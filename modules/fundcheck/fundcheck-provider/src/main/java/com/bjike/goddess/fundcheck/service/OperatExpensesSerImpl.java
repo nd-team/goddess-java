@@ -1,6 +1,5 @@
 package com.bjike.goddess.fundcheck.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -18,18 +17,15 @@ import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.ModCheck;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.event.ListSelectionEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 营业费用业务实现
@@ -198,6 +194,7 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
 
     @Override
     public OperatExpensesBO getOne(String id) throws SerException {
+
         OperatExpenses operatExpenses = super.findById(id);
         return BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
     }
@@ -206,6 +203,7 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
     public List<OperatExpensesBO> findList(OperatExpensesDTO operatExpensesDTO) throws SerException {
         checkSeeIdentity();
         operatExpensesDTO.getSorts().add("createTime=desc");
+        operatExpensesDTO.getSorts().add("modifyTime=desc");
         List<OperatExpenses> operatExpenses = super.findByPage(operatExpensesDTO);
         List<OperatExpensesBO> operatExpensesBOS = BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
         return operatExpensesBOS;
@@ -215,7 +213,7 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
     @Override
     public OperatExpensesBO insert(OperatExpensesTO operatExpensesTO) throws SerException {
         checkAddIdentity();
-        OperatExpenses operatExpenses = BeanTransform.copyProperties(operatExpensesTO, OperatExpenses.class,true);
+        OperatExpenses operatExpenses = BeanTransform.copyProperties(operatExpensesTO, OperatExpenses.class, true);
         operatExpenses.setCreateTime(LocalDateTime.now());
         super.save(operatExpenses);
         return BeanTransform.copyProperties(operatExpenses, OperatExpensesBO.class);
@@ -240,49 +238,55 @@ public class OperatExpensesSerImpl extends ServiceImpl<OperatExpenses, OperatExp
     }
 
     @Override
-    public List<OperatExpensesBO> collect(OperatExpensesCollectTO to) throws SerException {
-        List<OperatExpensesBO> operatExpensesBOList = new ArrayList<>();
-        OperatExpensesDTO dto = new OperatExpensesDTO();
+    public LinkedHashMap<String, String> collect(OperatExpensesCollectTO to) throws SerException {
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            String[] condi = new String[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("date", condi));
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        String sql = "select type from fundcheck_operatexpenses where " +
+                "date BETWEEN '" + startTime + "' and '" + endTime + "' GROUP BY type";
+        List<Object> titles = super.findBySql(sql);
+        for(Object o: titles){
+            if(NumberUtils.isCreatable(String.valueOf(o))){
+                throw new SerException("类型不能为数字");
+            }
         }
-        //获取所有类型(科目)
-        List<String> typeList = new ArrayList<>();
-        dto.getSorts().add("type=desc");
-        String sql = "SELECT type FROM fundcheck_operatexpenses WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY type ";
-        List<Object> objects = super.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-            typeList.addAll((List) objects);
+        String type = null;
+        if (null != titles && titles.size() > 0) {
+            StringBuilder sb = new StringBuilder("SELECT * from (SELECT");
+            for (Object o : titles) {
+                type = String.valueOf(o);
+                sb.append(" max(CASE WHEN type='" + type + "' THEN money  else NULL end )AS " + type + ",");
+            }
+            sb.append(" sum(money) as '合计' ");
+            sb.append(" FROM ");
+            sb.append(" (SELECT sum(money)as money,type  from fundcheck_operatexpenses a  WHERE a.date BETWEEN ");
+            sb.append("  '" + startTime + "' AND '" + endTime + "' ");
+            sb.append("GROUP BY type) a)a where '" + type + "' IS NOT NULL");
+            sql = sb.toString();
+            titles.add("合计");
+            map.put("日期",startTime+"-"+endTime);
+            List<Object> values = super.findBySql(sql);
+            if (null != values && values.size() > 0) {
+                Object[] obj = (Object[]) values.get(0);
+                for (int i = 0; i < obj.length; i++) {
+                    map.put(String.valueOf(titles.get(i)), String.valueOf(obj[i]));
+                }
+            }
         }
-        //获取所有类型(科目)对应的金额
-        List<Double> moneyList = new ArrayList<>();
-        sql = "SELECT money FROM fundcheck_operatexpenses WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY money;";
-        List<Object> objectList = super.findBySql(sql);
-        if (null != objectList && objectList.size() > 0) {
-            moneyList.addAll((List) objectList);
-        }
-        //获取金额合计
-        String[] fields = new String[]{"money"};
-        sql = "select sum(money) AS money from  fundcheck_operatexpenses where date between '" + startTime + "' and '" + endTime + "' ";
-        List<OperatExpensesBO> operatExpensesBOS = super.findBySql(sql, OperatExpensesBO.class, fields);
-        Double money = operatExpensesBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(OperatExpensesBO::getMoney).sum();
+        return map;
 
-        OperatExpensesBO operatExpensesBO = new OperatExpensesBO();
-        operatExpensesBO.setDate(startTime + "-" + endTime);
-        operatExpensesBO.setTypeList(typeList);
-        operatExpensesBO.setMoneyList(moneyList);
-        operatExpensesBO.setMoney(money);
-        operatExpensesBOList.add(operatExpensesBO);
-        return operatExpensesBOList;
     }
+
+    public static void main(String[] args) {
+        System.out.println(NumberUtils.isCreatable("fa"));
+    }
+
     @Override
     public List<String> listType() throws SerException {
         List<String> type = voucherGenerateAPI.listFirstSubject();
         return type;
     }
+
     @Override
     public OperatExpensesBO importExcel(List<OperatExpensesTO> operatExpensesTOS) throws SerException {
         List<OperatExpenses> operatExpenses = BeanTransform.copyProperties(operatExpensesTOS, OperatExpenses.class, true);

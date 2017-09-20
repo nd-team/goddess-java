@@ -281,7 +281,15 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
         sql.append(" and bankrecord.accountId = '" + accountId + "'");
         sql.append(" ORDER BY bankrecord.recordDate desc");
         sql.append(" limit 1");
-        String[] balanceField = new String[]{"id","balance"};
+        String[] balanceField = new String[]{"id", "balance"};
+        return super.findBySql(sql.toString(), BankRecord.class, balanceField);
+    }
+
+    public List<BankRecord> findBalanceByTime(String startTime, String endTime) throws SerException {
+        StringBuilder sql = new StringBuilder("select balance from bankrecords_bankrecord bankrecord  where 0 = 0");
+        sql.append(" and bankrecord.recordDate between '" + startTime + "' and '" + endTime + "' ");
+        sql.append(" ORDER BY bankrecord.recordDate desc");
+        String[] balanceField = new String[]{"balance"};
         return super.findBySql(sql.toString(), BankRecord.class, balanceField);
     }
 
@@ -853,18 +861,11 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     }
 
     @Override
-    public Double balanceByMonth(Integer year, Integer month) throws SerException {
+    public Double balanceByMonth(String startTime, String endTime) throws SerException {
 
-        StringBuilder accountSql = new StringBuilder(" select DISTINCT accountId from bankrecords_bankrecord ");
-        String[] accountIdStr = new String[]{"accountId"};
-        List<BankRecordBO> accountIds = super.findBySql(accountSql.toString(), BankRecordBO.class, accountIdStr);
         Double totalBalance = 0.0;
-        for (BankRecordBO bo : accountIds) {
-            List<BankRecord> list = findBalance(year, month, bo.getAccountId());
-            if (!CollectionUtils.isEmpty(list)) {
-                totalBalance = totalBalance + list.get(0).getBalance();
-            }
-        }
+        List<BankRecord> list = findBalanceByTime(startTime, endTime);
+        totalBalance = list.stream().filter(p->p.getBalance() != null).mapToDouble(p->p.getBalance()).sum();
         return totalBalance;
     }
 

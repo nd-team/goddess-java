@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 人员状态
  *
@@ -13,18 +15,22 @@ public enum StaffStatus {
     /**
      * 在职
      */
+    @ExcelValue(name="在职")
     WORKING(0),
     /**
      * 已离职
      */
+    @ExcelValue(name="已离职")
     HAVELEAVE(1),
     /**
      * 待离职
      */
+    @ExcelValue(name="已离职")
     LEAVING(2),
     /**
      * 请假
      */
+    @ExcelValue(name="已离职")
     REST(3);
     private int code;
 

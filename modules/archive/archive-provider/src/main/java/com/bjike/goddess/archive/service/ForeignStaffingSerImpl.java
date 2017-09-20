@@ -226,6 +226,11 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
         entity.setType(foreignStaffingSetSer.findById(to.getTypeId()));
         if (null == entity.getType())
             throw new SerException("使用类型不能为空");
+        entity.setIdentityCard(to.getIdentityCard());
+        entity.setBankCard(to.getBankCard());
+        entity.setAddress(to.getAddress());
+        entity.setBank(to.getBank());
+        entity.setEmail(to.getEmail());
         super.update(entity);
         return this.transformBO(entity);
     }
@@ -249,7 +254,10 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
         ForeignStaffing entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
-        return BeanTransform.copyProperties(entity, ForeignStaffingBO.class);
+
+        ForeignStaffingBO foreignStaffingBO = BeanTransform.copyProperties(entity, ForeignStaffingBO.class);
+        foreignStaffingBO.setTypeName(entity.getType().getName());
+        return foreignStaffingBO;
     }
 
     @Override

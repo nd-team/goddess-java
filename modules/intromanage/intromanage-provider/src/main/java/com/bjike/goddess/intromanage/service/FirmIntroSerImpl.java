@@ -6,9 +6,13 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
+import com.bjike.goddess.intromanage.excel.FirmIntroExport;
+import com.bjike.goddess.intromanage.excel.HonorAndQualityExport;
 import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
@@ -829,5 +833,51 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             startDate = String.valueOf(objects.get(0));
         }
         return startDate;
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+//        List<FirmIntro> list = super.findAll();
+//        List<FirmIntroExport> firmIntroExports = new ArrayList<>();
+//        if(list!=null && list.size()>0){
+//            for (FirmIntro firmIntro : list){
+//                FirmIntroExport excel = BeanTransform.copyProperties(firmIntro, FirmIntroExport.class);
+//                //查询荣誉与资质
+//                HonorAndQualityDTO honorAndQualityDTO = new HonorAndQualityDTO();
+//                honorAndQualityDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
+//                List<HonorAndQuality> honorAndQualities = honorAndQualitySer.findByCis(honorAndQualityDTO);
+//                List<HonorAndQualityExport> honorAndQualityExportList = BeanTransform.copyProperties(honorAndQualities, HonorAndQualityBO.class);
+//                //查询主业介绍
+//                MainBusinessIntroDTO mainBusinessIntroDTO = new MainBusinessIntroDTO();
+//                mainBusinessIntroDTO.getConditions().add(Restrict.eq("firmId", id));
+//                List<MainBusinessIntro> mainBusinessIntros = mainBusinessIntroSer.findByCis(mainBusinessIntroDTO);
+//                List<MainBusinessIntroBO> mainBusinessIntroBOS = BeanTransform.copyProperties(mainBusinessIntros, MainBusinessIntroBO.class);
+//                //查询成功案例
+//                SuccessStoriesDTO successStoriesDTO = new SuccessStoriesDTO();
+//                successStoriesDTO.getConditions().add(Restrict.eq("firmId", id));
+//                List<SuccessStories> successStories = successStoriesSer.findByCis(successStoriesDTO);
+//                List<SuccessStoriesBO> successStoriesBOS = BeanTransform.copyProperties(successStories, SuccessStoriesBO.class);
+//                //查询客户及合作伙伴
+//                CustomerAndPartnerDTO customerAndPartnerDTO = new CustomerAndPartnerDTO();
+//                successStoriesDTO.getConditions().add(Restrict.eq("firmId", id));
+//                List<CustomerAndPartner> customerAndPartners = customerAndPartnerSer.findByCis(customerAndPartnerDTO);
+//                List<CustomerAndPartnerBO> customerAndPartnerBOS = BeanTransform.copyProperties(customerAndPartners, CustomerAndPartnerBO.class);
+//                //查询通讯途径
+//                CommunicationPathDTO communicationPathDTO = new CommunicationPathDTO();
+//                communicationPathDTO.getConditions().add(Restrict.eq("firmId", id));
+//                List<CommunicationPath> communicationPaths = communicationPathSer.findByCis(communicationPathDTO);
+//                List<CommunicationPathBO> communicationPathBOS = BeanTransform.copyProperties(communicationPaths, CommunicationPathBO.class);
+//                temperatureSubsidiesImports.add(excel);
+//            }
+//    }
+//        Excel excel = new Excel(0, 2);
+//        byte[] bytes = ExcelUtil.clazzToExcel(temperatureSubsidiesImports, excel);
+//        return bytes;
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return new byte[0];
     }
 }

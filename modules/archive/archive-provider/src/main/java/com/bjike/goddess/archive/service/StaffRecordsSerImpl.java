@@ -27,7 +27,6 @@ import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -329,12 +327,14 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
                 staffRecordsBO.setPosition(entryBasicInfoBO.getPosition());
                 if (moduleAPI.isCheck("staffentry")) {
                     EntryRegisterBO entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
-                    staffRecordsBO.setEducation(entryRegister.getEducation());
-                    staffRecordsBO.setSchool(entryRegister.getSchoolTag());
-                    staffRecordsBO.setGraduate(entryRegister.getGraduationDate().toString());
-                    staffRecordsBO.setBirth(entryRegister.getBirthday().toString());
-                    staffRecordsBO.setAddress(entryRegister.getRegisteredAddress());
-                    staffRecordsBO.setIdentityCard(entryRegister.getIdCard());
+                    if (null != entryRegister) {
+                        staffRecordsBO.setEducation(entryRegister.getEducation());
+                        staffRecordsBO.setSchool(entryRegister.getSchoolTag());
+                        staffRecordsBO.setGraduate(entryRegister.getGraduationDate().toString());
+                        staffRecordsBO.setBirth(entryRegister.getBirthday().toString());
+                        staffRecordsBO.setAddress(entryRegister.getRegisteredAddress());
+                        staffRecordsBO.setIdentityCard(entryRegister.getIdCard());
+                    }
                 }
                 staffRecordsBO.setMajor(entryBasicInfoBO.getProfession());
                 staffRecordsBO.setEntryTime(entryBasicInfoBO.getEntryTime());

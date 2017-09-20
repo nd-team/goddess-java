@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.api.SubsidySchemeAPI;
 import com.bjike.goddess.assistance.bo.SubsidySchemeBO;
 import com.bjike.goddess.assistance.dto.SubsidySchemeDTO;
 import com.bjike.goddess.assistance.entity.SubsidyScheme;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.SubsidySchemeTO;
 import com.bjike.goddess.assistance.vo.SubsidySchemeVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -35,6 +36,29 @@ import java.util.List;
 public class SubsidySchemeAction {
     @Autowired
     private SubsidySchemeAPI subsidySchemeAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = subsidySchemeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 总条数
      *
@@ -84,7 +108,7 @@ public class SubsidySchemeAction {
     public Result findListSubsidy(SubsidySchemeDTO subsidySchemeDTO, BindingResult bindingResult) throws ActException {
         try {
             List<SubsidySchemeVO> ageAssistVOList = BeanTransform.copyProperties(
-                    subsidySchemeAPI.listSubsidy(subsidySchemeDTO), SubsidySchemeVO.class, true);
+                    subsidySchemeAPI.listSubsidy(subsidySchemeDTO), SubsidySchemeVO.class);
             return ActResult.initialize(ageAssistVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

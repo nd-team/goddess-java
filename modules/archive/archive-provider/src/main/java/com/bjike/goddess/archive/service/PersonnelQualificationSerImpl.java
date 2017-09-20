@@ -199,6 +199,7 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         PersonnelQualificationBO bo = BeanTransform.copyProperties(entity, PersonnelQualificationBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (user != null) {
+
             UserDetailBO detailBO = userDetailAPI.findByUserId(user.getId());
             if (null != detailBO) {
                 bo.setSex(detailBO.getSex() == SexType.MAN ? "男" : "女");
@@ -267,7 +268,12 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         PersonnelQualification entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
-        return BeanTransform.copyProperties(entity, PersonnelQualificationBO.class);
+        PersonnelQualificationBO personnelQualificationBO = BeanTransform.copyProperties(entity, PersonnelQualificationBO.class);
+        personnelQualificationBO.setLaborName(entity.getLabor().getName());
+        personnelQualificationBO.setLoborId(entity.getLabor().getId());
+        personnelQualificationBO.setSocialName(entity.getSocial().getName());
+        personnelQualificationBO.setSocialId(entity.getSocial().getId());
+        return personnelQualificationBO;
     }
 
     @Override

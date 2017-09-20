@@ -1,6 +1,5 @@
 package com.bjike.goddess.businessproject.service;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
@@ -438,7 +437,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         return areaList;
     }
 
-    @Transactional(rollbackFor = SerException.class )
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
 
@@ -485,35 +484,34 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
         SiginManageTemplateExport excel = new SiginManageTemplateExport();
         excel.setBusinessType("移动通信类");
-        excel.setBusinessSubject( "test" );
+        excel.setBusinessSubject("test");
         excel.setBusinessCooperate("租赁合同");
         excel.setOuterProject("test");
         excel.setFirstCompany("test");
-        excel.setSecondCompany( "test");
+        excel.setSecondCompany("test");
         excel.setArea("test");
-        excel.setMoney( 12.0d );
-        excel.setStartProjectTime(LocalDate.now() );
-        excel.setEndProjectTime( LocalDate.now() );
-        excel.setSiginStatus("已签订" );
-        excel.setContractProperty( "框架合同");
-        excel.setMakeProject( "已立项");
+        excel.setMoney(12.0d);
+        excel.setStartProjectTime(LocalDate.now());
+        excel.setEndProjectTime(LocalDate.now());
+        excel.setSiginStatus("已签订");
+        excel.setContractProperty("框架合同");
+        excel.setMakeProject("已立项");
         excel.setInnerProject("test");
-        excel.setProjectGroup( "test");
+        excel.setProjectGroup("test");
         excel.setProjectCharge("test");
         excel.setRemark("");
-        siginManageExports.add( excel );
+        siginManageExports.add(excel);
 
         SiginManageTemplateExport excel2 = new SiginManageTemplateExport();
-        BeanUtils.copyProperties( excel , excel2);
-        excel.setSiginStatus("未签订" );
-        excel.setMakeProject( "未立项");
+        BeanUtils.copyProperties(excel, excel2);
+        excel.setSiginStatus("未签订");
+        excel.setMakeProject("未立项");
         siginManageExports.add(excel);
 
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, exce);
         return bytes;
     }
-
 
 
     @Override
@@ -526,5 +524,16 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
 
         return innerProjectList;
+    }
+
+    @Override
+    public SiginManageBO findByProject(String name) throws SerException {
+        SiginManageDTO dto = new SiginManageDTO();
+        dto.getConditions().add(Restrict.eq("innerProject", name));
+        List<SiginManage> siginManageList = super.findByCis(dto);
+        if (null != siginManageList && siginManageList.size() > 0) {
+            return BeanTransform.copyProperties(siginManageList.get(0), SiginManageBO.class, false);
+        }
+        return null;
     }
 }

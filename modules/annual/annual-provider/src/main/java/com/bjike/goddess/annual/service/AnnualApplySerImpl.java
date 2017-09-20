@@ -16,6 +16,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
@@ -29,6 +30,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -261,8 +263,9 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
      */
     private Double countLeave(AnnualApply entity) {
         long hour = entity.getStartTime().until(entity.getEndTime(), ChronoUnit.HOURS);
-        //@TODO 计算请假时间(日总工时/本次请假的时长 = 请假时间)
-        return 0d;
+        Double d= hour/24d ;
+        DecimalFormat df=new DecimalFormat("#.##");
+        return Double.valueOf(df.format(d));
     }
 
     @Transactional(rollbackFor = SerException.class)

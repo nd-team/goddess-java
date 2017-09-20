@@ -7,7 +7,9 @@ import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OtherSpendCollectTO;
 import com.bjike.goddess.fundcheck.to.OtherSpendTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他支出业务接口
@@ -96,7 +98,7 @@ public interface OtherSpendAPI {
      * @return OtherSpendBO
      * @throws SerException
      */
-    default List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
+    default LinkedHashMap<String,String> collect(OtherSpendCollectTO to) throws SerException {
         return null;
     }
     /**

@@ -242,7 +242,7 @@ public class SkillGradingAction {
      * 计算
      *
      * @param to to
-     * @return class SkillVO
+     * @return class CalculateVO
      * @des 计算
      * @version v1
      */

@@ -20,6 +20,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 其他收入业务实现
@@ -239,43 +239,44 @@ public class OtherIncomeSerImpl extends ServiceImpl<OtherIncome, OtherIncomeDTO>
     }
 
     @Override
-    public List<OtherIncomeBO> collect(OtherIncomeCollectTO to) throws SerException {
-        List<OtherIncomeBO> otherIncomeBOList = new ArrayList<>();
-        OtherIncomeDTO dto = new OtherIncomeDTO();
+    public LinkedHashMap<String,String> collect(OtherIncomeCollectTO to) throws SerException {
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            String[] condi = new String[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("date", condi));
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        String sql = "select type from fundcheck_otherincome where " +
+                "date BETWEEN '" + startTime + "' and '" + endTime + "' GROUP BY type";
+        List<Object> titles = super.findBySql(sql);
+        for(Object o: titles){
+            if(NumberUtils.isCreatable(String.valueOf(o))){
+                throw new SerException("类型不能为数字");
+            }
         }
-        //获取所有类型(科目)
-        List<String> typeList = new ArrayList<>();
-        dto.getSorts().add("type=desc");
-        String sql = "SELECT type FROM fundcheck_otherincome WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY type ";
-        List<Object> objects = super.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-            typeList.addAll((List) objects);
-        }
-        //获取所有类型(科目)对应的金额
-        List<Double> moneyList = new ArrayList<>();
-        sql = "SELECT money FROM fundcheck_otherincome WHERE date BETWEEN '" + startTime + "' AND '" + endTime + "' GROUP BY money";
-        List<Object> objectList = super.findBySql(sql);
-        if (null != objectList && objectList.size() > 0) {
-            moneyList.addAll((List) objectList);
-        }
-        //获取金额合计
-        String[] fields = new String[]{"money"};
-        sql = "select sum(money) AS money from  fundcheck_stockmoney where date between '" + startTime + "' and '" + endTime + "' ";
-        List<OtherIncomeBO> stockMoneyBOS = super.findBySql(sql, OtherIncomeBO.class, fields);
-        Double money = stockMoneyBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(OtherIncomeBO::getMoney).sum();
+        String type = null;
+        if (null != titles && titles.size() > 0) {
+            StringBuilder sb = new StringBuilder("SELECT * from (SELECT");
+            for (Object o : titles) {
+                type = String.valueOf(o);
+                sb.append(" max(CASE WHEN type='" + type + "' THEN money  else NULL end )AS " + type + ",");
+            }
 
-        OtherIncomeBO otherIncomeBO = new OtherIncomeBO();
-        otherIncomeBO.setDate(startTime + "-" + endTime);
-        otherIncomeBO.setTypeList(typeList);
-        otherIncomeBO.setMoneyList(moneyList);
-        otherIncomeBO.setMoney(money);
-        otherIncomeBOList.add(otherIncomeBO);
-        return otherIncomeBOList;
+            sb.append(" sum(money) as '合计' ");
+            sb.append(" FROM ");
+            sb.append(" (SELECT sum(money)as money,type  from fundcheck_otherincome a  WHERE a.date BETWEEN ");
+            sb.append("  '" + startTime + "' AND '" + endTime + "' ");
+            sb.append("GROUP BY type) a)a where '" + type + "' IS NOT NULL");
+            sql = sb.toString();
+            titles.add("合计");
+            map.put("日期",startTime+"-"+endTime);
+            List<Object> values = super.findBySql(sql);
+            System.out.println(sql);
+            if (null != values && values.size() > 0) {
+                Object[] obj = (Object[]) values.get(0);
+                for (int i = 0; i < obj.length; i++) {
+                    map.put(String.valueOf(titles.get(i)), String.valueOf(obj[i]));
+                }
+            }
+        }
+        return map;
     }
     @Override
     public List<String> listFirstSubject() throws SerException {

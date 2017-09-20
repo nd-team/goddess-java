@@ -351,6 +351,9 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
 
                 fundPrepare.setCreateTime(LocalDateTime.now());
                 super.save(fundPrepare);
+                if (isExist(fundPrepare)) {
+                    throw new SerException("添加的数据重复,请检查后重新输入");
+                }
 
                 FundPrepareBO fundPrepareBO = BeanTransform.copyProperties(fundPrepare, FundPrepareBO.class);
                 bos.add(fundPrepareBO);
@@ -378,7 +381,7 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
         fundPrepareTO.setTime(sb.toString());
 
         FundPrepare fundPrepare = BeanTransform.copyProperties(fundPrepareTO, FundPrepare.class);
-        BeanUtils.copyProperties(fundPrepare, temp, "id", "createTime");
+        BeanUtils.copyProperties(fundPrepare, temp,  "createTime");
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 
@@ -401,9 +404,12 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
     }
 
     @Override
-    public List<String> findSecondSubject() throws SerException {
+    public List<String> findSecondSubject(String firstSubject) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            throw new SerException("一级科目名称不能为空");
+        }
         //从财务模块得到三级科目
-        return categoryAPI.listAllThirdName();
+        return categoryAPI.findByFirstName(firstSubject);
     }
 
 
@@ -689,5 +695,19 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
 
         }
         return proportionBOs;
+    }
+
+    //判断当月的数据是否已存在
+    private Boolean isExist(FundPrepare fundPrepare) throws SerException {
+        Boolean tar = false;
+        FundPrepareDTO dto = new FundPrepareDTO();
+        dto.getConditions().add(Restrict.eq("time", fundPrepare.getTime()));
+        dto.getConditions().add(Restrict.eq("firstSubject", fundPrepare.getFirstSubject()));
+        dto.getConditions().add(Restrict.eq("secondSubject", fundPrepare.getSecondSubject()));
+        List<FundPrepare> fundPrepares = super.findByCis(dto);
+        if (fundPrepares.size() >= 2) {
+            tar = true;
+        }
+        return tar;
     }
 }

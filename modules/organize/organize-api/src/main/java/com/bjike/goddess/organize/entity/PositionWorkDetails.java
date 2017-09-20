@@ -59,7 +59,7 @@ public class PositionWorkDetails extends BaseEntity {
     /**
      * 序号
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '序号'")
+    @Column(name = "serialNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '序号'")
     private Long serialNumber;
 
     /**

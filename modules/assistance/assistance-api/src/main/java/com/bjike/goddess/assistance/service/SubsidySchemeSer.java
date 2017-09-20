@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.service;
 import com.bjike.goddess.assistance.bo.SubsidySchemeBO;
 import com.bjike.goddess.assistance.dto.SubsidySchemeDTO;
 import com.bjike.goddess.assistance.entity.SubsidyScheme;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.SubsidySchemeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -19,6 +20,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SubsidySchemeSer extends Ser<SubsidyScheme, SubsidySchemeDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 公司补助方案列表总条数
      */

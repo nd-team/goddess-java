@@ -10,7 +10,9 @@ import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 营业费用业务接口实现
@@ -64,7 +66,7 @@ public class OperatExpensesApiImpl implements OperatExpensesAPI {
         operatExpensesSer.remove(id);
     }
     @Override
-    public List<OperatExpensesBO> collect(OperatExpensesCollectTO to) throws SerException {
+    public LinkedHashMap<String,String> collect(OperatExpensesCollectTO to) throws SerException {
         return operatExpensesSer.collect(to);
     }
     @Override

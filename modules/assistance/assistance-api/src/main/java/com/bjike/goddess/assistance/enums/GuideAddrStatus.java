@@ -24,29 +24,17 @@ public enum GuideAddrStatus {
      */
     EDIT(2),
     /**
-     * 综合部审核
-     */
-    RESOURCEAUDIT(3),
-    /**
      * 删除
      */
-    DELETE(4),
-    /**
-     * 汇总
-     */
-    COLLECT(5),
-    /**
-     * 查看
-     */
-    SEE(6),
-    /**
-     * 财务审核
-     */
-    FINACEAUDIT(7),
+    DELETE(3),
     /**
      * 总经办审核
      */
-    MANAGEAUDIT(8);
+    MANAGEAUDIT(4),
+    /**
+     * 确认
+     */
+    CONFIRM(5);
 
     private int code;
 

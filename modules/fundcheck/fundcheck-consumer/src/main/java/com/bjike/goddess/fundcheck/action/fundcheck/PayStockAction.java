@@ -12,16 +12,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.api.PayStockAPI;
-import com.bjike.goddess.fundcheck.bo.BackBO;
 import com.bjike.goddess.fundcheck.bo.PayStockBO;
-import com.bjike.goddess.fundcheck.dto.BackDTO;
 import com.bjike.goddess.fundcheck.dto.PayStockDTO;
 import com.bjike.goddess.fundcheck.excel.PayStockExcel;
-import com.bjike.goddess.fundcheck.excel.StockMoneyExcel;
-import com.bjike.goddess.fundcheck.to.*;
-import com.bjike.goddess.fundcheck.vo.BackVO;
+import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
+import com.bjike.goddess.fundcheck.to.PayStockCollectTO;
+import com.bjike.goddess.fundcheck.to.PayStockTO;
 import com.bjike.goddess.fundcheck.vo.PayStockVO;
-import com.bjike.goddess.fundcheck.vo.StockMoneyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 支付给股东
@@ -45,11 +44,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("paystock")
-public class PayStockAction extends BaseFileAction{
+public class PayStockAction extends BaseFileAction {
     @Autowired
     private PayStockAPI payStockAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -59,16 +60,17 @@ public class PayStockAction extends BaseFileAction{
         try {
 
             Boolean isHasPermission = payStockAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 支付给股东列表总条数
      *
@@ -178,23 +180,24 @@ public class PayStockAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 汇总
      *
      * @param to 支付给股东数据to
-     * @return class PayStockVO
      * @des 汇总支付给股东
      * @version v1
      */
     @GetMapping("v1/collect")
     public Result collect(@Validated PayStockCollectTO to, BindingResult bindingResult) throws ActException {
         try {
-            List<PayStockVO> payStockVOS = BeanTransform.copyProperties(payStockAPI.collect(to), PayStockVO.class);
-            return ActResult.initialize(payStockVOS);
+            LinkedHashMap<String,String> map = payStockAPI.collect(to);
+            return ActResult.initialize(map);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有一级科目
      *
@@ -259,7 +262,7 @@ public class PayStockAction extends BaseFileAction{
             List<PayStockExcel> tos = ExcelUtil.excelToClazz(is, PayStockExcel.class, excel);
             List<PayStockTO> tocs = new ArrayList<>();
             for (PayStockExcel str : tos) {
-                PayStockTO payStockTO = BeanTransform.copyProperties(str, PayStockTO.class,"date");
+                PayStockTO payStockTO = BeanTransform.copyProperties(str, PayStockTO.class, "date");
                 payStockTO.setDate(String.valueOf(str.getDate()));
                 tocs.add(payStockTO);
             }
@@ -270,6 +273,7 @@ public class PayStockAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * excel模板下载
      *
@@ -280,7 +284,7 @@ public class PayStockAction extends BaseFileAction{
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "支付给股东导入模板.xlsx";
-            super.writeOutFile(response, payStockAPI.templateExport( ), fileName);
+            super.writeOutFile(response, payStockAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

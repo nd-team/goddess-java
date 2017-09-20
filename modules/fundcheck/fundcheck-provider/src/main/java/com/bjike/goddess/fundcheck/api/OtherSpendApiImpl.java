@@ -10,7 +10,9 @@ import com.bjike.goddess.fundcheck.to.OtherSpendTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他支出业务接口实现
@@ -64,7 +66,7 @@ public class OtherSpendApiImpl implements OtherSpendAPI {
         otherSpendSer.remove(id);
     }
     @Override
-    public List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
+    public LinkedHashMap<String,String> collect(OtherSpendCollectTO to) throws SerException {
         return otherSpendSer.collect(to);
     }
     @Override

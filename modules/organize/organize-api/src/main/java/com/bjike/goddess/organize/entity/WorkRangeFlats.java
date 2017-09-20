@@ -26,7 +26,6 @@ public class WorkRangeFlats extends BaseEntity {
     @Column(name = "faltId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT 'faltId'")
     private String faltId;
 
-
     public String getFaltId() {
         return faltId;
     }
