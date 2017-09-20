@@ -5,6 +5,7 @@ import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
 import com.bjike.goddess.assistance.entity.ComputerSubsidies;
 import com.bjike.goddess.assistance.entity.SenioritySubsidies;
 import com.bjike.goddess.assistance.enums.SubsidiesStatus;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
 import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -189,15 +190,15 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
             senioritySubsidiesTO.setStaffStatus(status);
             senioritySubsidiesAPI.saveSen(senioritySubsidiesTO);
             //添加电脑补助lijuntao
-            ComputerSubsidiesTO computerSubsidiesTO = new ComputerSubsidiesTO();
-            computerSubsidiesTO.setArea(entryBasicInfo.getArea());
-            computerSubsidiesTO.setDepartment(entryBasicInfo.getDepartment());
-            computerSubsidiesTO.setName(entryBasicInfo.getName());
-            computerSubsidiesTO.setEntryDate(entryBasicInfo.getEntryTime().toString());
-            computerSubsidiesTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+            ComputerSubsidiesAddTO computerSubsidiesAddTO = new ComputerSubsidiesAddTO();
+            computerSubsidiesAddTO.setArea(entryBasicInfo.getArea());
+            computerSubsidiesAddTO.setDepartment(entryBasicInfo.getDepartment());
+            computerSubsidiesAddTO.setName(entryBasicInfo.getName());
+            computerSubsidiesAddTO.setEntryDate(entryBasicInfo.getEntryTime().toString());
+            computerSubsidiesAddTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
             StaffStatus status1 = positionDetailUserAPI.statusByName(entryBasicInfo.getName());
-            computerSubsidiesTO.setStaffStatus(status1);
-            computerSubsidiesAPI.saveComputer(computerSubsidiesTO);
+            computerSubsidiesAddTO.setStaffStatus(status1);
+            computerSubsidiesAPI.saveComputer(computerSubsidiesAddTO);
 
         } catch (SerException e) {
             throw new SerException(e.getMessage());

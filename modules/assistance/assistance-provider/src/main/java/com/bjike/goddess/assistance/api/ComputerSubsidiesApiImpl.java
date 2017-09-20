@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
 import com.bjike.goddess.assistance.dto.ComputerSubsidiesDTO;
 import com.bjike.goddess.assistance.service.ComputerSubsidiesSer;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -41,8 +42,8 @@ public class ComputerSubsidiesApiImpl implements ComputerSubsidiesAPI {
     }
 
     @Override
-    public void saveComputer(ComputerSubsidiesTO computerSubsidiesTO) throws SerException {
-        computerSubsidiesSer.saveComputer(computerSubsidiesTO);
+    public void saveComputer(ComputerSubsidiesAddTO computerSubsidiesAddTO) throws SerException {
+        computerSubsidiesSer.saveComputer(computerSubsidiesAddTO);
     }
 
     @Override
