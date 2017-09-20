@@ -7,6 +7,7 @@ import com.bjike.goddess.assistance.enums.GuideAddrStatus;
 import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.assistance.enums.Usage;
 import com.bjike.goddess.assistance.excel.ComputerSubsidiesImport;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
@@ -206,8 +207,8 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
     }
 
     @Override
-    public void saveComputer(ComputerSubsidiesTO computerSubsidiesTO) throws SerException {
-        ComputerSubsidies computerSubsidies = BeanTransform.copyProperties(computerSubsidiesTO, ComputerSubsidies.class, true);
+    public void saveComputer(ComputerSubsidiesAddTO computerSubsidiesAddTO) throws SerException {
+        ComputerSubsidies computerSubsidies = BeanTransform.copyProperties(computerSubsidiesAddTO, ComputerSubsidies.class, true);
         computerSubsidies.setCreateTime(LocalDateTime.now());
         super.save(computerSubsidies);
     }

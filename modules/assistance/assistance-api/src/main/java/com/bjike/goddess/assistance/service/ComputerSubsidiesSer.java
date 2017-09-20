@@ -3,6 +3,7 @@ package com.bjike.goddess.assistance.service;
 import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
 import com.bjike.goddess.assistance.dto.ComputerSubsidiesDTO;
 import com.bjike.goddess.assistance.entity.ComputerSubsidies;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
@@ -62,7 +63,7 @@ public interface ComputerSubsidiesSer extends Ser<ComputerSubsidies, ComputerSub
     /**
      * 添加
      */
-    default void saveComputer(ComputerSubsidiesTO computerSubsidiesTO) throws SerException {
+    default void saveComputer(ComputerSubsidiesAddTO computerSubsidiesAddTO) throws SerException {
         return;
     }
 

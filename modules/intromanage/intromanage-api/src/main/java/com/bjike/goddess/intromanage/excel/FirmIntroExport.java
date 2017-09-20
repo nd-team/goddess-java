@@ -1,14 +1,10 @@
 package com.bjike.goddess.intromanage.excel;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.intromanage.type.DemandType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,121 +23,121 @@ public class FirmIntroExport extends BaseBO {
     /**
      * 公司名称
      */
-   @ExcelHeader(name="公司名称",notNull = true)
+    @ExcelHeader(name = "公司名称", notNull = true)
     private String firmName;
 
     /**
      * 公司性质
      */
-    @ExcelHeader(name="公司性质",notNull = true)
+    @ExcelHeader(name = "公司性质", notNull = true)
     private String firmNature;
 
     /**
      * 注册资金
      */
-    @ExcelHeader(name="注册资金",notNull = true)
+    @ExcelHeader(name = "注册资金", notNull = true)
     private String registerMoney;
 
     /**
      * 注册时间
      */
-    @ExcelHeader(name="注册时间",notNull = true)
+    @ExcelHeader(name = "注册时间", notNull = true)
     private LocalDate registerDate;
 
     /**
      * 公司精神
      */
-    @ExcelHeader(name="公司精神",notNull = true)
+    @ExcelHeader(name = "公司精神", notNull = true)
     private String firmSpirit;
 
     /**
      * 服务意识
      */
-    @ExcelHeader(name="服务意识",notNull = true)
+    @ExcelHeader(name = "服务意识", notNull = true)
     private String serviceAwareness;
 
     /**
      * 公司宗旨
      */
-    @ExcelHeader(name="公司宗旨",notNull = true)
+    @ExcelHeader(name = "公司宗旨", notNull = true)
     private String firmTenet;
 
     /**
      * 人才观
      */
-    @ExcelHeader(name="人才观",notNull = true)
+    @ExcelHeader(name = "人才观", notNull = true)
     private String talentView;
 
     /**
      * 经营观
      */
-    @ExcelHeader(name="经营观",notNull = true)
+    @ExcelHeader(name = "经营观", notNull = true)
     private String operationView;
 
     /**
      * 质量观
      */
-    @ExcelHeader(name="质量观",notNull = true)
+    @ExcelHeader(name = "质量观", notNull = true)
     private String qualityView;
 
     /**
      * 组织结构
      */
-    @ExcelHeader(name="组织结构",notNull = true)
+    @ExcelHeader(name = "组织结构", notNull = true)
     private String organization;
 
     /**
      * 管理模式
      */
-    @ExcelHeader(name="管理模式",notNull = true)
+    @ExcelHeader(name = "管理模式", notNull = true)
     private String manageModel;
 
     /**
      * 服务团队介绍
      */
-    @ExcelHeader(name="服务团队介绍",notNull = true)
+    @ExcelHeader(name = "服务团队介绍", notNull = true)
     private String serviceTeamIntro;
 
     /**
      * 员工数量
      */
-    @ExcelHeader(name="员工数量",notNull = true)
+    @ExcelHeader(name = "员工数量", notNull = true)
     private String staffNo;
 
     /**
      * 囊括区域
      */
-    @ExcelHeader(name="囊括区域",notNull = true)
+    @ExcelHeader(name = "囊括区域", notNull = true)
     private String includeArea;
 
     /**
      * 一体化解决方案
      */
-    @ExcelHeader(name="一体化解决方案",notNull = true)
+    @ExcelHeader(name = "一体化解决方案", notNull = true)
     private String solvingScheme;
 
     /**
      * 需求类型
      */
-    @ExcelHeader(name="需求类型",notNull = true)
+    @ExcelHeader(name = "需求类型", notNull = true)
     private DemandType demandType;
 
     /**
      * 更新（制作）时间
      */
-    @ExcelHeader(name="更新（制作）时间",notNull = true)
+    @ExcelHeader(name = "更新（制作）时间", notNull = true)
     private LocalDate updateDate;
 
     /**
      * 战略定位
      */
-    @ExcelHeader(name="战略定位",notNull = true)
+    @ExcelHeader(name = "战略定位", notNull = true)
     private String positioning;
 
     /**
      * 状态
      */
-    @ExcelHeader(name="状态",notNull = true)
+    @ExcelHeader(name = "状态", notNull = true)
     private Status status;
 
     /**
@@ -152,8 +148,17 @@ public class FirmIntroExport extends BaseBO {
      * 主业介绍
      */
     private List<MainBusinessIntroExport> mainBusinessIntroExportList;
+    /**
+     * 成功案例
+     */
     private List<SuccessStoriesExport> successStoriesExportList;
+    /**
+     * 客户及合作伙伴
+     */
     private List<CustomerAndPartnerExport> customerAndPartnerExportList;
+    /**
+     * 通讯途径
+     */
     private List<CommunicationPathExprot> communicationPathExprotList;
 
 
@@ -315,5 +320,45 @@ public class FirmIntroExport extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<HonorAndQualityExport> getHonorAndQualityExportList() {
+        return honorAndQualityExportList;
+    }
+
+    public void setHonorAndQualityExportList(List<HonorAndQualityExport> honorAndQualityExportList) {
+        this.honorAndQualityExportList = honorAndQualityExportList;
+    }
+
+    public List<MainBusinessIntroExport> getMainBusinessIntroExportList() {
+        return mainBusinessIntroExportList;
+    }
+
+    public void setMainBusinessIntroExportList(List<MainBusinessIntroExport> mainBusinessIntroExportList) {
+        this.mainBusinessIntroExportList = mainBusinessIntroExportList;
+    }
+
+    public List<SuccessStoriesExport> getSuccessStoriesExportList() {
+        return successStoriesExportList;
+    }
+
+    public void setSuccessStoriesExportList(List<SuccessStoriesExport> successStoriesExportList) {
+        this.successStoriesExportList = successStoriesExportList;
+    }
+
+    public List<CustomerAndPartnerExport> getCustomerAndPartnerExportList() {
+        return customerAndPartnerExportList;
+    }
+
+    public void setCustomerAndPartnerExportList(List<CustomerAndPartnerExport> customerAndPartnerExportList) {
+        this.customerAndPartnerExportList = customerAndPartnerExportList;
+    }
+
+    public List<CommunicationPathExprot> getCommunicationPathExprotList() {
+        return communicationPathExprotList;
+    }
+
+    public void setCommunicationPathExprotList(List<CommunicationPathExprot> communicationPathExprotList) {
+        this.communicationPathExprotList = communicationPathExprotList;
     }
 }

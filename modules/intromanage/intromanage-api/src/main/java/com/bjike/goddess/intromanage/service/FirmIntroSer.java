@@ -142,5 +142,24 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
     default String getDate() throws SerException {
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
 
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+//    /**
+//     * 导入
+//     *
+//     * @param temperatureSubsidiesExcelTOS 工龄补助
+//     */
+//    void importExcel(List<TemperatureSubsidiesExcelTO> temperatureSubsidiesExcelTOS) throws SerException;
 }

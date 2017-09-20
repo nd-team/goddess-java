@@ -2,6 +2,7 @@ package com.bjike.goddess.assistance.api;
 
 import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
 import com.bjike.goddess.assistance.dto.ComputerSubsidiesDTO;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
@@ -60,7 +61,7 @@ public interface ComputerSubsidiesAPI {
     /**
      * 添加
      */
-    default void saveComputer(ComputerSubsidiesTO computerSubsidiesTO) throws SerException {
+    default void saveComputer(ComputerSubsidiesAddTO computerSubsidiesAddTO) throws SerException {
         return;
     }
 
