@@ -100,4 +100,9 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public List<EntryRegister> list() throws SerException {
         return entryRegisterSer.list();
     }
+
+    @Override
+    public String getGender(String name) throws SerException {
+        return entryRegisterSer.getGender(name);
+    }
 }

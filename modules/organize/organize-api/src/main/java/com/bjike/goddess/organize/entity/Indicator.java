@@ -23,7 +23,7 @@ public class Indicator extends BaseEntity {
     /**
      * 模块表id
      */
-    @Column(name = "modulesId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '模块表id'")
+    @Column(name = "modulesId", columnDefinition = "VARCHAR(255)   COMMENT '模块表id'")
     private String modulesId;
 
     /**

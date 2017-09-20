@@ -94,6 +94,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                     detailBO.setModule(positionDetail.getModule().getModule());
                 }
                 detailBO.setPosition(positionDetail.getPosition());
+                detailBO.setPositionId(positionDetail.getId());
                 detailBO.setPositionNumber(positionDetail.getSerialNumber());
                 detailBOS.add(detailBO);
             }

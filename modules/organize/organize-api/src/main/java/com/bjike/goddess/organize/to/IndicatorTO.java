@@ -21,7 +21,7 @@ public class IndicatorTO extends BaseTO {
     /**
      * 模块表id
      */
-    @NotBlank(message = "模块表id不能为空", groups = {ADD.class, EDIT.class})
+//    @NotBlank(message = "模块表id不能为空", groups = {EDIT.class})
     private String modulesId;
 
     /**

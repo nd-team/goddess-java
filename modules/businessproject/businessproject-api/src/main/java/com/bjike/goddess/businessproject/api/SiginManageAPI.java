@@ -5,9 +5,9 @@ import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
+import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -20,7 +20,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SiginManageAPI {
-
 
 
     /**
@@ -137,16 +136,18 @@ public interface SiginManageAPI {
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(SiginManageDTO dto ) throws SerException;
+    byte[] exportExcel(SiginManageDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
 
     /**
@@ -155,6 +156,13 @@ public interface SiginManageAPI {
      * @return class String
      */
     default List<String> listInnerProject() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据内部项目名称查询数据
+     */
+    default SiginManageBO findByProject(String name) throws SerException {
         return null;
     }
 }

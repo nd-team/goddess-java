@@ -15,11 +15,9 @@ import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.to.CategoryTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
-import com.bjike.goddess.financeinit.vo.FirstSubjectVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -352,13 +349,13 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         Category tranCategory = BeanTransform.copyProperties(categoryTO, Category.class, true);
         Category category = super.findById(categoryTO.getId());
 
-        if( category.getFirstSubject().getName().equals( categoryTO.getFirstSubjectName())
-                &&  category.getSecondSubject().equals( categoryTO.getSecondSubject())
-                &&  category.getThirdSubject().equals( categoryTO.getThirdSubject()) ){
-            category.setRemark( tranCategory.getRemark() );
+        if (category.getFirstSubject().getName().equals(categoryTO.getFirstSubjectName())
+                && category.getSecondSubject().equals(categoryTO.getSecondSubject())
+                && category.getThirdSubject().equals(categoryTO.getThirdSubject())) {
+            category.setRemark(tranCategory.getRemark());
             super.update(category);
             return BeanTransform.copyProperties(category, CategoryBO.class);
-        }else {
+        } else {
             CategoryDTO dto = new CategoryDTO();
             if (!firstSubjectBO.getId().equals(category.getFirstSubject().getId())) {
                 dto.getConditions().add(Restrict.eq("firstSubject.id", firstSubjectBO.getId()));
@@ -381,12 +378,12 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
 //            BeanUtils.copyProperties(tranCategory, category, "id", "firstSubject_id", "createTime", "firstCode", "secondCode");
             category.setFirstSubject(BeanTransform.copyProperties(firstSubjectBO, FirstSubject.class, true));
             category.setCode(code);
-            category.setFirstCode( category.getFirstSubject().getCode());
+            category.setFirstCode(category.getFirstSubject().getCode());
             category.setSecondCode(categoryTO.getSecondCode());
             category.setThirdCode(categoryTO.getThirdCode());
-            category.setSecondSubject( tranCategory.getSecondSubject());
-            category.setThirdSubject( tranCategory.getThirdSubject() );
-            category.setRemark( tranCategory.getRemark() );
+            category.setSecondSubject(tranCategory.getSecondSubject());
+            category.setThirdSubject(tranCategory.getThirdSubject());
+            category.setRemark(tranCategory.getRemark());
 
             category.setModifyTime(LocalDateTime.now());
             super.update(category);
@@ -584,10 +581,24 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
     public List<String> listAllThirdName() throws SerException {
         List<String> list = new ArrayList<>();
         CategoryDTO dto = new CategoryDTO();
-        String [] field = new String[]{"thirdSubject"};
+        String[] field = new String[]{"thirdSubject"};
         String sql = "select thirdSubject from financeinit_category ";
-        List<Category> categoryList = super.findBySql( sql,Category.class,field );
-        if ( categoryList != null && categoryList.size()>0 ){
+        List<Category> categoryList = super.findBySql(sql, Category.class, field);
+        if (categoryList != null && categoryList.size() > 0) {
+            list = categoryList.stream().map(Category::getThirdSubject).collect(Collectors.toList());
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> findByFirstName(String firstName) throws SerException {
+        List<String> list = new ArrayList<>();
+        String[] fields = new String[]{"thirdSubject"};
+        StringBuilder sql = new StringBuilder(" SELECT thirdSubject FROM financeinit_category a, ");
+        sql.append(" (select id from financeinit_firstsubject where name = '" + firstName + "') b ");
+        sql.append(" WHERE a.firstSubject_id = b.id; ");
+        List<Category> categoryList = super.findBySql(sql.toString(), Category.class, fields);
+        if (categoryList != null && categoryList.size() > 0) {
             list = categoryList.stream().map(Category::getThirdSubject).collect(Collectors.toList());
         }
         return list;

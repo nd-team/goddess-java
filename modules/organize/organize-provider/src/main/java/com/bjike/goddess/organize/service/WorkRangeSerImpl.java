@@ -306,7 +306,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                         for (WorkRange workRange : workRanges) {
                             if (workRange.getDirection().equals(str) && workRange.getProject().equals(project) && workRange.getClassify().equals(classify)) {
                                 WorkRangeListBO workRangeListBO = new WorkRangeListBO();
-                                workRangeListBO.setWorkRange(workRange.getWorkRange());
+                                workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
                                 workRangeListBO.setNode(workRange.getNode());
                                 workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
                                 workRangeListBO.setStatus(workRange.getStatus());
@@ -360,18 +360,31 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     public void flatAdd(WorkRangeFlatTO to) throws SerException {
         for (ProjectFlatTO projectFlatTO : to.getProjectFlatTOs()) {
             for (ClassifyFlatTO classifyFlatTO : projectFlatTO.getClassifyFlatTOs()) {
+                String wr = "";
+                String node = "";
                 for (WorkRangeListTO workRangeListTO : classifyFlatTO.getWorkRangeListTOs()) {
-                    WorkRange workRange = new WorkRange();
-                    workRange.setWorkRange(workRangeListTO.getWorkRange());
-                    workRange.setNode(workRangeListTO.getNode());
-                    workRange.setClassify(classifyFlatTO.getClassify());
-                    workRange.setProject(projectFlatTO.getProject());
-                    workRange.setDirection(to.getDirection());
-                    workRange.setCreateTime(LocalDateTime.now());
-                    workRange.setStatus(Status.THAW);
-
-                    super.save(workRange);
+                    if (StringUtils.isNotBlank(workRangeListTO.getWorkRange())) {
+                        wr = wr + workRangeListTO.getWorkRange() + ",";
+                    }
+                    if (StringUtils.isNotBlank(workRangeListTO.getNode())) {
+                        node = node + workRangeListTO.getNode() + ",";
+                    }
                 }
+                if (StringUtils.isNotBlank(wr)) {
+                    wr = wr.substring(0, wr.lastIndexOf(","));
+                }
+                if (StringUtils.isNotBlank(node)) {
+                    node = node.substring(0, node.lastIndexOf(","));
+                }
+                WorkRange workRange = new WorkRange();
+                workRange.setWorkRange(wr);
+                workRange.setNode(node);
+                workRange.setClassify(classifyFlatTO.getClassify());
+                workRange.setProject(projectFlatTO.getProject());
+                workRange.setDirection(to.getDirection());
+                workRange.setCreateTime(LocalDateTime.now());
+                workRange.setStatus(Status.THAW);
+                super.save(workRange);
             }
         }
     }
@@ -412,7 +425,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                         for (WorkRange workRange : workRanges) {
                             if (workRange.getDirection().equals(str) && workRange.getProject().equals(project) && workRange.getClassify().equals(classify)) {
                                 WorkRangeListBO workRangeListBO = new WorkRangeListBO();
-                                workRangeListBO.setWorkRange(workRange.getWorkRange());
+                                workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
                                 workRangeListBO.setNode(workRange.getNode());
                                 workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
                                 workRangeListBO.setStatus(workRange.getStatus());

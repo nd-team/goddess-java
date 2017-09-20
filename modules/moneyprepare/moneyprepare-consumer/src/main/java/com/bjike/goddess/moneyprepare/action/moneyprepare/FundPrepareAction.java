@@ -201,9 +201,9 @@ public class FundPrepareAction {
      * @version v1
      */
     @GetMapping("v1/findSecondSubject")
-    public Result findSecondSubject() throws ActException {
+    public Result findSecondSubject(String firstSubject) throws ActException {
         try {
-            List<String> list = fundPrepareAPI.findSecondSubject();
+            List<String> list = fundPrepareAPI.findSecondSubject(firstSubject);
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

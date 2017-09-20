@@ -160,4 +160,12 @@ public interface EntryRegisterAPI {
     default List<EntryRegister> list() throws SerException {
         return null;
     }
+
+    /**
+     * 根据员工的姓名获取员工性别
+     * zhuangkaiqin
+     */
+    default String getGender(String name) throws SerException {
+        return null;
+    }
 }
