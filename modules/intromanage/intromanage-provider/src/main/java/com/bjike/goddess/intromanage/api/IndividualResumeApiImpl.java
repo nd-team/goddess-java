@@ -1,5 +1,6 @@
 package com.bjike.goddess.intromanage.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.IndividualResumeBO;
@@ -11,6 +12,7 @@ import com.bjike.goddess.intromanage.service.IndividualResumeSer;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
 import com.bjike.goddess.intromanage.to.IndividualDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.IndividualResumeTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,9 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
      */
     @Override
     public Long count(IndividualResumeDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getName())) {
+            dto.getConditions().add(Restrict.eq("name", dto.getName()));
+        }
         return individualResumeSer.count(dto);
     }
 

@@ -33,37 +33,37 @@ public class ComputerSubsidies extends BaseEntity {
     /**
      * 项目组/部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组/部门'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组/部门'")
     private String department;
 
     /**
      * 姓名
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    @Column( nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
     private String name;
 
     /**
      * 入职日期
      */
-    @Column(name = "entryDate", nullable = false, columnDefinition = "DATE   COMMENT '入职日期'")
+    @Column( nullable = false, columnDefinition = "DATE   COMMENT '入职日期'")
     private String entryDate;
 
     /**
      * 是否领用电脑
      */
-    @Column(name = "is_necklineComputer", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否领用电脑'", insertable = false)
+    @Column(name = "is_necklineComputer", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否领用电脑'", insertable = false)
     private Boolean necklineComputer;
 
     /**
      * 使用情况
      */
-    @Column(name = "usage", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '使用情况'")
+    @Column(name = "usages",  columnDefinition = "TINYINT(2)   COMMENT '使用情况'")
     private Usage usage;
 
     /**
      * 电脑补助额
      */
-    @Column(name = "computerAmount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '电脑补助额'")
+    @Column(name = "computerAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '电脑补助额'")
     private Double computerAmount;
 
     /**
@@ -81,13 +81,13 @@ public class ComputerSubsidies extends BaseEntity {
     /**
      * 补助状态
      */
-    @Column(name = "staffStatus", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '补助状态'")
+    @Column(name = "subsidiesStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '补助状态'")
     private SubsidiesStatus subsidiesStatus;
 
     /**
      * 状态
      */
-    @Column(name = "staffStatus", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "staffStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '状态'")
     private StaffStatus staffStatus;
 
     public String getArea() {

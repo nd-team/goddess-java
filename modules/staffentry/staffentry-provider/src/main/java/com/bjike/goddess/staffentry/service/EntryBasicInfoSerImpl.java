@@ -1,16 +1,26 @@
 package com.bjike.goddess.staffentry.service;
 
+import com.bjike.goddess.assistance.api.ComputerSubsidiesAPI;
+import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
+import com.bjike.goddess.assistance.entity.ComputerSubsidies;
+import com.bjike.goddess.assistance.entity.SenioritySubsidies;
+import com.bjike.goddess.assistance.enums.SubsidiesStatus;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
+import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.FindNameBO;
@@ -59,7 +69,12 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     private UserAPI userAPI;
     @Autowired
     private MessageAPI messageAPI;
-
+    @Autowired
+    private SenioritySubsidiesAPI senioritySubsidiesAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ComputerSubsidiesAPI computerSubsidiesAPI;
 
     /**
      * 检测部门
@@ -158,7 +173,31 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         try {
             entryBasicInfo.setCreateTime(LocalDateTime.now());
             super.save(entryBasicInfo);
-            //添加转正人员信息lijuntao
+            //TODO 添加转正人员信息lijuntao
+
+            //添加公司补助中的工龄补助lijuntao
+            SenioritySubsidiesTO senioritySubsidiesTO = new SenioritySubsidiesTO();
+            senioritySubsidiesTO.setArea(entryBasicInfo.getArea());
+            senioritySubsidiesTO.setName(entryBasicInfo.getName());
+            senioritySubsidiesTO.setEmpNo(entryBasicInfo.getEmployeeID());
+            senioritySubsidiesTO.setDepartment(entryBasicInfo.getDepartment());
+            senioritySubsidiesTO.setJobs(entryBasicInfo.getPosition());
+            senioritySubsidiesTO.setEntryDate(entryBasicInfo.getEntryTime().toString());
+            senioritySubsidiesTO.setStartIssueDate(entryBasicInfo.getEntryTime().plusMonths(13).toString());
+            senioritySubsidiesTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+            StaffStatus status = positionDetailUserAPI.statusByName(entryBasicInfo.getName());
+            senioritySubsidiesTO.setStaffStatus(status);
+            senioritySubsidiesAPI.saveSen(senioritySubsidiesTO);
+            //添加电脑补助lijuntao
+            ComputerSubsidiesTO computerSubsidiesTO = new ComputerSubsidiesTO();
+            computerSubsidiesTO.setArea(entryBasicInfo.getArea());
+            computerSubsidiesTO.setDepartment(entryBasicInfo.getDepartment());
+            computerSubsidiesTO.setName(entryBasicInfo.getName());
+            computerSubsidiesTO.setEntryDate(entryBasicInfo.getEntryTime().toString());
+            computerSubsidiesTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+            StaffStatus status1 = positionDetailUserAPI.statusByName(entryBasicInfo.getName());
+            computerSubsidiesTO.setStaffStatus(status1);
+            computerSubsidiesAPI.saveComputer(computerSubsidiesTO);
 
         } catch (SerException e) {
             throw new SerException(e.getMessage());

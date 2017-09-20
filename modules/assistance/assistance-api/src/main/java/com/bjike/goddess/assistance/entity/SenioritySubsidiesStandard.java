@@ -23,7 +23,7 @@ public class SenioritySubsidiesStandard extends BaseEntity {
     /**
      * 年限
      */
-    @Column(name = "yearNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年限'")
+    @Column(name = "yearNum", nullable = false,unique = true, columnDefinition = "VARCHAR(255)   COMMENT '年限'")
     private String yearNum;
 
     /**

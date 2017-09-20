@@ -341,7 +341,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 //        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
         String token = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(token);
-            Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
+            Boolean moduleFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 

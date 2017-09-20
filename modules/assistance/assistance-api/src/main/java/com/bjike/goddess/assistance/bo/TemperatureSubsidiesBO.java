@@ -5,11 +5,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.organize.enums.StaffStatus;
 
 /**
- * 工龄补助标准业务传输对象
+ * 高温补助业务传输对象
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-09-16 02:38 ]
- * @Description: [ 工龄补助标准业务传输对象 ]
+ * @Description: [ 高温补助业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

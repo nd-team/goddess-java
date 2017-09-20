@@ -7,6 +7,7 @@ import com.bjike.goddess.organize.enums.StaffStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -56,24 +57,24 @@ public class SenioritySubsidies extends BaseEntity {
      * 入职时间
      */
     @Column(name = "entryDate", nullable = false, columnDefinition = "DATE   COMMENT '入职时间'")
-    private String entryDate;
+    private LocalDate entryDate;
 
     /**
      * 开始发放补助日期
      */
-    @Column(name = "startIssueDate", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '开始发放补助日期'")
-    private String startIssueDate;
+    @Column(name = "startIssueDate", nullable = false, columnDefinition = "DATE   COMMENT '开始发放补助日期'")
+    private LocalDate startIssueDate;
 
     /**
      * 本公司工龄（月）
      */
-    @Column(name = "companyLength", nullable = false, columnDefinition = "INT(2)   COMMENT '本公司工龄（月）'")
+    @Column(name = "companyLength",columnDefinition = "INT(2)   COMMENT '本公司工龄（月）'")
     private Integer companyLength;
 
     /**
      * 应获得补助
      */
-    @Column(name = "gainGrant", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '应获得补助'")
+    @Column(name = "gainGrant",  columnDefinition = "DECIMAL(10,2)   COMMENT '应获得补助'")
     private Double gainGrant;
 
     /**
@@ -128,19 +129,19 @@ public class SenioritySubsidies extends BaseEntity {
         this.jobs = jobs;
     }
 
-    public String getEntryDate() {
+    public LocalDate getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(String entryDate) {
+    public void setEntryDate(LocalDate entryDate) {
         this.entryDate = entryDate;
     }
 
-    public String getStartIssueDate() {
+    public LocalDate getStartIssueDate() {
         return startIssueDate;
     }
 
-    public void setStartIssueDate(String startIssueDate) {
+    public void setStartIssueDate(LocalDate startIssueDate) {
         this.startIssueDate = startIssueDate;
     }
 
