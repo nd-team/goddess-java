@@ -202,7 +202,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             int start = dto.getPage() - 1 * dto.getLimit();
             start = start > 0 ? start : 0;
             int limit = dto.getLimit();
-            cond = "limit " + start + "," + limit + "";
+            cond = "LIMIT " + start + "," + limit + "";
         }
         StringBuilder header = new StringBuilder(" SELECT ");
         for (int i = 0; i < fields.size(); i++) {
@@ -211,9 +211,9 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         }
         String tmp_header = header.toString().substring(0, header.toString().length() - 1);
         header = new StringBuilder(tmp_header);
-        header.append(" from(");
-        header.append("  select name  from task_field where tid='" + tableId + "' order by seq asc) a ");
-        header.append(" union all ");
+        header.append(" FROM (");
+        header.append("  SELECT name  FROM task_field WHERE tid='" + tableId + "' ORDER BY seq ASC) a ");
+        header.append(" UNION ALL ");
 
         StringBuilder sb = new StringBuilder(header.toString() + "SELECT * FROM( SELECT ");
         for (int i = 0; i < fields.size(); i++) {
