@@ -4,11 +4,11 @@ import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.organize.enums.StaffStatus;
 
 /**
- * 工龄补助标准表现层对象
+ * 高温补助表现层对象
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-09-16 02:38 ]
- * @Description: [ 工龄补助标准表现层对象 ]
+ * @Description: [ 高温补助表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

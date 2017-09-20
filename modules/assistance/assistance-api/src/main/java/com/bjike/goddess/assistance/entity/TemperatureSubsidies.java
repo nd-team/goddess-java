@@ -11,11 +11,11 @@ import java.time.LocalDate;
 
 
 /**
- * 工龄补助标准
+ * 高温补助
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-09-16 02:38 ]
- * @Description: [ 工龄补助标准 ]
+ * @Description: [ 高温补助 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

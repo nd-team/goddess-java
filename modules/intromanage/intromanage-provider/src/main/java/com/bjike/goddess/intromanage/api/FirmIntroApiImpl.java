@@ -1,5 +1,6 @@
 package com.bjike.goddess.intromanage.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.intromanage.bo.BussinesBO;
@@ -10,6 +11,7 @@ import com.bjike.goddess.intromanage.service.FirmIntroSer;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,9 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
      */
     @Override
     public Long count(FirmIntroDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getFirmName())) {
+            dto.getConditions().add(Restrict.eq("firmName", dto.getFirmName()));
+        }
         return firmIntroSer.count(dto);
     }
 
