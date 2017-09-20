@@ -34,6 +34,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -41,6 +42,7 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.enums.SexType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -86,6 +88,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
@@ -122,11 +126,13 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         UserDTO userDTO = new UserDTO();
         EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
         entryBasicInfoDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         String userToken = RpcTransmit.getUserToken();
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
 //        List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
         if (!CollectionUtils.isEmpty(userBOList)) {
             UserBO user = userBOList.get(0);
+            bo.setUsername(user.getUsername());
 //            UserBO user = userAPI.findByUsername(entity.getUsername());
             RpcTransmit.transmitUserToken(userToken);
             if (moduleAPI.isCheck("organize")) {
@@ -140,7 +146,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 //                        bo.setArea(user.get(0).getArea());
 //                        bo.setPosition(user.get(0).getPosition());
 //                        bo.setDepartment(user.get(0).getDepartment());
-                    List<PositionUserDetailBO> list=detailBO.getDetailS();
+                    List<PositionUserDetailBO> list = detailBO.getDetailS();
                     for (PositionUserDetailBO p : list) {
                         PositionDetailBO position = positionDetailAPI.findBOById(p.getPositionId());
 //                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
@@ -613,10 +619,15 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 if (null != userBO) {
                     bo.setHeadSculpture(userBO.getHeadSculpture());
                 }
-                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
-                if (null != userDetailBO) {
-                    bo.setSex(userDetailBO.getSex());
+//                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
+                if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    bo.setSex(SexType.MAN);
+                } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    bo.setSex(SexType.WOMAN);
+                } else {
+                    bo.setSex(SexType.NONE);
                 }
+
             }
             return mobileInternalContactsBOs;
         }
@@ -646,10 +657,14 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             if (null != userBO) {
                 mobileInternalContactsBO.setHeadSculpture(userBO.getHeadSculpture());
             }
-            UserDetailBO userDetailBO = userDetailAPI.findByUserId(mobileInternalContactsBO.getUserId());
-            if (null != userDetailBO) {
-                mobileInternalContactsBO.setSex(userDetailBO.getSex());
+            if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                mobileInternalContactsBO.setSex(SexType.MAN);
+            } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                mobileInternalContactsBO.setSex(SexType.WOMAN);
+            } else {
+                mobileInternalContactsBO.setSex(SexType.NONE);
             }
+            
             return mobileInternalContactsBO;
         }
         return null;

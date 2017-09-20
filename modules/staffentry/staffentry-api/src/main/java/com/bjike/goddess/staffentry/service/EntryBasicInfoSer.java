@@ -9,8 +9,6 @@ import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 import com.bjike.goddess.staffentry.to.EntryBasicInfoTO;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
-import com.bjike.goddess.staffentry.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -163,7 +161,6 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
 
 
     /**
-     *
      * @return class FindNameBO
      * @throws SerException
      */
@@ -192,4 +189,5 @@ public interface EntryBasicInfoSer extends Ser<EntryBasicInfo, EntryBasicInfoDTO
     default String getEntryTime(String userName) throws SerException {
         return null;
     }
+
 }

@@ -22,6 +22,7 @@ public class ModulesTO extends BaseTO {
     /**
      * 岗位明细id
      */
+//    @NotBlank(message = "岗位明细id不能为空", groups = { EDIT.class})
     private String workDetailsId;
 
     /**

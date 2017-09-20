@@ -1,7 +1,12 @@
 package com.bjike.goddess.projectroyalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectroyalty.bo.WeightalBO;
+import com.bjike.goddess.projectroyalty.dto.WeightalDTO;
+import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
 import com.bjike.goddess.projectroyalty.to.WeightalTO;
+
+import java.util.List;
 
 /**
  * 项目提成权重分配表业务接口
@@ -21,6 +26,65 @@ public interface WeightalAPI {
      * @throws SerException
      */
     default void save(WeightalTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 修改
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void update(WeightalTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void delete(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 根据id获取业务提成权重分配数据
+     */
+    default WeightalBO getById(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目提成权重分配表列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<WeightalBO> maps(WeightalDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目提成权重分配表总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal(WeightalDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 比例调整
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void adjust(WeightalAdjustTO to) throws SerException {
         return;
     }
 }

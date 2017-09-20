@@ -41,6 +41,7 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
     private UserAPI userAPI;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -199,6 +200,7 @@ public class EnclosureTypeSerImpl extends ServiceImpl<EnclosureType, EnclosureTy
                 EnclosureType entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setDescription(to.getDescription());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, EnclosureTypeBO.class);
             } catch (Exception e) {

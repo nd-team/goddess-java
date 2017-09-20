@@ -202,6 +202,7 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
                 ForeignStaffingSet entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setDescription(to.getDescription());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, ForeignStaffingSetBO.class);
             } catch (Exception e) {
@@ -271,7 +272,6 @@ public class ForeignStaffingSetSerImpl extends ServiceImpl<ForeignStaffingSet, F
     @Override
     public Long getTotal() throws SerException {
         ForeignStaffingSetDTO dto = new ForeignStaffingSetDTO();
-        return super.count(dto);
+        return count(dto);
     }
-
 }

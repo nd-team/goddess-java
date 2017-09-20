@@ -12,6 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.AngleBO;
 import com.bjike.goddess.organize.bo.DimensionBO;
+import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
 import com.bjike.goddess.organize.bo.InstructionClassifyBO;
 import com.bjike.goddess.organize.bo.ManagerBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
@@ -117,13 +118,13 @@ public class PositionWorkDetailsAction {
      * 列表
      *
      * @param dto 岗位工作明细数据传输
-     * @return class PositionWorkDetailsVO
+     * @return class PositionWorkDetailsBO
      * @version v1
      */
     @GetMapping("v1/maps")
-    public Result maps(PositionWorkDetailsDTO dto, HttpServletRequest request) throws ActException {
+    public Result maps(PositionWorkDetailsDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionWorkDetailsAPI.maps(dto), PositionWorkDetailsVO.class, request));
+            return ActResult.initialize(positionWorkDetailsAPI.maps(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
