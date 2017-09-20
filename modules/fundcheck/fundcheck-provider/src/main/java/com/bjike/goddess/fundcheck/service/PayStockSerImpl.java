@@ -22,6 +22,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 支付给股东业务实现
@@ -256,47 +256,43 @@ public class PayStockSerImpl extends ServiceImpl<PayStock, PayStockDTO> implemen
         return thirdSubject;
     }
     @Override
-    public List<PayStockBO> collect(PayStockCollectTO to) throws SerException {
-        List<PayStockBO> payStockBOList = new ArrayList<>();
-        PayStockDTO dto = new PayStockDTO();
+    public LinkedHashMap<String, String> collect(PayStockCollectTO to) throws SerException {
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            String[] condi = new String[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("date", condi));
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        String sql = "select stockName from fundcheck_paystock where " +
+                "date BETWEEN '" + startTime + "' and '" + endTime + "' GROUP BY stockName";
+        List<Object> titles = super.findBySql(sql);
+        for(Object o: titles){
+            if(NumberUtils.isCreatable(String.valueOf(o))){
+                throw new SerException("类型不能为数字");
+            }
         }
-        //获取所有股东名
-        List<String> stockNameList = new ArrayList<>();
-        dto.getSorts().add("stockName=asc");
-        String sql = "select stockName from  fundcheck_paystock where date between '" + startTime + "' and '" + endTime + "' group by stockName";
-        List<Object> objects = super.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-//            String[] names = objects.toArray(new String[objects.size()]);
-//            for(String n:names){
-//                stockNameList.add(n);
-//            }
-            stockNameList.addAll((List) objects);
+        String stockName =null;
+        if (null != titles && titles.size() > 0) {
+            StringBuilder sb = new StringBuilder("SELECT * from (SELECT");
+            for (Object o : titles) {
+                stockName = String.valueOf(o);
+                sb.append(" max(CASE WHEN stockName='" + stockName + "' THEN money  else NULL end )AS " + stockName + ",");
+            }
+            sb.append(" sum(money) as '合计' ");
+            sb.append(" FROM ");
+            sb.append(" (SELECT sum(money)as money,stockName  from fundcheck_paystock a  WHERE a.date BETWEEN ");
+            sb.append("  '" + startTime + "' AND '" + endTime + "' ");
+            sb.append("GROUP BY stockName) a)a where '"+stockName+"' IS NOT NULL");
+            sql = sb.toString();
+            titles.add("合计");
+            map.put("日期",startTime+"-"+endTime);
+            List<Object> values= super.findBySql(sql);
+            if (null != values && values.size() > 0) {
+                Object[] obj = (Object[]) values.get(0);
+                for(int i=0;i<obj.length;i++){
+                    map.put(String.valueOf(titles.get(i)),String.valueOf(obj[i]));
+                }
+            }
         }
-        //获取股东名对应的金额
-        List<Double> stockNameMoney = new ArrayList<>();
-        sql = "select money from  fundcheck_paystock where date between '" + startTime + "' and '" + endTime + "' group by money ";
-        List<Object> object = super.findBySql(sql);
-        if (null != object && object.size() > 0) {
-            stockNameMoney.addAll((List) object);
-        }
-        //获取金额的合计
-        String[] fields = new String[]{"money"};
-        sql = "select sum(money) AS money from  fundcheck_paystock where date between '" + startTime + "' and '" + endTime + "' ";
-        List<PayStockBO> payStockBOS = super.findBySql(sql, PayStockBO.class, fields);
-        Double money = payStockBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(PayStockBO::getMoney).sum();
+        return  map;
 
-        PayStockBO payStockBO = new PayStockBO();
-        payStockBO.setDate(startTime+"-"+endTime);
-        payStockBO.setStockNameList(stockNameList);
-        payStockBO.setStockNameMoney(stockNameMoney);
-        payStockBO.setMoney(money);
-        payStockBOList.add(payStockBO);
-        return payStockBOList;
     }
     @Override
     public PayStockBO importExcel(List<PayStockTO> payStockTOS) throws SerException {

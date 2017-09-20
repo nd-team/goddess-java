@@ -1,6 +1,5 @@
 package com.bjike.goddess.fundcheck.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -11,7 +10,6 @@ import com.bjike.goddess.fundcheck.bo.OtherSpendBO;
 import com.bjike.goddess.fundcheck.dto.OtherSpendDTO;
 import com.bjike.goddess.fundcheck.entity.OtherSpend;
 import com.bjike.goddess.fundcheck.enums.GuideAddrStatus;
-import com.bjike.goddess.fundcheck.excel.OtherIncomeTemplateExcel;
 import com.bjike.goddess.fundcheck.excel.OtherSpendTemplateExcel;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OtherSpendCollectTO;
@@ -19,7 +17,7 @@ import com.bjike.goddess.fundcheck.to.OtherSpendTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -27,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 其他支出业务实现
@@ -198,7 +195,7 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
     @Override
     public OtherSpendBO getOne(String id) throws SerException {
         OtherSpend otherSpend = super.findById(id);
-        return BeanTransform.copyProperties(otherSpend,OtherSpendBO.class);
+        return BeanTransform.copyProperties(otherSpend, OtherSpendBO.class);
     }
 
     @Override
@@ -206,7 +203,7 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
         checkSeeIdentity();
         otherSpendDTO.getSorts().add("createTime=desc");
         List<OtherSpend> otherSpends = super.findByPage(otherSpendDTO);
-        List<OtherSpendBO> otherSpendBOS = BeanTransform.copyProperties(otherSpends,OtherSpendBO.class);
+        List<OtherSpendBO> otherSpendBOS = BeanTransform.copyProperties(otherSpends, OtherSpendBO.class);
         return otherSpendBOS;
     }
 
@@ -214,10 +211,10 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
     @Override
     public OtherSpendBO insert(OtherSpendTO otherSpendTO) throws SerException {
         checkAddIdentity();
-        OtherSpend otherSpend = BeanTransform.copyProperties(otherSpendTO,OtherSpend.class,true);
+        OtherSpend otherSpend = BeanTransform.copyProperties(otherSpendTO, OtherSpend.class, true);
         otherSpend.setCreateTime(LocalDateTime.now());
         super.save(otherSpend);
-        return BeanTransform.copyProperties(otherSpend,OtherSpendBO.class);
+        return BeanTransform.copyProperties(otherSpend, OtherSpendBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -225,10 +222,10 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
     public OtherSpendBO edit(OtherSpendTO otherSpendTO) throws SerException {
         checkAddIdentity();
         OtherSpend otherSpend = super.findById(otherSpendTO.getId());
-        BeanTransform.copyProperties(otherSpendTO,otherSpend,true);
+        BeanTransform.copyProperties(otherSpendTO, otherSpend, true);
         otherSpend.setModifyTime(LocalDateTime.now());
         super.update(otherSpend);
-        return BeanTransform.copyProperties(otherSpend,OtherSpendBO.class);
+        return BeanTransform.copyProperties(otherSpend, OtherSpendBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -237,6 +234,7 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
         checkAddIdentity();
         super.remove(id);
     }
+
     @Override
     public List<String> listFirstSubject() throws SerException {
         List<String> firstSubject = voucherGenerateAPI.listFirstSubject();
@@ -254,45 +252,53 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
         List<String> thirdSubject = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
         return thirdSubject;
     }
+
     @Override
-    public List<OtherSpendBO> collect(OtherSpendCollectTO to) throws SerException {
-        List<OtherSpendBO> otherSpendBOList = new ArrayList<>();
-        OtherSpendDTO dto = new OtherSpendDTO();
+    public LinkedHashMap<String, String> collect(OtherSpendCollectTO to) throws SerException {
         String startTime = to.getStartTime();
         String endTime = to.getEndTime();
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            String[] condi = new String[]{startTime, endTime};
-            dto.getConditions().add(Restrict.between("date", condi));
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        String sql = "select type from fundcheck_otherspend where " +
+                "date BETWEEN '" + startTime + "' and '" + endTime + "' GROUP BY type";
+        List<Object> titles = super.findBySql(sql);
+        for (Object o : titles) {
+            if (NumberUtils.isCreatable(String.valueOf(o))) {
+                throw new SerException("类型不能为数字");
+            }
         }
-        //获取所有类型(科目)
-        List<String> typeList = new ArrayList<>();
-        dto.getSorts().add("type=desc");
-        String sql = "SELECT type FROM fundcheck_otherspend WHERE date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY type ";
-        List<Object> objects = super.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-            typeList.addAll((List) objects);
-        }
-        //获取所有类型(科目)对应的金额
-        List<Double> moneyList = new ArrayList<>();
-        sql = "SELECT money FROM fundcheck_otherspend WHERE date BETWEEN '"+startTime+"' AND '"+endTime+"' GROUP BY money;";
-        List<Object> objectList = super.findBySql(sql);
-        if(null != objectList && objectList.size() > 0){
-            moneyList.addAll((List) objectList);
-        }
-        //获取金额合计
-        String[] fields = new String[]{"money"};
-        sql = "select sum(money) AS money from  fundcheck_otherspend where date between '" + startTime + "' and '" + endTime + "' ";
-        List<OtherSpendBO> otherSpendBOS = super.findBySql(sql, OtherSpendBO.class, fields);
-        Double money = otherSpendBOS.stream().filter(str -> null != str.getMoney()).mapToDouble(OtherSpendBO::getMoney).sum();
+        String type = null;
+        if (null != titles && titles.size() > 0) {
+            StringBuilder sb = new StringBuilder("SELECT * from (SELECT");
+            for (Object o : titles) {
+                type = String.valueOf(o);
+                sb.append(" max(CASE WHEN type='" + type + "' THEN money  else NULL end )AS " + type + ",");
+            }
 
-        OtherSpendBO otherSpendBO = new OtherSpendBO();
-        otherSpendBO.setDate(startTime+"-"+endTime);
-        otherSpendBO.setTypeList(typeList);
-        otherSpendBO.setMoneyList(moneyList);
-        otherSpendBO.setMoney(money);
-        otherSpendBOList.add(otherSpendBO);
-        return otherSpendBOList;
+            sb.append(" sum(money) as '合计' ");
+            sb.append(" FROM ");
+            sb.append(" (SELECT sum(money)as money,type  from fundcheck_otherspend a  WHERE a.date BETWEEN ");
+            sb.append("  '" + startTime + "' AND '" + endTime + "' ");
+            sb.append("GROUP BY type) a)a where '" + type + "' IS NOT NULL");
+            sql = sb.toString();
+            titles.add("合计");
+            map.put("日期",startTime+"-"+endTime);
+            List<Object> values = super.findBySql(sql);
+            System.out.println(sql);
+            if (null != values && values.size() > 0) {
+                Object[] obj = (Object[]) values.get(0);
+                for (int i = 0; i < obj.length; i++) {
+                    map.put(String.valueOf(titles.get(i)), String.valueOf(obj[i]));
+                }
+            }
+        }
+        return map;
+
     }
+
+    public static void main(String[] args) {
+        System.out.println(NumberUtils.isCreatable("1"));
+    }
+
     @Override
     public OtherSpendBO importExcel(List<OtherSpendTO> otherSpendTOS) throws SerException {
         List<OtherSpend> otherSpends = BeanTransform.copyProperties(otherSpendTOS, OtherSpend.class, true);
@@ -301,6 +307,7 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
         OtherSpendBO bo = BeanTransform.copyProperties(new OtherSpend(), OtherSpendBO.class);
         return bo;
     }
+
     @Override
     public byte[] templateExport() throws SerException {
         List<OtherSpendTemplateExcel> templateExcels = new ArrayList<>();
@@ -311,8 +318,8 @@ public class OtherSpendSerImpl extends ServiceImpl<OtherSpend, OtherSpendDTO> im
         excel.setMoney(10.0d);
         templateExcels.add(excel);
 
-        Excel exce = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,exce);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels, exce);
         return bytes;
     }
 }

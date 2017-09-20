@@ -13,7 +13,9 @@ import com.bjike.goddess.fundcheck.to.PayStockTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 支付给股东业务接口实现
@@ -67,7 +69,7 @@ public class PayStockApiImpl implements PayStockAPI {
         payStockSer.remove(id);
     }
     @Override
-    public List<PayStockBO> collect(PayStockCollectTO to) throws SerException {
+    public LinkedHashMap<String, String> collect(PayStockCollectTO to) throws SerException {
         return payStockSer.collect(to);
     }
     @Override
