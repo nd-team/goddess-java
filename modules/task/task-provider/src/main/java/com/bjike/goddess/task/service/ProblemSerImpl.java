@@ -90,11 +90,11 @@ public class ProblemSerImpl extends ServiceImpl<Problem, ProblemDTO> implements 
     @Override
     public void add(ProblemTO to) throws SerException {
         String recorder = userAPI.currentUser().getId(); //录入人
-        String number = SeqUtil.genProblemNum(getMaxNum());
-        Problem problem = BeanTransform.copyProperties(to, Problem.class, true);
-        if (null == userAPI.findNameById(problem.getClaimer())) {
+        if (null == userAPI.findNameById(to.getClaimer())) {
             throw new SerException("无效问题提出人");
         }
+        Problem problem = BeanTransform.copyProperties(to, Problem.class, true);
+        String number = SeqUtil.genProblemNum(getMaxNum());
         problem.setRecorder(recorder);
         problem.setNumber(number);
         problem.setStatus(ProblemStatus.WAIT);

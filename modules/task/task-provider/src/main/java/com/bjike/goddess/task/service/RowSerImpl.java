@@ -61,7 +61,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
     @Override
     public Long count(RowDTO dto) throws SerException {
         StringBuilder sb = new StringBuilder();
-        String sql = "";
+        String sql;
         sb.append("SELECT COUNT(rid) AS num FROM (SELECT rid ");
         sb.append(" FROM ( ");
         sb.append("  SELECT b.* ");
@@ -80,7 +80,6 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
     @Transactional
     @Override
     public void add(Map<String, String> fieldValMap, String tableId, String node) throws SerException {
-
         List<Field> fields = fieldSer.list(tableId, node);  // 表列
         Row row = new Row();
         row.setTable(tableSer.findById(tableId));
@@ -116,7 +115,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
             Object o_file = inputStreams.get(1);
             InputStream is = new ByteArrayInputStream((byte[]) o_file);
-            XSSFWorkbook wb = null;
+            XSSFWorkbook wb  ;
             try {
                 wb = ExcelUtil.getWb(is);
             } catch (Exception e) {
@@ -145,7 +144,6 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                 } catch (Exception e) {
                     throw new SerException("获取excel内容错误");
                 }
-                System.out.println(fieldValMap);
                 this.add(fieldValMap, tableId, node);
             }
 
@@ -189,7 +187,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
     @Override
     public String findContent(String id) throws SerException {
-        String sql = "";
+        String sql ;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT v.val FROM task_grid g,task_row r,task_field f,task_val v ");
         sb.append(" WHERE r.id ='" + id + "' ");
