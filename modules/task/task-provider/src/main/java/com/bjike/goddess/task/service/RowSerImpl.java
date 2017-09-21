@@ -58,6 +58,25 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         return objects;
     }
 
+    @Override
+    public Long count(RowDTO dto) throws SerException {
+        StringBuilder sb = new StringBuilder();
+        String sql = "";
+        sb.append("SELECT COUNT(rid) AS num FROM (SELECT rid ");
+        sb.append(" FROM ( ");
+        sb.append("  SELECT b.* ");
+        sb.append(" FROM task_table a,task_field b ");
+        sb.append("  WHERE a.id='" + dto.getTableId() + "' AND a.id = b.tid AND b.node='" + dto.getNode() + "')a,( ");
+        sb.append(" SELECT a.fid,b.id AS rid ");
+        sb.append(" FROM task_grid a,task_row b ");
+        sb.append("  WHERE b.tid ='" + dto.getTableId() + "' AND a.rid=b.id ) b ");
+        sb.append("  WHERE a.id=b.fid ");
+        sb.append("  GROUP BY rid )a ");
+        sql = sb.toString();
+        String rs = String.valueOf(super.findBySql(sql).get(0));
+        return Long.parseLong(rs);
+    }
+
     @Transactional
     @Override
     public void add(Map<String, String> fieldValMap, String tableId, String node) throws SerException {
@@ -162,7 +181,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
     @Override
     public Integer getSeq(String tableId) throws SerException {
-        String sql = "SELECT IFNULL(MAX(seq),0) as seq FROM task_row WHERE tid = '%s' ";
+        String sql = "SELECT IFNULL(MAX(seq),0) AS seq FROM task_row WHERE tid = '%s' ";
         sql = String.format(sql, tableId);
         List<Object> objects = super.findBySql(sql);
         return Integer.parseInt(String.valueOf(objects.get(0)));
@@ -173,11 +192,11 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         String sql = "";
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT v.val FROM task_grid g,task_row r,task_field f,task_val v ");
-        sb.append("  WHERE r.id ='" + id + "' ");
-        sb.append("  AND v.id = g.vid ");
-        sb.append("  AND g.rid = r.id ");
-        sb.append("   AND g.fid = f.id ");
-        sb.append("  AND f.name = '任务内容' ");
+        sb.append(" WHERE r.id ='" + id + "' ");
+        sb.append(" AND v.id = g.vid ");
+        sb.append(" AND g.rid = r.id ");
+        sb.append(" AND g.fid = f.id ");
+        sb.append(" AND f.name = '任务内容' ");
         sql = sb.toString();
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() >= 0) {
@@ -212,7 +231,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         String tmp_header = header.toString().substring(0, header.toString().length() - 1);
         header = new StringBuilder(tmp_header);
         header.append(" FROM (");
-        header.append("  SELECT name  FROM task_field WHERE tid='" + tableId + "' ORDER BY seq ASC) a ");
+        header.append(" SELECT name  FROM task_field WHERE tid='" + tableId + "' ORDER BY seq ASC) a ");
         header.append(" UNION ALL ");
 
         StringBuilder sb = new StringBuilder(header.toString() + "SELECT * FROM( SELECT ");

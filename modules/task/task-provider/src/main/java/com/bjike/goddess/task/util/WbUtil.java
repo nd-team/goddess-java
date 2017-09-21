@@ -19,6 +19,12 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public class WbUtil {
+    /**
+     * 验证表头
+     * @param row
+     * @param fields
+     * @throws SerException
+     */
     public static void validate(XSSFRow row, List<Field> fields) throws SerException {
         int fieldCount = row.getLastCellNum();
         for (int i = 0; i < fieldCount; i++) {
@@ -30,6 +36,12 @@ public class WbUtil {
         }
     }
 
+    /**
+     * 创建表头
+     * @param wb
+     * @param sheet
+     * @param fields
+     */
     public static void initHeader(XSSFWorkbook wb, XSSFSheet sheet, List<Field> fields) {
         XSSFRow headerRow = sheet.createRow(0);
         headerRow.setHeight((short) 400);
@@ -44,6 +56,13 @@ public class WbUtil {
         }
     }
 
+    /**
+     * 创建内容行
+     * @param wb
+     * @param sheet
+     * @param fields
+     * @param beans
+     */
     public static void initRows(XSSFWorkbook wb, XSSFSheet sheet, List<Field> fields, List<CglibBean> beans) {
         int rowCount = 1;
         XSSFCellStyle contentStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());

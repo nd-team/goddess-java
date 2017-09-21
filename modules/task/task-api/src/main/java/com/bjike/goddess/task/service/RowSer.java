@@ -30,6 +30,7 @@ public interface RowSer extends Ser<Row, RowDTO> {
     default List<Object> list(RowDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 添加一行
      *

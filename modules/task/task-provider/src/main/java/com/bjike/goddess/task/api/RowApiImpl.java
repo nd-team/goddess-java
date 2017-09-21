@@ -45,6 +45,11 @@ public class RowApiImpl implements RowAPI {
     }
 
     @Override
+    public Long count(RowDTO dto) throws SerException {
+        return rowSer.count(dto);
+    }
+
+    @Override
     public void excelImport(List<InputStream> inputStreams, RowDTO dto) throws SerException {
         rowSer.excelImport(inputStreams, dto);
     }
