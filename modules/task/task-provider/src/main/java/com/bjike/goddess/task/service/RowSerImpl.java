@@ -228,10 +228,10 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         sb.append("  WHERE a.id='" + tableId + "' AND a.id = b.tid and b.node='" + dto.getNode() + "'");
         sb.append("  )a,( ");
         sb.append("   SELECT a.fid,b.id AS rid,c.val AS value  FROM task_grid a , ");
-        sb.append("    (SELECT * FROM task_row ORDER BY seq  " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
-        sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid ORDER BY seq ASC ");
+        sb.append("    (SELECT * FROM task_row " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
+        sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid  ");
         sb.append("     ) ");
-        sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq )b");
+        sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq ASC )b");
         return sb.toString();
     }
 
