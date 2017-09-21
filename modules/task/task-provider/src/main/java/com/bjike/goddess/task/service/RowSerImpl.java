@@ -267,14 +267,14 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                     valMap.put(field.getName(), Class.forName("java.lang.String"));
                 }
                 Object[] titles = null;
-                if (objects.get(0) instanceof String[]) {
+                if (objects.get(0) instanceof Object[]) {
                     titles = (Object[]) objects.get(0);
                 } else {//如果只有一列的情况
                     titles = new Object[]{objects.get(0)};
                 }
                 for (int i = 1; i < objects.size(); i++) {
                     Object[] values = null;
-                    if (objects.get(i) instanceof String[]) {
+                    if (objects.get(i) instanceof Object[]) {
                         values = (Object[]) objects.get(i);
                     } else {//如果只有一列的情况
                         values = new Object[]{objects.get(i)};
