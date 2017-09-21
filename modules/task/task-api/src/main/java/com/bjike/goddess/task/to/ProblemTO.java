@@ -3,8 +3,6 @@ package com.bjike.goddess.task.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.task.entity.ProblemType;
-import com.bjike.goddess.task.enums.ProblemStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
