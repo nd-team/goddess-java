@@ -37,7 +37,6 @@ public class PositionDetailAct {
     @Autowired
     private PositionDetailAPI positionDetailAPI;
 
-
     /**
      * 查询正常状态的岗位详细
      *

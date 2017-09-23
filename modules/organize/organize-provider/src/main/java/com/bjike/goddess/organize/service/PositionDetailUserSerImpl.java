@@ -288,6 +288,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 

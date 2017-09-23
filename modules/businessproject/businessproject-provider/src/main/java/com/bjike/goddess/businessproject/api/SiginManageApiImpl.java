@@ -108,4 +108,9 @@ public class SiginManageApiImpl implements SiginManageAPI {
     public SiginManageBO findByProject(String name) throws SerException {
         return siginManageSer.findByProject(name);
     }
+
+    @Override
+    public Boolean findCompleteStatus(String projectName) throws SerException {
+        return siginManageSer.findCompleteStatus(projectName);
+    }
 }

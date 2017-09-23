@@ -5,7 +5,6 @@ import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
-import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -163,6 +162,17 @@ public interface SiginManageAPI {
      * 根据内部项目名称查询数据
      */
     default SiginManageBO findByProject(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据项目名称获取是否完工
+     *
+     * @param projectName
+     * @return
+     * @throws SerException
+     */
+    default Boolean findCompleteStatus(String projectName) throws SerException {
         return null;
     }
 }

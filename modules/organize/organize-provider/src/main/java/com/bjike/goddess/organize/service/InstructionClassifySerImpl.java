@@ -60,6 +60,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
             throw new SerException("数据对象不能为空");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+
         super.update(entity);
         return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
     }

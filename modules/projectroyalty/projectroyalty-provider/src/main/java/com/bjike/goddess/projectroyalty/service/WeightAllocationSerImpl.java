@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.WeightAllocationBO;
 import com.bjike.goddess.projectroyalty.dto.WeightAllocationDTO;
 import com.bjike.goddess.projectroyalty.entity.*;

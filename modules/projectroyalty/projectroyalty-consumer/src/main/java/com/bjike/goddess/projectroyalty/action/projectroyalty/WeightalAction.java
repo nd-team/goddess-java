@@ -3,7 +3,6 @@ package com.bjike.goddess.projectroyalty.action.projectroyalty;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
-import com.bjike.goddess.businessproject.vo.SiginManageVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -14,6 +13,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.projectroyalty.api.WeightalAPI;
 import com.bjike.goddess.projectroyalty.dto.WeightalDTO;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
 import com.bjike.goddess.projectroyalty.to.WeightalTO;
 import com.bjike.goddess.projectroyalty.vo.WeightalVO;
@@ -37,15 +37,15 @@ import java.util.List;
 @RestController
 @RequestMapping("weightal")
 public class WeightalAction {
-    @Autowired
-    private WeightalAPI weightalAPI;
-    @Autowired
-    private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
-    private ModuleAPI moduleAPI;
-    @Autowired
-    private SiginManageAPI siginManageAPI;
-
+//    @Autowired
+//    private WeightalAPI weightalAPI;
+//    @Autowired
+//    private DepartmentDetailAPI departmentDetailAPI;
+//    @Autowired
+//    private ModuleAPI moduleAPI;
+//    @Autowired
+//    private SiginManageAPI siginManageAPI;
+//
 //    /**
 //     * 功能导航权限
 //     *
@@ -151,6 +151,22 @@ public class WeightalAction {
 //    }
 //
 //    /**
+//     * 项目提成权重分配合并列表
+//     *
+//     * @param dto 项目提成权重分配数据传输对象
+//     * @return class WeightalListBO
+//     * @version v1
+//     */
+//    @GetMapping("v1/list")
+//    public Result list(WeightalDTO dto) throws ActException {
+//        try {
+//            return ActResult.initialize(weightalAPI.list(dto));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
 //     * 项目提成权重分配表总条数
 //     *
 //     * @version v1
@@ -234,14 +250,26 @@ public class WeightalAction {
 //    }
 //
 //    /**
-//     * 根据内部项目名称获取数据
+//     * 根据内部项目名称获取地区部门立项时间是否立项
+//     *
+//     * @return class WeightalVO
+//     * @version v1
 //     */
 //    @GetMapping("v1/findByProject")
 //    public Result findByProject(String projectName) throws ActException {
 //        try {
 //            SiginManageBO siginManageBO = siginManageAPI.findByProject(projectName);
 //            if (null != siginManageBO) {
-//                return ActResult.initialize(BeanTransform.copyProperties(siginManageBO, SiginManageVO.class));
+//                WeightalVO weightalVO = new WeightalVO();
+//                weightalVO.setArea(siginManageBO.getArea());
+//                weightalVO.setDepartment(siginManageBO.getProjectGroup());
+//                weightalVO.setBuildTime(siginManageBO.getCreateTime());
+//                if ("已立项".equals(siginManageBO.getMakeProject())) {
+//                    weightalVO.setBuild(true);
+//                } else {
+//                    weightalVO.setBuild(false);
+//                }
+//                return ActResult.initialize(weightalVO);
 //            }
 //            return ActResult.initialize(null);
 //        } catch (SerException e) {
@@ -250,42 +278,30 @@ public class WeightalAction {
 //    }
 //
 //    /**
-//     * 根据内部项目名称获取利润额
-//     */
-//    @GetMapping("v1/findProfit")
-//    public Result findProfit(String projectName) throws ActException{
-//        try {
-//
-//        }catch (SerException e){
-//            throw new acte
-//        }
-//    }
-//
-//    /**
-//     * 项目提成权重分配表
+//     * 根据项目名称获取是否已完工
 //     *
 //     * @version v1
 //     */
-//    @GetMapping("v1/target/find")
-//    public Result findTargetOpinion() throws ActException {
+//    @GetMapping("v1/findCompleteStatus")
+//    public Result findCompleteStatus(String projectName) throws ActException {
 //        try {
-//            return ActResult.initialize(weightalAPI.findTargetOpinion());
+//            return ActResult.initialize(siginManageAPI.findCompleteStatus(projectName));
 //        } catch (SerException e) {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
 //
 //    /**
-//     * 项目提成实际权重分配
-//     *
-//     * @version v1
+//     * 获取方案
 //     */
-//    @GetMapping("v1/actual/find")
-//    public Result findActualOpinion() throws ActException {
+//    @GetMapping("v1/findProgram")
+//    public Result findProgram() throws ActException {
 //        try {
-//            return ActResult.initialize(weightalAPI.findActualOpinion());
+//            return ActResult.initialize(weightalAPI.findProgram());
 //        } catch (SerException e) {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
+
+
 }

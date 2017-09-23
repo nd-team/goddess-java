@@ -271,6 +271,7 @@ public class AnnualStandardSerImpl extends ServiceImpl<AnnualStandard, AnnualSta
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return BeanTransform.copyProperties(entity, AnnualStandardBO.class);
     }

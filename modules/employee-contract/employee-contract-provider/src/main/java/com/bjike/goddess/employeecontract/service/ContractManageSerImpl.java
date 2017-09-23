@@ -516,7 +516,11 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
             BeanTransform.copyProperties(to, entity, true);
             entity.setModifyTime(LocalDateTime.now());
             entity.setAddress(to.getAddress());
-            entity.setLeaveDate(DateUtil.parseDate(to.getLeaveDate()));
+            if (StringUtils.isNotBlank(to.getLeaveDate())) {
+                entity.setLeaveDate(DateUtil.parseDate(to.getLeaveDate()));
+            } else {
+                entity.setLeaveDate(null);
+            }
             super.update(entity);
             ContractManageBO bo = this.transformBO(entity);
             return BeanTransform.copyProperties(bo, ContractPersonalBO.class);

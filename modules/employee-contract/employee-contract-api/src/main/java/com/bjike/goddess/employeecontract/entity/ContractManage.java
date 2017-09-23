@@ -90,13 +90,13 @@ public class ContractManage extends BaseEntity {
     /**
      * 合同状态
      */
-    @Column(name = "is_status", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '合同状态'", insertable = false)
+    @Column(name = "is_status", columnDefinition = "TINYINT(1)  COMMENT '合同状态'")
     private Boolean status;
 
     /**
      * 性别
      */
-    @Column(name = "is_sex", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '性别'", insertable = false)
+    @Column(name = "is_sex", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '性别'")
     private Boolean sex;
 
     /**
@@ -150,7 +150,7 @@ public class ContractManage extends BaseEntity {
     /**
      * 是否离职
      */
-    @Column(name = "is_leave", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否离职'", insertable = false)
+    @Column(name = "is_leave", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否离职'")
     private Boolean leave;
 
     /**
@@ -399,4 +399,5 @@ public class ContractManage extends BaseEntity {
     public void setSituation(String situation) {
         this.situation = situation;
     }
+
 }
