@@ -114,4 +114,10 @@ public interface ComputerSubsidiesAPI {
     default void confirm(String id, Boolean confirm) throws SerException {
         return;
     }
+
+    /**
+     * 根据薪资开始时间和薪资结束时间来获取电脑补助
+     * jiangzaixuan
+     */
+    ComputerSubsidiesBO findByComputer(String payStartTime,String payEndTime) throws SerException;
 }
