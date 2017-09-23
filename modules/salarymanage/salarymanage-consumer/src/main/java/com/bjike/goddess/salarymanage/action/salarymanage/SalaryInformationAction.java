@@ -3,15 +3,13 @@ package com.bjike.goddess.salarymanage.action.salarymanage;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.vo.StaffRecordsVO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.bo.AgeAssistBO;
-import com.bjike.goddess.assistance.bo.ComputerAssistBO;
-import com.bjike.goddess.assistance.bo.HotAssistBO;
-import com.bjike.goddess.assistance.bo.HouseAssistBO;
-import com.bjike.goddess.assistance.entity.HouseAssist;
-import com.bjike.goddess.assistance.vo.AgeAssistVO;
-import com.bjike.goddess.assistance.vo.ComputerAssistVO;
-import com.bjike.goddess.assistance.vo.HotAssistVO;
-import com.bjike.goddess.assistance.vo.HouseAssistVO;
+
+import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
+import com.bjike.goddess.assistance.bo.SenioritySubsidiesBO;
+import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
+import com.bjike.goddess.assistance.vo.ComputerSubsidiesVO;
+import com.bjike.goddess.assistance.vo.SenioritySubsidiesVO;
+import com.bjike.goddess.assistance.vo.TemperatureSubsidiesVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -77,9 +75,6 @@ public class SalaryInformationAction extends BaseFileAction {
 
     @Autowired
     private FileAPI fileAPI;
-
-    @Autowired
-    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -464,18 +459,18 @@ public class SalaryInformationAction extends BaseFileAction {
 
 
     /**
-     * 根据计薪周期查询ｎ情况
+     * 根据计薪周期查询电脑补助情况
      *
      * @param dto 查询条件
-     * @return class ComputerAssistVO
+     * @return class ComputerSubsidiesVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/computer")
     public Result findComputer(SalaryInformationDTO dto) throws ActException {
         try {
-            ComputerAssistBO bo = salaryInformationAPI.findComputerAssist(dto);
-            ComputerAssistVO vo = BeanTransform.copyProperties(bo, ComputerAssistVO.class);
+            ComputerSubsidiesBO bo = salaryInformationAPI.findComputerAssist(dto);
+            ComputerSubsidiesVO vo = BeanTransform.copyProperties(bo, ComputerSubsidiesVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -486,53 +481,53 @@ public class SalaryInformationAction extends BaseFileAction {
      * 根据计薪周期查询高温补助情况
      *
      * @param dto 查询条件
-     * @return class HotAssistVO
+     * @return class TemperatureSubsidiesVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/hot")
     public Result findHot(SalaryInformationDTO dto) throws ActException {
         try {
-            HotAssistBO bo = salaryInformationAPI.findHotAssist(dto);
-            HotAssistVO vo = BeanTransform.copyProperties(bo, HotAssistVO.class);
+            TemperatureSubsidiesBO bo = salaryInformationAPI.findHotAssist(dto);
+            TemperatureSubsidiesVO vo = BeanTransform.copyProperties(bo, TemperatureSubsidiesVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 根据计薪周期查询住宿补助情况
-     *
-     * @param dto 查询条件
-     * @return class HouseAssistVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/find/house")
-    public Result findHouse(SalaryInformationDTO dto) throws ActException {
-        try {
-            HouseAssistBO bo = salaryInformationAPI.findHouseAssist(dto);
-            HouseAssistVO vo = BeanTransform.copyProperties(bo, HouseAssistVO.class);
-            return ActResult.initialize(vo);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 根据计薪周期查询住宿补助情况
+//     *
+//     * @param dto 查询条件
+//     * @return class HouseAssistVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/house")
+//    public Result findHouse(SalaryInformationDTO dto) throws ActException {
+//        try {
+//            HouseAssistBO bo = salaryInformationAPI.findHouseAssist(dto);
+//            HouseAssistVO vo = BeanTransform.copyProperties(bo, HouseAssistVO.class);
+//            return ActResult.initialize(vo);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 根据员工姓名工龄补助情况
      *
      * @param dto 查询条件
-     * @return class AgeAssistVO
+     * @return class SenioritySubsidiesVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/age")
     public Result findAge(SalaryInformationDTO dto) throws ActException {
         try {
-            AgeAssistBO bo = salaryInformationAPI.findAgeAssist(dto);
-            AgeAssistVO vo = BeanTransform.copyProperties(bo, AgeAssistVO.class);
+            SenioritySubsidiesBO bo = salaryInformationAPI.findAgeAssist(dto);
+            SenioritySubsidiesVO vo = BeanTransform.copyProperties(bo, SenioritySubsidiesVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
