@@ -16,6 +16,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
@@ -309,5 +310,17 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
         computerSubsidies.setConfirmDate(LocalDate.now());
         computerSubsidies.setCreateTime(LocalDateTime.now());
         super.update(computerSubsidies);
+    }
+
+    @Override
+    public ComputerSubsidiesBO findByComputer(String payStartTime, String payEndTime) throws SerException {
+        ComputerSubsidiesDTO dto = new ComputerSubsidiesDTO();
+        LocalDate startTime = DateUtil.parseDate(payStartTime);
+        LocalDate endTime = DateUtil.parseDate(payEndTime);
+        LocalDate[] time = new LocalDate[]{startTime,endTime};
+        dto.getConditions().add(Restrict.between("entryDate",time));
+        ComputerSubsidies computerSubsidies = super.findOne(dto);
+        ComputerSubsidiesBO computerSubsidiesBO = BeanTransform.copyProperties(computerSubsidies,ComputerSubsidiesBO.class,false);
+        return computerSubsidiesBO;
     }
 }

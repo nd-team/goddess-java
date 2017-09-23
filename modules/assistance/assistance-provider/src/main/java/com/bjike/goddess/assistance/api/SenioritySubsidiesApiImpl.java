@@ -68,4 +68,9 @@ public class SenioritySubsidiesApiImpl implements SenioritySubsidiesAPI {
     public void checkDate() throws SerException {
         senioritySubsidiesSer.checkDate();
     }
+
+    @Override
+    public SenioritySubsidiesBO findAge(String employeeName) throws SerException {
+        return senioritySubsidiesSer.findAge(employeeName);
+    }
 }

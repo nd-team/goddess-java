@@ -14,6 +14,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
@@ -378,5 +379,17 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         temperatureSubsidies.setConfirmDate(LocalDate.now());
         temperatureSubsidies.setCreateTime(LocalDateTime.now());
         super.update(temperatureSubsidies);
+    }
+
+    @Override
+    public TemperatureSubsidiesBO findTemperature(String paytStartTime, String payEndTime) throws SerException {
+        TemperatureSubsidiesDTO dto = new TemperatureSubsidiesDTO();
+        LocalDate startTime = DateUtil.parseDate(paytStartTime);
+        LocalDate endTime = DateUtil.parseDate(payEndTime);
+        LocalDate[] time = new LocalDate[]{startTime,endTime};
+        dto.getConditions().add(Restrict.between("entryDate",time));
+        TemperatureSubsidies temperatureSubsidies = super.findOne(dto);
+        TemperatureSubsidiesBO temperatureSubsidiesBO = BeanTransform.copyProperties(temperatureSubsidies,TemperatureSubsidiesBO.class,false);
+        return temperatureSubsidiesBO;
     }
 }
