@@ -30,5 +30,6 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:projectroyalty:projectroyalty-api")
     compile project(":common:common-utils")
+    compile project(":modules:businessproject:businessproject-api")
 }
 

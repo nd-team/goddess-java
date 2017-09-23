@@ -35,7 +35,7 @@ public class ProjectFactors extends BaseEntity {
     /**
      * 方案内容描述
      */
-    @Column(name = "description", nullable = false, columnDefinition = "TEST   COMMENT '方案内容描述'")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT   COMMENT '方案内容描述'")
     private String description;
 
     /**

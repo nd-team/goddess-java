@@ -29,9 +29,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -292,7 +294,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
             bo.setBusinessType(str.getBusinessType());
             bo.setBusinessCooperate(str.getBusinessCooperate());
             bo.setContractProperty(str.getContractProperty());
-            bo.setRemark( str.getRemark());
+            bo.setRemark(str.getRemark());
             siginManageBOS.add(bo);
         });
         return siginManageBOS;
@@ -528,12 +530,66 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
     @Override
     public SiginManageBO findByProject(String name) throws SerException {
-        SiginManageDTO dto = new SiginManageDTO();
-        dto.getConditions().add(Restrict.eq("innerProject", name));
-        List<SiginManage> siginManageList = super.findByCis(dto);
-        if (null != siginManageList && siginManageList.size() > 0) {
-            return BeanTransform.copyProperties(siginManageList.get(0), SiginManageBO.class, false);
+        if (StringUtils.isNotBlank(name)) {
+            SiginManageDTO dto = new SiginManageDTO();
+            dto.getConditions().add(Restrict.eq("innerProject", name));
+            List<SiginManage> siginManageList = super.findByCis(dto);
+            if (null != siginManageList && siginManageList.size() > 0) {
+                return BeanTransform.copyProperties(siginManageList.get(0), SiginManageBO.class, false);
+            }
         }
         return null;
+    }
+
+    @Override
+    public Boolean findCompleteStatus(String projectName) throws SerException {
+        if (StringUtils.isNotBlank(projectName)) {
+            SiginManageDTO dto = new SiginManageDTO();
+            dto.getConditions().add(Restrict.eq("innerProject", projectName));
+            List<SiginManage> siginManageList = super.findByCis(dto);
+            if (null != siginManageList && siginManageList.size() > 0) {
+                String time = DateUtil.dateToString(siginManageList.get(0).getEndProjectTime());
+                String localTime = DateUtil.dateToString(LocalDate.now());
+                //time<localTime,返回true
+                return isOrder(time, localTime);
+            }
+        }
+        return null;
+    }
+
+    private Boolean isOrder(String date1, String date2) throws SerException {
+        Boolean tar = false;
+        try {
+            //a1报名截止时间，b1,当前时间
+            Date a1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
+            Date b1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+            int result = a1.compareTo(b1);
+            if (result <= 0) {
+                //a1<a2
+                tar = true;
+            }
+            return tar;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    public static void main(String args[]) throws SerException {
+        Boolean tar = false;
+        String date1 = "2017-08-09";
+        String date2 = "2017-08-10";
+        try {
+            //a1报名截止时间，b1,当前时间
+            Date a1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
+            Date b1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+            int result = a1.compareTo(b1);
+            if (result <= 0) {
+                //能报名,a1<a2
+                tar = true;
+            }
+            System.out.println(tar);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
     }
 }

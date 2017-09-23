@@ -1,7 +1,7 @@
 package com.bjike.goddess.projectroyalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.RatioBO;
 import com.bjike.goddess.projectroyalty.dto.RatioDTO;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;

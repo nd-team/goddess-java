@@ -63,6 +63,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setDepartmentName(department.getDepartment());
         bo.setArrangementName(arrangement.getArrangement());
         bo.setDepartmentName(department.getDepartment());
+        bo.setHierarchyID(department.getHierarchyId());
         bo.setHierarchyName(department.getHierarchyName());
         bo.setArrangementId(arrangement.getId());
         if (null != moduleType) {

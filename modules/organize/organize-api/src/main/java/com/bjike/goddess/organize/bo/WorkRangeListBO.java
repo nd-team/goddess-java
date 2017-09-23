@@ -25,7 +25,7 @@ public class WorkRangeListBO extends BaseBO {
     /**
      * 工作界面(节点)
      */
-    private String node;
+    private String[] node;
 
     /**
      * 使用状态
@@ -45,11 +45,11 @@ public class WorkRangeListBO extends BaseBO {
         this.workRanges = workRanges;
     }
 
-    public String getNode() {
+    public String[] getNode() {
         return node;
     }
 
-    public void setNode(String node) {
+    public void setNode(String[] node) {
         this.node = node;
     }
 

@@ -307,7 +307,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                             if (workRange.getDirection().equals(str) && workRange.getProject().equals(project) && workRange.getClassify().equals(classify)) {
                                 WorkRangeListBO workRangeListBO = new WorkRangeListBO();
                                 workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
-                                workRangeListBO.setNode(workRange.getNode());
+                                workRangeListBO.setNode(workRange.getNode().split(","));
                                 workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
                                 workRangeListBO.setStatus(workRange.getStatus());
                                 workRangeListBOList.add(workRangeListBO);
@@ -426,7 +426,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                             if (workRange.getDirection().equals(str) && workRange.getProject().equals(project) && workRange.getClassify().equals(classify)) {
                                 WorkRangeListBO workRangeListBO = new WorkRangeListBO();
                                 workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
-                                workRangeListBO.setNode(workRange.getNode());
+                                workRangeListBO.setNode(workRange.getNode().split(","));
                                 workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
                                 workRangeListBO.setStatus(workRange.getStatus());
                                 workRangeListBOList.add(workRangeListBO);
