@@ -373,7 +373,7 @@ public class ExcelUtil {
      * @param fields
      * @return
      */
-    private static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
+    public static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
         List<ExcelHeader> excelHeaders = new ArrayList<>(0);// 获取类上的所有注解信息
         for (Field field : fields) {
             ExcelHeader eh = field.getAnnotation(ExcelHeader.class);
@@ -580,6 +580,7 @@ public class ExcelUtil {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
         if (color != IndexedColors.WHITE.getIndex()) {
             style.setFillForegroundColor(color);
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色
