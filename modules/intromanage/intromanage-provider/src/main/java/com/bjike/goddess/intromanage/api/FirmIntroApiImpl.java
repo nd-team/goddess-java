@@ -155,4 +155,14 @@ public class FirmIntroApiImpl implements FirmIntroAPI {
     public String getDate() throws SerException {
         return firmIntroSer.getDate();
     }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return firmIntroSer.exportExcel();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return firmIntroSer.templateExport();
+    }
 }

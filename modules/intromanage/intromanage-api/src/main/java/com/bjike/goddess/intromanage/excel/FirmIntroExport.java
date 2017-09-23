@@ -42,7 +42,7 @@ public class FirmIntroExport extends BaseBO {
      * 注册时间
      */
     @ExcelHeader(name = "注册时间", notNull = true)
-    private LocalDate registerDate;
+    private String registerDate;
 
     /**
      * 公司精神
@@ -126,40 +126,106 @@ public class FirmIntroExport extends BaseBO {
      * 更新（制作）时间
      */
     @ExcelHeader(name = "更新（制作）时间", notNull = true)
-    private LocalDate updateDate;
+    private String updateDate;
 
     /**
      * 战略定位
      */
     @ExcelHeader(name = "战略定位", notNull = true)
     private String positioning;
+    /**
+     * 各类证书
+     */
+    @ExcelHeader(name = "各类证书")
+    private String certificates;
 
     /**
-     * 状态
+     * 软件著作权
      */
-    @ExcelHeader(name = "状态", notNull = true)
-    private Status status;
+    @ExcelHeader(name = "软件著作权")
+    private String softwareCopyright;
+    /**
+     * 业务类型
+     */
+    @ExcelHeader(name="业务类型")
+    private String businessType;
 
     /**
-     * 荣誉与资质
+     * 项目科目
      */
-    private List<HonorAndQualityExport> honorAndQualityExportList;
+    @ExcelHeader(name="项目科目")
+    private String projectSubject;
+
     /**
-     * 主业介绍
+     * 通信类
      */
-    private List<MainBusinessIntroExport> mainBusinessIntroExportList;
+    @ExcelHeader(name="通信类")
+    private String communication;
+
     /**
-     * 成功案例
+     * 软件类
      */
-    private List<SuccessStoriesExport> successStoriesExportList;
+    @ExcelHeader(name="软件类")
+    private String software;
+
     /**
-     * 客户及合作伙伴
+     * 系统集成类
      */
-    private List<CustomerAndPartnerExport> customerAndPartnerExportList;
+    @ExcelHeader(name="系统集成类")
+    private String systemIntegration;
+
     /**
-     * 通讯途径
+     * 营销策划类
      */
-    private List<CommunicationPathExprot> communicationPathExprotList;
+    @ExcelHeader(name="营销策划类")
+    private String marketingPlanning;
+    /**
+     * 运营商
+     */
+    @ExcelHeader(name="运营商")
+    private String operators;
+
+    /**
+     * 厂家
+     */
+    @ExcelHeader(name="厂家")
+    private String manufacturer;
+
+    /**
+     * 各政府单位
+     */
+    @ExcelHeader(name="各政府单位")
+    private String governmentUnit;
+
+    /**
+     * 合作伙伴
+     */
+    @ExcelHeader(name="合作伙伴")
+    private String partner;
+
+    /**
+     * 总公司地址
+     */
+    @ExcelHeader(name="总公司地址")
+    private String headOfficeAddress;
+
+    /**
+     * 总公司联系方式
+     */
+    @ExcelHeader(name="总公司联系方式")
+    private String headOfficeContact;
+
+    /**
+     * 分公司地址
+     */
+    @ExcelHeader(name="分公司地址")
+    private String branchAddress;
+
+    /**
+     * 分公司联系方式
+     */
+    @ExcelHeader(name="分公司联系方式")
+    private String branchPhone;
 
 
     public String getFirmName() {
@@ -186,11 +252,11 @@ public class FirmIntroExport extends BaseBO {
         this.registerMoney = registerMoney;
     }
 
-    public LocalDate getRegisterDate() {
+    public String getRegisterDate() {
         return registerDate;
     }
 
-    public void setRegisterDate(LocalDate registerDate) {
+    public void setRegisterDate(String registerDate) {
         this.registerDate = registerDate;
     }
 
@@ -298,11 +364,11 @@ public class FirmIntroExport extends BaseBO {
         this.demandType = demandType;
     }
 
-    public LocalDate getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 
@@ -314,51 +380,132 @@ public class FirmIntroExport extends BaseBO {
         this.positioning = positioning;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getCertificates() {
+        return certificates;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setCertificates(String certificates) {
+        this.certificates = certificates;
     }
 
-    public List<HonorAndQualityExport> getHonorAndQualityExportList() {
-        return honorAndQualityExportList;
+    public String getSoftwareCopyright() {
+        return softwareCopyright;
     }
 
-    public void setHonorAndQualityExportList(List<HonorAndQualityExport> honorAndQualityExportList) {
-        this.honorAndQualityExportList = honorAndQualityExportList;
+    public void setSoftwareCopyright(String softwareCopyright) {
+        this.softwareCopyright = softwareCopyright;
     }
 
-    public List<MainBusinessIntroExport> getMainBusinessIntroExportList() {
-        return mainBusinessIntroExportList;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setMainBusinessIntroExportList(List<MainBusinessIntroExport> mainBusinessIntroExportList) {
-        this.mainBusinessIntroExportList = mainBusinessIntroExportList;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
-    public List<SuccessStoriesExport> getSuccessStoriesExportList() {
-        return successStoriesExportList;
+    public String getProjectSubject() {
+        return projectSubject;
     }
 
-    public void setSuccessStoriesExportList(List<SuccessStoriesExport> successStoriesExportList) {
-        this.successStoriesExportList = successStoriesExportList;
+    public void setProjectSubject(String projectSubject) {
+        this.projectSubject = projectSubject;
     }
 
-    public List<CustomerAndPartnerExport> getCustomerAndPartnerExportList() {
-        return customerAndPartnerExportList;
+    public String getCommunication() {
+        return communication;
     }
 
-    public void setCustomerAndPartnerExportList(List<CustomerAndPartnerExport> customerAndPartnerExportList) {
-        this.customerAndPartnerExportList = customerAndPartnerExportList;
+    public void setCommunication(String communication) {
+        this.communication = communication;
     }
 
-    public List<CommunicationPathExprot> getCommunicationPathExprotList() {
-        return communicationPathExprotList;
+    public String getSoftware() {
+        return software;
     }
 
-    public void setCommunicationPathExprotList(List<CommunicationPathExprot> communicationPathExprotList) {
-        this.communicationPathExprotList = communicationPathExprotList;
+    public void setSoftware(String software) {
+        this.software = software;
     }
+
+    public String getSystemIntegration() {
+        return systemIntegration;
+    }
+
+    public void setSystemIntegration(String systemIntegration) {
+        this.systemIntegration = systemIntegration;
+    }
+
+    public String getMarketingPlanning() {
+        return marketingPlanning;
+    }
+
+    public void setMarketingPlanning(String marketingPlanning) {
+        this.marketingPlanning = marketingPlanning;
+    }
+
+    public String getOperators() {
+        return operators;
+    }
+
+    public void setOperators(String operators) {
+        this.operators = operators;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getGovernmentUnit() {
+        return governmentUnit;
+    }
+
+    public void setGovernmentUnit(String governmentUnit) {
+        this.governmentUnit = governmentUnit;
+    }
+
+    public String getPartner() {
+        return partner;
+    }
+
+    public void setPartner(String partner) {
+        this.partner = partner;
+    }
+
+    public String getHeadOfficeAddress() {
+        return headOfficeAddress;
+    }
+
+    public void setHeadOfficeAddress(String headOfficeAddress) {
+        this.headOfficeAddress = headOfficeAddress;
+    }
+
+    public String getHeadOfficeContact() {
+        return headOfficeContact;
+    }
+
+    public void setHeadOfficeContact(String headOfficeContact) {
+        this.headOfficeContact = headOfficeContact;
+    }
+
+    public String getBranchAddress() {
+        return branchAddress;
+    }
+
+    public void setBranchAddress(String branchAddress) {
+        this.branchAddress = branchAddress;
+    }
+
+    public String getBranchPhone() {
+        return branchPhone;
+    }
+
+    public void setBranchPhone(String branchPhone) {
+        this.branchPhone = branchPhone;
+    }
+
 }
