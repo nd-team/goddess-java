@@ -1,31 +1,33 @@
 package com.bjike.goddess.task.enums;
 
 /**
- * 汇总类型
+ * 通知类型
  *
  * @Author: [liguiqin]
- * @Date: [2017-09-22 14:56]
+ * @Date: [2017-09-25 16:51]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public enum CollectType {
-
+public enum NoticeType {
     /**
-     * 数量
+     * 个人
      */
-    COUNT(1),
+    PERSON(0),
     /**
-     * 明细
+     * 部门
      */
-    DETAIL(2);
-
-
-    CollectType(int code) {
-        this.code = code;
-    }
+    DEPT(1),
+    /**
+     * 所有
+     */
+    ALL(2);
 
     private int code;
+
+    NoticeType(int code) {
+        this.code = code;
+    }
 
     public int getCode() {
         return code;

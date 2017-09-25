@@ -1,31 +1,31 @@
 package com.bjike.goddess.task.enums;
 
 /**
- * 汇总类型
- *
  * @Author: [liguiqin]
- * @Date: [2017-09-22 14:56]
+ * @Date: [2017-09-25 16:18]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public enum CollectType {
-
+public enum TimeType {
     /**
-     * 数量
+     * 秒
      */
-    COUNT(1),
+    SECOND(0),
     /**
-     * 明细
+     * 分钟
      */
-    DETAIL(2);
+    MINUTE(1),
+    /**
+     * 小时
+     */
+    HOUR(2),;
 
+    int code;
 
-    CollectType(int code) {
+    TimeType(int code) {
         this.code = code;
     }
-
-    private int code;
 
     public int getCode() {
         return code;

@@ -1,27 +1,28 @@
 package com.bjike.goddess.task.enums;
 
-/**
- * 汇总类型
- *
+/**汇总类型
  * @Author: [liguiqin]
- * @Date: [2017-09-22 14:56]
+ * @Date: [2017-09-25 16:01]
  * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public enum CollectType {
-
+public enum SummaryType {
     /**
-     * 数量
+     * 个人汇总
      */
-    COUNT(1),
+    PERSON(0),
     /**
-     * 明细
+     * 部门汇总
      */
-    DETAIL(2);
+    DEPT(1),
+    /**
+     * 整体汇总
+     */
+    ALL(2);
 
 
-    CollectType(int code) {
+    SummaryType(int code) {
         this.code = code;
     }
 
@@ -35,3 +36,4 @@ public enum CollectType {
         this.code = code;
     }
 }
+
