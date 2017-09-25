@@ -214,25 +214,20 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     }
 
     private String[] mEmails() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         Set<String> set = new HashSet<>();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO positionDetailBO : list1) {
-                if ("总经理".equals(positionDetailBO.getPosition())) {
-                    if (moduleAPI.isCheck("organize")) {
-                        RpcTransmit.transmitUserToken(token);
-                        List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                        for (UserBO userBO : users) {
-                            if (moduleAPI.isCheck("contacts")) {
-                                RpcTransmit.transmitUserToken(token);
-                                String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                                if (mail != null) {
-                                    set.add(mail);
-                                }
-                            }
-                        }
+            PositionDetailBO p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).findFirst().get();
+            RpcTransmit.transmitUserToken(token);
+            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+            for (UserBO userBO : users) {
+                if (moduleAPI.isCheck("contacts")) {
+                    RpcTransmit.transmitUserToken(token);
+                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                    if (mail != null) {
+                        set.add(mail);
                     }
                 }
             }
@@ -244,19 +239,16 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
 
     private String[] zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            for (DepartmentDetailBO departmentDetailBO : list) {
-                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                    if (moduleAPI.isCheck("contacts")) {
-                        RpcTransmit.transmitUserToken(token);
-                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                        if (commonality != null&&commonality.getEmail()!=null) {
-                            set.add(commonality.getEmail());
-                        }
-                    }
+            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            if (moduleAPI.isCheck("contacts")) {
+                RpcTransmit.transmitUserToken(token);
+                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
+                if (commonality != null && commonality.getEmail() != null) {
+                    set.add(commonality.getEmail());
                 }
             }
         }
@@ -291,8 +283,9 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
         MessageTO messageTO = new MessageTO();
         messageTO.setTitle("社保增员参考信息");
         messageTO.setContent(html(beforeAddBO));
-        messageTO.setReceivers(mEmails());
-        if (mEmails() != null && mEmails().length > 0) {
+        String[] strings = mEmails();
+        if (strings != null && strings.length > 0) {
+            messageTO.setReceivers(strings);
             messageAPI.send(messageTO);
         }
         return beforeAddBO;
@@ -357,7 +350,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     @Override
     public void add(AddEmployeeDTO dto, String id) throws SerException {
         checkAddIdentity();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         BeforeAdd entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -415,7 +408,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     @Override
     //每12小时执行一次
     public void send() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("regularization")) {
             RpcTransmit.transmitUserToken(token);
             List<RegularizationBO> boList = regularizationAPI.list(new RegularizationDTO());
@@ -450,24 +443,21 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
     }
 
     private String[] flEmails() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         Set<String> set = new HashSet<>();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO positionDetailBO : list1) {
-                if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
-                    if (moduleAPI.isCheck("organize")) {
+            PositionDetailBO p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).findFirst().get();
+            if (moduleAPI.isCheck("organize")) {
+                RpcTransmit.transmitUserToken(token);
+                List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+                for (UserBO userBO : users) {
+                    if (moduleAPI.isCheck("contacts")) {
                         RpcTransmit.transmitUserToken(token);
-                        List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                        for (UserBO userBO : users) {
-                            if (moduleAPI.isCheck("contacts")) {
-                                RpcTransmit.transmitUserToken(token);
-                                String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                                if (mail != null) {
-                                    set.add(mail);
-                                }
-                            }
+                        String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                        if (mail != null) {
+                            set.add(mail);
                         }
                     }
                 }

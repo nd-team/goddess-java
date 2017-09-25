@@ -298,22 +298,19 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
 
     private String[] flEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO positionDetailBO : list1) {
-                if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
+            PositionDetailBO p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).findFirst().get();
+            RpcTransmit.transmitUserToken(token);
+            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+            for (UserBO userBO : users) {
+                if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
-                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                    for (UserBO userBO : users) {
-                        if (moduleAPI.isCheck("contacts")) {
-                            RpcTransmit.transmitUserToken(token);
-                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                            if (mail != null) {
-                                set.add(mail);
-                            }
-                        }
+                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                    if (mail != null) {
+                        set.add(mail);
                     }
                 }
             }

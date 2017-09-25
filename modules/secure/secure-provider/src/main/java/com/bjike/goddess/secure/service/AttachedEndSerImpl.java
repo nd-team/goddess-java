@@ -318,7 +318,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    //定时发送，每12小时执行一次
+    //定时发送，每天12点执行
     public void send() throws SerException {
         List<AttachedBO> boList = attachedSer.findALL();
         LocalDate now = LocalDate.now();

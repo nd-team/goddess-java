@@ -222,19 +222,16 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            for (DepartmentDetailBO departmentDetailBO : list) {
-                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                    if (moduleAPI.isCheck("contacts")) {
-                        RpcTransmit.transmitUserToken(token);
-                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                        if (commonality != null && commonality.getEmail() != null) {
-                            set.add(commonality.getEmail());
-                        }
-                    }
+            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            if (moduleAPI.isCheck("contacts")) {
+                RpcTransmit.transmitUserToken(token);
+                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
+                if (commonality != null && commonality.getEmail() != null) {
+                    set.add(commonality.getEmail());
                 }
             }
         }
@@ -245,22 +242,20 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            for (DepartmentDetailBO departmentDetailBO : list) {
-                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                    if (moduleAPI.isCheck("contacts")) {
-                        RpcTransmit.transmitUserToken(token);
-                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                        if (commonality != null && commonality.getEmail() != null) {
-                            set.add(commonality.getEmail());
-                        }
-                    }
+            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            if (moduleAPI.isCheck("contacts")) {
+                RpcTransmit.transmitUserToken(token);
+                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
+                if (commonality != null && commonality.getEmail() != null) {
+                    set.add(commonality.getEmail());
                 }
             }
         }
+
         String[] mails = new String[set.size()];
         mails = set.toArray(mails);
         return mails;
@@ -268,22 +263,19 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO positionDetailBO : list1) {
-                if ("总经理".equals(positionDetailBO.getPosition())) {
+            PositionDetailBO p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).findFirst().get();
+            RpcTransmit.transmitUserToken(token);
+            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+            for (UserBO userBO : users) {
+                if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
-                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                    for (UserBO userBO : users) {
-                        if (moduleAPI.isCheck("contacts")) {
-                            RpcTransmit.transmitUserToken(token);
-                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                            if (mail != null) {
-                                set.add(mail);
-                            }
-                        }
+                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                    if (mail != null) {
+                        set.add(mail);
                     }
                 }
             }
@@ -303,8 +295,9 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         MessageTO messageTO = new MessageTO();
         messageTO.setTitle("社保挂靠信息");
         messageTO.setContent(html(attachedBO));
-        messageTO.setReceivers(mEmails());
-        if (mEmails() != null && mEmails().length > 0) {
+        String[] strings=mEmails();
+        if (strings != null && strings.length > 0) {
+            messageTO.setReceivers(strings);
             messageAPI.send(messageTO);
         }
         return attachedBO;
@@ -384,7 +377,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (send) {
             String[] users = dto.getUsers();
             if (users != null) {
-                String token=RpcTransmit.getUserToken();
+                String token = RpcTransmit.getUserToken();
                 if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
                     List<String> mails = internalContactsAPI.getEmails(users);
@@ -420,7 +413,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (send) {
             String[] users = dto.getUsers();
             if (users != null) {
-                String token=RpcTransmit.getUserToken();
+                String token = RpcTransmit.getUserToken();
                 if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
                     List<String> mails = internalContactsAPI.getEmails(users);
@@ -466,12 +459,14 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         MessageTO messageTO = new MessageTO();
         messageTO.setContent(html(attachedBO));
         messageTO.setTitle("以下是社保挂靠基本信息，请给予意见");
-        messageTO.setReceivers(yyEmails());
-        if (yyEmails() != null && yyEmails().length > 0) {
+        String[] strings=yyEmails();
+        if (strings != null && strings.length > 0) {
+            messageTO.setReceivers(strings);
             messageAPI.send(messageTO);
         }
-        messageTO.setReceivers(mEmails());
-        if (mEmails() != null && mEmails().length > 0) {
+        String[] strings1=mEmails();
+        if (strings1 != null && strings1.length > 0) {
+            messageTO.setReceivers(strings1);
             messageAPI.send(messageTO);
         }
         AddEmployeeTO addEmployeeTO = new AddEmployeeTO();
@@ -529,9 +524,9 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     @Override
     public AttachedBO findAttached(String name) throws SerException {
         AttachedDTO dto = new AttachedDTO();
-        dto.getConditions().add(Restrict.eq("attachedName",name));
+        dto.getConditions().add(Restrict.eq("attachedName", name));
         Attached attached = super.findOne(dto);
-        AttachedBO bo = BeanTransform.copyProperties(attached,AttachedBO.class,false);
+        AttachedBO bo = BeanTransform.copyProperties(attached, AttachedBO.class, false);
         return bo;
     }
 }

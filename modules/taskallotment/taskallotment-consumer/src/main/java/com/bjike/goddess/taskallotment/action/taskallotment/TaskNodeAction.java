@@ -131,7 +131,7 @@ public class TaskNodeAction {
      * @version v1
      */
     @PostMapping("v1/addTask")
-    public Result addTask(@Validated(EDIT.class) TaskNodeTO to, BindingResult result) throws ActException {
+    public Result addTask(TaskNodeTO to, BindingResult result) throws ActException {
         try {
             taskNodeAPI.addTask(to);
             return new ActResult("添加小任务成功");
@@ -180,7 +180,7 @@ public class TaskNodeAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/checkTime")
+    @PutMapping("v1/checkTime")
     public Result checkTime(TaskNodeTO to) throws ActException {
         try {
             return ActResult.initialize(taskNodeAPI.checkTime(to));

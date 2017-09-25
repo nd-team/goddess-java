@@ -297,6 +297,11 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     bo.setNum(num);
                     num++;
                     boList.add(bo);
+                }else {
+                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
+                    bo.setNum(num);
+                    num++;
+                    boList.add(bo);
                 }
             }
             ProfitBO lastBO = new ProfitBO();
