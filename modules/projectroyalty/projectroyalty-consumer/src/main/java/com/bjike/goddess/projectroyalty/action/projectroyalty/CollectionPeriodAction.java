@@ -9,13 +9,13 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.projectroyalty.api.CollectionPeriodAPI;
 import com.bjike.goddess.projectroyalty.dto.CollectionPeriodDTO;
 import com.bjike.goddess.projectroyalty.excel.SonPermissionObject;
 import com.bjike.goddess.projectroyalty.to.CollectionPeriodTO;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.vo.CollectionPeriodVO;
-import com.bjike.goddess.projectroyalty.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -188,7 +188,8 @@ public class CollectionPeriodAction {
     @GetMapping("v1/findOpinion")
     public Result findOpinion() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(collectionPeriodAPI.findOpinion(), OpinionVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(collectionPeriodAPI.findOpinion(),
+                    OpinionVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

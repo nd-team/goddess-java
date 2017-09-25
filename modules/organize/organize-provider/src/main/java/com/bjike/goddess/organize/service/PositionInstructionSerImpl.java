@@ -62,7 +62,9 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setPositionNumber(detailBO.getShowNumber());
         bo.setArrangement(detailBO.getArrangementName());
         bo.setHierarchy(detailBO.getHierarchyName());
+        bo.setHierarchyID(detailBO.getHierarchyID());
         bo.setDepartment(detailBO.getDepartmentName());
+        bo.setDepartmentId(detailBO.getDepartmentId());
         bo.setPool(detailBO.getPool());
         bo.setStaff(detailBO.getStaff());
         bo.setParent("");
@@ -75,12 +77,16 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setAngleName(entity.getAngle().getName());
         bo.setDimensionId(entity.getDimension().getId());
         bo.setDimensionName(entity.getDimension().getName());
-        if (null != entity.getReflect().getClassify())
+        if (null != entity.getReflect().getClassify()) {
             bo.setClassifyName(entity.getReflect().getClassify().getName());
+            bo.setClassifyId(entity.getReflect().getClassify().getId());
+        }
         bo.setOperateIds(entity.getOperates().stream().map(Operate::getId).collect(Collectors.toList()).toArray(new String[0]));
         bo.setOperateNames("");
-        for (Operate operate : entity.getOperates())
+        for (Operate operate : entity.getOperates()) {
             bo.setOperateNames(bo.getOperateNames() + operate.getName() + ",");
+            bo.setOperateIds(bo.getOperateIds());
+        }
         bo.setReflectId(entity.getReflect().getId());
         bo.setReflectNames(entity.getReflect().getName());
         return bo;
@@ -157,6 +163,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
             throw new SerException("数据对象不能为空");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setOutcome(to.getOutcome());
         super.update(this.setForeign(entity, to));
         return this.transformToBO(entity);
     }

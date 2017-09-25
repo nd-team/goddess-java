@@ -3,8 +3,10 @@ package com.bjike.goddess.projectroyalty.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectroyalty.bo.WeightalBO;
+import com.bjike.goddess.projectroyalty.bo.WeightalListBO;
 import com.bjike.goddess.projectroyalty.dto.WeightalDTO;
 import com.bjike.goddess.projectroyalty.entity.Weightal;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
 import com.bjike.goddess.projectroyalty.to.WeightalTO;
 
@@ -88,5 +90,40 @@ public interface WeightalSer extends Ser<Weightal, WeightalDTO> {
      */
     default void adjust(WeightalAdjustTO to) throws SerException {
         return;
+    }
+
+    /**
+     * 获取方案
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProgram() throws SerException {
+        return null;
+    }
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目提成权重分配合并列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<WeightalListBO> list(WeightalDTO dto) throws SerException {
+        return null;
     }
 }

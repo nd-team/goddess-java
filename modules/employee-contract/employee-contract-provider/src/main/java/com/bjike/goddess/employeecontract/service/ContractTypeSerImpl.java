@@ -320,6 +320,7 @@ public class ContractTypeSerImpl extends ServiceImpl<ContractType, ContractTypeD
             ContractType entity = super.findById(to.getId());
             BeanTransform.copyProperties(to, entity, true);
             entity.setModifyTime(LocalDateTime.now());
+            entity.setDescription(to.getDescription());
             super.update(entity);
             return BeanTransform.copyProperties(entity, ContractTypeBO.class);
         } catch (SerException e) {

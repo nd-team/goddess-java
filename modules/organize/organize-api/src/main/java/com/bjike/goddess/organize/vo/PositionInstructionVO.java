@@ -46,6 +46,16 @@ public class PositionInstructionVO {
     private String hierarchy;
 
     /**
+     * 所属体系id
+     */
+    private String hierarchyID;
+
+    /**
+     * 所属部门id
+     */
+    private String departmentId;
+
+    /**
      * 所属部门
      */
     private String department;
@@ -89,6 +99,11 @@ public class PositionInstructionVO {
      * 维度
      */
     private String dimensionName;
+
+    /**
+     * 分类id
+     */
+    private String classifyId;
 
     /**
      * 分类
@@ -365,5 +380,29 @@ public class PositionInstructionVO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getHierarchyID() {
+        return hierarchyID;
+    }
+
+    public void setHierarchyID(String hierarchyID) {
+        this.hierarchyID = hierarchyID;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getClassifyId() {
+        return classifyId;
+    }
+
+    public void setClassifyId(String classifyId) {
+        this.classifyId = classifyId;
     }
 }

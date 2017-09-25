@@ -2,8 +2,10 @@ package com.bjike.goddess.projectroyalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectroyalty.bo.WeightalBO;
+import com.bjike.goddess.projectroyalty.bo.WeightalListBO;
 import com.bjike.goddess.projectroyalty.dto.WeightalDTO;
 import com.bjike.goddess.projectroyalty.service.WeightalSer;
+import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
 import com.bjike.goddess.projectroyalty.to.WeightalTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +60,25 @@ public class WeightalApiImpl implements WeightalAPI {
     @Override
     public void adjust(WeightalAdjustTO to) throws SerException {
         weightalSer.adjust(to);
+    }
+
+    @Override
+    public List<String> findProgram() throws SerException {
+        return weightalSer.findProgram();
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return weightalSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return weightalSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<WeightalListBO> list(WeightalDTO dto) throws SerException {
+        return weightalSer.list(dto);
     }
 }

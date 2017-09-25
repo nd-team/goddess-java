@@ -6,25 +6,34 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
 import com.bjike.goddess.intromanage.excel.FirmIntroExport;
-import com.bjike.goddess.intromanage.excel.HonorAndQualityExport;
 import com.bjike.goddess.intromanage.to.*;
+import com.bjike.goddess.intromanage.type.DemandType;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -837,47 +846,270 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
 
     @Override
     public byte[] exportExcel() throws SerException {
-//        List<FirmIntro> list = super.findAll();
-//        List<FirmIntroExport> firmIntroExports = new ArrayList<>();
-//        if(list!=null && list.size()>0){
-//            for (FirmIntro firmIntro : list){
-//                FirmIntroExport excel = BeanTransform.copyProperties(firmIntro, FirmIntroExport.class);
-//                //查询荣誉与资质
-//                HonorAndQualityDTO honorAndQualityDTO = new HonorAndQualityDTO();
-//                honorAndQualityDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
-//                List<HonorAndQuality> honorAndQualities = honorAndQualitySer.findByCis(honorAndQualityDTO);
-//                List<HonorAndQualityExport> honorAndQualityExportList = BeanTransform.copyProperties(honorAndQualities, HonorAndQualityBO.class);
-//                //查询主业介绍
-//                MainBusinessIntroDTO mainBusinessIntroDTO = new MainBusinessIntroDTO();
-//                mainBusinessIntroDTO.getConditions().add(Restrict.eq("firmId", id));
-//                List<MainBusinessIntro> mainBusinessIntros = mainBusinessIntroSer.findByCis(mainBusinessIntroDTO);
-//                List<MainBusinessIntroBO> mainBusinessIntroBOS = BeanTransform.copyProperties(mainBusinessIntros, MainBusinessIntroBO.class);
-//                //查询成功案例
-//                SuccessStoriesDTO successStoriesDTO = new SuccessStoriesDTO();
-//                successStoriesDTO.getConditions().add(Restrict.eq("firmId", id));
-//                List<SuccessStories> successStories = successStoriesSer.findByCis(successStoriesDTO);
-//                List<SuccessStoriesBO> successStoriesBOS = BeanTransform.copyProperties(successStories, SuccessStoriesBO.class);
-//                //查询客户及合作伙伴
-//                CustomerAndPartnerDTO customerAndPartnerDTO = new CustomerAndPartnerDTO();
-//                successStoriesDTO.getConditions().add(Restrict.eq("firmId", id));
-//                List<CustomerAndPartner> customerAndPartners = customerAndPartnerSer.findByCis(customerAndPartnerDTO);
-//                List<CustomerAndPartnerBO> customerAndPartnerBOS = BeanTransform.copyProperties(customerAndPartners, CustomerAndPartnerBO.class);
-//                //查询通讯途径
-//                CommunicationPathDTO communicationPathDTO = new CommunicationPathDTO();
-//                communicationPathDTO.getConditions().add(Restrict.eq("firmId", id));
-//                List<CommunicationPath> communicationPaths = communicationPathSer.findByCis(communicationPathDTO);
-//                List<CommunicationPathBO> communicationPathBOS = BeanTransform.copyProperties(communicationPaths, CommunicationPathBO.class);
-//                temperatureSubsidiesImports.add(excel);
-//            }
-//    }
-//        Excel excel = new Excel(0, 2);
-//        byte[] bytes = ExcelUtil.clazzToExcel(temperatureSubsidiesImports, excel);
-//        return bytes;
-        return new byte[0];
+        int maxs = 0;
+        int firstMax = 0;
+        List<FirmIntro> list = super.findAll();
+        List<FirmIntroExport> firmIntroExports = new ArrayList<>();
+        List<Integer> maxList = new ArrayList<>();
+        if (list != null && list.size() > 0) {
+            for (FirmIntro firmIntro : list) {
+
+                //查询荣誉与资质
+                HonorAndQualityDTO honorAndQualityDTO = new HonorAndQualityDTO();
+                honorAndQualityDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
+                List<HonorAndQuality> honorAndQualities = honorAndQualitySer.findByCis(honorAndQualityDTO);
+                int h = honorAndQualities == null ? 0 : honorAndQualities.size();
+                //查询主业介绍
+                MainBusinessIntroDTO mainBusinessIntroDTO = new MainBusinessIntroDTO();
+                mainBusinessIntroDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
+                List<MainBusinessIntro> mainBusinessIntros = mainBusinessIntroSer.findByCis(mainBusinessIntroDTO);
+                int m = mainBusinessIntros == null ? 0 : mainBusinessIntros.size();
+                //查询成功案例
+                SuccessStoriesDTO successStoriesDTO = new SuccessStoriesDTO();
+                successStoriesDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
+                List<SuccessStories> successStories = successStoriesSer.findByCis(successStoriesDTO);
+                int s = successStories == null ? 0 : successStories.size();
+                //查询客户及合作伙伴
+                CustomerAndPartnerDTO customerAndPartnerDTO = new CustomerAndPartnerDTO();
+                successStoriesDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
+                List<CustomerAndPartner> customerAndPartners = customerAndPartnerSer.findByCis(customerAndPartnerDTO);
+                int c = customerAndPartners == null ? 0 : customerAndPartners.size();
+                //查询通讯途径
+                CommunicationPathDTO communicationPathDTO = new CommunicationPathDTO();
+                communicationPathDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
+                List<CommunicationPath> communicationPaths = communicationPathSer.findByCis(communicationPathDTO);
+                int co = communicationPaths == null ? 0 : communicationPaths.size();
+                //判断哪个list是最大的
+                List<Integer> integers = new ArrayList<>();
+                integers.add(h);
+                integers.add(m);
+                integers.add(s);
+                integers.add(c);
+                integers.add(co);
+                maxs = integers.stream().max(Comparator.comparing(u -> u)).get();//每一个主表对应的子表的最大集合长度
+                maxList.add(maxs);
+                for (int i = 0; i < maxs; i++) {
+                    FirmIntroExport excel = new FirmIntroExport();
+                    HonorAndQuality honorAndQuality = h > i ? honorAndQualities.get(i) : new HonorAndQuality();
+                    MainBusinessIntro mainBusinessIntro = m > i ? mainBusinessIntros.get(i) : new MainBusinessIntro();
+                    SuccessStories successStories1 = s > i ? successStories.get(i) : new SuccessStories();
+                    CustomerAndPartner customerAndPartner = c > i ? customerAndPartners.get(i) : new CustomerAndPartner();
+                    CommunicationPath communicationPath = co > i ? communicationPaths.get(i) : new CommunicationPath();
+                    BeanTransform.copyProperties(firmIntro, excel);
+                    BeanTransform.copyProperties(honorAndQuality, excel);
+                    BeanTransform.copyProperties(mainBusinessIntro, excel);
+                    BeanTransform.copyProperties(successStories1, excel);
+                    BeanTransform.copyProperties(customerAndPartner, excel);
+                    BeanTransform.copyProperties(communicationPath, excel);
+                    firmIntroExports.add(excel);
+                }
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(firmIntroExports, excel);
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+//            XSSFCellStyle style = wb.createCellStyle();
+//            style.setAlignment(HorizontalAlignment.FILL);
+            int rowSize = list.size();
+            List<Field> fields = ClazzUtils.getFields(FirmIntroExport.class); //获得列表对象属性
+            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            for (int j = 0; j < rowSize; j++) {
+                int mergeRowCount = maxList.get(j);
+                int firstRow = mergeRowCount * j + 1;
+                int lastRow = mergeRowCount * j == 0 ? mergeRowCount : mergeRowCount * (j + 1);
+                for (int i = 0; i < 19; i++) {
+                    sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
+                }
+            }
+
+            os = new ByteArrayOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return os.toByteArray();
     }
 
     @Override
     public byte[] templateExport() throws SerException {
-        return new byte[0];
+        List<FirmIntroExport> firmIntroExports = new ArrayList<>();
+        FirmIntroExport firmIntroExport = new FirmIntroExport();
+        firmIntroExport.setFirmName("北京艾佳天城");
+        firmIntroExport.setFirmNature("自营");
+        firmIntroExport.setRegisterMoney("10000万");
+        firmIntroExport.setRegisterDate("2017-01-01");
+        firmIntroExport.setFirmSpirit("积极向上");
+        firmIntroExport.setServiceAwareness("顾客是上帝");
+        firmIntroExport.setFirmTenet("创新");
+        firmIntroExport.setTalentView("不错过任何一个人才");
+        firmIntroExport.setOperationView("自营");
+        firmIntroExport.setQualityView("正品");
+        firmIntroExport.setOrganization("平台");
+        firmIntroExport.setManageModel("一对一");
+        firmIntroExport.setServiceTeamIntro("是一个很好的团体");
+        firmIntroExport.setStaffNo("231");
+        firmIntroExport.setIncludeArea("2321");
+        firmIntroExport.setSolvingScheme("解决方案");
+        firmIntroExport.setDemandType(DemandType.BIDDING);
+        firmIntroExport.setUpdateDate("2017-12-11");
+        firmIntroExport.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
+        firmIntroExport.setSoftwareCopyright("研发证");
+        firmIntroExport.setBusinessType("销售");
+        firmIntroExport.setProjectSubject("issp项目科目");
+        firmIntroExport.setCommunication("移动");
+        firmIntroExport.setSoftware("java issp");
+        firmIntroExport.setSystemIntegration("commit");
+        firmIntroExport.setMarketingPlanning("营销策划");
+        firmIntroExport.setOperators("北京艾佳");
+        firmIntroExport.setManufacturer("三星");
+        firmIntroExport.setGovernmentUnit("天河政府");
+        firmIntroExport.setPartner("三星");
+        firmIntroExport.setHeadOfficeAddress("北京");
+        firmIntroExport.setHeadOfficeContact("13698765824");
+        firmIntroExport.setBranchAddress("广州");
+        firmIntroExport.setBranchPhone("16987564533");
+        firmIntroExports.add(firmIntroExport);
+
+        FirmIntroExport firmIntroExport2 = new FirmIntroExport();
+        firmIntroExport2.setFirmName("北京艾佳天城");
+        firmIntroExport2.setFirmNature("自营");
+        firmIntroExport2.setRegisterMoney("10000万");
+        firmIntroExport2.setRegisterDate("2017-01-01");
+        firmIntroExport2.setFirmSpirit("积极向上");
+        firmIntroExport2.setServiceAwareness("顾客是上帝");
+        firmIntroExport2.setFirmTenet("创新");
+        firmIntroExport2.setTalentView("不错过任何一个人才");
+        firmIntroExport2.setOperationView("自营");
+        firmIntroExport2.setQualityView("正品");
+        firmIntroExport2.setOrganization("平台");
+        firmIntroExport2.setManageModel("一对一");
+        firmIntroExport2.setServiceTeamIntro("是一个很好的团体");
+        firmIntroExport2.setStaffNo("231");
+        firmIntroExport2.setIncludeArea("2321");
+        firmIntroExport2.setSolvingScheme("解决方案");
+        firmIntroExport2.setDemandType(DemandType.BIDDING);
+        firmIntroExport2.setUpdateDate("2017-12-11");
+        firmIntroExport2.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
+        firmIntroExport2.setSoftwareCopyright("荣誉证书");
+        firmIntroExport2.setBusinessType("策划");
+        firmIntroExport2.setProjectSubject("社群联盟科目");
+        firmIntroExport2.setCommunication("联通");
+        firmIntroExport2.setSoftware("ios issp");
+        firmIntroExport2.setSystemIntegration("user");
+        firmIntroExport2.setMarketingPlanning("计划计划");
+        firmIntroExport2.setOperators("礼尚往来");
+        firmIntroExport2.setManufacturer("天秤");
+        firmIntroExport2.setGovernmentUnit("白云政府");
+        firmIntroExport2.setPartner("ipon");
+        firmIntroExport2.setHeadOfficeAddress("佛上");
+        firmIntroExport2.setHeadOfficeContact("19564856234");
+        firmIntroExport2.setBranchAddress("佛山");
+        firmIntroExport2.setBranchPhone("3697564523");
+        firmIntroExports.add(firmIntroExport2);
+
+        FirmIntroExport firmIntroExport3 = new FirmIntroExport();
+        firmIntroExport3.setFirmName("北京艾佳天城");
+        firmIntroExport3.setFirmNature("自营");
+        firmIntroExport3.setRegisterMoney("10000万");
+        firmIntroExport3.setRegisterDate("2017-01-01");
+        firmIntroExport3.setFirmSpirit("积极向上");
+        firmIntroExport3.setServiceAwareness("顾客是上帝");
+        firmIntroExport3.setFirmTenet("创新");
+        firmIntroExport3.setTalentView("不错过任何一个人才");
+        firmIntroExport3.setOperationView("自营");
+        firmIntroExport3.setQualityView("正品");
+        firmIntroExport3.setOrganization("平台");
+        firmIntroExport3.setManageModel("一对一");
+        firmIntroExport3.setServiceTeamIntro("是一个很好的团体");
+        firmIntroExport3.setStaffNo("231");
+        firmIntroExport3.setIncludeArea("2321");
+        firmIntroExport3.setSolvingScheme("解决方案");
+        firmIntroExport3.setDemandType(DemandType.BIDDING);
+        firmIntroExport3.setUpdateDate("2017-12-11");
+        firmIntroExport3.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
+        firmIntroExport3.setSoftwareCopyright("利丰");
+        firmIntroExport3.setCommunication("联通");
+        firmIntroExport3.setSoftware("ios issp");
+        firmIntroExport3.setSystemIntegration("user");
+        firmIntroExport3.setMarketingPlanning("计划计划");
+        firmIntroExport3.setOperators("礼尚往来");
+        firmIntroExport3.setManufacturer("天秤");
+        firmIntroExport3.setGovernmentUnit("白云政府");
+        firmIntroExport3.setPartner("ipon");
+        firmIntroExports.add(firmIntroExport3);
+
+        FirmIntroExport firmIntroExport4 = new FirmIntroExport();
+        firmIntroExport4.setFirmName("粒上皇制作有限公司");
+        firmIntroExport4.setFirmNature("私立的");
+        firmIntroExport4.setRegisterMoney("600万");
+        firmIntroExport4.setRegisterDate("2013-12-12");
+        firmIntroExport4.setFirmSpirit("努力努力");
+        firmIntroExport4.setServiceAwareness("认真负责");
+        firmIntroExport4.setFirmTenet("取糟粕");
+        firmIntroExport4.setTalentView("巴拉巴拉");
+        firmIntroExport4.setOperationView("私立私立");
+        firmIntroExport4.setQualityView("质量号");
+        firmIntroExport4.setOrganization("尚峰形式");
+        firmIntroExport4.setManageModel("一对多");
+        firmIntroExport4.setServiceTeamIntro("团队能力号");
+        firmIntroExport4.setStaffNo("34323");
+        firmIntroExport4.setIncludeArea("53234");
+        firmIntroExport4.setSolvingScheme("不好解决");
+        firmIntroExport4.setDemandType(DemandType.INDUCTION_TRAINING);
+        firmIntroExport4.setUpdateDate("2017-12-11");
+        firmIntroExport4.setPositioning("首先然后其次");
+        firmIntroExport4.setSoftwareCopyright("荣誉证书");
+        firmIntroExport4.setBusinessType("策划");
+        firmIntroExport4.setProjectSubject("社群联盟科目");
+        firmIntroExport4.setCommunication("联通");
+        firmIntroExport4.setSoftware("ios issp");
+        firmIntroExport4.setSystemIntegration("user");
+        firmIntroExport4.setMarketingPlanning("计划计划");
+        firmIntroExport4.setOperators("礼尚往来");
+        firmIntroExport4.setManufacturer("天秤");
+        firmIntroExport4.setGovernmentUnit("白云政府");
+        firmIntroExport4.setPartner("ipon");
+        firmIntroExport4.setHeadOfficeAddress("佛上");
+        firmIntroExport4.setHeadOfficeContact("19564856234");
+        firmIntroExport4.setBranchAddress("佛山");
+        firmIntroExport4.setBranchPhone("3697564523");
+        firmIntroExports.add(firmIntroExport4);
+//        List<Integer> maxList = new ArrayList<>();
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(firmIntroExports, excel);
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+//            int rowSize = list.size();
+            List<Field> fields = ClazzUtils.getFields(FirmIntroExport.class); //获得列表对象属性
+            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+//            for (int j = 0; j < 2; j++) {
+//                int mergeRowCount = maxList.get(j);
+//                int firstRow = mergeRowCount * j + 1;
+//                int lastRow = mergeRowCount * j == 0 ? mergeRowCount : mergeRowCount * (j + 1);
+            for (int i = 0; i < 19; i++) {
+                sheet.addMergedRegion(new CellRangeAddress(1, 3, i, i));
+            }
+
+//            }
+
+            os = new ByteArrayOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return os.toByteArray();
     }
+
 }

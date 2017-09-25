@@ -580,6 +580,7 @@ public class ExcelUtil {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
         if (color != IndexedColors.WHITE.getIndex()) {
             style.setFillForegroundColor(color);
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色

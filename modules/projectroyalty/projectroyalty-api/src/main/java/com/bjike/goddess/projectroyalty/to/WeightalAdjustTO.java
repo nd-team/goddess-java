@@ -3,6 +3,7 @@ package com.bjike.goddess.projectroyalty.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.projectroyalty.enums.Type;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,6 +18,11 @@ import javax.validation.constraints.NotNull;
  */
 public class WeightalAdjustTO extends BaseTO {
 
+    /**
+     * 类型
+     */
+    @NotNull(message = "类型不能为空", groups = {ADD.class, EDIT.class})
+    private Type type;
 
     /**
      * 调整后的干股和公司预留利润综合比例
@@ -74,5 +80,13 @@ public class WeightalAdjustTO extends BaseTO {
 
     public void setAdjCaCompreRatio(Double adjCaCompreRatio) {
         this.adjCaCompreRatio = adjCaCompreRatio;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }

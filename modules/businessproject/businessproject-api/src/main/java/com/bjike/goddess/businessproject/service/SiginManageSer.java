@@ -170,4 +170,15 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
     default SiginManageBO findByProject(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 根据项目名称获取是否完工
+     *
+     * @param projectName
+     * @return
+     * @throws SerException
+     */
+    default Boolean findCompleteStatus(String projectName) throws SerException {
+        return null;
+    }
 }

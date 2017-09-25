@@ -1,10 +1,9 @@
 package com.bjike.goddess.salarymanage.service;
 
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
-import com.bjike.goddess.assistance.bo.AgeAssistBO;
-import com.bjike.goddess.assistance.bo.ComputerAssistBO;
-import com.bjike.goddess.assistance.bo.HotAssistBO;
-import com.bjike.goddess.assistance.bo.HouseAssistBO;
+import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
+import com.bjike.goddess.assistance.bo.SenioritySubsidiesBO;
+import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
@@ -163,24 +162,24 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      *
      * @throws SerException
      */
-    HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException;
+    TemperatureSubsidiesBO findHotAssist(SalaryInformationDTO dto) throws SerException;
 
-    /**
-     * 根据计薪周期查询住宿补助
-     *
-     * @throws SerException
-     */
-    HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException;
+//    /**
+//     * 根据计薪周期查询住宿补助
+//     *
+//     * @throws SerException
+//     */
+//    HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException;
 
     /**
      * 根据计薪周期查看电脑补助
      */
-    ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException;
+    ComputerSubsidiesBO findComputerAssist(SalaryInformationDTO dto) throws SerException;
 
     /**
      * 根据计薪周期查看工龄补助
      */
-    AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException;
+    SenioritySubsidiesBO findAgeAssist(SalaryInformationDTO dto) throws SerException;
 
     /**
      * 查询入职时间和离职时间和身份证号码和银行卡号

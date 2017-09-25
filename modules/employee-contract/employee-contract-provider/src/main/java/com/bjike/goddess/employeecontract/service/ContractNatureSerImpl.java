@@ -320,6 +320,7 @@ public class ContractNatureSerImpl extends ServiceImpl<ContractNature, ContractN
             ContractNature entity = super.findById(to.getId());
             BeanTransform.copyProperties(to, entity, true);
             entity.setModifyTime(LocalDateTime.now());
+            entity.setDescription(to.getDescription());
             super.update(entity);
             return BeanTransform.copyProperties(entity, ContractNatureBO.class);
         } catch (SerException e) {

@@ -79,4 +79,9 @@ public class TemperatureSubsidiesApiImpl implements TemperatureSubsidiesAPI {
     public void confirm(String id, Boolean confirm) throws SerException {
         temperatureSubsidiesSer.confirm(id, confirm);
     }
+
+    @Override
+    public TemperatureSubsidiesBO findTemperature(String paytStartTime, String payEndTime) throws SerException {
+        return temperatureSubsidiesSer.findTemperature(paytStartTime,payEndTime);
+    }
 }
