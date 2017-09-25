@@ -133,4 +133,9 @@ public class UserApiImpl implements UserAPI {
     public String findNameById(String id) throws SerException {
         return userSer.findNameById(id);
     }
+
+    @Override
+    public List<UserBO> findByDept(String... departmentId) throws SerException {
+        return userSer.findByDept(departmentId);
+    }
 }

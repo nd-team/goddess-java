@@ -373,7 +373,7 @@ public class ExcelUtil {
      * @param fields
      * @return
      */
-    private static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
+    public static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
         List<ExcelHeader> excelHeaders = new ArrayList<>(0);// 获取类上的所有注解信息
         for (Field field : fields) {
             ExcelHeader eh = field.getAnnotation(ExcelHeader.class);
