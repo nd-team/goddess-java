@@ -7,6 +7,9 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
@@ -14,10 +17,16 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.staffentry.bo.EntrySummaryBO;
+import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
+import com.bjike.goddess.staffentry.excel.StaffEntryRegisterExpTemplate;
+import com.bjike.goddess.staffentry.excel.StaffEntryRegisterExport;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
@@ -31,11 +40,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 员工入职注册业务实现
@@ -51,11 +60,7 @@ import java.util.List;
 public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, StaffEntryRegisterDTO> implements StaffEntryRegisterSer {
 
     @Autowired
-    private EntryBasicInfoSer entryBasicInfoSer;
-    @Autowired
     private EntryRegisterSer entryRegisterSer;
-    @Autowired
-    private SalaryConfirmRecordSer salaryConfirmRecordSer;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -66,6 +71,8 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     private ModuleAPI moduleAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private CommunicationFormworkSer communicationFormworkSer;
 
     /**
      * 添加等权限 检测模块
@@ -112,6 +119,11 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     }
 
+    //所有人都有权限
+    private Boolean checkAllTrue() throws SerException {
+        return true;
+
+    }
 
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
@@ -121,26 +133,15 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = checkLevelIdentity("8");
         RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAllTrue = checkAllTrue();
+        RpcTransmit.transmitUserToken(userToken);
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("staffentryregister");
         obj.setDescribesion("用户注册");
-        if (flagSee || flagAdd) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        //入职基本信息
-        flagSee = entryBasicInfoSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("entrybasicinfo");
-        obj.setDescribesion("入职基本信息");
-        if (flagSee) {
+        if (flagSee || flagAdd || flagAllTrue) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -160,12 +161,12 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         }
         list.add(obj);
 
-        //薪资确认
-        flagSee = salaryConfirmRecordSer.sonPermission();
+        //各类模块沟通交流
+        flagSee = communicationFormworkSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("salaryConfirmRecord");
-        obj.setDescribesion("薪资确认");
+        obj.setName("communicationformwork");
+        obj.setDescribesion("各类模块沟通交流");
         if (flagSee) {
             obj.setFlag(true);
         } else {
@@ -239,9 +240,13 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public List<StaffEntryRegisterBO> listStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
-
         String token = RpcTransmit.getUserToken();
         RpcTransmit.transmitUserToken(token);
+        if (!checkMoudleIdentity("1")) {
+            UserBO userBO = userAPI.currentUser();
+            String userId = userBO.getId();
+            staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userId));
+        }
         List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO, true);
         List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list, StaffEntryRegisterBO.class);
         if (list != null && list.size() > 0) {
@@ -285,8 +290,13 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         StaffEntryRegister staffEntryRegister = new StaffEntryRegister();
         staffEntryRegister.setDepartment(staffEntryRegisterTO.getDepartment());
         staffEntryRegister.setPosition(staffEntryRegisterTO.getPosition());
-        staffEntryRegister.setProjectGroup(staffEntryRegisterTO.getProjectGroup());
-        staffEntryRegister.setRole(staffEntryRegisterTO.getRole());
+        staffEntryRegister.setContactNum(staffEntryRegisterTO.getContactNum());
+        staffEntryRegister.setEntryDate(DateUtil.parseDate(staffEntryRegisterTO.getEntryDate()));
+        staffEntryRegister.setLodge(staffEntryRegisterTO.getLodge());
+        staffEntryRegister.setUseCompanyComputer(staffEntryRegisterTO.getUseCompanyComputer());
+        staffEntryRegister.setEntryAddress(staffEntryRegisterTO.getEntryAddress());
+        staffEntryRegister.setEntry(staffEntryRegisterTO.getEntry());
+        staffEntryRegister.setNoEntryCause(staffEntryRegisterTO.getNoEntryCause());
         staffEntryRegister.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
         staffEntryRegister.setWorkEmailPassword(staffEntryRegisterTO.getWorkEmailPassword());
         staffEntryRegister.setCreateTime(LocalDateTime.now());
@@ -294,7 +304,13 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         staffEntryRegister.setUserId(userBO.getId());
         super.save(staffEntryRegister);
         return BeanTransform.copyProperties(staffEntryRegister, StaffEntryRegisterBO.class);
+
     }
+
+    //TODO 当通讯录中的邮箱密码被修改时读取通讯录中的更改密码信息到此表未做 lijuntao
+
+    //TODO 链接数据 由于招聘模块还没有改所有获取根据是否同意入职字段为是的入职信息数据链接未做 lijuntao
+
 
     @Override
     public StaffEntryRegisterBO editStaffEntryRegister(StaffEntryRegisterTO staffEntryRegisterTO) throws SerException {
@@ -315,8 +331,15 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         StaffEntryRegister temp = super.findById(staffEntryRegisterTO.getId());
         temp.setDepartment(staffEntryRegisterTO.getDepartment());
         temp.setPosition(staffEntryRegisterTO.getPosition());
-        temp.setProjectGroup(staffEntryRegisterTO.getProjectGroup());
-        temp.setRole(staffEntryRegisterTO.getRole());
+        temp.setContactNum(staffEntryRegisterTO.getContactNum());
+        temp.setEntryDate(DateUtil.parseDate(staffEntryRegisterTO.getEntryDate()));
+        temp.setLodge(staffEntryRegisterTO.getLodge());
+        temp.setUseCompanyComputer(staffEntryRegisterTO.getUseCompanyComputer());
+        temp.setEntryAddress(staffEntryRegisterTO.getEntryAddress());
+        temp.setEntry(staffEntryRegisterTO.getEntry());
+        temp.setNoEntryCause(staffEntryRegisterTO.getNoEntryCause());
+        temp.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
+        temp.setWorkEmailPassword(staffEntryRegisterTO.getWorkEmailPassword());
         temp.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
         temp.setWorkEmailPassword(staffEntryRegisterTO.getWorkEmailPassword());
         temp.setModifyTime(LocalDateTime.now());
@@ -335,6 +358,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         }
         return BeanTransform.copyProperties(temp, StaffEntryRegisterBO.class);
     }
+
 
     @Override
     public void delete(String id) throws SerException {
@@ -416,4 +440,349 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
         return null;
     }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        List<StaffEntryRegister> list = super.findAll();
+        List<StaffEntryRegisterExport> staffEntryRegisterExports = new ArrayList<>();
+        for (StaffEntryRegister str : list) {
+            StaffEntryRegisterExport excel = BeanTransform.copyProperties(str, StaffEntryRegisterExport.class, "lodge", "useCompanyComputer", "entry", "notice");
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("id", str.getUserId()));
+            UserBO userBO = userAPI.findOne(userDTO);
+            excel.setLodge(checkBool(str.getLodge()));
+            excel.setUseCompanyComputer(checkBool(str.getUseCompanyComputer()));
+            excel.setEntry(checkBool(str.getEntry()));
+            excel.setNotice(checkBool(str.getNotice()));
+            excel.setPassword(userBO.getPassword());
+            excel.setName(userBO.getUsername());
+            excel.setEmployeeNumber(userBO.getEmployeeNumber());
+            staffEntryRegisterExports.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(staffEntryRegisterExports, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<StaffEntryRegisterExpTemplate> staffEntryRegisterExpTemplates = new ArrayList<>();
+        StaffEntryRegisterExpTemplate excel = new StaffEntryRegisterExpTemplate();
+        excel.setDepartment("研发部");
+        excel.setName("张三");
+        excel.setEmployeeNumber("ike002613");
+        excel.setContactNum("13698659846");
+        excel.setEntryDate("2017-09-12");
+        excel.setLodge("是");
+        excel.setUseCompanyComputer("是");
+        excel.setEntryAddress("广州天河棠下");
+        excel.setEntry("是");
+        excel.setNoEntryCause("");
+        excel.setArea("广州");
+        excel.setNotice("否");
+        excel.setRegisterUseNum("13698659846");
+        excel.setPosition("工程师");
+        excel.setWorkEmail("zhansan_aj@163.com");
+        excel.setTellStatus("是");
+        excel.setWorkEmailPassword("abc123");
+        excel.setPassword("abc123");
+        staffEntryRegisterExpTemplates.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(staffEntryRegisterExpTemplates, exce);
+        return bytes;
+    }
+
+    @Override
+    public void importExcel(List<StaffEntryRegisterTO> staffEntryRegisterTOS) throws SerException {
+        for (StaffEntryRegisterTO staffEntryRegisterTO : staffEntryRegisterTOS) {
+            addStaffEntryRegister(staffEntryRegisterTO);
+        }
+    }
+
+    @Override
+    public String findNotisDate(String[] ids) throws SerException {
+        StringBuffer sb = new StringBuffer();
+        for (String id : ids) {
+            StaffEntryRegister staffEntryRegister = super.findById(id);
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
+            UserBO userBO = userAPI.findOne(userDTO);
+            sb.append(userBO.getUsername() + " " + staffEntryRegister.getContactNum() + " " + staffEntryRegister.getEntryDate() + " " + checkBool(staffEntryRegister.getLodge()) + "住宿 ");
+            sb.append(checkBool(staffEntryRegister.getUseCompanyComputer()) + "使用公司电脑 " + staffEntryRegister.getEntryAddress() + " " + staffEntryRegister.getDepartment() + " ");
+            sb.append(userBO.getEmployeeNumber() + " " + staffEntryRegister.getPosition() + " " + staffEntryRegister.getWorkEmail() + ";  ");
+        }
+        return sb.toString();
+    }
+
+    public String checkBool(Boolean bool) throws SerException {
+        String name = "否";
+        if (bool) {
+            name = "是";
+        }
+        return name;
+    }
+
+    @Override
+    public void notis(String content, String[] emails, String[] ids) throws SerException {
+        MessageTO messageTO = new MessageTO();
+        messageTO.setContent(content);
+        messageTO.setTitle("确认提醒");
+        messageTO.setMsgType(MsgType.SYS);
+        messageTO.setSendType(SendType.EMAIL);
+        messageTO.setRangeType(RangeType.SPECIFIED);
+
+        messageTO.setReceivers(emails);
+        messageAPI.send(messageTO);
+
+        for (String id : ids) {
+            StaffEntryRegister staffEntryRegister = super.findById(id);
+            staffEntryRegister.setNotice(true);
+            super.update(staffEntryRegister);
+        }
+    }
+
+    @Override
+    public List<String> findEmpNum() throws SerException {
+        List<StaffEntryRegister> staffEntryRegisters = super.findAll();
+        List<String> empNums = new ArrayList<>();
+        if (staffEntryRegisters != null) {
+            for (StaffEntryRegister staffEntryRegister : staffEntryRegisters) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
+                UserBO userBO = userAPI.findOne(userDTO);
+                empNums.add(userBO.getEmployeeNumber());
+            }
+        }
+        return empNums;
+    }
+
+    @Override
+    public LinkDateStaffEntryBO findByEmpNum(String empNum) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq("employeeNumber", empNum));
+        UserBO userBO = userAPI.findOne(userDTO);
+        StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userBO.getId()));
+        StaffEntryRegister staffEntryRegister = super.findOne(staffEntryRegisterDTO);
+        LinkDateStaffEntryBO linkDateStaffEntryBO = new LinkDateStaffEntryBO();
+        linkDateStaffEntryBO.setUserName(userBO.getUsername());
+        linkDateStaffEntryBO.setEmpNumber(empNum);
+        linkDateStaffEntryBO.setDepartment(staffEntryRegister.getDepartment());
+        linkDateStaffEntryBO.setEntryDate(staffEntryRegister.getEntryDate().toString());
+        linkDateStaffEntryBO.setArea(staffEntryRegister.getArea());
+        linkDateStaffEntryBO.setPosition(staffEntryRegister.getPosition());
+        return linkDateStaffEntryBO;
+    }
+
+    @Override
+    public List<String> findAllArea() throws SerException {
+        List<StaffEntryRegister> list = super.findAll();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (StaffEntryRegister model : list) {
+            String projectName = model.getArea();
+            if (StringUtils.isNotBlank(model.getArea())) {
+                set.add(projectName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findDepByArea(String area) throws SerException {
+        StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("area", area));
+        List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO);
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (StaffEntryRegister model : list) {
+            String projectName = model.getDepartment();
+            if (StringUtils.isNotBlank(model.getDepartment())) {
+                set.add(projectName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    //转换周期
+    private String[] getTimes(int year, int month, int week) throws SerException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        calendar.set(Calendar.WEEK_OF_MONTH, week);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String start = dateFormat.format(calendar.getTime());
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        String end = dateFormat.format(calendar.getTime());
+        LocalDate e = DateUtil.parseDate(end);
+        if (week == 1) {
+            if (String.valueOf(month).length() == 1) {
+                start = year + "-0" + month + "-01";
+            } else {
+                start = year + "-" + month + "-01";
+            }
+        }
+        if (week == weekNum) {
+            if (month != e.getMonthValue()) {
+                e = DateUtil.parseDate(end);
+                e = e.minusDays(e.getDayOfMonth());
+            }
+        }
+        String endTime = e.toString();
+        String[] time = new String[]{start, endTime};
+        return time;
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaDay(String summationDate) throws SerException {
+        if (StringUtils.isNotBlank(summationDate)) {
+            summationDate = LocalDate.now().toString();
+        }
+        String[] date = new String[]{summationDate, summationDate};
+        totalMethod(date);
+        return null;
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        String[] date = getTimes(year, month, week);
+
+        return totalMethod(date);
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaMonth(Integer year, Integer month) throws SerException {
+        if (year == null || month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String[] date = new String[]{startDate, endDate};
+        return totalMethod(date);
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaTotal(String endDate) throws SerException {
+        endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        String sql = "select min(entryDate) as entryDate from  " + getTableName(StaffEntryRegister.class);
+        List<Object> objects = super.findBySql(sql);
+        //获取用户注册中的最小入职时间
+        String startDate = "";
+        if (objects != null && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+        }
+        String sql2 = "select min(updateTime) as updateTime from  " + getTableName(EntryRegister.class);
+        List<Object> objects2 = super.findBySql(sql);
+        //获取入职登记中的最小更新时间
+        String startDate2 = "";
+        if (objects != null && objects.size() > 0) {
+            startDate2 = String.valueOf(objects.get(0));
+        }
+        String[] date1 = new String[]{startDate, endDate};
+        String[] date2 = new String[]{startDate2, endDate};
+
+        List<EntrySummaryBO> entrySummaryBOS = new ArrayList<>();
+        List<String> areas = findAllArea();
+        if (areas != null && areas.size() > 0) {
+            for (String area : areas) {
+                List<String> departments = findDepByArea(area);
+                if (departments != null && departments.size() > 0) {
+                    for (String department : departments) {
+                        EntrySummaryBO entrySummaryBO = new EntrySummaryBO();
+                        entrySummaryBO.setArea(area);
+                        entrySummaryBO.setDepartment(department);
+                        //TODO 由于招聘需求未明确修改所有本汇总字段计划入职人数未拿
+                        entrySummaryBO.setPlanInductionNum(0);
+                        entrySummaryBO.setRegistrationNum(registrationNum(date1, area, department));//注册用户数
+                        entrySummaryBO.setNoticeNum(noticeNum(date1, area, department));//通告数
+                        entrySummaryBO.setEntryRegistrationNum(entryRegistrationNum(date2, area, department));//新增入职登记信息数
+                        entrySummaryBOS.add(entrySummaryBO);
+                    }
+                }
+            }
+        }
+        return entrySummaryBOS;
+    }
+
+    public List<EntrySummaryBO> totalMethod(String[] date) throws SerException {
+        List<EntrySummaryBO> entrySummaryBOS = new ArrayList<>();
+        List<String> areas = findAllArea();
+        if (areas != null && areas.size() > 0) {
+            for (String area : areas) {
+                List<String> departments = findDepByArea(area);
+                if (departments != null && departments.size() > 0) {
+                    for (String department : departments) {
+                        EntrySummaryBO entrySummaryBO = new EntrySummaryBO();
+                        entrySummaryBO.setArea(area);
+                        entrySummaryBO.setDepartment(department);
+                        //TODO 由于招聘需求未明确修改所有本汇总字段计划入职人数未拿
+                        entrySummaryBO.setPlanInductionNum(0);
+                        entrySummaryBO.setRegistrationNum(registrationNum(date, area, department));//注册用户数
+                        entrySummaryBO.setNoticeNum(noticeNum(date, area, department));//通告数
+                        entrySummaryBO.setEntryRegistrationNum(entryRegistrationNum(date, area, department));//新增入职登记信息数
+                        entrySummaryBOS.add(entrySummaryBO);
+                    }
+                }
+            }
+        }
+        return entrySummaryBOS;
+    }
+
+    //注册用户数（入职人数）
+    public Integer registrationNum(String[] date, String area, String dep) throws SerException {
+        Integer num = 0;
+        StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
+        staffEntryRegisterDTO.getConditions().add(Restrict.between("entryDate", date));
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("area", area));
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("department", dep));
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("entry", true));
+        List<StaffEntryRegister> staffEntryRegisters = super.findByCis(staffEntryRegisterDTO);
+        if (staffEntryRegisters != null && staffEntryRegisters.size() > 0) {
+            num = staffEntryRegisters.size();
+        }
+        return num;
+    }
+
+    //通告数
+    public Integer noticeNum(String[] date, String area, String dep) throws SerException {
+        Integer num = 0;
+        StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
+        staffEntryRegisterDTO.getConditions().add(Restrict.between("entryDate", date));
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("area", area));
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("department", dep));
+        staffEntryRegisterDTO.getConditions().add(Restrict.eq("notice", true));
+        List<StaffEntryRegister> staffEntryRegisters = super.findByCis(staffEntryRegisterDTO);
+        if (staffEntryRegisters != null && staffEntryRegisters.size() > 0) {
+            num = staffEntryRegisters.size();
+        }
+        return num;
+    }
+
+    //新增入职登记信息数
+    public Integer entryRegistrationNum(String[] date, String area, String dep) throws SerException {
+        Integer num = 0;
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.between("updateTime", date));
+        entryRegisterDTO.getConditions().add(Restrict.eq("area", area));
+        entryRegisterDTO.getConditions().add(Restrict.eq("department", dep));
+        List<EntryRegister> entryBasicInfos = entryRegisterSer.findByCis(entryRegisterDTO);
+        if (entryBasicInfos != null && entryBasicInfos.size() > 0) {
+            num = entryBasicInfos.size();
+        }
+        return num;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import java.util.List;
 
@@ -138,7 +139,30 @@ public class EntryRegisterBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
-
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 部门/项目组
+     */
+    private String department;
+    /**
+     * 职位 
+     */
+    private String position;
+    /**
+     * 入职日期 
+     */
+    private String inductionDate;
+    /**
+     * 状态 
+     */
+    private StaffStatus staffStatus;
     /**
      * 家庭成员集合
      */
@@ -358,6 +382,54 @@ public class EntryRegisterBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getInductionDate() {
+        return inductionDate;
+    }
+
+    public void setInductionDate(String inductionDate) {
+        this.inductionDate = inductionDate;
+    }
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
     }
 
     public List<FamilyMemberBO> getFamilyMemberBOList() {

@@ -100,4 +100,14 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public List<EntryRegister> list() throws SerException {
         return entryRegisterSer.list();
     }
+
+    @Override
+    public String findEmpNum(String name) throws SerException {
+        return entryRegisterSer.findEmpNum(name);
+    }
+
+    @Override
+    public EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
+        return entryRegisterSer.getEntryOptionByEmpNum(empNumer);
+    }
 }

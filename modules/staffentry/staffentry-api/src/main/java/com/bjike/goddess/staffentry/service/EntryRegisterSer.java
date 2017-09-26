@@ -2,6 +2,7 @@ package com.bjike.goddess.staffentry.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
@@ -159,6 +160,25 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * zhuangkaiqin
      */
     default List<EntryRegister> list() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取员工编号
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String findEmpNum(String name) throws SerException{
+        return  null;
+    }
+
+    /**
+     * 根据员工编号获取信息
+     * @param empNumer
+     * @return
+     */
+    default EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException{
         return null;
     }
 }

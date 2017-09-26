@@ -3,13 +3,17 @@ package com.bjike.goddess.staffentry.action.staffentry;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
+import com.bjike.goddess.staffentry.excel.StaffEntryRegisterExcel;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
@@ -22,6 +26,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +43,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("staffentryregister")
-public class StaffEntryRegisterAction {
+public class StaffEntryRegisterAction extends BaseFileAction {
 
     @Autowired
     private UserAPI userAPI;
@@ -251,8 +258,6 @@ public class StaffEntryRegisterAction {
     }
 
 
-
-
     /**
      * 发送邮件账号密码告知
      *
@@ -272,5 +277,108 @@ public class StaffEntryRegisterAction {
         }
     }
 
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(org.apache.catalina.servlet4preview.http.HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<StaffEntryRegisterExcel> tos = ExcelUtil.excelToClazz(is, StaffEntryRegisterExcel.class, excel);
+            List<StaffEntryRegisterTO> tocs = new ArrayList<>();
+            for (StaffEntryRegisterExcel str : tos) {
+                StaffEntryRegisterTO staffEntryRegisterTO = BeanTransform.copyProperties(str, StaffEntryRegisterTO.class, "entryDate");
+                staffEntryRegisterTO.setEntryDate(String.valueOf(str.getEntryDate()));
+                tocs.add(staffEntryRegisterTO);
+            }
+            //注意序列化
+            staffEntryRegisterAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @des 导出用户注册
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "用户注册.xlsx";
+            super.writeOutFile(response, staffEntryRegisterAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板电脑补助
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "用户注册模板.xlsx";
+            super.writeOutFile(response, staffEntryRegisterAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 发送邮件通告
+     *
+     * @param content 发送内容
+     * @param emails 发送对象
+     * @param ids 发送对象对应数据id
+     * @des 提醒确认
+     * @version v1
+     */
+    @GetMapping("v1/notis")
+    public Result notis(@RequestParam String content,@RequestParam String[] emails,@RequestParam String[] ids) throws ActException {
+        try {
+            staffEntryRegisterAPI.notis(content,emails,ids);
+            return new ActResult("send success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 发送内容获取
+     *
+     * @param ids 发送对象对应数据id
+     * @des 提醒确认
+     * @version v1
+     */
+    @GetMapping("v1/notisContent")
+    public Result notisContent(@RequestParam String[] ids) throws ActException {
+        try {
+            String content = staffEntryRegisterAPI.findNotisDate(ids);
+            return ActResult.initialize(content);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

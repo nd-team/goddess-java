@@ -7,10 +7,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.Credential;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
+import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.staffentry.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public class EntryRegisterAction {
 
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
+    @Autowired
+    private StaffEntryRegisterAPI staffEntryRegisterAPI;
 
 
 
@@ -252,6 +256,110 @@ public class EntryRegisterAction {
             throw new ActException(e.getMessage());
         }
     }
-
+    /**
+     * 获取所有的员工编号
+     *
+     * @des 获取所有的员工编号
+     * @version v1
+     */
+    @GetMapping("v1/findEmpNum")
+    public Result findEmpNum() throws ActException {
+        try {
+            List<String> empNums = staffEntryRegisterAPI.findEmpNum();
+            return ActResult.initialize(empNums);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据员工编号获取数据
+     *
+     * @des 根据员工编号获取数据
+     * @version v1
+     */
+    @GetMapping("v1/findByEmpNum")
+    public Result findByEmpNum(@RequestParam String empNums) throws ActException {
+        try {
+            LinkDateStaffEntryBO linkDateStaffEntryBO = staffEntryRegisterAPI.findByEmpNum(empNums);
+            return ActResult.initialize(linkDateStaffEntryBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 入职管理日汇总
+     *
+     * @param date 日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/day")
+    public Result summarizeDay(String date, HttpServletRequest request) throws ActException {
+        try {
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaDay(date);
+            List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 入职管理周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/week")
+    public Result summarizeDay(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year,month,week);
+            List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 入职管理月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/month")
+    public Result summarizeMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaMonth(year,month);
+            List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 入职管理累计汇总
+     *
+     * @param date 截止日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/summarize/total")
+    public Result summarizeMonth(String date, HttpServletRequest request) throws ActException {
+        try {
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaTotal(date);
+            List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }
