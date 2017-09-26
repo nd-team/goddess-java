@@ -378,7 +378,13 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
                 temp.setPhone(null != familyMemberTO.getPhones() ? familyMemberTO.getPhones().get(i) : "");
                 temp.setEntryRegister(entryRegister);
 
-                familyMembers.add(temp);
+                if( StringUtils.isBlank( temp.getTitle() ) && StringUtils.isBlank( temp.getName())
+                        && temp.getAge()==0 && StringUtils.isBlank( temp.getUnit())
+                        && StringUtils.isBlank( temp.getPosition() ) && StringUtils.isBlank( temp.getPhone() )  ){
+
+                }else{
+                    familyMembers.add(temp);
+                }
             }
             familyMemberSer.save(familyMembers);
         }
@@ -393,13 +399,27 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             int countStartTime = studyExperienceTO.getStudyStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
                 StudyExperience temp = new StudyExperience();
-                temp.setStartTime(StringUtils.isBlank(studyExperienceTO.getStudyStartTimes().get(i)) ? null : LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                temp.setEndTime(null == studyExperienceTO.getStudyEndTimes() ? null : (StringUtils.isBlank(studyExperienceTO.getStudyEndTimes().get(i)) ? null : LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                temp.setSchool(null == studyExperienceTO.getSchools() ? "" : studyExperienceTO.getSchools().get(i));
-                temp.setCertificate(null == studyExperienceTO.getCertificates() ? "" : studyExperienceTO.getCertificates().get(i));
+                if( null != studyExperienceTO.getStudyStartTimes() ){
+                    temp.setStartTime(StringUtils.isBlank(studyExperienceTO.getStudyStartTimes().get(i) )? null:LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }else{
+                    temp.setStartTime(null );
+                }
+                if( null != studyExperienceTO.getStudyEndTimes() ){
+                    temp.setEndTime(StringUtils.isBlank(studyExperienceTO.getStudyEndTimes().get(i) )? null:LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }else{
+                    temp.setEndTime(null );
+                }
+                temp.setSchool(null == studyExperienceTO.getSchools()? "":studyExperienceTO.getSchools().get(i));
+                temp.setCertificate(null == studyExperienceTO.getCertificates()? "":studyExperienceTO.getCertificates().get(i));
+
                 temp.setEntryRegister(entryRegister);
 
-                studyExperienceTOS.add(temp);
+                if( null== temp.getStartTime() && null== temp.getEndTime()
+                        && StringUtils.isBlank( temp.getSchool()) && StringUtils.isBlank( temp.getCertificate()) ){
+
+                }else{
+                    studyExperienceTOS.add(temp);
+                }
             }
             studyExperienceSer.save(studyExperienceTOS);
         }
@@ -414,13 +434,31 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             int countStartTime = workExperienceTO.getWorkStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
                 WorkExperience temp = new WorkExperience();
-                temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i)) ? null : LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
-                temp.setEndTime(null == workExperienceTO.getWorkEndTimes() ? null : (StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i)) ? null : LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater)));
-                temp.setFirm(null == workExperienceTO.getFirms() ? "" : workExperienceTO.getFirms().get(i));
-                temp.setJobDescription(null == workExperienceTO.getJobDescriptions() ? "" : workExperienceTO.getJobDescriptions().get(i));
+
+//                temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i)) ? null:LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
+                if( null != workExperienceTO.getWorkStartTimes() ){
+                    temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i) )? null:LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
+                }else{
+                    temp.setStartTime(null );
+                }
+//                temp.setEndTime(null == workExperienceTO.getWorkEndTimes() ? null:(StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i)) ? null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater)));
+                if( null != workExperienceTO.getWorkEndTimes() ){
+                    temp.setEndTime(StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i) )? null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater));
+                }else{
+                    temp.setEndTime(null );
+                }
+                temp.setFirm(null == workExperienceTO.getFirms()?"":workExperienceTO.getFirms().get(i));
+                temp.setJobDescription(null == workExperienceTO.getJobDescriptions()?"":workExperienceTO.getJobDescriptions().get(i));
+
                 temp.setEntryRegister(entryRegister);
 
-                workExperienceTOS.add(temp);
+                if( null == temp.getStartTime() && null==temp.getEndTime()
+                        && StringUtils.isBlank(temp.getFirm()) && StringUtils.isBlank( temp.getJobDescription()) ){
+
+                }else{
+                    workExperienceTOS.add(temp);
+                }
+
             }
             workExperienceSer.save(workExperienceTOS);
         }
@@ -435,11 +473,19 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             for (int i = 0; i < countName; i++) {
                 Credential temp = new Credential();
                 temp.setName(credentialTO.getNameses().get(i));
-
-                temp.setObtainTime(null == credentialTO.getObtainTimes() ? null : (StringUtils.isBlank(credentialTO.getObtainTimes().get(i)) ? null : LocalDate.parse(credentialTO.getObtainTimes().get(i), formater)));
+//                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:(StringUtils.isBlank(credentialTO.getObtainTimes().get(i))?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater)));
+                if( null != credentialTO.getObtainTimes() ){
+                    temp.setObtainTime(StringUtils.isBlank(credentialTO.getObtainTimes().get(i) )? null:LocalDate.parse(credentialTO.getObtainTimes().get(i), formater));
+                }else{
+                    temp.setObtainTime(null );
+                }
                 temp.setEntryRegister(entryRegister);
 
-                credentialTOS.add(temp);
+                if( StringUtils.isBlank( temp.getName()) && null== temp.getObtainTime() ){
+
+                }else{
+                    credentialTOS.add(temp);
+                }
             }
             credentialSer.save(credentialTOS);
         }

@@ -6,9 +6,12 @@ import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.service.ApplyLendSer;
-import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
-import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -216,6 +219,16 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public ApplyLendBO editPhoneReturn(PhoneLendReturnSendTO phoneLendReturnSendTO) throws SerException {
+        return applyLendSer.editPhoneReturn( phoneLendReturnSendTO);
+    }
+
+    @Override
+    public ApplyLendBO editPhoneSend(PhoneLendSendTO phoneLendSendTO) throws SerException {
+        return applyLendSer.editPhoneSend(phoneLendSendTO);
+    }
+
+    @Override
     public List<AccountVoucherBO> listAccountVoucherByRecord(String id) throws SerException {
         return applyLendSer.listAccountVoucherByRecord(id);
     }
@@ -238,6 +251,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     @Override
     public ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
         return applyLendSer.checkReturnMoney(applyLendTO);
+    }
+
+    @Override
+    public ApplyLendBO phoneCheckReturn(PhoneLendReturnCheckTO phoneLendReturnCheckTO) throws SerException {
+        return applyLendSer.phoneCheckReturn( phoneLendReturnCheckTO);
     }
 
     @Override
@@ -286,6 +304,10 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public List<String> getAllUser() throws SerException {
+        return applyLendSer.getAllUser();
+    }
+    @Override
     public List<String> listLender() throws SerException {
         return applyLendSer.listLender();
     }
@@ -295,6 +317,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
         return applyLendSer.listArea();
     }
 
+
     @Override
     public List<String> listProjectGroup() throws SerException {
         return applyLendSer.listProjectGroup();
@@ -303,6 +326,21 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     @Override
     public List<String> listProjectName() throws SerException {
         return applyLendSer.listProjectName();
+    }
+
+    @Override
+    public List<String> listPhoneArea() throws SerException {
+        return applyLendSer.listPhoneArea();
+    }
+
+    @Override
+    public List<String> listPhoneProjectGroup(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
+        return applyLendSer.listPhoneProjectGroup(phoneApplyLendSelectDTO);
+    }
+
+    @Override
+    public List<String> listPhoneProjectName(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
+        return applyLendSer.listPhoneProjectName(phoneApplyLendSelectDTO);
     }
 
     @Override
@@ -356,4 +394,17 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     public Long countWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.countWaitPayCJH(applyLendDTO);
     }
+
+    @Override
+    public Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus,String lendId) throws SerException {
+        return applyLendSer.phoneShowRight( lendPhoneShowStatus ,lendId);
+    }
+
+    @Override
+    public List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException {
+        return applyLendSer.listAll( dto );
+    }
+
+
+
 }

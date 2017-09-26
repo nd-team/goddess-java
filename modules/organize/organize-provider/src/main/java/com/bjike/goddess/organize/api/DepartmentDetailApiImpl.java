@@ -100,6 +100,16 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     }
 
     @Override
+    public List<String> findDepartByArea(String area) throws SerException {
+        return departmentDetailSer.findDepartByArea( area );
+    }
+
+    @Override
+    public List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
+        return departmentDetailSer.findPnameByAreaAndDepart( area ,depart);
+    }
+
+    @Override
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         return departmentDetailSer.findByIds(ids);
     }

@@ -33,7 +33,7 @@ public class CustomIntercept implements Interceptor {
         HIInfo smoothInfo = new HIInfo(smoothInterceptor, "/**");
 
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"lendreimbursement","123456","businessproject"), "/**");
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"lendreimbursement","123456","lendreimbursement"), "/**");
 
         return Arrays.asList(smoothInfo,storage,loginInfo);
     }

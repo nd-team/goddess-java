@@ -292,6 +292,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         staffEntryRegister.setCreateTime(LocalDateTime.now());
         staffEntryRegister.setModifyTime(LocalDateTime.now());
         staffEntryRegister.setUserId(userBO.getId());
+        staffEntryRegister.setTellStatus( "否");
         super.save(staffEntryRegister);
         return BeanTransform.copyProperties(staffEntryRegister, StaffEntryRegisterBO.class);
     }
@@ -320,6 +321,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         temp.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
         temp.setWorkEmailPassword(staffEntryRegisterTO.getWorkEmailPassword());
         temp.setModifyTime(LocalDateTime.now());
+        temp.setTellStatus( (StringUtils.isBlank(temp.getTellStatus())||"否".equals(temp.getTellStatus()))?"否":"是");
 
         super.update(temp);
 
@@ -402,7 +404,13 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
             messageTO.setReceivers(new String[]{staffEntryRegisterEmailTO.getEmailAccount()});
             messageAPI.send(messageTO);
+
+
+            staffEntryRegister.setTellStatus("是");
+            staffEntryRegister.setModifyTime(LocalDateTime.now());
+            super.update( staffEntryRegister );
         }
+
 
 
     }

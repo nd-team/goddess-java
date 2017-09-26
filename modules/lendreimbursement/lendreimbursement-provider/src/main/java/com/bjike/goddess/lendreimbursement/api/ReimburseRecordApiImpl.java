@@ -5,10 +5,14 @@ import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.service.ReimburseRecordSer;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
@@ -103,6 +107,11 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     }
 
     @Override
+    public ReimburseRecordBO sendRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return reimburseRecordSer.sendRecord( reimburseRecordTO);
+    }
+
+    @Override
     public ReimburseRecordBO congelAuditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return reimburseRecordSer.congelAuditRecord(reimburseRecordTO);
     }
@@ -168,8 +177,18 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     }
 
     @Override
+    public ReimburseRecordBO phonePrePay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return reimburseRecordSer.phonePrePay(reimburseRecordTO);
+    }
+
+    @Override
     public ReimburseRecordBO waitPay(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return reimburseRecordSer.waitPay(reimburseRecordTO);
+    }
+
+    @Override
+    public ReimburseRecordBO phoneWaitPay(PhoneReimbursePayTO phoneReimbursePayTO) throws SerException {
+        return reimburseRecordSer.phoneWaitPay( phoneReimbursePayTO );
     }
 
     @Override
@@ -266,5 +285,15 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     @Override
     public Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.countWaitPayCJH(reimburseRecordDTO);
+    }
+
+    @Override
+    public List<ReimburseRecordBO> listAll(PhoneReimburseDTO phoneReimburseDTO) throws SerException {
+        return reimburseRecordSer.listAll( phoneReimburseDTO );
+    }
+
+    @Override
+    public ReimPhoneShowStatus phoneShowRight(ReimPhoneSelectStatus reimPhoneSelectStatus, String reimId) throws SerException {
+        return reimburseRecordSer.phoneShowRight( reimPhoneSelectStatus , reimId );
     }
 }
