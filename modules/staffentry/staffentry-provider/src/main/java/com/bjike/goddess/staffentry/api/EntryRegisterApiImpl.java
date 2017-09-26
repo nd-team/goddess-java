@@ -102,7 +102,12 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     }
 
     @Override
-    public String getGender(String name) throws SerException {
-        return entryRegisterSer.getGender(name);
+    public String findEmpNum(String name) throws SerException {
+        return entryRegisterSer.findEmpNum(name);
+    }
+
+    @Override
+    public EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
+        return entryRegisterSer.getEntryOptionByEmpNum(empNumer);
     }
 }

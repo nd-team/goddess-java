@@ -1,11 +1,11 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
-import scala.collection.immutable.Nil;
 
 import java.util.List;
 
@@ -129,30 +129,37 @@ public interface EntryRegisterAPI {
     default EntryRegisterBO getByNumber(String number) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的qq号
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findQQ() throws SerException {
         return null;
     }
+
     /**
      * 获取所有的毕业学校
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findSchoolTag() throws SerException {
         return null;
     }
+
     /**
      * 获取所有的毕业时间
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findGraduationDate() throws SerException {
         return null;
     }
+
     /**
      * 获取全部的入职等级信息（不分页）
      * zhuangkaiqin
@@ -162,10 +169,23 @@ public interface EntryRegisterAPI {
     }
 
     /**
-     * 根据员工的姓名获取员工性别
-     * zhuangkaiqin
+     * 根据姓名获取员工编号
+     *
+     * @param name
+     * @return
+     * @throws SerException
      */
-    default String getGender(String name) throws SerException {
+    default String findEmpNum(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据员工编号获取信息
+     *
+     * @param empNumer
+     * @return
+     */
+    default EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
         return null;
     }
 }

@@ -27,6 +27,7 @@
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 	<dubbo:reference validation="true" id="commonalityApiImpl" interface="com.bjike.goddess.contacts.api.CommonalityAPI" />
+	<dubbo:reference validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
