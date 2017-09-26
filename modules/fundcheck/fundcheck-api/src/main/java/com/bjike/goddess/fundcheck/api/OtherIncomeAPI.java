@@ -7,7 +7,9 @@ import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OtherIncomeCollectTO;
 import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他收入业务接口
@@ -125,10 +127,9 @@ public interface OtherIncomeAPI {
      * 汇总
      *
      * @param to
-     * @return OtherIncomeBO
      * @throws SerException
      */
-    default List<OtherIncomeBO> collect(OtherIncomeCollectTO to) throws SerException {
+    default LinkedHashMap<String,String> collect(OtherIncomeCollectTO to) throws SerException {
         return null;
     }
     /**

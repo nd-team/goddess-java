@@ -30,16 +30,24 @@ public class BiddingInfoBO extends BaseBO {
      * 网址
      */
     private String url;
+    /**
+     * 年份
+     */
+    private Integer year;
+    /**
+     * 月份
+     */
+    private Integer month;
 
     /**
      * 招投标类型
      */
-    private BiddingType biddingType;
+    private String biddingType;
 
     /**
      * 业务类型
      */
-    private BusinessType businessType;
+    private String businessType;
 
     /**
      * 业务方向科目
@@ -116,7 +124,7 @@ public class BiddingInfoBO extends BaseBO {
     private String buyTenderTime;
 
     /**
-     * 价格
+     * 标书价格
      */
     private Double price;
 
@@ -129,6 +137,14 @@ public class BiddingInfoBO extends BaseBO {
      * 交保证金时间
      */
     private String marginTime;
+    /**
+     * 保证金金额
+     */
+    private Double marginPrice;
+    /**
+     * 退回保证金金额
+     */
+    private Double returnMarginPrice;
 
     /**
      * 交保证金方式
@@ -139,11 +155,51 @@ public class BiddingInfoBO extends BaseBO {
      * 保证金退回时间
      */
     private String backTimeDeposit;
+    /**
+     * 竞争对手数量
+     */
+    private Integer contendNum;
+    /**
+     * 是否进行项目测算
+     */
+    private Boolean projectEstimates;
+    /**
+     * 项目测算是否通过
+     */
+    private Boolean passProjectEstimates;
+    /**
+     * 规模数量
+     */
+    private Integer scale;
+    /**
+     * 是否转为商机
+     */
+    private Boolean opportunity;
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 
     /**
      * 备注
      */
     private String remark;
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
 
     public String getBiddingNumber() {
         return biddingNumber;
@@ -177,19 +233,19 @@ public class BiddingInfoBO extends BaseBO {
         this.businessDirectionSubject = businessDirectionSubject;
     }
 
-    public BiddingType getBiddingType() {
+    public String getBiddingType() {
         return biddingType;
     }
 
-    public void setBiddingType(BiddingType biddingType) {
+    public void setBiddingType(String biddingType) {
         this.biddingType = biddingType;
     }
 
-    public BusinessType getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(BusinessType businessType) {
+    public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
 
@@ -352,5 +408,69 @@ public class BiddingInfoBO extends BaseBO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Double getMarginPrice() {
+        return marginPrice;
+    }
+
+    public void setMarginPrice(Double marginPrice) {
+        this.marginPrice = marginPrice;
+    }
+
+    public Double getReturnMarginPrice() {
+        return returnMarginPrice;
+    }
+
+    public void setReturnMarginPrice(Double returnMarginPrice) {
+        this.returnMarginPrice = returnMarginPrice;
+    }
+
+    public Integer getContendNum() {
+        return contendNum;
+    }
+
+    public void setContendNum(Integer contendNum) {
+        this.contendNum = contendNum;
+    }
+
+    public Boolean getProjectEstimates() {
+        return projectEstimates;
+    }
+
+    public void setProjectEstimates(Boolean projectEstimates) {
+        this.projectEstimates = projectEstimates;
+    }
+
+    public Boolean getPassProjectEstimates() {
+        return passProjectEstimates;
+    }
+
+    public void setPassProjectEstimates(Boolean passProjectEstimates) {
+        this.passProjectEstimates = passProjectEstimates;
+    }
+
+    public Integer getScale() {
+        return scale;
+    }
+
+    public void setScale(Integer scale) {
+        this.scale = scale;
+    }
+
+    public Boolean getOpportunity() {
+        return opportunity;
+    }
+
+    public void setOpportunity(Boolean opportunity) {
+        this.opportunity = opportunity;
     }
 }

@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.moneyprepare.api.FundPrepareAPI;
 import com.bjike.goddess.moneyprepare.bo.ApplyAndExaminationBO;
 import com.bjike.goddess.moneyprepare.bo.FundPrepareApplyBO;
@@ -288,8 +287,10 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
         applyAndExamination.setApplyTime(LocalDateTime.now());
         applyAndExamination.setRemark(applyAndExaminationTO.getRemark());
         applyAndExamination.setCreateTime(LocalDateTime.now());
+        if (isExist(applyAndExamination)) {
+            throw new SerException("该月的资金准备表已存在");
+        }
         super.save(applyAndExamination);
-
         ApplyAndExaminationBO applyAndExaminationBO = BeanTransform.copyProperties(applyAndExamination, ApplyAndExaminationBO.class);
         return applyAndExaminationBO;
     }
@@ -569,6 +570,21 @@ public class ApplyAndExaminationSerImpl extends ServiceImpl<ApplyAndExamination,
         }
         time = transformation(first, last, string, tag);
         return time;
+    }
+
+    //判断当月资金准备表是否已存在
+    private Boolean isExist(ApplyAndExamination applyAndExamination) throws SerException {
+        Boolean tar = false;
+        String time = getFirstDay(applyAndExamination.getTableName());
+        List<ApplyAndExamination> applyAndExaminations = super.findAll();
+        if (null != applyAndExaminations && applyAndExaminations.size() > 0) {
+            for (ApplyAndExamination entity : applyAndExaminations) {
+                if (getFirstDay(entity.getTableName()).equals(time)) {
+                    tar = true;
+                }
+            }
+        }
+        return tar;
     }
 
 }

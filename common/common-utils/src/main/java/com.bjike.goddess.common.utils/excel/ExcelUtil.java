@@ -48,6 +48,17 @@ public class ExcelUtil {
         }
     }
 
+    /**
+     * 获取工作薄
+     *
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    public static XSSFWorkbook getWb(InputStream is) throws Exception {
+        XSSFWorkbook wb = new XSSFWorkbook(is);
+        return wb;
+    }
 
     /**
      * excel文件流转换成实体类
@@ -76,18 +87,18 @@ public class ExcelUtil {
                         Object obj = clazz.newInstance();
                         for (int j = 0; j < cellSize; j++) {
                             ExcelHeader eh = null;
-                                if (headers.size() > j) {
-                                    eh = headers.get(j);
-                                    String cellVal = getCellValue(row.getCell(j), eh);
-                                    Object val = convertValue(cellVal, eh, fields);
-                                    if (eh.notNull() && null == val) {
-                                        throw new ActException(rowIndex+excel.getHeaderStartRow() + " 行,列[" + eh.name() + "]不能为空!");
-                                    } else if (null != val) {
-                                        setFieldValue(obj, eh.name(), val, fields);
-                                    }
-                                }else{
-                                    throw new ActException("不符合导入表格要求");
+                            if (headers.size() > j) {
+                                eh = headers.get(j);
+                                String cellVal = getCellValue(row.getCell(j), eh);
+                                Object val = convertValue(cellVal, eh, fields);
+                                if (eh.notNull() && null == val) {
+                                    throw new ActException(rowIndex + excel.getHeaderStartRow() + " 行,列[" + eh.name() + "]不能为空!");
+                                } else if (null != val) {
+                                    setFieldValue(obj, eh.name(), val, fields);
                                 }
+                            } else {
+                                throw new ActException("不符合导入表格要求");
+                            }
 
 
                         }
@@ -114,9 +125,9 @@ public class ExcelUtil {
      * @param <T>
      * @return
      */
-    public static <T> XSSFWorkbook clazzToExcelAddMoreSheet(XSSFWorkbook wb ,List<T> objects, Excel excel,int sheetIndex) {
-        XSSFSheet sheet = wb.createSheet( );
-        wb.setSheetName(sheetIndex,excel.getSheetName());
+    public static <T> XSSFWorkbook clazzToExcelAddMoreSheet(XSSFWorkbook wb, List<T> objects, Excel excel, int sheetIndex) {
+        XSSFSheet sheet = wb.createSheet();
+        wb.setSheetName(sheetIndex, excel.getSheetName());
         if (null != objects && objects.size() > 0) {
             List<Field> fields = ClazzUtils.getFields(objects.get(0).getClass()); //获得列表对象属性
             List<ExcelHeader> excelHeaders = getExcelHeaders(fields, excel.getExcludes()); //获得表头
@@ -362,7 +373,7 @@ public class ExcelUtil {
      * @param fields
      * @return
      */
-    private static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
+    public static List<ExcelHeader> getExcelHeaders(List<Field> fields, String[] excludes) {
         List<ExcelHeader> excelHeaders = new ArrayList<>(0);// 获取类上的所有注解信息
         for (Field field : fields) {
             ExcelHeader eh = field.getAnnotation(ExcelHeader.class);
@@ -439,7 +450,7 @@ public class ExcelUtil {
      * @param cell
      * @return
      */
-    private static String getCellValue(Cell cell, ExcelHeader eh) throws ActException {
+    public static String getCellValue(Cell cell, ExcelHeader eh) throws ActException {
         String val = null;
         try {
             if (null != cell) {
@@ -486,6 +497,9 @@ public class ExcelUtil {
         }
 
     }
+
+
+
 
     /**
      * 验证表头是否正确
@@ -562,10 +576,11 @@ public class ExcelUtil {
      * @param color
      * @return
      */
-    private static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
+    public static XSSFCellStyle getStyle(XSSFWorkbook wb, short color) {
         // 内容的样式
         XSSFCellStyle style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
         if (color != IndexedColors.WHITE.getIndex()) {
             style.setFillForegroundColor(color);
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND); //设置单元格颜色

@@ -2,14 +2,9 @@ package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.archive.bo.StaffRecords1BO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
-import com.bjike.goddess.assistance.bo.AgeAssistBO;
-import com.bjike.goddess.assistance.bo.ComputerAssistBO;
-import com.bjike.goddess.assistance.bo.HotAssistBO;
-import com.bjike.goddess.assistance.bo.HouseAssistBO;
-import com.bjike.goddess.assistance.dto.AgeAssistDTO;
-import com.bjike.goddess.assistance.dto.ComputerAssistDTO;
-import com.bjike.goddess.assistance.dto.HotAssistDTO;
-import com.bjike.goddess.assistance.dto.HouseAssistDTO;
+import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
+import com.bjike.goddess.assistance.bo.SenioritySubsidiesBO;
+import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
 import com.bjike.goddess.managementpromotion.entity.LevelShow;
@@ -113,22 +108,22 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     }
 
     @Override
-    public HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException {
+    public TemperatureSubsidiesBO findHotAssist(SalaryInformationDTO dto) throws SerException {
         return salaryInformationSer.findHotAssist(dto);
     }
 
-    @Override
-    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
-        return salaryInformationSer.findHouseAssist(dto);
-    }
+//    @Override
+//    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
+//        return salaryInformationSer.findHouseAssist(dto);
+//    }
 
     @Override
-    public ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
+    public ComputerSubsidiesBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
         return salaryInformationSer.findComputerAssist(dto);
     }
 
     @Override
-    public AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
+    public SenioritySubsidiesBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
         return salaryInformationSer.findAgeAssist(dto);
     }
 

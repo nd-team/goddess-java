@@ -23,7 +23,7 @@ public class Modules extends BaseEntity {
     /**
      * 岗位明细id
      */
-    @Column(name = "workDetailsId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位明细id'")
+    @Column(name = "workDetailsId", columnDefinition = "VARCHAR(255)   COMMENT '岗位明细id'")
     private String workDetailsId;
 
     /**

@@ -9,7 +9,9 @@ import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.StockMoneyCollectTO;
 import com.bjike.goddess.fundcheck.to.StockMoneyTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 收到股东款业务接口
@@ -98,7 +100,7 @@ public interface StockMoneySer extends Ser<StockMoney, StockMoneyDTO> {
      * @param to
      * @throws SerException
      */
-    default List<StockMoneyBO> collect(StockMoneyCollectTO to) throws SerException {
+    default LinkedHashMap<String,String> collect(StockMoneyCollectTO to) throws SerException {
         return null;
     }
     /**

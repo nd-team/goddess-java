@@ -1,6 +1,5 @@
 package com.bjike.goddess.bidding.service;
 
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingWebInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingWebInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingWebInfo;
@@ -9,12 +8,19 @@ import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -22,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -239,6 +247,37 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
         }
         super.remove(id);
     }
+
+    @Override
+    public void congel(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        try {
+            BiddingWebInfo biddingWebInfo = super.findById(id);
+            biddingWebInfo.setModifyTime(LocalDateTime.now());
+            biddingWebInfo.setStatus(Status.CONGEAL);
+            super.update(biddingWebInfo);
+        } catch (SerException e) {
+            throw new SerException("冻结出现错误，冻结失败" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void thaw(String id) throws SerException {
+        if (StringUtils.isBlank(id)) {
+            throw new SerException("id不能为空");
+        }
+        try {
+            BiddingWebInfo biddingWebInfo = super.findById(id);
+            biddingWebInfo.setModifyTime(LocalDateTime.now());
+            biddingWebInfo.setStatus(Status.THAW);
+            super.update(biddingWebInfo);
+        } catch (SerException e) {
+            throw new SerException("解冻出现错误，解冻失败" + e.getMessage());
+        }
+    }
+
     @Override
     public List<String> getWebName() throws SerException {
         String[] fields = new String[]{"webName"};
@@ -250,6 +289,7 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
 
         return webNameList;
     }
+
     @Override
     public List<String> getUrl() throws SerException {
         String[] fields = new String[]{"url"};
@@ -261,17 +301,73 @@ public class BiddingWebInfoSerImpl extends ServiceImpl<BiddingWebInfo, BiddingWe
 
         return urlList;
     }
+
     @Override
     public BiddingWebInfoBO getWebInfo(String webName) throws SerException {
-        if(StringUtils.isNotBlank(webName)){
+        if (StringUtils.isNotBlank(webName)) {
             BiddingWebInfoDTO dto = new BiddingWebInfoDTO();
-            dto.getConditions().add(Restrict.eq("webName",webName));
+            dto.getConditions().add(Restrict.eq("webName", webName));
             BiddingWebInfo biddingWebInfo = super.findOne(dto);
-            BiddingWebInfoBO bo = BeanTransform.copyProperties(biddingWebInfo,BiddingWebInfoBO.class);
+            BiddingWebInfoBO bo = BeanTransform.copyProperties(biddingWebInfo, BiddingWebInfoBO.class);
             return bo;
         }
         return null;
     }
 
+    @Override
+    public String info(String url, String key) throws SerException {
+        try {
 
+            //创建连接
+//            URL u = new URL(url);
+//            HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+//            //得到输入流 也就是读取源代码
+//            BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream(), "gbk"));
+//            String line = null;
+//            StringBuilder sb = new StringBuilder();
+//            while ((line = bf.readLine()) != null) {
+//                sb.append(line);
+//            }
+            HttpGet request = new HttpGet(url);
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+            //进行源代码的匹配是否包含‘<’,'>'
+            StringBuilder sb=new StringBuilder();
+            sb.append(content);
+            if (content.contains(key)) {
+                if (content.contains("<script") || content.contains("/script>")) {
+                    int index = sb.indexOf("<script");
+                    int nextIndex = sb.indexOf("/script>");
+                    while ((index >= 0 && nextIndex >= 0)&& (nextIndex > index)) {
+                        if (index < nextIndex) {
+                            sb.delete(index, nextIndex + 1);
+                        }
+                        index = sb.indexOf("<script");
+                        nextIndex = sb.indexOf("/script>");
+                    }
+                }
+                if (sb.toString().contains("<") || sb.toString().contains(">")) {
+                    int index = sb.indexOf("<");
+                    int nextIndex = sb.indexOf(">");
+                    while ((index >= 0 && nextIndex >= 0) && (nextIndex > index)) {
+                        //删除‘<’,'>'标签
+                        sb.delete(index, nextIndex + 1);
+                        index = sb.indexOf("<");
+                        nextIndex = sb.indexOf(">");
+                    }
+                }
+                Pattern pattern=Pattern.compile("[\u4E00-\u9FA5|\\！|\\,|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
+                Matcher matcher=pattern.matcher(sb.toString());
+                StringBuilder result=new StringBuilder();
+                while (matcher.find()){
+                    result.append(matcher.group());
+                }
+                return result.toString();
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 }

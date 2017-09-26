@@ -448,6 +448,9 @@ public class CommunicationFormworkSerImpl extends ServiceImpl<CommunicationFormw
             case GENMANAGE:
                 flag = guidePosinIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;

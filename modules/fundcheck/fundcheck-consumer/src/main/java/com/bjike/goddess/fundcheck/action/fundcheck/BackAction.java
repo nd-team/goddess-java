@@ -139,99 +139,98 @@ public class BackAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
-
-    /**
-     * 一个回款
-     *
-     * @param id
-     * @return class BackVO
-     * @des 获取一个回款
-     * @version v1
-     */
-    @GetMapping("v1/back/{id}")
-    public Result back(@PathVariable String id) throws ActException {
-        try {
-            BackBO backBO = backAPI.getOne(id);
-            return ActResult.initialize(BeanTransform.copyProperties(backBO, BackVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 回款列表
-     *
-     * @param backDTO 回款dto
-     * @return class BackVO
-     * @des 获取所有回款
-     * @version v1
-     */
-    @GetMapping("v1/list")
-    public Result list(BackDTO backDTO, HttpServletRequest request) throws ActException {
-        try {
-            List<BackVO> backVOS = BeanTransform.copyProperties(
-                    backAPI.findListBack(backDTO), BackVO.class, request);
-            return ActResult.initialize(backVOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 添加回款
-     *
-     * @param backTO 回款to
-     * @return class BackVO
-     * @des 添加回款
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/add")
-    public Result add(@Validated(BackTO.TestAdd.class) BackTO backTO, BindingResult bindingResult) throws ActException {
-        try {
-            BackBO backBO = backAPI.insert(backTO);
-            return ActResult.initialize(BeanTransform.copyProperties(backBO, BackVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 编辑回款
-     *
-     * @param backTO 回款数据to
-     * @return class BackVO
-     * @des 编辑回款
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/edit")
-    public Result edit(@Validated(BackTO.TestEdit.class) BackTO backTO, BindingResult bindingResult) throws ActException {
-        try {
-            BackBO backBO = backAPI.edit(backTO);
-            return ActResult.initialize(BeanTransform.copyProperties(backBO, BackVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 删除回款
-     *
-     * @param id 用户id
-     * @des 根据用户id删除回款记录
-     * @version v1
-     */
-    @LoginAuth
-    @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
-        try {
-            backAPI.remove(id);
-            return new ActResult("delete success!");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 一个回款
+//     *
+//     * @param id
+//     * @return class BackVO
+//     * @des 获取一个回款
+//     * @version v1
+//     */
+//    @GetMapping("v1/back/{id}")
+//    public Result back(@PathVariable String id) throws ActException {
+//        try {
+//            BackBO backBO = backAPI.getOne(id);
+//            return ActResult.initialize(BeanTransform.copyProperties(backBO, BackVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 回款列表
+//     *
+//     * @param backDTO 回款dto
+//     * @return class BackVO
+//     * @des 获取所有回款
+//     * @version v1
+//     */
+//    @GetMapping("v1/list")
+//    public Result list(BackDTO backDTO, HttpServletRequest request) throws ActException {
+//        try {
+//            List<BackVO> backVOS = BeanTransform.copyProperties(
+//                    backAPI.findListBack(backDTO), BackVO.class, request);
+//            return ActResult.initialize(backVOS);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 添加回款
+//     *
+//     * @param backTO 回款to
+//     * @return class BackVO
+//     * @des 添加回款
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/add")
+//    public Result add(@Validated(BackTO.TestAdd.class) BackTO backTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            BackBO backBO = backAPI.insert(backTO);
+//            return ActResult.initialize(BeanTransform.copyProperties(backBO, BackVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 编辑回款
+//     *
+//     * @param backTO 回款数据to
+//     * @return class BackVO
+//     * @des 编辑回款
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/edit")
+//    public Result edit(@Validated(BackTO.TestEdit.class) BackTO backTO, BindingResult bindingResult) throws ActException {
+//        try {
+//            BackBO backBO = backAPI.edit(backTO);
+//            return ActResult.initialize(BeanTransform.copyProperties(backBO, BackVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 删除回款
+//     *
+//     * @param id 用户id
+//     * @des 根据用户id删除回款记录
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @DeleteMapping("v1/delete/{id}")
+//    public Result delete(@PathVariable String id) throws ActException {
+//        try {
+//            backAPI.remove(id);
+//            return new ActResult("delete success!");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 回款

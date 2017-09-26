@@ -17,6 +17,7 @@ import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.entity.PositionUserDetail;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.organize.to.PositionUserDetailTO;
@@ -93,6 +94,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                     detailBO.setModule(positionDetail.getModule().getModule());
                 }
                 detailBO.setPosition(positionDetail.getPosition());
+                detailBO.setPositionId(positionDetail.getId());
                 detailBO.setPositionNumber(positionDetail.getSerialNumber());
                 detailBOS.add(detailBO);
             }
@@ -286,6 +288,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 
@@ -499,6 +502,21 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             bos.add(bo);
         }
         return bos;
+    }
+
+    @Override
+    public StaffStatus statusByName(String name) throws SerException {
+        //根据名字获取用户ｉｄ
+        StaffStatus staffStatus = StaffStatus.HAVELEAVE;
+        UserBO userBO = userAPI.findByUsername(name);
+        if (null != userBO) {
+            String userId = userBO.getId();
+            PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+            positionDetailUserDTO.getConditions().add(Restrict.eq("userId",userId));
+            PositionDetailUser positionDetailUser = super.findOne(positionDetailUserDTO);
+            staffStatus = positionDetailUser.getStaffStatus();
+        }
+        return staffStatus;
     }
 
     @Override

@@ -68,6 +68,9 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
     public void save(PositionWorkDetailsTO to) throws SerException {
         PositionWorkDetails entity = BeanTransform.copyProperties(to, PositionWorkDetails.class, "modulesTOList");
         entity = transForm(entity);
+        //todo: 注意这张表要重新建一下，因为有可能查不到Purpose和Version
+        entity.setPurpose("asf");
+        entity.setVersion("saf");
         entity = super.save(entity);
         List<ModulesTO> modulesTOList = to.getModulesTOList();
         for (ModulesTO modulesTO : modulesTOList) {
@@ -75,7 +78,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
             modules.setWorkDetailsId(entity.getId());
             modules = modulesSer.save(modules);
             for (IndicatorTO indicatorTO : modulesTO.getIndicatorTOList()) {
-                Indicator indicator = BeanTransform.copyProperties(indicatorTO, Indicator.class, "ModulesId");
+                Indicator indicator = BeanTransform.copyProperties(indicatorTO, Indicator.class, "modulesId");
                 indicator.setModulesId(modules.getId());
                 indicatorSer.save(indicator);
             }
@@ -92,6 +95,8 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         }
         BeanTransform.copyProperties(to, entity, "modulesTOList");
         entity = transForm(entity);
+//        entity.setPurpose("asf");
+//        entity.setVersion("saf");
         super.update(entity);
         for (ModulesTO modulesTO : to.getModulesTOList()) {
             Modules modules = modulesSer.findById(modulesTO.getId());
@@ -99,7 +104,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
             modulesSer.update(modules);
             for (IndicatorTO indicatorTO : modulesTO.getIndicatorTOList()) {
                 Indicator indicator = indicatorSer.findById(indicatorTO.getId());
-                BeanTransform.copyProperties(indicatorTO, indicator, "ModulesId");
+                BeanTransform.copyProperties(indicatorTO, indicator, "modulesId");
                 indicatorSer.update(indicator);
             }
         }
@@ -117,7 +122,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         List<Modules> modulesList = modulesSer.findByCis(modulesDTO);
         for (Modules modules : modulesList) {
             IndicatorDTO indicatorDTO = new IndicatorDTO();
-            indicatorDTO.getConditions().add(Restrict.eq("ModulesId", modules.getId()));
+            indicatorDTO.getConditions().add(Restrict.eq("modulesId", modules.getId()));
             indicatorSer.remove(indicatorSer.findByCis(indicatorDTO));
         }
         modulesSer.remove(modulesList);
@@ -127,23 +132,24 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
     @Override
     public List<PositionWorkDetailsBO> maps(PositionWorkDetailsDTO dto) throws SerException {
         searchCondition(dto);
-        ModulesDTO modulesDTO = new ModulesDTO();
-        if (StringUtils.isNotBlank(dto.getModulesName())) {
-            modulesDTO.getConditions().add(Restrict.eq("name", dto.getModulesName()));
-            modulesDTO.getConditions().add(Restrict.eq("hasConnet", 1));
-        }
+
 
         List<PositionWorkDetails> positionWorkDetailsList = super.findByPage(dto);
         if (null != positionWorkDetailsList && positionWorkDetailsList.size() > 0) {
             List<PositionWorkDetailsBO> positionWorkDetailsBOList = BeanTransform.copyProperties(positionWorkDetailsList, PositionWorkDetailsBO.class, "modulesBOList");
             for (PositionWorkDetailsBO positionWorkDetailsBO : positionWorkDetailsBOList) {
-//                ModulesDTO modulesDTO = new ModulesDTO();
+                ModulesDTO modulesDTO = new ModulesDTO();
+                if (StringUtils.isNotBlank(dto.getModulesName())) {
+                    modulesDTO.getConditions().add(Restrict.eq("name", dto.getModulesName()));
+                    modulesDTO.getConditions().add(Restrict.eq("hasConnet", 1));
+                }
+//                ModulesDTO modulesDTO1 = new ModulesDTO();
                 modulesDTO.getConditions().add(Restrict.eq("workDetailsId", positionWorkDetailsBO.getId()));
                 List<Modules> modulesList = modulesSer.findByCis(modulesDTO);
                 List<ModulesBO> modulesBOList = BeanTransform.copyProperties(modulesList, ModulesBO.class, "indicatorBOList");
                 for (ModulesBO modulesBO : modulesBOList) {
                     IndicatorDTO indicatorDTO = new IndicatorDTO();
-                    indicatorDTO.getConditions().add(Restrict.eq("ModulesId", modulesBO.getId()));
+                    indicatorDTO.getConditions().add(Restrict.eq("modulesId", modulesBO.getId()));
                     List<Indicator> indicatorList = indicatorSer.findByCis(indicatorDTO);
                     List<IndicatorBO> indicatorBOList = BeanTransform.copyProperties(indicatorList, IndicatorBO.class);
                     modulesBO.setIndicatorBOList(indicatorBOList);
@@ -184,7 +190,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         List<ModulesBO> modulesBOList = BeanTransform.copyProperties(modulesList, ModulesBO.class, "indicatorBOList");
         for (ModulesBO modulesBO : modulesBOList) {
             IndicatorDTO indicatorDTO = new IndicatorDTO();
-            indicatorDTO.getConditions().add(Restrict.eq("ModulesId", modulesBO.getId()));
+            indicatorDTO.getConditions().add(Restrict.eq("modulesId", modulesBO.getId()));
             List<Indicator> indicatorList = indicatorSer.findByCis(indicatorDTO);
             List<IndicatorBO> indicatorBOList = BeanTransform.copyProperties(indicatorList, IndicatorBO.class);
             modulesBO.setIndicatorBOList(indicatorBOList);
@@ -257,8 +263,9 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         entity.setProjectStageNum(projectStage);
 
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getPurpose/{" + entity.getFunction() + "}");//线上
-//        HttpGet httpGet = new HttpGet("http://localhost:51654/featurelist/v1/getPurpose/{" +entity.getFunction() +"}");//线下测试
+//        HttpGet httpGet = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getPurpose/"+ entity.getFunction() + "");//线上
+        HttpGet httpGet = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getPurpose/" + entity.getFunction() + "");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51654/featurelist/v1/getPurpose/" +entity.getFunction() +"");//线下测试
         String userToken = RpcTransmit.getUserToken();
         httpGet.setHeader("userToken", userToken);
         RpcTransmit.transmitUserToken(userToken);
@@ -273,8 +280,8 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         }
 
         CloseableHttpClient closeableHttpClient1 = HttpClients.createDefault();
-        HttpGet httpGet1 = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getVersion/{" + entity.getFunction() + "}");//线上
-//        HttpGet httpGet1 = new HttpGet("http://localhost:51654/featurelist/v1/getVersion/{" +entity.getFunction() +"}");//线下测试
+        HttpGet httpGet1 = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getVersion/" + entity.getFunction() + "");//线上
+//        HttpGet httpGet1 = new HttpGet("http://localhost:51654/featurelist/v1/getVersion/" +entity.getFunction() +"");//线下测试
         httpGet1.setHeader("userToken", userToken);
         RpcTransmit.transmitUserToken(userToken);
         ActResultOrgan resultOrgan1 = new ActResultOrgan();

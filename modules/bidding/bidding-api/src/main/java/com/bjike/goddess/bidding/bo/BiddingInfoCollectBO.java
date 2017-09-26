@@ -1,6 +1,8 @@
 package com.bjike.goddess.bidding.bo;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ike on 17-5-5.
@@ -8,12 +10,8 @@ import java.io.Serializable;
 public class BiddingInfoCollectBO implements Serializable{
 
     private String cities;
-    private Object invite;
-    private Object openly;
-    private Object mobile;
-    private Object soft;
-    private Object system;
-    private Object plan;
+    private Map<String,Integer> biddingMap;
+    private Map<String,Integer> businessMap;
 
     public String getCities() {
         return cities;
@@ -23,51 +21,19 @@ public class BiddingInfoCollectBO implements Serializable{
         this.cities = cities;
     }
 
-    public Object getInvite() {
-        return invite;
+    public Map<String, Integer> getBiddingMap() {
+        return biddingMap;
     }
 
-    public void setInvite(Object invite) {
-        this.invite = invite;
+    public void setBiddingMap(Map<String, Integer> biddingMap) {
+        this.biddingMap = biddingMap;
     }
 
-    public Object getOpenly() {
-        return openly;
+    public Map<String, Integer> getBusinessMap() {
+        return businessMap;
     }
 
-    public void setOpenly(Object openly) {
-        this.openly = openly;
-    }
-
-    public Object getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(Object mobile) {
-        this.mobile = mobile;
-    }
-
-    public Object getSoft() {
-        return soft;
-    }
-
-    public void setSoft(Object soft) {
-        this.soft = soft;
-    }
-
-    public Object getSystem() {
-        return system;
-    }
-
-    public void setSystem(Object system) {
-        this.system = system;
-    }
-
-    public Object getPlan() {
-        return plan;
-    }
-
-    public void setPlan(Object plan) {
-        this.plan = plan;
+    public void setBusinessMap(Map<String, Integer> businessMap) {
+        this.businessMap = businessMap;
     }
 }

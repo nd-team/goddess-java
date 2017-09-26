@@ -20,25 +20,32 @@
 	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.RecommendSchemeAPI" id="recommendSchemeApiImpl" />
 
 	<!-- 推荐方案API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.RecommendTypeAPI" id="recommendTypeApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldRecommendTypeAPI" id="recommendTypeApiImpl" />
 
 	<!-- 推荐要求API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.RecommendRequireAPI" id="recommendRequireApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldRecommendRequireAPI" id="recommendRequireApiImpl" />
 
 	<!-- 推荐考核内容API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.RecommendAssessDetailAPI" id="recommendAssessDetailApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldRecommendAssessDetailAPI" id="recommendAssessDetailApiImpl" />
 
 	<!-- 推荐内容API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.AwardStandardAPI" id="awardStandardApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldAwardStandardAPI" id="awardStandardApiImpl" />
 
 	<!-- 推荐信息API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.RecommendInfoAPI" id="recommendInfoApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldRecommendInfoAPI" id="recommendInfoApiImpl" />
 
 	<!-- 推荐内容API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.RecommendContentAPI" id="recommendContentApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldRecommendContentAPI" id="recommendContentApiImpl" />
 
 	<!-- 奖励信息API -->
-	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.AwardInfoAPI" id="awardInfoApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.OldAwardInfoAPI" id="awardInfoApiImpl" />
+
+    <!--推荐方案实施API-->
+    <dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.SchemeImplementAPI" id="schemeImplementApiImpl"/>
+
+    <!--推荐奖管理汇总API-->
+    <dubbo:reference interface="com.bjike.goddess.interiorrecommend.api.CollectAwardAPI" id="collectAwardApiImpl"/>
+
 
 	<!-- userAPI -->
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl" />
@@ -57,7 +64,7 @@
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.interiorrecommend.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.interiorrecommend.api.CusPermissionOperateAPI" />
-
+    <dubbo:reference  validation="true" id="interviewInforApiImpl" interface="com.bjike.goddess.recruit.api.InterviewInforAPI" />
 
 
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />

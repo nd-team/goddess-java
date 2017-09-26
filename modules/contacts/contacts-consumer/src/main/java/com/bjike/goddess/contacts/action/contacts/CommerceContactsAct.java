@@ -335,9 +335,9 @@ public class CommerceContactsAct extends BaseFileAction {
     }
 
     /**
-     * 根据id 获取移动端数据
+     * 根据id获取移动端数据
      *
-     * @return calss MobileCommerceContactsVO
+     * @return class MobileCommerceContactsVO
      * @version v1
      */
     @GetMapping("v1/mobile/findByID/{id}")

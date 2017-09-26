@@ -32,6 +32,7 @@ public class JapiTest {
                 "modules/secure/secure-api",
                 "modules/salaryconfirm/salaryconfirm-api",
                 "modules/assistance/assistance-api",
+                "modules/recruit/recruit-api",
                 "common/common-api"
         });
 //                JapiClient.saveHistory(false);

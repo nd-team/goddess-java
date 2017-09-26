@@ -11,7 +11,9 @@ import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
 import com.bjike.goddess.fundcheck.to.PayStockCollectTO;
 import com.bjike.goddess.fundcheck.to.PayStockTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 支付给股东业务接口
@@ -99,7 +101,7 @@ public interface PayStockSer extends Ser<PayStock, PayStockDTO> {
      * @param to
      * @throws SerException
      */
-    default List<PayStockBO> collect(PayStockCollectTO to) throws SerException {
+    default LinkedHashMap<String, String> collect(PayStockCollectTO to) throws SerException {
         return null;
     }
     /**

@@ -20,6 +20,11 @@
 
 	<!-- 基本资料 -->
 	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryBasicAPI" id="salayBasicApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryCalculateDetailAPI" id="salaryCalculateDetailApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryCalculateResultAPI" id="salaryCalculateResultApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryConfirmRecordAPI" id="salaryConfirmRecordApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryManageCollectAPI" id="salaryManageCollectApiImpl" />
+	<dubbo:reference interface="com.bjike.goddess.salarymanage.api.SalaryTestCollectAPI" id="salaryTestCollectApiImpl" />
 
 
 	<!-- userAPI -->

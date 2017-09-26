@@ -1,10 +1,10 @@
 package com.bjike.goddess.projectroyalty.api;
 
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.CusPermissionBO;
 import com.bjike.goddess.projectroyalty.dto.CusPermissionDTO;
 import com.bjike.goddess.projectroyalty.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.OpinionBO;
 
 import java.util.List;
 

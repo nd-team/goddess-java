@@ -61,19 +61,19 @@ public class EmployeePromoted extends BaseEntity {
     /**
      * 晋升前（不包括各项补助）
      */
-    @Column(  columnDefinition = "VARCHAR(255)   COMMENT '晋升前（不包括各项补助）'")
+    @Column(  columnDefinition = "INT(11)   COMMENT '晋升前（不包括各项补助）'")
     private Integer promotionBefore;
 
     /**
      * 晋升后（不包括各项补助）
      */
-    @Column(  columnDefinition = "VARCHAR(255)   COMMENT '晋升后（不包括各项补助）'")
+    @Column(  columnDefinition = "INT(11)  COMMENT '晋升后（不包括各项补助）'")
     private Integer promotionAfter;
 
     /**
      * 幅度(晋升后-晋升前)
      */
-    @Column(columnDefinition = "VARCHAR(255)   COMMENT '幅度'")
+    @Column(columnDefinition = "INT(11)   COMMENT '幅度'")
     private Integer extent;
 
     /**

@@ -34,6 +34,8 @@ public class ExcelTest {
             u.setName("黎黎黎");
             u.setPhone("15622226780");
             users.add(u);
+            users.add(u);
+            users.add(u);
             /**
              * 对象列表转excel bytes
              */

@@ -34,13 +34,14 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.enums.SexType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -86,6 +87,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
@@ -120,29 +123,40 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 //            }
 //        }
         UserDTO userDTO = new UserDTO();
-        EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
-        entryBasicInfoDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
+
+        userDTO.getConditions().add(Restrict.eq(ID, entity.getUserId()));
         String userToken = RpcTransmit.getUserToken();
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
-//        List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+        RpcTransmit.transmitUserToken(userToken);
+
+
         if (!CollectionUtils.isEmpty(userBOList)) {
             UserBO user = userBOList.get(0);
+            EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
+            entryBasicInfoDTO.getConditions().add(Restrict.eq("employeeID", user.getEmployeeNumber()));
+            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+            RpcTransmit.transmitUserToken(userToken);
+            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+                bo.setUsername(entryBasicInfoBOs.get(0).getName());
+            }
+
 //            UserBO user = userAPI.findByUsername(entity.getUsername());
             RpcTransmit.transmitUserToken(userToken);
             if (moduleAPI.isCheck("organize")) {
+                RpcTransmit.transmitUserToken(userToken);
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+                RpcTransmit.transmitUserToken(userToken);
                 if (null != detailBO) {
                     bo.setUsername(detailBO.getUsername());
                     bo.setNumber(detailBO.getEmployeesNumber());
 
-                    userToken = RpcTransmit.getUserToken();
-                    RpcTransmit.transmitUserToken(userToken);
 //                        bo.setArea(user.get(0).getArea());
 //                        bo.setPosition(user.get(0).getPosition());
 //                        bo.setDepartment(user.get(0).getDepartment());
-                    List<PositionUserDetailBO> list=detailBO.getDetailS();
+                    List<PositionUserDetailBO> list = detailBO.getDetailS();
                     for (PositionUserDetailBO p : list) {
                         PositionDetailBO position = positionDetailAPI.findBOById(p.getPositionId());
+                        RpcTransmit.transmitUserToken(userToken);
 //                    bo.setPosition(bo.getPosition() + "," + position.getPosition());
 //                    bo.setDepartment(bo.getDepartment() + "," + position.getDepartmentName());
 //                    bo.setArea(bo.getArea() + "," + position.getArea());
@@ -175,6 +189,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Transactional(rollbackFor = SerException.class)
     @Override
     public InternalContactsBO save(InternalContactsTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if (StringUtils.isNotBlank(to.getEmail())) {
             if (!Validator.isEmail(to.getEmail())) {
                 throw new SerException("输入的邮箱格式不正确");
@@ -201,6 +216,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             messageTO.setReceivers(emails);
             messageAPI.send(messageTO);
         }
+        RpcTransmit.transmitUserToken(userToken);
         return this.transformBO(entity);
     }
 
@@ -520,16 +536,22 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public List<NameAndIdBO> getUserName() throws SerException {
         String token = RpcTransmit.getUserToken();
-        RpcTransmit.transmitUserToken(token);
         EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
         List<EntryBasicInfoBO> bos = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+        RpcTransmit.transmitUserToken(token);
         List<NameAndIdBO> userNameList = new ArrayList<>();
         if (null != bos && bos.size() > 0) {
             for (EntryBasicInfoBO bo : bos) {
-                NameAndIdBO nameAndIdBO = new NameAndIdBO();
-                nameAndIdBO.setUserId(bo.getId());
-                nameAndIdBO.setName(bo.getName());
-                userNameList.add(nameAndIdBO);
+                UserDTO userDTO = new UserDTO();
+                userDTO.getConditions().add(Restrict.eq("employeeNumber",bo.getEmployeeID()));
+                List<UserBO> userBOList = userAPI.findByCis( userDTO );
+                RpcTransmit.transmitUserToken(token);
+                if( userBOList != null && userBOList.size()>0 ){
+                    NameAndIdBO nameAndIdBO = new NameAndIdBO();
+                    nameAndIdBO.setUserId(userBOList.get(0).getId());
+                    nameAndIdBO.setName(bo.getName());
+                    userNameList.add(nameAndIdBO);
+                }
             }
         }
 
@@ -613,10 +635,15 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 if (null != userBO) {
                     bo.setHeadSculpture(userBO.getHeadSculpture());
                 }
-                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
-                if (null != userDetailBO) {
-                    bo.setSex(userDetailBO.getSex());
+//                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
+                if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    bo.setSex(SexType.MAN);
+                } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    bo.setSex(SexType.WOMAN);
+                } else {
+                    bo.setSex(SexType.NONE);
                 }
+
             }
             return mobileInternalContactsBOs;
         }
@@ -646,10 +673,14 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             if (null != userBO) {
                 mobileInternalContactsBO.setHeadSculpture(userBO.getHeadSculpture());
             }
-            UserDetailBO userDetailBO = userDetailAPI.findByUserId(mobileInternalContactsBO.getUserId());
-            if (null != userDetailBO) {
-                mobileInternalContactsBO.setSex(userDetailBO.getSex());
+            if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                mobileInternalContactsBO.setSex(SexType.MAN);
+            } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                mobileInternalContactsBO.setSex(SexType.WOMAN);
+            } else {
+                mobileInternalContactsBO.setSex(SexType.NONE);
             }
+
             return mobileInternalContactsBO;
         }
         return null;

@@ -2,15 +2,21 @@ package com.bjike.goddess.intromanage.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.dimission.api.DimissionInfoAPI;
 import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
 import com.bjike.goddess.intromanage.excel.SonPermissionObject;
 import com.bjike.goddess.intromanage.to.*;
+import com.bjike.goddess.intromanage.type.DemandType;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -19,8 +25,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -63,6 +72,10 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private DimissionInfoAPI dimissionInfoAPI;
 
     /**
      * 检查权限(部门)
@@ -163,6 +176,33 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
             case SETACCOR:
                 flag = guideIdentity();
                 break;
+            case CONGEL:
+                flag = guideIdentity();
+                break;
+            case THAW:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            case SEE:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
@@ -202,37 +242,37 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
 
 
         //查询员工奖励
-        StaffRewardDTO staffRewardDTO =  new StaffRewardDTO();
+        StaffRewardDTO staffRewardDTO = new StaffRewardDTO();
         staffRewardDTO.getConditions().add(Restrict.eq("staffId", id));
-        List<StaffReward> honorAndQualities = staffRewardSer.findByCis( staffRewardDTO );
-        List<StaffRewardBO> honorAndQualitieBOs = BeanTransform.copyProperties( honorAndQualities ,StaffRewardBO.class );
+        List<StaffReward> honorAndQualities = staffRewardSer.findByCis(staffRewardDTO);
+        List<StaffRewardBO> honorAndQualitieBOs = BeanTransform.copyProperties(honorAndQualities, StaffRewardBO.class);
         //查询员工荣誉
-        StaffHonorDTO staffHonorDTO =  new StaffHonorDTO();
+        StaffHonorDTO staffHonorDTO = new StaffHonorDTO();
         staffHonorDTO.getConditions().add(Restrict.eq("staffId", id));
-        List<StaffHonor> mainBusinessIntros = staffHonorSer.findByCis( staffHonorDTO );
-        List<StaffHonorBO> mainBusinessIntroBOS = BeanTransform.copyProperties( mainBusinessIntros ,StaffHonorBO.class );
+        List<StaffHonor> mainBusinessIntros = staffHonorSer.findByCis(staffHonorDTO);
+        List<StaffHonorBO> mainBusinessIntroBOS = BeanTransform.copyProperties(mainBusinessIntros, StaffHonorBO.class);
         //查询教育经历
-        EducateExperienceDTO educateExperienceDTO =  new EducateExperienceDTO();
+        EducateExperienceDTO educateExperienceDTO = new EducateExperienceDTO();
         educateExperienceDTO.getConditions().add(Restrict.eq("staffId", id));
-        List<EducateExperience> successStories = educateExperienceSer.findByCis( educateExperienceDTO );
-        List<EducateExperienceBO> successStoriesBOS = BeanTransform.copyProperties( successStories ,EducateExperienceBO.class );
+        List<EducateExperience> successStories = educateExperienceSer.findByCis(educateExperienceDTO);
+        List<EducateExperienceBO> successStoriesBOS = BeanTransform.copyProperties(successStories, EducateExperienceBO.class);
         //查询工作经历
-        WorkExperienceDTO workExperienceDTO =  new WorkExperienceDTO();
+        WorkExperienceDTO workExperienceDTO = new WorkExperienceDTO();
         workExperienceDTO.getConditions().add(Restrict.eq("staffId", id));
-        List<WorkExperience> customerAndPartners = workExperienceSer.findByCis( workExperienceDTO );
-        List<WorkExperienceBO> customerAndPartnerBOS = BeanTransform.copyProperties( customerAndPartners ,WorkExperienceBO.class );
+        List<WorkExperience> customerAndPartners = workExperienceSer.findByCis(workExperienceDTO);
+        List<WorkExperienceBO> customerAndPartnerBOS = BeanTransform.copyProperties(customerAndPartners, WorkExperienceBO.class);
         //查询证书情况
-        CredentialSituationDTO credentialSituationDTO =  new CredentialSituationDTO();
+        CredentialSituationDTO credentialSituationDTO = new CredentialSituationDTO();
         credentialSituationDTO.getConditions().add(Restrict.eq("staffId", id));
-        List<CredentialSituation> communicationPaths = credentialSituationSer.findByCis( credentialSituationDTO );
-        List<CredentialSituationBO> communicationPathBOS = BeanTransform.copyProperties( communicationPaths ,CredentialSituationBO.class );
+        List<CredentialSituation> communicationPaths = credentialSituationSer.findByCis(credentialSituationDTO);
+        List<CredentialSituationBO> communicationPathBOS = BeanTransform.copyProperties(communicationPaths, CredentialSituationBO.class);
 
-        IndividualResumeBO individualResumeBO = BeanTransform.copyProperties( individualResume , IndividualResumeBO.class);
-        individualResumeBO.setStaffRewardBOS( honorAndQualitieBOs );
-        individualResumeBO.setStaffHonorBOS( mainBusinessIntroBOS );
-        individualResumeBO.setEducateExperienceBOS( successStoriesBOS );
-        individualResumeBO.setWorkExperienceBOS( customerAndPartnerBOS );
-        individualResumeBO.setCredentialSituationBOS( communicationPathBOS );
+        IndividualResumeBO individualResumeBO = BeanTransform.copyProperties(individualResume, IndividualResumeBO.class);
+        individualResumeBO.setStaffRewardBOS(honorAndQualitieBOs);
+        individualResumeBO.setStaffHonorBOS(mainBusinessIntroBOS);
+        individualResumeBO.setEducateExperienceBOS(successStoriesBOS);
+        individualResumeBO.setWorkExperienceBOS(customerAndPartnerBOS);
+        individualResumeBO.setCredentialSituationBOS(communicationPathBOS);
         return individualResumeBO;
     }
 
@@ -244,6 +284,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
      */
     @Override
     public List<IndividualResumeBO> list(IndividualResumeDTO dto) throws SerException {
+        checkPermission();
+        seachCond(dto);
         List<IndividualResume> list = super.findByPage(dto);
         UserBO userBO = userAPI.currentUser();
         String currentUsername = userBO.getUsername();//获取当前用户姓名
@@ -263,6 +305,12 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         }
         List<IndividualResumeBO> boList = BeanTransform.copyProperties(list, IndividualResumeBO.class);
         return boList;
+    }
+
+    public void seachCond(IndividualResumeDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getName())) {
+            dto.getConditions().add(Restrict.eq("name", dto.getName()));
+        }
     }
 
     /**
@@ -395,7 +443,12 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     @Override
     @Transactional
     public IndividualResumeBO save(IndividualResumeTO to) throws SerException {
+        checkPermission();
         IndividualResume entity = BeanTransform.copyProperties(to, IndividualResume.class, true);
+        entity.setUpdateDate(LocalDate.now());
+        StaffStatus staffStatus = positionDetailUserAPI.statusByName(to.getName());//查看员工状态
+        entity.setStaffStatus(staffStatus);
+        entity.setStatus(Status.THAW);
         entity = super.save(entity);
         IndividualResumeBO bo = BeanTransform.copyProperties(entity, IndividualResumeBO.class);
         String staffId = entity.getId();//员工id
@@ -428,8 +481,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private void saveCredentialSituation(IndividualResumeTO to, String staffId) throws SerException {
         List<CredentialSituationTO> credentialSituationTOS = to.getCredentialSituationTOS();
         List<CredentialSituation> list = new ArrayList<>(0);
-        if( credentialSituationTOS != null && credentialSituationTOS.size()>0 ){
-            for ( CredentialSituationTO temp : credentialSituationTOS){
+        if (credentialSituationTOS != null && credentialSituationTOS.size() > 0) {
+            for (CredentialSituationTO temp : credentialSituationTOS) {
                 CredentialSituation model = new CredentialSituation();
                 model.setCertificateTitle(temp.getCertificateTitle());
                 model.setCertificateTime(temp.getCertificateTime());
@@ -470,8 +523,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private void saveWorkExperiences(IndividualResumeTO to, String staffId) throws SerException {
         List<WorkExperienceTO> workExperienceTOS = to.getWorkExperienceTOS();
         List<WorkExperience> list = new ArrayList<>(0);
-        if( workExperienceTOS != null && workExperienceTOS.size()>0 ){
-            for ( WorkExperienceTO temp : workExperienceTOS){
+        if (workExperienceTOS != null && workExperienceTOS.size() > 0) {
+            for (WorkExperienceTO temp : workExperienceTOS) {
                 WorkExperience model = new WorkExperience();
                 model.setParticipatedActivity(temp.getParticipatedActivity());
                 model.setProjectExperience(temp.getProjectExperience());
@@ -510,8 +563,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private void saveEducateExperiences(IndividualResumeTO to, String staffId) throws SerException {
         List<EducateExperienceTO> educateExperienceTOS = to.getEducateExperienceTOS();
         List<EducateExperience> list = new ArrayList<>(0);
-        if( educateExperienceTOS != null && educateExperienceTOS.size()>0 ){
-            for ( EducateExperienceTO temp : educateExperienceTOS){
+        if (educateExperienceTOS != null && educateExperienceTOS.size() > 0) {
+            for (EducateExperienceTO temp : educateExperienceTOS) {
                 EducateExperience model = new EducateExperience();
                 model.setEducatAddress(temp.getEducatAddress());
                 model.setTrainingExperience(temp.getTrainingExperience());
@@ -549,8 +602,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private void saveStaffHonors(IndividualResumeTO to, String staffId) throws SerException {
         List<StaffHonorTO> staffHonorTOS = to.getStaffHonorTOS();
         List<StaffHonor> list = new ArrayList<>(0);
-        if( staffHonorTOS != null && staffHonorTOS.size()>0 ){
-            for ( StaffHonorTO temp : staffHonorTOS){
+        if (staffHonorTOS != null && staffHonorTOS.size() > 0) {
+            for (StaffHonorTO temp : staffHonorTOS) {
                 StaffHonor model = new StaffHonor();
                 model.setHonorName(temp.getHonorName());
                 model.setHonorGrade(temp.getHonorGrade());
@@ -592,8 +645,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     private void saveStaffRewards(IndividualResumeTO to, String staffId) throws SerException {
         List<StaffRewardTO> staffRewardTOS = to.getStaffRewardTOS();
         List<StaffReward> list = new ArrayList<>(0);
-        if( staffRewardTOS != null && staffRewardTOS.size()>0 ){
-            for ( StaffRewardTO temp : staffRewardTOS){
+        if (staffRewardTOS != null && staffRewardTOS.size() > 0) {
+            for (StaffRewardTO temp : staffRewardTOS) {
                 StaffReward model = new StaffReward();
                 model.setRewardsName(temp.getRewardsName());
                 model.setPrize(temp.getPrize());
@@ -633,6 +686,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     @Override
     @Transactional
     public void update(IndividualResumeTO to) throws SerException {
+        checkPermission();
         String staffId = to.getId();
         if (StringUtils.isNotEmpty(staffId)) {
             IndividualResume model = super.findById(staffId);
@@ -749,6 +803,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
     @Override
     @Transactional
     public void remove(String id) throws SerException {
+        checkPermission();
         removeSubObj(id);
         super.remove(id);
     }
@@ -801,5 +856,257 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         individualDisplayUser.setUsernames(usernameStr);
         individualDisplayUser.setDisplayId(displayFieldId);
         individualDisplayUserSer.save(individualDisplayUser);//保存显示的用户
+    }
+
+    @Override
+    public void congealFirmin(String id) throws SerException {
+        IndividualResume individualResume = super.findById(id);
+        individualResume.setStatus(Status.CONGEAL);
+        super.update(individualResume);
+    }
+
+    @Override
+    public void thawFirmin(String id) throws SerException {
+        IndividualResume individualResume = super.findById(id);
+        individualResume.setStatus(Status.THAW);
+        super.update(individualResume);
+    }
+
+    //转换周期
+    private String[] getTimes(int year, int month, int week) throws SerException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        calendar.set(Calendar.WEEK_OF_MONTH, week);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String start = dateFormat.format(calendar.getTime());
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        String end = dateFormat.format(calendar.getTime());
+        LocalDate e = DateUtil.parseDate(end);
+        if (week == 1) {
+            if (String.valueOf(month).length() == 1) {
+                start = year + "-0" + month + "-01";
+            } else {
+                start = year + "-" + month + "-01";
+            }
+        }
+        if (week == weekNum) {
+            if (month != e.getMonthValue()) {
+                e = DateUtil.parseDate(end);
+                e = e.minusDays(e.getDayOfMonth());
+            }
+        }
+        String endTime = e.toString();
+        String[] time = new String[]{start, endTime};
+        return time;
+    }
+
+    @Override
+    public SummationBO summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        checkPermission();
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        String[] date = getTimes(year, month, week);
+
+        return totalMethod(date);
+    }
+
+    @Override
+    public SummationBO summaMonth(Integer year, Integer month) throws SerException {
+        checkPermission();
+        if (year == null || month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String[] date = new String[]{startDate, endDate};
+        return totalMethod(date);
+    }
+
+    @Override
+    public SummationBO summaTotal(String endDate) throws SerException {
+        checkPermission();
+        endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        String sql = "select min(updateDate) as updateDate,min(entryDate) as entryDate from  " + getTableName(IndividualResume.class);
+        List<Object> objects = super.findBySql(sql);
+        //个人简历的最早时间
+        String startDateInd = "";
+        //个人简历入职的最早时间
+        String startDateEntry = "";
+        if (objects != null && objects.size() > 0) {
+            Object[] object = (Object[]) objects.get(0);
+            startDateInd = String.valueOf(object[0]);
+            startDateEntry = String.valueOf(object[1]);
+        }
+        String startDateDimi = dimissionInfoAPI.getDate();
+        String startDateFirm = firmIntroSer.getDate();
+        //个人时间数组
+        String[] gdates = new String[]{startDateInd, endDate};
+        //入职时间数组
+        String[] rdates = new String[]{startDateEntry, endDate};
+        //离职时间数组
+        String[] ddates = new String[]{startDateDimi, endDate};
+        //公司简历时间数组
+        String[] fdates = new String[]{startDateFirm, endDate};
+        SummationBO summationBO = new SummationBO();
+        //可用于招投标的数量
+        summationBO.setAvailBiddingNum(availBiddingNum(fdates));
+        //招投标类型简介数量
+        summationBO.setBiddingNum(biddingNum(fdates));
+        //入职培训所用简介数量
+        summationBO.setOrientationNum(orientationNum(fdates));
+        //公司官网所用简介数量
+        summationBO.setOfficialWebsiteNum(officialWebsiteNum(fdates));
+        //招聘所用简介数量
+        summationBO.setRecruitNum(recruitNum(fdates));
+        //入职人数
+        summationBO.setInductionNum(inductionNum(rdates));
+        //已有个人简介数
+        summationBO.setExistingProfileNum(existingProfileNum(gdates));
+        //离职人数
+        summationBO.setLeaveOffice(leaveOffice(ddates));
+        //已冻结有个人简介数
+        summationBO.setHasFrozen(hasFrozen(gdates));
+        return summationBO;
+    }
+
+    //可用于招投标的数量
+    public Integer availBiddingNum(String[] date) throws SerException {
+        Integer number = 0;
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        firmIntroDTO.getConditions().add(Restrict.between("updateDate", date));
+        firmIntroDTO.getConditions().add(Restrict.eq("demandType", DemandType.BIDDING));
+        firmIntroDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+        List<FirmIntro> firmIntros = firmIntroSer.findByCis(firmIntroDTO);
+        if (firmIntros != null && firmIntros.size() > 0) {
+            number = firmIntros.size();
+        }
+        return number;
+    }
+
+    //更新（制作）招投标类型简介数量
+    public Integer biddingNum(String[] date) throws SerException {
+        Integer number = 0;
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        firmIntroDTO.getConditions().add(Restrict.between("updateDate", date));
+        firmIntroDTO.getConditions().add(Restrict.eq("demandType", DemandType.BIDDING));
+        List<FirmIntro> firmIntros = firmIntroSer.findByCis(firmIntroDTO);
+        if (firmIntros != null && firmIntros.size() > 0) {
+            number = firmIntros.size();
+        }
+        return number;
+    }
+
+    //更新（制作）入职培训所用简介数量
+    public Integer orientationNum(String[] date) throws SerException {
+        Integer number = 0;
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        firmIntroDTO.getConditions().add(Restrict.between("updateDate", date));
+        firmIntroDTO.getConditions().add(Restrict.eq("demandType", DemandType.INDUCTION_TRAINING));
+        List<FirmIntro> firmIntros = firmIntroSer.findByCis(firmIntroDTO);
+        if (firmIntros != null && firmIntros.size() > 0) {
+            number = firmIntros.size();
+        }
+        return number;
+    }
+
+    //更新（制作）公司官网所用简介数量
+    public Integer officialWebsiteNum(String[] date) throws SerException {
+        Integer number = 0;
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        firmIntroDTO.getConditions().add(Restrict.between("updateDate", date));
+        firmIntroDTO.getConditions().add(Restrict.eq("demandType", DemandType.COMPANY_WEBSITE));
+        List<FirmIntro> firmIntros = firmIntroSer.findByCis(firmIntroDTO);
+        if (firmIntros != null && firmIntros.size() > 0) {
+            number = firmIntros.size();
+        }
+        return number;
+    }
+
+    //更新（制作）招聘所用简介数量
+    public Integer recruitNum(String[] date) throws SerException {
+        Integer number = 0;
+        FirmIntroDTO firmIntroDTO = new FirmIntroDTO();
+        firmIntroDTO.getConditions().add(Restrict.between("updateDate", date));
+        firmIntroDTO.getConditions().add(Restrict.eq("demandType", DemandType.RECRUIT));
+        List<FirmIntro> firmIntros = firmIntroSer.findByCis(firmIntroDTO);
+        if (firmIntros != null && firmIntros.size() > 0) {
+            number = firmIntros.size();
+        }
+        return number;
+    }
+
+    //入职人数
+    public Integer inductionNum(String[] date) throws SerException {
+        Integer number = 0;
+        IndividualResumeDTO individualResumeDTO = new IndividualResumeDTO();
+        individualResumeDTO.getConditions().add(Restrict.between("entryDate", date));
+        List<IndividualResume> individualResumes = super.findByCis(individualResumeDTO);
+        if (individualResumes != null && individualResumes.size() > 0) {
+            number = individualResumes.size();
+        }
+        return number;
+    }
+
+    //已有个人简介数（在职）
+    public Integer existingProfileNum(String[] date) throws SerException {
+        Integer number = 0;
+        IndividualResumeDTO individualResumeDTO = new IndividualResumeDTO();
+        individualResumeDTO.getConditions().add(Restrict.between("updateDate", date));
+        individualResumeDTO.getConditions().add(Restrict.eq("staffStatus", StaffStatus.WORKING));
+        List<IndividualResume> individualResumes = super.findByCis(individualResumeDTO);
+        if (individualResumes != null && individualResumes.size() > 0) {
+            number = individualResumes.size();
+        }
+        return number;
+    }
+
+    //离职人数
+    public Integer leaveOffice(String[] date) throws SerException {
+        return dimissionInfoAPI.getDimissionNum(date);
+    }
+
+    //已冻结有个人简介数
+    public Integer hasFrozen(String[] date) throws SerException {
+        Integer number = 0;
+        IndividualResumeDTO individualResumeDTO = new IndividualResumeDTO();
+        individualResumeDTO.getConditions().add(Restrict.between("updateDate", date));
+        individualResumeDTO.getConditions().add(Restrict.eq("status", Status.CONGEAL));
+        List<IndividualResume> individualResumes = super.findByCis(individualResumeDTO);
+        if (individualResumes != null && individualResumes.size() > 0) {
+            number = individualResumes.size();
+        }
+        return number;
+    }
+
+    //汇总总方法
+    public SummationBO totalMethod(String[] date) throws SerException {
+        SummationBO summationBO = new SummationBO();
+        //可用于招投标的数量
+        summationBO.setAvailBiddingNum(availBiddingNum(date));
+        //招投标类型简介数量
+        summationBO.setBiddingNum(biddingNum(date));
+        //入职培训所用简介数量
+        summationBO.setOrientationNum(orientationNum(date));
+        //公司官网所用简介数量
+        summationBO.setOfficialWebsiteNum(officialWebsiteNum(date));
+        //招聘所用简介数量
+        summationBO.setRecruitNum(recruitNum(date));
+        //入职人数
+        summationBO.setInductionNum(inductionNum(date));
+        //已有个人简介数
+        summationBO.setExistingProfileNum(existingProfileNum(date));
+        //离职人数
+        summationBO.setLeaveOffice(leaveOffice(date));
+        //已冻结有个人简介数
+        summationBO.setHasFrozen(hasFrozen(date));
+        return summationBO;
     }
 }

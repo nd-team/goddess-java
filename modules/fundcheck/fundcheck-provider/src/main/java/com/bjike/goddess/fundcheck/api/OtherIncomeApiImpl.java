@@ -10,7 +10,9 @@ import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 其他收入业务接口实现
@@ -64,7 +66,7 @@ public class OtherIncomeApiImpl implements OtherIncomeAPI {
         otherIncomeSer.remove(id);
     }
     @Override
-    public List<OtherIncomeBO> collect(OtherIncomeCollectTO to) throws SerException {
+    public LinkedHashMap<String,String> collect(OtherIncomeCollectTO to) throws SerException {
         return otherIncomeSer.collect(to);
     }
     @Override

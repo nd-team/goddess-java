@@ -197,7 +197,7 @@ public class PositionWorkDetailsTO extends BaseTO {
     /**
      * 模块
      */
-    @NotBlank(message = "模块不能为空", groups = {ADD.class, EDIT.class})
+//    @NotBlank(message = "模块不能为空", groups = {ADD.class, EDIT.class})
     private List<ModulesTO> modulesTOList;
 
     public String getGoals() {

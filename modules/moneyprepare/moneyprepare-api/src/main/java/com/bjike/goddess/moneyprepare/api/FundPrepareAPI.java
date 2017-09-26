@@ -95,7 +95,7 @@ public interface FundPrepareAPI {
     /**
      * 获得二级科目
      */
-    List<String> findSecondSubject() throws SerException;
+    List<String> findSecondSubject(String firstSubject) throws SerException;
 
     /**
      * 根据id获取资金准备列表

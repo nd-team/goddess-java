@@ -22,6 +22,7 @@ public class ModulesTO extends BaseTO {
     /**
      * 岗位明细id
      */
+//    @NotBlank(message = "岗位明细id不能为空", groups = { EDIT.class})
     private String workDetailsId;
 
     /**
@@ -81,7 +82,7 @@ public class ModulesTO extends BaseTO {
     /**
      * 指标
      */
-    @NotNull(message = "指标不能为空", groups = {ADD.class, EDIT.class})
+//    @NotNull(message = "指标不能为空", groups = {ADD.class, EDIT.class})
     private List<IndicatorTO> indicatorTOList;
 
     public String getWorkDetailsId() {

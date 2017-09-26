@@ -353,7 +353,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
             entity.setLaunch(user.getUsername());
         if (StringUtils.isBlank(entity.getName()))
             entity.setName(" ");
-        if (StringUtils.isBlank(entity.getProject())){
+        if (StringUtils.isBlank(entity.getProject())) {
             if (moduleAPI.isCheck("organize")) {
                 List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.getPositionDetail(user.getUsername());
                 if (!CollectionUtils.isEmpty(positionDetailBOs)) {
@@ -387,7 +387,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         UserBO user = null;
         if (moduleAPI.isCheck("organize")) {
             List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
-            if (CollectionUtils.isEmpty(userBOList)) {
+            if (!CollectionUtils.isEmpty(userBOList)) {
                 userBOList = userBOList.stream().filter(obj -> obj.getUsername().equals(entity.getUsername())).collect(Collectors.toList());
                 user = userBOList.get(0);
             }
@@ -806,6 +806,7 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         scoreBO.setPushTotal(pushTotal);
         return scoreBO;
     }
+
     public String getRewardBallot(String name) throws SerException {
         StringBuilder sql = new StringBuilder("select sum(ballot) as ballot ");
         sql.append(" from bonus_discipline_record ");
@@ -815,7 +816,9 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
         if (!CollectionUtils.isEmpty(disciplineRecords)) {
             Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
-            return ballots.toString();
+            if (null != ballots) {
+                return ballots.toString();
+            }
         }
         return null;
     }
@@ -830,7 +833,9 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         List<DisciplineRecord> disciplineRecords = super.findBySql(sql.toString(), DisciplineRecord.class, fields);
         if (!CollectionUtils.isEmpty(disciplineRecords)) {
             Double ballots = disciplineRecords.stream().map(DisciplineRecord::getBallot).distinct().collect(Collectors.toList()).get(0);
-            return ballots.toString();
+            if (null != ballots) {
+                return ballots.toString();
+            }
         }
         return null;
     }

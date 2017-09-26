@@ -38,7 +38,7 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:assistance:assistance-api")
-    compile project(":modules:salarymanage:salarymanage-api")
+compile project(":modules:salarymanage:salarymanage-api")
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }

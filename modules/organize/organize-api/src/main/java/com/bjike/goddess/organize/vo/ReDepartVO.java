@@ -1,5 +1,7 @@
 package com.bjike.goddess.organize.vo;
 
+import java.util.List;
+
 /**
  * Created by ike on 17-9-7.
  */
@@ -20,6 +22,18 @@ public class ReDepartVO {
      * 所属地区
      */
     private String area;
+    /**
+     * 层级详情
+     */
+    private List<ReArrangementVO> arrangementS;
+
+    public List<ReArrangementVO> getArrangementS() {
+        return arrangementS;
+    }
+
+    public void setArrangementS(List<ReArrangementVO> arrangementS) {
+        this.arrangementS = arrangementS;
+    }
 
     public String getId() {
         return id;

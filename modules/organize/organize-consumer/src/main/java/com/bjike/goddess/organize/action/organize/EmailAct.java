@@ -185,10 +185,18 @@ public class EmailAct {
 //        }
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail");//线上
-//        HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail");//线下测试
+        String[] names=dto.getNames();
+        StringBuilder sb=new StringBuilder();
+        for (int i=0;i<names.length;i++){
+            if (i==names.length-1){
+                sb.append(names[i]);
+            }else {
+                sb.append(names[i]+",");
+            }
+        }
+                HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
-
         ActResultOrgan resultOrgan = new ActResultOrgan();
         try {
             CloseableHttpResponse response = closeableHttpClient.execute(httpGet);

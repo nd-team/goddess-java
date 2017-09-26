@@ -60,6 +60,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
             throw new SerException("数据对象不能为空");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+
         super.update(entity);
         return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);
     }
@@ -69,7 +70,7 @@ public class InstructionClassifySerImpl extends ServiceImpl<InstructionClassify,
         InstructionClassify entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        if (positionInstructionSer.findByClassify(id).size() > 0)
+        if (null!=positionInstructionSer.findByClassify(id)&&!positionInstructionSer.findByClassify(id).isEmpty())
             throw new SerException("此处已被引用,无法删除");
         super.remove(entity);
         return BeanTransform.copyProperties(entity, InstructionClassifyBO.class);

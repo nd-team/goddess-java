@@ -1,6 +1,5 @@
 package com.bjike.goddess.businessproject.service;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
@@ -30,9 +29,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -293,7 +294,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
             bo.setBusinessType(str.getBusinessType());
             bo.setBusinessCooperate(str.getBusinessCooperate());
             bo.setContractProperty(str.getContractProperty());
-            bo.setRemark( str.getRemark());
+            bo.setRemark(str.getRemark());
             siginManageBOS.add(bo);
         });
         return siginManageBOS;
@@ -438,7 +439,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         return areaList;
     }
 
-    @Transactional(rollbackFor = SerException.class )
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
 
@@ -485,35 +486,34 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
         SiginManageTemplateExport excel = new SiginManageTemplateExport();
         excel.setBusinessType("移动通信类");
-        excel.setBusinessSubject( "test" );
+        excel.setBusinessSubject("test");
         excel.setBusinessCooperate("租赁合同");
         excel.setOuterProject("test");
         excel.setFirstCompany("test");
-        excel.setSecondCompany( "test");
+        excel.setSecondCompany("test");
         excel.setArea("test");
-        excel.setMoney( 12.0d );
-        excel.setStartProjectTime(LocalDate.now() );
-        excel.setEndProjectTime( LocalDate.now() );
-        excel.setSiginStatus("已签订" );
-        excel.setContractProperty( "框架合同");
-        excel.setMakeProject( "已立项");
+        excel.setMoney(12.0d);
+        excel.setStartProjectTime(LocalDate.now());
+        excel.setEndProjectTime(LocalDate.now());
+        excel.setSiginStatus("已签订");
+        excel.setContractProperty("框架合同");
+        excel.setMakeProject("已立项");
         excel.setInnerProject("test");
-        excel.setProjectGroup( "test");
+        excel.setProjectGroup("test");
         excel.setProjectCharge("test");
         excel.setRemark("");
-        siginManageExports.add( excel );
+        siginManageExports.add(excel);
 
         SiginManageTemplateExport excel2 = new SiginManageTemplateExport();
-        BeanUtils.copyProperties( excel , excel2);
-        excel.setSiginStatus("未签订" );
-        excel.setMakeProject( "未立项");
+        BeanUtils.copyProperties(excel, excel2);
+        excel.setSiginStatus("未签订");
+        excel.setMakeProject("未立项");
         siginManageExports.add(excel);
 
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(siginManageExports, exce);
         return bytes;
     }
-
 
 
     @Override
@@ -526,5 +526,70 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
 
         return innerProjectList;
+    }
+
+    @Override
+    public SiginManageBO findByProject(String name) throws SerException {
+        if (StringUtils.isNotBlank(name)) {
+            SiginManageDTO dto = new SiginManageDTO();
+            dto.getConditions().add(Restrict.eq("innerProject", name));
+            List<SiginManage> siginManageList = super.findByCis(dto);
+            if (null != siginManageList && siginManageList.size() > 0) {
+                return BeanTransform.copyProperties(siginManageList.get(0), SiginManageBO.class, false);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean findCompleteStatus(String projectName) throws SerException {
+        if (StringUtils.isNotBlank(projectName)) {
+            SiginManageDTO dto = new SiginManageDTO();
+            dto.getConditions().add(Restrict.eq("innerProject", projectName));
+            List<SiginManage> siginManageList = super.findByCis(dto);
+            if (null != siginManageList && siginManageList.size() > 0) {
+                String time = DateUtil.dateToString(siginManageList.get(0).getEndProjectTime());
+                String localTime = DateUtil.dateToString(LocalDate.now());
+                //time<localTime,返回true
+                return isOrder(time, localTime);
+            }
+        }
+        return null;
+    }
+
+    private Boolean isOrder(String date1, String date2) throws SerException {
+        Boolean tar = false;
+        try {
+            //a1报名截止时间，b1,当前时间
+            Date a1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
+            Date b1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+            int result = a1.compareTo(b1);
+            if (result <= 0) {
+                //a1<a2
+                tar = true;
+            }
+            return tar;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    public static void main(String args[]) throws SerException {
+        Boolean tar = false;
+        String date1 = "2017-08-09";
+        String date2 = "2017-08-10";
+        try {
+            //a1报名截止时间，b1,当前时间
+            Date a1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
+            Date b1 = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+            int result = a1.compareTo(b1);
+            if (result <= 0) {
+                //能报名,a1<a2
+                tar = true;
+            }
+            System.out.println(tar);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
     }
 }

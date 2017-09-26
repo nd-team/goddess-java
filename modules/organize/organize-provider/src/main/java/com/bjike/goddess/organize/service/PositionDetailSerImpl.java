@@ -63,6 +63,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setDepartmentName(department.getDepartment());
         bo.setArrangementName(arrangement.getArrangement());
         bo.setDepartmentName(department.getDepartment());
+        bo.setHierarchyID(department.getHierarchyId());
         bo.setHierarchyName(department.getHierarchyName());
         bo.setArrangementId(arrangement.getId());
         if (null != moduleType) {
@@ -301,51 +302,63 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             }
         }
         for (ReHierarchyBO h : hierarchyBOS) {
-            List<DepartmentDetail> departmentDetails = departs.stream().filter(departmentDetail -> h.getId().equals(departmentDetail.getHierarchy().getId())).collect(Collectors.toList());
-            List<ReDepartBO> departS = BeanTransform.copyProperties(departmentDetails, ReDepartBO.class);
-            h.setDeparts(departS);
-            List<String> departIds = departS.stream().map(reDepartBO -> reDepartBO.getId()).collect(Collectors.toList());
-            PositionDetailDTO dto = new PositionDetailDTO();
-            dto.getConditions().add(Restrict.in("department.id", departIds));
-            List<PositionDetail> list = super.findByCis(dto);
-            Set<Arrangement> set = list.stream().map(positionDetail -> positionDetail.getArrangement()).collect(Collectors.toSet());
-            List<Arrangement> arrangements = new ArrayList<>(set);
-            List<ReArrangementBO> reArrangementBOS = BeanTransform.copyProperties(arrangements, ReArrangementBO.class);
-            h.setArrangementS(reArrangementBOS);
-            Set<ModuleType> moduleTypes = list.stream().filter(positionDetail -> null!=positionDetail.getModule()).map(positionDetail ->positionDetail.getModule()).collect(Collectors.toSet());
-            List<ModuleType> modules = new ArrayList<>(moduleTypes);
-            List<ReModuleBO> moduleBOS = BeanTransform.copyProperties(modules, ReModuleBO.class);
-            h.setModuleS(moduleBOS);
-            for (ReArrangementBO reArrangementBO : reArrangementBOS) {
-                PositionDetailDTO dto1 = new PositionDetailDTO();
-                dto1.getConditions().add(Restrict.in("arrangement.id", reArrangementBO.getId()));
-                List<PositionDetail> list1 = super.findByCis(dto1);
-                List<RePositionBO> bos = new ArrayList<>();
-                for (PositionDetail p : list1) {
-                    PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
-                    detailDTO.getConditions().add(Restrict.eq("positionId", p.getId()));
-                    detailDTO.getConditions().add(Restrict.eq("workStatus", WorkStatus.MAIN));
-                    List<PositionUserDetail> mains = positionUserDetailSer.findByCis(detailDTO);
-                    String main = get(mains);
-                    PositionUserDetailDTO detailDTO1 = new PositionUserDetailDTO();
-                    detailDTO1.getConditions().add(Restrict.eq("positionId", p.getId()));
-                    detailDTO1.getConditions().add(Restrict.eq("workStatus", WorkStatus.PARTJOB));
-                    List<PositionUserDetail> parts = positionUserDetailSer.findByCis(detailDTO1);
-                    String part = get(parts);
-                    PositionUserDetailDTO detailDTO2 = new PositionUserDetailDTO();
-                    detailDTO2.getConditions().add(Restrict.eq("positionId", p.getId()));
-                    detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
-                    List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
-                    String agent = get(agents);
-                    RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class);
-                    positionBO.setMain(main);
-                    positionBO.setPart(part);
-                    positionBO.setAgent(agent);
-                    positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
-                    bos.add(positionBO);
-                }
-                reArrangementBO.setPositionS(bos);
+            Set<String> departIds = departs.stream().filter(departmentDetail -> h.getId().equals(departmentDetail.getHierarchy().getId())).map(departmentDetail -> departmentDetail.getId()).collect(Collectors.toSet());
+            List<ReDepartBO> departS = new ArrayList<>();
+            for (String id : departIds) {
+                departS.add(BeanTransform.copyProperties(departmentDetailSer.findById(id), ReDepartBO.class));
             }
+            for (ReDepartBO d : departS) {
+                PositionDetailDTO dto = new PositionDetailDTO();
+                dto.getConditions().add(Restrict.eq("department.id", d.getId()));
+                List<PositionDetail> list = super.findByCis(dto);
+                Set<String> arrangementIds = list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
+                List<ReArrangementBO> reArrangementBOS = new ArrayList<>();
+                for (String id : arrangementIds) {
+                    reArrangementBOS.add(BeanTransform.copyProperties(arrangementSer.findById(id), ReArrangementBO.class));
+                }
+                for (ReArrangementBO reArrangementBO : reArrangementBOS) {
+                    PositionDetailDTO dto1 = new PositionDetailDTO();
+                    dto1.getConditions().add(Restrict.eq("department.id", d.getId()));
+                    dto1.getConditions().add(Restrict.eq("arrangement.id", reArrangementBO.getId()));
+                    List<PositionDetail> list1 = super.findByCis(dto1);
+//                    Set<String> moduleTypeIds = list1.stream().filter(positionDetail -> null != positionDetail.getModule()).map(positionDetail -> positionDetail.getModule().getId()).collect(Collectors.toSet());
+//                    List<ReModuleBO> moduleBOS = new ArrayList<>();
+//                    for (String id : moduleTypeIds) {
+//                        moduleBOS.add(BeanTransform.copyProperties(moduleTypeSer.findById(id), ReModuleBO.class));
+//                    }
+                    List<RePositionBO> bos = new ArrayList<>();
+                    for (PositionDetail p : list1) {
+                        PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                        detailDTO.getConditions().add(Restrict.eq("positionId", p.getId()));
+                        detailDTO.getConditions().add(Restrict.eq("workStatus", WorkStatus.MAIN));
+                        List<PositionUserDetail> mains = positionUserDetailSer.findByCis(detailDTO);
+                        String main = get(mains);
+                        PositionUserDetailDTO detailDTO1 = new PositionUserDetailDTO();
+                        detailDTO1.getConditions().add(Restrict.eq("positionId", p.getId()));
+                        detailDTO1.getConditions().add(Restrict.eq("workStatus", WorkStatus.PARTJOB));
+                        List<PositionUserDetail> parts = positionUserDetailSer.findByCis(detailDTO1);
+                        String part = get(parts);
+                        PositionUserDetailDTO detailDTO2 = new PositionUserDetailDTO();
+                        detailDTO2.getConditions().add(Restrict.eq("positionId", p.getId()));
+                        detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
+                        List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
+                        String agent = get(agents);
+                        RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class, "module");
+                        positionBO.setMain(main);
+                        positionBO.setPart(part);
+                        positionBO.setAgent(agent);
+                        if (null != p.getModule()) {
+                            positionBO.setModule(p.getModule().getModule());
+                        }
+                        positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
+                        bos.add(positionBO);
+                    }
+                    reArrangementBO.setPositionS(bos);
+//                    reArrangementBO.setModuleS(moduleBOS);
+                }
+                d.setArrangementS(reArrangementBOS);
+            }
+            h.setDeparts(departS);
         }
         return hierarchyBOS;
     }

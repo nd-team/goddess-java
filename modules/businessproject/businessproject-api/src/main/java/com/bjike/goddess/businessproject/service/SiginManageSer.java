@@ -1,15 +1,14 @@
 package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
+import com.bjike.goddess.businessproject.dto.SiginManageDTO;
+import com.bjike.goddess.businessproject.entity.SiginManage;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.businessproject.entity.SiginManage;
-import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -22,7 +21,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
-
 
 
     /**
@@ -42,7 +40,6 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
 
     /**
      * 签订与立项列表总条数
-     *
      */
     default Long countSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         return null;
@@ -50,9 +47,12 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
 
     /**
      * 根据id获取签订与立项列表
+     *
      * @return class SiginManageBO
      */
-    default SiginManageBO getOneById(String id) throws SerException {return null;}
+    default SiginManageBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -96,49 +96,59 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
     ;
 
     /**
-     *  审核
+     * 审核
+     *
      * @param siginManageTO 合同签订与立项信息
      * @return class SiginManageBO
      */
-    default SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException { return null;}
+    default SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
+        return null;
+    }
 
     /**
      * 搜索
+     *
      * @param siginManageDTO 搜索
      * @return class SiginManageBO
      */
-    default List<SiginManageBO> searchSiginManage(SiginManageDTO siginManageDTO) throws  SerException {
+    default List<SiginManageBO> searchSiginManage(SiginManageDTO siginManageDTO) throws SerException {
         return null;
     }
 
     /**
      * 获取地区
+     *
      * @return class String
      */
-    default List<String> listArea( ) throws  SerException {
+    default List<String> listArea() throws SerException {
         return null;
     }
 
 
     /**
-     *  导入
+     * 导入
+     *
      * @param siginManageTO 合同签订与立项信息
      * @return class SiginManageBO
      */
-    default SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException { return null;}
+    default SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
+        return null;
+    }
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(SiginManageDTO dto ) throws SerException;
+    byte[] exportExcel(SiginManageDTO dto) throws SerException;
 
     /**
      * 导出Excel
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
 
     /**
@@ -150,6 +160,25 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
         return null;
     }
 
+    /**
+     * 根据内部项目名称查询数据
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default SiginManageBO findByProject(String name) throws SerException {
+        return null;
+    }
 
-
+    /**
+     * 根据项目名称获取是否完工
+     *
+     * @param projectName
+     * @return
+     * @throws SerException
+     */
+    default Boolean findCompleteStatus(String projectName) throws SerException {
+        return null;
+    }
 }

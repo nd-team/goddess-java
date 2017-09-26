@@ -2,10 +2,12 @@ package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
+
 /**
  * Created by ike on 17-9-7.
  */
-public class ReDepartBO extends BaseBO{
+public class ReDepartBO extends BaseBO {
     /**
      * 部门编号
      */
@@ -18,6 +20,18 @@ public class ReDepartBO extends BaseBO{
      * 所属地区
      */
     private String area;
+    /**
+     * 层级详情
+     */
+    private List<ReArrangementBO> arrangementS;
+
+    public List<ReArrangementBO> getArrangementS() {
+        return arrangementS;
+    }
+
+    public void setArrangementS(List<ReArrangementBO> arrangementS) {
+        this.arrangementS = arrangementS;
+    }
 
     public String getSerialNumber() {
         return serialNumber;

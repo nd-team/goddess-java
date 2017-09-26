@@ -2,6 +2,7 @@ package com.bjike.goddess.regularization.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.regularization.type.Assess;
+import com.bjike.goddess.regularization.type.SexType;
 import com.bjike.goddess.regularization.type.StaffStatus;
 
 /**
@@ -43,7 +44,7 @@ public class TransferInfoBO extends BaseBO {
     /**
      * 性别
      */
-    private String gender;
+    private SexType gender;
 
     /**
      * 学历
@@ -118,7 +119,7 @@ public class TransferInfoBO extends BaseBO {
     /**
      * 截止目前试用期时长
      */
-    private String asProbationLength;
+    private Integer asProbationLength;
 
     /**
      * 确定事项是否确认
@@ -271,11 +272,11 @@ public class TransferInfoBO extends BaseBO {
         this.empNo = empNo;
     }
 
-    public String getGender() {
+    public SexType getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(SexType gender) {
         this.gender = gender;
     }
 
@@ -392,12 +393,11 @@ public class TransferInfoBO extends BaseBO {
         this.staffStatus = staffStatus;
     }
 
-
-    public String getAsProbationLength() {
+    public Integer getAsProbationLength() {
         return asProbationLength;
     }
 
-    public void setAsProbationLength(String asProbationLength) {
+    public void setAsProbationLength(Integer asProbationLength) {
         this.asProbationLength = asProbationLength;
     }
 

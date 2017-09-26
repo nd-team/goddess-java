@@ -62,7 +62,9 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setPositionNumber(detailBO.getShowNumber());
         bo.setArrangement(detailBO.getArrangementName());
         bo.setHierarchy(detailBO.getHierarchyName());
+        bo.setHierarchyID(detailBO.getHierarchyID());
         bo.setDepartment(detailBO.getDepartmentName());
+        bo.setDepartmentId(detailBO.getDepartmentId());
         bo.setPool(detailBO.getPool());
         bo.setStaff(detailBO.getStaff());
         bo.setParent("");
@@ -75,12 +77,16 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         bo.setAngleName(entity.getAngle().getName());
         bo.setDimensionId(entity.getDimension().getId());
         bo.setDimensionName(entity.getDimension().getName());
-        if (null != entity.getReflect().getClassify())
+        if (null != entity.getReflect().getClassify()) {
             bo.setClassifyName(entity.getReflect().getClassify().getName());
+            bo.setClassifyId(entity.getReflect().getClassify().getId());
+        }
         bo.setOperateIds(entity.getOperates().stream().map(Operate::getId).collect(Collectors.toList()).toArray(new String[0]));
         bo.setOperateNames("");
-        for (Operate operate : entity.getOperates())
+        for (Operate operate : entity.getOperates()) {
             bo.setOperateNames(bo.getOperateNames() + operate.getName() + ",");
+            bo.setOperateIds(bo.getOperateIds());
+        }
         bo.setReflectId(entity.getReflect().getId());
         bo.setReflectNames(entity.getReflect().getName());
         return bo;
@@ -157,6 +163,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
             throw new SerException("数据对象不能为空");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setOutcome(to.getOutcome());
         super.update(this.setForeign(entity, to));
         return this.transformToBO(entity);
     }
@@ -168,7 +175,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
             throw new SerException("数据对象不能为空");
         try {
             super.remove(entity);
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new SerException("此处已被引用,无法删除");
         }
         return this.transformToBO(entity);
@@ -210,13 +217,13 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         if (StringUtils.isBlank(classifyId))
             return new ArrayList<>(0);
         PositionInstructionDTO dto = new PositionInstructionDTO();
-        dto.getConditions().add(Restrict.in("reflect.id",
-                reflectSer.findByClassify(classifyId).stream()
-                        .map(ReflectBO::getId)
-                        .collect(Collectors.toList())
-                        .toArray(new String[0])));
-        List<PositionInstruction> list = super.findByCis(dto);
-        return this.transformToBOList(list);
+        Set<String> set = reflectSer.findByClassify(classifyId).stream().map(ReflectBO::getId).collect(Collectors.toSet());
+        if (!set.isEmpty()) {
+            dto.getConditions().add(Restrict.in("reflect.id", set));
+            List<PositionInstruction> list = super.findByCis(dto);
+            return this.transformToBOList(list);
+        }
+        return null;
     }
 
     @Override
@@ -241,6 +248,7 @@ public class PositionInstructionSerImpl extends ServiceImpl<PositionInstruction,
         List<PositionInstruction> list = super.findByCis(dto);
         return this.transformToBOList(list);
     }
+
     @Override
     public List<String> getOutCome() throws SerException {
         String[] fields = new String[]{"outcome"};

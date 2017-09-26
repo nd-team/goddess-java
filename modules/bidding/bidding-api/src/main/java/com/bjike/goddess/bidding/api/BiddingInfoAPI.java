@@ -1,10 +1,12 @@
 package com.bjike.goddess.bidding.api;
 
+import com.bjike.goddess.bidding.bo.BiddingCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
+import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -145,6 +147,45 @@ public interface BiddingInfoAPI {
     byte[] exportExcel(BiddingInfoDTO dto) throws SerException;
 
 
-
+    /**
+     * 招投标流程进度管理日汇总
+     *
+     * @param to to
+     * @return class BiddingCollectBO
+     * @throws SerException
+     */
+    default List<BiddingCollectBO> dayCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 招投标流程进度管理周汇总
+     *
+     * @param to to
+     * @return class BiddingCollectBO
+     * @throws SerException
+     */
+    default List<BiddingCollectBO> weekCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 招投标流程进度管理月汇总
+     *
+     * @param to to
+     * @return class BiddingCollectBO
+     * @throws SerException
+     */
+    default List<BiddingCollectBO> monthCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 招投标流程进度管理累计汇总
+     *
+     * @param to to
+     * @return class BiddingCollectBO
+     * @throws SerException
+     */
+    default List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
 
 }

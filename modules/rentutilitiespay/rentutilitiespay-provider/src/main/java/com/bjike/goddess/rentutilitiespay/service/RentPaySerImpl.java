@@ -292,7 +292,9 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
     @Override
     public RentPayBO editRentPay(RentPayTO rentPayTO) throws SerException {
         RentPay rentPay = super.findById(rentPayTO.getId());
-        BeanTransform.copyProperties(rentPayTO, rentPay, true, "projectName");
+        LocalDateTime createTime = rentPay.getCreateTime();
+        rentPay = BeanTransform.copyProperties(rentPayTO, RentPay.class, true, "projectName");
+        rentPay.setCreateTime(createTime);
         rentPay.setModifyTime(LocalDateTime.now());
         //用水量（水费期末数目-水费初期数目）
         Double water = rentPay.getWaterEndNum() - rentPay.getWaterBeginNum();
@@ -335,25 +337,25 @@ public class RentPaySerImpl extends ServiceImpl<RentPay, RentPayDTO> implements 
         sb.append(" SELECT * FROM ");
         sb.append(" (SELECT area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(rent) AS rent,sum(waterPayMoney) AS waterPayMoney, ");
-        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(fee)AS fee, ");
-        sb.append(" ( sum(rent)+sum(waterPayMoney)+sum(energyPayMoney)+sum(fee)) AS remark ");
+        sb.append(" sum(energyPayMoney)AS energyPayMoney,sum(gasRechargeLines) as gasRechargeLines, sum(fee)AS fee, ");
+        sb.append(" ( sum(rent)+sum(waterPayMoney)+sum(energyPayMoney)+sum(gasRechargeLines)+sum(fee)) AS remark ");
         sb.append(" FROM rentutilitiespay_rentpay WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address, ");
         sb.append(" area ORDER BY area)A ");
         sb.append(" UNION ");
         sb.append(" SELECT '合计' AS area,NULL as projectGroup,NULL as projectName,NULL as address, ");
         sb.append(" sum(rent) AS rent,sum(waterPayMoney) AS waterPayMoney, ");
-        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(fee)AS fee , ");
+        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(gasRechargeLines) as gasRechargeLines,sum(fee)AS fee , ");
         sb.append(" ( sum(remark)) as remark FROM ");
         sb.append(" (SELECT area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(rent) AS rent,sum(waterPayMoney) AS waterPayMoney, ");
-        sb.append(" sum(energyPayMoney)AS energyPayMoney, sum(fee)AS fee, ");
-        sb.append(" ( sum(rent)+sum(waterPayMoney)+sum(energyPayMoney)+sum(fee)) AS remark ");
+        sb.append(" sum(energyPayMoney)AS energyPayMoney,sum(gasRechargeLines) as gasRechargeLines, sum(fee)AS fee, ");
+        sb.append(" ( sum(rent)+sum(waterPayMoney)+sum(energyPayMoney)+sum(gasRechargeLines)+sum(fee)) AS remark ");
         sb.append(" FROM rentutilitiespay_rentpay WHERE area IN (%s) GROUP BY area,projectGroup,projectName,address, ");
         sb.append(" area ORDER BY area)A ");
         String sql = sb.toString();
         sql = String.format(sql, areaStr, areaStr);
         String[] fields = new String[]{"area", "projectGroup", "projectName", "address",
-                "rent", "waterPayMoney", "energyPayMoney", "fee", "remark"};
+                "rent", "waterPayMoney", "energyPayMoney", "gasRechargeLines","fee", "remark"};
         List<CollectAreaBO> collectAreaBOS = super.findBySql(sql, CollectAreaBO.class, fields);
         return collectAreaBOS;
     }

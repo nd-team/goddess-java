@@ -2,8 +2,8 @@ package com.bjike.goddess.projectroyalty.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.CompletionTimeBO;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.CompletionTimeDTO;
 import com.bjike.goddess.projectroyalty.entity.CompletionTime;
 import com.bjike.goddess.projectroyalty.to.CompletionTimeTO;

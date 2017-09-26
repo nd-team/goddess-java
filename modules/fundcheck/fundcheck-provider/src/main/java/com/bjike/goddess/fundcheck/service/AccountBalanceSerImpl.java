@@ -219,15 +219,15 @@ public class AccountBalanceSerImpl extends ServiceImpl<AccountBalance, AccountBa
         Double accountSpendMoney = accountSpendBOS.stream().filter(str->null!=str.getTotal()).mapToDouble(AccountSpendBO::getTotal).sum();
 
         //获取银行流水的账上余额
-        int year = LocalDate.now().getYear();
-        int month = LocalDate.now().getMonthValue();
-        Double bank = bankRecordAPI.balanceByMonth(year,month);
+        Double bank = bankRecordAPI.balanceByMonth(startTime,endTime);
         //资金差异(期初余额+账务收入-财务支出)
         Double fundsDifference = beginBalanceMoney+accountIncomeMoney-accountSpendMoney;
 
         AccountBalanceBO bo = new AccountBalanceBO();
+        bo.setDate(startTime+"-"+endTime);
         bo.setBeginningBalance(beginBalanceMoney);
         bo.setAccountIncome(accountIncomeMoney);
+        bo.setAccountBalance(bank);
         bo.setAccountSpend(accountSpendMoney);
         bo.setFundsDifference(fundsDifference);
         accountBalanceBOList.add(bo);

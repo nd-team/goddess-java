@@ -7,6 +7,7 @@ import com.bjike.goddess.bidding.to.BiddingWebInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.common.api.type.Status;
 
 import java.util.List;
 
@@ -91,6 +92,24 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
 
     }
     /**
+     * 冻结
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void congel(String id) throws SerException {
+
+    }
+    /**
+     * 解冻
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void thaw(String id) throws SerException {
+
+    }
+    /**
      * 获取网站名称
      *
      * @return class String
@@ -115,5 +134,13 @@ public interface BiddingWebInfoSer extends Ser<BiddingWebInfo, BiddingWebInfoDTO
         return null;
     }
 
+    /**
+     * 获取信息
+     * @param url
+     * @param key
+     * @return
+     * @throws SerException
+     */
+    String info(String url,String key) throws SerException;
 
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.bo.UserBO;
 
@@ -217,6 +218,13 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      * @throws SerException
      */
     List<DepartPositionBO> departPositions() throws SerException;
+    /**
+     * 获取用户名获取该员工状态
+     * lijuntao
+     * @return
+     * @throws SerException
+     */
+    StaffStatus statusByName(String name) throws SerException;
 
     /**
      * 检测是否在该部门

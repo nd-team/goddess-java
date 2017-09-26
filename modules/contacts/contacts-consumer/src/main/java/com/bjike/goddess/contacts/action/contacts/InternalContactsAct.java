@@ -12,9 +12,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.contacts.excel.InternalContactsExcel;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
@@ -323,9 +325,9 @@ public class InternalContactsAct extends BaseFileAction {
     }
 
     /**
-     * 根据id 获取移动端数据
+     * 根据id获取移动端数据
      *
-     * @return calss MobileInternalContactsVO
+     * @return class MobileInternalContactsVO
      * @version v1
      */
     @GetMapping("v1/mobile/findByID/{id}")

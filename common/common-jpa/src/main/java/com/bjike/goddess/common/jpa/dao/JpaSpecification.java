@@ -76,7 +76,7 @@ public class JpaSpecification<BE extends BaseEntity, BD extends BaseDTO> impleme
                     String field = model.getField(); //字段
                     if (null != model.getValue()) {
                         if (model.getValue() instanceof Boolean) {
-                            model.setValue(Boolean.TRUE == model.getValue() ? "0" : "1");
+                            model.setValue(Boolean.TRUE == model.getValue() ? "1" : "0");
                         }
                         clazz = PrimitiveUtil.switchType(model.getValue()); //得到数据类型
 

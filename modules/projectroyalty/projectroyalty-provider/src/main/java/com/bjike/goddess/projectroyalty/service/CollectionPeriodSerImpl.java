@@ -5,8 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.bo.CollectionPeriodBO;
-import com.bjike.goddess.projectroyalty.bo.OpinionBO;
 import com.bjike.goddess.projectroyalty.dto.CollectionPeriodDTO;
 import com.bjike.goddess.projectroyalty.entity.CollectionPeriod;
 import com.bjike.goddess.projectroyalty.enums.GuideAddrStatus;
@@ -50,9 +50,9 @@ public class CollectionPeriodSerImpl extends ServiceImpl<CollectionPeriod, Colle
     @Autowired
     private RatioSer ratioSer;
     @Autowired
-    private TargetAuotaSer targetAuotaSer;
+    private WeightalsSer weightalsSer;
     @Autowired
-    private WeightAllocationSer weightAllocationSer;
+    private ProjectFactorsSer projectFactorsSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -196,11 +196,11 @@ public class CollectionPeriodSerImpl extends ServiceImpl<CollectionPeriod, Colle
         }
         list.add(obj);
 
-        Boolean flagSeeBase1 = targetAuotaSer.sonPermission();
+        Boolean flagSeeBase1 = weightalsSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("targetauota");
-        obj.setDescribesion("项目提成目标定额");
+        obj.setName("weightal");
+        obj.setDescribesion("项目提成权重分配表");
         if (flagSeeBase1) {
             obj.setFlag(true);
         } else {
@@ -208,11 +208,11 @@ public class CollectionPeriodSerImpl extends ServiceImpl<CollectionPeriod, Colle
         }
         list.add(obj);
 
-        Boolean flagSeeBase3 = targetAuotaSer.sonPermission();
+        Boolean flagSeeBase3 = projectFactorsSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("targetauota1");
-        obj.setDescribesion("项目提成实际定额");
+        obj.setName("projectfactors");
+        obj.setDescribesion("项目提成分配因素");
         if (flagSeeBase1) {
             obj.setFlag(true);
         } else {
@@ -220,29 +220,29 @@ public class CollectionPeriodSerImpl extends ServiceImpl<CollectionPeriod, Colle
         }
         list.add(obj);
 
-        Boolean flagSeeBase2 = weightAllocationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("weightallocation");
-        obj.setDescribesion("项目提成目标权重分配");
-        if (flagSeeBase2) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagSeeBase4 = weightAllocationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("weightallocation1");
-        obj.setDescribesion("项目提成实际权重分配");
-        if (flagSeeBase2) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
+//        Boolean flagSeeBase2 = weightAllocationSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("weightallocation");
+//        obj.setDescribesion("项目提成目标权重分配");
+//        if (flagSeeBase2) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
+//
+//        Boolean flagSeeBase4 = weightAllocationSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("weightallocation1");
+//        obj.setDescribesion("项目提成实际权重分配");
+//        if (flagSeeBase2) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
 
         return list;
     }

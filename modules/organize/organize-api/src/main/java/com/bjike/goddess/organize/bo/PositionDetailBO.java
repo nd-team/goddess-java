@@ -25,6 +25,11 @@ public class PositionDetailBO extends BaseBO {
     private String hierarchyName;
 
     /**
+     * 体系id
+     */
+    private String hierarchyID;
+
+    /**
      * 所属地区
      */
     private String area;
@@ -232,5 +237,13 @@ public class PositionDetailBO extends BaseBO {
 
     public void setShowNumber(String showNumber) {
         this.showNumber = showNumber;
+    }
+
+    public String getHierarchyID() {
+        return hierarchyID;
+    }
+
+    public void setHierarchyID(String hierarchyID) {
+        this.hierarchyID = hierarchyID;
     }
 }
