@@ -28,6 +28,9 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.PayDetailAPI" ref="payDetailApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.RemoveEmployeeAPI" ref="removeEmployeeApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.SecureCartAPI" ref="secureCartApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.ReplaceRegisterAPI" ref="replaceRegisterApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.DrawRegisterAPI" ref="drawRegisterApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.SecureCaseAPI" ref="secureCaseApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.secure.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 

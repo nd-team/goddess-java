@@ -6,17 +6,15 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.royalty.api.JobsBetAPI;
 import com.bjike.goddess.royalty.bo.JobsBetABO;
 import com.bjike.goddess.royalty.dto.JobsBetADTO;
-import com.bjike.goddess.royalty.dto.JobsBetDTO;
 import com.bjike.goddess.royalty.dto.JobsBetEDTO;
-import com.bjike.goddess.royalty.entity.JobsBetA;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.JobsBetATO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import com.bjike.goddess.royalty.vo.JobsBetAVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -42,7 +40,6 @@ public class JobsBetAction {
     private JobsBetAPI jobsBetAPI;
     @Autowired
     private PositionDetailAPI positionDetailAPI;
-
 
 
     /**
@@ -191,6 +188,23 @@ public class JobsBetAction {
         }
     }
 
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class JobsBetAVO
+     * @des 根据项目名称汇总岗位间对赌表
+     * @version v1
+     */
+    @GetMapping("v1/jobsCollect")
+    public Result jobsCollect(ProjectNameTO to) throws ActException {
+        try {
+            List<JobsBetABO> jobsBetABOS = jobsBetAPI.jobsCollect(to);
+            return ActResult.initialize(BeanTransform.copyProperties(jobsBetABOS, JobsBetAVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

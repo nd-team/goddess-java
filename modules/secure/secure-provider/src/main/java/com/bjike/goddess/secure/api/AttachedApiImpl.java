@@ -7,11 +7,13 @@ import com.bjike.goddess.secure.dto.AttachedDTO;
 import com.bjike.goddess.secure.service.AttachedSer;
 import com.bjike.goddess.secure.to.AttachedTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 挂靠业务接口实现
@@ -90,5 +92,15 @@ public class AttachedApiImpl implements AttachedAPI {
     @Override
     public AttachedBO findAttached(String name) throws SerException {
         return attachedSer.findAttached(name);
+    }
+
+    @Override
+    public List<AttachedBO> byName(NameTO to) throws SerException {
+        return attachedSer.byName(to);
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        return attachedSer.allName();
     }
 }

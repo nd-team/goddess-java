@@ -50,7 +50,11 @@ public enum GuideAddrStatus {
     /**
      * 搜索
      */
-    SEARCH(9);
+    SEARCH(9),
+    /**
+     * 综合资源部审核
+     */
+    RESOURCES(10);
 
     private int code;
 

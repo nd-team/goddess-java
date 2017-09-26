@@ -30,10 +30,7 @@ import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.entity.BeforeAdd;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
-import com.bjike.goddess.secure.to.AddEmployeeTO;
-import com.bjike.goddess.secure.to.BuyTO;
-import com.bjike.goddess.secure.to.EmployeeSecureTO;
-import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.*;
 import com.bjike.goddess.secure.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -529,7 +526,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
 
     private Set<String> emails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
@@ -567,7 +564,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
 
     private Set<String> yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
@@ -588,7 +585,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
 
     private Set<String> mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
@@ -623,7 +620,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         LocalDateTime a = addEmployee.getCreateTime();
         addEmployee = BeanTransform.copyProperties(to, AddEmployee.class, true);
         addEmployee.setCreateTime(a);
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("archive")) {
             RpcTransmit.transmitUserToken(token);
             List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
@@ -684,7 +681,7 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
         }
         addEmployee.setMonth(addEmployee.getSecureTime().getMonthValue());
         addEmployee.setYear(addEmployee.getSecureTime().getYear());
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("archive")) {
             RpcTransmit.transmitUserToken(token);
             List<StaffRecordsBO> list = staffRecordsAPI.listEmployee();
@@ -1066,5 +1063,29 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<AddEmployeeBO> byName(NameTO to) throws SerException {
+        List<AddEmployee> addEmployees = new ArrayList<>();
+        if(to.getNames() != null){
+
+            AddEmployeeDTO dto=new AddEmployeeDTO();
+            dto.getConditions().add(Restrict.in("name",to.getNames()));
+            addEmployees =  super.findByCis(dto);
+
+        }
+        List<AddEmployeeBO> bos = BeanTransform.copyProperties(addEmployees,AddEmployeeBO.class);
+        return bos;
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<AddEmployee> list = super.findAll();
+        for(AddEmployee a:list){
+            set.add(a.getName());
+        }
+        return set;
     }
 }

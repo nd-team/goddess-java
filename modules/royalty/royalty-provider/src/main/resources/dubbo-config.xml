@@ -39,12 +39,14 @@
 	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetBAPI" ref="departmentBetBApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetCAPI" ref="departmentBetCApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetDAPI" ref="departmentBetDApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.DepartmentBetEAPI" ref="departmentBetEApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetAPI" ref="jobsBetApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetAAPI" ref="jobsBetAApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetBAPI" ref="jobsBetBApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetCAPI" ref="jobsBetCApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetDAPI" ref="jobsBetDApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetEAPI" ref="jobsBetEApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.royalty.api.JobsBetFAPI" ref="jobsBetFApiImpl"/>
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.royalty.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.royalty.api.CusPermissionOperateAPI" />
 

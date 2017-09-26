@@ -21,74 +21,21 @@ import java.util.List;
 public class JobsBetCTO extends BaseTO {
 
     /**
-     * 岗位
+     * 部门
      */
-    @NotBlank(message = "岗位不能为空",groups = {ADD.class, EDIT.class})
-    private String jobs;
-
-    /**
-     * 分配基础权重（%）
-     */
-    @NotNull(message = "分配基础权重（%）不能为空",groups = {ADD.class, EDIT.class})
-    private Double baseWeight;
-
-    /**
-     * 基础得分（部门总得分*目标-部门分配基础权重）
-     */
-    private Double basesScore;
-
-    /**
-     * 制约得分
-     */
-    private Double restrictScore;
-
-    /**
-     * 总得分（制约得分+基础得分）
-     */
-    private Double departmentTotalScore;
+    @NotBlank(message = "部门不能为空",groups = {ADD.class, EDIT.class})
+    private String department;
     /**
      * 岗位间对赌表C
      */
     private List<JobsBetETO> jobsBetETOS;
 
-    public String getJobs() {
-        return jobs;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setJobs(String jobs) {
-        this.jobs = jobs;
-    }
-
-    public Double getBaseWeight() {
-        return baseWeight;
-    }
-
-    public void setBaseWeight(Double baseWeight) {
-        this.baseWeight = baseWeight;
-    }
-
-    public Double getBasesScore() {
-        return basesScore;
-    }
-
-    public void setBasesScore(Double basesScore) {
-        this.basesScore = basesScore;
-    }
-
-    public Double getRestrictScore() {
-        return restrictScore;
-    }
-
-    public void setRestrictScore(Double restrictScore) {
-        this.restrictScore = restrictScore;
-    }
-
-    public Double getDepartmentTotalScore() {
-        return departmentTotalScore;
-    }
-
-    public void setDepartmentTotalScore(Double departmentTotalScore) {
-        this.departmentTotalScore = departmentTotalScore;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public List<JobsBetETO> getJobsBetETOS() {

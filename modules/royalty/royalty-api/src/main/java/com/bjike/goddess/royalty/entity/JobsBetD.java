@@ -20,47 +20,69 @@ public class JobsBetD extends BaseEntity {
 
 
     /**
-     * 分配对赌权重（%）
+     * 岗位
      */
-    @Column(name = "betWeight", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '分配对赌权重（%）'")
-    private Double betWeight;
+    @Column(name = "jobs", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    private String jobs;
+    /**
+     * 人数
+     */
+    @Column(name = "people", nullable = false, columnDefinition = "INT(11)   COMMENT '人数'")
+    private Integer people;
+
 
     /**
-     * 指标编号
+     * 分配基础权重（%）
      */
-    @Column(name = "indexNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标编号'")
-    private String indexNum;
+    @Column(name = "baseWeight", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '分配基础权重（%）'")
+    private Double baseWeight;
 
     /**
-     * 指标名称
+     * 目标基础得分（体系目标总得分*目标-部门分配基础权重）
      */
-    @Column(name = "indexName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标名称'")
-    private String indexName;
+    @Column(name = "basesScore", columnDefinition = "DECIMAL(10,2)   COMMENT '目标基础得分'")
+    private Double basesScore;
+    /**
+     * 计划基础得分（体系计划总得分*目标-部门分配基础权重）
+     */
+    @Column(name = "basesScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '计划基础得分'")
+    private Double basesScorePlan;
+    /**
+     * 实际基础得分（体系实际总得分*目标-部门分配基础权重）
+     */
+    @Column(name = "basesScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '实际基础得分'")
+    private Double basesScorePractice;
+    /**
+     * 目标制约得分
+     */
+    @Column(name = "restrictScore", columnDefinition = "DECIMAL(10,2)   COMMENT '目标制约得分'")
+    private Double restrictScore;
+    /**
+     * 计划制约得分
+     */
+    @Column(name = "restrictScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '计划制约得分'")
+    private Double restrictScorePlan;
+    /**
+     * 实际制约得分
+     */
+    @Column(name = "restrictScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '实际制约得分'")
+    private Double restrictScorePractice;
 
     /**
-     * 对赌承诺-确认目标值
+     * 目标总得分（目标制约得分+目标基础得分）
      */
-    @Column(name = "confirmTargetValue", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '对赌承诺-确认目标值'")
-    private String confirmTargetValue;
-
+    @Column(name = "totalScore", columnDefinition = "DECIMAL(10,2)   COMMENT '目标总得分'")
+    private Double totalScore;
     /**
-     * 实际目标值
+     * 计划总得分（计划制约得分+计划基础得分）
      */
-    @Column(name = "actualTargetValue", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际目标值'")
-    private String actualTargetValue;
-
+    @Column(name = "totalScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '计划总得分'")
+    private Double totalScorePlan;
     /**
-     * 是否达标
+     * 实际总得分（实际制约得分+实际基础得分）
      */
-    @Column(name = "is_standard", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否达标'", insertable = false)
-    private Boolean standard;
-
-    /**
-     * 对赌得分（部门总得分*目标-部门分配对赌权重）
-     */
-    @Column(name = "betScore", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '对赌得分（部门总得分*目标-部门分配对赌权重）'")
-    private Double betScore;
-
+    @Column(name = "totalScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '实际总得分'")
+    private Double totalScorePractice;
     /**
      * 岗位间对赌表C
      */
@@ -69,60 +91,100 @@ public class JobsBetD extends BaseEntity {
     private JobsBetC jobsBetC;
 
 
-    public Double getBetWeight() {
-        return betWeight;
+    public String getJobs() {
+        return jobs;
     }
 
-    public void setBetWeight(Double betWeight) {
-        this.betWeight = betWeight;
+    public void setJobs(String jobs) {
+        this.jobs = jobs;
     }
 
-    public String getIndexNum() {
-        return indexNum;
+    public Integer getPeople() {
+        return people;
     }
 
-    public void setIndexNum(String indexNum) {
-        this.indexNum = indexNum;
+    public void setPeople(Integer people) {
+        this.people = people;
     }
 
-    public String getIndexName() {
-        return indexName;
+    public Double getBaseWeight() {
+        return baseWeight;
     }
 
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
+    public void setBaseWeight(Double baseWeight) {
+        this.baseWeight = baseWeight;
     }
 
-    public String getConfirmTargetValue() {
-        return confirmTargetValue;
+    public Double getBasesScore() {
+        return basesScore;
     }
 
-    public void setConfirmTargetValue(String confirmTargetValue) {
-        this.confirmTargetValue = confirmTargetValue;
+    public void setBasesScore(Double basesScore) {
+        this.basesScore = basesScore;
     }
 
-    public String getActualTargetValue() {
-        return actualTargetValue;
+    public Double getBasesScorePlan() {
+        return basesScorePlan;
     }
 
-    public void setActualTargetValue(String actualTargetValue) {
-        this.actualTargetValue = actualTargetValue;
+    public void setBasesScorePlan(Double basesScorePlan) {
+        this.basesScorePlan = basesScorePlan;
     }
 
-    public Boolean getStandard() {
-        return standard;
+    public Double getBasesScorePractice() {
+        return basesScorePractice;
     }
 
-    public void setStandard(Boolean standard) {
-        this.standard = standard;
+    public void setBasesScorePractice(Double basesScorePractice) {
+        this.basesScorePractice = basesScorePractice;
     }
 
-    public Double getBetScore() {
-        return betScore;
+    public Double getRestrictScore() {
+        return restrictScore;
     }
 
-    public void setBetScore(Double betScore) {
-        this.betScore = betScore;
+    public void setRestrictScore(Double restrictScore) {
+        this.restrictScore = restrictScore;
+    }
+
+    public Double getRestrictScorePlan() {
+        return restrictScorePlan;
+    }
+
+    public void setRestrictScorePlan(Double restrictScorePlan) {
+        this.restrictScorePlan = restrictScorePlan;
+    }
+
+    public Double getRestrictScorePractice() {
+        return restrictScorePractice;
+    }
+
+    public void setRestrictScorePractice(Double restrictScorePractice) {
+        this.restrictScorePractice = restrictScorePractice;
+    }
+
+    public Double getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(Double totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public Double getTotalScorePlan() {
+        return totalScorePlan;
+    }
+
+    public void setTotalScorePlan(Double totalScorePlan) {
+        this.totalScorePlan = totalScorePlan;
+    }
+
+    public Double getTotalScorePractice() {
+        return totalScorePractice;
+    }
+
+    public void setTotalScorePractice(Double totalScorePractice) {
+        this.totalScorePractice = totalScorePractice;
     }
 
     public JobsBetC getJobsBetC() {

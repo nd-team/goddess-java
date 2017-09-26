@@ -112,6 +112,10 @@ public class AttachedVO {
      * 已参保年限
      */
     private String insuredYear;
+    /**
+     * 是否挂靠到期
+     */
+    private Boolean affiliated;
 
     /**
      * 备注
@@ -125,6 +129,14 @@ public class AttachedVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getAffiliated() {
+        return affiliated;
+    }
+
+    public void setAffiliated(Boolean affiliated) {
+        this.affiliated = affiliated;
     }
 
     public String getAttachedName() {

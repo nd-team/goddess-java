@@ -20,104 +20,158 @@ import java.util.List;
  */
 public class JobsBetETO extends BaseTO {
     /**
-     * 分配对赌权重（%）
+     * 岗位
      */
-    @NotNull(message = "分配对赌权重（%）不能为空",groups = {ADD.class, EDIT.class})
-    private Double betWeight;
+    @NotBlank(message = "岗位不能为空",groups = {ADD.class, EDIT.class})
+    private String jobs;
+    /**
+     * 人数
+     */
+    @NotNull(message = "人数不能为空",groups = {ADD.class, EDIT.class})
+    private Integer people;
 
     /**
-     * 指标编号
+     * 分配基础权重（%）
      */
-    @NotBlank(message = "指标编号不能为空",groups = {ADD.class, EDIT.class})
-    private String indexNum;
+    @NotNull(message = "分配基础权重（%）不能为空",groups = {ADD.class, EDIT.class})
+    private Double baseWeight;
 
     /**
-     * 指标名称
+     * 目标基础得分（体系目标总得分*目标-部门分配基础权重）
      */
-    @NotBlank(message = "指标名称不能为空",groups = {ADD.class, EDIT.class})
-    private String indexName;
+    private Double basesScore;
+    /**
+     * 计划基础得分（体系计划总得分*目标-部门分配基础权重）
+     */
+    private Double basesScorePlan;
+    /**
+     * 实际基础得分（体系实际总得分*目标-部门分配基础权重）
+     */
+    private Double basesScorePractice;
+    /**
+     * 目标制约得分
+     */
+    private Double restrictScore;
+    /**
+     * 计划制约得分
+     */
+    private Double restrictScorePlan;
+    /**
+     * 实际制约得分
+     */
+    private Double restrictScorePractice;
 
     /**
-     * 对赌承诺-确认目标值
+     * 目标总得分（目标制约得分+目标基础得分）
      */
-    @NotBlank(message = "对赌承诺-确认目标值不能为空",groups = {ADD.class, EDIT.class})
-    private String confirmTargetValue;
-
+    private Double totalScore;
     /**
-     * 实际目标值
+     * 计划总得分（计划制约得分+计划基础得分）
      */
-    @NotBlank(message = "实际目标值不能为空",groups = {ADD.class, EDIT.class})
-    private String actualTargetValue;
-
+    private Double totalScorePlan;
     /**
-     * 是否达标
+     * 实际总得分（实际制约得分+实际基础得分）
      */
-    @NotNull(message = "是否达标不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean standard;
-
-    /**
-     * 对赌得分（部门总得分*目标-部门分配对赌权重）
-     */
-    private Double betScore;
+    private Double totalScorePractice;
     /**
      * 岗位间对赌表F
      */
     private List<JobsBetFTO> jobsBetFTOS;
 
-    public Double getBetWeight() {
-        return betWeight;
+    public String getJobs() {
+        return jobs;
     }
 
-    public void setBetWeight(Double betWeight) {
-        this.betWeight = betWeight;
+    public void setJobs(String jobs) {
+        this.jobs = jobs;
     }
 
-    public String getIndexNum() {
-        return indexNum;
+    public Integer getPeople() {
+        return people;
     }
 
-    public void setIndexNum(String indexNum) {
-        this.indexNum = indexNum;
+    public void setPeople(Integer people) {
+        this.people = people;
     }
 
-    public String getIndexName() {
-        return indexName;
+    public Double getBaseWeight() {
+        return baseWeight;
     }
 
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
+    public void setBaseWeight(Double baseWeight) {
+        this.baseWeight = baseWeight;
     }
 
-    public String getConfirmTargetValue() {
-        return confirmTargetValue;
+    public Double getBasesScore() {
+        return basesScore;
     }
 
-    public void setConfirmTargetValue(String confirmTargetValue) {
-        this.confirmTargetValue = confirmTargetValue;
+    public void setBasesScore(Double basesScore) {
+        this.basesScore = basesScore;
     }
 
-    public String getActualTargetValue() {
-        return actualTargetValue;
+    public Double getBasesScorePlan() {
+        return basesScorePlan;
     }
 
-    public void setActualTargetValue(String actualTargetValue) {
-        this.actualTargetValue = actualTargetValue;
+    public void setBasesScorePlan(Double basesScorePlan) {
+        this.basesScorePlan = basesScorePlan;
     }
 
-    public Boolean getStandard() {
-        return standard;
+    public Double getBasesScorePractice() {
+        return basesScorePractice;
     }
 
-    public void setStandard(Boolean standard) {
-        this.standard = standard;
+    public void setBasesScorePractice(Double basesScorePractice) {
+        this.basesScorePractice = basesScorePractice;
     }
 
-    public Double getBetScore() {
-        return betScore;
+    public Double getRestrictScore() {
+        return restrictScore;
     }
 
-    public void setBetScore(Double betScore) {
-        this.betScore = betScore;
+    public void setRestrictScore(Double restrictScore) {
+        this.restrictScore = restrictScore;
+    }
+
+    public Double getRestrictScorePlan() {
+        return restrictScorePlan;
+    }
+
+    public void setRestrictScorePlan(Double restrictScorePlan) {
+        this.restrictScorePlan = restrictScorePlan;
+    }
+
+    public Double getRestrictScorePractice() {
+        return restrictScorePractice;
+    }
+
+    public void setRestrictScorePractice(Double restrictScorePractice) {
+        this.restrictScorePractice = restrictScorePractice;
+    }
+
+    public Double getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(Double totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public Double getTotalScorePlan() {
+        return totalScorePlan;
+    }
+
+    public void setTotalScorePlan(Double totalScorePlan) {
+        this.totalScorePlan = totalScorePlan;
+    }
+
+    public Double getTotalScorePractice() {
+        return totalScorePractice;
+    }
+
+    public void setTotalScorePractice(Double totalScorePractice) {
+        this.totalScorePractice = totalScorePractice;
     }
 
     public List<JobsBetFTO> getJobsBetFTOS() {

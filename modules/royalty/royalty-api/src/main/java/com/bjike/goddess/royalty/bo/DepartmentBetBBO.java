@@ -15,87 +15,22 @@ import java.util.List;
  */
 public class DepartmentBetBBO extends BaseBO {
     /**
-     * 部门
+     * 体系
      */
-    private String department;
+    private String system;
 
-    /**
-     * 目标-部门分配基础权重（%）
-     */
-    private Double baseWeight;
-
-
-    /**
-     * 基础得分（部门总得分*目标-部门分配基础权重）
-     */
-    private Double basesScore;
-
-
-    /**
-     * 制约得分
-     */
-    private Double restrictScore;
-
-    /**
-     * 部门总得分（制约得分+基础得分）
-     */
-    private Double departmentTotalScore;
-//    /**
-//     * 部门间对赌表A
-//     */
-//    private DepartmentBetABO departmentBetABO;
     /**
      * 部门间对赌表C
      */
     private List<DepartmentBetCBO> departmentBetCBOS;
 
-    public String getDepartment() {
-        return department;
+    public String getSystem() {
+        return system;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setSystem(String system) {
+        this.system = system;
     }
-
-    public Double getBaseWeight() {
-        return baseWeight;
-    }
-
-    public void setBaseWeight(Double baseWeight) {
-        this.baseWeight = baseWeight;
-    }
-
-    public Double getBasesScore() {
-        return basesScore;
-    }
-
-    public void setBasesScore(Double basesScore) {
-        this.basesScore = basesScore;
-    }
-
-    public Double getRestrictScore() {
-        return restrictScore;
-    }
-
-    public void setRestrictScore(Double restrictScore) {
-        this.restrictScore = restrictScore;
-    }
-
-    public Double getDepartmentTotalScore() {
-        return departmentTotalScore;
-    }
-
-    public void setDepartmentTotalScore(Double departmentTotalScore) {
-        this.departmentTotalScore = departmentTotalScore;
-    }
-
-//    public DepartmentBetABO getDepartmentBetABO() {
-//        return departmentBetABO;
-//    }
-//
-//    public void setDepartmentBetABO(DepartmentBetABO departmentBetABO) {
-//        this.departmentBetABO = departmentBetABO;
-//    }
 
     public List<DepartmentBetCBO> getDepartmentBetCBOS() {
         return departmentBetCBOS;

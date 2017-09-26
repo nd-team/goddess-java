@@ -3,15 +3,17 @@ package com.bjike.goddess.secure.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
+import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.service.AddEmployeeSer;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
-import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.secure.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保增员信息名单业务接口实现
@@ -85,6 +87,15 @@ public class AddEmployeeApiImpl implements AddEmployeeAPI {
 
     @Override
     public void managerConfirmAdd(AddEmployeeDTO dto, String id) throws SerException {
-        addEmployeeSer.managerConfirmAdd(dto,id);
+        addEmployeeSer.managerConfirmAdd(dto, id);
+    }
+
+    @Override
+    public List<AddEmployeeBO> byName(NameTO to) throws SerException {
+        return addEmployeeSer.byName(to);
+    }
+    @Override
+    public Set<String> allName() throws SerException {
+        return addEmployeeSer.allName();
     }
 }

@@ -20,21 +20,21 @@ import java.util.List;
 public class JobsBetBTO extends BaseTO {
 
     /**
-     * 部门
+     * 体系
      */
-    @NotBlank(message = "部门不能为空",groups = {ADD.class, EDIT.class})
-    private String department;
+    @NotBlank(message = "体系不能为空",groups = {ADD.class, EDIT.class})
+    private String system;
     /**
      * 岗位间对赌表C
      */
     private List<JobsBetCTO> jobsBetCTOS;
 
-    public String getDepartment() {
-        return department;
+    public String getSystem() {
+        return system;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setSystem(String system) {
+        this.system = system;
     }
 
     public List<JobsBetCTO> getJobsBetCTOS() {

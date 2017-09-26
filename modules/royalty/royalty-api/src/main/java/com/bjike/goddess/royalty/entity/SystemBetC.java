@@ -55,10 +55,20 @@ public class SystemBetC extends BaseEntity {
     @Column(name = "is_standard", nullable = false, columnDefinition = "TINYINT(2) COMMENT '项目对赌是否达标'")
     private Boolean standard;
     /**
-     * 对赌得分（分值*目标-部门分配对赌权重）
+     * 目标对赌得分（分值（利润额）*目标-部门分配对赌权重）
      */
-    @Column(name = "betScore", columnDefinition = "DECIMAL(10,2)   COMMENT '对赌得分（分值*目标-部门分配对赌权重）'")
+    @Column(name = "betScore", columnDefinition = "DECIMAL(10,2)   COMMENT '目标对赌得分'")
     private Double betScore;
+    /**
+     * 计划对赌得分（计划分值（利润额）*目标-部门分配对赌权重）
+     */
+    @Column(name = "betScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '计划对赌得分'")
+    private Double betScorePlan;
+    /**
+     * 实际对赌得分（实际分值（利润额）*目标-部门分配对赌权重）
+     */
+    @Column(name = "betScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '实际对赌得分'")
+    private Double betScorePractice;
 
     /**
      * 体系间对赌表B
@@ -123,6 +133,21 @@ public class SystemBetC extends BaseEntity {
         this.betScore = betScore;
     }
 
+    public Double getBetScorePlan() {
+        return betScorePlan;
+    }
+
+    public void setBetScorePlan(Double betScorePlan) {
+        this.betScorePlan = betScorePlan;
+    }
+
+    public Double getBetScorePractice() {
+        return betScorePractice;
+    }
+
+    public void setBetScorePractice(Double betScorePractice) {
+        this.betScorePractice = betScorePractice;
+    }
 
     public SystemBetB getSystemBetB() {
         return systemBetB;

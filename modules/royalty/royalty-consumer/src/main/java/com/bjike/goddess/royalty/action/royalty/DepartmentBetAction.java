@@ -7,20 +7,15 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.royalty.api.DepartmentBetAPI;
 import com.bjike.goddess.royalty.api.SystemBetAPI;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
-import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.DepartmentBetADTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
-import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
-import com.bjike.goddess.royalty.entity.DepartmentBetA;
-import com.bjike.goddess.royalty.entity.SystemBetA;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import com.bjike.goddess.royalty.vo.DepartmentBetAVO;
-import com.bjike.goddess.royalty.vo.SystemBetAVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -178,21 +173,39 @@ public class DepartmentBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
-     * 获取部门
+     * 获取体系
      *
-     * @des 获取部门集合
+     * @des 获取体系集合
      * @version v1
      */
-    @GetMapping("v1/department")
-    public Result department() throws ActException {
+    @GetMapping("v1/system")
+    public Result system() throws ActException {
         try {
-            List<String> departmentList = systemBetAPI.getDepartment();
+            List<String> departmentList = systemBetAPI.system();
             return ActResult.initialize(departmentList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class DepartmentBetAVO
+     * @des 根据项目名称汇总部门间对赌表
+     * @version v1
+     */
+    @GetMapping("v1/departmentCollect")
+    public Result departmentCollect(ProjectNameTO to) throws ActException {
+        try {
+            List<DepartmentBetABO> departmentBetABOS = departmentBetAPI.departmentCollect(to);
+            return ActResult.initialize(BeanTransform.copyProperties(departmentBetABOS, DepartmentBetAVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

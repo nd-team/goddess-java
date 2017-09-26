@@ -18,45 +18,64 @@ import javax.persistence.*;
 @Table(name = "royalty_departmentbetc")
 public class DepartmentBetC extends BaseEntity {
     /**
-     * 目标-部门分配对赌权重（%）
+     * 部门
      */
-    @Column(name = "betWeight", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '目标-部门分配对赌权重（%）'")
-    private Double betWeight;
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    private String department;
 
     /**
-     * 指标编号
+     * 目标-部门分配基础权重（%）
      */
-    @Column(name = "indexNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标编号'")
-    private String indexNum;
+    @Column(name = "baseWeight", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '目标-部门分配基础权重（%）'")
+    private Double baseWeight;
+
 
     /**
-     * 指标名称
+     * 目标基础得分（体系目标总得分*目标-部门分配基础权重）
      */
-    @Column(name = "indexName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标名称'")
-    private String indexName;
+    @Column(name = "basesScore", columnDefinition = "DECIMAL(10,2)   COMMENT '目标基础得分'")
+    private Double basesScore;
+    /**
+     * 计划基础得分（体系计划总得分*目标-部门分配基础权重）
+     */
+    @Column(name = "basesScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '计划基础得分'")
+    private Double basesScorePlan;
+    /**
+     * 实际基础得分（体系实际总得分*目标-部门分配基础权重）
+     */
+    @Column(name = "basesScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '实际基础得分'")
+    private Double basesScorePractice;
+    /**
+     * 目标制约得分
+     */
+    @Column(name = "restrictScore", columnDefinition = "DECIMAL(10,2)   COMMENT '目标制约得分'")
+    private Double restrictScore;
+    /**
+     * 计划制约得分
+     */
+    @Column(name = "restrictScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '计划制约得分'")
+    private Double restrictScorePlan;
+    /**
+     * 实际制约得分
+     */
+    @Column(name = "restrictScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '实际制约得分'")
+    private Double restrictScorePractice;
 
     /**
-     * 部门对赌承诺-确认目标值
+     * 部门目标总得分（目标制约得分+目标基础得分）
      */
-    @Column(name = "confirmTargetValue", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门对赌承诺-确认目标值'")
-    private String confirmTargetValue;
-
+    @Column(name = "departmentTotalScore", columnDefinition = "DECIMAL(10,2)   COMMENT '部门目标总得分'")
+    private Double departmentTotalScore;
     /**
-     * 实际目标值
+     * 部门计划总得分（计划制约得分+计划基础得分）
      */
-    @Column(name = "actualTargetValue", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际目标值'")
-    private String actualTargetValue;
-
+    @Column(name = "departmentTotalScorePlan", columnDefinition = "DECIMAL(10,2)   COMMENT '部门计划总得分'")
+    private Double departmentTotalScorePlan;
     /**
-     * 项目对赌是否达标
+     * 部门实际总得分（实际制约得分+实际基础得分）
      */
-    @Column(name = "is_standard", nullable = false, columnDefinition = "TINYINT(2) COMMENT '项目对赌是否达标'")
-    private Boolean standard;
-    /**
-     * 对赌得分（部门总得分*目标-部门分配对赌权重）
-     */
-    @Column(name = "betScore", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '对赌得分（部门总得分*目标-部门分配对赌权重）'")
-    private Double betScore;
+    @Column(name = "departmentTotalScorePractice", columnDefinition = "DECIMAL(10,2)   COMMENT '部门实际总得分'")
+    private Double departmentTotalScorePractice;
 
     /**
      * 部门间对赌表B
@@ -65,60 +84,92 @@ public class DepartmentBetC extends BaseEntity {
     @JoinColumn(name = "departmentBetB_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '部门间对赌表B'")
     private DepartmentBetB departmentBetB;
 
-    public Double getBetWeight() {
-        return betWeight;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setBetWeight(Double betWeight) {
-        this.betWeight = betWeight;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
-    public String getIndexNum() {
-        return indexNum;
+    public Double getBaseWeight() {
+        return baseWeight;
     }
 
-    public void setIndexNum(String indexNum) {
-        this.indexNum = indexNum;
+    public void setBaseWeight(Double baseWeight) {
+        this.baseWeight = baseWeight;
     }
 
-    public String getIndexName() {
-        return indexName;
+    public Double getBasesScore() {
+        return basesScore;
     }
 
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
+    public void setBasesScore(Double basesScore) {
+        this.basesScore = basesScore;
     }
 
-    public String getConfirmTargetValue() {
-        return confirmTargetValue;
+    public Double getBasesScorePlan() {
+        return basesScorePlan;
     }
 
-    public void setConfirmTargetValue(String confirmTargetValue) {
-        this.confirmTargetValue = confirmTargetValue;
+    public void setBasesScorePlan(Double basesScorePlan) {
+        this.basesScorePlan = basesScorePlan;
     }
 
-    public String getActualTargetValue() {
-        return actualTargetValue;
+    public Double getBasesScorePractice() {
+        return basesScorePractice;
     }
 
-    public void setActualTargetValue(String actualTargetValue) {
-        this.actualTargetValue = actualTargetValue;
+    public void setBasesScorePractice(Double basesScorePractice) {
+        this.basesScorePractice = basesScorePractice;
     }
 
-    public Boolean getStandard() {
-        return standard;
+    public Double getRestrictScore() {
+        return restrictScore;
     }
 
-    public void setStandard(Boolean standard) {
-        this.standard = standard;
+    public void setRestrictScore(Double restrictScore) {
+        this.restrictScore = restrictScore;
     }
 
-    public Double getBetScore() {
-        return betScore;
+    public Double getRestrictScorePlan() {
+        return restrictScorePlan;
     }
 
-    public void setBetScore(Double betScore) {
-        this.betScore = betScore;
+    public void setRestrictScorePlan(Double restrictScorePlan) {
+        this.restrictScorePlan = restrictScorePlan;
+    }
+
+    public Double getRestrictScorePractice() {
+        return restrictScorePractice;
+    }
+
+    public void setRestrictScorePractice(Double restrictScorePractice) {
+        this.restrictScorePractice = restrictScorePractice;
+    }
+
+    public Double getDepartmentTotalScore() {
+        return departmentTotalScore;
+    }
+
+    public void setDepartmentTotalScore(Double departmentTotalScore) {
+        this.departmentTotalScore = departmentTotalScore;
+    }
+
+    public Double getDepartmentTotalScorePlan() {
+        return departmentTotalScorePlan;
+    }
+
+    public void setDepartmentTotalScorePlan(Double departmentTotalScorePlan) {
+        this.departmentTotalScorePlan = departmentTotalScorePlan;
+    }
+
+    public Double getDepartmentTotalScorePractice() {
+        return departmentTotalScorePractice;
+    }
+
+    public void setDepartmentTotalScorePractice(Double departmentTotalScorePractice) {
+        this.departmentTotalScorePractice = departmentTotalScorePractice;
     }
 
     public DepartmentBetB getDepartmentBetB() {

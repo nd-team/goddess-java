@@ -12,6 +12,7 @@ import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
+import com.bjike.goddess.managepromotion.bo.SkillPromotionDetailCollectABO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
 import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
 import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
@@ -30,12 +31,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -568,21 +568,65 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         String[] fields = new String[]{"area","department","receving","untreated","completedProcessing",
         "pass","unpass","result","unresult"};
         List<SkillLevelCollectBO> skillLevelCollectBOS = super.findBySql(sql,SkillLevelCollectBO.class,fields);
+        //todo 以下表头需求方只说了大的模块，没有具体到哪个模块哪张表，要等到时候再问需求方
+        //todo 公司发展需求人数 （人员编制）
+        //todo 月收入（元） (财务运营部预算模块)
+        //TODO 月人工成本 (财务运营部预算模块)
+        //todo 差异（月收入（元）-月人工成本）
         return skillLevelCollectBOS;
     }
 
     @Override
     public List<SkillLevelCollectBO> weekLevelCollect(SkillLevelCollectTO to) throws SerException {
+        List<SkillPromotionDetailCollectABO> boList = new ArrayList<>();
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        LocalDate start = time[0];
+        LocalDate end = time[1];
         return null;
     }
 
     @Override
     public List<SkillLevelCollectBO> monthLevelCollect(SkillLevelCollectTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
         return null;
     }
 
     @Override
     public List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
+        LocalDate end = null;
+        if (to.getTime() != null) {
+            end = DateUtil.parseDate(to.getTime());
+        } else {
+            end = LocalDate.now();
+        }
         return null;
     }
     //获取所有地区

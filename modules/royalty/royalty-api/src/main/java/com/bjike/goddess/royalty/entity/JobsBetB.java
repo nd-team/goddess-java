@@ -19,10 +19,10 @@ import javax.persistence.*;
 public class JobsBetB extends BaseEntity {
 
     /**
-     * 部门
+     * 体系
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
-    private String department;
+    @Column(name = "system", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    private String system;
     /**
      * 岗位间对赌表A
      */
@@ -31,12 +31,12 @@ public class JobsBetB extends BaseEntity {
     private JobsBetA jobsBetA;
 
 
-    public String getDepartment() {
-        return department;
+    public String getSystem() {
+        return system;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setSystem(String system) {
+        this.system = system;
     }
 
     public JobsBetA getJobsBetA() {

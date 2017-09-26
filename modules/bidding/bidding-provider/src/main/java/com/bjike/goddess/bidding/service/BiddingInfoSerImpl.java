@@ -11,6 +11,7 @@ import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
+import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -27,6 +28,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -654,26 +656,24 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         List<BiddingCollectBO> boList = super.findBySql(sql, BiddingCollectBO.class, feilds);
         return boList;
     }
-    //        StringBuilder sb = new StringBuilder();
-//        sb.append(" SELECT * from ");
-//        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
-//        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS soft, ");
-//        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS system, ");
-//        sb.append(" max(CASE WHEN businessType=4 THEN businessTypeCounts END )AS plan FROM ");
-//        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
-//        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)A ");
-//        sb.append(" UNION ");
-//        sb.append(" SELECT '合计' as area ,sum(mobile) AS mobile, ");
-//        sb.append(" sum(soft) AS soft,sum(system) AS system,sum(plan) AS plan from ");
-//        sb.append(" (SELECT cities,max(CASE WHEN businessType=0 THEN businessTypeCounts END )AS mobile, ");
-//        sb.append(" max(CASE WHEN businessType=2 THEN businessTypeCounts END )AS soft, ");
-//        sb.append(" max(CASE WHEN businessType=3 THEN businessTypeCounts END )AS system, ");
-//        sb.append(" max(CASE WHEN businessType=4 THEN businessTypeCounts END )AS plan FROM ");
-//        sb.append(" (SELECT count(*) AS businessTypeCounts,businessType as businessType,cities as cities ");
-//        sb.append(" FROM bidding_biddinginfo a WHERE cities IN (%s) GROUP BY businessType,cities ORDER BY cities)a GROUP BY cities)A ");
-//        String sql = sb.toString();
-//        sql = String.format(sql, citiesStr, citiesStr, citiesStr, citiesStr);
-//        String[] fields = new String[]{"cities", "mobile", "soft", "system", "plan"};
-//        List<BiddingInfoCollectBO> biddingInfoCollectBOS = super.findBySql(sql, BiddingInfoCollectBO.class, fields);
-//        for (BiddingInfoCollectBO collectBO : biddingInfoCollectBOS) {
+
+//    @Override
+//    public void search(SearchTO to) throws SerException {
+//        try {
+//            String strLine = null;
+//            StringBuffer sb = new StringBuffer();
+//            URL urlObj = new URL(url);
+//            InputStream streamObj = urlObj.openStream();
+//            InputStreamReader readerObj = new InputStreamReader(streamObj,
+//                    chartset);
+//            BufferedReader buffObj = new BufferedReader(readerObj);
+//            while ((strLine = buffObj.readLine()) != null) {
+//                sb.append(strLine);
+//            }
+//            buffObj.close();
+//            return sb.toString();
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 }

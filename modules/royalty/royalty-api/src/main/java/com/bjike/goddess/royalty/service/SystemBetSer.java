@@ -3,13 +3,12 @@ package com.bjike.goddess.royalty.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
-import com.bjike.goddess.royalty.bo.SystemBetBO;
 import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
 import com.bjike.goddess.royalty.dto.SystemBetDTO;
 import com.bjike.goddess.royalty.entity.SystemBet;
-import com.bjike.goddess.royalty.excel.SonPermissionObject;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
 
 import java.util.List;
@@ -101,11 +100,11 @@ public interface SystemBetSer extends Ser<SystemBet, SystemBetDTO> {
         return null;
     }
     /**
-     * 获取所有部门
+     * 获取所有体系
      *
      * @throws SerException
      */
-    default List<String> getDepartment() throws SerException {
+    default List<String> system() throws SerException {
         return null;
     }
     /**
@@ -114,6 +113,17 @@ public interface SystemBetSer extends Ser<SystemBet, SystemBetDTO> {
      * @throws SerException
      */
     default SystemBetABO getSystem(String projectName) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class SystemBetABO
+     * @throws SerException
+     */
+    default List<SystemBetABO> systemCollect(ProjectNameTO to) throws SerException {
         return null;
     }
 }

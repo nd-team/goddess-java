@@ -9,6 +9,7 @@ import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
+import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -190,5 +191,13 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
      */
     default List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
         return null;
+    }
+    /**
+     * 搜索
+     *
+     * @param to to
+     * @throws SerException
+     */
+    default void search(SearchTO to) throws SerException {
     }
 }
