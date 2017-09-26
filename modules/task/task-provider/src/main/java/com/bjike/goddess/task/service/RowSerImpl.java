@@ -58,10 +58,28 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         return objects;
     }
 
+    @Override
+    public Long count(RowDTO dto) throws SerException {
+        StringBuilder sb = new StringBuilder();
+        String sql;
+        sb.append("SELECT COUNT(rid) AS num FROM (SELECT rid ");
+        sb.append(" FROM ( ");
+        sb.append("  SELECT b.* ");
+        sb.append(" FROM task_table a,task_field b ");
+        sb.append("  WHERE a.id='" + dto.getTableId() + "' AND a.id = b.tid AND b.node='" + dto.getNode() + "')a,( ");
+        sb.append(" SELECT a.fid,b.id AS rid ");
+        sb.append(" FROM task_grid a,task_row b ");
+        sb.append("  WHERE b.tid ='" + dto.getTableId() + "' AND a.rid=b.id ) b ");
+        sb.append("  WHERE a.id=b.fid ");
+        sb.append("  GROUP BY rid )a ");
+        sql = sb.toString();
+        String rs = String.valueOf(super.findBySql(sql).get(0));
+        return Long.parseLong(rs);
+    }
+
     @Transactional
     @Override
     public void add(Map<String, String> fieldValMap, String tableId, String node) throws SerException {
-
         List<Field> fields = fieldSer.list(tableId, node);  // 表列
         Row row = new Row();
         row.setTable(tableSer.findById(tableId));
@@ -97,7 +115,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
             Object o_file = inputStreams.get(1);
             InputStream is = new ByteArrayInputStream((byte[]) o_file);
-            XSSFWorkbook wb = null;
+            XSSFWorkbook wb  ;
             try {
                 wb = ExcelUtil.getWb(is);
             } catch (Exception e) {
@@ -126,7 +144,6 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                 } catch (Exception e) {
                     throw new SerException("获取excel内容错误");
                 }
-                System.out.println(fieldValMap);
                 this.add(fieldValMap, tableId, node);
             }
 
@@ -162,7 +179,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
     @Override
     public Integer getSeq(String tableId) throws SerException {
-        String sql = "SELECT IFNULL(MAX(seq),0) as seq FROM task_row WHERE tid = '%s' ";
+        String sql = "SELECT IFNULL(MAX(seq),0) AS seq FROM task_row WHERE tid = '%s' ";
         sql = String.format(sql, tableId);
         List<Object> objects = super.findBySql(sql);
         return Integer.parseInt(String.valueOf(objects.get(0)));
@@ -170,14 +187,14 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
 
     @Override
     public String findContent(String id) throws SerException {
-        String sql = "";
+        String sql ;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT v.val FROM task_grid g,task_row r,task_field f,task_val v ");
-        sb.append("  WHERE r.id ='" + id + "' ");
-        sb.append("  AND v.id = g.vid ");
-        sb.append("  AND g.rid = r.id ");
-        sb.append("   AND g.fid = f.id ");
-        sb.append("  AND f.name = '任务内容' ");
+        sb.append(" WHERE r.id ='" + id + "' ");
+        sb.append(" AND v.id = g.vid ");
+        sb.append(" AND g.rid = r.id ");
+        sb.append(" AND g.fid = f.id ");
+        sb.append(" AND f.name = '任务内容' ");
         sql = sb.toString();
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() >= 0) {
@@ -202,7 +219,7 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
             int start = dto.getPage() - 1 * dto.getLimit();
             start = start > 0 ? start : 0;
             int limit = dto.getLimit();
-            cond = "limit " + start + "," + limit + "";
+            cond = "LIMIT " + start + "," + limit + "";
         }
         StringBuilder header = new StringBuilder(" SELECT ");
         for (int i = 0; i < fields.size(); i++) {
@@ -211,9 +228,9 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         }
         String tmp_header = header.toString().substring(0, header.toString().length() - 1);
         header = new StringBuilder(tmp_header);
-        header.append(" from(");
-        header.append("  select name  from task_field where tid='" + tableId + "' order by seq asc) a ");
-        header.append(" union all ");
+        header.append(" FROM (");
+        header.append(" SELECT name  FROM task_field WHERE tid='" + tableId + "' ORDER BY seq ASC) a ");
+        header.append(" UNION ALL ");
 
         StringBuilder sb = new StringBuilder(header.toString() + "SELECT * FROM( SELECT ");
         for (int i = 0; i < fields.size(); i++) {
@@ -228,10 +245,10 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
         sb.append("  WHERE a.id='" + tableId + "' AND a.id = b.tid and b.node='" + dto.getNode() + "'");
         sb.append("  )a,( ");
         sb.append("   SELECT a.fid,b.id AS rid,c.val AS value  FROM task_grid a , ");
-        sb.append("    (SELECT * FROM task_row ORDER BY seq  " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
-        sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid ORDER BY seq ASC ");
+        sb.append("    (SELECT * FROM task_row " + cond + ") b,task_val c WHERE b.tid ='" + tableId + "' ");
+        sb.append("     AND a.rid=b.id AND c.id=a.vid) b WHERE a.id=b.fid  ");
         sb.append("     ) ");
-        sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq )b");
+        sb.append("     )a ,task_row c WHERE a.rid=c.id GROUP BY rid ORDER BY c.seq ASC )b");
         return sb.toString();
     }
 
@@ -267,14 +284,14 @@ public class RowSerImpl extends ServiceImpl<Row, RowDTO> implements RowSer {
                     valMap.put(field.getName(), Class.forName("java.lang.String"));
                 }
                 Object[] titles = null;
-                if (objects.get(0) instanceof String[]) {
+                if (objects.get(0) instanceof Object[]) {
                     titles = (Object[]) objects.get(0);
                 } else {//如果只有一列的情况
                     titles = new Object[]{objects.get(0)};
                 }
                 for (int i = 1; i < objects.size(); i++) {
                     Object[] values = null;
-                    if (objects.get(i) instanceof String[]) {
+                    if (objects.get(i) instanceof Object[]) {
                         values = (Object[]) objects.get(i);
                     } else {//如果只有一列的情况
                         values = new Object[]{objects.get(i)};

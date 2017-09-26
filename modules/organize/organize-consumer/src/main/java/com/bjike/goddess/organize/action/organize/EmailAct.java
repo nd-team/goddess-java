@@ -194,8 +194,8 @@ public class EmailAct {
                 sb.append(names[i]+",");
             }
         }
-//                HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线上
-        HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线下测试
+                HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
         ActResultOrgan resultOrgan = new ActResultOrgan();
         try {
@@ -226,8 +226,8 @@ public class EmailAct {
 
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-//        HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/commonality/v1/getEmails");//线上
-        HttpGet httpGet = new HttpGet("http://localhost:51310/commonality/v1/getEmails");//线下测试
+        HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/commonality/v1/getEmails");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51310/commonality/v1/getEmails");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
 
         ActResultOrgan resultOrgan = new ActResultOrgan();

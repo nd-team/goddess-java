@@ -20,6 +20,7 @@ public class JapiTest {
                 "modules/organize/organize-api",
                 "modules/archive/archive-api",
                 "modules/regularization/regularization-api",
+                "modules/contacts/contacts-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索
@@ -28,7 +29,7 @@ public class JapiTest {
         JapiClientStorage japiClientStorage = JapiClientStorage.getInstance();
         japiClientStorage.setProject(project);
         japiClientStorage.autoSaveToDisk();
-        //JapiClient.delete(true);
+//        JapiClient.delete(true);
         new JapiClientTransfer().autoTransfer(japiClientStorage);
     }
 

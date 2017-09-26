@@ -21,7 +21,7 @@ public class WorkRangeFlatTO implements Serializable {
     /**
      * 修改前的业务方向分类
      */
-    @NotBlank(message = "业务方向分类不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "业务方向分类不能为空", groups = { EDIT.class})
     private String directionEdit;
 
 

@@ -22,7 +22,7 @@ public class WeightalTO extends BaseTO {
 //    /**
 //     * 确定项目提成分配比例时间
 //     */
-//    @NotBlank(message = "确定项目提成分配比例时间不能为空", groups = {ADD.class, EDIT.class})
+////    @NotBlank(message = "确定项目提成分配比例时间不能为空", groups = {ADD.class, EDIT.class})
 //    private String time;
 
     /**

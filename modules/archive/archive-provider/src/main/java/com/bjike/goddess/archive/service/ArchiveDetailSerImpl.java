@@ -211,6 +211,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
         ArchiveDetailBO bo = BeanTransform.copyProperties(entity, ArchiveDetailBO.class);
         bo.setPosition("");
         bo.setProject("");
+        bo.setArea("");
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null != user) {
             PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
@@ -223,6 +224,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
                                 PositionDetailBO position = positionDetailAPI.findBOById(id);
                                 bo.setPosition(bo.getPosition() + "," + position.getPosition());
                                 bo.setProject(bo.getProject() + "," + position.getDepartmentName());
+                                bo.setArea(position.getArea());
                             }
                         }
                     }
@@ -280,6 +282,8 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
                     entity.setPush(push);
                 }
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setRemark(to.getRemark());
+                entity.setStorage(to.getStorage());
                 super.update(entity);
                 return this.transformBO(entity);
             } catch (Exception e) {

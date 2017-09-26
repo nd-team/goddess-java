@@ -118,4 +118,9 @@ public interface TemperatureSubsidiesAPI {
     default void confirm(String id, Boolean confirm) throws SerException {
         return;
     }
+
+    /**
+     * 根据计薪周期开始时间和结束时间获取高温补助
+     */
+    TemperatureSubsidiesBO findTemperature(String paytStartTime,String payEndTime) throws SerException;
 }

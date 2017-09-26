@@ -73,8 +73,8 @@ public class FundPrepareApiImpl implements FundPrepareAPI {
     }
 
     @Override
-    public List<String> findSecondSubject() throws SerException {
-        return fundPrepareSer.findSecondSubject();
+    public List<String> findSecondSubject(String firstSubject) throws SerException {
+        return fundPrepareSer.findSecondSubject(firstSubject);
     }
 
     @Override

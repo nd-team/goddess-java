@@ -248,6 +248,12 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
                 ArchiveGather entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setEvaluate(to.getEvaluate());
+                entity.setOther(to.getOther());
+                entity.setPromotion(to.getPromotion());
+                entity.setSkill(to.getSkill());
+                entity.setSubsidy(to.getSubsidy());
+                entity.setTransfer(to.getTransfer());
                 super.update(entity);
                 return this.transformBO(entity);
             } catch (Exception e) {

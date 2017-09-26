@@ -63,6 +63,22 @@ public class RowAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 列表
+     *
+     * @param dto
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/count")
+    public Result count(@Validated({GET.class}) RowDTO dto, BindingResult rs) throws ActException {
+        try {
+            Long count = rowAPI.count(dto);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 添加一行数据

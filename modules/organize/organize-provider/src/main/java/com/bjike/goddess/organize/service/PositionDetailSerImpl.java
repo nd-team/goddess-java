@@ -63,6 +63,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         bo.setDepartmentName(department.getDepartment());
         bo.setArrangementName(arrangement.getArrangement());
         bo.setDepartmentName(department.getDepartment());
+        bo.setHierarchyID(department.getHierarchyId());
         bo.setHierarchyName(department.getHierarchyName());
         bo.setArrangementId(arrangement.getId());
         if (null != moduleType) {
@@ -342,11 +343,11 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
                         detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
                         List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
                         String agent = get(agents);
-                        RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class,"module");
+                        RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class, "module");
                         positionBO.setMain(main);
                         positionBO.setPart(part);
                         positionBO.setAgent(agent);
-                        if (null != p.getModule().getModule()) {
+                        if (null != p.getModule()) {
                             positionBO.setModule(p.getModule().getModule());
                         }
                         positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");

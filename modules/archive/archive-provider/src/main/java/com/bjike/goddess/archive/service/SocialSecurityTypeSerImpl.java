@@ -203,6 +203,7 @@ public class SocialSecurityTypeSerImpl extends ServiceImpl<SocialSecurityType, S
                 SocialSecurityType entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setDescription(to.getDescription());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, SocialSecurityTypeBO.class);
             } catch (Exception e) {

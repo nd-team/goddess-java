@@ -77,6 +77,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
             this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setDescription(to.getDescription());
         super.update(entity);
         return BeanTransform.copyProperties(entity, HierarchyBO.class);
     }

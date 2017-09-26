@@ -97,4 +97,9 @@ public class CategoryApiImpl implements CategoryAPI {
     public List<String> listAllThirdName() throws SerException {
         return categorySer.listAllThirdName();
     }
+
+    @Override
+    public List<String> findByFirstName(String firstName) throws SerException {
+        return categorySer.findByFirstName(firstName);
+    }
 }

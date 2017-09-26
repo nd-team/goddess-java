@@ -1,7 +1,5 @@
 package com.bjike.goddess.fundcheck.action.fundcheck;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -14,14 +12,10 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundcheck.api.OperatExpensesAPI;
 import com.bjike.goddess.fundcheck.bo.OperatExpensesBO;
 import com.bjike.goddess.fundcheck.dto.OperatExpensesDTO;
-import com.bjike.goddess.fundcheck.entity.OperatExpenses;
 import com.bjike.goddess.fundcheck.excel.OperatExpensesExcel;
-import com.bjike.goddess.fundcheck.excel.OtherIncomeExcel;
 import com.bjike.goddess.fundcheck.to.GuidePermissionTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesCollectTO;
 import com.bjike.goddess.fundcheck.to.OperatExpensesTO;
-import com.bjike.goddess.fundcheck.to.OtherIncomeTO;
-import com.bjike.goddess.fundcheck.vo.BackVO;
 import com.bjike.goddess.fundcheck.vo.OperatExpensesVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -33,7 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 营业费用
@@ -49,8 +45,10 @@ import java.util.List;
 public class OperatExpensesAction extends BaseFileAction {
     @Autowired
     private OperatExpensesAPI operatExpensesAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -60,16 +58,17 @@ public class OperatExpensesAction extends BaseFileAction {
         try {
 
             Boolean isHasPermission = operatExpensesAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 营业费用列表总条数
      *
@@ -179,6 +178,7 @@ public class OperatExpensesAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 汇总
      *
@@ -190,12 +190,13 @@ public class OperatExpensesAction extends BaseFileAction {
     @GetMapping("v1/collect")
     public Result collect(@Validated OperatExpensesCollectTO to) throws ActException {
         try {
-            List<OperatExpensesVO> operatExpensesVOS = BeanTransform.copyProperties(operatExpensesAPI.collect(to), OperatExpensesVO.class);
-            return ActResult.initialize(operatExpensesVOS);
+            LinkedHashMap<String, String> map = operatExpensesAPI.collect(to);
+            return ActResult.initialize(map);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有类型
      *
@@ -211,6 +212,7 @@ public class OperatExpensesAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导入Excel
      *
@@ -227,7 +229,7 @@ public class OperatExpensesAction extends BaseFileAction {
             List<OperatExpensesExcel> tos = ExcelUtil.excelToClazz(is, OperatExpensesExcel.class, excel);
             List<OperatExpensesTO> tocs = new ArrayList<>();
             for (OperatExpensesExcel str : tos) {
-                OperatExpensesTO OperatExpensesTO = BeanTransform.copyProperties(str, OperatExpensesTO.class,"date");
+                OperatExpensesTO OperatExpensesTO = BeanTransform.copyProperties(str, OperatExpensesTO.class, "date");
                 OperatExpensesTO.setDate(String.valueOf(str.getDate()));
                 tocs.add(OperatExpensesTO);
             }
@@ -238,6 +240,7 @@ public class OperatExpensesAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * excel模板下载
      *
@@ -248,7 +251,7 @@ public class OperatExpensesAction extends BaseFileAction {
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "营业费用导入模板.xlsx";
-            super.writeOutFile(response, operatExpensesAPI.templateExport( ), fileName);
+            super.writeOutFile(response, operatExpensesAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

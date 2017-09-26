@@ -114,5 +114,11 @@ public interface CategorySer extends Ser<Category, CategoryDTO> {
     default List<String> listAllThirdName( ) throws SerException {return null;}
 
 
-
+    /**
+     * 通过一级科目查询对应的三级科目
+     * zhuangkaiqin
+     */
+    default List<String> findByFirstName(String firstName) throws SerException {
+        return null;
+    }
 }

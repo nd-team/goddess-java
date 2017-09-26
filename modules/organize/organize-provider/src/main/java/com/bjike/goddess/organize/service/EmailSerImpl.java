@@ -185,6 +185,7 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
 
     @Override
     public List<EmailBO> list(EmailDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         List<Email> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, EmailBO.class);
     }

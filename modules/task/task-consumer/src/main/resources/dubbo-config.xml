@@ -27,10 +27,14 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.TaskAPI" id="taskApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.NodeAPI" id="nodeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ScheduleAPI" id="scheduleApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProblemAPI" id="problemApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProblemTypeAPI" id="problemTypeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeAPI" id="customizeApiImpl"/>
 
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-    <dubbo:reference  validation="true"  interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
+                     id="storageUserApiImpl"/>
 
 
 </beans>

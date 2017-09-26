@@ -17,9 +17,13 @@ public enum Type {
      */
     PLAN(1),
     /**
+     * 差异
+     */
+    DIFFERENCE(2),
+    /**
      * 实际
      */
-    ACTUAL(2);
+    ACTUAL(3);
     private int code;
 
     Type(int code) {

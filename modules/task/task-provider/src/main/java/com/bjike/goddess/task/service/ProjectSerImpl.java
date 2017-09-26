@@ -78,7 +78,7 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         if (null != status) {
             sb.append("SELECT *  FROM (");
         }
-        sb.append(" SELECT *  FROM task_project WHERE userId = '" + userId + "' ");
+        sb.append(" SELECT id,createTime,area,description,execStatus,name,status  FROM task_project WHERE userId = '" + userId + "' ");
         sb.append(" UNION ");
         sb.append(" SELECT a.*  FROM task_project a,( ");
         sb.append(" SELECT pid  FROM task_project_range WHERE users LIKE '%" + userId + "%' ");
@@ -93,20 +93,20 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         sb.append(")b WHERE a.id=b.pid");
 
         if (null != status) {
-            sb.append(" and status=" + status.getCode());
+            sb.append(" AND status=" + status.getCode());
         }
         if (null != execStatus) {
-            sb.append(" and execStatus=" + execStatus.getCode());
+            sb.append(" AND execStatus=" + execStatus.getCode());
         }
-        sb.append(" order by createTime desc ");
+        sb.append(" ORDER BY createTime DESC ");
         String sql = sb.toString();
-        String[] fields = new String[]{"id", "createTime", "modifyTime", "area", "description", "execStatus", "name", "status"};
+        String[] fields = new String[]{"id", "createTime",  "area", "description", "execStatus", "name", "status"};
         return super.findBySql(sql, Project.class, fields);
     }
 
     @Override
     public Project findByTableId(String tableId) throws SerException {
-            String sql = "select pid from task_table where id='" + tableId + "'";
+            String sql = "SELECT pid FROM task_table WHERE id = '" + tableId + "'";
             List<Object> objects = super.findBySql(sql);
             if(null!=objects && objects.size()>0){
                 String pid =  String.valueOf(objects.get(0));

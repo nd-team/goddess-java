@@ -3,14 +3,12 @@ package com.bjike.goddess.salarymanage.service;
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.AgeAssistAPI;
-import com.bjike.goddess.assistance.api.ComputerAssistAPI;
-import com.bjike.goddess.assistance.api.HotAssistAPI;
-import com.bjike.goddess.assistance.api.HouseAssistAPI;
-import com.bjike.goddess.assistance.bo.AgeAssistBO;
-import com.bjike.goddess.assistance.bo.ComputerAssistBO;
-import com.bjike.goddess.assistance.bo.HotAssistBO;
-import com.bjike.goddess.assistance.bo.HouseAssistBO;
+import com.bjike.goddess.assistance.api.ComputerSubsidiesAPI;
+import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
+import com.bjike.goddess.assistance.api.TemperatureSubsidiesAPI;
+import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
+import com.bjike.goddess.assistance.bo.SenioritySubsidiesBO;
+import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -78,16 +76,8 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     private EntryBasicInfoAPI entryBasicInfoAPI;
 
     @Autowired
-    private HotAssistAPI hotAssistAPI;
+    private ComputerSubsidiesAPI computerSubsidiesAPI;
 
-    @Autowired
-    private HouseAssistAPI houseAssistAPI;
-
-    @Autowired
-    private ComputerAssistAPI computerAssistAPI;
-
-    @Autowired
-    private AgeAssistAPI ageAssistAPI;
 
     @Autowired
     private ModuleAPI moduleAPI;
@@ -99,13 +89,19 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     private RegularizationAPI regularizationAPI;
 
     @Autowired
-    private OverviewSkillLevelAPI overviewSkillLevelAPI;
+    private SenioritySubsidiesAPI senioritySubsidiesAPI;
 
     @Autowired
     private SalaryconfirmAPI salaryconfirmAPI;
 
     @Autowired
     private AttachedAPI attachedAPI;
+
+    @Autowired
+    private TemperatureSubsidiesAPI temperatureSubsidiesAPI;
+
+    @Autowired
+    private OverviewSkillLevelAPI overviewSkillLevelAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -474,45 +470,45 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     }
 
     @Override
-    public HotAssistBO findHotAssist(SalaryInformationDTO dto) throws SerException {
-        HotAssistBO bo = new HotAssistBO();
+    public TemperatureSubsidiesBO findHotAssist(SalaryInformationDTO dto) throws SerException {
+        TemperatureSubsidiesBO bo = new TemperatureSubsidiesBO();
         if (moduleAPI.isCheck("assistance")) {
             String userToken = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
-            bo = hotAssistAPI.findHot(dto.getPayStartTime(), dto.getPayEndTime());
+            bo = temperatureSubsidiesAPI.findTemperature(dto.getPayStartTime(), dto.getPayEndTime());
+        }
+        return bo;
+    }
+
+//    @Override
+//    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
+//        HouseAssistBO bo = new HouseAssistBO();
+//        if (moduleAPI.isCheck("assistance")) {
+//            String userToken = RpcTransmit.getUserToken();
+//            RpcTransmit.transmitUserToken(userToken);
+//            bo = houseAssistAPI.findHouse(dto.getPayStartTime(), dto.getPayEndTime());
+//        }
+//        return bo;
+//    }
+
+    @Override
+    public ComputerSubsidiesBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
+        ComputerSubsidiesBO bo = new ComputerSubsidiesBO();
+        if (moduleAPI.isCheck("assistance")) {
+            String userToken = RpcTransmit.getUserToken();
+            RpcTransmit.transmitUserToken(userToken);
+            bo = computerSubsidiesAPI.findByComputer(dto.getPayStartTime(), dto.getPayEndTime());
         }
         return bo;
     }
 
     @Override
-    public HouseAssistBO findHouseAssist(SalaryInformationDTO dto) throws SerException {
-        HouseAssistBO bo = new HouseAssistBO();
+    public SenioritySubsidiesBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
+        SenioritySubsidiesBO bo = new SenioritySubsidiesBO();
         if (moduleAPI.isCheck("assistance")) {
             String userToken = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
-            bo = houseAssistAPI.findHouse(dto.getPayStartTime(), dto.getPayEndTime());
-        }
-        return bo;
-    }
-
-    @Override
-    public ComputerAssistBO findComputerAssist(SalaryInformationDTO dto) throws SerException {
-        ComputerAssistBO bo = new ComputerAssistBO();
-        if (moduleAPI.isCheck("assistance")) {
-            String userToken = RpcTransmit.getUserToken();
-            RpcTransmit.transmitUserToken(userToken);
-            bo = computerAssistAPI.findComputer(dto.getPayStartTime(), dto.getPayEndTime());
-        }
-        return bo;
-    }
-
-    @Override
-    public AgeAssistBO findAgeAssist(SalaryInformationDTO dto) throws SerException {
-        AgeAssistBO bo = new AgeAssistBO();
-        if (moduleAPI.isCheck("assistance")) {
-            String userToken = RpcTransmit.getUserToken();
-            RpcTransmit.transmitUserToken(userToken);
-            bo = ageAssistAPI.findAge(dto.getEmployeeName());
+            bo = senioritySubsidiesAPI.findAge(dto.getEmployeeName());
         }
         return bo;
     }

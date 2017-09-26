@@ -1,6 +1,5 @@
 package com.bjike.goddess.rentutilitiespay.service;
 
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -302,7 +301,9 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
     public StayUtilitiesBO editStayUtilities(StayUtilitiesTO stayUtilitiesTO) throws SerException {
         checkAddIdentity();
         StayUtilities stayUtilities = super.findById(stayUtilitiesTO.getId());
-        BeanTransform.copyProperties(stayUtilitiesTO, stayUtilities, true, "projectName");
+        LocalDateTime createTime = stayUtilities.getCreateTime();
+        stayUtilities = BeanTransform.copyProperties(stayUtilitiesTO, StayUtilities.class, true, "projectName");
+        stayUtilities.setCreateTime(createTime);
         stayUtilities.setModifyTime(LocalDateTime.now());
         stayUtilities.setProjectName(StringUtils.join(stayUtilitiesTO.getProjectName(), ","));
         super.update(stayUtilities);

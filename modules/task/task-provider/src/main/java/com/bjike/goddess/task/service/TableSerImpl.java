@@ -67,7 +67,7 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
 
     @Override
     public Table findByRowId(String rowId) throws SerException {
-        String sql = "select tid from task_row where id='" + rowId + "'";
+        String sql = "SELECT tid FROM task_row WHERE id='" + rowId + "'";
         List<Object> objects = super.findBySql(sql);
         if(null!=objects && objects.size()>0){
             String tid =  String.valueOf(objects.get(0));

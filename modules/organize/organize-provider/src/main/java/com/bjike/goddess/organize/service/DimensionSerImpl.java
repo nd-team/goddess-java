@@ -77,6 +77,7 @@ public class DimensionSerImpl extends ServiceImpl<Dimension, DimensionDTO> imple
             this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setDescription(to.getDescription());
         super.update(entity);
         return BeanTransform.copyProperties(entity, DimensionBO.class);
     }

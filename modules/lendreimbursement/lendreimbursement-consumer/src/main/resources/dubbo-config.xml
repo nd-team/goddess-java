@@ -44,5 +44,12 @@
 	<dubbo:reference  validation="true" id="lendPermissionApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionAPI" />
 	<dubbo:reference  validation="true" id="lendPermissionOperateApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionOperateAPI" />
 
+	<dubbo:reference  validation="true" id="ajoafinancelendmoneyApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancelendmoneyAPI" />
+	<dubbo:reference  validation="true" id="ajoafinanceSubjectApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinanceSubjectAPI" />
+	<dubbo:reference  validation="true" id="ajoafinancemattersApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancemattersAPI" />
+	<dubbo:reference  validation="true" id="ajoafinancereimbursementApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementAPI" />
+	<dubbo:reference  validation="true" id="ajoafinancereimbursementForApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementForAPI" />
+	<dubbo:reference  validation="true" id="ajoafinancereimbursementLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementLogAPI" />
+	<dubbo:reference  validation="true" id="ajoafinancereimbursementUserApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementUserAPI" />
 
 </beans>

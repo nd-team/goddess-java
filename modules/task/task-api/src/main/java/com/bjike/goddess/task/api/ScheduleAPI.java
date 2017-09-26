@@ -1,8 +1,11 @@
 package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.task.bo.collect.Collect;
+import com.bjike.goddess.task.dto.CollectDTO;
 
 /**
+ * 进度
  * @Author: [liguiqin]
  * @Date: [2017-09-19 11:10]
  * @Description: [ ]
@@ -10,7 +13,9 @@ import com.bjike.goddess.common.api.exception.SerException;
  * @Copy: [com.bjike]
  */
 public interface ScheduleAPI {
-    default String detail(String projectId) throws SerException {
+
+    default String collect(CollectDTO dto) throws SerException {
+
         return null;
     }
 

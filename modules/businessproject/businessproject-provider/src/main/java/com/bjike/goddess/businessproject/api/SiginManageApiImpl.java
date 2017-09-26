@@ -6,6 +6,7 @@ import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.service.SiginManageSer;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
+import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,5 +102,15 @@ public class SiginManageApiImpl implements SiginManageAPI {
     @Override
     public List<String> listInnerProject() throws SerException {
         return siginManageSer.listInnerProject();
+    }
+
+    @Override
+    public SiginManageBO findByProject(String name) throws SerException {
+        return siginManageSer.findByProject(name);
+    }
+
+    @Override
+    public Boolean findCompleteStatus(String projectName) throws SerException {
+        return siginManageSer.findCompleteStatus(projectName);
     }
 }

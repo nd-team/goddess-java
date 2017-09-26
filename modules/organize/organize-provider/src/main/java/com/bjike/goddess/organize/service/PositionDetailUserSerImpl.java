@@ -94,6 +94,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                     detailBO.setModule(positionDetail.getModule().getModule());
                 }
                 detailBO.setPosition(positionDetail.getPosition());
+                detailBO.setPositionId(positionDetail.getId());
                 detailBO.setPositionNumber(positionDetail.getSerialNumber());
                 detailBOS.add(detailBO);
             }
@@ -287,6 +288,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         return this.transformBOList(super.findByPage(dto));
     }
 

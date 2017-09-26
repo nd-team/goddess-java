@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 任务下发
+ * 任务
  *
  * @Author: [liguiqin]
  * @Date: [2017-09-19 11:06]
@@ -29,7 +29,7 @@ public class TaskAct {
     private TaskAPI taskAPI;
 
     /**
-     * 一个项目所有详情
+     * 任务下发
      *
      * @return
      * @throws ActException
@@ -44,6 +44,5 @@ public class TaskAct {
         }
 
     }
-
 
 }

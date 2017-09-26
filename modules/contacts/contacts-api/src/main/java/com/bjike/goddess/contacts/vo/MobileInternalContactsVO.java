@@ -30,7 +30,7 @@ public class MobileInternalContactsVO {
     /**
      * 用户名
      */
-    private String name;
+    private String username;
 
     /**
      * 用户性别
@@ -123,12 +123,12 @@ public class MobileInternalContactsVO {
         this.headSculpture = headSculpture;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public SexType getSex() {

@@ -17,36 +17,31 @@ public class CglibTest {
     /**
      *
      *
-     SELECT MAX(CASE name WHEN '列1' THEN name ELSE '' END) '列1',
-     MAX(CASE name WHEN '列2' THEN name ELSE '' END) '列2',
-     MAX(CASE name WHEN '列3' THEN name ELSE '' END) '列3',
-     MAX(CASE name WHEN '列4' THEN name ELSE '' END) '列4',
-     MAX(CASE name WHEN '列5' THEN name ELSE '' END) '列5'
-     FROM(
+     SELECT MAX(CASE name WHEN '列1' THEN name ELSE '' END) '列1', MAX(CASE name WHEN '列2' THEN name ELSE '' END) '列2', MAX(CASE name WHEN '列3' THEN name ELSE '' END) '列3', MAX(CASE name WHEN '列4' THEN name ELSE '' END) '列4', MAX(CASE name WHEN '任务内容' THEN name ELSE '' END) '任务内容'
+     FROM (
      SELECT name
      FROM task_field
      WHERE tid='c6d23165-278e-4ea0-b917-78d3c6c97eb0'
-     ORDER BY seq ASC) a
-     UNION ALL
-     select * from (
-     SELECT MAX(CASE name WHEN '列1' THEN value ELSE '' END) '列1', MAX(CASE name WHEN '列2' THEN value ELSE '' END) '列2', MAX(CASE name WHEN '列3' THEN value ELSE '' END) '列3', MAX(CASE name WHEN '列4' THEN value ELSE '' END) '列4', MAX(CASE name WHEN '列5' THEN value ELSE '' END) '列5'
+     ORDER BY seq ASC) a UNION ALL
+     SELECT *
+     FROM(
+     SELECT MAX(CASE name WHEN '列1' THEN value ELSE '' END) '列1', MAX(CASE name WHEN '列2' THEN value ELSE '' END) '列2', MAX(CASE name WHEN '列3' THEN value ELSE '' END) '列3', MAX(CASE name WHEN '列4' THEN value ELSE '' END) '列4', MAX(CASE name WHEN '任务内容' THEN value ELSE '' END) '任务内容'
      FROM((
-     SELECT name,value,fid,rid
+     SELECT name,value,fid,rid,seq
      FROM (
      SELECT b.*
      FROM task_table a,task_field b
-     WHERE a.id='c6d23165-278e-4ea0-b917-78d3c6c97eb0' AND a.id = b.tid)a,(
-     -- SELECT a.fid,b.id AS rid,c.val AS value
+     WHERE a.id='c6d23165-278e-4ea0-b917-78d3c6c97eb0' AND a.id = b.tid AND b.node='0')a,(
+     SELECT a.fid,b.id AS rid,c.val AS value
      FROM task_grid a, (
      SELECT *
      FROM task_row
-     ORDER BY seq
      LIMIT 0,10) b,task_val c
      WHERE b.tid ='c6d23165-278e-4ea0-b917-78d3c6c97eb0' AND a.rid=b.id AND c.id=a.vid) b
-     WHERE a.id=b.fid
-     ORDER BY seq ASC))a,task_row rr
-     WHERE a.rid=rr.id
-     GROUP BY rid order by rr.seq) b
+     WHERE a.id=b.fid))a,task_row c
+     WHERE a.rid=c.id
+     GROUP BY rid
+     ORDER BY c.seq ASC)b
      *
      *
      * @param args

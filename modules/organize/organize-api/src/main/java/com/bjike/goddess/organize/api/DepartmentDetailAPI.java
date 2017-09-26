@@ -163,6 +163,30 @@ public interface DepartmentDetailAPI {
     }
 
     /**
+     * 根据地区查询部门
+     * tanghaixiang
+     *
+     * @param area
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartByArea(String area) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据地区和部门查询项目名称
+     * tanghaixiang
+     *
+     * @param area
+     * @return
+     * @throws SerException
+     */
+    default List<String> findPnameByAreaAndDepart(String area,String depart) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据id查询部门项目组详细数据
      *
      * @param ids 部门项目组详细数据id数组

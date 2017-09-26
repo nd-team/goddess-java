@@ -80,4 +80,9 @@ public class ComputerSubsidiesApiImpl implements ComputerSubsidiesAPI {
     public void confirm(String id, Boolean confirm) throws SerException {
         computerSubsidiesSer.confirm(id, confirm);
     }
+
+    @Override
+    public ComputerSubsidiesBO findByComputer(String payStartTime, String payEndTime) throws SerException {
+        return computerSubsidiesSer.findByComputer(payStartTime,payEndTime);
+    }
 }

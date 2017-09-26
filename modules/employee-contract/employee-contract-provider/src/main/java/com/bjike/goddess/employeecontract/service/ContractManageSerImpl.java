@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.employeecontract.bo.ContractChangeBO;
 import com.bjike.goddess.employeecontract.bo.ContractInfoBO;
 import com.bjike.goddess.employeecontract.bo.ContractManageBO;
@@ -96,6 +97,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 综合资源部权限(部门)
      *
@@ -198,7 +200,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            if (posinFlag || depFlag ) {
+            if (posinFlag || depFlag) {
                 flag = true;
             }
         } else {
@@ -210,7 +212,6 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-
 
 
     /**
@@ -229,6 +230,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         }
         return flag;
     }
+
     /**
      * 核对总经办权限（岗位级别）
      */
@@ -245,6 +247,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
         }
         return flag;
     }
+
     /**
      * 核对综合资源部权限（部门级别）
      */
@@ -492,6 +495,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
             entity.setType(contractTypeSer.findById(to.getTypeId()));
             if (null == entity.getType())
                 throw new SerException("合同类型不能为空");
+            entity.setLineStorage(to.getLineStorage());
             super.update(entity);
             ContractManageBO bo = this.transformBO(entity);
             return BeanTransform.copyProperties(bo, ContractInfoBO.class);
@@ -511,6 +515,12 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
                 throw new SerException();
             BeanTransform.copyProperties(to, entity, true);
             entity.setModifyTime(LocalDateTime.now());
+            entity.setAddress(to.getAddress());
+            if (StringUtils.isNotBlank(to.getLeaveDate())) {
+                entity.setLeaveDate(DateUtil.parseDate(to.getLeaveDate()));
+            } else {
+                entity.setLeaveDate(null);
+            }
             super.update(entity);
             ContractManageBO bo = this.transformBO(entity);
             return BeanTransform.copyProperties(bo, ContractPersonalBO.class);
@@ -556,9 +566,9 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     @Override
     public List<ContractPersonalBO> personalMaps(ContractManageDTO dto) throws SerException {
         Boolean flag = checkSeePermission();
-        if(!flag){
+        if (!flag) {
             this.checkAuthority(dto);
-        }else{
+        } else {
             dto.getSorts().add("status=asc");
             dto.getSorts().add("username=desc");
         }
@@ -569,9 +579,9 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     @Override
     public List<ContractInfoBO> infoMaps(ContractManageDTO dto) throws SerException {
         Boolean flag = checkSeePermission();
-        if(!flag){
+        if (!flag) {
             this.checkAuthority(dto);
-        }else{
+        } else {
             dto.getSorts().add("status=asc");
             dto.getSorts().add("serialNumber=desc");
         }
@@ -583,7 +593,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     public Long getPersonalTotal() throws SerException {
         ContractManageDTO dto = new ContractManageDTO();
         Boolean flag = checkSeePermission();
-        if(!flag){
+        if (!flag) {
             this.checkAuthority(dto);
         }
         return super.count(dto);
@@ -593,7 +603,7 @@ public class ContractManageSerImpl extends ServiceImpl<ContractManage, ContractM
     public Long getInfoTotal() throws SerException {
         ContractManageDTO dto = new ContractManageDTO();
         Boolean flag = checkSeePermission();
-        if(!flag){
+        if (!flag) {
             this.checkAuthority(dto);
         }
         return super.count(dto);

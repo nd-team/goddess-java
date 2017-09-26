@@ -8,7 +8,9 @@ import com.bjike.goddess.fundcheck.bo.StockMoneyBO;
 import com.bjike.goddess.fundcheck.dto.PayStockDTO;
 import com.bjike.goddess.fundcheck.to.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 支付给股东业务接口
@@ -96,7 +98,7 @@ public interface PayStockAPI {
      * @param to
      * @throws SerException
      */
-    default List<PayStockBO> collect(PayStockCollectTO to) throws SerException {
+    default LinkedHashMap<String, String> collect(PayStockCollectTO to) throws SerException {
         return null;
     }
     /**

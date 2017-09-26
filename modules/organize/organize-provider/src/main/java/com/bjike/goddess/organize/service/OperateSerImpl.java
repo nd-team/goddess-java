@@ -76,6 +76,7 @@ public class OperateSerImpl extends ServiceImpl<Operate, OperateDTO> implements 
             this.checkUnique(to);
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setDescription(to.getDescription());
         super.update(entity);
         return BeanTransform.copyProperties(entity, OperateBO.class);
     }

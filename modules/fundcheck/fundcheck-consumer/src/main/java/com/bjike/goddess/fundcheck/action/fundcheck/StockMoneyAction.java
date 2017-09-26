@@ -34,7 +34,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 收到股东款
@@ -185,15 +187,14 @@ public class StockMoneyAction extends BaseFileAction{
      * 汇总
      *
      * @param to 收到股东款数据to
-     * @return class StockMoneyVO
      * @des 编辑收到股东款
      * @version v1
      */
     @GetMapping("v1/collect")
     public Result collect(@Validated StockMoneyCollectTO to, BindingResult bindingResult) throws ActException {
         try {
-            List<StockMoneyVO> stockMoneyVOS = BeanTransform.copyProperties(stockMoneyAPI.collect(to), StockMoneyVO.class);
-            return ActResult.initialize(stockMoneyVOS);
+            LinkedHashMap<String,String> map  = stockMoneyAPI.collect(to);
+            return ActResult.initialize(map);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

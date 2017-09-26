@@ -30,8 +30,6 @@ public class CustomIntercept implements Interceptor {
     private UserAPI userAPI;
     @Autowired
     private PermissionAPI permissionAPI;
-    @Autowired
-    private StorageUserAPI storageUserAPI;
 
     @Override
     public List<HIInfo> customerInterceptors() {
@@ -45,7 +43,6 @@ public class CustomIntercept implements Interceptor {
          * 登录拦截器
          */
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI,"fundcheck","123456","fundcheck"), "/**");
 
         /**
          * 权限拦截器
@@ -66,6 +63,6 @@ public class CustomIntercept implements Interceptor {
         /**
          * 顺序
          */
-        return Arrays.asList(smoothInfo,storage, loginInfo);
+        return Arrays.asList(smoothInfo, loginInfo);
     }
 }

@@ -95,4 +95,9 @@ public interface SenioritySubsidiesSer extends Ser<SenioritySubsidies, Seniority
      */
     void importExcel(List<SenioritySubsidiesTO> senioritySubsidiesTOS) throws SerException;
 
+    /**
+     * 根据员工姓名获取工龄补助
+     */
+    SenioritySubsidiesBO findAge(String employeeName) throws SerException;
+
 }

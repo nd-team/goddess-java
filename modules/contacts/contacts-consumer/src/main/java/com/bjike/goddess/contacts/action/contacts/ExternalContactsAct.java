@@ -131,7 +131,7 @@ public class ExternalContactsAct extends BaseFileAction {
 
 
     /**
-     * 根据id获取外部通讯录数据
+     * 获取外部通讯录数据
      *
      * @param id 外部通讯录数据id
      * @return class ExternalContactsVO
@@ -261,9 +261,10 @@ public class ExternalContactsAct extends BaseFileAction {
     }
 
     /**
-     * 根据id 获取移动端数据
+     * 获取移动端数据
      *
-     * @return calss MobileExternalContactsVO
+     * @param id 列表id
+     * @return class MobileExternalContactsVO
      * @version v1
      */
     @GetMapping("v1/mobile/findByID/{id}")

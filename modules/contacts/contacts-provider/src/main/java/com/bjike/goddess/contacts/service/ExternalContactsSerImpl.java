@@ -26,11 +26,13 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.enums.SexType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -67,6 +69,8 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private UserDetailAPI userDetailAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
 
     @Transactional(rollbackFor = SerException.class)
@@ -287,6 +291,14 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
                     if (null != userDetailBO) {
                         bo.setSex(userDetailBO.getSex());
                     }
+
+                    if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                        bo.setSex(SexType.MAN);
+                    } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                        bo.setSex(SexType.WOMAN);
+                    } else {
+                        bo.setSex(SexType.NONE);
+                    }
                 }
             }
             return bos;
@@ -316,9 +328,16 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
             UserBO userBO = userAPI.findOne(userDTO);
             if (null != userBO) {
                 mobileExternalContactsBO.setHeadSculpture(userBO.getHeadSculpture());
-                UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-                if (null != userDetailBO) {
-                    mobileExternalContactsBO.setSex(userDetailBO.getSex());
+//                UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
+//                if (null != userDetailBO) {
+//                    mobileExternalContactsBO.setSex(userDetailBO.getSex());
+//                }
+                if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    mobileExternalContactsBO.setSex(SexType.MAN);
+                } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                    mobileExternalContactsBO.setSex(SexType.WOMAN);
+                } else {
+                    mobileExternalContactsBO.setSex(SexType.NONE);
                 }
             }
             return mobileExternalContactsBO;

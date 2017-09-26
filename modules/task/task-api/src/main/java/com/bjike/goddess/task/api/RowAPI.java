@@ -26,6 +26,14 @@ public interface RowAPI {
     default String list(RowDTO dto) throws SerException {
         return null;
     }
+    /**
+     *
+     *
+     * @throws SerException
+     */
+    default Long count(RowDTO dto) throws SerException {
+        return null;
+    }
 
     /**
      * 添加数据行

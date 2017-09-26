@@ -5,11 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.bo.AreaBO;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
-import com.bjike.goddess.organize.bo.ManagerBO;
-import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.Hierarchy;
@@ -77,8 +73,10 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public Integer getAreaNum(String startTime, String endTime) throws SerException {
         String fields[] = new String[]{"area"};
         StringBuilder sql = new StringBuilder("select count(area) from organize_department_detail ");
-        sql.append(" where createTime between '" + startTime + "' ");
-        sql.append(" and '" + endTime + "' ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
         List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
         if (null != managerBOs && managerBOs.size() > 0) {
             List<Integer> areas = managerBOs.stream().map(ManagerBO::getArea).distinct().collect(Collectors.toList());
@@ -91,8 +89,10 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public Integer getDepartmentNum(String startTime, String endTime) throws SerException {
         String fields[] = new String[]{"department"};
         StringBuilder sql = new StringBuilder("select count(department) from organize_department_detail ");
-        sql.append(" where createTime between '" + startTime + "' ");
-        sql.append(" and '" + endTime + "' ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
         List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
         if (null != managerBOs && managerBOs.size() > 0) {
             List<Integer> areas = managerBOs.stream().map(ManagerBO::getDepartment).distinct().collect(Collectors.toList());
@@ -215,6 +215,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         }
         entity.setInnerProject(sb.toString());
         entity.setModifyTime(LocalDateTime.now());
+        entity.setDescription(to.getDescription());
         super.update(entity);
         return this.transformationToBO(entity);
     }
@@ -275,6 +276,31 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.eq("area", area));
         return this.transformationToBOList(super.findByCis(dto));
+    }
+
+    @Override
+    public List<String> findDepartByArea(String area) throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        List<DepartmentDetail> list = super.findByCis( dto );
+        List<String> opinionBOList = new ArrayList<>();
+        if( list!=  null && list.size()>0 ){
+            opinionBOList = list.stream().filter( str -> StringUtils.isNotBlank(str.getDepartment())).map(DepartmentDetail::getDepartment).collect(Collectors.toList());
+        }
+        return opinionBOList;
+    }
+
+    @Override
+    public List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("department", depart));
+        List<DepartmentDetail> list = super.findByCis( dto );
+        List<String> opinionBOList = new ArrayList<>();
+        if( list!=  null && list.size()>0 ){
+            opinionBOList = list.stream().filter( str -> StringUtils.isNotBlank(str.getInnerProject())).map(DepartmentDetail::getInnerProject).collect(Collectors.toList());
+        }
+        return opinionBOList;
     }
 
     @Override

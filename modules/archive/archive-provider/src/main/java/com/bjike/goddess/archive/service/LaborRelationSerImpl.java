@@ -198,6 +198,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
                 LaborRelation entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setDescription(to.getDescription());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, LaborRelationBO.class);
             } catch (Exception e) {

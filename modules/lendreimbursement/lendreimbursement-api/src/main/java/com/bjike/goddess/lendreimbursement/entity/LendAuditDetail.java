@@ -24,6 +24,16 @@ public class LendAuditDetail extends BaseEntity {
      */
     @Column(name = "position",  columnDefinition = "VARCHAR(255)   COMMENT '职位名称'")
     private String position;
+    /**
+     * 员工编号
+     */
+    @Column(name = "empNumber",  columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    private String empNumber;
+    /**
+     * 审核身份（负责人/财务/总经办）
+     */
+    @Column(name = "auditIdentity",  columnDefinition = "VARCHAR(255)   COMMENT '审核身份（负责人/财务/总经办）'")
+    private String auditIdentity;
 
     /**
      * 审核人
@@ -44,9 +54,9 @@ public class LendAuditDetail extends BaseEntity {
     private LocalDate auditDate;
 
     /**
-     * 是否通过
+     * 是否通过(是/否)
      */
-    @Column(name = "passOr",  columnDefinition = "VARCHAR(255)   COMMENT '是否通过'")
+    @Column(name = "passOr",  columnDefinition = "VARCHAR(255)   COMMENT '是否通过(是/否)'")
     private String passOr;
 
     /**
@@ -56,12 +66,28 @@ public class LendAuditDetail extends BaseEntity {
     private String applyLendId;
 
 
+    public String getEmpNumber() {
+        return empNumber;
+    }
+
+    public void setEmpNumber(String empNumber) {
+        this.empNumber = empNumber;
+    }
+
     public String getPosition() {
         return position;
     }
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getAuditIdentity() {
+        return auditIdentity;
+    }
+
+    public void setAuditIdentity(String auditIdentity) {
+        this.auditIdentity = auditIdentity;
     }
 
     public String getAuditor() {

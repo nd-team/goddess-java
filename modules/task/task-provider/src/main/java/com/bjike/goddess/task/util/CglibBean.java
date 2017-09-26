@@ -22,7 +22,6 @@ public class CglibBean implements Serializable{
     public CglibBean() {
         super();
     }
-    @SuppressWarnings("unchecked")
     public CglibBean(Map propertyMap) {
         this.object = generateBean(propertyMap);
         this.beanMap = BeanMap.create(this.object);
@@ -39,7 +38,6 @@ public class CglibBean implements Serializable{
     public Object getObject() {
         return this.object;
     }
-    @SuppressWarnings("unchecked")
     private Object generateBean(Map propertyMap) {
         BeanGenerator generator = new BeanGenerator();
         Set keySet = propertyMap.keySet();

@@ -94,8 +94,8 @@ public class BankRecordApiImpl implements BankRecordAPI {
     }
 
     @Override
-    public Double balanceByMonth(Integer year, Integer month) throws SerException {
-        return bankRecordSer.balanceByMonth(year, month);
+    public Double balanceByMonth(String startTime,String endTime) throws SerException {
+        return bankRecordSer.balanceByMonth(startTime, endTime);
     }
 
     @Override

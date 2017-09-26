@@ -312,4 +312,12 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
         super.save(senioritySubsidies);
     }
 
+    @Override
+    public SenioritySubsidiesBO findAge(String employeeName) throws SerException {
+        SenioritySubsidiesDTO dto = new SenioritySubsidiesDTO();
+        dto.getConditions().add(Restrict.eq("name",employeeName));
+        SenioritySubsidies model = super.findOne(dto);
+        SenioritySubsidiesBO senioritySubsidiesBO = BeanTransform.copyProperties(model,SenioritySubsidiesBO.class,false);
+        return senioritySubsidiesBO;
+    }
 }

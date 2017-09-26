@@ -132,28 +132,36 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default EntryRegisterBO getByNumber(String number) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的qq号
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findQQ() throws SerException {
         return null;
     }
+
     /**
      * 获取所有的毕业学校
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findSchoolTag() throws SerException {
         return null;
     }
+
     /**
      * 获取所有的毕业时间
      * lijuntao
+     *
      * @throws SerException
      */
-    default List<String> findGraduationDate() throws SerException {return null;}
+    default List<String> findGraduationDate() throws SerException {
+        return null;
+    }
 
     /**
      * 获取全部的入职等级信息（不分页）
@@ -179,6 +187,7 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * @return
      */
     default EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException{
+
         return null;
     }
 }
