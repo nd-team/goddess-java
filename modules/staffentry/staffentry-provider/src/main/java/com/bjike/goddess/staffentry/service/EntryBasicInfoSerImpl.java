@@ -172,6 +172,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
     public EntryBasicInfoBO insertEntryBasicInfo(EntryBasicInfoTO entryBasicInfoTO) throws SerException {
         EntryBasicInfo entryBasicInfo = BeanTransform.copyProperties(entryBasicInfoTO, EntryBasicInfo.class, true);
         try {
+            entryBasicInfo.setEmailInfo(false);
             entryBasicInfo.setCreateTime(LocalDateTime.now());
             super.save(entryBasicInfo);
             //TODO 添加转正人员信息lijuntao
@@ -216,7 +217,7 @@ public class EntryBasicInfoSerImpl extends ServiceImpl<EntryBasicInfo, EntryBasi
         EntryBasicInfo temp = super.findById(entryBasicInfoTO.getId());
         EntryBasicInfo entryBasicInfo = BeanTransform.copyProperties(entryBasicInfoTO, EntryBasicInfo.class, true);
         try {
-            BeanUtils.copyProperties(entryBasicInfo, temp, "createTime");
+            BeanUtils.copyProperties(entryBasicInfo, temp, "createTime","is_emailInfo");
             temp.setModifyTime(LocalDateTime.now());
             super.update(temp);
         } catch (SerException e) {
