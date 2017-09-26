@@ -20,6 +20,17 @@ public class LendAuditDetailVO {
      */
     private String position;
 
+
+    /**
+     * 员工编号
+     */
+    private String empNumber;
+
+    /**
+     * 审核身份（负责人/财务/总经办）
+     */
+    private String auditIdentity;
+
     /**
      * 审核人
      */
@@ -72,12 +83,28 @@ public class LendAuditDetailVO {
         this.position = position;
     }
 
+    public String getEmpNumber() {
+        return empNumber;
+    }
+
+    public void setEmpNumber(String empNumber) {
+        this.empNumber = empNumber;
+    }
+
     public String getAuditor() {
         return auditor;
     }
 
     public void setAuditor(String auditor) {
         this.auditor = auditor;
+    }
+
+    public String getAuditIdentity() {
+        return auditIdentity;
+    }
+
+    public void setAuditIdentity(String auditIdentity) {
+        this.auditIdentity = auditIdentity;
     }
 
     public String getAuditSuggest() {

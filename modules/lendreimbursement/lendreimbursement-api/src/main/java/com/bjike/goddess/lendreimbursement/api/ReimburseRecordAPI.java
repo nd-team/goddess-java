@@ -2,12 +2,16 @@ package com.bjike.goddess.lendreimbursement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
+import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
@@ -144,6 +148,15 @@ public interface ReimburseRecordAPI {
     default ReimburseRecordBO auditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
+    /**
+     * 等待审核寄件
+     *
+     * @param reimburseRecordTO 申请报销信息
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO sendRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return null;
+    }
 
     /**
      * 负责人确认冻结等待审核
@@ -260,6 +273,15 @@ public interface ReimburseRecordAPI {
     default ReimburseRecordBO prePay(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
+    /**
+     * 手机版等待付款预计付款
+     *
+     * @param reimburseRecordTO 申请报销信息
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO phonePrePay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return null;
+    }
 
     /**
      * 等待付款的付款
@@ -268,6 +290,15 @@ public interface ReimburseRecordAPI {
      * @return class ReimburseRecordBO
      */
     default ReimburseRecordBO waitPay(ReimburseRecordTO reimburseRecordTO) throws SerException {
+        return null;
+    }
+    /**
+     * 手机版的等待付款的付款
+     *
+     * @param phoneReimbursePayTO 申请报销信息
+     * @return class ReimburseRecordBO
+     */
+    default ReimburseRecordBO phoneWaitPay(PhoneReimbursePayTO phoneReimbursePayTO) throws SerException {
         return null;
     }
 
@@ -432,4 +463,26 @@ public interface ReimburseRecordAPI {
      * @throws SerException
      */
     Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException;
+
+
+
+    /**
+     * 手机端的列表
+     *
+     * @return class ReimburseRecordBO
+     */
+    default List<ReimburseRecordBO> listAll(PhoneReimburseDTO phoneReimburseDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 手机端的详情按钮控件状态
+     *
+     * @return class ReimPhoneShowStatus
+     */
+    default ReimPhoneShowStatus phoneShowRight(ReimPhoneSelectStatus reimPhoneSelectStatus,String reimId ) throws SerException {
+        return null;
+    }
+
+
 }

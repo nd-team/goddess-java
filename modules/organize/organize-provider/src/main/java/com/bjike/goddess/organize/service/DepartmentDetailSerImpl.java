@@ -278,6 +278,31 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     }
 
     @Override
+    public List<String> findDepartByArea(String area) throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        List<DepartmentDetail> list = super.findByCis( dto );
+        List<String> opinionBOList = new ArrayList<>();
+        if( list!=  null && list.size()>0 ){
+            opinionBOList = list.stream().filter( str -> StringUtils.isNotBlank(str.getDepartment())).map(DepartmentDetail::getDepartment).collect(Collectors.toList());
+        }
+        return opinionBOList;
+    }
+
+    @Override
+    public List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("department", depart));
+        List<DepartmentDetail> list = super.findByCis( dto );
+        List<String> opinionBOList = new ArrayList<>();
+        if( list!=  null && list.size()>0 ){
+            opinionBOList = list.stream().filter( str -> StringUtils.isNotBlank(str.getInnerProject())).map(DepartmentDetail::getInnerProject).collect(Collectors.toList());
+        }
+        return opinionBOList;
+    }
+
+    @Override
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.in(ID, ids));

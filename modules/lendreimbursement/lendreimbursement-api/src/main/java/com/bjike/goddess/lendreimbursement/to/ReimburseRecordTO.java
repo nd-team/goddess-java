@@ -122,7 +122,7 @@ public class ReimburseRecordTO extends BaseTO {
     private String reimerRemark;
 
     /**
-     * 是否有发票(是/否)
+     * 是否有发票(单据)(是/否)
      */
     @NotBlank(groups = {ReimburseRecordTO.TestChargeAudit.class}, message = "是否有发票不能为空(是/否)")
     private String ticketCondition;
@@ -267,6 +267,44 @@ public class ReimburseRecordTO extends BaseTO {
      * 修改时间
      */
     private String modifyTime;
+
+
+
+    /**
+     * 寄件的收件人
+     */
+    private String sendRecevier;
+
+    /**
+     * 寄件人
+     */
+    private String sender;
+
+    /**
+     * 寄件日期
+     */
+    private String sendDate;
+
+    /**
+     * 寄件情况
+     */
+    private String sendCondition;
+
+
+    /**
+     * 收件地区(寄件的时候填的地区)
+     */
+    private String receiveArea;
+
+    /**
+     * 收件地址
+     */
+    private String receiveAddr;
+
+    /**
+     * 帐务核对是否通过（是/否）
+     */
+    private String accountCheckPassOr;
 
 
     public String[] getReimNumbers() {
@@ -603,5 +641,61 @@ public class ReimburseRecordTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getSendRecevier() {
+        return sendRecevier;
+    }
+
+    public void setSendRecevier(String sendRecevier) {
+        this.sendRecevier = sendRecevier;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(String sendDate) {
+        this.sendDate = sendDate;
+    }
+
+    public String getSendCondition() {
+        return sendCondition;
+    }
+
+    public void setSendCondition(String sendCondition) {
+        this.sendCondition = sendCondition;
+    }
+
+    public String getReceiveArea() {
+        return receiveArea;
+    }
+
+    public void setReceiveArea(String receiveArea) {
+        this.receiveArea = receiveArea;
+    }
+
+    public String getReceiveAddr() {
+        return receiveAddr;
+    }
+
+    public void setReceiveAddr(String receiveAddr) {
+        this.receiveAddr = receiveAddr;
+    }
+
+    public String getAccountCheckPassOr() {
+        return accountCheckPassOr;
+    }
+
+    public void setAccountCheckPassOr(String accountCheckPassOr) {
+        this.accountCheckPassOr = accountCheckPassOr;
     }
 }
