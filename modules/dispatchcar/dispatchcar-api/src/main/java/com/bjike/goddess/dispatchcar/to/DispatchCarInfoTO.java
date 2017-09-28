@@ -10,6 +10,7 @@ import com.bjike.goddess.dispatchcar.enums.FindType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.Map;
 
 /**
@@ -29,11 +30,6 @@ public class DispatchCarInfoTO extends BaseTO {
     @NotBlank(message = "司机名称不能为空", groups = {ADD.class, EDIT.class})
     private String driver;
 
-    /**
-     * 是否为公司人员出车
-     */
-    @NotNull(message = "是否为公司人员出车不能为空", groups = {ADD.class, EDIT.class})
-    private Boolean companyDispatch;
 
     /**
      * 用车人
@@ -152,7 +148,9 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 补加油说明
      */
+    @NotBlank(message = "补加油说明不能为空", groups = {ADD.class, EDIT.class})
     private String addOilExplain;
+
 
     /**
      * 油卡余额
@@ -163,17 +161,22 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 欠油说明
      */
+    @NotBlank(message = "欠油说明不能为空", groups = {ADD.class, EDIT.class})
     private String oweOilExplain;
+
+
 
     /**
      * 加油时间
      */
+    @NotBlank(message = "加油时间不能为空", groups = {ADD.class, EDIT.class})
     private String addOilTime;
 
 
     /**
      * 当天油价
      */
+    @NotNull(message = "当天油价不能为空", groups = {ADD.class, EDIT.class})
     private Double oilPrice;
 
     /**
@@ -231,15 +234,119 @@ public class DispatchCarInfoTO extends BaseTO {
     private Evaluate evaluatedriver;
 
     /**
-     * 处罚汇总
+     * 项目模块负责人
      */
-    @NotNull(message = "处罚汇总不能为空", groups = {ADD.class, EDIT.class})
-    private Double punishCost;
+    private String projectCharge;
 
     /**
-     * 异常分析
+     * 项目模块负责人意见
      */
-    @NotBlank(message = "异常分析不能为空", groups = {ADD.class, EDIT.class})
+    private String projectChargeIdea;
+
+
+    /**
+     * 是否通过
+     */
+    private Boolean ifPass;
+
+
+    /**
+     * 预算模块意见
+     */
+    private String budgetModuleIdea;
+
+
+    /**
+     * 账务模块意见
+     */
+    private String accountModuleIdea;
+
+
+    /**
+     * 核对依据是否齐全无误
+     */
+    private Boolean isCorrect;
+
+    /**
+     * 寄件人
+     */
+    private String sender;
+
+    /**
+     * 寄件日期
+     */
+    private LocalDate sendDate;
+
+
+    /**
+     * 存档联是否寄件
+     */
+    private Boolean ifSendArchiveAL;
+
+    /**
+     * 报销联是否寄件
+     */
+    private Boolean ifSendReimbursementAl;
+
+
+
+    /**
+     * 小票总数
+     */
+    private Integer totalReceipts;
+
+
+    /**
+     * 加油小票是否寄件
+     */
+    private Boolean ifSendAddOilReceipts;
+
+
+    /**
+     * 收票人
+     */
+    private String receiver;
+
+    /**
+     * 收到发票日期
+     */
+    private String receiveDate;
+
+    /**
+     * 收到发票情况
+     */
+    private String receiveReceipts;
+
+    /**
+     * 资金模块意见
+     */
+    private String moneyModuleIdea;
+
+    /**
+     * 预计付款日期
+     */
+    private LocalDate expectPayDate;
+
+    /**
+     * 付款计划
+     */
+    private String paymentSchedule;
+
+    /**
+     * 是否付款
+     */
+    private Boolean ifPayed;
+
+//    /**
+//     * 处罚汇总
+//     */
+//    @NotNull(message = "处罚汇总不能为空", groups = {ADD.class, EDIT.class})
+//    private Double punishCost;
+//
+//    /**
+//     * 异常分析
+//     */
+//    @NotBlank(message = "异常分析不能为空", groups = {ADD.class, EDIT.class})
     private String exceptionAnalyze;
 
     public String getDriver() {
@@ -250,13 +357,7 @@ public class DispatchCarInfoTO extends BaseTO {
         this.driver = driver;
     }
 
-    public Boolean getCompanyDispatch() {
-        return companyDispatch;
-    }
 
-    public void setCompanyDispatch(Boolean companyDispatch) {
-        this.companyDispatch = companyDispatch;
-    }
 
     public String getCarUser() {
         return carUser;
@@ -522,12 +623,166 @@ public class DispatchCarInfoTO extends BaseTO {
         this.evaluatedriver = evaluatedriver;
     }
 
-    public Double getPunishCost() {
-        return punishCost;
+//    public Double getPunishCost() {
+//        return punishCost;
+//    }
+//
+//    public void setPunishCost(Double punishCost) {
+//        this.punishCost = punishCost;
+//    }
+
+
+    public String getProjectCharge() {
+        return projectCharge;
     }
 
-    public void setPunishCost(Double punishCost) {
-        this.punishCost = punishCost;
+    public void setProjectCharge(String projectCharge) {
+        this.projectCharge = projectCharge;
+    }
+
+    public String getProjectChargeIdea() {
+        return projectChargeIdea;
+    }
+
+    public void setProjectChargeIdea(String projectChargeIdea) {
+        this.projectChargeIdea = projectChargeIdea;
+    }
+
+    public Boolean getIfPass() {
+        return ifPass;
+    }
+
+    public void setIfPass(Boolean ifPass) {
+        this.ifPass = ifPass;
+    }
+
+    public String getBudgetModuleIdea() {
+        return budgetModuleIdea;
+    }
+
+    public void setBudgetModuleIdea(String budgetModuleIdea) {
+        this.budgetModuleIdea = budgetModuleIdea;
+    }
+
+    public String getAccountModuleIdea() {
+        return accountModuleIdea;
+    }
+
+    public void setAccountModuleIdea(String accountModuleIdea) {
+        this.accountModuleIdea = accountModuleIdea;
+    }
+
+    public Boolean getCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(Boolean correct) {
+        isCorrect = correct;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public LocalDate getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(LocalDate sendDate) {
+        this.sendDate = sendDate;
+    }
+
+    public Boolean getIfSendArchiveAL() {
+        return ifSendArchiveAL;
+    }
+
+    public void setIfSendArchiveAL(Boolean ifSendArchiveAL) {
+        this.ifSendArchiveAL = ifSendArchiveAL;
+    }
+
+    public Boolean getIfSendReimbursementAl() {
+        return ifSendReimbursementAl;
+    }
+
+    public void setIfSendReimbursementAl(Boolean ifSendReimbursementAl) {
+        this.ifSendReimbursementAl = ifSendReimbursementAl;
+    }
+
+
+    public Integer getTotalReceipts() {
+        return totalReceipts;
+    }
+
+    public void setTotalReceipts(Integer totalReceipts) {
+        this.totalReceipts = totalReceipts;
+    }
+
+    public Boolean getIfSendAddOilReceipts() {
+        return ifSendAddOilReceipts;
+    }
+
+    public void setIfSendAddOilReceipts(Boolean ifSendAddOilReceipts) {
+        this.ifSendAddOilReceipts = ifSendAddOilReceipts;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getReceiveDate() {
+        return receiveDate;
+    }
+
+    public void setReceiveDate(String receiveDate) {
+        this.receiveDate = receiveDate;
+    }
+
+    public String getReceiveReceipts() {
+        return receiveReceipts;
+    }
+
+    public void setReceiveReceipts(String receiveReceipts) {
+        this.receiveReceipts = receiveReceipts;
+    }
+
+    public String getMoneyModuleIdea() {
+        return moneyModuleIdea;
+    }
+
+    public void setMoneyModuleIdea(String moneyModuleIdea) {
+        this.moneyModuleIdea = moneyModuleIdea;
+    }
+
+    public LocalDate getExpectPayDate() {
+        return expectPayDate;
+    }
+
+    public void setExpectPayDate(LocalDate expectPayDate) {
+        this.expectPayDate = expectPayDate;
+    }
+
+    public String getPaymentSchedule() {
+        return paymentSchedule;
+    }
+
+    public void setPaymentSchedule(String paymentSchedule) {
+        this.paymentSchedule = paymentSchedule;
+    }
+
+    public Boolean getIfPayed() {
+        return ifPayed;
+    }
+
+    public void setIfPayed(Boolean ifPayed) {
+        this.ifPayed = ifPayed;
     }
 
     public String getExceptionAnalyze() {

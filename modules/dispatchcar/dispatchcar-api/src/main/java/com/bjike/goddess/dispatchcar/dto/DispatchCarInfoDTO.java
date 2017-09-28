@@ -12,5 +12,30 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class DispatchCarInfoDTO extends BaseDTO {
+    /**
+     * 出车人
+     */
+    private String carUser;
 
+
+    /**
+     * 出车单号
+     */
+    private String number;
+
+    public String getCarUser() {
+        return carUser;
+    }
+
+    public void setCarUser(String carUser) {
+        this.carUser = carUser;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }

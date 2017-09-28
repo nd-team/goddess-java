@@ -29,7 +29,7 @@ public class DispatchCollectBO extends BaseBO {
     private String group;
 
     /**
-     * 地区
+     * 项目名称
      */
     private String project;
 
