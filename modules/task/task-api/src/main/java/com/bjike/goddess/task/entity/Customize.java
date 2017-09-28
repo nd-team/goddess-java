@@ -6,8 +6,7 @@ import com.bjike.goddess.task.enums.NoticeType;
 import com.bjike.goddess.task.enums.SummaryType;
 import com.bjike.goddess.task.enums.TimeType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -29,10 +28,16 @@ public class Customize extends BaseEntity {
     private String name;
 
     /**
-     * 项目
+     * 项目id
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '项目' ", nullable = false)
-    private String project;
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '项目id' ", nullable = false)
+    private String projectId;
+
+    /**
+     * 表id
+     */
+    @Column(columnDefinition = "TEXT COMMENT '表id,多个' ", nullable = false)
+    private String tablesId;
 
     /**
      * 创建人
@@ -40,17 +45,10 @@ public class Customize extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(50) COMMENT '创建人' ", nullable = false)
     private String user;
 
-
     /**
-     * 表
+     * 汇总自定义字段
      */
-    @Column(columnDefinition = "TEXT COMMENT '表,多个' ", nullable = false)
-    private String tables;
-
-    /**
-     * 汇总字段
-     */
-    @Column(columnDefinition = "TEXT COMMENT '汇总字段,多个' ", nullable = false)
+    @Column(columnDefinition = "TEXT COMMENT '汇总自定义字段,多个' ", nullable = false)
     private String fields;
     /**
      * 定时时间类型
@@ -59,10 +57,10 @@ public class Customize extends BaseEntity {
     private TimeType timeType;
 
     /**
-     * 定时时间隔值
+     * 定时时间间隔值
      */
-    @Column(columnDefinition = "INT(8) COMMENT '定时时间隔值'",nullable = false)
-    private Integer timeVal;
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '定时时间隔值'",nullable = false)
+    private String timeVal;
 
     /**
      * 通知类型
@@ -72,7 +70,7 @@ public class Customize extends BaseEntity {
     /**
      * 通知目标(部门,用户等,所有时为空)
      */
-    @Column(columnDefinition = "TEXT COMMENT '通知目标' ")
+    @Column(columnDefinition = "TEXT COMMENT 'noticeType:0-用户,1-部门,2-为空' ")
     private String noticeTarget;
 
     /**
@@ -88,7 +86,7 @@ public class Customize extends BaseEntity {
     /**
      * 汇总目标(部门,用户等,所有时为空)
      */
-    @Column(columnDefinition = "TEXT comment '汇总目标' ")
+    @Column(columnDefinition = "TEXT comment '汇总目标[summaryType:0-用户,1-部门,2-为空]' ")
     private String summaryTarget;
     /**
      * 间隔类型
@@ -104,7 +102,7 @@ public class Customize extends BaseEntity {
     /**
      * 上次发送时间
      */
-    @Column(columnDefinition = "DATETIME   COMMENT '上次发送时间' ")
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '上次发送时间' ",insertable = false,nullable = false)
     private LocalDateTime lastTime;
 
     public String getName() {
@@ -115,12 +113,12 @@ public class Customize extends BaseEntity {
         this.name = name;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getUser() {
@@ -131,12 +129,12 @@ public class Customize extends BaseEntity {
         this.user = user;
     }
 
-    public String getTables() {
-        return tables;
+    public String getTablesId() {
+        return tablesId;
     }
 
-    public void setTables(String tables) {
-        this.tables = tables;
+    public void setTablesId(String tablesId) {
+        this.tablesId = tablesId;
     }
 
     public String getFields() {
@@ -155,11 +153,11 @@ public class Customize extends BaseEntity {
         this.timeType = timeType;
     }
 
-    public Integer getTimeVal() {
+    public String getTimeVal() {
         return timeVal;
     }
 
-    public void setTimeVal(Integer timeVal) {
+    public void setTimeVal(String timeVal) {
         this.timeVal = timeVal;
     }
 
@@ -226,4 +224,6 @@ public class Customize extends BaseEntity {
     public void setLastTime(LocalDateTime lastTime) {
         this.lastTime = lastTime;
     }
+
+
 }

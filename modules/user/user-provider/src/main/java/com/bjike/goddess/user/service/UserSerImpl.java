@@ -349,11 +349,11 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
     @Override
-    public List<UserBO> findByDept(String... departmentId) throws SerException {
-        String depts = "'" + StringUtils.join(departmentId, "','") + "'";
+    public List<UserBO> findByDept(String... department) throws SerException {
+        String depts = "'" + StringUtils.join(department, "','") + "'";
         String sql = "  select a.id,a.username,a.email,a.phone,a.nickname,a.employeeNumber " +
                 " from user a,user_department b ,user_detail c where a.id =c.user_id and a.status=0 " +
-                " and c.department_id = b.id and b.id in(" + depts + ")";
+                " and c.department_id = b.id and (b.id in(" + depts + ") or b.name in(" + depts + "))";
         String[] fields = new String[]{"id", "username", "email", "phone", "nickname", "employeeNumber"};
         List<UserBO> list = super.findBySql(sql, UserBO.class, fields);
         return list;

@@ -19,7 +19,11 @@ public enum TimeType {
     /**
      * 小时
      */
-    HOUR(2),;
+    HOUR(2),
+    /**
+     * 每天
+     */
+    EVERYDAY(3),;
 
     int code;
 

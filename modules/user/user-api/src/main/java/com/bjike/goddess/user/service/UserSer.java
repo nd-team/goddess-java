@@ -235,7 +235,7 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return UserBO
      * @throws SerException
      */
-    default List<UserBO> findByDept(String ... departmentId  ) throws SerException {
+    default List<UserBO> findByDept(String ... department  ) throws SerException {
         return null;
     }
 }
