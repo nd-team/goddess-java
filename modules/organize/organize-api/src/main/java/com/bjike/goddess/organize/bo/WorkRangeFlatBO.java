@@ -1,6 +1,7 @@
 package com.bjike.goddess.organize.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
 
 import java.util.List;
 
@@ -19,6 +20,11 @@ public class WorkRangeFlatBO extends BaseBO {
      * 业务方向分类
      */
     private String direction;
+
+    /**
+     * 使用状态
+     */
+    private Status status1;
 
     /**
      * 业务方向－科目集合
@@ -54,5 +60,13 @@ public class WorkRangeFlatBO extends BaseBO {
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Status getStatus1() {
+        return status1;
+    }
+
+    public void setStatus1(Status status1) {
+        this.status1 = status1;
     }
 }

@@ -33,10 +33,10 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -84,8 +84,6 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private DimissionInfoAPI dimissionInfoAPI;
 
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
-    @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
@@ -132,12 +130,12 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
         if (!CollectionUtils.isEmpty(userBOList)) {
             UserBO user = userBOList.get(0);
-            EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
-            entryBasicInfoDTO.getConditions().add(Restrict.eq("employeeID", user.getEmployeeNumber()));
-            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+            EntryRegisterDTO entryBasicInfoDTO = new EntryRegisterDTO();
+            entryBasicInfoDTO.getConditions().add(Restrict.eq("empNumber", user.getEmployeeNumber()));
+            List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.map(entryBasicInfoDTO);
             RpcTransmit.transmitUserToken(userToken);
             if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                bo.setUsername(entryBasicInfoBOs.get(0).getName());
+                bo.setUsername(entryBasicInfoBOs.get(0).getUsername());
             }
 
 //            UserBO user = userAPI.findByUsername(entity.getUsername());
@@ -462,10 +460,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 throw new SerException("该用户数据已存在");
             }
             //判断是否是入职员工
-            EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
+            EntryRegisterDTO entryBasicInfoDTO = new EntryRegisterDTO();
             entryBasicInfoDTO.getConditions().add(Restrict.eq("name", entity.getUserId()));
             String userToken = RpcTransmit.getUserToken();
-            List<EntryBasicInfoBO> user = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+            List<EntryRegisterBO> user = entryRegisterAPI.map(entryBasicInfoDTO);
             if (null == user || user.size() < 1) {
                 throw new SerException("导入的员工应该为已入职员工");
             }
@@ -536,20 +534,20 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public List<NameAndIdBO> getUserName() throws SerException {
         String token = RpcTransmit.getUserToken();
-        EntryBasicInfoDTO entryBasicInfoDTO = new EntryBasicInfoDTO();
-        List<EntryBasicInfoBO> bos = entryBasicInfoAPI.listEntryBasicInfo(entryBasicInfoDTO);
+        EntryRegisterDTO entryBasicInfoDTO = new EntryRegisterDTO();
+        List<EntryRegisterBO> bos = entryRegisterAPI.map(entryBasicInfoDTO);
         RpcTransmit.transmitUserToken(token);
         List<NameAndIdBO> userNameList = new ArrayList<>();
         if (null != bos && bos.size() > 0) {
-            for (EntryBasicInfoBO bo : bos) {
+            for (EntryRegisterBO bo : bos) {
                 UserDTO userDTO = new UserDTO();
-                userDTO.getConditions().add(Restrict.eq("employeeNumber",bo.getEmployeeID()));
-                List<UserBO> userBOList = userAPI.findByCis( userDTO );
+                userDTO.getConditions().add(Restrict.eq("empNumber", bo.getEmpNumber()));
+                List<UserBO> userBOList = userAPI.findByCis(userDTO);
                 RpcTransmit.transmitUserToken(token);
-                if( userBOList != null && userBOList.size()>0 ){
+                if (userBOList != null && userBOList.size() > 0) {
                     NameAndIdBO nameAndIdBO = new NameAndIdBO();
                     nameAndIdBO.setUserId(userBOList.get(0).getId());
-                    nameAndIdBO.setName(bo.getName());
+                    nameAndIdBO.setName(bo.getUsername());
                     userNameList.add(nameAndIdBO);
                 }
             }
@@ -585,18 +583,30 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         List<String> strings = new ArrayList<>();
         if (0 < names.length) {
             for (String name : names) {
-                List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
-                if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                    for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
-                        InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
-                        internalContactsDTO.getConditions().add(Restrict.in("userId", bo.getId()));
-                        List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
-                        if (null != internalContactsBOs && internalContactsBOs.size() > 0) {
-                            InternalContactsBO internalContactsBO = internalContactsBOs.get(0);
-                            String str = bo.getEmail();
-                            strings.add(str);
+                try {
+                    List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
+                    if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+                        for (EntryRegisterBO bo : entryBasicInfoBOs) {
+                            String number = bo.getEmpNumber();
+                            UserDTO userDTO = new UserDTO();
+                            userDTO.getConditions().add(Restrict.eq("empNumber", number));
+                            List<UserBO> userBOs = userAPI.findByCis(userDTO);
+                            if (null != userBOs && userBOs.size() > 0) {
+                                InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+                                internalContactsDTO.getConditions().add(Restrict.in("userId", userBOs.get(0).getId()));
+
+                                List<InternalContacts> internalContactses = super.findByCis(internalContactsDTO);
+//                            List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
+                                if (null != internalContactses && internalContactses.size() > 0) {
+                                    InternalContacts internalContacts = internalContactses.get(0);
+                                    String str = internalContacts.getEmail();
+                                    strings.add(str);
+                                }
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    throw new SerException(e.getMessage());
                 }
             }
         }
@@ -606,9 +616,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public String getEmail(String name) throws SerException {
         if (StringUtils.isNotBlank(name)) {
-            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+            List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
             if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
+                for (EntryRegisterBO bo : entryBasicInfoBOs) {
                     InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
                     internalContactsDTO.getConditions().add(Restrict.in("userId", bo.getId()));
                     List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);

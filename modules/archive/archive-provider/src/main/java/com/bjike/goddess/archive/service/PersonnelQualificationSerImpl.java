@@ -10,9 +10,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -50,9 +51,9 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
     @Autowired
     private UserDetailAPI userDetailAPI;
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
-    @Autowired
     private RotainCusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -284,13 +285,13 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
 
     @Override
     public List<String> getName() throws SerException {
-        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.listEntryBasicInfo(dto);
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.listEntryRegister(dto);
         List<String> list = new ArrayList<>();
         if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-            for (EntryBasicInfoBO bo : entryBasicInfoBOs) {
+            for (EntryRegisterBO bo : entryBasicInfoBOs) {
                 String name = "";
-                name = bo.getName();
+                name = bo.getUsername();
                 list.add(name);
             }
         }

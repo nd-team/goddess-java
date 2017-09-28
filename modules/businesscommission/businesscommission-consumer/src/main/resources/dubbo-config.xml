@@ -25,8 +25,11 @@
 	<!--<dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />-->
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businesscommission.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businesscommission.api.CusPermissionOperateAPI" />
-	<dubbo:reference  validation="true" id="commissionQuotaApiImpl" interface="com.bjike.goddess.businesscommission.api.CommissionQuotaAPI" />
-	<dubbo:reference  validation="true" id="weightAllotApiImpl" interface="com.bjike.goddess.businesscommission.api.WeightAllotAPI" />
+	<dubbo:reference  validation="true" id="proportionRatioApiImpl" interface="com.bjike.goddess.businesscommission.api.ProportionRatioAPI" />
+	<!--<dubbo:reference  validation="true" id="weightAllotApiImpl" interface="com.bjike.goddess.businesscommission.api.WeightAllotAPI" />-->
+	<dubbo:reference  validation="true" id="proportionApiImpl" interface="com.bjike.goddess.businesscommission.api.ProportionAPI" />
+	<dubbo:reference  validation="true" id="quotaApiImpl" interface="com.bjike.goddess.businesscommission.api.QuotaAPI" />
+	<dubbo:reference  validation="true" id="proportionConfirmApiImpl" interface="com.bjike.goddess.businesscommission.api.ProportionConfirmAPI" />
 
 
 
@@ -34,7 +37,7 @@
 	<!--<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />-->
 	<!--<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />-->
 	<!--<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />-->
-	<!--<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />-->
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
@@ -42,10 +45,7 @@
 	<!--<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />-->
 	<dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
-	<dubbo:reference validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
-	<dubbo:reference validation="true" id="projectContractApiImpl" interface="com.bjike.goddess.contractcommunicat.api.ProjectContractAPI" />
-	<dubbo:reference validation="true" id="problemHandlingResultApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" />
-	<dubbo:reference validation="true" id="marketServeApplyApiImpl" interface="com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI" />
+	<dubbo:reference validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
 
 
 </beans>

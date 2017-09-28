@@ -20,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -286,8 +284,10 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         if (null != workRanges && workRanges.size() > 0) {
             directions = workRanges.stream().map(WorkRange::getDirection).distinct().collect(Collectors.toList());
             for (String str : directions) {
+
                 WorkRangeFlatBO workRangeFlatBO = new WorkRangeFlatBO();
                 workRangeFlatBO.setDirection(str);
+                workRangeFlatBO.setStatus1(workRanges.stream().filter(obj -> str.equals(obj.getDirection())).map(WorkRange::getStatus1).distinct().collect(Collectors.toList()).get(0));
                 workRangeFlatBO.setId(UUID.randomUUID().toString());
                 WorkRangeFlats workRangeFlats = new WorkRangeFlats();
                 workRangeFlats.setId(workRangeFlatBO.getId());
@@ -309,7 +309,6 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                                 workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
                                 workRangeListBO.setNode(workRange.getNode().split(","));
                                 workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
-                                workRangeListBO.setStatus(workRange.getStatus());
                                 workRangeListBOList.add(workRangeListBO);
                             }
                         }
@@ -350,6 +349,13 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                     }
                 }
             }
+            returnBO.sort( new Comparator<WorkRangeFlatBO>() {
+                @Override
+                public int compare(WorkRangeFlatBO o1, WorkRangeFlatBO o2) {
+                    int a = o1.getDirection().compareTo(o2.getDirection());
+                    return a;
+                }
+            });
             return returnBO;
         }
         return null;
@@ -358,6 +364,13 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     @Transactional
     @Override
     public void flatAdd(WorkRangeFlatTO to) throws SerException {
+        WorkRangeDTO dto = new WorkRangeDTO();
+        dto.getConditions().add(Restrict.eq("direction", to.getDirection()));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        if (workRanges.size() > 0) {
+            throw new SerException("该方向数据已存在");
+        }
+
         for (ProjectFlatTO projectFlatTO : to.getProjectFlatTOs()) {
             for (ClassifyFlatTO classifyFlatTO : projectFlatTO.getClassifyFlatTOs()) {
                 String wr = "";
@@ -383,7 +396,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                 workRange.setProject(projectFlatTO.getProject());
                 workRange.setDirection(to.getDirection());
                 workRange.setCreateTime(LocalDateTime.now());
-                workRange.setStatus(Status.THAW);
+                workRange.setStatus1(Status.THAW);
                 super.save(workRange);
             }
         }
@@ -407,6 +420,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
             for (String str : directions) {
                 WorkRangeFlatBO workRangeFlatBO = new WorkRangeFlatBO();
                 workRangeFlatBO.setDirection(str);
+                workRangeFlatBO.setStatus1(workRanges.stream().filter(obj -> str.equals(obj.getDirection())).map(WorkRange::getStatus1).distinct().collect(Collectors.toList()).get(0));
                 workRangeFlatBO.setId(UUID.randomUUID().toString());
                 WorkRangeFlats workRangeFlats = new WorkRangeFlats();
                 workRangeFlats.setId(workRangeFlatBO.getId());
@@ -428,7 +442,7 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
                                 workRangeListBO.setWorkRanges(workRange.getWorkRange().split(","));
                                 workRangeListBO.setNode(workRange.getNode().split(","));
                                 workRangeListBO.setCreateTime(DateUtil.dateToString(workRange.getCreateTime()));
-                                workRangeListBO.setStatus(workRange.getStatus());
+//                                workRangeListBO.setStatus(workRange.getStatus());
                                 workRangeListBOList.add(workRangeListBO);
                             }
                         }
@@ -450,7 +464,11 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
     public void faltDelete(String direction) throws SerException {
         WorkRangeDTO dto = new WorkRangeDTO();
         dto.getConditions().add(Restrict.eq("direction", direction));
-        super.remove(super.findByCis(dto));
+        List<WorkRange> workRanges = super.findByCis(dto);
+        if (null == workRanges || workRanges.size() <= 0) {
+            throw new SerException("目标数据对象为空");
+        }
+        super.remove(workRanges);
     }
 
     @Transactional
@@ -474,9 +492,11 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
 
         if (null != workRanges && workRanges.size() > 0) {
             for (WorkRange workRange : workRanges) {
-                workRange.setStatus(Status.CONGEAL);
+                workRange.setStatus1(Status.CONGEAL);
                 super.save(workRange);
             }
+        } else {
+            throw new SerException("目标数据对象为空");
         }
     }
 
@@ -488,9 +508,11 @@ public class WorkRangeSerImpl extends ServiceImpl<WorkRange, WorkRangeDTO> imple
         List<WorkRange> workRanges = super.findByCis(dto);
         if (null != workRanges && workRanges.size() > 0) {
             for (WorkRange workRange : workRanges) {
-                workRange.setStatus(Status.THAW);
+                workRange.setStatus1(Status.THAW);
                 super.save(workRange);
             }
+        } else {
+            throw new SerException("目标数据对象为空");
         }
     }
 

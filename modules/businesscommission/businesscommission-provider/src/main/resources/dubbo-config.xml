@@ -26,12 +26,16 @@
     <!--<dubbo:service ref="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI"/>-->
     <!--<dubbo:service ref="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI"/>-->
 
-    <dubbo:service ref="weightAllotApiImpl" interface="com.bjike.goddess.businesscommission.api.WeightAllotAPI"/>
-    <dubbo:service ref="commissionQuotaApiImpl" interface="com.bjike.goddess.businesscommission.api.CommissionQuotaAPI"/>
+    <!--<dubbo:service ref="weightAllotApiImpl" interface="com.bjike.goddess.businesscommission.api.WeightAllotAPI"/>-->
+    <!--<dubbo:service ref="commissionQuotaApiImpl"-->
+                   <!--interface="com.bjike.goddess.businesscommission.api.CommissionQuotaAPI"/>-->
+    <dubbo:service ref="proportionApiImpl" interface="com.bjike.goddess.businesscommission.api.ProportionAPI"/>
+    <dubbo:service ref="proportionConfirmApiImpl" interface="com.bjike.goddess.businesscommission.api.ProportionConfirmAPI"/>
+    <dubbo:service ref="proportionRatioApiImpl" interface="com.bjike.goddess.businesscommission.api.ProportionRatioAPI"/>
+    <dubbo:service ref="quotaApiImpl" interface="com.bjike.goddess.businesscommission.api.QuotaAPI"/>
 
     <dubbo:service ref="cusPermissionApiImpl" interface="com.bjike.goddess.businesscommission.api.CusPermissionAPI"/>
-    <dubbo:service ref="cusPermissionOperateApiImpl"
-                   interface="com.bjike.goddess.businesscommission.api.CusPermissionOperateAPI"/>
+    <dubbo:service ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businesscommission.api.CusPermissionOperateAPI"/>
 
 
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
@@ -53,15 +57,15 @@
     <dubbo:reference validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI"/>
     <dubbo:reference validation="true" id="positionDetailApiImpl"
                      interface="com.bjike.goddess.organize.api.PositionDetailAPI"/>
-   <dubbo:reference validation="true" id="positionDetailUserApiImpl"
+    <dubbo:reference validation="true" id="positionDetailUserApiImpl"
                      interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
     <dubbo:reference validation="true" id="userSetPermissionApiImpl"
                      interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
 
 
-    <dubbo:reference validation="true" id="targetAuotaApiImpl"
-                     interface="com.bjike.goddess.projectroyalty.api.TargetAuotaAPI"/>
-    <dubbo:reference validation="true" id="marketInfoApiImpl"
-                     interface="com.bjike.goddess.market.api.MarketInfoAPI"/>
+    <dubbo:reference validation="true" id="siginManageApiImpl"
+                     interface="com.bjike.goddess.businessproject.api.SiginManageAPI"/>
+    <dubbo:reference validation="true" id="weightalsApiImpl"
+                     interface="com.bjike.goddess.projectroyalty.api.WeightalsAPI"/>
 
 </beans>

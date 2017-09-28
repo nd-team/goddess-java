@@ -17,10 +17,15 @@ import com.bjike.goddess.organize.to.EmailTO;
 import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.EmailVO;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -174,7 +179,7 @@ public class EmailAct {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/emails")
+    @PostMapping("v1/emails")
     public Result emails(@Validated(EmailDTO.EMAIL.class) EmailDTO dto, BindingResult result) throws ActException {
 //        try {
 //            String[] names = dto.getNames();
@@ -185,21 +190,33 @@ public class EmailAct {
 //        }
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        String[] names=dto.getNames();
-        StringBuilder sb=new StringBuilder();
-        for (int i=0;i<names.length;i++){
-            if (i==names.length-1){
+        String[] names = dto.getNames();
+        StringBuilder sb = new StringBuilder();
+        try {
+        for (int i = 0; i < names.length; i++) {
+            if (i == names.length - 1) {
+//                byte[] b=names[i].getBytes("iso-8859-1");
                 sb.append(names[i]);
-            }else {
-                sb.append(names[i]+",");
+            } else {
+//                byte[] b=names[i].getBytes("iso-8859-1");
+                sb.append(names[i]);
             }
         }
-                HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线上
-//        HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线下测试
-        httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
-        ActResultOrgan resultOrgan = new ActResultOrgan();
-        try {
-            CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+        HttpPost httpPost = new HttpPost("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线上
+//        HttpPost httpPost = new HttpPost("http://localhost:51310/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线下测试
+        httpPost.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+//        nvps.add(new BasicNameValuePair("names", sb.toString()));
+
+            UrlEncodedFormEntity entity= new UrlEncodedFormEntity(nvps);
+            entity.setContentEncoding("utf-8");
+            httpPost.setEntity(entity);
+//            httpPost.setHeader(new BasicHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8"));
+//        httpclient.execute(httpPost);
+//        httpclient.getConnectionManager().shutdown();
+
+            ActResultOrgan resultOrgan = new ActResultOrgan();
+            CloseableHttpResponse response = closeableHttpClient.execute(httpPost);
             resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
             list = (List<String>) (resultOrgan.getData());
 

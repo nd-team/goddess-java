@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 
 /**
- * 业务提成定额表
+ * 业务提成权重分配表
  *
  * @Author: [ zhuangkaiqin ]
  * @Date: [ 2017-06-29 04:49 ]

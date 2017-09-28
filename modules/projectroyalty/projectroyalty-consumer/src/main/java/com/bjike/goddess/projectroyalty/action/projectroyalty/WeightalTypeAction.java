@@ -17,6 +17,6 @@ import javax.validation.Valid;
 */
 @RestController
 @RequestMapping("weightaltype")
-public class WeightalTypeAction { 
+public class WeightalTypeAction {
 
  }

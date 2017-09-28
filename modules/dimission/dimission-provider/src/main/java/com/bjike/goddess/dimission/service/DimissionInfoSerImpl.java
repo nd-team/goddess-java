@@ -22,7 +22,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.organize.enums.WorkStatus;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -63,8 +63,6 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
