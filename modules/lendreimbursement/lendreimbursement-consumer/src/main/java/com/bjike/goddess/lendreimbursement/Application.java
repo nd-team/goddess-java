@@ -1,5 +1,6 @@
 package com.bjike.goddess.lendreimbursement;
 
+import com.bjike.goddess.common.consumer.interceptor.ModuleInfo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,7 +30,7 @@ public class Application {
     }
 
     public static void main(String[] args) throws IOException {
-
+//        ModuleInfo.MODULE_NAME = "lendreimbursement-consumer";
         SpringApplication.run(Application.class, args);
         System.in.read();
     }

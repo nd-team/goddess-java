@@ -14,7 +14,14 @@ import javax.persistence.Column;
  * @Copy: [ com.bjike ]
  */
 public class BusInsuranceBO extends BaseBO {
-
+    /**
+     * 制作方案时间
+     */
+    private String makeDate;
+    /**
+     * 制作方案人
+     */
+    private String maker;
     /**
      * 保险公司
      */
@@ -110,6 +117,23 @@ public class BusInsuranceBO extends BaseBO {
      */
     private String modifyTime;
 
+
+
+    public String getMakeDate() {
+        return makeDate;
+    }
+
+    public void setMakeDate(String makeDate) {
+        this.makeDate = makeDate;
+    }
+
+    public String getMaker() {
+        return maker;
+    }
+
+    public void setMaker(String maker) {
+        this.maker = maker;
+    }
 
     public String getInsureComapny() {
         return insureComapny;

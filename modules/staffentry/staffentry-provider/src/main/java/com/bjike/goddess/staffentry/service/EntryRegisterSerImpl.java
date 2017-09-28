@@ -1,10 +1,18 @@
 package com.bjike.goddess.staffentry.service;
 
+import com.bjike.goddess.assistance.api.ComputerSubsidiesAPI;
+import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
+import com.bjike.goddess.assistance.enums.SubsidiesStatus;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
+import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
+
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
 import com.bjike.goddess.staffentry.entity.*;
@@ -53,7 +61,12 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     private CredentialSer credentialSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
-
+    @Autowired
+    private SenioritySubsidiesAPI senioritySubsidiesAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ComputerSubsidiesAPI computerSubsidiesAPI;
 
     /**
      * 检测部门
@@ -78,6 +91,11 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         return flag;
     }
 
+    //所有人都有权限
+    private Boolean checkAllTrue() throws SerException {
+        return true;
+
+    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -86,7 +104,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = checkDepartIdentity("7");
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagAdd) {
+        Boolean flagAllTrue = checkAllTrue();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdd || flagAllTrue) {
             return true;
         } else {
             return false;
@@ -140,7 +160,13 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
-        entryRegisterDTO.getSorts().add("createTime=desc");
+        if (checkDepartIdentity("2")) {
+            entryRegisterDTO.getSorts().add("createTime=desc");
+        } else {
+            UserBO userBO = userAPI.currentUser();
+            String userName = userBO.getUsername();
+            entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
+        }
         List<EntryRegister> entryRegisters = super.findByPage(entryRegisterDTO);
         return entryRegisters;
     }
@@ -205,23 +231,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     public List<EntryRegister> list() throws SerException {
         return super.findAll();
-    }
-
-    @Override
-    public String getGender(String name) throws SerException {
-        if (StringUtils.isNotBlank(name)) {
-            EntryRegisterDTO dto = new EntryRegisterDTO();
-            dto.getConditions().add(Restrict.eq("username", name));
-            EntryRegister entity = super.findOne(dto);
-            if (null != entity) {
-                if (entity.getGender() == 0) {
-                    return "男";
-                } else {
-                    return "女";
-                }
-            }
-        }
-        return null;
     }
 
     @Override
@@ -336,7 +345,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             throw new SerException("员工编号不能为空");
         }
         try {
-            super.save(entryRegister);
+            StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegister.getUsername());//查看员工状态
+            entryRegister.setStaffStatus(staffStatus);
+            entryRegister = super.save(entryRegister);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
@@ -357,6 +368,33 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
          * 插入证书情况
          */
         insertCredential(entryRegister, credentialTO);
+
+        //TODO 添加转正人员信息lijuntao
+
+        //添加公司补助中的工龄补助lijuntao
+        SenioritySubsidiesTO senioritySubsidiesTO = new SenioritySubsidiesTO();
+        senioritySubsidiesTO.setArea(entryRegister.getArea());
+        senioritySubsidiesTO.setName(entryRegister.getUsername());
+        senioritySubsidiesTO.setEmpNo(entryRegister.getEmpNumber());
+        senioritySubsidiesTO.setDepartment(entryRegister.getDepartment());
+        senioritySubsidiesTO.setJobs(entryRegister.getPosition());
+        senioritySubsidiesTO.setEntryDate(entryRegister.getInductionDate().toString());
+        senioritySubsidiesTO.setStartIssueDate(entryRegister.getInductionDate().plusMonths(13).toString());
+        senioritySubsidiesTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+        StaffStatus status = positionDetailUserAPI.statusByName(entryRegister.getUsername());
+        senioritySubsidiesTO.setStaffStatus(status);
+        senioritySubsidiesAPI.saveSen(senioritySubsidiesTO);
+        //添加电脑补助lijuntao
+        ComputerSubsidiesAddTO computerSubsidiesAddTO = new ComputerSubsidiesAddTO();
+        computerSubsidiesAddTO.setArea(entryRegister.getArea());
+        computerSubsidiesAddTO.setDepartment(entryRegister.getDepartment());
+        computerSubsidiesAddTO.setName(entryRegister.getUsername());
+        computerSubsidiesAddTO.setEntryDate(entryRegister.getInductionDate().toString());
+        computerSubsidiesAddTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+        StaffStatus status1 = positionDetailUserAPI.statusByName(entryRegister.getUsername());
+        computerSubsidiesAddTO.setStaffStatus(status1);
+        computerSubsidiesAPI.saveComputer(computerSubsidiesAddTO);
+
 
         EntryRegisterBO bo = new EntryRegisterBO();
         BeanUtils.copyProperties(entryRegister, bo);
@@ -492,5 +530,37 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             }
         }
         return new ArrayList<>(set);
+    }
+
+    @Override
+    public String findEmpNum(String name) throws SerException {
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.eq("username", name));
+        List<EntryRegister> list = super.findByCis(entryRegisterDTO);
+        String empNum = "";
+        if (list != null && list.size()>0) {
+            EntryRegister entryRegister = list.get(0);
+            empNum = entryRegister.getEmpNumber();
+        }
+        return empNum;
+    }
+
+    public EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
+        EntryOptionBO entryOptionBO = new EntryOptionBO();
+
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        dto.getConditions().add(Restrict.eq("empNumber", empNumer));
+        EntryRegister entryRegister = super.findOne(dto);
+        if (entryRegister != null) {
+            entryOptionBO.setName(entryRegister.getUsername());
+            entryOptionBO.setEntryTime(entryRegister.getInductionDate().toString());
+            entryOptionBO.setProfession(entryRegister.getProfession());
+            entryOptionBO.setEducation(entryRegister.getEducation());
+            entryOptionBO.setEmployeeID(empNumer);
+            entryOptionBO.setDepartment(entryRegister.getDepartment());
+            entryOptionBO.setArea(entryRegister.getArea());
+            entryOptionBO.setPosition(entryOptionBO.getPosition());
+        }
+        return entryOptionBO;
     }
 }

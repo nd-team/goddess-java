@@ -50,7 +50,7 @@ public class LendAuditDetailSerImpl extends ServiceImpl<LendAuditDetail, LendAud
     }
     @Override
     public List<LendAuditDetailBO> listLendAuditDetail(LendAuditDetailDTO lendAuditDetailDTO) throws SerException {
-        lendAuditDetailDTO.getSorts().add("modifyTime=desc");
+        lendAuditDetailDTO.getSorts().add("createTime=desc");
         if(StringUtils.isNotBlank(lendAuditDetailDTO.getApplyLendId())){
             lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId",lendAuditDetailDTO.getApplyLendId()));
         }

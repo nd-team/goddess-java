@@ -60,6 +60,11 @@ public class ReimburseAuditLogBO extends BaseBO {
      */
     private String modifyTime;
 
+    /**
+     * sql查询总条数
+     */
+    private Integer count;
+
 
     public String getUserName() {
         return userName;
@@ -131,5 +136,13 @@ public class ReimburseAuditLogBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

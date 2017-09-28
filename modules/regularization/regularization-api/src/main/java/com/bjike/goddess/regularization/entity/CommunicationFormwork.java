@@ -24,67 +24,67 @@ public class CommunicationFormwork extends BaseEntity {
     /**
      * 模板名称
      */
-    @Column(name = "moduleName", nullable = false, columnDefinition = "INT(2)   COMMENT '模板名称'")
+    @Column(name = "moduleName", columnDefinition = "INT(2)   COMMENT '模板名称'")
     private ModuleName moduleName;
 
     /**
      * 所属类型
      */
-    @Column(name = "belongType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属类型'")
+    @Column(name = "belongType", columnDefinition = "VARCHAR(255)   COMMENT '所属类型'")
     private String belongType;
 
     /**
      * 分类
      */
-    @Column(name = "classifi", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '分类'")
+    @Column(name = "classifi", columnDefinition = "VARCHAR(255)   COMMENT '分类'")
     private String classifi;
 
     /**
      * 触发字段
      */
-    @Column(name = "triggerField", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '触发字段'")
+    @Column(name = "triggerField", columnDefinition = "VARCHAR(255)   COMMENT '触发字段'")
     private String triggerField;
 
     /**
      * 标题
      */
-    @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标题'")
+    @Column(name = "title", columnDefinition = "VARCHAR(255)   COMMENT '标题'")
     private String title;
 
     /**
      * 邮件内容模板
      */
-    @Column(name = "emailModule", nullable = false, columnDefinition = "TEXT   COMMENT '邮件内容模板'")
+    @Column(name = "emailModule", columnDefinition = "TEXT   COMMENT '邮件内容模板'")
     private String emailModule;
 
     /**
      * 例子
      */
-    @Column(name = "example", nullable = false, columnDefinition = "TEXT   COMMENT '例子'")
+    @Column(name = "example", columnDefinition = "TEXT   COMMENT '例子'")
     private String example;
 
     /**
      * 附件
      */
-    @Column(name = "attachment", nullable = false, columnDefinition = "TEXT   COMMENT '附件'")
+    @Column(name = "attachment", columnDefinition = "TEXT   COMMENT '附件'")
     private String attachment;
 
     /**
      * 主送对象
      */
-    @Column(name = "lordSendObj", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '主送对象'")
+    @Column(name = "lordSendObj", columnDefinition = "VARCHAR(255)   COMMENT '主送对象'")
     private String lordSendObj;
 
     /**
      * 抄送对象
      */
-    @Column(name = "ccObj", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '抄送对象'")
+    @Column(name = "ccObj", columnDefinition = "VARCHAR(255)   COMMENT '抄送对象'")
     private String ccObj;
 
     /**
      * 途径
      */
-    @Column(name = "way", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '途径'")
+    @Column(name = "way", columnDefinition = "VARCHAR(255)   COMMENT '途径'")
     private String way;
 
 

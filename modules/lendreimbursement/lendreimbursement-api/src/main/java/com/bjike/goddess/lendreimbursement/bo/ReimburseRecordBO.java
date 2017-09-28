@@ -1,6 +1,7 @@
 package com.bjike.goddess.lendreimbursement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 
 import javax.persistence.Column;
@@ -120,6 +121,10 @@ public class ReimburseRecordBO extends BaseBO {
      */
     private String receiveTicketCheck;
     /**
+     * 帐务核对是否通过（是/否）
+     */
+    private String accountCheckPassOr;
+    /**
      * 预计付款时间
      */
     private String budgetPayTime;
@@ -143,6 +148,22 @@ public class ReimburseRecordBO extends BaseBO {
      * 审核意见
      */
     private String auditAdvice;
+
+
+    /**
+     * 负责人确认冻结或取消冻结的时间
+     */
+    private String chargerCongelTime;
+
+    /**
+     * 负责人确认冻结或取消冻结的意见
+     */
+    private String chargeCongleAdvice;
+
+    /**
+     * 是否全部分析完
+     */
+    private Boolean analisisIsAll;
 
     /**
      * 是否支付
@@ -217,6 +238,47 @@ public class ReimburseRecordBO extends BaseBO {
      * 数量count
      */
     private Integer count;
+
+
+
+    /**
+     * 寄件的收件人
+     */
+    private String sendRecevier;
+
+    /**
+     * 寄件人
+     */
+    private String sender;
+
+    /**
+     * 寄件日期
+     */
+    private String sendDate;
+
+    /**
+     * 寄件情况
+     */
+    private String sendCondition;
+
+
+    /**
+     * 收件地区(寄件的时候填的地区)
+     */
+    private String receiveArea;
+
+    /**
+     * 收件地址
+     */
+    private String receiveAddr;
+
+    /**
+     * 报销手机端筛选状态个显示状态
+     */
+    private ReimPhoneSelectStatus reimPhoneSelectStatus;
+
+
+
 
 
     public String getOccureDate() {
@@ -387,6 +449,14 @@ public class ReimburseRecordBO extends BaseBO {
         this.receiveTicketCon = receiveTicketCon;
     }
 
+    public String getAccountCheckPassOr() {
+        return accountCheckPassOr;
+    }
+
+    public void setAccountCheckPassOr(String accountCheckPassOr) {
+        this.accountCheckPassOr = accountCheckPassOr;
+    }
+
     public String getBudgetPayTime() {
         return budgetPayTime;
     }
@@ -425,6 +495,14 @@ public class ReimburseRecordBO extends BaseBO {
 
     public void setAuditAdvice(String auditAdvice) {
         this.auditAdvice = auditAdvice;
+    }
+
+    public Boolean getAnalisisIsAll() {
+        return analisisIsAll;
+    }
+
+    public void setAnalisisIsAll(Boolean analisisIsAll) {
+        this.analisisIsAll = analisisIsAll;
     }
 
     public String getPayCondition() {
@@ -545,5 +623,77 @@ public class ReimburseRecordBO extends BaseBO {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public String getSendRecevier() {
+        return sendRecevier;
+    }
+
+    public void setSendRecevier(String sendRecevier) {
+        this.sendRecevier = sendRecevier;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(String sendDate) {
+        this.sendDate = sendDate;
+    }
+
+    public String getSendCondition() {
+        return sendCondition;
+    }
+
+    public void setSendCondition(String sendCondition) {
+        this.sendCondition = sendCondition;
+    }
+
+    public String getReceiveArea() {
+        return receiveArea;
+    }
+
+    public void setReceiveArea(String receiveArea) {
+        this.receiveArea = receiveArea;
+    }
+
+    public String getReceiveAddr() {
+        return receiveAddr;
+    }
+
+    public void setReceiveAddr(String receiveAddr) {
+        this.receiveAddr = receiveAddr;
+    }
+
+    public String getChargerCongelTime() {
+        return chargerCongelTime;
+    }
+
+    public void setChargerCongelTime(String chargerCongelTime) {
+        this.chargerCongelTime = chargerCongelTime;
+    }
+
+    public String getChargeCongleAdvice() {
+        return chargeCongleAdvice;
+    }
+
+    public void setChargeCongleAdvice(String chargeCongleAdvice) {
+        this.chargeCongleAdvice = chargeCongleAdvice;
+    }
+
+    public ReimPhoneSelectStatus getReimPhoneSelectStatus() {
+        return reimPhoneSelectStatus;
+    }
+
+    public void setReimPhoneSelectStatus(ReimPhoneSelectStatus reimPhoneSelectStatus) {
+        this.reimPhoneSelectStatus = reimPhoneSelectStatus;
     }
 }

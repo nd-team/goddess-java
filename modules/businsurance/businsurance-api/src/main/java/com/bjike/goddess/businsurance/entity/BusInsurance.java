@@ -3,6 +3,7 @@ package com.bjike.goddess.businsurance.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -18,6 +19,16 @@ import javax.persistence.*;
 @Table(name = "businsurance_businsurance")
 public class BusInsurance extends BaseEntity {
 
+    /**
+     * 制作方案时间
+     */
+    @Column(name = "makeDate",  columnDefinition = "DATE   COMMENT '制作方案时间'")
+    private LocalDate makeDate;
+    /**
+     * 制作方案人
+     */
+    @Column(name = "maker",  columnDefinition = "VARCHAR(255)   COMMENT '制作方案人'")
+    private String maker;
     /**
      * 保险公司
      */
@@ -119,6 +130,22 @@ public class BusInsurance extends BaseEntity {
      */
     @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+
+    public LocalDate getMakeDate() {
+        return makeDate;
+    }
+
+    public void setMakeDate(LocalDate makeDate) {
+        this.makeDate = makeDate;
+    }
+
+    public String getMaker() {
+        return maker;
+    }
+
+    public void setMaker(String maker) {
+        this.maker = maker;
+    }
 
     public String getInsureComapny() {
         return insureComapny;

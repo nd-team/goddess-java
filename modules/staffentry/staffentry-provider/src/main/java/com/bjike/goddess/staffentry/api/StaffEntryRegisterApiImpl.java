@@ -1,6 +1,8 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.staffentry.bo.EntrySummaryBO;
+import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.service.StaffEntryRegisterSer;
@@ -82,5 +84,60 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
     @Override
     public String getMaxEmpNumberByName(String name) throws SerException {
         return staffEntryRegisterSer.getMaxEmpNumberByName(name);
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return staffEntryRegisterSer.exportExcel();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return staffEntryRegisterSer.templateExport();
+    }
+
+    @Override
+    public void importExcel(List<StaffEntryRegisterTO> staffEntryRegisterTOS) throws SerException {
+        staffEntryRegisterSer.importExcel(staffEntryRegisterTOS);
+    }
+
+    @Override
+    public String findNotisDate(String[] ids) throws SerException {
+        return staffEntryRegisterSer.findNotisDate(ids);
+    }
+
+    @Override
+    public void notis(String content, String[] emails, String[] ids) throws SerException {
+        staffEntryRegisterSer.notis(content,emails,ids);
+    }
+
+    @Override
+    public List<String> findEmpNum() throws SerException {
+        return staffEntryRegisterSer.findEmpNum();
+    }
+
+    @Override
+    public LinkDateStaffEntryBO findByEmpNum(String empNum) throws SerException {
+        return staffEntryRegisterSer.findByEmpNum(empNum);
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaDay(String summationDate) throws SerException {
+        return staffEntryRegisterSer.summaDay(summationDate);
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        return staffEntryRegisterSer.summaWeek(year,month,week);
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaMonth(Integer year, Integer month) throws SerException {
+        return staffEntryRegisterSer.summaMonth(year,month);
+    }
+
+    @Override
+    public List<EntrySummaryBO> summaTotal(String endDate) throws SerException {
+        return staffEntryRegisterSer.summaTotal(endDate);
     }
 }

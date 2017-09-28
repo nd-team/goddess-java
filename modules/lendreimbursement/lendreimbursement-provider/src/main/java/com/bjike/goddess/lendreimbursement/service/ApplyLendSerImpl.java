@@ -13,26 +13,23 @@ import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
-import com.bjike.goddess.lendreimbursement.dto.ApplyLendCopyDTO;
-import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
-import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
+import com.bjike.goddess.lendreimbursement.dto.*;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLendCopy;
 import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
-import com.bjike.goddess.lendreimbursement.enums.GuideAddrStatus;
-import com.bjike.goddess.lendreimbursement.enums.LendStatus;
-import com.bjike.goddess.lendreimbursement.enums.Words;
+import com.bjike.goddess.lendreimbursement.enums.*;
 import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
-import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
-import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.to.*;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
-import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +64,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private UserDetailAPI userDetailAPI;
     @Autowired
     private PositionAPI positionAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private LendAuditDetailSer lendAuditDetailSer;
     @Autowired
@@ -174,6 +175,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
                 flag = checkPermission("applyWaitPay-Pay");
                 break;
             case RECIVEMONEYSURE:
+//                flag = guideIdentity("applySurePay-Recieve");
+                flag = true;
+            case RECIVEMONEYSURE2:
                 flag = guideIdentity("applySurePay-Recieve");
             case RETURN:
                 flag = guideIdentity("applyRecord-ReturnAndsendTicket");
@@ -185,7 +189,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
                 flag = checkPermission("applyReturn-ReturnCheck");
                 break;
             case RECIVETICKET:
-                flag = guideIdentity("applyAccountCheck-ReciveTicket");
+                flag = checkPermission("applyReturn-ReturnCheck");
                 break;
             default:
                 flag = true;
@@ -284,7 +288,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         applyLendDTO.getSorts().add("createTime=desc");
         //未收款且不在有误单里面
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 7, 8, 9}));
 
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
@@ -296,29 +300,33 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         applyLendDTO = addCondition(applyLendDTO);
 
         List<ApplyLend> list = super.findByCis(applyLendDTO, true);
+        List<ApplyLendBO> listBO = BeanTransform.copyProperties(list, ApplyLendBO.class);
 
-        return BeanTransform.copyProperties(list, ApplyLendBO.class);
+
+        return listBO;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO addApplyLend(ApplyLendTO applyLendTO) throws SerException {
 
-        if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
-            throw new SerException("添加失败，未填无发票备注");
-        }
+//        if ("否".equals(applyLendTO.getInvoice()) && StringUtils.isBlank(applyLendTO.getNoInvoiceRemark())) {
+//            throw new SerException("添加失败，未填无发票备注");
+//        }
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         //填单人
         applyLend.setFillSingler(userAPI.currentUser().getUsername());
-        applyLend.setLendDate(LocalDate.now());
+//        applyLend.setLendDate(LocalDate.now());
         applyLend.setCreateTime(LocalDateTime.now());
+        applyLend.setCommitTime(LocalDateTime.now());
         //未付款
         applyLend.setPayCondition("否");
+        //这个字段用于手机字段
+        applyLend.setLendRetunStatus(LendRetunStatus.NONE);
         applyLend.setLendStatus(LendStatus.NONE);
         applyLend.setChargerPass("未处理");
         applyLend.setManagerPass("未处理");
         applyLend.setFincerPass("未处理");
-        applyLend.setLendDate(LocalDate.now());
         super.save(applyLend);
         ApplyLendBO bo = BeanTransform.copyProperties(applyLend, ApplyLendBO.class, "lendStatus");
         bo.setLendStatus(applyLend.getLendStatus());
@@ -552,6 +560,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend lend = super.findById(applyLendTO.getId());
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userBO.getUsername().toLowerCase()) && !userBO.getUsername().equals(lend.getCharger())) {
+            throw new SerException("负责人审核失败，您不是负责人，不能进行负责人审核");
+        }
 
         lend.setCharger(userBO.getUsername());
         lend.setChargerOpinion(applyLendTO.getChargerOpinion());
@@ -565,26 +576,49 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (lend.getLendStatus().getCode() == 5) {
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
+        if (lend.getLendStatus().getCode() == 3) {
+            throw new SerException("该条数据已经被财务分析过，不能再操作");
+        }
+        if (lend.getLendStatus().getCode() == 4) {
+            throw new SerException("该条数据已经被财务分析过，不能再操作");
+        }
+        lend.setChargerPassTime(LocalDateTime.now());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
-        //存审核详情表
-//        UserBO userBO = userAPI.currentUser(token);
-        UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-        PositionBO positionBO = new PositionBO();
-        if (userDetailBO != null) {
-            positionBO = positionAPI.findById(userDetailBO.getPositionId());
+        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "负责人"));
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+        if (listDetails != null && listDetails.size() > 0) {
+            LendAuditDetail updateDetail = listDetails.get(0);
+            updateDetail.setAuditDate(LocalDate.now());
+            updateDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+            updateDetail.setPassOr(applyLendTO.getFincerPass());
+            updateDetail.setModifyTime(LocalDateTime.now());
+            lendAuditDetailSer.update(updateDetail);
+        } else {
+            List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            RpcTransmit.transmitUserToken(userToken);
+            String position = "";
+            if (positionBO != null && positionBO.size() > 0) {
+                position = positionBO.get(0).getPosition();
+            }
+            //职位名
+            LendAuditDetail lendAuditDetail = new LendAuditDetail();
+            lendAuditDetail.setPosition(position);
+            lendAuditDetail.setAuditIdentity("负责人");
+            lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+            lendAuditDetail.setAuditor(userBO.getUsername());
+            lendAuditDetail.setAuditDate(LocalDate.now());
+            lendAuditDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+            lendAuditDetail.setPassOr(applyLendTO.getFincerPass());
+            lendAuditDetail.setApplyLendId(lend.getId());
+            lendAuditDetail.setCreateTime(LocalDateTime.now());
+            lendAuditDetailSer.save(lendAuditDetail);
         }
-        //职位名
-        LendAuditDetail lendAuditDetail = new LendAuditDetail();
-        lendAuditDetail.setPosition(positionBO.getName());
-        lendAuditDetail.setAuditor(userBO.getUsername());
-        lendAuditDetail.setAuditDate(LocalDate.now());
-        lendAuditDetail.setAuditSuggest(applyLendTO.getChargerOpinion());
-        lendAuditDetail.setPassOr(applyLendTO.getChargerPass());
-        lendAuditDetail.setApplyLendId(lend.getId());
-        lendAuditDetail.setCreateTime(LocalDateTime.now());
-        lendAuditDetailSer.save(lendAuditDetail);
 
         ApplyLendBO bo = BeanTransform.copyProperties(lend, ApplyLendBO.class, "lendStatus");
         bo.setLendStatus(lend.getLendStatus());
@@ -594,6 +628,15 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editOperateWaitAudit(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        LendGuidePermissionTO guidePermissionTO = new LendGuidePermissionTO();
+        guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.FINACEAUDIT);
+        Boolean finaceFlag = guidePermission(guidePermissionTO);
+        if (!finaceFlag) {
+            throw new SerException("您没有财务审核的权限，审核失败");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("财务运营部审核失败，未填id");
         }
@@ -608,6 +651,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         lend.setFinacer(userBO.getUsername());
         lend.setFincerOpinion(applyLendTO.getFincerOpinion());
         lend.setFincerPass(applyLendTO.getFincerPass());
@@ -616,38 +660,64 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         } else if ("否".equals(applyLendTO.getFincerPass())) {
             lend.setLendStatus(LendStatus.FINACENOTPASS);
         }
+        lend.setFincerPassTime(LocalDateTime.now());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
-        //存审核详情表
-//        UserBO userBO = userAPI.currentUser();
-        UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-        PositionBO positionBO = new PositionBO();
-        if (userDetailBO != null) {
-            positionBO = positionAPI.findById(userDetailBO.getPositionId());
+        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "财务"));
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+        if (listDetails != null && listDetails.size() > 0) {
+            LendAuditDetail updateDetail = listDetails.get(0);
+            updateDetail.setAuditDate(LocalDate.now());
+            updateDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+            updateDetail.setPassOr(applyLendTO.getFincerPass());
+            updateDetail.setModifyTime(LocalDateTime.now());
+            lendAuditDetailSer.update(updateDetail);
+        } else {
+            List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            RpcTransmit.transmitUserToken(userToken);
+            String position = "";
+            if (positionBO != null && positionBO.size() > 0) {
+                position = positionBO.get(0).getPosition();
+            }
+            //职位名
+            LendAuditDetail lendAuditDetail = new LendAuditDetail();
+            lendAuditDetail.setPosition(position);
+            lendAuditDetail.setAuditIdentity("财务");
+            lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+            lendAuditDetail.setAuditor(userBO.getUsername());
+            lendAuditDetail.setAuditDate(LocalDate.now());
+            lendAuditDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+            lendAuditDetail.setPassOr(applyLendTO.getFincerPass());
+            lendAuditDetail.setApplyLendId(lend.getId());
+            lendAuditDetail.setCreateTime(LocalDateTime.now());
+            lendAuditDetailSer.save(lendAuditDetail);
         }
-        //职位名
-        LendAuditDetail lendAuditDetail = new LendAuditDetail();
-        lendAuditDetail.setPosition(positionBO.getName());
-        lendAuditDetail.setAuditor(userBO.getUsername());
-        lendAuditDetail.setAuditDate(LocalDate.now());
-        lendAuditDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
-        lendAuditDetail.setPassOr(applyLendTO.getFincerPass());
-        lendAuditDetail.setApplyLendId(lend.getId());
-        lendAuditDetail.setCreateTime(LocalDateTime.now());
-        lendAuditDetailSer.save(lendAuditDetail);
-
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editManageWaitAudit(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("总经办审核失败，未填id");
         }
+        LendGuidePermissionTO guidePermissionTO = new LendGuidePermissionTO();
+        guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.MANAGEAUDIT);
+        Boolean finaceFlag = guidePermission(guidePermissionTO);
+        if (!finaceFlag) {
+            throw new SerException("您没有总经办审核的权限，审核失败");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
         ApplyLend lend = super.findById(applyLendTO.getId());
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         //说明财务还没审核
         if (lend.getLendStatus().getCode() == 3 || lend.getLendStatus().getCode() == 4) {
             lend.setManager(userBO.getUsername());
@@ -672,26 +742,43 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         } else if ("否".equals(applyLendTO.getManagerPass())) {
             lend.setLendStatus(LendStatus.MANAGENOTPASS);
         }
+        lend.setManagerPassTime(LocalDateTime.now());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
-        //存审核详情表
-//        UserBO userBO = userAPI.currentUser();
-        UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
-        PositionBO positionBO = new PositionBO();
-        if (userDetailBO != null) {
-            positionBO = positionAPI.findById(userDetailBO.getPositionId());
+        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "总经办"));
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+        if (listDetails != null && listDetails.size() > 0) {
+            LendAuditDetail updateDetail = listDetails.get(0);
+            updateDetail.setAuditDate(LocalDate.now());
+            updateDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+            updateDetail.setPassOr(applyLendTO.getFincerPass());
+            updateDetail.setModifyTime(LocalDateTime.now());
+            lendAuditDetailSer.update(updateDetail);
+        } else {
+            List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            RpcTransmit.transmitUserToken(userToken);
+            String position = "";
+            if (positionBO != null && positionBO.size() > 0) {
+                position = positionBO.get(0).getPosition();
+            }
+            //职位名
+            LendAuditDetail lendAuditDetail = new LendAuditDetail();
+            lendAuditDetail.setPosition(position);
+            lendAuditDetail.setAuditIdentity("总经办");
+            lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+            lendAuditDetail.setAuditor(userBO.getUsername());
+            lendAuditDetail.setAuditDate(LocalDate.now());
+            lendAuditDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+            lendAuditDetail.setPassOr(applyLendTO.getFincerPass());
+            lendAuditDetail.setApplyLendId(lend.getId());
+            lendAuditDetail.setCreateTime(LocalDateTime.now());
+            lendAuditDetailSer.save(lendAuditDetail);
         }
-        //职位名
-        LendAuditDetail lendAuditDetail = new LendAuditDetail();
-        lendAuditDetail.setPosition(positionBO.getName());
-        lendAuditDetail.setAuditor(userBO.getUsername());
-        lendAuditDetail.setAuditDate(LocalDate.now());
-        lendAuditDetail.setAuditSuggest(applyLendTO.getManagerOpinion());
-        lendAuditDetail.setPassOr(applyLendTO.getManagerPass());
-        lendAuditDetail.setApplyLendId(lend.getId());
-        lendAuditDetail.setCreateTime(LocalDateTime.now());
-        lendAuditDetailSer.save(lendAuditDetail);
 
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
@@ -699,6 +786,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editOperateCongel(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("财务运营部冻结失败，未填id");
         }
@@ -711,6 +799,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
         UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         lend.setFinacer(userBO.getUsername());
         lend.setFincerOpinion(applyLendTO.getFincerOpinion());
         lend.setFincerPass("未处理");
@@ -719,12 +808,34 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
+
+        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+        List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+        String position = "";
+        if (positionBO != null && positionBO.size() > 0) {
+            position = positionBO.get(0).getPosition();
+        }
+        //职位名
+        LendAuditDetail lendAuditDetail = new LendAuditDetail();
+        lendAuditDetail.setPosition(position);
+        lendAuditDetail.setAuditIdentity("财务");
+        lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+        lendAuditDetail.setAuditor(userBO.getUsername());
+        lendAuditDetail.setAuditDate(LocalDate.now());
+        lendAuditDetail.setAuditSuggest("财务运营部申请冻结");
+        lendAuditDetail.setPassOr("不通过");
+        lendAuditDetail.setApplyLendId(lend.getId());
+        lendAuditDetail.setCreateTime(LocalDateTime.now());
+        lendAuditDetailSer.save(lendAuditDetail);
+
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editChargeSureCongel(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("负责人冻结失败，未填id");
         }
@@ -733,17 +844,42 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (lend.getLendStatus().getCode() != 5) {
             throw new SerException("负责人确认冻结失败，此条数据财务部还未冻结");
         }
-        lend.setCharger(userAPI.currentUser().getUsername());
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        lend.setCharger(userBO.getUsername());
 
         lend.setLendStatus(LendStatus.CHARGESURECONGEL);
+        lend.setChargerPassTime(LocalDateTime.now());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
+
+        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+        List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+        String position = "";
+        if (positionBO != null && positionBO.size() > 0) {
+            position = positionBO.get(0).getPosition();
+        }
+        //职位名
+        LendAuditDetail lendAuditDetail = new LendAuditDetail();
+        lendAuditDetail.setPosition(position);
+        lendAuditDetail.setAuditIdentity("负责人");
+        lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+        lendAuditDetail.setAuditor(userBO.getUsername());
+        lendAuditDetail.setAuditDate(LocalDate.now());
+        lendAuditDetail.setAuditSuggest("负责人确认冻结");
+        lendAuditDetail.setPassOr("通过");
+        lendAuditDetail.setApplyLendId(lend.getId());
+        lendAuditDetail.setCreateTime(LocalDateTime.now());
+        lendAuditDetailSer.save(lendAuditDetail);
+
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editChargeConcelCongel(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("负责人取消冻结失败，未填id");
         }
@@ -752,15 +888,39 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (lend.getLendStatus().getCode() != 5) {
             throw new SerException("负责人确认取消冻结失败，此条数据财务部还未冻结");
         }
-        lend.setCharger(userAPI.currentUser().getUsername());
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        lend.setCharger(userBO.getUsername());
 
         if ("是".equals(lend.getChargerPass())) {
             lend.setLendStatus(LendStatus.CHARGEPASS);
         } else {
             lend.setLendStatus(LendStatus.CHARGENOTPASS);
         }
+        lend.setChargerPassTime(LocalDateTime.now());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
+
+        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+        List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+        String position = "";
+        if (positionBO != null && positionBO.size() > 0) {
+            position = positionBO.get(0).getPosition();
+        }
+        //职位名
+        LendAuditDetail lendAuditDetail = new LendAuditDetail();
+        lendAuditDetail.setPosition(position);
+        lendAuditDetail.setAuditIdentity("负责人");
+        lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+        lendAuditDetail.setAuditor(userBO.getUsername());
+        lendAuditDetail.setAuditDate(LocalDate.now());
+        lendAuditDetail.setAuditSuggest("负责人取消冻结");
+        lendAuditDetail.setPassOr("是".equals(lend.getChargerPass()) ? "负责人取消冻结" : "负责人确认冻结");
+        lendAuditDetail.setApplyLendId(lend.getId());
+        lendAuditDetail.setCreateTime(LocalDateTime.now());
+        lendAuditDetailSer.save(lendAuditDetail);
+
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
@@ -780,7 +940,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        applyLendDTO.getConditions().add(Restrict.eq("lendError", 9));
         //LendStatus.CHARGESURECONGEL
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 6));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{0, 1, 2, 3, 4, 5, 7, 8}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{0, 1, 3, 4, 5, 7}));
         applyLendDTO = addCondition(applyLendDTO);
 
         Long count = super.count(applyLendDTO);
@@ -800,7 +960,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        applyLendDTO.getConditions().add(Restrict.eq("lendError", 9));
         //LendStatus.CHARGESURECONGEL
 //        applyLendDTO.getConditions().add(Restrict.or("lendStatus", 6));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{0, 1, 2, 3, 4, 5, 7, 8}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{0, 1, 3, 4, 5, 7}));
 
         applyLendDTO = addCondition(applyLendDTO);
 
@@ -821,6 +981,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
+        RpcTransmit.transmitUserToken(userToken);
         checkAddAndEditPermission(userToken, userBO, lend);
 
         lend.setLendError(0);
@@ -870,17 +1031,28 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setInvoice(applyLend.getInvoice());
         lend.setRemark(applyLend.getRemark());
         //填单人
+        RpcTransmit.transmitUserToken(userToken);
         lend.setFillSingler(userAPI.currentUser().getUsername());
+        RpcTransmit.transmitUserToken(userToken);
         lend.setLendDate(applyLend.getLendDate());
         lend.setModifyTime(LocalDateTime.now());
         //未付款
-        applyLend.setPayCondition("否");
-        applyLend.setChargerPass("未处理");
-        applyLend.setManagerPass("未处理");
-        applyLend.setFincerPass("未处理");
+        lend.setPayCondition("否");
+        lend.setChargerPass("未处理");
+        lend.setManagerPass("未处理");
+        lend.setFincerPass("未处理");
         lend.setLendStatus(LendStatus.NONE);
+        //这个字段用于手机字段
+        lend.setLendRetunStatus(LendRetunStatus.NONE);
+        lend.setCommitTime( LocalDateTime.now() );
+
         super.update(lend);
 
+        //清掉审核记录
+        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+        lendAuditDetailSer.remove( listDetails );
 
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
@@ -1033,12 +1205,16 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isBlank(applyLendTO.getPayDate())) {
             throw new SerException("编辑失败，支付日期不能为空");
         }
+        if (StringUtils.isBlank(applyLendTO.getId())) {
+            throw new SerException("编辑失败，id不能为空");
+        }
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
 //        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
-        lend.setPayOrigin(applyLend.getPayOrigin());
+        lend.setPayOrigin(applyLendTO.getPayOrigin());
         lend.setPayDate(applyLend.getPayDate());
+        lend.setLendDate(applyLend.getPayDate());
         //支付人
         lend.setPayer(userAPI.currentUser().getUsername());
         lend.setPayCondition("是");
@@ -1049,36 +1225,49 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public Long countSureRecieve(ApplyLendDTO applyLendDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean listpermission = cusPermissionSer.getCusPermission("apply-ListAll");
+        RpcTransmit.transmitUserToken(userToken);
+
         String userName = userAPI.currentUser().getUsername();
-        String [] field = new String[]{"id"};
+        RpcTransmit.transmitUserToken(userToken);
+        String[] field = new String[]{"id"};
         StringBuffer sql = new StringBuffer("");
-        sql.append( " SELECT payCondition ,id " )
-                .append( " FROM lendreimbursement_applylend " )
-                .append( " WHERE  payCondition = '是' AND  receivePay IS NULL " )
-                .append( " AND ( fillSingler = '"+userName+"'  OR lender = '"+userName+"') " )
-                ;
+        sql.append(" SELECT payCondition ,id ")
+                .append(" FROM lendreimbursement_applylend ")
+                .append(" WHERE  payCondition = '是' AND  receivePay IS NULL ");
+        if (!"admin".equals(userName.toLowerCase()) && listpermission.equals(false)) {
+            sql.append(" AND ( fillSingler = '" + userName + "'  OR lender = '" + userName + "') ");
+        }
+
         List<Object> list = super.findBySql(sql.toString());
-        Long counts = ( list != null && list.size()>0 )? list.size() : 0L;
+        Long counts = (list != null && list.size() > 0) ? list.size() : 0L;
         return counts;
     }
 
     @Override
     public List<ApplyLendBO> listSureRecieveMoney(ApplyLendDTO applyLendDTO) throws SerException {
 
-        String userName = userAPI.currentUser().getUsername();
-        String [] field = new String[]{"id","fillSingler","lendDate","estimateLendDate","area","projectGroup","projectName","lender",
-                "firstSubject","secondSubject","thirdSubject","explains","writeUp","writeUpCondition","lendReson","remark",
-        "money","attender","lendWay","goodsLink","charger","chargerOpinion"};
-        StringBuffer sql = new StringBuffer("");
-        sql.append( " SELECT id, fillSingler,lendDate,estimateLendDate,area,projectGroup,projectName,lender ," )
-                .append( " firstSubject,secondSubject,thirdSubject,explains,writeUp,writeUpCondition,lendReson,remark, " )
-                .append( " money,attender,lendWay,goodsLink,charger,chargerOpinion " )
-                .append( " FROM lendreimbursement_applylend " )
-                .append( " WHERE  payCondition = '是' AND  receivePay IS NULL " )
-                .append( " AND ( fillSingler = '"+userName+"'  OR lender = '"+userName+"') " )
-        ;
+        String userToken = RpcTransmit.getUserToken();
+        Boolean listpermission = cusPermissionSer.getCusPermission("apply-ListAll");
+        RpcTransmit.transmitUserToken(userToken);
 
-        List<ApplyLendBO> applyLend = super.findBySql( sql.toString() , ApplyLendBO.class , field );
+        String userName = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String[] field = new String[]{"id", "fillSingler", "lendDate", "estimateLendDate", "area", "projectGroup", "projectName", "lender",
+                "firstSubject", "secondSubject", "thirdSubject", "explains", "writeUp", "writeUpCondition", "lendReson", "remark",
+                "money", "attender", "lendWay", "goodsLink", "charger", "chargerOpinion"};
+        StringBuffer sql = new StringBuffer("");
+        sql.append(" SELECT id, fillSingler,lendDate,estimateLendDate,area,projectGroup,projectName,lender ,")
+                .append(" firstSubject,secondSubject,thirdSubject,explains,writeUp,writeUpCondition,lendReson,remark, ")
+                .append(" money,attender,lendWay,goodsLink,charger,chargerOpinion ")
+                .append(" FROM lendreimbursement_applylend ")
+                .append(" WHERE  payCondition = '是' AND  receivePay IS NULL ");
+        if (!"admin".equals(userName.toLowerCase()) && listpermission.equals(false)) {
+            sql.append(" AND ( fillSingler = '" + userName + "'  OR lender = '" + userName + "') ");
+        }
+
+        List<ApplyLendBO> applyLend = super.findBySql(sql.toString(), ApplyLendBO.class, field);
 
         return BeanTransform.copyProperties(applyLend, ApplyLendBO.class);
     }
@@ -1086,17 +1275,31 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editSureRecieveMoney(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("编辑失败，id不能为空");
         }
 
+        LendGuidePermissionTO guidePermissionTO = new LendGuidePermissionTO();
+        guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.RECIVEMONEYSURE2);
+        Boolean sureReciveMoneyFlag = guidePermission(guidePermissionTO);
+        RpcTransmit.transmitUserToken(userToken);
+
         String id = applyLendTO.getId();
         ApplyLend lend = super.findById(id);
+        //只有借款人和有权限的人才可以去确认收款
+        if (userName.equals(lend.getLender()) || sureReciveMoneyFlag) {
+            //确认收款
+            lend.setReceivePay("是");
+            lend.setReceivePayTime(LocalDate.now());
+            lend.setModifyTime(LocalDateTime.now());
+            super.update(lend);
+        }
 
-        //确认收款
-        lend.setReceivePay("是");
-        lend.setModifyTime(LocalDateTime.now());
-        super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
@@ -1129,20 +1332,24 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("还款失败，id不能为空");
         }
-        if ("转账".equals(applyLendTO.getReturnWays()) && StringUtils.isBlank(applyLendTO.getPayOrigin())) {
+        if ("转账".equals(applyLendTO.getReturnWays()) && StringUtils.isBlank(applyLendTO.getReturnAccount())) {
             throw new SerException("还款失败，还款账户不能为空");
+        }
+        if (null != applyLendTO.getReimMoney() && applyLendTO.getReimMoney() <= 0d) {
+            throw new SerException("还款失败，报销金额必须大于0");
         }
 
         ApplyLend applyLend = BeanTransform.copyProperties(applyLendTO, ApplyLend.class, true);
         ApplyLend lend = super.findById(applyLendTO.getId());
 
-//        BeanUtils.copyProperties(applyLend, lend, "id", "createTime");
         lend.setReimMoney(applyLend.getReimMoney());
-        lend.setLendMoney(applyLend.getLendMoney());
+        lend.setLendMoney(applyLend.getLendMoney().equals(lend.getMoney()) ? applyLend.getLendMoney() : lend.getMoney());
         lend.setReturnMoney(applyLend.getReturnMoney());
         lend.setReturnDate(applyLend.getReturnDate());
         lend.setReturnWays(applyLend.getReturnWays());
         lend.setReturnAccount(applyLend.getReturnAccount());
+        //表示已填还款，还未进行还款核对
+        lend.setLendRetunStatus(LendRetunStatus.WAITRETURNCHECK);
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
@@ -1163,8 +1370,60 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setSendDate(applyLend.getSendDate());
         lend.setSendCondition(applyLend.getSendCondition());
         lend.setReceiveAddr(applyLend.getReceiveAddr());
-        lend.setSender( userName );
+        lend.setSender(userName);
         lend.setDocumentQuantity(applyLendTO.getDocumentQuantity());
+        lend.setModifyTime(LocalDateTime.now());
+        super.update(lend);
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
+    }
+
+    @Override
+    public ApplyLendBO editPhoneReturn(PhoneLendReturnSendTO phoneLendReturnSendTO) throws SerException {
+        if (StringUtils.isBlank(phoneLendReturnSendTO.getId())) {
+            throw new SerException("还款失败，id不能为空");
+        }
+        if ("转账".equals(phoneLendReturnSendTO.getReturnWays()) && StringUtils.isBlank(phoneLendReturnSendTO.getReturnAccount())) {
+            throw new SerException("还款失败，还款账户不能为空");
+        }
+        if (null != phoneLendReturnSendTO.getReimMoney() && phoneLendReturnSendTO.getReimMoney() <= 0d) {
+            throw new SerException("还款失败，报销金额必须大于0");
+        }
+        ApplyLend temp = BeanTransform.copyProperties(phoneLendReturnSendTO, ApplyLend.class, true);
+        ApplyLend lend = super.findById(phoneLendReturnSendTO.getId());
+
+        lend.setReimMoney(phoneLendReturnSendTO.getReimMoney());
+        //这里不同，把money改成了lendmoney
+        lend.setLendMoney(lend.getMoney());
+        lend.setReturnMoney(phoneLendReturnSendTO.getReturnMoney());
+        lend.setReturnDate(temp.getReturnDate());
+        lend.setReturnWays(phoneLendReturnSendTO.getReturnWays());
+        lend.setReturnAccount(phoneLendReturnSendTO.getReturnAccount());
+        lend.setModifyTime(LocalDateTime.now());
+        //之前在添加的页面，现在搬到这里来了：是否有发票（单据）
+        lend.setInvoice(phoneLendReturnSendTO.getInvoice());
+        //表示已填还款，还未进行还款核对
+        lend.setLendRetunStatus(LendRetunStatus.WAITRETURNCHECK);
+        super.update(lend);
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
+    }
+
+    @Override
+    public ApplyLendBO editPhoneSend(PhoneLendSendTO phoneLendSendTO) throws SerException {
+        String userName = userAPI.currentUser().getUsername();
+        if (StringUtils.isBlank(phoneLendSendTO.getId())) {
+            throw new SerException("寄件失败，id不能为空");
+        }
+
+        ApplyLend applyLend = BeanTransform.copyProperties(phoneLendSendTO, ApplyLend.class, true);
+        ApplyLend lend = super.findById(phoneLendSendTO.getId());
+
+        lend.setSendDate(applyLend.getSendDate());
+        lend.setSendCondition(phoneLendSendTO.getSendCondition());
+        lend.setReceiveAddr(phoneLendSendTO.getReceiveAddr());
+        lend.setReceiveArea(phoneLendSendTO.getReceiveArea());
+        lend.setSender(userName);
+        lend.setSendRecevier(phoneLendSendTO.getSendRecevier());
+        lend.setDocumentQuantity(phoneLendSendTO.getDocumentQuantity());
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
@@ -1225,8 +1484,12 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public Long countReturn(ApplyLendDTO applyLendDTO) throws SerException {
+        //还款记录是报销金额和借款金额>0
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "是"));
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+        //还款状态为未处理和审核不通过的情况
+        applyLendDTO.getConditions().add(Restrict.in("lendRetunStatus", new Integer[]{0, 3}));
 
         applyLendDTO = addCondition(applyLendDTO);
 
@@ -1237,8 +1500,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public List<ApplyLendBO> listReturnMoneyRecord(ApplyLendDTO applyLendDTO) throws SerException {
         //还款记录是报销金额和借款金额>0
+        applyLendDTO.getConditions().add(Restrict.eq("payCondition", "是"));
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+        //还款状态为未处理和审核不通过的情况
+        applyLendDTO.getConditions().add(Restrict.in("lendRetunStatus", new Integer[]{0, 3}));
 
         applyLendDTO = addCondition(applyLendDTO);
         List<ApplyLend> list = super.findByCis(applyLendDTO, true);
@@ -1362,14 +1628,53 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         if (StringUtils.isBlank(applyLendTO.getCheckcontent())) {
             throw new SerException("失败，核对内容不能为空");
         }
+        if (StringUtils.isBlank(applyLendTO.getCheckPassOr()) || !"是".equals(applyLendTO.getCheckPassOr()) || !"否".equals(applyLendTO.getCheckPassOr())) {
+            throw new SerException("失败，是否通过只能选是或否");
+        }
         ApplyLend lend = super.findById(applyLendTO.getId());
-
-//        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
 
         lend.setChecker(userAPI.currentUser().getUsername());
         lend.setCheckDate(LocalDate.now());
         lend.setCheckcontent(applyLendTO.getCheckcontent());
+        lend.setModifyTime(LocalDateTime.now());//表示已填还款，还未进行还款核对
+        lend.setLendRetunStatus("是".equals(applyLendTO.getCheckPassOr()) ? LendRetunStatus.PASS : LendRetunStatus.NOTPASS);
+        super.update(lend);
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
+
+    }
+
+    @Override
+    public ApplyLendBO phoneCheckReturn(PhoneLendReturnCheckTO phoneLendReturnCheckTO) throws SerException {
+        if (StringUtils.isBlank(phoneLendReturnCheckTO.getId())) {
+            throw new SerException("失败，id不能为空");
+        }
+        if (StringUtils.isBlank(phoneLendReturnCheckTO.getCheckcontent())) {
+            throw new SerException("失败，审核原因不能为空");
+        }
+        if (StringUtils.isBlank(phoneLendReturnCheckTO.getDocumentCondition())) {
+            throw new SerException("失败，请填写是否收到单据（是/否）");
+        }
+        if (!LendRetunStatus.NOTPASS.equals(phoneLendReturnCheckTO.getLendRetunStatus())
+                && !LendRetunStatus.PASS.equals(phoneLendReturnCheckTO.getLendRetunStatus())) {
+            throw new SerException("失败，请填写是否通过，lendRetunStatus");
+        }
+        ApplyLend lend = super.findById(phoneLendReturnCheckTO.getId());
+
+        //还款核对
+        UserBO userBO = userAPI.currentUser();
+        lend.setChecker(userBO.getUsername());
+        lend.setCheckDate(LocalDate.now());
+        lend.setCheckcontent(phoneLendReturnCheckTO.getCheckcontent());
+        lend.setDocumentCondition(phoneLendReturnCheckTO.getDocumentCondition());
+
+        //帐务核对的收到单据
+        lend.setTicketDate(lend.getReturnDate());
+        lend.setTicketer(userBO.getUsername());
+        lend.setTicketCondition(phoneLendReturnCheckTO.getCheckcontent());
+        lend.setReceiveTicket(phoneLendReturnCheckTO.getDocumentCondition());
         lend.setModifyTime(LocalDateTime.now());
+        //表示已填还款，已进行还款核对
+        lend.setLendRetunStatus(phoneLendReturnCheckTO.getLendRetunStatus());
         super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
 
@@ -1380,6 +1685,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         //帐务核对是报销金额和借款金额>0
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+        //还款状态为未处理和审核不通过的情况
+        applyLendDTO.getConditions().add(Restrict.in("lendRetunStatus", new Integer[]{0, 3}));
 
         applyLendDTO = addCondition(applyLendDTO);
 
@@ -1392,6 +1699,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         //帐务核对是报销金额和借款金额>0
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+        //还款状态为未处理和审核不通过的情况
+        applyLendDTO.getConditions().add(Restrict.in("lendRetunStatus", new Integer[]{0, 3}));
 
         applyLendDTO = addCondition(applyLendDTO);
 
@@ -1419,7 +1728,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 //        BeanUtils.copyProperties(applyLendTO, lend, "id", "createTime");
 
         lend.setDocumentCondition(applyLendTO.getDocumentCondition());
-        lend.setTicketDate( LocalDate.parse( applyLendTO.getTicketDate()));
+        lend.setTicketDate(LocalDate.parse(applyLendTO.getTicketDate()));
         lend.setTicketer(userAPI.currentUser().getUsername());
         lend.setTicketCondition(applyLendTO.getTicketCondition());
         lend.setReceiveTicket(applyLendTO.getReceiveTicket());
@@ -1431,8 +1740,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public Long countRecTicket(ApplyLendDTO applyLendDTO) throws SerException {
-        //收到单据 是
-        applyLendDTO.getConditions().add(Restrict.eq("documentCondition", "是"));
+        //收到单据 是 或手机端还款核对通过的
+//        applyLendDTO.getConditions().add(Restrict.eq("documentCondition", "是"));
+        //手机端还款核对（帐务核对）通过的
+        applyLendDTO.getConditions().add(Restrict.or("lendRetunStatus", 2));
 
         applyLendDTO = addCondition(applyLendDTO);
 
@@ -1442,8 +1753,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     @Override
     public List<ApplyLendBO> listRecieveTicketRecord(ApplyLendDTO applyLendDTO) throws SerException {
-        //收到单据 是
-        applyLendDTO.getConditions().add(Restrict.eq("documentCondition", "是"));
+        //收到单据 是 或手机端还款核对通过的
+//        applyLendDTO.getConditions().add(Restrict.eq("documentCondition", "是"));
+        //手机端还款核对（帐务核对）通过的
+        applyLendDTO.getConditions().add(Restrict.or("lendRetunStatus", 2));
 
         applyLendDTO = addCondition(applyLendDTO);
 
@@ -1546,6 +1859,16 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     }
 
     @Override
+    public List<String> getAllUser() throws SerException {
+        List<UserBO> userBOS = userAPI.findAllUser();
+        List<String> lenderList = new ArrayList<>();
+        if( userBOS != null && userBOS.size()>0 ){
+            lenderList = userBOS.stream().map(UserBO::getUsername).collect(Collectors.toList());
+        }
+        return lenderList;
+    }
+
+    @Override
     public List<String> listLender() throws SerException {
         String[] fields = new String[]{"lender"};
         List<ApplyLend> list = super.findBySql(
@@ -1568,6 +1891,18 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         return areaList;
     }
+    @Override
+    public List<String> listPhoneArea() throws SerException {
+        List<AreaBO> list = departmentDetailAPI.findArea();
+        List<String> areaList = new ArrayList<>();
+        if( list!= null && list.size()>0 ){
+            areaList = list.stream().map(AreaBO::getArea).collect(Collectors.toList());
+        }
+        if( areaList != null && areaList.size()>0 ){
+            areaList = areaList.stream().distinct().collect(Collectors.toList());
+        }
+        return areaList;
+    }
 
     @Override
     public List<String> listProjectGroup() throws SerException {
@@ -1579,6 +1914,23 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
         return areaList;
+    }
+
+    @Override
+    public List<String> listPhoneProjectGroup(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO ) throws SerException {
+        String area = phoneApplyLendSelectDTO.getArea();
+        List<String> list = departmentDetailAPI.findDepartByArea( area);
+
+        return list;
+    }
+
+    @Override
+    public List<String> listPhoneProjectName(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
+        String area = phoneApplyLendSelectDTO.getArea();
+        String depart = phoneApplyLendSelectDTO.getProjectGroup();
+        List<String> list = departmentDetailAPI.findPnameByAreaAndDepart( area ,depart );
+
+        return list;
     }
 
     @Override
@@ -1862,4 +2214,200 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
+
+    @Override
+    public Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus, String lendId) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flag = false;
+        ApplyLend applyLend = super.findById(lendId);
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        String charger = applyLend.getCharger();
+        LendGuidePermissionTO guidePermissionTO = new LendGuidePermissionTO();
+        //待审核详情,负责人，财务权限，总经办权限
+        if (lendPhoneShowStatus.equals(LendPhoneShowStatus.WAITAUDIT)) {
+            guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.FINACEAUDIT);
+            Boolean finaceFlag = guidePermission(guidePermissionTO);
+            RpcTransmit.transmitUserToken(userToken);
+            guidePermissionTO = new LendGuidePermissionTO();
+            guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.MANAGEAUDIT);
+            Boolean manageFlag = guidePermission(guidePermissionTO);
+            RpcTransmit.transmitUserToken(userToken);
+            if (userName.equals(charger) || finaceFlag || manageFlag) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+        } else if (lendPhoneShowStatus.equals(LendPhoneShowStatus.WAITPAY)) {
+            //付款详情,只有有权限的人才可以付款
+            guidePermissionTO = new LendGuidePermissionTO();
+            guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.PAY);
+            flag = guidePermission(guidePermissionTO);
+            RpcTransmit.transmitUserToken(userToken);
+        } else if (lendPhoneShowStatus.equals(LendPhoneShowStatus.SURERECEIVE)) {
+            //确认收款详情,只有借款人和有权限的人才可以去确认收款
+            guidePermissionTO = new LendGuidePermissionTO();
+            guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.RECIVEMONEYSURE2);
+            Boolean sureReciveMoneyFlag = guidePermission(guidePermissionTO);
+            RpcTransmit.transmitUserToken(userToken);
+
+            if (userName.equals(applyLend.getLender()) || sureReciveMoneyFlag) {
+                flag = true;
+            }
+        } else if ("是".equals(applyLend.getReceivePay()) && applyLend.getLendRetunStatus().equals(LendRetunStatus.WAITRETURNCHECK) && lendPhoneShowStatus.equals(LendPhoneShowStatus.WAITRETURNCHECK)) {
+            //还款核对详情（包括网页版中的帐务核对）
+            guidePermissionTO = new LendGuidePermissionTO();
+            guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.RETURNCHECK);
+            flag = guidePermission(guidePermissionTO);
+            RpcTransmit.transmitUserToken(userToken);
+        } else if (lendPhoneShowStatus.equals(LendPhoneShowStatus.WAITTHAW)) {
+            //待解冻状态,只有admin和借款人有权限重新编辑
+            if (applyLend.getLender().equals(userName)) {
+                flag = true;
+            }
+
+        }
+
+        if ("是".equals(applyLend.getReceivePay()) && !applyLend.getLendRetunStatus().equals(LendRetunStatus.WAITRETURNCHECK) && applyLend.getLender().equals(userName)) {
+            //表示已确认付款，但还没填还款和还未进行还款核对
+            //只有借款人自己有权限可以操作”去还款“
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    @Override
+    public List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException {
+        //先查个人的
+        //再查所有的
+        LendPhoneSelectStatus lendPhoneSelectStatus = dto.getLendPhoneSelectStatus();
+        String userToken = RpcTransmit.getUserToken();
+        ApplyLendDTO applyLendDTO = new ApplyLendDTO();
+        List<ApplyLend> list = new ArrayList<>();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        switch (lendPhoneSelectStatus) {
+            case ALL:
+                break;
+            case WAITAUDIT:
+                //若没有审核权限的则只有借款人自己的数据，判断权限
+                LendGuidePermissionTO guidePermissionTO = new LendGuidePermissionTO();
+                guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.FINACEAUDIT);
+                Boolean finaceFlag = guidePermission(guidePermissionTO);
+                RpcTransmit.transmitUserToken(userToken);
+                guidePermissionTO = new LendGuidePermissionTO();
+                guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.MANAGEAUDIT);
+                Boolean manageFlag = guidePermission(guidePermissionTO);
+                RpcTransmit.transmitUserToken(userToken);
+                if (!finaceFlag && !manageFlag) {
+                    applyLendDTO.getConditions().add(Restrict.eq("lender", userName));
+                    applyLendDTO.getConditions().add(Restrict.or("charger", userName));
+                }
+                //只要审核
+                applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+                applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 3, 6, 7, 8, 9}));
+                break;
+            case WAITPAY:
+                guidePermissionTO = new LendGuidePermissionTO();
+                guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.PAY);
+                Boolean payFlag = guidePermission(guidePermissionTO);
+                RpcTransmit.transmitUserToken(userToken);
+                if (!payFlag) {
+                    applyLendDTO.getConditions().add(Restrict.eq("lender", userName));
+                }
+                //还未付款操作
+                applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+                applyLendDTO.getConditions().add(Restrict.in("lendStatus", new Integer[]{3, 7}));
+                break;
+            case HASLEND:
+                //每个人只能看到自己的,除了admin可以看到所有
+                if (!"admin".equals(userName.toLowerCase())) {
+                    applyLendDTO.getConditions().add(Restrict.eq("lender", userName));
+                }
+                //已付款，包括付款了还未确认收款
+                applyLendDTO.getConditions().add(Restrict.eq("payCondition", "是"));
+                applyLendDTO.getConditions().add(Restrict.isNull("receivePay"));
+
+                break;
+            case WAITRETURN:
+                guidePermissionTO = new LendGuidePermissionTO();
+                guidePermissionTO.setGuideAddrStatus(GuideAddrStatus.RETURNCHECK);
+                Boolean returnFlag = guidePermission(guidePermissionTO);
+                RpcTransmit.transmitUserToken(userToken);
+                if (!returnFlag) {
+                    applyLendDTO.getConditions().add(Restrict.eq("lender", userName));
+                }
+                //已付款了且已确认收款，且没有还款核对通过和帐务核对通过的数据，对应手机端（还款状态为未处理和审核不通过的情况）
+                applyLendDTO.getConditions().add(Restrict.eq("payCondition", "是"));
+                applyLendDTO.getConditions().add(Restrict.eq("receivePay", "是"));
+//                applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
+//                applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+                //还款状态为未处理和审核不通过和等待核对的情况
+                applyLendDTO.getConditions().add(Restrict.in("lendRetunStatus", new Integer[]{0, 1, 3}));
+                break;
+            case HASRETURN:
+                //每个人只能看到自己的,除了admin可以看到所有
+                if (!"admin".equals(userName.toLowerCase())) {
+                    applyLendDTO.getConditions().add(Restrict.eq("lender", userName));
+                }
+                //手机端还款核对（帐务核对）通过的
+                applyLendDTO.getConditions().add(Restrict.eq("lendRetunStatus", 2));
+                break;
+            case WAITTHAW:
+                //待解冻（负责人，总经办审核不通过的，即申请单有误的情况）
+                //每个人只能看到自己的,除了admin可以看到所有
+                if (!"admin".equals(userName.toLowerCase())) {
+                    applyLendDTO.getConditions().add(Restrict.eq("lender", userName));
+                }
+                applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{0, 1, 3, 4, 5, 7}));
+                break;
+            default:
+                break;
+        }
+
+        applyLendDTO.getSorts().add("modifyTime=desc");
+        applyLendDTO.setPage(dto.getPage() + 1);
+        applyLendDTO.setLimit(dto.getLimit());
+        list = super.findByPage(applyLendDTO);
+        List<ApplyLendBO> listBO = BeanTransform.copyProperties(list, ApplyLendBO.class);
+        if (listBO != null && listBO.size() > 0) {
+            for (ApplyLendBO str : listBO) {
+                String payCondition = str.getPayCondition();
+                LendStatus lendStatus = str.getLendStatus();
+                if ("否".equals(payCondition)) {
+                    if (!lendStatus.equals(LendStatus.CHARGENOTPASS) && !lendStatus.equals(LendStatus.CHARGESURECONGEL)
+                            && !lendStatus.equals(LendStatus.MANAGEPASS) && !lendStatus.equals(LendStatus.MANAGENOTPASS)
+                            && !lendStatus.equals(LendStatus.LISTERROR) && !lendStatus.equals(LendStatus.FINACEPASS)) {
+                        //待审核
+                        str.setLendPhoneSelectStatus(LendPhoneSelectStatus.WAITAUDIT);
+                    } else if (lendStatus.equals(LendStatus.FINACEPASS) || lendStatus.equals(LendStatus.MANAGEPASS)) {
+                        //待付款
+                        str.setLendPhoneSelectStatus(LendPhoneSelectStatus.WAITPAY);
+                    } else if (!lendStatus.equals(LendStatus.NONE) && !lendStatus.equals(LendStatus.CHARGEPASS)
+                            && !lendStatus.equals(LendStatus.FINACEPASS) && !lendStatus.equals(LendStatus.FINACENOTPASS)
+                            && !lendStatus.equals(LendStatus.FINACECONGEL) && !lendStatus.equals(LendStatus.MANAGEPASS)) {
+                        //待解冻
+                        str.setLendPhoneSelectStatus(LendPhoneSelectStatus.WAITTHAW);
+                    }
+                } else if ("是".equals(payCondition)) {
+                    LendRetunStatus lendRetunStatus = str.getLendRetunStatus();
+                    if (!"是".equals(str.getReceivePay())) {
+                        //已借款,付款后但未确认收款就是已借款
+                        //TODO 已借款和待还款界定
+                        str.setLendPhoneSelectStatus(LendPhoneSelectStatus.HASLEND);
+                    } else if ("是".equals(str.getReceivePay()) && !lendRetunStatus.equals(LendRetunStatus.PASS)) {
+                        //待还款(确认收款后的未经过还款核对和核对不通过)
+                        str.setLendPhoneSelectStatus(LendPhoneSelectStatus.WAITRETURN);
+                    } else if ("是".equals(str.getReceivePay()) && lendRetunStatus.equals(LendRetunStatus.PASS)) {
+                        //已还款
+                        str.setLendPhoneSelectStatus(LendPhoneSelectStatus.HASRETURN);
+                    }
+                }
+            }
+        }
+        return listBO;
+    }
 }

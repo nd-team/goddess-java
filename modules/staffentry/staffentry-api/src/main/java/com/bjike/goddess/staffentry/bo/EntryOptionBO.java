@@ -14,13 +14,14 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class EntryOptionBO extends BaseBO {
 
     /**
-     * 入职时间
-     */
-    private String entryTime;
-    /**
      * 姓名
      */
     private String name;
+
+    /**
+     * 入职时间
+     */
+    private String entryTime;
     /**
      * 员工编号
      */
@@ -34,14 +35,18 @@ public class EntryOptionBO extends BaseBO {
      * 学历
      */
     private String education;
-
-    public String getEntryTime() {
-        return entryTime;
-    }
-
-    public void setEntryTime(String entryTime) {
-        this.entryTime = entryTime;
-    }
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 部门/项目组
+     */
+    private String department;
+    /**
+     * 职位 
+     */
+    private String position;
 
     public String getName() {
         return name;
@@ -49,6 +54,14 @@ public class EntryOptionBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
     }
 
     public String getEmployeeID() {
@@ -73,5 +86,29 @@ public class EntryOptionBO extends BaseBO {
 
     public void setEducation(String education) {
         this.education = education;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

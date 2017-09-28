@@ -922,6 +922,7 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
+
     /**
      * 帐务核对记录
      *
@@ -1094,7 +1095,23 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取借款人
+     * 获取用户
+     *
+     * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
+     * @des 用于所有用户
+     * @version v1
+     */
+    @GetMapping("v1/getAllUser")
+    public Result getAllUser() throws ActException {
+        try {
+            List<String> areaList = applyLendAPI.getAllUser();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取借款人汇总
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取借款人集合
@@ -1111,7 +1128,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取地区
+     * 获取地区汇总
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取地区集合
@@ -1128,7 +1145,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目组
+     * 获取项目组汇总
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目组集合
@@ -1145,7 +1162,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目名
+     * 获取项目名汇总
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目名集合
