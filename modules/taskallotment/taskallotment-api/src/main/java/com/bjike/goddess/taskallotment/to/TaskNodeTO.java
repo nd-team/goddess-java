@@ -31,12 +31,16 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 项目名称
      */
-    private String project;
+    private String projectId;
     /**
      * 项目表id
      */
     @NotBlank(groups = {ADD.class}, message = "项目表id不能为空")
     private String tableId;
+    /**
+     * 项目表
+     */
+    private String table;
     /**
      * 任务名称
      */
@@ -226,6 +230,14 @@ public class TaskNodeTO extends BaseTO {
      */
     private List<CustomTitleTO> customTitles;
 
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
     public String getResult() {
         return result;
     }
@@ -258,12 +270,12 @@ public class TaskNodeTO extends BaseTO {
         this.depart = depart;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getTableId() {

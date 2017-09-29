@@ -580,6 +580,34 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
+    //chenjunhao
+    public DepartmentDetailBO areaAndDepart(String userId) throws SerException {
+        PositionDetailUserDTO detailUserDTO = new PositionDetailUserDTO();
+        detailUserDTO.getConditions().add(Restrict.eq("userId", userId));
+        List<PositionDetailUser> list = super.findByCis(detailUserDTO);
+        if (!list.isEmpty()) {
+            String id = list.get(0).getId();
+            String sql = "SELECT position_id id FROM organize_position_detail_user_table WHERE user_id = '" + id + "'";
+            String[] strings = new String[]{"id"};
+            List<PositionDetailBO> positionDetailBOS = super.findBySql(sql, PositionDetailBO.class, strings);
+            if (null != positionDetailBOS && !positionDetailBOS.isEmpty()) {
+                String pId=positionDetailBOS.get(0).getId();
+                String sql1 = "SELECT area,department " +
+                        "FROM organize_department_detail " +
+                        "WHERE id =" +
+                        "      (SELECT department_id " +
+                        "       FROM organize_position_detail " +
+                        "       WHERE id = " + pId + ")";
+                String[] fileds = new String[]{"area", "department"};
+                List<DepartmentDetailBO> areas = super.findBySql(sql1, DepartmentDetailBO.class, fileds);
+                if (null != areas && !areas.isEmpty()) {
+                    return areas.get(0);
+                }
+            }
+        }
+        return null;
+    }
+ @Override
     public Boolean isMarker(String userId) throws SerException {
         Boolean tar = false;
         String[] fildes = new String[]{"id"};

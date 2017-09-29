@@ -18,7 +18,7 @@ import com.bjike.goddess.taskallotment.to.CustomTitleTO;
 import com.bjike.goddess.taskallotment.to.QuestionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.user.api.UserAPI;
-import org.springframework.beans.BeanUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -77,27 +77,22 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 titles.add(customTitle);
             }
         }
-//        List<QuestionTO> questionTOS = to.getQuestions();
-//        List<Question> questions = new ArrayList<>();
-//        if (null != questionTOS) {
-//            for (QuestionTO questionTO : questionTOS) {
-//                Question question = BeanTransform.copyProperties(questionTO, Question.class, true);
-//                question.setTaskNode(entity);
-//                questions.add(question);
-//            }
-//        }
         TaskType taskType = entity.getTaskType();
         entity.setType(type(taskType));
         entity.setCustomTitles(titles);
-//        entity.setQuestions(questions);
         super.save(entity);
     }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void edit(TaskNodeTO to) throws SerException {
+        TaskNode entity = update(to);
+        super.update(entity);
+    }
+
+    private TaskNode update(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
-        Table table=entity.getTable();
+        Table table = entity.getTable();
         LocalDateTime a = entity.getCreateTime();
         List<CustomTitle> customTitles = entity.getCustomTitles();
         if (null != customTitles && !customTitles.isEmpty()) {
@@ -106,10 +101,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         QuestionDTO dto = new QuestionDTO();
         dto.getConditions().add(Restrict.eq("taskNode.id", entity.getId()));
         List<Question> questions = questionSer.findByCis(dto);
-        if (!questions.isEmpty()){
+        if (!questions.isEmpty()) {
             questionSer.remove(questions);
         }
-        entity = BeanTransform.copyProperties(to, TaskNode.class, true, "table", "taskStatus", "initiate");
+        entity = BeanTransform.copyProperties(to, TaskNode.class, true, "taskStatus", "initiate");
         entity.setCreateTime(a);
         TaskType taskType = entity.getTaskType();
         entity.setType(type(taskType));
@@ -140,7 +135,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setCustomTitles(customTitles1);
         entity.setTable(table);
         entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
+        return entity;
     }
 
     private String type(TaskType taskType) throws SerException {
@@ -250,7 +245,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     public Boolean checkTime(TaskNodeTO to) throws SerException {
         String execute = to.getExecute();
-        LocalDate date = DateUtil.parseDate(to.getStartTime());
+        if (null==execute){
+            throw new SerException("该任务没有执行人");
+        }
+        String time1=to.getStartTime().substring(0,to.getStartTime().indexOf(" "));
+        LocalDate date = DateUtil.parseDate(time1);
         TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{date, date}));
         dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{date, date}));
@@ -279,22 +278,14 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void initiateTask(TaskNodeTO to) throws SerException {
         String name = userAPI.currentUser().getUsername();
-        TaskNode entity = super.findById(to.getId());
-        List<CustomTitle> customTitles = entity.getCustomTitles();
-        if (null != customTitles && !customTitles.isEmpty()) {
-            customTitleSer.remove(customTitles);
-        }
-        TaskNode taskNode = BeanTransform.copyProperties(to, TaskNode.class, true);
-        BeanUtils.copyProperties(taskNode, entity, "table", "createTime", "id");
+        TaskNode entity = update(to);
         entity.setInitiate(name);
-        entity.setTaskStatus(TaskStatus.DOING);
-        entity.setType(type(entity.getTaskType()));
-        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         if (null != to.getExecute()) {
-            priority(taskNode);  //处理优先级
+            priority(entity);  //处理优先级
         }
         send(name, entity);
     }
@@ -303,7 +294,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     public void priority(TaskNode taskNode) throws SerException {
         String execute = taskNode.getExecute();
         String time = DateUtil.dateToString(taskNode.getStartTime());
-        time = time.substring(0, time.indexOf("T"));
+        int index = time.indexOf(" ");
+        time = time.substring(0, index);
         LocalDate date = DateUtil.parseDate(time);
         TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{date, date}));
@@ -384,14 +376,45 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void addTask(TaskNodeTO to) throws SerException {
         String name = userAPI.currentUser().getUsername();
-        String tableId = to.getTableId();
-        Table table = tableSer.findById(tableId);
-        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
-        entity.setTable(table);
+        String projectId = to.getProjectId();
+        String table = to.getTable();
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.getConditions().add(Restrict.eq("name", table));
+        List<Table> tables = tableSer.findByCis(tableDTO);
+        String tableId = null;
+        if (tables.isEmpty()) {
+            Table e = new Table();
+            e.setProject(projectSer.findById(projectId));
+            e.setName(table);
+            e.setStatus(Status.START);
+            tableSer.save(e);
+            tableId = e.getId();
+        } else {
+            tableId = tables.get(0).getId();
+        }
+        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true,"table");
+        entity.setTable(tableSer.findById(tableId));
         entity.setInitiate(name);
         entity.setTaskStatus(TaskStatus.DOING);
+        List<CustomTitleTO> titleTOS = to.getCustomTitles();
+        List<CustomTitle> titles = new ArrayList<>();
+        if (null != titleTOS) {
+            int i = 0;
+            for (CustomTitleTO titleTO : titleTOS) {
+                i++;
+                CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
+                customTitle.setTitleIndex(i);
+                customTitle.setTaskNode(entity);
+                titles.add(customTitle);
+            }
+        }
+        entity.setCustomTitles(titles);
+        entity.setType(type(entity.getTaskType()));
+        entity.setCreateTime(LocalDateTime.now());
+        entity.setModifyTime(LocalDateTime.now());
         super.save(entity);
         if (null != entity.getExecute()) {
             priority(entity);  //处理优先级

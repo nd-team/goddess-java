@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
@@ -11,7 +12,6 @@ import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
-import com.bjike.goddess.organize.vo.PhoneLoginUserInfoVO;
 import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
@@ -221,9 +221,11 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      * @throws SerException
      */
     List<DepartPositionBO> departPositions() throws SerException;
+
     /**
      * 获取用户名获取该员工状态
      * lijuntao
+     *
      * @return
      * @throws SerException
      */
@@ -231,6 +233,7 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
 
     /**
      * 检测是否在该部门
+     *
      * @param entity
      * @param positions
      * @return
@@ -239,6 +242,15 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException;
 
     /**
+     * chenjunhao
+     * 根据用户id获取该用户所属的部门地区
+     *
+     * @param userId userId
+     * @return
+     * @throws SerException
+     */
+    DepartmentDetailBO areaAndDepart(String userId) throws SerException;
+/*
      * 判断是否是市场专业人员
      *
      * @param userId
