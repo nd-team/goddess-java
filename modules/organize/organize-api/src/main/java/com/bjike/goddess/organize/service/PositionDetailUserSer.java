@@ -3,12 +3,15 @@ package com.bjike.goddess.organize.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.DepartPositionBO;
+import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
+import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
+import com.bjike.goddess.organize.vo.PhoneLoginUserInfoVO;
 import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
@@ -245,4 +248,17 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     default Boolean isMarker(String userId) throws SerException {
         return null;
     }
+
+
+    /**
+     * 手机端根据用户名获取体系和员工编号和性别
+     *
+     * @param phoneLoginUserInfoTO
+     * @return
+     * @throws SerException
+     */
+    default PhoneLoginUserInfoBO userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO) throws SerException {
+        return null;
+    }
+
 }

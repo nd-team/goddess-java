@@ -9,10 +9,13 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.DepartPositionBO;
+import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
+import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.organize.vo.DepartPositionVO;
+import com.bjike.goddess.organize.vo.PhoneLoginUserInfoVO;
 import com.bjike.goddess.organize.vo.PositionDetailUserVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.user.vo.UserVO;
@@ -244,4 +247,23 @@ public class PositionDetailUserAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据用户名获取体系和员工编号和性别
+     *
+     * @return class PhoneLoginUserInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/userName/userinfo")
+    public Result userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO , HttpServletRequest request) throws ActException {
+        try {
+            PhoneLoginUserInfoBO userBOS = positionDetailUserAPI.userLoginInfoByUserName(phoneLoginUserInfoTO);
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, PhoneLoginUserInfoVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

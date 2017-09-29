@@ -22,7 +22,7 @@ import java.util.Set;
 public class PositionDetailUser extends BaseEntity {
 
     /**
-     * 用户信息
+     * 用户表的信息
      */
     @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户信息'", unique = true)
     private String userId;

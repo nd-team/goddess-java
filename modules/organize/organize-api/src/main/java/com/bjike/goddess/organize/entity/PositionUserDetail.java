@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Table(name = "organize_position_user_detail")
 public class PositionUserDetail extends BaseEntity {
     /**
-     * 用户id
+     * 用户表id
      */
     @Column(nullable = false,columnDefinition = "VARCHAR(36) COMMENT '用户id'")
     private String userId;
