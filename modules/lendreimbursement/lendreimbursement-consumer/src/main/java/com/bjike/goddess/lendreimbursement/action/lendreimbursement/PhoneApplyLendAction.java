@@ -215,8 +215,8 @@ public class PhoneApplyLendAction extends BaseFileAction {
     private ApplyLendBO editAuditByManager(PhoneApplyLendChargerTO phoneApplyLendChargerTO) throws SerException {
             ApplyLendTO applyLendTO = new ApplyLendTO();
             applyLendTO.setId(phoneApplyLendChargerTO.getId());
-            applyLendTO.setFincerPass(phoneApplyLendChargerTO.getChargerPass());
-            applyLendTO.setFincerOpinion(phoneApplyLendChargerTO.getChargerOpinion());
+            applyLendTO.setManagerPass(phoneApplyLendChargerTO.getChargerPass());
+            applyLendTO.setManagerOpinion(phoneApplyLendChargerTO.getChargerOpinion());
 
             ApplyLendBO applyLendBO1 = applyLendAPI.editManageWaitAudit(applyLendTO);
             return applyLendBO1;
@@ -252,7 +252,9 @@ public class PhoneApplyLendAction extends BaseFileAction {
                     procingVO.setAuditTime(time.getYear() + "-" + time.getMonthValue() + "-" + time.getDayOfMonth());
                     procingVO.setProcing((StringUtils.isBlank(str.getPosition())?"":str.getPosition())
                             +"  审核人"+(StringUtils.isNotBlank(str.getAuditIdentity())?"("+str.getAuditIdentity()+")":"")
-                            +"："+str.getAuditor()+" <br>是否通过："+(str.getPassOr().equals("是")?"审核通过":"审核不通过") + "  <br>审核意见：" + str.getAuditSuggest());
+                            +"："+str.getAuditor()+" <br>是否通过："
+                            +(StringUtils.isBlank(str.getPassOr())? "":(str.getPassOr().equals("是")?"审核通过":"审核不通过"))
+                            + "  <br>审核意见：" + (StringUtils.isBlank(str.getAuditSuggest())? "":str.getAuditSuggest()));
                     list.add(procingVO);
                 }
             }
@@ -451,7 +453,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
 
 
     /**
-     * 还款核对有误编辑
+     * 手机版还款核对有误编辑
      *
      * @param phoneLendReturnSendTO 申请借款信息applyLendTO
      * @return class ApplyLendVO

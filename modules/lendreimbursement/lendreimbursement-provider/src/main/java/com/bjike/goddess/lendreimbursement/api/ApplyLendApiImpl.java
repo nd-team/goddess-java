@@ -259,6 +259,11 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
+    public ApplyLendBO editErrorReturn(ApplyLendTO applyLendTO) throws SerException {
+        return applyLendSer.editErrorReturn( applyLendTO );
+    }
+
+    @Override
     public Long countBusCheck(ApplyLendDTO applyLendDTO) throws SerException {
         return applyLendSer.countBusCheck(applyLendDTO);
     }
