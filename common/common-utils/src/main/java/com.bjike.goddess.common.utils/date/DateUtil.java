@@ -368,4 +368,18 @@ public class DateUtil {
             throw new SerException(e.getMessage());
         }
     }
+
+    /**
+     * chenjunhao
+     * 时间相减
+     * @param a 减数
+     * @param b 被减数
+     * @return
+     * @throws SerException
+     */
+    public static Long mis(LocalDateTime a,LocalDateTime b){
+        Long mis = a.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                - b.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return mis;
+    }
 }

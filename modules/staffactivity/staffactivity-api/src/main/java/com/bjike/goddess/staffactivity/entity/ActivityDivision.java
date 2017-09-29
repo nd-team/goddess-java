@@ -29,7 +29,7 @@ public class ActivityDivision extends BaseEntity {
     /**
      * 组织人员名单
      */
-    @Column(name = "organizers", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '组织人员名单'")
+    @Column(name = "organizers", nullable = false, columnDefinition = "TEXT COMMENT '组织人员名单'")
     private String organizers;
 
     /**
@@ -41,7 +41,7 @@ public class ActivityDivision extends BaseEntity {
     /**
      * 执行人员名单
      */
-    @Column(name = "executors", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '执行人员名单'")
+    @Column(name = "executors", nullable = false, columnDefinition = "TEXT COMMENT '执行人员名单'")
     private String executors;
 
     /**

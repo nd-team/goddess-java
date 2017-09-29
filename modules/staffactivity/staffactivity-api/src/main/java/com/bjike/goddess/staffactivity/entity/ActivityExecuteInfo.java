@@ -23,7 +23,7 @@ public class ActivityExecuteInfo extends BaseEntity {
     /**
      * 人员名单
      */
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '人员名单'")
+    @Column(name = "name", nullable = false, columnDefinition = "TEXT COMMENT '人员名单'")
     private String name;
 
     /**

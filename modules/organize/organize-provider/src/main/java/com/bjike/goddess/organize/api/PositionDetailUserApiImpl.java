@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.DepartPositionBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
@@ -154,6 +155,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
+    public DepartmentDetailBO areaAndDepart(String userId) throws SerException {
+        return positionDetailUserSer.areaAndDepart(userId);
+    }
+  @Override
     public Boolean isMarker(String userId) throws SerException {
         return positionDetailUserSer.isMarker(userId);
     }

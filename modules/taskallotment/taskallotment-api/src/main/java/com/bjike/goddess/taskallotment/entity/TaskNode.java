@@ -61,7 +61,7 @@ public class TaskNode extends BaseEntity{
     /**
      * 类型
      */
-    @Column(name = "taskContent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '类型'")
+    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '类型'")
     private String type;
 
     /**

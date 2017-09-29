@@ -212,23 +212,20 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
 //    }
 
     private String[] mEmails() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         Set<String> set = new HashSet<>();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO positionDetailBO : list1) {
-                if ("总经理".equals(positionDetailBO.getPosition())) {
+            PositionDetailBO p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).findFirst().get();
+            RpcTransmit.transmitUserToken(token);
+            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+            for (UserBO userBO : users) {
+                if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
-                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                    for (UserBO userBO : users) {
-                        if (moduleAPI.isCheck("contacts")) {
-                            RpcTransmit.transmitUserToken(token);
-                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                            if (mail != null) {
-                                set.add(mail);
-                            }
-                        }
+                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                    if (mail != null) {
+                        set.add(mail);
                     }
                 }
             }
@@ -239,20 +236,17 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     }
 
     private String[] zhEmails() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         Set<String> set = new HashSet<>();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            for (DepartmentDetailBO departmentDetailBO : list) {
-                if ("综合资源部".equals(departmentDetailBO.getDepartment())) {
-                    if (moduleAPI.isCheck("contacts")) {
-                        RpcTransmit.transmitUserToken(token);
-                        CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                        if (commonality != null&&commonality.getEmail()!=null) {
-                            set.add(commonality.getEmail());
-                        }
-                    }
+            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            if (moduleAPI.isCheck("contacts")) {
+                RpcTransmit.transmitUserToken(token);
+                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
+                if (commonality != null && commonality.getEmail() != null) {
+                    set.add(commonality.getEmail());
                 }
             }
         }
@@ -263,22 +257,19 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
 
     private String[] flEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            for (PositionDetailBO positionDetailBO : list1) {
-                if ("综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())) {
+            PositionDetailBO p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).findFirst().get();
+            RpcTransmit.transmitUserToken(token);
+            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
+            for (UserBO userBO : users) {
+                if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
-                    List<UserBO> users = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
-                    for (UserBO userBO : users) {
-                        if (moduleAPI.isCheck("contacts")) {
-                            RpcTransmit.transmitUserToken(token);
-                            String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                            if (mail != null) {
-                                set.add(mail);
-                            }
-                        }
+                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                    if (mail != null) {
+                        set.add(mail);
                     }
                 }
             }
@@ -298,8 +289,9 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         MessageTO messageTO = new MessageTO();
         messageTO.setTitle("社保减员前参考信息,请审阅");
         messageTO.setContent(html(beforeRemoveEmployeeBO));
-        messageTO.setReceivers(mEmails());
-        if (mEmails() != null && mEmails().length > 0) {
+        String[] strings=mEmails();
+        if (strings != null && strings.length > 0) {
+            messageTO.setReceivers(strings);
             messageAPI.send(messageTO);
         }
         return beforeRemoveEmployeeBO;
@@ -382,7 +374,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     @Override
     //每12小时执行一次
     public void send() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("dimission")) {
             RpcTransmit.transmitUserToken(token);
             List<DimissionInfoBO> list = dimissionInfoAPI.all();
