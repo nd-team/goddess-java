@@ -27,6 +27,7 @@ import com.bjike.goddess.user.entity.UserDetail;
 
 import com.bjike.goddess.user.entity.Department;
 
+import com.bjike.goddess.user.entity.Department;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
