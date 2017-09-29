@@ -5,27 +5,31 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.royalty.bo.IndexLibraryBO;
+import com.bjike.goddess.royalty.bo.RoyaltyCollectBO;
 import com.bjike.goddess.royalty.dto.IndexLibraryDTO;
-import com.bjike.goddess.royalty.entity.CusPermission;
 import com.bjike.goddess.royalty.entity.IndexLibrary;
-import com.bjike.goddess.royalty.entity.JobsBet;
-import com.bjike.goddess.royalty.entity.SystemBet;
 import com.bjike.goddess.royalty.enums.GuideAddrStatus;
 import com.bjike.goddess.royalty.excel.SonPermissionObject;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.IndexLibraryTO;
+import com.bjike.goddess.royalty.to.RoyaltyCollectTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.util.LazilyConcatenatedByteArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +55,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
     private DepartmentBetSer departmentBetSer;
     @Autowired
     private JobsBetSer jobsBetSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -237,16 +242,17 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
         }
         return flag;
     }
+
     @Override
     public Long count(IndexLibraryDTO dto) throws SerException {
-       Long count = super.count(dto);
+        Long count = super.count(dto);
         return count;
     }
 
     @Override
     public IndexLibraryBO getOne(String id) throws SerException {
         IndexLibrary indexLibrary = super.findById(id);
-        return BeanTransform.copyProperties(indexLibrary,IndexLibraryBO.class);
+        return BeanTransform.copyProperties(indexLibrary, IndexLibraryBO.class);
     }
 
     @Override
@@ -254,7 +260,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
         checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<IndexLibrary> indexLibraries = super.findByPage(dto);
-        List<IndexLibraryBO> indexLibraryBOS = BeanTransform.copyProperties(indexLibraries,IndexLibraryBO.class);
+        List<IndexLibraryBO> indexLibraryBOS = BeanTransform.copyProperties(indexLibraries, IndexLibraryBO.class);
         return indexLibraryBOS;
     }
 
@@ -262,10 +268,10 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
     @Override
     public IndexLibraryBO insert(IndexLibraryTO indexLibraryTO) throws SerException {
         checkAddIdentity();
-        IndexLibrary indexLibrary = BeanTransform.copyProperties(indexLibraryTO,IndexLibrary.class,true);
+        IndexLibrary indexLibrary = BeanTransform.copyProperties(indexLibraryTO, IndexLibrary.class, true);
         indexLibrary.setCreateTime(LocalDateTime.now());
         super.save(indexLibrary);
-        return BeanTransform.copyProperties(indexLibrary,IndexLibraryBO.class);
+        return BeanTransform.copyProperties(indexLibrary, IndexLibraryBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -273,10 +279,10 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
     public IndexLibraryBO edit(IndexLibraryTO indexLibraryTO) throws SerException {
         checkAddIdentity();
         IndexLibrary indexLibrary = super.findById(indexLibraryTO.getId());
-        BeanTransform.copyProperties(indexLibraryTO,indexLibrary,true);
+        BeanTransform.copyProperties(indexLibraryTO, indexLibrary, true);
         indexLibrary.setModifyTime(LocalDateTime.now());
         super.update(indexLibrary);
-        return BeanTransform.copyProperties(indexLibrary,IndexLibraryBO.class);
+        return BeanTransform.copyProperties(indexLibrary, IndexLibraryBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -285,6 +291,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
         checkAddIdentity();
         super.remove(id);
     }
+
     @Override
     public List<String> getIndexNum() throws SerException {
         String[] fields = new String[]{"indexNum"};
@@ -314,11 +321,230 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
         if (StringUtils.isNotBlank(indexNum)) {
             IndexLibraryDTO dto = new IndexLibraryDTO();
             dto.getConditions().add(Restrict.eq("indexNum", indexNum));
-            IndexLibrary indexLibrary= super.findOne(dto);
+            IndexLibrary indexLibrary = super.findOne(dto);
             IndexLibraryBO bo = BeanTransform.copyProperties(indexLibrary, IndexLibraryBO.class);
             return bo;
         }
         return null;
     }
 
+    @Override
+    public List<RoyaltyCollectBO> dayRoyalty(RoyaltyCollectTO to) throws SerException {
+        LocalDate time = null;
+        if (to.getTime() != null) {
+            time = DateUtil.parseDate(to.getTime());
+        } else {
+            time = LocalDate.now();
+        }
+        List<RoyaltyCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT a.area AS area,c.department AS department, " +
+                " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
+                " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
+                " WHERE betTime = '" + time + "' " +
+                " GROUP BY area,department ";
+        String[] fields = new String[]{"area", "department", "bet", "practiceProfit"};
+
+        List<RoyaltyCollectBO> royaltyCollectBOS = super.findBySql(sql, RoyaltyCollectBO.class, fields);
+
+        for (RoyaltyCollectBO bo : royaltyCollectBOS) {
+            String[] total = new String[]{"resourceProfit"};
+            sql = " SELECT  d.totalScorePractice as resourceProfit  FROM royalty_jobsbetc c,royalty_jobsbetd d " +
+                    "WHERE c.department='" + bo.getDepartment() + "' ";
+            List<RoyaltyCollectBO> collectBOS = super.findBySql(sql, RoyaltyCollectBO.class, total);
+            for (RoyaltyCollectBO collectBO : collectBOS) {
+
+                if (bo.getDepartment().equals("综合资源部")) {
+                    bo.setResourceProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setResourceProfit(0.0);
+                }
+                if (bo.getDepartment().equals("财务发展部")) {
+                    bo.setAccountProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setAccountProfit(0.0);
+                }
+            }
+            //todo 以下表头需求方只说了大的模块，没有具体到哪个模块哪张表，要等到时候再问需求方
+            //todo 已立项 （商务合同）
+            //todo 已确定提成分配比例项目数 (项目提成)
+            //TODO 计划利润额 (项目提成)
+            //todo 实际分值（利润额） (项目提成)
+            //todo 实际分值（利润额）-计划利润额
+            //todo 已完工项目  （商务合同）
+            //todo 已回款项目 （回款）
+            boList.add(bo);
+        }
+
+        return boList;
+    }
+
+    @Override
+    public List<RoyaltyCollectBO> weekRoyalty(RoyaltyCollectTO to) throws SerException {
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        LocalDate start = time[0];
+        LocalDate end = time[1];
+        List<RoyaltyCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT a.area AS area,c.department AS department, " +
+                " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
+                " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
+                " WHERE betTime between '" + start + "' and '" + end + "' " +
+                " GROUP BY area,department ";
+        String[] fields = new String[]{"area", "department", "bet", "practiceProfit"};
+
+        List<RoyaltyCollectBO> royaltyCollectBOS = super.findBySql(sql, RoyaltyCollectBO.class, fields);
+
+        for (RoyaltyCollectBO bo : royaltyCollectBOS) {
+            String[] total = new String[]{"resourceProfit"};
+            sql = " SELECT  d.totalScorePractice as resourceProfit  FROM royalty_jobsbetc c,royalty_jobsbetd d " +
+                    "WHERE c.department='" + bo.getDepartment() + "' ";
+            List<RoyaltyCollectBO> collectBOS = super.findBySql(sql, RoyaltyCollectBO.class, total);
+            for (RoyaltyCollectBO collectBO : collectBOS) {
+
+                if (bo.getDepartment().equals("综合资源部")) {
+                    bo.setResourceProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setResourceProfit(0.0);
+                }
+                if (bo.getDepartment().equals("财务发展部")) {
+                    bo.setAccountProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setAccountProfit(0.0);
+                }
+            }
+            boList.add(bo);
+            //todo 以下表头需求方只说了大的模块，没有具体到哪个模块哪张表，要等到时候再问需求方
+            //todo 已立项 （商务合同）
+            //todo 已确定提成分配比例项目数 (项目提成)
+            //TODO 计划利润额 (项目提成)
+            //todo 实际分值（利润额） (项目提成)
+            //todo 实际分值（利润额）-计划利润额
+            //todo 已完工项目  （商务合同）
+            //todo 已回款项目 （回款）
+        }
+
+        return boList;
+    }
+
+    @Override
+    public List<RoyaltyCollectBO> monthRoyalty(RoyaltyCollectTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        List<RoyaltyCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT a.area AS area,c.department AS department, " +
+                " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
+                " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
+                " WHERE year(betTime) = '" + year + "' month(betTime) = '" + month + "' " +
+                " GROUP BY area,department ";
+        String[] fields = new String[]{"area", "department", "bet", "practiceProfit"};
+
+        List<RoyaltyCollectBO> royaltyCollectBOS = super.findBySql(sql, RoyaltyCollectBO.class, fields);
+
+        for (RoyaltyCollectBO bo : royaltyCollectBOS) {
+            String[] total = new String[]{"resourceProfit"};
+            sql = " SELECT  d.totalScorePractice as resourceProfit  FROM royalty_jobsbetc c,royalty_jobsbetd d " +
+                    "WHERE c.department='" + bo.getDepartment() + "' ";
+            List<RoyaltyCollectBO> collectBOS = super.findBySql(sql, RoyaltyCollectBO.class, total);
+            for (RoyaltyCollectBO collectBO : collectBOS) {
+
+                if (bo.getDepartment().equals("综合资源部")) {
+                    bo.setResourceProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setResourceProfit(0.0);
+                }
+                if (bo.getDepartment().equals("财务发展部")) {
+                    bo.setAccountProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setAccountProfit(0.0);
+                }
+            }
+            boList.add(bo);
+            //todo 以下表头需求方只说了大的模块，没有具体到哪个模块哪张表，要等到时候再问需求方
+            //todo 已立项 （商务合同）
+            //todo 已确定提成分配比例项目数 (项目提成)
+            //TODO 计划利润额 (项目提成)
+            //todo 实际分值（利润额） (项目提成)
+            //todo 实际分值（利润额）-计划利润额
+            //todo 已完工项目  （商务合同）
+            //todo 已回款项目 （回款）
+        }
+
+        return boList;
+    }
+
+    @Override
+    public List<RoyaltyCollectBO> totalRoyalty(RoyaltyCollectTO to) throws SerException {
+        LocalDate end = null;
+        if (to.getTime() != null) {
+            end = DateUtil.parseDate(to.getTime());
+        } else {
+            end = LocalDate.now();
+        }
+        List<RoyaltyCollectBO> boList = new ArrayList<>();
+        String sql = " SELECT a.area AS area,c.department AS department, " +
+                " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
+                " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
+                " WHERE betTime <= '" + end + "' " +
+                " GROUP BY area,department ";
+        String[] fields = new String[]{"area", "department", "bet", "practiceProfit"};
+
+        List<RoyaltyCollectBO> royaltyCollectBOS = super.findBySql(sql, RoyaltyCollectBO.class, fields);
+
+        for (RoyaltyCollectBO bo : royaltyCollectBOS) {
+            String[] total = new String[]{"resourceProfit"};
+            sql = " SELECT  d.totalScorePractice as resourceProfit  FROM royalty_jobsbetc c,royalty_jobsbetd d " +
+                    "WHERE c.department='" + bo.getDepartment() + "' ";
+            List<RoyaltyCollectBO> collectBOS = super.findBySql(sql, RoyaltyCollectBO.class, total);
+            for (RoyaltyCollectBO collectBO : collectBOS) {
+
+                if (bo.getDepartment().equals("综合资源部")) {
+                    bo.setResourceProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setResourceProfit(0.0);
+                }
+                if (bo.getDepartment().equals("财务发展部")) {
+                    bo.setAccountProfit(collectBO.getResourceProfit());
+                } else {
+                    bo.setAccountProfit(0.0);
+                }
+            }
+            boList.add(bo);
+            //todo 以下表头需求方只说了大的模块，没有具体到哪个模块哪张表，要等到时候再问需求方
+            //todo 已立项 （商务合同）
+            //todo 已确定提成分配比例项目数 (项目提成)
+            //TODO 计划利润额 (项目提成)
+            //todo 实际分值（利润额） (项目提成)
+            //todo 实际分值（利润额）-计划利润额
+            //todo 已完工项目  （商务合同）
+            //todo 已回款项目 （回款）
+        }
+
+        return boList;
+    }
 }

@@ -43,9 +43,17 @@ public class SystemBetCTO extends BaseTO {
      */
     private Boolean standard;
     /**
-     * 对赌得分（分值*目标-部门分配对赌权重）
+     * 目标对赌得分（分值（利润额）*目标-部门分配对赌权重）
      */
     private Double betScore;
+    /**
+     * 计划对赌得分（计划分值（利润额）*目标-部门分配对赌权重）
+     */
+    private Double betScorePlan;
+    /**
+     * 实际对赌得分（实际分值（利润额）*目标-部门分配对赌权重）
+     */
+    private Double betScorePractice;
     /**
      * 体系间对赌表D
      */
@@ -107,6 +115,21 @@ public class SystemBetCTO extends BaseTO {
         this.betScore = betScore;
     }
 
+    public Double getBetScorePlan() {
+        return betScorePlan;
+    }
+
+    public void setBetScorePlan(Double betScorePlan) {
+        this.betScorePlan = betScorePlan;
+    }
+
+    public Double getBetScorePractice() {
+        return betScorePractice;
+    }
+
+    public void setBetScorePractice(Double betScorePractice) {
+        this.betScorePractice = betScorePractice;
+    }
 
     public List<SystemBetETO> getSystemBetETOS() {
         return systemBetETOS;

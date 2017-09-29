@@ -10,10 +10,7 @@ import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
 import com.bjike.goddess.royalty.entity.DepartmentBet;
 import com.bjike.goddess.royalty.entity.DepartmentBetA;
 import com.bjike.goddess.royalty.service.DepartmentBetSer;
-import com.bjike.goddess.royalty.to.DepartmentBetATO;
-import com.bjike.goddess.royalty.to.DepartmentBetTO;
-import com.bjike.goddess.royalty.to.GuidePermissionTO;
-import com.bjike.goddess.royalty.to.SystemBetATO;
+import com.bjike.goddess.royalty.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,5 +67,9 @@ public class DepartmentBetApiImpl implements DepartmentBetAPI {
     @Override
     public void delete(String id) throws SerException {
         departmentBetSer.delete(id);
+    }
+    @Override
+    public List<DepartmentBetABO> departmentCollect(ProjectNameTO to) throws SerException {
+        return departmentBetSer.departmentCollect(to);
     }
 }

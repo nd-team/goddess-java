@@ -228,4 +228,14 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @throws SerException
      */
     String findNameById(String id) throws SerException;
+
+    /**
+     * 获取部门人员
+     *
+     * @return UserBO
+     * @throws SerException
+     */
+    default List<UserBO> findByDept(String ... department  ) throws SerException {
+        return null;
+    }
 }

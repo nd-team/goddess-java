@@ -30,10 +30,7 @@ import com.bjike.goddess.secure.entity.AddEmployee;
 import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.entity.BeforeAdd;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
-import com.bjike.goddess.secure.to.AddEmployeeTO;
-import com.bjike.goddess.secure.to.BuyTO;
-import com.bjike.goddess.secure.to.EmployeeSecureTO;
-import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.*;
 import com.bjike.goddess.secure.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -1054,5 +1051,29 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<AddEmployeeBO> byName(NameTO to) throws SerException {
+        List<AddEmployee> addEmployees = new ArrayList<>();
+        if(to.getNames() != null){
+
+            AddEmployeeDTO dto=new AddEmployeeDTO();
+            dto.getConditions().add(Restrict.in("name",to.getNames()));
+            addEmployees =  super.findByCis(dto);
+
+        }
+        List<AddEmployeeBO> bos = BeanTransform.copyProperties(addEmployees,AddEmployeeBO.class);
+        return bos;
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<AddEmployee> list = super.findAll();
+        for(AddEmployee a:list){
+            set.add(a.getName());
+        }
+        return set;
     }
 }

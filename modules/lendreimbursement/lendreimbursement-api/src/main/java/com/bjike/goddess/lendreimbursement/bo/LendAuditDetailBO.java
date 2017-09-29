@@ -19,12 +19,19 @@ public class LendAuditDetailBO extends BaseBO {
      * 职位名称
      */
     private String position;
+    /**
+     * 员工编号
+     */
+    private String empNumber;
 
     /**
      * 审核人
      */
     private String auditor;
-
+    /**
+     * 审核身份（负责人/财务/总经办）
+     */
+    private String auditIdentity;
     /**
      * 审核意见
      */
@@ -62,6 +69,14 @@ public class LendAuditDetailBO extends BaseBO {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getEmpNumber() {
+        return empNumber;
+    }
+
+    public void setEmpNumber(String empNumber) {
+        this.empNumber = empNumber;
     }
 
     public String getAuditor() {
@@ -118,5 +133,13 @@ public class LendAuditDetailBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getAuditIdentity() {
+        return auditIdentity;
+    }
+
+    public void setAuditIdentity(String auditIdentity) {
+        this.auditIdentity = auditIdentity;
     }
 }

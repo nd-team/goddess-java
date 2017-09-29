@@ -3,6 +3,7 @@ package com.bjike.goddess.user.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
@@ -244,4 +245,13 @@ public interface UserAPI {
      */
     String findNameById(String id) throws SerException;
 
+    /**
+     * 获取部门人员
+     *@param department id或者部门名
+     * @return UserBO
+     * @throws SerException
+     */
+    default List<UserBO> findByDept(String ... department  ) throws SerException {
+        return null;
+    }
 }

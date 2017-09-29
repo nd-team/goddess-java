@@ -1,6 +1,10 @@
 package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.task.bo.collect.Collect;
+import com.bjike.goddess.task.dto.CollectDTO;
+import com.bjike.goddess.task.service.ScheduleSer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +16,12 @@ import org.springframework.stereotype.Service;
  */
 @Service("scheduleApiImpl")
 public class ScheduleApiImpl implements ScheduleAPI {
+    @Autowired
+    private ScheduleSer scheduleSer;
+
     @Override
-    public String detail(String projectId) throws SerException {
-        return null;
+    public String collect(CollectDTO dto) throws SerException {
+        Collect collect = scheduleSer.collect(dto);
+        return scheduleSer.buildCollectHtml(collect,dto.getType());
     }
 }

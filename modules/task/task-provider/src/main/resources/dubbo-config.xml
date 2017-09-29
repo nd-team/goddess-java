@@ -30,6 +30,7 @@
     <dubbo:service interface="com.bjike.goddess.task.api.NodeAPI" ref="nodeApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.task.api.ProblemAPI" ref="problemApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.task.api.ProblemTypeAPI" ref="problemTypeApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.CustomizeAPI" ref="customizeApiImpl"/>
 
     <!--接口引用-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>

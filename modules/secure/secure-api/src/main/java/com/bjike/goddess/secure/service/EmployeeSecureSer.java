@@ -7,8 +7,10 @@ import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工社保基本信息业务接口
@@ -111,4 +113,18 @@ public interface EmployeeSecureSer extends Ser<EmployeeSecure, EmployeeSecureDTO
      * @throws SerException
      */
     Long count(EmployeeSecureDTO dto) throws SerException;
+    /**
+     * 根据姓名查找
+     *
+     * @param to to
+     * @return EmployeeSecureBO
+     * @throws SerException
+     */
+    List<EmployeeSecureBO> byName(NameTO to) throws SerException;
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
 }

@@ -58,6 +58,12 @@ public class WorkRange extends BaseEntity {
     private Status status;
 
     /**
+     * 八大平台中状态
+     */
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '八大平台中状态'", nullable = false, insertable = false)
+    private Status status1;
+
+    /**
      * 创建时间
      */
     @Column(columnDefinition = "DATETIME COMMENT '创建时间'", nullable = false)
@@ -136,4 +142,11 @@ public class WorkRange extends BaseEntity {
         this.createTime = createTime;
     }
 
+    public Status getStatus1() {
+        return status1;
+    }
+
+    public void setStatus1(Status status1) {
+        this.status1 = status1;
+    }
 }

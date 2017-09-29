@@ -234,7 +234,7 @@ public class DepartmentDetailAct {
     @GetMapping("v1/findThawOpinion")
     public Result findThawOpinion() throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findThawOpinion(), OpinionVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(departmentDetailAPI.findThawOpinion(), OpinionVO.class));  
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

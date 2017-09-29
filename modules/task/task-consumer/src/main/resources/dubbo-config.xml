@@ -29,6 +29,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ScheduleAPI" id="scheduleApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProblemAPI" id="problemApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProblemTypeAPI" id="problemTypeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeAPI" id="customizeApiImpl"/>
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>

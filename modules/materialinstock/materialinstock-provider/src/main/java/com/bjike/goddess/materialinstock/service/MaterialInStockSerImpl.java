@@ -314,7 +314,9 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
      * @throws SerException
      */
     private void updateMaterialInStock(MaterialInStockTO to, MaterialInStock model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime date =  model.getCreateTime();
+        model = BeanTransform.copyProperties(to, MaterialInStock.class, true);
+        model.setCreateTime(date);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

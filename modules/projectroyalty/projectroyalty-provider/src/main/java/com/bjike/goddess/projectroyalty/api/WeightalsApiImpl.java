@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectroyalty.bo.CollectBO;
 import com.bjike.goddess.projectroyalty.bo.WeightalsBO;
 import com.bjike.goddess.projectroyalty.dto.WeightalsDTO;
+import com.bjike.goddess.projectroyalty.enums.Type;
 import com.bjike.goddess.projectroyalty.service.WeightalsSer;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
@@ -95,5 +96,10 @@ public class WeightalsApiImpl implements WeightalsAPI {
     @Override
     public List<CollectBO> totalCollect() throws SerException {
         return weightalsSer.totalCollect();
+    }
+
+    @Override
+    public Double findAimAmount(String projectName, Type type) throws SerException {
+        return weightalsSer.findAimAmount(projectName, type);
     }
 }

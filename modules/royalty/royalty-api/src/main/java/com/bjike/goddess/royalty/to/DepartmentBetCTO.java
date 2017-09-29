@@ -16,100 +16,145 @@ import java.util.List;
 public class DepartmentBetCTO extends BaseTO {
 
     /**
-     * 目标-部门分配对赌权重（%）
+     * 部门
      */
-    private Double betWeight;
+    private String department;
 
     /**
-     * 指标编号
+     * 目标-部门分配基础权重（%）
      */
-    private String indexNum;
+    private Double baseWeight;
 
     /**
-     * 指标名称
+     * 目标基础得分（分值（利润额）*目标-部门分配基础权重）
      */
-    private String indexName;
+    private Double basesScore;
+    /**
+     * 计划基础得分（计划分值（利润额）*目标-部门分配基础权重）
+     */
+    private Double basesScorePlan;
+    /**
+     * 实际基础得分（实际分值（利润额）*目标-部门分配基础权重）
+     */
+    private Double basesScorePractice;
+    /**
+     * 目标制约得分
+     */
+    private Double restrictScore;
+    /**
+     * 计划制约得分
+     */
+    private Double restrictScorePlan;
+    /**
+     * 实际制约得分
+     */
+    private Double restrictScorePractice;
 
     /**
-     * 部门对赌承诺-确认目标值
+     * 体系目标总得分（目标制约得分+目标基础得分）
      */
-    private String confirmTargetValue;
+    private Double departmentTotalScore;
+    /**
+     * 体系计划总得分（计划制约得分+计划基础得分）
+     */
+    private Double departmentTotalScorePlan;
+    /**
+     * 体系实际总得分（实际制约得分+实际基础得分）
+     */
+    private Double departmentTotalScorePractice;
 
     /**
-     * 实际目标值
-     */
-    private String actualTargetValue;
-
-    /**
-     * 项目对赌是否达标
-     */
-    private Boolean standard;
-    /**
-     * 对赌得分（部门总得分*目标-部门分配对赌权重）
-     */
-    private Double betScore;
-    /**
-     * 体系间对赌表D
+     * 部门间对赌表D
      */
     private List<DepartmentBetETO> departmentBetETOS;
 
-
-    public String getIndexNum() {
-        return indexNum;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setIndexNum(String indexNum) {
-        this.indexNum = indexNum;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
-    public String getIndexName() {
-        return indexName;
+    public Double getBaseWeight() {
+        return baseWeight;
     }
 
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
+    public void setBaseWeight(Double baseWeight) {
+        this.baseWeight = baseWeight;
     }
 
-    public String getConfirmTargetValue() {
-        return confirmTargetValue;
+    public Double getBasesScore() {
+        return basesScore;
     }
 
-    public void setConfirmTargetValue(String confirmTargetValue) {
-        this.confirmTargetValue = confirmTargetValue;
+    public void setBasesScore(Double basesScore) {
+        this.basesScore = basesScore;
     }
 
-    public String getActualTargetValue() {
-        return actualTargetValue;
+    public Double getBasesScorePlan() {
+        return basesScorePlan;
     }
 
-    public void setActualTargetValue(String actualTargetValue) {
-        this.actualTargetValue = actualTargetValue;
+    public void setBasesScorePlan(Double basesScorePlan) {
+        this.basesScorePlan = basesScorePlan;
     }
 
-    public Boolean getStandard() {
-        return standard;
+    public Double getBasesScorePractice() {
+        return basesScorePractice;
     }
 
-    public void setStandard(Boolean standard) {
-        this.standard = standard;
+    public void setBasesScorePractice(Double basesScorePractice) {
+        this.basesScorePractice = basesScorePractice;
     }
 
-    public Double getBetWeight() {
-        return betWeight;
+    public Double getRestrictScore() {
+        return restrictScore;
     }
 
-    public void setBetWeight(Double betWeight) {
-        this.betWeight = betWeight;
+    public void setRestrictScore(Double restrictScore) {
+        this.restrictScore = restrictScore;
     }
 
-    public Double getBetScore() {
-        return betScore;
+    public Double getRestrictScorePlan() {
+        return restrictScorePlan;
     }
 
-    public void setBetScore(Double betScore) {
-        this.betScore = betScore;
+    public void setRestrictScorePlan(Double restrictScorePlan) {
+        this.restrictScorePlan = restrictScorePlan;
     }
 
+    public Double getRestrictScorePractice() {
+        return restrictScorePractice;
+    }
+
+    public void setRestrictScorePractice(Double restrictScorePractice) {
+        this.restrictScorePractice = restrictScorePractice;
+    }
+
+    public Double getDepartmentTotalScore() {
+        return departmentTotalScore;
+    }
+
+    public void setDepartmentTotalScore(Double departmentTotalScore) {
+        this.departmentTotalScore = departmentTotalScore;
+    }
+
+    public Double getDepartmentTotalScorePlan() {
+        return departmentTotalScorePlan;
+    }
+
+    public void setDepartmentTotalScorePlan(Double departmentTotalScorePlan) {
+        this.departmentTotalScorePlan = departmentTotalScorePlan;
+    }
+
+    public Double getDepartmentTotalScorePractice() {
+        return departmentTotalScorePractice;
+    }
+
+    public void setDepartmentTotalScorePractice(Double departmentTotalScorePractice) {
+        this.departmentTotalScorePractice = departmentTotalScorePractice;
+    }
 
     public List<DepartmentBetETO> getDepartmentBetETOS() {
         return departmentBetETOS;

@@ -3,6 +3,8 @@ package com.bjike.goddess.task.action;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.api.ScheduleAPI;
+import com.bjike.goddess.task.bo.collect.Collect;
+import com.bjike.goddess.task.dto.CollectDTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,15 +30,14 @@ public class ScheduleAct {
     private ScheduleAPI scheduleAPI;
 
     /**
-     * 一个项目所有详情
-     * @param projectId
+     * 汇总
      * @return
      * @throws ActException
      */
-    @GetMapping("v1/detail/{projectId}")
-    public String detail(@PathVariable String projectId) throws ActException {
+    @GetMapping("v1/collect")
+    public String collect(CollectDTO dto) throws ActException {
         try {
-            String result = scheduleAPI.detail(projectId);
+            String result = scheduleAPI.collect(dto);
             return result;
         } catch (SerException e) {
             throw new ActException(e.getMessage());

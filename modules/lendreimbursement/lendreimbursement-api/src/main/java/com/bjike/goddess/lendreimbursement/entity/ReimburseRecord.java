@@ -65,7 +65,7 @@ public class ReimburseRecord extends BaseEntity {
     /**
      * 补充内容
      */
-    @Column(name = "addContent",  columnDefinition = "VARCHAR(255)   COMMENT '补充内容'")
+    @Column(name = "addContent",  columnDefinition = "TEXT   COMMENT '补充内容'")
     private String addContent;
 
     /**
@@ -107,7 +107,7 @@ public class ReimburseRecord extends BaseEntity {
     /**
      * 报销人备注
      */
-    @Column(name = "reimerRemark",  columnDefinition = "VARCHAR(255)   COMMENT '报销人备注'")
+    @Column(name = "reimerRemark",  columnDefinition = "TEXT   COMMENT '报销人备注'")
     private String reimerRemark;
 
     /**
@@ -145,7 +145,11 @@ public class ReimburseRecord extends BaseEntity {
      */
     @Column(name = "receiveTicketCheck",  columnDefinition = "VARCHAR(255)   COMMENT '是否已收到单据(是/否)'")
     private String receiveTicketCheck;
-
+    /**
+     * 帐务核对是否通过（是/否）
+     */
+    @Column(name = "accountCheckPassOr",  columnDefinition = "VARCHAR(255)   COMMENT '帐务核对是否通过(是/否)'")
+    private String accountCheckPassOr;
     /**
      * 预计付款时间
      */
@@ -165,16 +169,35 @@ public class ReimburseRecord extends BaseEntity {
     private String chargerAuditStatus;
 
     /**
-     * 审核时间
+     * 负责人审核时间
      */
     @Column(name = "chargerAuditTime",  columnDefinition = "DATE  COMMENT '审核时间'")
     private LocalDate chargerAuditTime;
 
     /**
-     * 审核意见
+     * 负责人审核意见
      */
     @Column(name = "auditAdvice",  columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
     private String auditAdvice;
+
+
+    /**
+     * 负责人确认冻结或取消冻结的时间
+     */
+    @Column(name = "chargerCongelTime",  columnDefinition = "DATE  COMMENT '负责人确认冻结或取消冻结的时间'")
+    private LocalDate chargerCongelTime;
+
+    /**
+     * 负责人确认冻结或取消冻结的意见
+     */
+    @Column(name = "chargeCongleAdvice",  columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
+    private String chargeCongleAdvice;
+
+    /**
+     * 是否全部分析完
+     */
+    @Column(name = "is_analisisAll",  columnDefinition = "int(1) default '0'  COMMENT '是否全部分析完' " ,insertable = false)
+    private Boolean analisisIsAll;
 
     /**
      * 是否支付(是/否)
@@ -215,8 +238,9 @@ public class ReimburseRecord extends BaseEntity {
     /**
      * 摘要
      */
-    @Column(name = "summary",  columnDefinition = "VARCHAR(255)   COMMENT '摘要'")
+    @Column(name = "summary",  columnDefinition = "TEXT  COMMENT '摘要'")
     private String summary;
+
 
     /**
      * 支付计划
@@ -246,6 +270,45 @@ public class ReimburseRecord extends BaseEntity {
      */
     @Column(name = "payOrigin",  columnDefinition = "VARCHAR(255)   COMMENT '付款来源'")
     private String payOrigin;
+
+
+
+    /**
+     * 寄件的收件人
+     */
+    @Column(name = "sendRecevier", columnDefinition = "VARCHAR(255)   COMMENT '寄件的收件人'")
+    private String sendRecevier;
+
+    /**
+     * 寄件人
+     */
+    @Column(name = "sender", columnDefinition = "VARCHAR(255)   COMMENT '寄件人'")
+    private String sender;
+
+    /**
+     * 寄件日期
+     */
+    @Column(name = "sendDate", columnDefinition = "DATE   COMMENT '寄件日期'")
+    private LocalDate sendDate;
+
+    /**
+     * 寄件情况
+     */
+    @Column(name = "sendCondition", columnDefinition = "VARCHAR(255)   COMMENT '寄件情况'")
+    private String sendCondition;
+
+
+    /**
+     * 收件地区(寄件的时候填的地区)
+     */
+    @Column(name = "receiveArea", columnDefinition = "VARCHAR(255)   COMMENT '收件地区(寄件的时候填的地区)'")
+    private String receiveArea;
+
+    /**
+     * 收件地址
+     */
+    @Column(name = "receiveAddr", columnDefinition = "VARCHAR(255)   COMMENT '收件地址'")
+    private String receiveAddr;
 
 
     public LocalDate getOccureDate() {
@@ -384,6 +447,14 @@ public class ReimburseRecord extends BaseEntity {
         this.receiveTicketCheck = receiveTicketCheck;
     }
 
+    public String getAccountCheckPassOr() {
+        return accountCheckPassOr;
+    }
+
+    public void setAccountCheckPassOr(String accountCheckPassOr) {
+        this.accountCheckPassOr = accountCheckPassOr;
+    }
+
     public String getNoTicketRemark() {
         return noTicketRemark;
     }
@@ -454,6 +525,14 @@ public class ReimburseRecord extends BaseEntity {
 
     public void setAuditAdvice(String auditAdvice) {
         this.auditAdvice = auditAdvice;
+    }
+
+    public Boolean getAnalisisIsAll() {
+        return analisisIsAll;
+    }
+
+    public void setAnalisisIsAll(Boolean analisisIsAll) {
+        this.analisisIsAll = analisisIsAll;
     }
 
     public String getPayCondition() {
@@ -550,5 +629,69 @@ public class ReimburseRecord extends BaseEntity {
 
     public void setPayOrigin(String payOrigin) {
         this.payOrigin = payOrigin;
+    }
+
+    public String getSendRecevier() {
+        return sendRecevier;
+    }
+
+    public void setSendRecevier(String sendRecevier) {
+        this.sendRecevier = sendRecevier;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public LocalDate getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(LocalDate sendDate) {
+        this.sendDate = sendDate;
+    }
+
+    public String getSendCondition() {
+        return sendCondition;
+    }
+
+    public void setSendCondition(String sendCondition) {
+        this.sendCondition = sendCondition;
+    }
+
+    public String getReceiveArea() {
+        return receiveArea;
+    }
+
+    public void setReceiveArea(String receiveArea) {
+        this.receiveArea = receiveArea;
+    }
+
+    public String getReceiveAddr() {
+        return receiveAddr;
+    }
+
+    public void setReceiveAddr(String receiveAddr) {
+        this.receiveAddr = receiveAddr;
+    }
+
+    public LocalDate getChargerCongelTime() {
+        return chargerCongelTime;
+    }
+
+    public void setChargerCongelTime(LocalDate chargerCongelTime) {
+        this.chargerCongelTime = chargerCongelTime;
+    }
+
+    public String getChargeCongleAdvice() {
+        return chargeCongleAdvice;
+    }
+
+    public void setChargeCongleAdvice(String chargeCongleAdvice) {
+        this.chargeCongleAdvice = chargeCongleAdvice;
     }
 }

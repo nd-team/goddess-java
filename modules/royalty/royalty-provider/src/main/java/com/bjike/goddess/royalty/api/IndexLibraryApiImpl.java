@@ -4,12 +4,14 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.royalty.bo.IndexLibraryBO;
+import com.bjike.goddess.royalty.bo.RoyaltyCollectBO;
 import com.bjike.goddess.royalty.dto.IndexLibraryDTO;
 import com.bjike.goddess.royalty.entity.IndexLibrary;
 import com.bjike.goddess.royalty.excel.SonPermissionObject;
 import com.bjike.goddess.royalty.service.IndexLibrarySer;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.IndexLibraryTO;
+import com.bjike.goddess.royalty.to.RoyaltyCollectTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,25 @@ public class IndexLibraryApiImpl implements IndexLibraryAPI {
     @Override
     public IndexLibraryBO getIndexLibrary(String indexNum) throws SerException {
         return indexLibrarySer.getIndexLibrary(indexNum);
+    }
+    @Override
+    public List<RoyaltyCollectBO> dayRoyalty(RoyaltyCollectTO to) throws SerException {
+        return indexLibrarySer.dayRoyalty(to);
+    }
+
+    @Override
+    public List<RoyaltyCollectBO> weekRoyalty(RoyaltyCollectTO to) throws SerException {
+        return indexLibrarySer.weekRoyalty(to);
+    }
+
+    @Override
+    public List<RoyaltyCollectBO> monthRoyalty(RoyaltyCollectTO to) throws SerException {
+        return indexLibrarySer.monthRoyalty(to);
+    }
+
+    @Override
+    public List<RoyaltyCollectBO> totalRoyalty(RoyaltyCollectTO to) throws SerException {
+        return indexLibrarySer.totalRoyalty(to);
     }
 
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.SecureCartTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保卡基本信息业务接口
@@ -91,6 +92,12 @@ public interface SecureCartAPI {
      * @throws SerException
      */
     Long count(SecureCartDTO dto) throws SerException;
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
 
 //    /**
 //     * 启动定时方法

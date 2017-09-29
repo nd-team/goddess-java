@@ -2,10 +2,12 @@ package com.bjike.goddess.royalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.IndexLibraryBO;
+import com.bjike.goddess.royalty.bo.RoyaltyCollectBO;
 import com.bjike.goddess.royalty.dto.IndexLibraryDTO;
 import com.bjike.goddess.royalty.excel.SonPermissionObject;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.IndexLibraryTO;
+import com.bjike.goddess.royalty.to.RoyaltyCollectTO;
 
 import java.util.List;
 
@@ -115,6 +117,46 @@ public interface IndexLibraryAPI {
      * @throws SerException
      */
     default IndexLibraryBO getIndexLibrary(String indexNum) throws SerException {
+        return null;
+    }
+    /**
+     * 管理提成管理日汇总
+     *
+     * @param to to
+     * @return class RoyaltyCollectBO
+     * @throws SerException
+     */
+    default List<RoyaltyCollectBO> dayRoyalty(RoyaltyCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 管理提成管理周汇总
+     *
+     * @param to to
+     * @return class RoyaltyCollectBO
+     * @throws SerException
+     */
+    default List<RoyaltyCollectBO> weekRoyalty(RoyaltyCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 管理提成管理月汇总
+     *
+     * @param to to
+     * @return class RoyaltyCollectBO
+     * @throws SerException
+     */
+    default List<RoyaltyCollectBO> monthRoyalty(RoyaltyCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 管理提成管理累计汇总
+     *
+     * @param to to
+     * @return class RoyaltyCollectBO
+     * @throws SerException
+     */
+    default List<RoyaltyCollectBO> totalRoyalty(RoyaltyCollectTO to) throws SerException {
         return null;
     }
 

@@ -14,6 +14,7 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.secure.bo.SecureCartBO;
 import com.bjike.goddess.secure.dto.SecureCartDTO;
 import com.bjike.goddess.secure.entity.SecureCart;
+import com.bjike.goddess.secure.entity.SecureCase;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.SecureCartTO;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -325,7 +327,16 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
         return super.count(dto);
     }
 
-//    /**
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<SecureCart> list = super.findAll();
+        for(SecureCart entity:list){
+            set.add(entity.getName());
+        }
+        return set;
+    }
+    //    /**
 //     * 查找所有员工社保信息id
 //     *
 //     * @return class String

@@ -61,7 +61,7 @@ public class FinanceCollectVO {
     /**
      * 油费
      */
-    private Double oilCost;
+//    private Double oilCost;
 
     /**
      * 加班时长
@@ -71,7 +71,7 @@ public class FinanceCollectVO {
     /**
      * 加班费
      */
-    private Double overWorkCost;
+//    private Double overWorkCost;
 
     /**
      * 餐费补贴
@@ -152,13 +152,13 @@ public class FinanceCollectVO {
         this.acctype = acctype;
     }
 
-    public Double getOilCost() {
-        return oilCost;
-    }
-
-    public void setOilCost(Double oilCost) {
-        this.oilCost = oilCost;
-    }
+//    public Double getOilCost() {
+//        return oilCost;
+//    }
+//
+//    public void setOilCost(Double oilCost) {
+//        this.oilCost = oilCost;
+//    }
 
     public Integer getOverWorkTime() {
         return overWorkTime;
@@ -168,13 +168,13 @@ public class FinanceCollectVO {
         this.overWorkTime = overWorkTime;
     }
 
-    public Double getOverWorkCost() {
-        return overWorkCost;
-    }
-
-    public void setOverWorkCost(Double overWorkCost) {
-        this.overWorkCost = overWorkCost;
-    }
+//    public Double getOverWorkCost() {
+//        return overWorkCost;
+//    }
+//
+//    public void setOverWorkCost(Double overWorkCost) {
+//        this.overWorkCost = overWorkCost;
+//    }
 
     public Double getMealCost() {
         return mealCost;

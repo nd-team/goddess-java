@@ -2,14 +2,17 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
+import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
-import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -362,6 +365,25 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
         return null;
     }
 
+    /**
+     * 手机版还款
+     *
+     * @param phoneLendReturnSendTO 申请借款信息
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO editPhoneReturn(PhoneLendReturnSendTO phoneLendReturnSendTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 手机版寄件
+     *
+     * @param phoneLendSendTO 申请借款信息
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO editPhoneSend(PhoneLendSendTO phoneLendSendTO) throws SerException {
+        return null;
+    }
 
     /**
      * 借款记录生成记账凭证
@@ -409,6 +431,16 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @return class ApplyLendBO
      */
     default ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 手机版还款记录还款核对
+     *
+     * @param phoneLendReturnCheckTO applyLendTO
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO phoneCheckReturn(PhoneLendReturnCheckTO phoneLendReturnCheckTO) throws SerException {
         return null;
     }
 
@@ -500,6 +532,14 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
 
 
     /**
+     * 获取所有用户
+     *
+     * @return
+     */
+    default List<String> getAllUser() throws SerException {
+        return null;
+    }
+    /**
      * 获取所有借款人
      *
      * @return
@@ -518,11 +558,28 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     }
 
     /**
+     * 手机端获取所有地区
+     *
+     * @return
+     */
+    default List<String> listPhoneArea() throws SerException {
+        return null;
+    }
+
+    /**
      * 获取所有项目组
      *
      * @return
      */
     default List<String> listProjectGroup() throws SerException {
+        return null;
+    }
+    /**
+     * 手机端获取所有项目组
+     *
+     * @return
+     */
+    default List<String> listPhoneProjectGroup(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
         return null;
     }
 
@@ -532,6 +589,16 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @return
      */
     default List<String> listProjectName() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 手机端获取所有项目名
+     *
+     * @return
+     */
+    default List<String> listPhoneProjectName(PhoneApplyLendSelectDTO phoneApplyLendSelectDTO) throws SerException {
         return null;
     }
 
@@ -584,11 +651,13 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     /**
      * 获取所有账户来源
      * chenjunhao
+     *
      * @return
      */
     default List<String> listAccountCom() throws SerException {
         return null;
     }
+
     /**
      * chenjunhao
      * 等待付款导出cjh
@@ -621,9 +690,36 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
 
     /**
      * chenjunhao
+     *
      * @param applyLendDTO
      * @return
      * @throws SerException
      */
     Long countWaitPayCJH(ApplyLendDTO applyLendDTO) throws SerException;
+
+
+    /**
+     * 判断手机端页面某些地方显示问题的权限
+     *
+     * @param lendPhoneShowStatus
+     * @return
+     * @throws SerException
+     */
+    Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus, String lendId) throws SerException;
+
+
+    /**
+     * 手机版所有列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException {
+        return null;
+    }
+
+    ;
+
+
 }

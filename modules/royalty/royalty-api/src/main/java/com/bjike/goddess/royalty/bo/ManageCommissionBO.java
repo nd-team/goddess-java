@@ -1,65 +1,66 @@
 package com.bjike.goddess.royalty.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import org.apache.commons.lang3.ThreadUtils;
-
-import java.util.List;
 
 /**
  * Created by ike on 17-7-17.
  */
 public class ManageCommissionBO extends BaseBO {
-    public ManageCommissionBO(){}
-//    public ManageCommissionBO(String projectName,Integer score,String system,Double systemBaseWeight,
-//                              Double systemBetWeight,String systemIndexNum ,String systemIndexName,
-//                              String systemConfirmTargetValue,Boolean systemStandard,Double systemBasesScore,
-//                              Double systemBetScore,String unmetAllocationSystem,Double systemUnmetAllocation,
-//                              Double systemRestrictScore,Double systemTotalScore){
-//        this.projectName = projectName;
-//        this.score = score;
-//        this.system = system;
-//        this.systemBaseWeight = systemBaseWeight;
-//        this.systemBetWeight = systemBetWeight;
-//        this.systemIndexNum = systemIndexNum;
-//        this.systemIndexName = systemIndexName;
-//        this.systemConfirmTargetValue = systemConfirmTargetValue;
-//        this.systemStandard = systemStandard;
-//        this.systemBasesScore = systemBasesScore;
-//        this.systemBetScore = systemBetScore;
-//        this.unmetAllocationSystem = unmetAllocationSystem;
-//        this.systemUnmetAllocation = systemUnmetAllocation;
-//        this.systemRestrictScore = systemRestrictScore;
-//        this.systemTotalScore = systemTotalScore;
-//    }
-public ManageCommissionBO(String projectName,Double systemBasesScore,
-                          Double systemBetScore, Double systemRestrictScore,Double systemTotalScore,
-                          Double departmentBasesScore,Double departmentBetScore,
-                          Double departmentRestrictScore,Double departmentTotalScore,
-                          Double jobsBasesScore,Double jobsBetScore,
-                          Double jobsRestrictScore,Double jobsTotalScore){
-    this.projectName = projectName;
-    this.systemBasesScore = systemBasesScore;
-    this.systemBetScore = systemBetScore;
-    this.systemRestrictScore = systemRestrictScore;
-    this.systemTotalScore = systemTotalScore;
-    this.departmentBasesScore = departmentBasesScore;
-    this.departmentBetScore = departmentBetScore;
-    this.departmentRestrictScore = departmentRestrictScore;
-    this.departmentTotalScore = departmentTotalScore;
-    this.jobsBasesScore = jobsBasesScore;
-    this.jobsBetScore = jobsBetScore;
-    this.jobsRestrictScore = jobsRestrictScore;
-    this.jobsTotalScore = jobsTotalScore;
-}
+    public ManageCommissionBO() {
+    }
+
+    public ManageCommissionBO(String projectName, Double systemBasesScore,
+                              Double systemBetScore, Double systemRestrictScore, Double systemTotalScore,
+                              Double departmentBasesScore, Double departmentBetScore,
+                              Double departmentRestrictScore, Double departmentTotalScore,
+                              Double jobsBasesScore, Double jobsBetScore,
+                              Double jobsRestrictScore, Double totalScore) {
+        this.projectName = projectName;
+        this.systemBasesScore = systemBasesScore;
+        this.systemBetScore = systemBetScore;
+        this.systemRestrictScore = systemRestrictScore;
+        this.systemTotalScore = systemTotalScore;
+        this.departmentBasesScore = departmentBasesScore;
+        this.departmentBetScore = departmentBetScore;
+        this.departmentRestrictScore = departmentRestrictScore;
+        this.departmentTotalScore = departmentTotalScore;
+        this.jobsBasesScore = jobsBasesScore;
+        this.jobsBetScore = jobsBetScore;
+        this.jobsRestrictScore = jobsRestrictScore;
+        this.totalScore = totalScore;
+    }
+
     /**
-     * 项目名称
+     * 对赌开始时间
+     */
+    private String betTime;
+
+    /**
+     * 地区
+     */
+    private String area;
+    /**
+     * 项目组/部门
+     */
+    private String projectGroup;
+
+    /**
+     * 内部项目名称
      */
     private String projectName;
 
     /**
-     * 分值
+     * 分值（利润额）
      */
-    private Integer score;
+    private Integer scoreProfit;
+    /**
+     * 计划分值（利润额）
+     */
+    private Integer planProfit;
+    /**
+     * 实际分值（利润额）
+     */
+    private Integer practiceProfit;
     /**
      * 体系
      */
@@ -69,6 +70,7 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      * 目标-部门分配基础权重（%）
      */
     private Double systemBaseWeight;
+
     /**
      * 目标-部门分配对赌权重（%）
      */
@@ -88,20 +90,35 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      */
     private String systemConfirmTargetValue;
 
-
     /**
      * 项目对赌是否达标
      */
     private Boolean systemStandard;
 
     /**
-     * 基础得分
+     * 目标基础得分
      */
     private Double systemBasesScore;
     /**
-     * 对赌得分
+     * 计划基础得分
+     */
+    private Double systemPlanBasesScore;
+    /**
+     * 实际基础得分
+     */
+    private Double systemPracticeBasesScore;
+    /**
+     * 目标对赌得分
      */
     private Double systemBetScore;
+    /**
+     * 计划对赌得分
+     */
+    private Double systemPlanBetScore;
+    /**
+     * 实际对赌得分
+     */
+    private Double systemPracticeBetScore;
 
     /**
      * 未达标分配体系
@@ -113,23 +130,36 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      */
     private Double systemUnmetAllocation;
     /**
-     * 制约得分
+     * 目标制约得分
      */
     private Double systemRestrictScore;
+    /**
+     * 计划制约得分
+     */
+    private Double systemPlanRestrictScore;
 
     /**
-     * 部门总得分
+     * 实际制约得分
+     */
+    private Double systemPracticeRestrictScore;
+
+    /**
+     * 目标体系总得分
      */
     private Double systemTotalScore;
     /**
-     * 部门
+     * 计划体系总得分
      */
-    private String systemDepartment;
-
+    private Double systemPlanTotalScore;
+    /**
+     * 实际体系总得分
+     */
+    private Double systemPracticeTotalScore;
     /**
      * 部门
      */
     private String department;
+
     /**
      * 目标-部门分配基础权重（%）
      */
@@ -158,18 +188,33 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      * 项目对赌是否达标
      */
     private Boolean departmentStandard;
-
     /**
-     * 基础得分
+     * 目标基础得分
      */
     private Double departmentBasesScore;
     /**
-     * 对赌得分
+     * 计划基础得分
+     */
+    private Double departmentPlanBasesScore;
+    /**
+     * 实际基础得分
+     */
+    private Double departmentPracticeBasesScore;
+    /**
+     * 目标对赌得分
      */
     private Double departmentBetScore;
+    /**
+     * 计划对赌得分
+     */
+    private Double departmentPlanBetScore;
+    /**
+     * 实际对赌得分
+     */
+    private Double departmentPracticeBetScore;
 
     /**
-     * 未达标分配体系
+     * 未达标分配部门
      */
     private String unmetAllocationDepartment;
 
@@ -178,23 +223,39 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      */
     private Double departmentUnmetAllocation;
     /**
-     * 制约得分
+     * 目标制约得分
      */
     private Double departmentRestrictScore;
+    /**
+     * 计划制约得分
+     */
+    private Double departmentPlanRestrictScore;
 
     /**
-     * 部门总得分
+     * 实际制约得分
+     */
+    private Double departmentPracticeRestrictScore;
+
+    /**
+     * 目标体系总得分
      */
     private Double departmentTotalScore;
     /**
-     * 项目组
+     * 计划体系总得分
      */
-    private String projectGroup;
-
+    private Double departmentPlanTotalScore;
+    /**
+     * 实际体系总得分
+     */
+    private Double departmentPracticeTotalScore;
     /**
      * 岗位
      */
     private String jobs;
+    /**
+     * 人数
+     */
+    private Integer people;
 
     /**
      * 分配基础权重（%）
@@ -220,12 +281,10 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      */
     private String jobsConfirmTargetValue;
 
-
     /**
      * 是否达标
      */
     private Boolean jobsStandard;
-
     /**
      * 未达标分配岗位
      */
@@ -236,30 +295,80 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
      */
     private Double jobsUnmetAllocation;
     /**
-     * 基础得分
+     * 目标基础得分
      */
     private Double jobsBasesScore;
     /**
-     * 对赌得分
+     * 计划基础得分
+     */
+    private Double jobsPlanBasesScore;
+    /**
+     * 实际基础得分
+     */
+    private Double jobsPracticeBasesScore;
+    /**
+     * 目标对赌得分
      */
     private Double jobsBetScore;
+    /**
+     * 计划对赌得分
+     */
+    private Double jobsPlanBetScore;
+    /**
+     * 实际对赌得分
+     */
+    private Double jobsPracticeBetScore;
 
     /**
-     * 制约得分
+     * 目标制约得分
      */
     private Double jobsRestrictScore;
 
     /**
-     * 总得分
+     * 计划制约得分
      */
-    private Double jobsTotalScore;
+    private Double jobsPlanRestrictScore;
 
-    public String getSystemDepartment() {
-        return systemDepartment;
+    /**
+     * 实际制约得分
+     */
+    private Double jobsPracticeRestrictScore;
+
+    /**
+     * 目标总得分
+     */
+    private Double totalScore;
+    /**
+     * 计划总得分
+     */
+    private Double planTotalScore;
+    /**
+     * 实际总得分
+     */
+    private Double practiceTotalScore;
+
+    public String getBetTime() {
+        return betTime;
     }
 
-    public void setSystemDepartment(String systemDepartment) {
-        this.systemDepartment = systemDepartment;
+    public void setBetTime(String betTime) {
+        this.betTime = betTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
     }
 
     public String getProjectName() {
@@ -270,12 +379,28 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.projectName = projectName;
     }
 
-    public Integer getScore() {
-        return score;
+    public Integer getScoreProfit() {
+        return scoreProfit;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setScoreProfit(Integer scoreProfit) {
+        this.scoreProfit = scoreProfit;
+    }
+
+    public Integer getPlanProfit() {
+        return planProfit;
+    }
+
+    public void setPlanProfit(Integer planProfit) {
+        this.planProfit = planProfit;
+    }
+
+    public Integer getPracticeProfit() {
+        return practiceProfit;
+    }
+
+    public void setPracticeProfit(Integer practiceProfit) {
+        this.practiceProfit = practiceProfit;
     }
 
     public String getSystem() {
@@ -342,12 +467,44 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.systemBasesScore = systemBasesScore;
     }
 
+    public Double getSystemPlanBasesScore() {
+        return systemPlanBasesScore;
+    }
+
+    public void setSystemPlanBasesScore(Double systemPlanBasesScore) {
+        this.systemPlanBasesScore = systemPlanBasesScore;
+    }
+
+    public Double getSystemPracticeBasesScore() {
+        return systemPracticeBasesScore;
+    }
+
+    public void setSystemPracticeBasesScore(Double systemPracticeBasesScore) {
+        this.systemPracticeBasesScore = systemPracticeBasesScore;
+    }
+
     public Double getSystemBetScore() {
         return systemBetScore;
     }
 
     public void setSystemBetScore(Double systemBetScore) {
         this.systemBetScore = systemBetScore;
+    }
+
+    public Double getSystemPlanBetScore() {
+        return systemPlanBetScore;
+    }
+
+    public void setSystemPlanBetScore(Double systemPlanBetScore) {
+        this.systemPlanBetScore = systemPlanBetScore;
+    }
+
+    public Double getSystemPracticeBetScore() {
+        return systemPracticeBetScore;
+    }
+
+    public void setSystemPracticeBetScore(Double systemPracticeBetScore) {
+        this.systemPracticeBetScore = systemPracticeBetScore;
     }
 
     public String getUnmetAllocationSystem() {
@@ -374,12 +531,44 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.systemRestrictScore = systemRestrictScore;
     }
 
+    public Double getSystemPlanRestrictScore() {
+        return systemPlanRestrictScore;
+    }
+
+    public void setSystemPlanRestrictScore(Double systemPlanRestrictScore) {
+        this.systemPlanRestrictScore = systemPlanRestrictScore;
+    }
+
+    public Double getSystemPracticeRestrictScore() {
+        return systemPracticeRestrictScore;
+    }
+
+    public void setSystemPracticeRestrictScore(Double systemPracticeRestrictScore) {
+        this.systemPracticeRestrictScore = systemPracticeRestrictScore;
+    }
+
     public Double getSystemTotalScore() {
         return systemTotalScore;
     }
 
     public void setSystemTotalScore(Double systemTotalScore) {
         this.systemTotalScore = systemTotalScore;
+    }
+
+    public Double getSystemPlanTotalScore() {
+        return systemPlanTotalScore;
+    }
+
+    public void setSystemPlanTotalScore(Double systemPlanTotalScore) {
+        this.systemPlanTotalScore = systemPlanTotalScore;
+    }
+
+    public Double getSystemPracticeTotalScore() {
+        return systemPracticeTotalScore;
+    }
+
+    public void setSystemPracticeTotalScore(Double systemPracticeTotalScore) {
+        this.systemPracticeTotalScore = systemPracticeTotalScore;
     }
 
     public String getDepartment() {
@@ -396,30 +585,6 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
 
     public void setDepartmentBaseWeight(Double departmentBaseWeight) {
         this.departmentBaseWeight = departmentBaseWeight;
-    }
-
-    public Double getDepartmentBasesScore() {
-        return departmentBasesScore;
-    }
-
-    public void setDepartmentBasesScore(Double departmentBasesScore) {
-        this.departmentBasesScore = departmentBasesScore;
-    }
-
-    public Double getDepartmentRestrictScore() {
-        return departmentRestrictScore;
-    }
-
-    public void setDepartmentRestrictScore(Double departmentRestrictScore) {
-        this.departmentRestrictScore = departmentRestrictScore;
-    }
-
-    public Double getDepartmentTotalScore() {
-        return departmentTotalScore;
-    }
-
-    public void setDepartmentTotalScore(Double departmentTotalScore) {
-        this.departmentTotalScore = departmentTotalScore;
     }
 
     public Double getDepartmentBetWeight() {
@@ -462,12 +627,52 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.departmentStandard = departmentStandard;
     }
 
+    public Double getDepartmentBasesScore() {
+        return departmentBasesScore;
+    }
+
+    public void setDepartmentBasesScore(Double departmentBasesScore) {
+        this.departmentBasesScore = departmentBasesScore;
+    }
+
+    public Double getDepartmentPlanBasesScore() {
+        return departmentPlanBasesScore;
+    }
+
+    public void setDepartmentPlanBasesScore(Double departmentPlanBasesScore) {
+        this.departmentPlanBasesScore = departmentPlanBasesScore;
+    }
+
+    public Double getDepartmentPracticeBasesScore() {
+        return departmentPracticeBasesScore;
+    }
+
+    public void setDepartmentPracticeBasesScore(Double departmentPracticeBasesScore) {
+        this.departmentPracticeBasesScore = departmentPracticeBasesScore;
+    }
+
     public Double getDepartmentBetScore() {
         return departmentBetScore;
     }
 
     public void setDepartmentBetScore(Double departmentBetScore) {
         this.departmentBetScore = departmentBetScore;
+    }
+
+    public Double getDepartmentPlanBetScore() {
+        return departmentPlanBetScore;
+    }
+
+    public void setDepartmentPlanBetScore(Double departmentPlanBetScore) {
+        this.departmentPlanBetScore = departmentPlanBetScore;
+    }
+
+    public Double getDepartmentPracticeBetScore() {
+        return departmentPracticeBetScore;
+    }
+
+    public void setDepartmentPracticeBetScore(Double departmentPracticeBetScore) {
+        this.departmentPracticeBetScore = departmentPracticeBetScore;
     }
 
     public String getUnmetAllocationDepartment() {
@@ -486,12 +691,52 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.departmentUnmetAllocation = departmentUnmetAllocation;
     }
 
-    public String getProjectGroup() {
-        return projectGroup;
+    public Double getDepartmentRestrictScore() {
+        return departmentRestrictScore;
     }
 
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
+    public void setDepartmentRestrictScore(Double departmentRestrictScore) {
+        this.departmentRestrictScore = departmentRestrictScore;
+    }
+
+    public Double getDepartmentPlanRestrictScore() {
+        return departmentPlanRestrictScore;
+    }
+
+    public void setDepartmentPlanRestrictScore(Double departmentPlanRestrictScore) {
+        this.departmentPlanRestrictScore = departmentPlanRestrictScore;
+    }
+
+    public Double getDepartmentPracticeRestrictScore() {
+        return departmentPracticeRestrictScore;
+    }
+
+    public void setDepartmentPracticeRestrictScore(Double departmentPracticeRestrictScore) {
+        this.departmentPracticeRestrictScore = departmentPracticeRestrictScore;
+    }
+
+    public Double getDepartmentTotalScore() {
+        return departmentTotalScore;
+    }
+
+    public void setDepartmentTotalScore(Double departmentTotalScore) {
+        this.departmentTotalScore = departmentTotalScore;
+    }
+
+    public Double getDepartmentPlanTotalScore() {
+        return departmentPlanTotalScore;
+    }
+
+    public void setDepartmentPlanTotalScore(Double departmentPlanTotalScore) {
+        this.departmentPlanTotalScore = departmentPlanTotalScore;
+    }
+
+    public Double getDepartmentPracticeTotalScore() {
+        return departmentPracticeTotalScore;
+    }
+
+    public void setDepartmentPracticeTotalScore(Double departmentPracticeTotalScore) {
+        this.departmentPracticeTotalScore = departmentPracticeTotalScore;
     }
 
     public String getJobs() {
@@ -502,36 +747,20 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.jobs = jobs;
     }
 
+    public Integer getPeople() {
+        return people;
+    }
+
+    public void setPeople(Integer people) {
+        this.people = people;
+    }
+
     public Double getJobsBaseWeight() {
         return jobsBaseWeight;
     }
 
     public void setJobsBaseWeight(Double jobsBaseWeight) {
         this.jobsBaseWeight = jobsBaseWeight;
-    }
-
-    public Double getJobsBasesScore() {
-        return jobsBasesScore;
-    }
-
-    public void setJobsBasesScore(Double jobsBasesScore) {
-        this.jobsBasesScore = jobsBasesScore;
-    }
-
-    public Double getJobsRestrictScore() {
-        return jobsRestrictScore;
-    }
-
-    public void setJobsRestrictScore(Double jobsRestrictScore) {
-        this.jobsRestrictScore = jobsRestrictScore;
-    }
-
-    public Double getJobsTotalScore() {
-        return jobsTotalScore;
-    }
-
-    public void setJobsTotalScore(Double jobsTotalScore) {
-        this.jobsTotalScore = jobsTotalScore;
     }
 
     public Double getJobsBetWeight() {
@@ -574,14 +803,6 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
         this.jobsStandard = jobsStandard;
     }
 
-    public Double getJobsBetScore() {
-        return jobsBetScore;
-    }
-
-    public void setJobsBetScore(Double jobsBetScore) {
-        this.jobsBetScore = jobsBetScore;
-    }
-
     public String getUnmetAllocationJobs() {
         return unmetAllocationJobs;
     }
@@ -596,5 +817,101 @@ public ManageCommissionBO(String projectName,Double systemBasesScore,
 
     public void setJobsUnmetAllocation(Double jobsUnmetAllocation) {
         this.jobsUnmetAllocation = jobsUnmetAllocation;
+    }
+
+    public Double getJobsBasesScore() {
+        return jobsBasesScore;
+    }
+
+    public void setJobsBasesScore(Double jobsBasesScore) {
+        this.jobsBasesScore = jobsBasesScore;
+    }
+
+    public Double getJobsPlanBasesScore() {
+        return jobsPlanBasesScore;
+    }
+
+    public void setJobsPlanBasesScore(Double jobsPlanBasesScore) {
+        this.jobsPlanBasesScore = jobsPlanBasesScore;
+    }
+
+    public Double getJobsPracticeBasesScore() {
+        return jobsPracticeBasesScore;
+    }
+
+    public void setJobsPracticeBasesScore(Double jobsPracticeBasesScore) {
+        this.jobsPracticeBasesScore = jobsPracticeBasesScore;
+    }
+
+    public Double getJobsBetScore() {
+        return jobsBetScore;
+    }
+
+    public void setJobsBetScore(Double jobsBetScore) {
+        this.jobsBetScore = jobsBetScore;
+    }
+
+    public Double getJobsPlanBetScore() {
+        return jobsPlanBetScore;
+    }
+
+    public void setJobsPlanBetScore(Double jobsPlanBetScore) {
+        this.jobsPlanBetScore = jobsPlanBetScore;
+    }
+
+    public Double getJobsPracticeBetScore() {
+        return jobsPracticeBetScore;
+    }
+
+    public void setJobsPracticeBetScore(Double jobsPracticeBetScore) {
+        this.jobsPracticeBetScore = jobsPracticeBetScore;
+    }
+
+    public Double getJobsRestrictScore() {
+        return jobsRestrictScore;
+    }
+
+    public void setJobsRestrictScore(Double jobsRestrictScore) {
+        this.jobsRestrictScore = jobsRestrictScore;
+    }
+
+    public Double getJobsPlanRestrictScore() {
+        return jobsPlanRestrictScore;
+    }
+
+    public void setJobsPlanRestrictScore(Double jobsPlanRestrictScore) {
+        this.jobsPlanRestrictScore = jobsPlanRestrictScore;
+    }
+
+    public Double getJobsPracticeRestrictScore() {
+        return jobsPracticeRestrictScore;
+    }
+
+    public void setJobsPracticeRestrictScore(Double jobsPracticeRestrictScore) {
+        this.jobsPracticeRestrictScore = jobsPracticeRestrictScore;
+    }
+
+    public Double getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(Double totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public Double getPlanTotalScore() {
+        return planTotalScore;
+    }
+
+    public void setPlanTotalScore(Double planTotalScore) {
+        this.planTotalScore = planTotalScore;
+    }
+
+    public Double getPracticeTotalScore() {
+        return practiceTotalScore;
+    }
+
+    public void setPracticeTotalScore(Double practiceTotalScore) {
+        this.practiceTotalScore = practiceTotalScore;
     }
 }

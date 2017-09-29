@@ -96,26 +96,30 @@ public enum GuideAddrStatus {
      * 收款确认
      */
     RECIVEMONEYSURE(20),
+    /**
+     * 收款确认
+     */
+    RECIVEMONEYSURE2(21),
 
     /**
      * 还款、寄件
      */
-    RETURN(21),
+    RETURN(22),
 
     /**
      * 生成记账凭证
      */
-    VOUCHER(22),
+    VOUCHER(23),
 
     /**
      * 还款核对
      */
-    RETURNCHECK(23),
+    RETURNCHECK(24),
 
     /**
      * 收到单据
      */
-    RECIVETICKET(24)
+    RECIVETICKET(25)
     ;
 
     private int code;

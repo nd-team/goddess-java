@@ -158,4 +158,8 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public DepartmentDetailBO areaAndDepart(String userId) throws SerException {
         return positionDetailUserSer.areaAndDepart(userId);
     }
+  @Override
+    public Boolean isMarker(String userId) throws SerException {
+        return positionDetailUserSer.isMarker(userId);
+    }
 }

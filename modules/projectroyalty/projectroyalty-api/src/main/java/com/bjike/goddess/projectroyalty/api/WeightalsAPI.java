@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectroyalty.bo.CollectBO;
 import com.bjike.goddess.projectroyalty.bo.WeightalsBO;
 import com.bjike.goddess.projectroyalty.dto.WeightalsDTO;
+import com.bjike.goddess.projectroyalty.enums.Type;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
 import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
 import com.bjike.goddess.projectroyalty.to.WeightalsTO;
@@ -159,6 +160,13 @@ public interface WeightalsAPI {
      * @throws SerException
      */
     default List<CollectBO> totalCollect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据内部项目名称和类型获得业务提成定额
+     */
+    default Double findAimAmount(String projectName, Type type) throws SerException {
         return null;
     }
 }

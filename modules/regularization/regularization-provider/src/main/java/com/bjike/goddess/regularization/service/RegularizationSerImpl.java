@@ -22,8 +22,9 @@ import com.bjike.goddess.regularization.excel.SonPermissionObject;
 import com.bjike.goddess.regularization.to.*;
 import com.bjike.goddess.regularization.type.GuideAddrStatus;
 import com.bjike.goddess.regularization.type.StaffStatus;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -69,7 +70,7 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     private PositionDetailUserAPI positionDetailUserAPI;
 
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private EntryRegisterAPI entryRegisterAPI;
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
@@ -934,13 +935,17 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
     }
 
     @Override
-    public RegularizationBO findAddRusult(String name, String empNumer) throws SerException {
-        List<EntryOptionBO> entryOptionBOS = entryBasicInfoAPI.getEntryOptionByNameAndEmpNum(name, empNumer);
-        EntryOptionBO entryOptionBO = new EntryOptionBO();
-        if(entryOptionBOS!=null && entryOptionBOS.size()>0){
-            entryOptionBO = entryOptionBOS.get(0);
-        }
-        return BeanTransform.copyProperties(entryOptionBO, RegularizationBO.class);
+    public RegularizationBO findAddRusult(String empNumer) throws SerException {
+        EntryOptionBO entryOptionBO = entryRegisterAPI.getEntryOptionByEmpNum(empNumer);
+        RegularizationBO regularizationBO = new RegularizationBO();
+        regularizationBO.setName(entryOptionBO.getName());
+        regularizationBO.setHiredate(entryOptionBO.getEntryTime());
+        regularizationBO.setProfession(entryOptionBO.getProfession());
+        regularizationBO.setEducation(entryOptionBO.getEducation());
+        regularizationBO.setArea(entryOptionBO.getArea());
+        regularizationBO.setProjectGroup(entryOptionBO.getDepartment());
+        regularizationBO.setPost(entryOptionBO.getPosition());
+        return regularizationBO;
     }
 
     @Override

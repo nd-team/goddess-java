@@ -263,4 +263,14 @@ public interface PositionDetailUserAPI {
      * @throws SerException
      */
     DepartmentDetailBO areaAndDepart(String userId) throws SerException;
+/*
+     * 判断是否是市场专业人员
+     *
+     * @param userId
+     * @return
+     * @throws SerException
+     */
+    default Boolean isMarker(String userId) throws SerException {
+        return null;
+    }
 }

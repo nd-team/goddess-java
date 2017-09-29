@@ -1,6 +1,6 @@
 package com.bjike.goddess.task.enums;
 
-/**
+/**问题类型
  * @Author: [liguiqin]
  * @Date: [2017-09-20 10:28]
  * @Description: [ ]

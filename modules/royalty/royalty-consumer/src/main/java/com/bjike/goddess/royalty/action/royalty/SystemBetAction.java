@@ -1,7 +1,5 @@
 package com.bjike.goddess.royalty.action.royalty;
 
-import com.alibaba.dubbo.rpc.RpcContext;
-import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -17,8 +15,8 @@ import com.bjike.goddess.royalty.api.SystemBetAPI;
 import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
-import com.bjike.goddess.royalty.entity.SystemBetA;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
 import com.bjike.goddess.royalty.vo.SystemBetAVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +87,7 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个体系间对赌表
      *
@@ -106,6 +105,7 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 体系间对赌表列表
      *
@@ -122,6 +122,7 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加体系间对赌表
      *
@@ -209,6 +210,7 @@ public class SystemBetAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 查询未冻结部门项目组详细信息
      *
@@ -222,13 +224,14 @@ public class SystemBetAction {
 //            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
 //            if (moduleAPI.isCheck("organize")) {
 //                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN,userToken);
-                boList = departmentDetailAPI.findStatus();
+            boList = departmentDetailAPI.findStatus();
 //            }
             return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据项目名称获取体系间对赌表
      *
@@ -245,8 +248,22 @@ public class SystemBetAction {
         }
     }
 
-
-
-
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class SystemBetAVO
+     * @des 根据项目名称汇总体系间对赌表
+     * @version v1
+     */
+    @GetMapping("v1/systemCollect")
+    public Result systemCollect(ProjectNameTO to) throws ActException {
+        try {
+            List<SystemBetABO> systemBetABO = systemBetAPI.systemCollect(to);
+            return ActResult.initialize(BeanTransform.copyProperties(systemBetABO, SystemBetAVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -11,6 +11,7 @@ import com.bjike.goddess.royalty.entity.JobsBet;
 import com.bjike.goddess.royalty.to.CollectTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.JobsBetATO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 
 import java.util.List;
 
@@ -109,6 +110,16 @@ public interface JobsBetSer extends Ser<JobsBet, JobsBetDTO> {
      * @throws SerException
      */
     default List<String> getProjectName() throws SerException {
+        return null;
+    }
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class JobsBetABO
+     * @throws SerException
+     */
+    default List<JobsBetABO> jobsCollect(ProjectNameTO to) throws SerException {
         return null;
     }
 }

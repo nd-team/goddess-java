@@ -1,9 +1,6 @@
 package com.bjike.goddess.managepromotion.to;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 员工已晋升情况

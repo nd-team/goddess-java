@@ -16,33 +16,21 @@ import java.util.List;
  */
 public class JobsBetBBO extends BaseBO {
     /**
-     * 部门
+     * 体系
      */
-    private String department;
-//    /**
-//     * 部门间对赌表A
-//     */
-//    private JobsBetABO jobsBetABO;
+    private String system;
     /**
      * 部门间对赌表C
      */
     private List<JobsBetCBO> jobsBetCBOS;
 
-    public String getDepartment() {
-        return department;
+    public String getSystem() {
+        return system;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setSystem(String system) {
+        this.system = system;
     }
-
-//    public JobsBetABO getJobsBetABO() {
-//        return jobsBetABO;
-//    }
-//
-//    public void setJobsBetABO(JobsBetABO jobsBetABO) {
-//        this.jobsBetABO = jobsBetABO;
-//    }
 
     public List<JobsBetCBO> getJobsBetCBOS() {
         return jobsBetCBOS;

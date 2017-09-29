@@ -1,6 +1,7 @@
 package com.bjike.goddess.royalty.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 指标库
@@ -21,6 +22,7 @@ public class IndexLibraryTO extends BaseTO {
     /**
      * 指标编号
      */
+    @NotBlank(message = "指标编号不能为空", groups = {IndexLibraryTO.TestAdd.class, IndexLibraryTO.TestEdit.class})
     private String indexNum;
 
     /**
@@ -31,6 +33,7 @@ public class IndexLibraryTO extends BaseTO {
     /**
      * 指标名称
      */
+    @NotBlank(message = "指标名称不能为空", groups = {IndexLibraryTO.TestAdd.class, IndexLibraryTO.TestEdit.class})
     private String indexName;
 
     /**
@@ -57,7 +60,18 @@ public class IndexLibraryTO extends BaseTO {
      * 数据来源
      */
     private String dataSource;
-
+    /**
+     * 是否被选用
+     */
+    private Boolean choose;
+    /**
+     * 对赌承诺-确认目标值
+     */
+    private String confirmTargetValue;
+    /**
+     * 达标状态
+     */
+    private String standard;
 
     public String getIndexNum() {
         return indexNum;
@@ -121,5 +135,29 @@ public class IndexLibraryTO extends BaseTO {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public Boolean getChoose() {
+        return choose;
+    }
+
+    public void setChoose(Boolean choose) {
+        this.choose = choose;
+    }
+
+    public String getConfirmTargetValue() {
+        return confirmTargetValue;
+    }
+
+    public void setConfirmTargetValue(String confirmTargetValue) {
+        this.confirmTargetValue = confirmTargetValue;
+    }
+
+    public String getStandard() {
+        return standard;
+    }
+
+    public void setStandard(String standard) {
+        this.standard = standard;
     }
 }

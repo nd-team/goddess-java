@@ -98,6 +98,7 @@ public class ReflectSerImpl extends ServiceImpl<Reflect, ReflectDTO> implements 
         entity.setClassify(instructionClassifySer.findById(to.getClassifyId()));
         if (null == entity.getClassify())
             throw new SerException("选择分类不存在,无法保存");
+        entity.setDescription(to.getDescription());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         return this.transform(entity);

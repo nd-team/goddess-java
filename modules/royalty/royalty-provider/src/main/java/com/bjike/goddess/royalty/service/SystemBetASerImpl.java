@@ -1,15 +1,10 @@
 package com.bjike.goddess.royalty.service;
 
-import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.entity.SystemBetA;
-import com.bjike.goddess.royalty.to.SystemBetATO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 体系间对赌表A业务实现

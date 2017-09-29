@@ -391,15 +391,20 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public List<String> getAllDepartment() throws SerException {
-        PositionDetailDTO dto = new PositionDetailDTO();
-        List<PositionDetailBO> positionDetailBOList = positionDetailSer.maps(dto);
-        List<String> list = new ArrayList<>();
-        if (null != positionDetailBOList && positionDetailBOList.size() > 0) {
-            for (PositionDetailBO bo : positionDetailBOList) {
-                list.add(bo.getDepartmentName());
-            }
+        List<DepartmentDetail> departmentDetails = departmentDetailSer.findAll();
+        if (null != departmentDetails && departmentDetails.size() > 0) {
+            return departmentDetails.stream().map(DepartmentDetail::getDepartment).distinct().collect(Collectors.toList());
         }
-        return list;
+        return null;
+//        PositionDetailDTO dto = new PositionDetailDTO();
+//        List<PositionDetailBO> positionDetailBOList = positionDetailSer.maps(dto);
+//        List<String> list = new ArrayList<>();
+//        if (null != positionDetailBOList && positionDetailBOList.size() > 0) {
+//            for (PositionDetailBO bo : positionDetailBOList) {
+//                list.add(bo.getDepartmentName());
+//            }
+//        }
+//        return list;
     }
 
 //    @Override
@@ -598,4 +603,29 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         return null;
     }
+ @Override
+    public Boolean isMarker(String userId) throws SerException {
+        Boolean tar = false;
+        String[] fildes = new String[]{"id"};
+//        userId = "3348a9a1-bfcb-4799-8d43-834e13c55bf2";
+        StringBuilder sql = new StringBuilder(" SELECT e.position_id as id FROM ");
+        sql.append("  (SELECT id FROM organize_position_detail_user ");
+        sql.append("  WHERE user_id = '" + userId + "') c, ");
+        sql.append("  (SELECT f.id FROM ");
+        sql.append("  (SELECT id FROM organize_moduletype ");
+        sql.append("  WHERE module = '客户管理')a, ");
+        sql.append("  (SELECT id FROM organize_department_detail ");
+        sql.append("  WHERE department = '商务发展部')b, ");
+        sql.append("  organize_position_detail f ");
+        sql.append("  WHERE module_id = a.id AND department_id = b.id)d, ");
+        sql.append("  organize_position_detail_user_table e ");
+        sql.append("  WHERE user_id = c.id AND position_id = d.id; ");
+
+        List<UserBO> userBO = super.findBySql(sql.toString(), UserBO.class, fildes);
+        if (null != userBO && userBO.size() > 0) {
+            tar = true;
+        }
+        return tar;
+    }
+
 }
