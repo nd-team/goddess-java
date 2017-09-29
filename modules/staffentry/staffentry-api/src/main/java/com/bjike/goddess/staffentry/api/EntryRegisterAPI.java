@@ -164,7 +164,7 @@ public interface EntryRegisterAPI {
      * 获取全部的入职等级信息（不分页）
      * zhuangkaiqin
      */
-    default List<EntryRegister> list() throws SerException {
+    default List<EntryRegisterBO> list() throws SerException {
         return null;
     }
 
@@ -186,6 +186,49 @@ public interface EntryRegisterAPI {
      * @return
      */
     default EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取性别
+     *
+     * @param username
+     * @return
+     * @throws SerException
+     */
+    default String getGender(String username) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据条件查询不分页
+     *
+     * @param entryBasicInfoDTO
+     * @return
+     * @throws SerException
+     */
+    default List<EntryRegisterBO> map(EntryRegisterDTO entryBasicInfoDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取信息
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default List<EntryRegisterBO> getEntryRegisterByName(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取入职时间
+     *
+     * @param username
+     * @return
+     */
+    default String getEntryTime(String username) throws SerException {
         return null;
     }
 }

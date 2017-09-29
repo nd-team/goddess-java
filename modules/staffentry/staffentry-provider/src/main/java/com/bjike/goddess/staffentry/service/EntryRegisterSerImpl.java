@@ -5,12 +5,12 @@ import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
 import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
-
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.staffentry.bo.*;
@@ -33,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 入职登记业务实现
@@ -229,8 +230,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
-    public List<EntryRegister> list() throws SerException {
-        return super.findAll();
+    public List<EntryRegisterBO> list() throws SerException {
+        List<EntryRegister> entryRegisters = super.findAll();
+        return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
     }
 
     @Override
@@ -538,7 +540,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         entryRegisterDTO.getConditions().add(Restrict.eq("username", name));
         List<EntryRegister> list = super.findByCis(entryRegisterDTO);
         String empNum = "";
-        if (list != null && list.size()>0) {
+        if (list != null && list.size() > 0) {
             EntryRegister entryRegister = list.get(0);
             empNum = entryRegister.getEmpNumber();
         }
@@ -562,5 +564,45 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             entryOptionBO.setPosition(entryOptionBO.getPosition());
         }
         return entryOptionBO;
+    }
+
+    @Override
+    public String getGender(String username) throws SerException {
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        dto.getConditions().add(Restrict.eq("username", username));
+        List<EntryRegister> entryRegisters = super.findByCis(dto);
+        if (null != entryRegisters && entryRegisters.size() > 0) {
+            if (entryRegisters.get(0).getGender() == 1) {
+                return "男";
+            } else {
+                return "女";
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<EntryRegisterBO> map(EntryRegisterDTO dto) throws SerException {
+        List<EntryRegister> entryRegisters = super.findByCis(dto);
+        return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
+    }
+
+    @Override
+    public List<EntryRegisterBO> getEntryRegisterByName(String name) throws SerException {
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        dto.getConditions().add(Restrict.eq("username", name));
+        List<EntryRegister> entryRegisters = super.findByCis(dto);
+        return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
+    }
+
+    @Override
+    public String getEntryTime(String username) throws SerException {
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.eq("username", username));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        if (null != entryRegisters && entryRegisters.size() > 0) {
+            return DateUtil.dateToString(entryRegisters.stream().map(EntryRegister::getInductionDate).distinct().collect(Collectors.toList()).get(0));
+        }
+        return null;
     }
 }

@@ -14,7 +14,6 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -37,14 +36,6 @@ public class AnnualApplyAct {
 
     @Autowired
     private AnnualApplyAPI annualApplyAPI;
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
-//    @Autowired
-//    private ModuleAPI moduleAPI;
-//    @Autowired
-//    private UserAPI userAPI;
-//    @Autowired
-//    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 功能导航权限

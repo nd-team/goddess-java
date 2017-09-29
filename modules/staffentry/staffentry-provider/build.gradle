@@ -31,6 +31,5 @@ dependencies {
     compile project(":modules:staffentry:staffentry-api")
     compile project(":common:common-utils")
     compile project(":modules:assistance:assistance-api")
-
 }
 

@@ -23,7 +23,6 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
@@ -58,8 +57,6 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     private UserAPI userAPI;
     @Autowired
     private RotainCusPermissionSer cusPermissionSer;
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
     @Autowired
@@ -300,9 +297,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     @Override
     public List<PerBO> getPerBO(String name) throws SerException {
         List<PerBO> list = new ArrayList<>();
-        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(name);
+        List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
         if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-            EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoAPI.getEntryBasicInfoByName(name).get(0);
+            EntryRegisterBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
             String id = entryBasicInfoBO.getId();
             StaffRecordsBO staffRecordsBO = getById(id);
             if (null != staffRecordsBO) {
@@ -317,16 +314,16 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecordsBO> listEmployee() throws SerException {
-        List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo();
+        List<EntryRegisterBO> entryBasicInfoBOList = entryRegisterAPI.list();
         if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0) {
-            for (EntryBasicInfoBO entryBasicInfoBO : entryBasicInfoBOList) {
+            for (EntryRegisterBO entryBasicInfoBO : entryBasicInfoBOList) {
                 StaffRecordsBO staffRecordsBO = new StaffRecordsBO();
-                staffRecordsBO.setUsername(entryBasicInfoBO.getName());
-                staffRecordsBO.setSerialNumber(entryBasicInfoBO.getEmployeeID());
-                staffRecordsBO.setProject(entryBasicInfoBO.getProjectGroup());
+                staffRecordsBO.setUsername(entryBasicInfoBO.getUsername());
+                staffRecordsBO.setSerialNumber(entryBasicInfoBO.getEmpNumber());
+                staffRecordsBO.setProject(entryBasicInfoBO.getDepartment());
                 staffRecordsBO.setPosition(entryBasicInfoBO.getPosition());
                 if (moduleAPI.isCheck("staffentry")) {
-                    EntryRegisterBO entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmployeeID());
+                    EntryRegisterBO entryRegister = entryRegisterAPI.getByNumber(entryBasicInfoBO.getEmpNumber());
                     if (null != entryRegister) {
                         staffRecordsBO.setEducation(entryRegister.getEducation());
                         staffRecordsBO.setSchool(entryRegister.getSchoolTag());
@@ -337,11 +334,12 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
                     }
                 }
                 staffRecordsBO.setMajor(entryBasicInfoBO.getProfession());
-                staffRecordsBO.setEntryTime(entryBasicInfoBO.getEntryTime());
-                staffRecordsBO.setSeniority(getMonthSpace(entryBasicInfoBO.getEntryTime(), LocalDateTime.now().toString()));
+                staffRecordsBO.setEntryTime(entryBasicInfoBO.getInductionDate());
+                staffRecordsBO.setSeniority(getMonthSpace(entryBasicInfoBO.getInductionDate(), LocalDateTime.now().toString()));
                 staffRecordsBO.setTelephone(entryBasicInfoBO.getPhone());
-                staffRecordsBO.setBankCard(entryBasicInfoBO.getBankCardID());
-                staffRecordsBO.setBank(entryBasicInfoBO.getBankOfDeposit());
+                //银行卡账号和开户行
+//                staffRecordsBO.setBankCard(entryBasicInfoBO.getBankCardID());
+//                staffRecordsBO.setBank(entryBasicInfoBO.getBankOfDeposit());
                 staffRecordsBO.setEmail(entryBasicInfoBO.getEmail());
 //                staffRecordsBO.setStatus();
             }

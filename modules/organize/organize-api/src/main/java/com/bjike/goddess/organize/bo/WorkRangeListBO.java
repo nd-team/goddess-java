@@ -28,11 +28,6 @@ public class WorkRangeListBO extends BaseBO {
     private String[] node;
 
     /**
-     * 使用状态
-     */
-    private Status status;
-
-    /**
      * 创建时间
      */
     private String createTime;
@@ -51,14 +46,6 @@ public class WorkRangeListBO extends BaseBO {
 
     public void setNode(String[] node) {
         this.node = node;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public String getCreateTime() {

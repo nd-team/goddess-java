@@ -285,11 +285,11 @@ public class InternalContactsAct extends BaseFileAction {
      *
      * @version v1
      */
-    @GetMapping("v1/getEmail")
+    @PostMapping("v1/getEmail")
     public Result getEmail(String[] names, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(internalContactsAPI.getEmails(names));
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

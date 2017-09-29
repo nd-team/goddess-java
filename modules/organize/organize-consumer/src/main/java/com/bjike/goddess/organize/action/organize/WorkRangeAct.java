@@ -588,7 +588,7 @@ public class WorkRangeAct {
      * @param direction 业务方向分类
      * @version v1
      */
-    @PatchMapping("v1/flat/close/{direction}")
+    @PutMapping("v1/flat/close/{direction}")
     public Result flatClose(@PathVariable String direction) throws ActException {
         try {
             workRangeAPI.flatClose(direction);
@@ -604,7 +604,7 @@ public class WorkRangeAct {
      * @param direction 业务方向分类
      * @version v1
      */
-    @PatchMapping("v1/flat/open/{direction}")
+    @PutMapping("v1/flat/open/{direction}")
     public Result open(@PathVariable String direction) throws ActException {
         try {
             workRangeAPI.flatOpen(direction);
@@ -627,6 +627,5 @@ public class WorkRangeAct {
             throw new ActException(e.getMessage());
         }
     }
-
 
 }

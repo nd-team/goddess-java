@@ -25,6 +25,7 @@ import java.util.Set;
 public interface PositionDetailUserAPI {
     /**
      * 总条数
+     *
      * @return
      * @throws SerException
      */
@@ -32,11 +33,13 @@ public interface PositionDetailUserAPI {
 
     /**
      * 通过id查找
+     *
      * @param id
      * @return
      * @throws SerException
      */
     PositionDetailUserBO findById(String id) throws SerException;
+
     /**
      * 保存
      *
@@ -226,10 +229,12 @@ public interface PositionDetailUserAPI {
     /**
      * 获取用户名获取该员工状态
      * lijuntao
+     *
      * @return
      * @throws SerException
      */
     StaffStatus statusByName(String name) throws SerException;
+
     /**
      * 获取所有部门下的职位
      *
@@ -240,10 +245,22 @@ public interface PositionDetailUserAPI {
 
     /**
      * 检测是否在该部门
+     *
      * @param entity
      * @param positions
      * @return
      * @throws SerException
      */
     PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException;
+
+    /**
+     * 判断是否是市场专业人员
+     *
+     * @param userId
+     * @return
+     * @throws SerException
+     */
+    default Boolean isMarker(String userId) throws SerException {
+        return null;
+    }
 }
