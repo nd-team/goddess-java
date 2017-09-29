@@ -11,17 +11,20 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.OilCardBasicCarBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
-import com.bjike.goddess.dispatchcar.to.DispatchCarInfoEditTO;
-import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
-import com.bjike.goddess.dispatchcar.to.DispatchcarDeleteFileTO;
+import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
+import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
+import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
-import com.bjike.goddess.oilcardmanage.vo.OilCardBasicVO;
+import com.bjike.goddess.dispatchcar.vo.OilCardBasicCarVO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.staffentry.vo.StaffEntryRegisterVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -33,6 +36,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -292,16 +297,15 @@ public class DispatchCarInfoAct extends BaseFileAction {
     /**
      * 查询所有用车陪同人员和用车人员和任务下达人员和所属地区和所属项目组
      *
-     * @return class EntryBasicInfoVO
+     * @return class StaffEntryRegisterVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/entry")
     public Result findAllEntry() throws ActException {
         try {
-            List<EntryBasicInfoVO> voList = new ArrayList<>(0);
-            List<EntryBasicInfoBO> boList = dispatchCarInfoAPI.findAllEntry();
-            voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
+            List<StaffEntryRegisterBO> boList = dispatchCarInfoAPI.findAllEntry();
+            List<StaffEntryRegisterVO>  voList = BeanTransform.copyProperties(boList, StaffEntryRegisterBO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -319,12 +323,122 @@ public class DispatchCarInfoAct extends BaseFileAction {
     public Result findAllOil() throws ActException {
         try {
             List<OilCardBasicCarBO> boList = dispatchCarInfoAPI.findAllOil();
-            List<OilCardBasicVO> voList = BeanTransform.copyProperties(boList, OilCardBasicVO.class);
+            List<OilCardBasicCarVO> voList = BeanTransform.copyProperties(boList, OilCardBasicCarVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 查找所有项目名称
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/allProject")
+    public Result findAllProject() throws ActException{
+        try {
+            List<String> allProject = dispatchCarInfoAPI.findAllProject();
+            return ActResult.initialize(allProject);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 寄件
+     * @param to 寄件内容
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/mail")
+    public Result mail(@Validated(EDIT.class) MailTO to) throws ActException{
+        try {
+            dispatchCarInfoAPI.mail(to);
+            return new ActResult("寄件编辑成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 导入
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/leadExcel")
+    public Result leadExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<DispatchCarInfoSetExcel> tos = ExcelUtil.excelToClazz(is, DispatchCarInfoSetExcel.class, excel);
+            List<DispatchCarInfoTO> toList = BeanTransform.copyProperties(tos, DispatchCarInfoTO.class);
+            dispatchCarInfoAPI.leadExcel(toList);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @param to 导出条件
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(ExportDispatchCarInfoTO to, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "出车记录.xlsx";
+            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(to), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板项目签订与立项
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "出车记录模板.xlsx";
+            super.writeOutFile(response, dispatchCarInfoAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+
+//    /**
+//     * 添加数据
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/copy/serve")
+//    public Result copyServe() throws ActException{
+//        try {
+//            dispatchCarInfoAPI.copyServer();
+//            return new ActResult("添加成功");
+//        }catch (SerException e){
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
 }

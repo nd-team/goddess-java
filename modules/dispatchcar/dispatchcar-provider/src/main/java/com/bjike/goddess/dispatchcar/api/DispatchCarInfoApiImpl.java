@@ -12,11 +12,9 @@ import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
-import com.bjike.goddess.dispatchcar.to.ConditionTO;
-import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
-import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
-import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
+import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -79,25 +77,16 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
         return dispatchCarInfoSer.findAudit(id);
     }
 
-    @Override
-    public void fundSugg(String id, String fundModuleSugg) throws SerException {
-        dispatchCarInfoSer.fundSugg(id, fundModuleSugg);
-    }
-
-    @Override
-    public void budgetSugg(String id, String budgetModuleSugg) throws SerException {
-        dispatchCarInfoSer.budgetSugg(id, budgetModuleSugg);
-    }
 
     @Override
     public void principalSugg(String id, String principalSugg, Boolean auditResult) throws SerException {
         dispatchCarInfoSer.principalSugg(id, principalSugg, auditResult);
     }
 
-    @Override
-    public void receiptAudit(String id, String auditReceiptSugg, String receiveReceiptDate, Boolean auditReceiptResult) throws SerException {
-        dispatchCarInfoSer.receiptAudit(id, auditReceiptSugg, receiveReceiptDate, auditReceiptResult);
-    }
+//    @Override
+//    public void receiptAudit(String id, String auditReceiptSugg, String receiveReceiptDate, Boolean auditReceiptResult) throws SerException {
+//        dispatchCarInfoSer.receiptAudit(id, auditReceiptSugg, receiveReceiptDate, auditReceiptResult);
+//    }
 
     @Override
     public void pay(String id) throws SerException {
@@ -157,8 +146,8 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public void predict(String id, String budgetPayDate, String payPlan) throws SerException {
-        dispatchCarInfoSer.predict(id, budgetPayDate, payPlan);
+    public void predict(PredictPayTO to) throws SerException {
+        dispatchCarInfoSer.predict(to);
     }
 
     @Override
@@ -213,12 +202,102 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public List<EntryBasicInfoBO> findAllEntry() throws SerException {
+    public List<StaffEntryRegisterBO> findAllEntry() throws SerException {
         return dispatchCarInfoSer.findAllEntry();
     }
 
     @Override
     public List<OilCardBasicCarBO> findAllOil() throws SerException {
         return dispatchCarInfoSer.findAllOil();
+    }
+
+//    @Override
+//    public void copyServer() throws SerException {
+//        dispatchCarInfoSer.copyServer();
+//    }
+
+    @Override
+    public void copyDriver() throws SerException {
+        dispatchCarInfoSer.copyDriver();
+    }
+
+    @Override
+    public List<String> findAllProject() throws SerException {
+        return dispatchCarInfoSer.findAllProject();
+    }
+
+    @Override
+    public void fundSugg(PredictPayTO to) throws SerException {
+        dispatchCarInfoSer.fundSugg(to);
+    }
+
+    @Override
+    public void budgetSugg(DispatchCarInfoTO dispatchCarInfoTO, CheckChangeCarTO to) throws SerException {
+        dispatchCarInfoSer.budgetSugg(dispatchCarInfoTO,to);
+    }
+
+    @Override
+    public void clientSugg(CheckChangeCarTO to) throws SerException {
+        dispatchCarInfoSer.clientSugg(to);
+    }
+
+    @Override
+    public void headSugg(CheckChangeCarTO to) throws SerException {
+        dispatchCarInfoSer.headSugg(to);
+    }
+
+    @Override
+    public void financialSugg(CheckChangeCarTO to) throws SerException {
+        dispatchCarInfoSer.financialSugg(to);
+    }
+
+    @Override
+    public List<DispatchCarInfoBO> findWrongRecord(DispatchCarInfoDTO dto) throws SerException {
+        return dispatchCarInfoSer.findWrongRecord(dto);
+    }
+
+    @Override
+    public void correctMistake(DispatchCarInfoTO to) throws SerException {
+        dispatchCarInfoSer.correctMistake(to);
+    }
+
+    @Override
+    public void receivePaper(String id, Boolean isCorrect) throws SerException {
+        dispatchCarInfoSer.receivePaper(id,isCorrect);
+    }
+
+    @Override
+    public void mail(MailTO to) throws SerException {
+        dispatchCarInfoSer.mail(to);
+    }
+
+    @Override
+    public void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+        dispatchCarInfoSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportDispatchCarInfoTO to) throws SerException {
+        return dispatchCarInfoSer.exportExcel(to);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return dispatchCarInfoSer.templateExport();
+    }
+
+    @Override
+    public List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime) throws SerException {
+        return dispatchCarInfoSer.driverCollect(startTime,endTime);
+    }
+
+    @Override
+    public List<PayedCollectBO> collectPayed(String startTime, String endTime) throws SerException {
+        return dispatchCarInfoSer.collectPayed(startTime,endTime);
+    }
+
+    @Override
+    public byte[] exportExcel(CollectIntervalType collectIntervalType, CollectType collectType, ExportCollectPayedTO to) throws SerException {
+        return dispatchCarInfoSer.exportExcel(collectIntervalType,collectType,to);
     }
 }
