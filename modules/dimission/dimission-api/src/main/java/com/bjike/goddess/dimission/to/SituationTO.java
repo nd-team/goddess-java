@@ -1,225 +1,250 @@
 package com.bjike.goddess.dimission.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-/**
-* 离职办理节点情况
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-09-28 11:28 ]
-* @Description:	[ 离职办理节点情况 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class SituationTO extends BaseTO { 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
-* 地区
-*/
- private String  area; 
+ * 离职办理节点情况
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-09-28 02:23 ]
+ * @Description: [ 离职办理节点情况 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class SituationTO extends BaseTO {
 
-/**
-* 项目组/部门
-*/
- private String  department; 
+//    /**
+//     * 地区
+//     */
+//    private String area;
+//
+//    /**
+//     * 项目组/部门
+//     */
+//    private String department;
+//
+//    /**
+//     * 岗位
+//     */
+//    private String position;
+//
+//    /**
+//     * 岗位层级
+//     */
+//    private String positionLever;
 
-/**
-* 岗位
-*/
- private String  position; 
+    /**
+     * 姓名
+     */
+    @NotBlank(message = "姓名不能为空", groups = {ADD.class, EDIT.class})
+    private String name;
 
-/**
-* 岗位层级
-*/
- private String  positionLever; 
+    /**
+     * 是否填写离职申请表
+     */
+    @NotNull(message = "是否填写离职申请表不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean writeApply;
 
-/**
-* 姓名
-*/
- private String  name; 
+    /**
+     * 是否待离职
+     */
+    @NotNull(message = "是否待离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean waitDimission;
 
-/**
-* 是否填写离职申请表
-*/
- private Boolean  isBuild; 
+    /**
+     * 是否已离职
+     */
+    @NotNull(message = "是否已离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean left;
 
-/**
-* 是否待离职
-*/
- private Boolean  buildTime; 
+    /**
+     * 是否正常离职
+     */
+    @NotNull(message = "是否正常离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean normalLeave;
 
-/**
-* 是否已离职
-*/
- private Boolean  isComplete; 
+    /**
+     * 是否自离
+     */
+    @NotNull(message = "是否自离不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean selfLeave;
 
-/**
-* 是否正常离职
-*/
- private Boolean  aimAmount; 
+    /**
+     * 是否辞退
+     */
+    @NotNull(message = "是否辞退不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean dismiss;
 
-/**
-* 是否自离
-*/
- private Boolean  planAmount; 
+    /**
+     * 是否冻结账号
+     */
+    @NotNull(message = "是否冻结账号不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean freeze;
 
-/**
-* 是否辞退
-*/
- private Boolean  actualAmount; 
+    /**
+     * 是否可挽留
+     */
+    @NotNull(message = "是否可挽留不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean retained;
 
-/**
-* 是否冻结账号
-*/
- private Boolean  informationProvide; 
+    /**
+     * 是否工作交接
+     */
+    @NotNull(message = "是否工作交接不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean workTransfer;
 
-/**
-* 是否可挽留
-*/
- private Boolean  messageProportion; 
+    /**
+     * 是否可提前离职
+     */
+    @NotNull(message = "是否可提前离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean leaveEarly;
 
-/**
-* 是否工作交接数
-*/
- private Boolean  provideAccount; 
+    /**
+     * 是否需要延后离职
+     */
+    @NotNull(message = "是否需要延后离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean postponement;
 
-/**
-* 是否可提前离职
-*/
- private Boolean  businessContracting; 
+    /**
+     * 是否需填写《员工离职工作交接手续表》
+     */
+    @NotNull(message = "是否需填写《员工离职工作交接手续表》不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean handover;
 
-/**
-* 是否需要延后离职
-*/
- private Boolean  businessProportion; 
+    /**
+     * 项目经理需审核是否可提前离职
+     */
+    @NotNull(message = "项目经理需审核是否可提前离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean managerAudit;
 
-/**
-* 是否需填写《员工离职工作交接手续表》
-*/
- private Boolean  contractAccount; 
+    /**
+     * 模块负责人需审核是否可提前离职
+     */
+    @NotNull(message = "模块负责人需审核是否可提前离职不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean principalAudit;
 
-/**
-* 项目经理需审核是否可提前离职
-*/
- private Boolean  businessNegotiation; 
+    public String getName() {
+        return name;
+    }
 
-/**
-* 模块负责人需审核是否可提前离职
-*/
- private Boolean  talkProportion; 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public Boolean getWriteApply() {
+        return writeApply;
+    }
 
+    public void setWriteApply(Boolean writeApply) {
+        this.writeApply = writeApply;
+    }
 
- public String getArea () { 
- return area;
- } 
- public void setArea (String area ) { 
- this.area = area ; 
- } 
- public String getDepartment () { 
- return department;
- } 
- public void setDepartment (String department ) { 
- this.department = department ; 
- } 
- public String getPosition () { 
- return position;
- } 
- public void setPosition (String position ) { 
- this.position = position ; 
- } 
- public String getPositionLever () { 
- return positionLever;
- } 
- public void setPositionLever (String positionLever ) { 
- this.positionLever = positionLever ; 
- } 
- public String getName () { 
- return name;
- } 
- public void setName (String name ) { 
- this.name = name ; 
- } 
- public Boolean getIsBuild () { 
- return isBuild;
- } 
- public void setIsBuild (Boolean isBuild ) { 
- this.isBuild = isBuild ; 
- } 
- public Boolean getBuildTime () { 
- return buildTime;
- } 
- public void setBuildTime (Boolean buildTime ) { 
- this.buildTime = buildTime ; 
- } 
- public Boolean getIsComplete () { 
- return isComplete;
- } 
- public void setIsComplete (Boolean isComplete ) { 
- this.isComplete = isComplete ; 
- } 
- public Boolean getAimAmount () { 
- return aimAmount;
- } 
- public void setAimAmount (Boolean aimAmount ) { 
- this.aimAmount = aimAmount ; 
- } 
- public Boolean getPlanAmount () { 
- return planAmount;
- } 
- public void setPlanAmount (Boolean planAmount ) { 
- this.planAmount = planAmount ; 
- } 
- public Boolean getActualAmount () { 
- return actualAmount;
- } 
- public void setActualAmount (Boolean actualAmount ) { 
- this.actualAmount = actualAmount ; 
- } 
- public Boolean getInformationProvide () { 
- return informationProvide;
- } 
- public void setInformationProvide (Boolean informationProvide ) { 
- this.informationProvide = informationProvide ; 
- } 
- public Boolean getMessageProportion () { 
- return messageProportion;
- } 
- public void setMessageProportion (Boolean messageProportion ) { 
- this.messageProportion = messageProportion ; 
- } 
- public Boolean getProvideAccount () { 
- return provideAccount;
- } 
- public void setProvideAccount (Boolean provideAccount ) { 
- this.provideAccount = provideAccount ; 
- } 
- public Boolean getBusinessContracting () { 
- return businessContracting;
- } 
- public void setBusinessContracting (Boolean businessContracting ) { 
- this.businessContracting = businessContracting ; 
- } 
- public Boolean getBusinessProportion () { 
- return businessProportion;
- } 
- public void setBusinessProportion (Boolean businessProportion ) { 
- this.businessProportion = businessProportion ; 
- } 
- public Boolean getContractAccount () { 
- return contractAccount;
- } 
- public void setContractAccount (Boolean contractAccount ) { 
- this.contractAccount = contractAccount ; 
- } 
- public Boolean getBusinessNegotiation () { 
- return businessNegotiation;
- } 
- public void setBusinessNegotiation (Boolean businessNegotiation ) { 
- this.businessNegotiation = businessNegotiation ; 
- } 
- public Boolean getTalkProportion () { 
- return talkProportion;
- } 
- public void setTalkProportion (Boolean talkProportion ) { 
- this.talkProportion = talkProportion ; 
- } 
- }
+    public Boolean getWaitDimission() {
+        return waitDimission;
+    }
+
+    public void setWaitDimission(Boolean waitDimission) {
+        this.waitDimission = waitDimission;
+    }
+
+    public Boolean getLeft() {
+        return left;
+    }
+
+    public void setLeft(Boolean left) {
+        this.left = left;
+    }
+
+    public Boolean getNormalLeave() {
+        return normalLeave;
+    }
+
+    public void setNormalLeave(Boolean normalLeave) {
+        this.normalLeave = normalLeave;
+    }
+
+    public Boolean getSelfLeave() {
+        return selfLeave;
+    }
+
+    public void setSelfLeave(Boolean selfLeave) {
+        this.selfLeave = selfLeave;
+    }
+
+    public Boolean getDismiss() {
+        return dismiss;
+    }
+
+    public void setDismiss(Boolean dismiss) {
+        this.dismiss = dismiss;
+    }
+
+    public Boolean getFreeze() {
+        return freeze;
+    }
+
+    public void setFreeze(Boolean freeze) {
+        this.freeze = freeze;
+    }
+
+    public Boolean getRetained() {
+        return retained;
+    }
+
+    public void setRetained(Boolean retained) {
+        this.retained = retained;
+    }
+
+    public Boolean getWorkTransfer() {
+        return workTransfer;
+    }
+
+    public void setWorkTransfer(Boolean workTransfer) {
+        this.workTransfer = workTransfer;
+    }
+
+    public Boolean getLeaveEarly() {
+        return leaveEarly;
+    }
+
+    public void setLeaveEarly(Boolean leaveEarly) {
+        this.leaveEarly = leaveEarly;
+    }
+
+    public Boolean getPostponement() {
+        return postponement;
+    }
+
+    public void setPostponement(Boolean postponement) {
+        this.postponement = postponement;
+    }
+
+    public Boolean getHandover() {
+        return handover;
+    }
+
+    public void setHandover(Boolean handover) {
+        this.handover = handover;
+    }
+
+    public Boolean getManagerAudit() {
+        return managerAudit;
+    }
+
+    public void setManagerAudit(Boolean managerAudit) {
+        this.managerAudit = managerAudit;
+    }
+
+    public Boolean getPrincipalAudit() {
+        return principalAudit;
+    }
+
+    public void setPrincipalAudit(Boolean principalAudit) {
+        this.principalAudit = principalAudit;
+    }
+}

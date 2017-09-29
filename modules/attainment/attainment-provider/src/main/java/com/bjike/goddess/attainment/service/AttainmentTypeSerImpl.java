@@ -17,6 +17,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,7 @@ public class AttainmentTypeSerImpl extends ServiceImpl<AttainmentType, Attainmen
                 AttainmentType entity = super.findById(to.getId());
                 BeanTransform.copyProperties(to, entity, true);
                 entity.setModifyTime(LocalDateTime.now());
+                entity.setDescription(to.getDescription());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, AttainmentTypeBO.class);
             } catch (Exception e) {

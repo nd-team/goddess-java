@@ -34,7 +34,6 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -644,16 +643,16 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 UserBO userBO = userAPI.findOne(userDTO);
                 if (null != userBO) {
                     bo.setHeadSculpture(userBO.getHeadSculpture());
-                }
+                    bo.setUsername(userBO.getUsername());
 //                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
-                if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
-                    bo.setSex(SexType.MAN);
-                } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
-                    bo.setSex(SexType.WOMAN);
-                } else {
-                    bo.setSex(SexType.NONE);
+                    if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                        bo.setSex(SexType.MAN);
+                    } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                        bo.setSex(SexType.WOMAN);
+                    } else {
+                        bo.setSex(SexType.NONE);
+                    }
                 }
-
             }
             return mobileInternalContactsBOs;
         }

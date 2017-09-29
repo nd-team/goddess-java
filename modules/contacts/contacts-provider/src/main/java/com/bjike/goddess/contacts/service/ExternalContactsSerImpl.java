@@ -290,15 +290,15 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
                     UserDetailBO userDetailBO = userDetailAPI.findByUserId(userBO.getId());
                     if (null != userDetailBO) {
                         bo.setSex(userDetailBO.getSex());
+                        if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                            bo.setSex(SexType.MAN);
+                        } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
+                            bo.setSex(SexType.WOMAN);
+                        } else {
+                            bo.setSex(SexType.NONE);
+                        }
                     }
 
-                    if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
-                        bo.setSex(SexType.MAN);
-                    } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
-                        bo.setSex(SexType.WOMAN);
-                    } else {
-                        bo.setSex(SexType.NONE);
-                    }
                 }
             }
             return bos;
