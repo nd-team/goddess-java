@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保卡基本信息业务接口实现
@@ -73,5 +74,10 @@ public class SecureCartApiImpl implements SecureCartAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return secureCartSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        return secureCartSer.allName();
     }
 }

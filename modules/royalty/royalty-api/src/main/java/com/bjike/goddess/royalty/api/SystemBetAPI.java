@@ -5,6 +5,7 @@ import com.bjike.goddess.royalty.bo.SystemBetABO;
 import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
 
 import java.util.List;
@@ -99,11 +100,11 @@ public interface SystemBetAPI {
     }
 
     /**
-     * 获取所有部门
+     * 获取所有体系
      *
      * @throws SerException
      */
-    default List<String> getDepartment() throws SerException {
+    default List<String> system() throws SerException {
         return null;
     }
     /**
@@ -112,6 +113,16 @@ public interface SystemBetAPI {
      * @throws SerException
      */
     default SystemBetABO getSystem(String projectName) throws SerException {
+        return null;
+    }
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class SystemBetABO
+     * @throws SerException
+     */
+    default List<SystemBetABO> systemCollect(ProjectNameTO to) throws SerException {
         return null;
     }
 

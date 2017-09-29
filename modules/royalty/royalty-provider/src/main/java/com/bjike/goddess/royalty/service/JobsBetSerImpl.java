@@ -19,10 +19,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +46,8 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     private JobsBetDSer jobsBetDSer;
     @Autowired
     private JobsBetESer jobsBetESer;
+    @Autowired
+    private JobsBetFSer jobsBetFSer;
     @Autowired
     private SystemBetBSer systemBetBSer;
     @Autowired
@@ -244,6 +245,15 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                     List<JobsBetE> listE = jobsBetESer.findByCis(edto);
                                     List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE, JobsBetEBO.class);
                                     jobsBetDBO.setJobsBetEBOS(listEBO);
+                                    if (listEBO != null) {
+                                        for (JobsBetEBO jobsBetEBO : listEBO) {
+                                            JobsBetFDTO fdto = new JobsBetFDTO();
+                                            fdto.getConditions().add(Restrict.eq("jobsBetE.id", jobsBetEBO.getId()));
+                                            List<JobsBetF> listF = jobsBetFSer.findByCis(fdto);
+                                            List<JobsBetFBO> listFBO = BeanTransform.copyProperties(listF, JobsBetFBO.class);
+                                            jobsBetEBO.setJobsBetFBOS(listFBO);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -287,6 +297,15 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                         List<JobsBetE> listE = jobsBetESer.findByCis(edto);
                                         List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE, JobsBetEBO.class);
                                         jobsBetDBO.setJobsBetEBOS(listEBO);
+                                        if (listEBO != null) {
+                                            for (JobsBetEBO jobsBetEBO : listEBO) {
+                                                JobsBetFDTO fdto = new JobsBetFDTO();
+                                                fdto.getConditions().add(Restrict.eq("jobsBetE.id", jobsBetEBO.getId()));
+                                                List<JobsBetF> listF = jobsBetFSer.findByCis(fdto);
+                                                List<JobsBetFBO> listFBO = BeanTransform.copyProperties(listF, JobsBetFBO.class);
+                                                jobsBetEBO.setJobsBetFBOS(listFBO);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -310,6 +329,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         List<JobsBetC> jobsBetCS = new ArrayList<>();
         List<JobsBetD> jobsBetDS = new ArrayList<>();
         List<JobsBetE> jobsBetES = new ArrayList<>();
+        List<JobsBetF> jobsBetFS = new ArrayList<>();
         List<JobsBetBTO> jobsBetBTOS = jobsBetATO.getJobsBetBTOS();
         if (jobsBetBTOS != null) {
             for (JobsBetBTO jobsBetBTO : jobsBetBTOS) {
@@ -324,23 +344,6 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                         JobsBetC jobsBetC = BeanTransform.copyProperties(jobsBetCTO, JobsBetC.class, true);
                         jobsBetC.setJobsBetB(jobsBetB);
 
-                        //基础得分（部门总得分*目标-部门分配基础权重）
-                        double departmentTotalScore = 0;
-                        double basesScore = 0.0;
-                        String[] fields = new String[]{"departmentTotalScore"};
-                        String sql = "SELECT departmentTotalScore AS departmentTotalScore FROM royalty_systembetb WHERE department='" + jobsBetB.getDepartment() + "'";
-                        List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
-                        if (systemBetBS != null && !systemBetBS.isEmpty()) {
-                            departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
-                        }
-                        if (departmentTotalScore != 0) {
-                            basesScore = departmentTotalScore * jobsBetC.getBaseWeight();
-                            jobsBetC.setBasesScore(basesScore);
-                        }
-                        //部门总得分
-                        double totalScore = jobsBetC.getRestrictScore() + basesScore;
-                        jobsBetC.setDepartmentTotalScore(totalScore);
-
                         jobsBetC = jobsBetCSer.save(jobsBetC);
                         jobsBetCS.add(jobsBetC);
 
@@ -349,13 +352,53 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                             for (JobsBetETO jobsBetETO : jobsBetETOS) {
                                 JobsBetD jobsBetD = BeanTransform.copyProperties(jobsBetETO, JobsBetD.class, true);
                                 jobsBetD.setJobsBetC(jobsBetC);
+                                //体系目标总得分
+                                double systemTotalScore = 0;
+                                //体系计划总得分
+                                double systemTotalScorePlan = 0;
+                                //体系实际总得分
+                                double systemTotalScorePractice = 0;
+                                //目标基础得分
+                                double basesScore = 0.0;
+                                //计划基础得分
+                                double basesScorePlan = 0.0;
+                                //实际基础得分
+                                double basesScorePractice = 0.0;
+                                String[] fields = new String[]{"systemTotalScore", "systemTotalScorePlan", "systemTotalScorePractice"};
+                                String sql = "SELECT systemTotalScore AS systemTotalScore,systemTotalScorePlan AS systemTotalScorePlan, " +
+                                        " systemTotalScorePractice as systemTotalScorePractice FROM royalty_systembetb WHERE system='" + jobsBetB.getSystem() + "' ";
+                                List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
+                                if (systemBetBS != null && !systemBetBS.isEmpty()) {
+                                    if (null != systemBetBS.get(0).getSystemTotalScore()) {
+                                        systemTotalScore = systemBetBS.get(0).getSystemTotalScore();
+                                    }
+                                    if (null != systemBetBS.get(0).getSystemTotalScorePlan()) {
+                                        systemTotalScorePlan = systemBetBS.get(0).getSystemTotalScorePlan();
+                                    }
+                                    if (null != systemBetBS.get(0).getSystemTotalScorePractice()) {
+                                        systemTotalScorePractice = systemBetBS.get(0).getSystemTotalScorePractice();
+                                    }
 
-                                //对赌得分
-                                if (departmentTotalScore != 0) {
-                                    double betScore = departmentTotalScore * jobsBetD.getBetWeight();
-                                    jobsBetD.setBetScore(betScore);
                                 }
+                                //目标基础得分（体系目标总得分*目标-部门分配基础权重）
+                                basesScore = systemTotalScore * jobsBetD.getBaseWeight();
+                                jobsBetD.setBasesScore(basesScore);
+                                //计划基础得分（体系计划总得分*目标-部门分配基础权重）
+                                basesScorePlan = systemTotalScorePlan * jobsBetD.getBaseWeight();
+                                jobsBetD.setBasesScorePlan(basesScorePlan);
+                                //实际基础得分（体系实际总得分*目标-部门分配基础权重）
+                                basesScorePractice = systemTotalScorePractice * jobsBetD.getBaseWeight();
+                                jobsBetD.setBasesScorePractice(basesScorePractice);
 
+                                //目标总得分（目标制约得分+目标基础得分）
+                                Double totalScore = jobsBetD.getRestrictScore() + basesScore;
+                                jobsBetD.setTotalScore(totalScore);
+                                //计划总得分（计划制约得分+计划基础得分）
+                                Double totalScorePlan = jobsBetD.getRestrictScorePlan() + basesScorePlan;
+                                jobsBetD.setTotalScorePlan(totalScorePlan);
+                                //实际总得分（实际制约得分+实际基础得分）
+                                Double totalScorePractice = jobsBetD.getTotalScorePractice() + basesScorePractice;
+                                jobsBetD.setTotalScorePractice(totalScorePractice);
                                 jobsBetD = jobsBetDSer.save(jobsBetD);
                                 jobsBetDS.add(jobsBetD);
 
@@ -366,6 +409,18 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                         jobsBetE.setJobsBetD(jobsBetD);
                                         jobsBetE = jobsBetESer.save(jobsBetE);
                                         jobsBetES.add(jobsBetE);
+                                        List<JobsBetGTO> jobsBetGTOS = jobsBetFTO.getJobsBetGTOS();
+                                        if (jobsBetGTOS != null) {
+                                            for (JobsBetGTO jobsBetGTO : jobsBetGTOS) {
+                                                JobsBetF jobsBetF = BeanTransform.copyProperties(jobsBetGTO, JobsBetF.class, true);
+                                                jobsBetF.setJobsBetE(jobsBetE);
+                                                if(jobsBetD.getJobs().equals(jobsBetF.getUnmetAllocationJobs())){
+                                                    throw new SerException("岗位不能和未达标分配岗位是同一个");
+                                                }
+                                                jobsBetF = jobsBetFSer.save(jobsBetF);
+                                                jobsBetFS.add(jobsBetF);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -388,6 +443,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         List<JobsBetC> jobsBetCS = new ArrayList<>();
         List<JobsBetD> jobsBetDS = new ArrayList<>();
         List<JobsBetE> jobsBetES = new ArrayList<>();
+        List<JobsBetF> jobsBetFS = new ArrayList<>();
 
         //先删掉B表对应数据
         JobsBetBDTO jobsBetBDTO = new JobsBetBDTO();
@@ -418,6 +474,16 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                     jobsBetEDTO.getConditions().add(Restrict.in("jobsBetD.id", dids));
                     List<JobsBetE> eList = jobsBetESer.findByCis(jobsBetEDTO);
                     if (eList != null && eList.size() > 0) {
+                        //查询对应F表的数据，先删除
+                        List<String> eIdList = eList.stream().map(JobsBetE::getId).collect(Collectors.toList());
+                        String[] eids = new String[eIdList.size()];
+                        eids = eIdList.toArray(eids);
+                        JobsBetFDTO jobsBetFDTO = new JobsBetFDTO();
+                        jobsBetFDTO.getConditions().add(Restrict.in("jobsBetE.id", eids));
+                        List<JobsBetF> fList = jobsBetFSer.findByCis(jobsBetFDTO);
+                        if (fList != null && fList.size() > 0) {
+                            jobsBetFSer.remove(fList);
+                        }
                         jobsBetESer.remove(eList);
                     }
                     jobsBetDSer.remove(dList);
@@ -442,23 +508,6 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                     for (JobsBetCTO jobsBetCTO : jobsBetCTOS) {
                         JobsBetC jobsBetC = BeanTransform.copyProperties(jobsBetCTO, JobsBetC.class, true);
                         jobsBetC.setJobsBetB(jobsBetB);
-
-                        //基础得分（部门总得分*目标-部门分配基础权重）
-                        double departmentTotalScore = 0;
-                        double basesScore = 0.0;
-                        String[] fields = new String[]{"departmentTotalScore"};
-                        String sql = "SELECT departmentTotalScore AS departmentTotalScore FROM royalty_systembetb WHERE department='" + jobsBetB.getDepartment() + "'";
-                        List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
-                        if (systemBetBS != null && !systemBetBS.isEmpty()) {
-                            departmentTotalScore = systemBetBS.get(0).getDepartmentTotalScore();
-                        }
-                        if (departmentTotalScore != 0) {
-                            basesScore = departmentTotalScore * jobsBetC.getBaseWeight();
-                            jobsBetC.setBasesScore(basesScore);
-                        }
-                        //部门总得分
-                        double totalScore = jobsBetC.getRestrictScore() + basesScore;
-                        jobsBetC.setDepartmentTotalScore(totalScore);
                         jobsBetC.setId(null);
                         jobsBetCSer.update(jobsBetC);
                         jobsBetCS.add(jobsBetC);
@@ -468,13 +517,53 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                             for (JobsBetETO jobsBetETO : jobsBetETOS) {
                                 JobsBetD jobsBetD = BeanTransform.copyProperties(jobsBetETO, JobsBetD.class, true);
                                 jobsBetD.setJobsBetC(jobsBetC);
+                                //体系目标总得分
+                                double systemTotalScore = 0;
+                                //体系计划总得分
+                                double systemTotalScorePlan = 0;
+                                //体系实际总得分
+                                double systemTotalScorePractice = 0;
+                                //目标基础得分
+                                double basesScore = 0.0;
+                                //计划基础得分
+                                double basesScorePlan = 0.0;
+                                //实际基础得分
+                                double basesScorePractice = 0.0;
+                                String[] fields = new String[]{"systemTotalScore", "systemTotalScorePlan", "systemTotalScorePractice"};
+                                String sql = "SELECT systemTotalScore AS systemTotalScore,systemTotalScorePlan AS systemTotalScorePlan, " +
+                                        " systemTotalScorePractice as systemTotalScorePractice FROM royalty_systembetb WHERE system='" + jobsBetB.getSystem() + "' ";
+                                List<SystemBetB> systemBetBS = systemBetBSer.findBySql(sql, SystemBetB.class, fields);
+                                if (systemBetBS != null && !systemBetBS.isEmpty()) {
+                                    if (null != systemBetBS.get(0).getSystemTotalScore()) {
+                                        systemTotalScore = systemBetBS.get(0).getSystemTotalScore();
+                                    }
+                                    if (null != systemBetBS.get(0).getSystemTotalScorePlan()) {
+                                        systemTotalScorePlan = systemBetBS.get(0).getSystemTotalScorePlan();
+                                    }
+                                    if (null != systemBetBS.get(0).getSystemTotalScorePractice()) {
+                                        systemTotalScorePractice = systemBetBS.get(0).getSystemTotalScorePractice();
+                                    }
 
-                                //对赌得分
-                                if (departmentTotalScore != 0) {
-                                    double betScore = departmentTotalScore * jobsBetD.getBetWeight();
-                                    jobsBetD.setBetScore(betScore);
                                 }
+                                //目标基础得分（体系目标总得分*目标-部门分配基础权重）
+                                basesScore = systemTotalScore * jobsBetD.getBaseWeight();
+                                jobsBetD.setBasesScore(basesScore);
+                                //计划基础得分（体系计划总得分*目标-部门分配基础权重）
+                                basesScorePlan = systemTotalScorePlan * jobsBetD.getBaseWeight();
+                                jobsBetD.setBasesScorePlan(basesScorePlan);
+                                //实际基础得分（体系实际总得分*目标-部门分配基础权重）
+                                basesScorePractice = systemTotalScorePractice * jobsBetD.getBaseWeight();
+                                jobsBetD.setBasesScorePractice(basesScorePractice);
 
+                                //目标总得分（目标制约得分+目标基础得分）
+                                Double totalScore = jobsBetD.getRestrictScore() + basesScore;
+                                jobsBetD.setTotalScore(totalScore);
+                                //计划总得分（计划制约得分+计划基础得分）
+                                Double totalScorePlan = jobsBetD.getRestrictScorePlan() + basesScorePlan;
+                                jobsBetD.setTotalScorePlan(totalScorePlan);
+                                //实际总得分（实际制约得分+实际基础得分）
+                                Double totalScorePractice = jobsBetD.getTotalScorePractice() + basesScorePractice;
+                                jobsBetD.setTotalScorePractice(totalScorePractice);
                                 jobsBetD.setId(null);
                                 jobsBetDSer.update(jobsBetD);
                                 jobsBetDS.add(jobsBetD);
@@ -487,6 +576,19 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                         jobsBetE.setId(null);
                                         jobsBetESer.update(jobsBetE);
                                         jobsBetES.add(jobsBetE);
+                                        List<JobsBetGTO> jobsBetGTOS = jobsBetFTO.getJobsBetGTOS();
+                                        if (jobsBetGTOS != null) {
+                                            for (JobsBetGTO jobsBetGTO : jobsBetGTOS) {
+                                                JobsBetF jobsBetF = BeanTransform.copyProperties(jobsBetGTO, JobsBetF.class, true);
+                                                jobsBetF.setJobsBetE(jobsBetE);
+                                                jobsBetF.setId(null);
+                                                if(jobsBetD.getJobs().equals(jobsBetF.getUnmetAllocationJobs())){
+                                                    throw new SerException("岗位不能和未达标分配岗位是同一个");
+                                                }
+                                                jobsBetFSer.update(jobsBetF);
+                                                jobsBetFS.add(jobsBetF);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -502,23 +604,33 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        JobsBetE jobsBetE = jobsBetESer.findById(id);
-        if (jobsBetE == null) {
+        JobsBetF jobsBetF = jobsBetFSer.findById(id);
+        if (jobsBetF == null) {
             throw new SerException("该对象不存在");
         }
-        jobsBetESer.remove(id);
+        jobsBetFSer.remove(id);
+        List<JobsBetE> eList = jobsBetESer.findAll();
         List<JobsBetD> dList = jobsBetDSer.findAll();
         List<JobsBetC> cList = jobsBetCSer.findAll();
         List<JobsBetB> bList = jobsBetBSer.findAll();
         List<JobsBetA> aList = jobsBetASer.findAll();
 
+        Set<String> eids = new HashSet<>();
         Set<String> dids = new HashSet<>();
         Set<String> cids = new HashSet<>();
         Set<String> bids = new HashSet<>();
         Set<String> aids = new HashSet<>();
 
-        for (JobsBetE e : jobsBetESer.findAll()) {
-            dids.add(e.getJobsBetD().getId());
+        for (JobsBetF f : jobsBetFSer.findAll()) {
+            eids.add(f.getJobsBetE().getId());
+        }
+        for (JobsBetE e : eList) {
+            if (!eids.contains(e.getId())) {
+                jobsBetESer.remove(e.getId());
+            }
+        }
+        for (JobsBetE e1 : jobsBetESer.findAll()) {
+            dids.add(e1.getJobsBetD().getId());
         }
         for (JobsBetD d : dList) {
             if (!dids.contains(d.getId())) {
@@ -554,6 +666,212 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     }
 
     @Override
+    public List<JobsBetABO> jobsCollect(ProjectNameTO to) throws SerException {
+        List<JobsBetABO> jobsBetABOS = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.betTime AS betTime,a.area as area,a.projectGroup as projectGroup, ");
+        sb.append(" a.projectName as projectName,a.scoreProfit as scoreProfit, ");
+        sb.append(" a.planProfit as planProfit,a.practiceProfit as practiceProfit, ");
+        sb.append(" b.system AS system,c.department as department,d.jobs AS jobs,d.people AS people, ");
+        sb.append(" d.baseWeight AS baseWeight,d.basesScore AS basesScore, ");
+        sb.append(" d.basesScorePlan AS basesScorePlan,d.basesScorePractice AS basesScorePractice, ");
+        sb.append(" d.restrictScore AS restrictScore,d.restrictScorePlan AS restrictScorePlan, ");
+        sb.append(" d.restrictScorePractice AS restrictScorePractice,d.totalScore AS totalScore, ");
+        sb.append(" d.totalScorePlan AS totalScorePlan,d.totalScorePractice AS totalScorePractice, ");
+        sb.append(" e.betWeight AS betWeight,e.indexNum as indexNum,e.indexName AS indexName, ");
+        sb.append(" e.confirmTargetValue as confirmTargetValue,e.actualTargetValue AS actualTargetValue, ");
+        sb.append(" e.is_standard AS standard,e.betScore AS betScore,e.betScorePlan AS betScorePlan, ");
+        sb.append(" e.betScorePractice AS betScorePractice, ");
+        sb.append(" f.unmetAllocationJobs as unmetAllocationJobs, f.unmetAllocation as unmetAllocation ");
+        sb.append(" FROM royalty_jobsbeta a,royalty_jobsbetb b,  royalty_jobsbetc c,royalty_jobsbetd d, ");
+        sb.append(" royalty_jobsbete e,royalty_jobsbetf f ");
+        sb.append(" WHERE a.projectName='" + to.getProjectName() + "' AND a.id=b.jobsBetA_id AND b.id=c.jobsBetB_id AND c.id=d.jobsBetC_id ");
+        sb.append(" AND d.id=e.jobsBetD_id AND e.id=f.jobsBetE_id ");
+        String[] feilds = new String[]{"betTime", "area", "projectGroup", "projectName", "scoreProfit", "planProfit",
+                "practiceProfit", "system", "department", "jobs", "people", "baseWeight", "basesScore", "basesScorePlan", "basesScorePractice",
+                "restrictScore", "restrictScorePlan", "restrictScorePractice", "totalScore", "totalScorePlan",
+                "totalScorePractice", "betWeight", "indexNum", "indexName",
+                "confirmTargetValue", "actualTargetValue", "standard", "betScore", "betScorePlan", "betScorePractice",
+                "unmetAllocationJobs", "unmetAllocation"};
+        List<JobsBetBO> jobsBetBOS = super.findBySql(sb.toString(), JobsBetBO.class, feilds);
+        double basesScore = 0.0;
+        double basesScorePlan = 0.0;
+        double basesScorePractice = 0.0;
+        double restrictScore = 0.0;
+        double restrictScorePlan = 0.0;
+        double restrictScorePractice = 0.0;
+        double totalScore = 0.0;
+        double totalScorePlan = 0.0;
+        double totalScorePractice = 0.0;
+        double betScore = 0.0;
+        double betScorePlan = 0.0;
+        double betScorePractice = 0.0;
+        if (jobsBetBOS != null) {
+            basesScore = jobsBetBOS.stream().filter(p -> p.getBasesScore() != null).mapToDouble(p -> p.getBasesScore()).sum();
+            basesScorePlan = jobsBetBOS.stream().filter(p -> p.getBasesScorePlan() != null).mapToDouble(p -> p.getBasesScorePlan()).sum();
+            basesScorePractice = jobsBetBOS.stream().filter(p -> p.getBasesScorePractice() != null).mapToDouble(p -> p.getBasesScorePractice()).sum();
+            restrictScore = jobsBetBOS.stream().filter(p -> p.getRestrictScore() != null).mapToDouble(p -> p.getRestrictScore()).sum();
+            restrictScorePlan = jobsBetBOS.stream().filter(p -> p.getRestrictScorePlan() != null).mapToDouble(p -> p.getRestrictScorePlan()).sum();
+            restrictScorePractice = jobsBetBOS.stream().filter(p -> p.getBasesScorePractice() != null).mapToDouble(p -> p.getBasesScorePractice()).sum();
+            totalScore = jobsBetBOS.stream().filter(p -> p.getTotalScore() != null).mapToDouble(p -> p.getTotalScore()).sum();
+            totalScorePlan = jobsBetBOS.stream().filter(p -> p.getTotalScorePlan() != null).mapToDouble(p -> p.getTotalScorePlan()).sum();
+            totalScorePractice = jobsBetBOS.stream().filter(p -> p.getTotalScorePractice() != null).mapToDouble(p -> p.getTotalScorePractice()).sum();
+            betScore = jobsBetBOS.stream().filter(p -> p.getBetScore() != null).mapToDouble(p -> p.getBetScore()).sum();
+            betScorePlan = jobsBetBOS.stream().filter(p -> p.getBetScorePlan() != null).mapToDouble(p -> p.getBetScorePlan()).sum();
+            betScorePractice = jobsBetBOS.stream().filter(p -> p.getBetScorePractice() != null).mapToDouble(p -> p.getBetScorePractice()).sum();
+
+        }
+        Set<String> projectNames = jobsBetBOS.stream().map(JobsBetBO::getProjectName).collect(Collectors.toSet());
+        JobsBetABO jobsBetABO = new JobsBetABO();
+        for (String projectName : projectNames) {
+            List<JobsBetBO> betBOS = jobsBetBOS.stream().filter(jobsBetBO -> projectName.equals(jobsBetBO.getProjectName())).collect(Collectors.toList());
+            for (JobsBetBO jobsBetBO : betBOS) {
+                jobsBetABO.setBetTime(jobsBetBO.getBetTime());
+                jobsBetABO.setArea(jobsBetBO.getArea());
+                jobsBetABO.setProjectName(projectName);
+                jobsBetABO.setProjectGroup(jobsBetBO.getProjectGroup());
+                jobsBetABO.setScoreProfit(jobsBetBO.getScoreProfit());
+                jobsBetABO.setPlanProfit(jobsBetBO.getPlanProfit());
+                jobsBetABO.setPracticeProfit(jobsBetBO.getPracticeProfit());
+            }
+            Set<String> systems = jobsBetBOS.stream().map(jobsBetBO -> jobsBetBO.getSystem()).collect(Collectors.toSet());
+            List<JobsBetBBO> jobsBetBBOS = new ArrayList<>();
+            for (String system : systems) {
+                List<JobsBetBO> list = betBOS.stream().filter(jobsBetBO -> system.equals(jobsBetBO.getSystem())).collect(Collectors.toList());
+                List<JobsBetBBO> bbos = BeanTransform.copyProperties(list, JobsBetBBO.class);
+                jobsBetBBOS.addAll(bbos);
+            }
+            TreeSet<JobsBetBBO> treeSetB = filter();
+            for (JobsBetBBO b : jobsBetBBOS) {
+                treeSetB.add(b);
+                Set<String> departments = jobsBetBOS.stream().map(jobsBetBO -> jobsBetBO.getDepartment()).collect(Collectors.toSet());
+                List<JobsBetCBO> jobsBetCBOS = new ArrayList<>();
+                for (String department : departments) {
+                    List<JobsBetBO> list = betBOS.stream().filter(jobsBetBO -> department.equals(jobsBetBO.getDepartment())).collect(Collectors.toList());
+                    List<JobsBetCBO> cbos = BeanTransform.copyProperties(list, JobsBetCBO.class);
+                    jobsBetCBOS.addAll(cbos);
+                }
+                TreeSet<JobsBetCBO> treeSetC = filter();
+                for (JobsBetCBO c : jobsBetCBOS) {
+                    treeSetC.add(c);
+                    Set<String> jobs = jobsBetBOS.stream().map(jobsBetBO -> jobsBetBO.getJobs()).collect(Collectors.toSet());
+                    List<JobsBetDBO> jobsBetDBOS = new ArrayList<>();
+                    for (String job : jobs) {
+                        List<JobsBetBO> list = jobsBetBOS.stream().filter(jobsBetBO -> job.equals(jobsBetBO.getJobs())).collect(Collectors.toList());
+                        List<JobsBetDBO> dbos = BeanTransform.copyProperties(list, JobsBetDBO.class);
+                        jobsBetDBOS.addAll(dbos);
+                    }
+                    TreeSet<JobsBetDBO> treeSetD = filter();
+                    for (JobsBetDBO d : jobsBetDBOS) {
+                        treeSetD.add(d);
+                        Set<String> indexNums = jobsBetBOS.stream().map(jobsBetBO -> jobsBetBO.getIndexNum()).collect(Collectors.toSet());
+                        List<JobsBetEBO> jobsBetEBOS = new ArrayList<>();
+                        for (String indexNum : indexNums) {
+                            List<JobsBetBO> list = jobsBetBOS.stream().filter(jobsBetBO -> indexNum.equals(jobsBetBO.getIndexNum())).collect(Collectors.toList());
+                            List<JobsBetEBO> ebos = BeanTransform.copyProperties(list, JobsBetEBO.class);
+                            jobsBetEBOS.addAll(ebos);
+                        }
+                        TreeSet<JobsBetEBO> treeSetE = filter();
+                        for (JobsBetEBO e : jobsBetEBOS) {
+                            treeSetE.add(e);
+                            Set<String> unmetJobs = jobsBetBOS.stream().map(jobsBetBO -> jobsBetBO.getUnmetAllocationJobs()).collect(Collectors.toSet());
+                            List<JobsBetFBO> jobsBetFBOS = new ArrayList<>();
+                            for (String unmetJob : unmetJobs) {
+                                List<JobsBetBO> list = jobsBetBOS.stream().filter(jobsBetBO -> unmetJob.equals(jobsBetBO.getUnmetAllocationJobs())).collect(Collectors.toList());
+                                List<JobsBetFBO> fbos = BeanTransform.copyProperties(list, JobsBetFBO.class);
+                                jobsBetFBOS.addAll(fbos);
+                            }
+                            TreeSet<JobsBetFBO> treeSetF = filter();
+                            jobsBetFBOS.clear();
+                            jobsBetFBOS = new ArrayList<>(treeSetF);
+                            e.setJobsBetFBOS(jobsBetFBOS);
+                        }
+                        jobsBetEBOS.clear();
+                        jobsBetEBOS = new ArrayList<>(treeSetE);
+                        d.setJobsBetEBOS(jobsBetEBOS);
+                    }
+                    jobsBetDBOS.clear();
+                    jobsBetDBOS = new ArrayList<>(treeSetD);
+                    c.setJobsBetDBOS(jobsBetDBOS);
+                }
+                jobsBetCBOS.clear();
+                jobsBetCBOS = new ArrayList<>(treeSetC);
+                b.setJobsBetCBOS(jobsBetCBOS);
+            }
+            jobsBetBBOS.clear();
+            jobsBetBBOS = new ArrayList<>(treeSetB);
+            jobsBetABO.setJobsBetBBOS(jobsBetBBOS);
+        }
+        jobsBetABOS.add(jobsBetABO);
+        JobsBetABO abo = new JobsBetABO();
+        abo.setArea("合计分值");
+        List<JobsBetBBO> bboList = new ArrayList<>();
+        JobsBetBBO bbo = new JobsBetBBO();
+        abo.setJobsBetBBOS(bboList);
+        List<JobsBetCBO> cboList = new ArrayList<>();
+        JobsBetCBO cbo = new JobsBetCBO();
+        bbo.setJobsBetCBOS(cboList);
+        List<JobsBetDBO> dboList = new ArrayList<>();
+        JobsBetDBO dbo = new JobsBetDBO();
+        dbo.setBasesScore(basesScore);
+        dbo.setBasesScorePlan(basesScorePlan);
+        dbo.setBasesScorePractice(basesScorePractice);
+        dbo.setRestrictScore(restrictScore);
+        dbo.setRestrictScorePlan(restrictScorePlan);
+        dbo.setRestrictScorePractice(restrictScorePractice);
+        dbo.setTotalScore(totalScore);
+        dbo.setTotalScorePlan(totalScorePlan);
+        dbo.setTotalScorePractice(totalScorePractice);
+        dboList.add(dbo);
+        cbo.setJobsBetDBOS(dboList);
+        List<JobsBetEBO> eboList = new ArrayList<>();
+        JobsBetEBO ebo = new JobsBetEBO();
+        ebo.setBetScore(betScore);
+        ebo.setBetScorePlan(betScorePlan);
+        ebo.setBetScorePractice(betScorePractice);
+        eboList.add(ebo);
+        dbo.setJobsBetEBOS(eboList);
+        jobsBetABOS.add(abo);
+        return jobsBetABOS;
+    }
+
+    private <T> TreeSet<T> filter() throws SerException {
+        TreeSet<T> treeSet = new TreeSet<>(new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                Field[] field = o1.getClass().getDeclaredFields();//获取实体类的所有属性，返回field数组
+                int num = 0;   //用于识别属性相同的个数
+                int sum = 0;    //用于识别该对象除了集合的属性值个数
+                for (Field f : field) {//遍历所有的属性
+                    String type = f.getGenericType().toString();//获取属性的类型
+                    if (type.indexOf("java.util.List") < 0) {
+                        sum++;
+                        String name = f.getName(); // 获取属性的名字
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                        try {
+                            Method m = o1.getClass().getMethod("get" + name);
+                            Object value = m.invoke(o1);// 调用getter方法获取属性值
+                            Method m1 = o2.getClass().getMethod("get" + name);
+                            Object value1 = m1.invoke(o2);
+                            if (value.equals(value1)) {    //判断该属性值是否相同
+                                num++;
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+                if (num == sum) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return treeSet;
+    }
+
+    @Override
     public List<ManageCommissionBO> collect(CollectTO to) throws SerException {
         SystemBetADTO systemBetADTO = new SystemBetADTO();
         if (null != to.getProjectName()) {
@@ -573,14 +891,14 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
             String[] ids = new String[]{systemBetA.getId()};
             List<DepartmentBetBBO> departmentBetBBOS = null;
             for (String id : ids) {
-                String[] feilds = new String[]{"department"};
-                String sql = "SELECT department AS department FROM royalty_systembetb WHERE systemBetA_id='" + id + "'";
+                String[] feilds = new String[]{"system"};
+                String sql = "SELECT system AS system FROM royalty_systembetb WHERE systemBetA_id='" + id + "'";
                 departmentBetBBOS = super.findBySql(sql, DepartmentBetBBO.class, feilds);
             }
             Set<String> departments = new HashSet<>();
             if (departmentBetBBOS != null && !departmentBetBBOS.isEmpty()) {
                 for (DepartmentBetBBO departmentBetBBO : departmentBetBBOS) {
-                    departments.add(departmentBetBBO.getDepartment());
+//                    departments.add(departmentBetBBO.getDepartment());
 
                 }
             }
@@ -608,22 +926,22 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                             jobsBetEDTO.getConditions().add(Restrict.eq("jobsBetD.id", jobsBetD.getId()));
                             List<JobsBetE> jobsBetES = jobsBetESer.findByCis(jobsBetEDTO);
                             for (JobsBetE jobsBetE : jobsBetES) {
-                                ManageCommissionBO bo = new ManageCommissionBO();
-                                bo.setProjectGroup(jobsBetB.getDepartment());
-                                bo.setJobs(jobsBetC.getJobs());
-                                bo.setJobsBaseWeight(jobsBetC.getBaseWeight());
-                                bo.setJobsBasesScore(jobsBetC.getBasesScore());
-                                bo.setJobsRestrictScore(jobsBetC.getRestrictScore());
-                                bo.setJobsTotalScore(jobsBetC.getDepartmentTotalScore());
-                                bo.setJobsBetWeight(jobsBetD.getBetWeight());
-                                bo.setJobsIndexNum(jobsBetD.getIndexNum());
-                                bo.setJobsIndexName(jobsBetD.getIndexName());
-                                bo.setJobsConfirmTargetValue(jobsBetD.getConfirmTargetValue());
-                                bo.setJobsStandard(jobsBetD.getStandard());
-                                bo.setJobsBetScore(jobsBetD.getBetScore());
-                                bo.setUnmetAllocationJobs(jobsBetE.getUnmetAllocationJobs());
-                                bo.setJobsUnmetAllocation(jobsBetE.getUnmetAllocation());
-                                list.add(bo);
+//                                ManageCommissionBO bo = new ManageCommissionBO();
+//                                bo.setProjectGroup(jobsBetB.getDepartment());
+//                                bo.setJobs(jobsBetC.getJobs());
+//                                bo.setJobsBaseWeight(jobsBetC.getBaseWeight());
+//                                bo.setJobsBasesScore(jobsBetC.getBasesScore());
+//                                bo.setJobsRestrictScore(jobsBetC.getRestrictScore());
+//                                bo.setJobsTotalScore(jobsBetC.getDepartmentTotalScore());
+//                                bo.setJobsBetWeight(jobsBetD.getBetWeight());
+//                                bo.setJobsIndexNum(jobsBetD.getIndexNum());
+//                                bo.setJobsIndexName(jobsBetD.getIndexName());
+//                                bo.setJobsConfirmTargetValue(jobsBetD.getConfirmTargetValue());
+//                                bo.setJobsStandard(jobsBetD.getStandard());
+//                                bo.setJobsBetScore(jobsBetD.getBetScore());
+//                                bo.setUnmetAllocationJobs(jobsBetE.getUnmetAllocationJobs());
+//                                bo.setJobsUnmetAllocation(jobsBetE.getUnmetAllocation());
+//                                list.add(bo);
                             }
 
                         }
@@ -646,21 +964,21 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                             departmentBetDDTO.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetC.getId()));
                             List<DepartmentBetD> departmentBetDS = departmentBetDSer.findByCis(departmentBetDDTO);
                             for (DepartmentBetD departmentBetD : departmentBetDS) {
-                                ManageCommissionBO bo = new ManageCommissionBO();
-                                bo.setDepartment(departmentBetB.getDepartment());
-                                bo.setDepartmentBaseWeight(departmentBetB.getBaseWeight());
-                                bo.setDepartmentBasesScore(departmentBetB.getBasesScore());
-                                bo.setDepartmentRestrictScore(departmentBetB.getRestrictScore());
-                                bo.setDepartmentTotalScore(departmentBetB.getDepartmentTotalScore());
-                                bo.setDepartmentBetWeight(departmentBetC.getBetWeight());
-                                bo.setDepartmentIndexNum(departmentBetC.getIndexNum());
-                                bo.setDepartmentIndexName(departmentBetC.getIndexName());
-                                bo.setDepartmentConfirmTargetValue(departmentBetC.getConfirmTargetValue());
-                                bo.setDepartmentStandard(departmentBetC.getStandard());
-                                bo.setDepartmentBetScore(departmentBetC.getBetScore());
-                                bo.setUnmetAllocationDepartment(departmentBetD.getUnmetAllocationDepartment());
-                                bo.setDepartmentUnmetAllocation(departmentBetD.getUnmetAllocation());
-                                list.add(bo);
+//                                ManageCommissionBO bo = new ManageCommissionBO();
+//                                bo.setDepartment(departmentBetB.getDepartment());
+//                                bo.setDepartmentBaseWeight(departmentBetB.getBaseWeight());
+//                                bo.setDepartmentBasesScore(departmentBetB.getBasesScore());
+//                                bo.setDepartmentRestrictScore(departmentBetB.getRestrictScore());
+//                                bo.setDepartmentTotalScore(departmentBetB.getDepartmentTotalScore());
+//                                bo.setDepartmentBetWeight(departmentBetC.getBetWeight());
+//                                bo.setDepartmentIndexNum(departmentBetC.getIndexNum());
+//                                bo.setDepartmentIndexName(departmentBetC.getIndexName());
+//                                bo.setDepartmentConfirmTargetValue(departmentBetC.getConfirmTargetValue());
+//                                bo.setDepartmentStandard(departmentBetC.getStandard());
+//                                bo.setDepartmentBetScore(departmentBetC.getBetScore());
+//                                bo.setUnmetAllocationDepartment(departmentBetD.getUnmetAllocationDepartment());
+//                                bo.setDepartmentUnmetAllocation(departmentBetD.getUnmetAllocation());
+//                                list.add(bo);
                             }
 
                         }
@@ -691,12 +1009,12 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
 
                             ManageCommissionBO bo = new ManageCommissionBO();
                             bo.setProjectName(systemBetA.getProjectName());
-                            bo.setScore(systemBetA.getScore());
+//                            bo.setScore(systemBetA.getScore());
                             bo.setSystem(systemBetB.getSystem());
                             bo.setSystemBaseWeight(systemBetB.getBaseWeight());
                             bo.setSystemBasesScore(systemBetB.getBasesScore());
                             bo.setSystemRestrictScore(systemBetB.getRestrictScore());
-                            bo.setSystemTotalScore(systemBetB.getDepartmentTotalScore());
+//                            bo.setSystemTotalScore(systemBetB.getDepartmentTotalScore());
                             bo.setSystemBetWeight(systemBetC.getBetWeight());
                             bo.setSystemIndexNum(systemBetC.getIndexNum());
                             bo.setSystemIndexName(systemBetC.getIndexName());
@@ -705,7 +1023,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                             bo.setSystemBetScore(systemBetC.getBetScore());
                             bo.setUnmetAllocationSystem(systemBetD.getUnmetAllocationSystem());
                             bo.setSystemUnmetAllocation(systemBetD.getUnmetAllocation());
-                            bo.setSystemDepartment(systemBetB.getDepartment());
+//                            bo.setSystemDepartment(systemBetB.getDepartment());
 //                                bo.setDepartment(departmentBetB.getDepartment());
 //                                bo.setDepartmentBaseWeight(departmentBetB.getBaseWeight());
 //                                bo.setDepartmentBasesScore(departmentBetB.getBasesScore());
@@ -751,7 +1069,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
             jobsBasesScore = list.stream().filter(p -> p.getJobsBasesScore() != null).mapToDouble(p -> p.getJobsBasesScore()).sum();
             jobsBetScore = list.stream().filter(p -> p.getJobsBetScore() != null).mapToDouble(p -> p.getJobsBetScore()).sum();
             jobsRestrictScore = list.stream().filter(p -> p.getJobsRestrictScore() != null).mapToDouble(p -> p.getJobsRestrictScore()).sum();
-            jobsTotalScore = list.stream().filter(p -> p.getJobsTotalScore() != null).mapToDouble(p -> p.getJobsTotalScore()).sum();
+            jobsTotalScore = list.stream().filter(p -> p.getTotalScore() != null).mapToDouble(p -> p.getTotalScore()).sum();
 
 
             totalBO = new ManageCommissionBO("合计分值", systemBasesScore, systemBetScore, systemRestrictScore, systemTotalScore,
@@ -762,9 +1080,9 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         List<ManageCommissionBO> bos = new ArrayList<>();
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(i).getDepartment() != null && list.get(j).getSystemDepartment() != null) {
+                if (list.get(i).getDepartment() != null && list.get(j).getSystem() != null) {
 
-                    if (list.get(i).getDepartment().equals(list.get(j).getSystemDepartment())) {
+                    if (list.get(i).getDepartment().equals(list.get(j).getSystem())) {
                         ManageCommissionBO bo = list.get(i);
                         ManageCommissionBO naBo = list.get(j);
 //                        bo.setProjectName(naBo.getProjectName());
@@ -817,6 +1135,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         }
         return bos;
     }
+
     @Override
     public List<String> getProjectName() throws SerException {
         String[] fields = new String[]{"projectName"};

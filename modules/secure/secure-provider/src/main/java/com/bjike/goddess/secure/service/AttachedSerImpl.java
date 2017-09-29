@@ -25,6 +25,7 @@ import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
 import com.bjike.goddess.secure.to.AttachedTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -222,7 +224,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] yyEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
@@ -245,7 +247,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
@@ -268,7 +270,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     private String[] mEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
@@ -384,7 +386,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (send) {
             String[] users = dto.getUsers();
             if (users != null) {
-                String token=RpcTransmit.getUserToken();
+                String token = RpcTransmit.getUserToken();
                 if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
                     List<String> mails = internalContactsAPI.getEmails(users);
@@ -420,7 +422,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (send) {
             String[] users = dto.getUsers();
             if (users != null) {
-                String token=RpcTransmit.getUserToken();
+                String token = RpcTransmit.getUserToken();
                 if (moduleAPI.isCheck("contacts")) {
                     RpcTransmit.transmitUserToken(token);
                     List<String> mails = internalContactsAPI.getEmails(users);
@@ -492,6 +494,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     @Override
     public List<AttachedBO> find(AttachedDTO dto) throws SerException {
         checkSeeIdentity();
+        search(dto);
         List<Attached> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, AttachedBO.class);
     }
@@ -523,15 +526,50 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     @Override
     public Long count(AttachedDTO dto) throws SerException {
+        search(dto);
         return super.count(dto);
     }
 
     @Override
     public AttachedBO findAttached(String name) throws SerException {
         AttachedDTO dto = new AttachedDTO();
-        dto.getConditions().add(Restrict.eq("attachedName",name));
+        dto.getConditions().add(Restrict.eq("attachedName", name));
         Attached attached = super.findOne(dto);
-        AttachedBO bo = BeanTransform.copyProperties(attached,AttachedBO.class,false);
+        AttachedBO bo = BeanTransform.copyProperties(attached, AttachedBO.class, false);
         return bo;
+    }
+
+    private void search(AttachedDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getAttachedName())) {
+            dto.getConditions().add(Restrict.like("attachedName", dto.getAttachedName()));
+        }
+        if (StringUtils.isNotBlank(dto.getCity())) {
+            dto.getConditions().add(Restrict.like("city", dto.getCity()));
+        }
+        if (dto.getAffiliated() != null) {
+            dto.getConditions().add(Restrict.like("affiliated", dto.getAffiliated()));
+        }
+    }
+
+    @Override
+    public List<AttachedBO> byName(NameTO to) throws SerException {
+        List<Attached> attacheds  = new ArrayList<>();
+        if(to.getNames()!=null){
+            AttachedDTO dto = new AttachedDTO();
+            dto.getConditions().add(Restrict.eq("attachedName",to.getNames()));
+            attacheds = super.findByCis(dto);
+        }
+        List<AttachedBO> boList = BeanTransform.copyProperties(attacheds,AttachedBO.class);
+        return boList;
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<Attached> list = super.findAll();
+        for (Attached attached:list){
+            set.add(attached.getAttachedName());
+        }
+        return set;
     }
 }

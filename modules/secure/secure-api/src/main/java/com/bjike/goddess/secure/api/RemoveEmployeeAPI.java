@@ -7,6 +7,7 @@ import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.RemoveEmployeeTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 减员名单业务接口
@@ -117,4 +118,10 @@ public interface RemoveEmployeeAPI {
      * @throws SerException
      */
     Long count(RemoveEmployeeDTO dto) throws SerException;
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
 }

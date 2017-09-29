@@ -5,9 +5,11 @@ import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.secure.vo.SonPermissionObject;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 社保增员信息名单业务接口
@@ -121,4 +123,22 @@ public interface AddEmployeeAPI {
      * @throws SerException
      */
     Long count(AddEmployeeDTO dto) throws SerException;
+
+    /**
+     * 根据姓名查找
+     *
+     * @param to to
+     * @return AddEmployeeBO
+     * @throws SerException
+     */
+    List<AddEmployeeBO> byName(NameTO to) throws SerException;
+
+
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
+
 }

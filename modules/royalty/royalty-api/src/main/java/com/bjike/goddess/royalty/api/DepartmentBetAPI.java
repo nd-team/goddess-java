@@ -10,6 +10,7 @@ import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
 import com.bjike.goddess.royalty.to.DepartmentBetTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 
 import java.util.List;
 
@@ -89,5 +90,15 @@ public interface DepartmentBetAPI {
      */
     default void delete(String id) throws SerException {
 
+    }
+    /**
+     * 汇总
+     *
+     * @param to to
+     * @return class DepartmentBetABO
+     * @throws SerException
+     */
+    default List<DepartmentBetABO> departmentCollect(ProjectNameTO to) throws SerException {
+        return null;
     }
 }

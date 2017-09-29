@@ -2,14 +2,17 @@ package com.bjike.goddess.secure.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.AttachedDTO;
 import com.bjike.goddess.secure.entity.Attached;
 import com.bjike.goddess.secure.to.AttachedTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 挂靠业务接口
@@ -134,4 +137,18 @@ public interface AttachedSer extends Ser<Attached, AttachedDTO> {
      * 根据员工姓名查找扣社保情况
      */
     AttachedBO findAttached(String name) throws SerException;
+    /**
+     * 根据姓名查找
+     *
+     * @param to to
+     * @return AttachedBO
+     * @throws SerException
+     */
+    List<AttachedBO> byName(NameTO to) throws SerException;
+    /**
+     * 获取所有姓名
+     *
+     * @throws SerException
+     */
+    Set<String> allName() throws SerException;
 }

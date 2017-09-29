@@ -1,5 +1,6 @@
 package com.bjike.goddess.secure.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -11,9 +12,11 @@ import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 员工社保基本信息业务实现
@@ -284,5 +290,27 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     @Override
     public Long count(EmployeeSecureDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public List<EmployeeSecureBO> byName(NameTO to) throws SerException {
+        List<EmployeeSecure> employeeSecures = new ArrayList<>();
+        if(to.getNames()!=null){
+            EmployeeSecureDTO dto = new EmployeeSecureDTO();
+            dto.getConditions().add(Restrict.eq("name",to.getNames()));
+            employeeSecures = super.findAll();
+        }
+        List<EmployeeSecureBO> boList = BeanTransform.copyProperties(employeeSecures,EmployeeSecureBO.class);
+        return boList;
+    }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set =new HashSet<>();
+        List<EmployeeSecure> list = super.findAll();
+        for(EmployeeSecure employeeSecure:list){
+            set.add(employeeSecure.getName());
+        }
+        return set;
     }
 }

@@ -12,6 +12,7 @@ import com.bjike.goddess.royalty.service.JobsBetSer;
 import com.bjike.goddess.royalty.to.CollectTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.JobsBetATO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +69,10 @@ public class JobsBetApiImpl implements JobsBetAPI {
     @Override
     public void delete(String id) throws SerException {
         jobsBetSer.delete(id);
+    }
+    @Override
+    public List<JobsBetABO> jobsCollect(ProjectNameTO to) throws SerException {
+        return jobsBetSer.jobsCollect(to);
     }
     @Override
     public List<ManageCommissionBO> collect(CollectTO to) throws SerException {

@@ -119,6 +119,11 @@ public class AttachedTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "金额的支付类型不能为空")
     private Pay pay;
+    /**
+     * 是否挂靠到期
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否挂靠到期不能为空")
+    private Boolean affiliated;
 
     /**
      * 前参保地市
@@ -140,6 +145,13 @@ public class AttachedTO extends BaseTO {
      */
     private String decription;
 
+    public Boolean getAffiliated() {
+        return affiliated;
+    }
+
+    public void setAffiliated(Boolean affiliated) {
+        this.affiliated = affiliated;
+    }
 
     public String getAttachedName() {
         return attachedName;

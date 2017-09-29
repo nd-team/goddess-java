@@ -1,7 +1,6 @@
 package com.bjike.goddess.royalty.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.royalty.entity.JobsBetB;
 
 import java.util.List;
 
@@ -17,85 +16,21 @@ import java.util.List;
 public class JobsBetCBO extends BaseBO {
 
     /**
-     * 岗位
+     * 部门
      */
-    private String jobs;
-
-    /**
-     * 分配基础权重（%）
-     */
-    private Double baseWeight;
-
-    /**
-     * 基础得分（部门总得分*目标-部门分配基础权重）
-     */
-    private Double basesScore;
-
-    /**
-     * 制约得分
-     */
-    private Double restrictScore;
-
-    /**
-     * 总得分（制约得分+基础得分）
-     */
-    private Double departmentTotalScore;
-//    /**
-//     * 岗位间对赌表B
-//     */
-//    private JobsBetBBO jobsBetBBO;
+    private String department;
     /**
      * 岗位间对赌表D
      */
     private List<JobsBetDBO> jobsBetDBOS;
 
-    public String getJobs() {
-        return jobs;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setJobs(String jobs) {
-        this.jobs = jobs;
+    public void setDepartment(String department) {
+        this.department = department;
     }
-
-    public Double getBaseWeight() {
-        return baseWeight;
-    }
-
-    public void setBaseWeight(Double baseWeight) {
-        this.baseWeight = baseWeight;
-    }
-
-    public Double getBasesScore() {
-        return basesScore;
-    }
-
-    public void setBasesScore(Double basesScore) {
-        this.basesScore = basesScore;
-    }
-
-    public Double getRestrictScore() {
-        return restrictScore;
-    }
-
-    public void setRestrictScore(Double restrictScore) {
-        this.restrictScore = restrictScore;
-    }
-
-    public Double getDepartmentTotalScore() {
-        return departmentTotalScore;
-    }
-
-    public void setDepartmentTotalScore(Double departmentTotalScore) {
-        this.departmentTotalScore = departmentTotalScore;
-    }
-
-//    public JobsBetBBO getJobsBetBBO() {
-//        return jobsBetBBO;
-//    }
-//
-//    public void setJobsBetBBO(JobsBetBBO jobsBetBBO) {
-//        this.jobsBetBBO = jobsBetBBO;
-//    }
 
     public List<JobsBetDBO> getJobsBetDBOS() {
         return jobsBetDBOS;
