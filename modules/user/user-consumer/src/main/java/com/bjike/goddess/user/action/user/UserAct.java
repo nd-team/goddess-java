@@ -8,6 +8,8 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.to.UserTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +74,23 @@ public class UserAct {
         try {
             Boolean result = (null != userAPI.add(null, userTO));
             return ActResult.initialize(result);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 修改密码
+     *
+     * @param userTO 用户
+     * @version v1
+     */
+    @PostMapping("v1/update/pwd")
+    public Result updatePassword(@Validated(UserTO.UPDATEPWD.class) UserTO userTO , BindingResult bindingResult ) throws ActException {
+        try {
+           userAPI.updatePassword( userTO  );
+            return new ActResult("修改密码成功！");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

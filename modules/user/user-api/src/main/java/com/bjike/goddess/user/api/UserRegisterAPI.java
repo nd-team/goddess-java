@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.to.SmsCodeParameterTO;
 import com.bjike.goddess.user.to.UserRegisterTO;
 
 /**
@@ -28,4 +29,28 @@ public interface UserRegisterAPI {
      * @param phone
      */
     void verifyAndSendCode(String phone) throws SerException;
+
+
+    /**
+     * 获取发送短信验证码
+     * tanghaixiang
+     * @return
+     * @throws SerException
+     */
+    default String sendSmsVerifyCode(SmsCodeParameterTO smsCodeParameterTO ) throws SerException {
+        return null;
+    }
+
+    /**
+     * 校验手机短信验证码
+     * tanghaixiang
+     * @param phone 手机号
+     * @param code 验证码
+     * @return
+     * @throws SerException
+     */
+    default Boolean verifyCode(String phone ,String code) throws SerException {
+        return null;
+    }
+
 }

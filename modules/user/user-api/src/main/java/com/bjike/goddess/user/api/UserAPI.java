@@ -126,6 +126,16 @@ public interface UserAPI {
     default void update(UserTO userTO) throws SerException {
     }
 
+    /**
+     * 修改密码
+     * tanghaixiang
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePassword(UserTO userTO) throws SerException {
+    }
+
 
     /**
      * 通过用户名查询用户

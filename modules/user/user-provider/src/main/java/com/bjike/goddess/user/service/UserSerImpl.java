@@ -1,6 +1,8 @@
 package com.bjike.goddess.user.service;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.aliyuncs.exceptions.ClientException;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -21,8 +23,11 @@ import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.constant.UserCommon;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
+import com.bjike.goddess.user.to.SmsCodeParameterTO;
+import com.bjike.goddess.user.to.SmsCodeTO;
 import com.bjike.goddess.user.to.UserTO;
 import com.bjike.goddess.user.utils.SeqUtil;
+import com.bjike.goddess.user.utils.SmsCodeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -32,6 +37,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +45,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -263,6 +273,26 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         } else {
             throw new SerException("notLogin");
         }
+    }
+
+    @Override
+    public void updatePassword(UserTO userTO) throws SerException {
+        if( StringUtils.isBlank( userTO.getId())){
+            throw new SerException("用户id不能为空");
+        }
+        User user = super.findById( userTO.getId() );
+        if( null == user){
+            throw new SerException("该用户不存在");
+        }
+        try {
+            user.setPassword(PasswordHash.createHash(userTO.getPassword()));
+            super.update( user );
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

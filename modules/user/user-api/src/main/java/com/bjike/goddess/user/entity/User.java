@@ -66,7 +66,7 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户员工编号'")
     private String employeeNumber;
 
-    /**
+    /*
      * 用户状态
      */
     @Column(columnDefinition = "TINYINT(2)  COMMENT '用户状态'", nullable = false)

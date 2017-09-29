@@ -70,6 +70,11 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
+    public void updatePassword(UserTO userTO) throws SerException {
+        userSer.updatePassword( userTO );
+    }
+
+    @Override
     public UserBO findByUsername(String username) throws SerException {
         return userSer.findByUsername(username);
     }

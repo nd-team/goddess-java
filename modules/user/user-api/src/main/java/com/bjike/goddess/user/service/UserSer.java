@@ -156,6 +156,17 @@ public interface UserSer extends Ser<User, UserDTO> {
     }
 
     /**
+     * 修改密码
+     * tanghaixiang
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePassword(UserTO userTO) throws SerException {
+    }
+
+
+    /**
      * 通过组查寻用户
      *
      * @param groups
