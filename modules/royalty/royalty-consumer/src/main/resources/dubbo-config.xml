@@ -38,12 +38,14 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.DepartmentBetBAPI" id="departmentBetBApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.DepartmentBetCAPI" id="departmentBetCApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.DepartmentBetDAPI" id="departmentBetDApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.DepartmentBetEAPI" id="departmentBetEApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetAPI" id="jobsBetApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetAAPI" id="jobsBetAApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetBAPI" id="jobsBetBApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetCAPI" id="jobsBetCApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetDAPI" id="jobsBetDApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetEAPI" id="jobsBetEApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.royalty.api.JobsBetFAPI" id="jobsBetFApiImpl"/>
 
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.royalty.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.royalty.api.CusPermissionOperateAPI" />

@@ -167,7 +167,7 @@ public interface RegularizationAPI {
      * @throws SerException
      */
 
-    default RegularizationBO findAddRusult(String name,String empNumer) throws SerException {
+    default RegularizationBO findAddRusult(String empNumer) throws SerException {
         return null;
     }
 

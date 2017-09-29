@@ -252,6 +252,23 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
         return returnMethod(startTime, endTime);
     }
 
+    @Override
+    public Double findAimAmount(String projectName,Type type) throws SerException {
+        WeightalsDTO dto = new WeightalsDTO();
+        dto.getConditions().add(Restrict.eq("project", projectName));
+        List<Weightals> weightalses = super.findByCis(dto);
+        if (null != weightalses && weightalses.size() > 0) {
+            WeightalTypeDTO weightalTypeDTO = new WeightalTypeDTO();
+            weightalTypeDTO.getConditions().add(Restrict.eq("weightalsId", weightalses.get(0).getId()));
+            weightalTypeDTO.getConditions().add(Restrict.eq("type", type));
+            List<WeightalType> weightalTypes = weightalTypeSer.findByCis(weightalTypeDTO);
+            if (null != weightalTypes && weightalses.size() > 0) {
+                return weightalTypes.get(0).getBusiness();
+            }
+        }
+        return null;
+    }
+
     @Transactional
     @Override
     public void save(WeightalsTO to) throws SerException {

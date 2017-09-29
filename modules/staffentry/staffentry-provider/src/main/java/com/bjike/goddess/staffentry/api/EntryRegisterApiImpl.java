@@ -97,12 +97,37 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public List<String> findGraduationDate() throws SerException {
         return entryRegisterSer.findGraduationDate();
     }
-    public List<EntryRegister> list() throws SerException {
+    public List<EntryRegisterBO> list() throws SerException {
         return entryRegisterSer.list();
     }
 
     @Override
-    public String getGender(String name) throws SerException {
-        return entryRegisterSer.getGender(name);
+    public String findEmpNum(String name) throws SerException {
+        return entryRegisterSer.findEmpNum(name);
+    }
+
+    @Override
+    public EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
+        return entryRegisterSer.getEntryOptionByEmpNum(empNumer);
+    }
+
+    @Override
+    public String getGender(String username) throws SerException {
+        return entryRegisterSer.getGender(username);
+    }
+
+    @Override
+    public List<EntryRegisterBO> map(EntryRegisterDTO dto) throws SerException {
+        return entryRegisterSer.map(dto);
+    }
+
+    @Override
+    public List<EntryRegisterBO> getEntryRegisterByName(String name) throws SerException {
+        return entryRegisterSer.getEntryRegisterByName(name);
+    }
+
+    @Override
+    public String getEntryTime(String username) throws SerException {
+        return entryRegisterSer.getEntryTime(username);
     }
 }

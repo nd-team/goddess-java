@@ -19,7 +19,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.PositionAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -66,7 +67,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 检查权限(部门)
@@ -388,7 +389,7 @@ public class AnnualApplySerImpl extends ServiceImpl<AnnualApply, AnnualApplyDTO>
             String userToken = RpcTransmit.getUserToken();
             UserBO userBO = userAPI.currentUser();
             RpcTransmit.transmitUserToken(userToken);
-            time = entryBasicInfoAPI.getEntryTime(userBO.getUsername());
+            time = entryRegisterAPI.getEntryTime(userBO.getUsername());
         }
         return time;
     }

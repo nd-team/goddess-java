@@ -31,13 +31,14 @@ public class CustomizeTO extends BaseTO {
      * 项目
      */
     @NotBlank(message = "项目不能为空", groups = {ADD.class, EDIT.class})
-    private String project;
+    private String projectId;
 
     /**
      * 表id
      */
-    @NotNull(message = "表不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "表id不能为空", groups = {ADD.class, EDIT.class})
     private String[] tables;
+
 
     /**
      * 汇总字段
@@ -53,8 +54,8 @@ public class CustomizeTO extends BaseTO {
     /**
      * 定时时间间隔值
      */
-    @NotNull(message = "定时间隔值不能为空", groups = {ADD.class, EDIT.class})
-    private Integer timeVal;
+    @NotBlank(message = "定时间隔值不能为空", groups = {ADD.class, EDIT.class})
+    private String timeVal;
 
     /**
      * 通知类型
@@ -72,7 +73,7 @@ public class CustomizeTO extends BaseTO {
     @NotNull(message = "是否启用不能为空", groups = {ADD.class, EDIT.class})
     private Boolean enable;
     /**
-     * 汇总类型
+     * 汇总类型,执行项目的所有人还是个人...
      */
     @NotNull(message = "汇总类型不能为空", groups = {ADD.class, EDIT.class})
     private SummaryType summaryType;
@@ -99,12 +100,12 @@ public class CustomizeTO extends BaseTO {
         this.name = name;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String[] getTables() {
@@ -131,11 +132,11 @@ public class CustomizeTO extends BaseTO {
         this.timeType = timeType;
     }
 
-    public Integer getTimeVal() {
+    public String getTimeVal() {
         return timeVal;
     }
 
-    public void setTimeVal(Integer timeVal) {
+    public void setTimeVal(String timeVal) {
         this.timeVal = timeVal;
     }
 
@@ -194,4 +195,5 @@ public class CustomizeTO extends BaseTO {
     public void setDateVal(Integer dateVal) {
         this.dateVal = dateVal;
     }
+
 }

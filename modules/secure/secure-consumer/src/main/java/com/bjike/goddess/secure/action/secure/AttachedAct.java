@@ -10,11 +10,14 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.secure.api.AttachedAPI;
 import com.bjike.goddess.secure.bo.AttachedBO;
+import com.bjike.goddess.secure.bo.EmployeeSecureBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.dto.AttachedDTO;
 import com.bjike.goddess.secure.to.AttachedTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.secure.vo.AttachedVO;
+import com.bjike.goddess.secure.vo.EmployeeSecureVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 挂靠
@@ -220,6 +224,39 @@ public class AttachedAct {
     public Result count(AttachedDTO dto) throws ActException {
         try {
             return ActResult.initialize(attachedAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据姓名获取挂靠信息
+     *
+     * @param to to
+     * @return class AttachedVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/byName")
+    public Result byName(@Validated(NameTO.TestName.class) NameTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            List<AttachedBO> bos = attachedAPI.byName(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, AttachedVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name() throws ActException {
+        try {
+            Set<String> set = attachedAPI.allName();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

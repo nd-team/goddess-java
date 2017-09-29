@@ -29,6 +29,7 @@ import com.bjike.goddess.secure.bo.AddEmployeeBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
 import com.bjike.goddess.secure.to.AddEmployeeTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
+import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.secure.vo.AddEmployeeVO;
 import com.bjike.goddess.secure.vo.SonPermissionObject;
 import com.bjike.goddess.user.bo.UserBO;
@@ -305,6 +306,40 @@ public class AddEmployeeAct {
         try {
             AddEmployeeBO bo = addEmployeeAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, AddEmployeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取增员信息
+     *
+     * @param to to
+     * @return class AddEmployeeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/byName")
+    public Result byName(@Validated(NameTO.TestName.class) NameTO to, BindingResult bindingResult,HttpServletRequest request) throws ActException {
+        try {
+            List<AddEmployeeBO> bos = addEmployeeAPI.byName(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, AddEmployeeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/name")
+    public Result name() throws ActException {
+        try {
+            Set<String> set = addEmployeeAPI.allName();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,10 +1,10 @@
 package com.bjike.goddess.organize.service;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -24,8 +24,10 @@ import com.bjike.goddess.organize.enums.IntervalType;
 import com.bjike.goddess.organize.to.EmailTO;
 import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.user.api.UserAPI;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -214,19 +216,34 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                 String[] departs = email.getDepart().split(",");
                 String[] names = names(departs);
                 if (null != names) {
-//                    List<String> emails = internalContactsAPI.getEmails(names);
                     List<String> emails = new ArrayList<>(0);
                     CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-                    HttpGet httpGet = new HttpGet("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail");//线上
-//                    HttpGet httpGet = new HttpGet("http://localhost:51310/internalcontacts/v1/getEmail");//线下测试
-//                    httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
-                    String token = RpcTransmit.getUserToken();
-                    httpGet.setHeader("userToken", token);
-                    RpcTransmit.transmitUserToken(token);
-
-                    ActResultOrgan resultOrgan = new ActResultOrgan();
+                    StringBuilder sb = new StringBuilder();
                     try {
-                        CloseableHttpResponse response = closeableHttpClient.execute(httpGet);
+                        for (int i = 0; i < names.length; i++) {
+                            if (i == names.length - 1) {
+//                byte[] b=names[i].getBytes("iso-8859-1");
+                                sb.append(names[i]);
+                            } else {
+//                byte[] b=names[i].getBytes("iso-8859-1");
+                                sb.append(names[i]);
+                            }
+                        }
+                        HttpPost httpPost = new HttpPost("https://contacts.issp.bjike.com:8080/internalcontacts/v1/getEmail?names=" + sb.toString() + "");//线上
+//        HttpPost httpPost = new HttpPost("http://localhost:51310/internalcontacts/v1/getEmail?names="+sb.toString()+"");//线下测试
+                        httpPost.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
+                        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+//        nvps.add(new BasicNameValuePair("names", sb.toString()));
+
+                        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
+                        entity.setContentEncoding("utf-8");
+                        httpPost.setEntity(entity);
+//            httpPost.setHeader(new BasicHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8"));
+//        httpclient.execute(httpPost);
+//        httpclient.getConnectionManager().shutdown();
+
+                        ActResultOrgan resultOrgan = new ActResultOrgan();
+                        CloseableHttpResponse response = closeableHttpClient.execute(httpPost);
                         resultOrgan = JSON.parseObject(EntityUtils.toString(response.getEntity()), ActResultOrgan.class);
                         emails = (List<String>) (resultOrgan.getData());
 
@@ -313,7 +330,11 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
             int size = detailS.size();
             sb.append("<tr>");
             sb.append("<td rowspan='" + size + "'>" + bo.getEmployeesNumber() + "</td>");
-            sb.append("<td rowspan='" + size + "'>" + bo.getUsername() + "</td>");
+            if (null != bo.getUsername()) {
+                sb.append("<td rowspan='" + size + "'>" + bo.getUsername() + "</td>");
+            } else {
+                sb.append("<td rowspan='" + size + "'> </td>");
+            }
             for (int i = 0; i < detailS.size(); i++) {
                 if (i == 0) {
                     sb.append("<td>" + detailS.get(i).getHierarchyNumber() + "</td>");
@@ -330,18 +351,30 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                     }
                     sb.append("<td>" + detailS.get(i).getPosition() + "</td>");
                     sb.append("<td>" + detailS.get(i).getPositionNumber() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getWorkStatus().toString() + "</td>");
-                    if (detailS.get(i).getAgent()) {
-                        sb.append("<td>是</td>");
+                    if (null != detailS.get(i).getWorkStatus()) {
+                        sb.append("<td>" + detailS.get(i).getWorkStatus().toString() + "</td>");
                     } else {
-                        sb.append("<td>否</td>");
+                        sb.append("<td> </td>");
+                    }
+                    if (null != detailS.get(i).getAgent()) {
+                        if (detailS.get(i).getAgent()) {
+                            sb.append("<td>是</td>");
+                        } else {
+                            sb.append("<td>否</td>");
+                        }
+                    } else {
+                        sb.append("<td> </td>");
                     }
                     if (null == detailS.get(i).getAgentType()) {
                         sb.append("<td> </td>");
                     } else {
                         sb.append("<td>" + detailS.get(i).getAgentType().toString() + "</td>");
                     }
-                    sb.append("<td rowspan='" + size + "'>" + bo.getStaffStatus().toString() + "</td>");
+                    if (null != bo.getStaffStatus()) {
+                        sb.append("<td rowspan='" + size + "'>" + bo.getStaffStatus().toString() + "</td>");
+                    }else {
+                        sb.append("<td rowspan='" + size + "'> </td>");
+                    }
                     sb.append("</tr>");
                 } else {
                     sb.append("<tr>");
@@ -359,11 +392,19 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
                     }
                     sb.append("<td>" + detailS.get(i).getPosition() + "</td>");
                     sb.append("<td>" + detailS.get(i).getPositionNumber() + "</td>");
-                    sb.append("<td>" + detailS.get(i).getWorkStatus().toString() + "</td>");
-                    if (detailS.get(i).getAgent()) {
-                        sb.append("<td>是</td>");
+                    if (null != detailS.get(i).getWorkStatus()) {
+                        sb.append("<td>" + detailS.get(i).getWorkStatus().toString() + "</td>");
                     } else {
-                        sb.append("<td>否</td>");
+                        sb.append("<td> </td>");
+                    }
+                    if (null != detailS.get(i).getAgent()) {
+                        if (detailS.get(i).getAgent()) {
+                            sb.append("<td>是</td>");
+                        } else {
+                            sb.append("<td>否</td>");
+                        }
+                    } else {
+                        sb.append("<td> </td>");
                     }
                     if (null == detailS.get(i).getAgentType()) {
                         sb.append("<td> </td>");

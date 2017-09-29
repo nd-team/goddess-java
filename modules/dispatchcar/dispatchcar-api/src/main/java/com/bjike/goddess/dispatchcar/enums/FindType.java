@@ -25,7 +25,11 @@ public enum FindType {
     /**
      * 已付款
      */
-    PAYED(3);
+    PAYED(3),
+    /**
+     * 有误
+     */
+    WRONG(4);
 
     private int code;
 

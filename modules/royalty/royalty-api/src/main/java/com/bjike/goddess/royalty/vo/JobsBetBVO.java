@@ -1,7 +1,5 @@
 package com.bjike.goddess.royalty.vo;
 
-import com.bjike.goddess.royalty.entity.JobsBetB;
-
 import java.util.List;
 
 /**
@@ -20,13 +18,14 @@ public class JobsBetBVO {
      */
     private String id;
     /**
-     * 部门
+     * 体系
      */
-    private String department;
+    private String system;
     /**
      * 岗位间对赌表C
      */
-    private List<JobsBetCVO> jobsBetCVOS;
+    private List<JobsBetCVO> jobsBetCBOS;
+
     public String getId() {
         return id;
     }
@@ -36,20 +35,19 @@ public class JobsBetBVO {
         this.id = id;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getSystem() {
+        return system;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setSystem(String system) {
+        this.system = system;
     }
 
-
-    public List<JobsBetCVO> getJobsBetCVOS() {
-        return jobsBetCVOS;
+    public List<JobsBetCVO> getJobsBetCBOS() {
+        return jobsBetCBOS;
     }
 
-    public void setJobsBetCVOS(List<JobsBetCVO> jobsBetCVOS) {
-        this.jobsBetCVOS = jobsBetCVOS;
+    public void setJobsBetCBOS(List<JobsBetCVO> jobsBetCBOS) {
+        this.jobsBetCBOS = jobsBetCBOS;
     }
 }

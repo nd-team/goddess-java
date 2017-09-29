@@ -1,6 +1,7 @@
 package com.bjike.goddess.staffentry.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.organize.enums.StaffStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 /**
  * 员工入职登记
+ *
  * @Author: [tanghaixiang]
  * @Date: [2017-03-08 10:23]
  * @Description: [员工入职登记]
@@ -22,139 +24,169 @@ public class EntryRegister extends BaseEntity {
     /**
      * 员工编号
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '员工工号'" , unique = true)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '员工工号'", unique = true)
     private String empNumber;
     /**
      * 姓名
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '姓名'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '姓名'")
     private String username;
 
     /**
-     *性别0男1女
+     * 性别0男1女
      */
-    @Column(nullable = false,columnDefinition = "INT(11) COMMENT '性别0男1女'")
+    @Column(nullable = false, columnDefinition = "INT(11) COMMENT '性别0男1女'")
     private Integer gender;
 
     /**
-     *出生年月日
+     * 出生年月日
      */
-    @Column(nullable = false,columnDefinition = "DATE COMMENT '出生年月日'")
+    @Column(nullable = false, columnDefinition = "DATE COMMENT '出生年月日'")
     private LocalDate birthday;
 
     /**
-     *民族
+     * 民族
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '民族'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '民族'")
     private String nation;
 
     /**
-     *婚姻状况
+     * 婚姻状况
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '婚姻状况'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '婚姻状况'")
     private String marriage;
 
     /**
-     *政治面貌
+     * 政治面貌
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '政治面貌'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '政治面貌'")
     private String politicsStatus;
 
     /**
-     *籍贯
+     * 籍贯
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '籍贯'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '籍贯'")
     private String nativePlace;
 
     /**
-     *身高
+     * 身高
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '身高'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '身高'")
     private String stature;
 
     /**
-     *专业
+     * 专业
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '专业'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '专业'")
     private String profession;
 
     /**
-     *学历
+     * 学历
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '学历'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '学历'")
     private String education;
 
     /**
-     *毕业学校
+     * 毕业学校
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '毕业学校'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '毕业学校'")
     private String schoolTag;
 
     /**
-     *毕业时间
+     * 毕业时间
      */
-    @Column(nullable = false,columnDefinition = "DATE COMMENT '毕业时间'")
+    @Column(nullable = false, columnDefinition = "DATE COMMENT '毕业时间'")
     private LocalDate graduationDate;
 
     /**
-     *健康状况
+     * 健康状况
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '健康状况'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '健康状况'")
     private String healthStatus;
 
     /**
-     *QQ号
+     * QQ号
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT 'QQ号'")
     private String qq;
 
     /**
-     *手机号
+     * 手机号
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '手机号'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '手机号'")
     private String phone;
 
     /**
-     *个人邮箱账号
+     * 个人邮箱账号
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '个人邮箱账号'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '个人邮箱账号'")
     private String email;
 
     /**
-     *紧急情况联系人
+     * 紧急情况联系人
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '紧急情况联系人'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '紧急情况联系人'")
     private String emergencyContact;
 
     /**
-     *联系电话
+     * 联系电话
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '联系电话'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '联系电话'")
     private String phoneNumber;
 
     /**
-     *身份证号码
+     * 身份证号码
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '身份证号码'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '身份证号码'")
     private String idCard;
 
     /**
-     *户口地址
+     * 户口地址
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '户口地址'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '户口地址'")
     private String registeredAddress;
 
     /**
-     *目前住宿地址
+     * 目前住宿地址
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '目前住宿地址'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '目前住宿地址'")
     private String location;
 
     /**
-     *兴趣爱好
+     * 兴趣爱好
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(255) COMMENT '兴趣爱好'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '兴趣爱好'")
     private String hobbies;
+    /**
+     * 更新时间
+     */
+    @Column(nullable = false, columnDefinition = "DATE COMMENT '更新时间'")
+    private LocalDate updateTime;
+    /**
+     * 地区
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '地区'")
+    private String area;
+    /**
+     * 部门/项目组
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '部门/项目组'")
+    private String department;
+    /**
+     * 职位 
+     */
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '职位'")
+    private String position;
+    /**
+     * 入职日期 
+     */
+    @Column(nullable = false, columnDefinition = "DATE COMMENT '入职日期'")
+    private LocalDate inductionDate;
+    /**
+     * 状态 
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT(255) COMMENT '状态'")
+    private StaffStatus staffStatus;
 
 
     public String getEmpNumber() {
@@ -339,5 +371,53 @@ public class EntryRegister extends BaseEntity {
 
     public void setHobbies(String hobbies) {
         this.hobbies = hobbies;
+    }
+
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public LocalDate getInductionDate() {
+        return inductionDate;
+    }
+
+    public void setInductionDate(LocalDate inductionDate) {
+        this.inductionDate = inductionDate;
+    }
+
+    public StaffStatus getStaffStatus() {
+        return staffStatus;
+    }
+
+    public void setStaffStatus(StaffStatus staffStatus) {
+        this.staffStatus = staffStatus;
     }
 }

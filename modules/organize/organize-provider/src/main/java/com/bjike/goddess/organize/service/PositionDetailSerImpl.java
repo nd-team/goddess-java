@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.bo.*;
+import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.dto.PositionUserDetailDTO;
 import com.bjike.goddess.organize.entity.*;
@@ -17,11 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -283,84 +283,133 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
 
     @Override
     public List<ReHierarchyBO> list() throws SerException {
-        List<ReHierarchyBO> hierarchyBOS = new ArrayList<>();
-        List<DepartmentDetail> departs = new ArrayList<>();
         List<PositionDetailBO> positionDetailBOS = this.transformationToBOList(super.findAll());
+        TreeSet<ReHierarchyBO> reHierarchyBOs = filter();
         for (PositionDetailBO p : positionDetailBOS) {
             String departId = p.getDepartmentId();
             DepartmentDetail depart = departmentDetailSer.findById(departId);
-            departs.add(depart);
             Hierarchy hierarchy = depart.getHierarchy();
             ReHierarchyBO reHierarchyBO = BeanTransform.copyProperties(hierarchy, ReHierarchyBO.class);
-            if (!hierarchyBOS.isEmpty()) {
-                Set<String> hierarchyIds = hierarchyBOS.stream().map(hierarchyBO -> hierarchyBO.getId()).collect(Collectors.toSet());
-                if (!hierarchyIds.contains(hierarchy.getId())) {
-                    hierarchyBOS.add(reHierarchyBO);
-                }
-            } else {
-                hierarchyBOS.add(reHierarchyBO);
-            }
+            reHierarchyBOs.add(reHierarchyBO);
         }
+        List<ReHierarchyBO> hierarchyBOS = new ArrayList<>(reHierarchyBOs);
         for (ReHierarchyBO h : hierarchyBOS) {
-            Set<String> departIds = departs.stream().filter(departmentDetail -> h.getId().equals(departmentDetail.getHierarchy().getId())).map(departmentDetail -> departmentDetail.getId()).collect(Collectors.toSet());
-            List<ReDepartBO> departS = new ArrayList<>();
-            for (String id : departIds) {
-                departS.add(BeanTransform.copyProperties(departmentDetailSer.findById(id), ReDepartBO.class));
-            }
-            for (ReDepartBO d : departS) {
-                PositionDetailDTO dto = new PositionDetailDTO();
-                dto.getConditions().add(Restrict.eq("department.id", d.getId()));
-                List<PositionDetail> list = super.findByCis(dto);
-                Set<String> arrangementIds = list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
-                List<ReArrangementBO> reArrangementBOS = new ArrayList<>();
-                for (String id : arrangementIds) {
-                    reArrangementBOS.add(BeanTransform.copyProperties(arrangementSer.findById(id), ReArrangementBO.class));
-                }
-                for (ReArrangementBO reArrangementBO : reArrangementBOS) {
-                    PositionDetailDTO dto1 = new PositionDetailDTO();
-                    dto1.getConditions().add(Restrict.eq("department.id", d.getId()));
-                    dto1.getConditions().add(Restrict.eq("arrangement.id", reArrangementBO.getId()));
-                    List<PositionDetail> list1 = super.findByCis(dto1);
-//                    Set<String> moduleTypeIds = list1.stream().filter(positionDetail -> null != positionDetail.getModule()).map(positionDetail -> positionDetail.getModule().getId()).collect(Collectors.toSet());
-//                    List<ReModuleBO> moduleBOS = new ArrayList<>();
-//                    for (String id : moduleTypeIds) {
-//                        moduleBOS.add(BeanTransform.copyProperties(moduleTypeSer.findById(id), ReModuleBO.class));
-//                    }
-                    List<RePositionBO> bos = new ArrayList<>();
-                    for (PositionDetail p : list1) {
-                        PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
-                        detailDTO.getConditions().add(Restrict.eq("positionId", p.getId()));
-                        detailDTO.getConditions().add(Restrict.eq("workStatus", WorkStatus.MAIN));
-                        List<PositionUserDetail> mains = positionUserDetailSer.findByCis(detailDTO);
-                        String main = get(mains);
-                        PositionUserDetailDTO detailDTO1 = new PositionUserDetailDTO();
-                        detailDTO1.getConditions().add(Restrict.eq("positionId", p.getId()));
-                        detailDTO1.getConditions().add(Restrict.eq("workStatus", WorkStatus.PARTJOB));
-                        List<PositionUserDetail> parts = positionUserDetailSer.findByCis(detailDTO1);
-                        String part = get(parts);
-                        PositionUserDetailDTO detailDTO2 = new PositionUserDetailDTO();
-                        detailDTO2.getConditions().add(Restrict.eq("positionId", p.getId()));
-                        detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
-                        List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
-                        String agent = get(agents);
-                        RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class, "module");
-                        positionBO.setMain(main);
-                        positionBO.setPart(part);
-                        positionBO.setAgent(agent);
-                        if (null != p.getModule()) {
-                            positionBO.setModule(p.getModule().getModule());
-                        }
-                        positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
-                        bos.add(positionBO);
+            TreeSet<DepartmentDetail> departmentDetails = new TreeSet<>(new Comparator<DepartmentDetail>() {
+                @Override
+                public int compare(DepartmentDetail o1, DepartmentDetail o2) {
+                    if (o1.getDepartment().equals(o2.getDepartment())) {
+                        return 0;
                     }
-                    reArrangementBO.setPositionS(bos);
-//                    reArrangementBO.setModuleS(moduleBOS);
+                    return 1;
                 }
-                d.setArrangementS(reArrangementBOS);
+            });
+            DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
+            departmentDetailDTO.getConditions().add(Restrict.eq("hierarchy.id", h.getId()));
+            List<DepartmentDetail> departmentDetails1 = departmentDetailSer.findByCis(departmentDetailDTO);
+            departmentDetails.addAll(departmentDetails1);
+            List<DepartmentDetail> departs = new ArrayList<>(departmentDetails);
+            List<ReDepartBO> departS = BeanTransform.copyProperties(departs, ReDepartBO.class);
+            if (null != departS) {
+                for (ReDepartBO d : departS) {
+                    PositionDetailDTO dto = new PositionDetailDTO();
+                    dto.getConditions().add(Restrict.eq("department.id", d.getId()));
+                    List<PositionDetail> list = super.findByCis(dto);
+//                    TreeSet<Arrangement> arrangements = new TreeSet<>(new Comparator<Arrangement>() {
+//                        @Override
+//                        public int compare(Arrangement o1, Arrangement o2) {
+//                            if (o1.getId().equals(o2.getId())) {
+//                                return 0;
+//                            }
+//                            return 1;
+//                        }
+//                    });
+//                    for (PositionDetail p : list) {
+//                        arrangements.add(p.getArrangement());
+//                    }
+                    Set<String> arrangementsID=list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
+                    List<Arrangement> arrangements1 = new ArrayList<>();
+                    for (String id:arrangementsID){
+                        arrangements1.add(arrangementSer.findById(id));
+                    }
+                    List<ReArrangementBO> reArrangementBOS = BeanTransform.copyProperties(arrangements1, ReArrangementBO.class);
+                    if (null != reArrangementBOS) {
+                        for (ReArrangementBO reArrangementBO : reArrangementBOS) {
+                            PositionDetailDTO dto1 = new PositionDetailDTO();
+                            dto1.getConditions().add(Restrict.eq("department.id", d.getId()));
+                            dto1.getConditions().add(Restrict.eq("arrangement.id", reArrangementBO.getId()));
+                            List<PositionDetail> list1 = super.findByCis(dto1);
+                            List<RePositionBO> bos = new ArrayList<>();
+                            for (PositionDetail p : list1) {
+                                PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                                detailDTO.getConditions().add(Restrict.eq("positionId", p.getId()));
+                                detailDTO.getConditions().add(Restrict.eq("workStatus", WorkStatus.MAIN));
+                                List<PositionUserDetail> mains = positionUserDetailSer.findByCis(detailDTO);
+                                String main = get(mains);
+                                PositionUserDetailDTO detailDTO1 = new PositionUserDetailDTO();
+                                detailDTO1.getConditions().add(Restrict.eq("positionId", p.getId()));
+                                detailDTO1.getConditions().add(Restrict.eq("workStatus", WorkStatus.PARTJOB));
+                                List<PositionUserDetail> parts = positionUserDetailSer.findByCis(detailDTO1);
+                                String part = get(parts);
+                                PositionUserDetailDTO detailDTO2 = new PositionUserDetailDTO();
+                                detailDTO2.getConditions().add(Restrict.eq("positionId", p.getId()));
+                                detailDTO2.getConditions().add(Restrict.eq("agent", Boolean.FALSE));
+                                List<PositionUserDetail> agents = positionUserDetailSer.findByCis(detailDTO2);
+                                String agent = get(agents);
+                                RePositionBO positionBO = BeanTransform.copyProperties(p, RePositionBO.class, "module");
+                                positionBO.setMain(main);
+                                positionBO.setPart(part);
+                                positionBO.setAgent(agent);
+                                if (null != p.getModule()) {
+                                    positionBO.setModule(p.getModule().getModule());
+                                }
+                                positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
+                                bos.add(positionBO);
+                            }
+                            reArrangementBO.setPositionS(bos);
+                        }
+                    }
+                    d.setArrangementS(reArrangementBOS);
+                }
             }
             h.setDeparts(departS);
         }
         return hierarchyBOS;
+    }
+
+    private <T> TreeSet<T> filter() throws SerException {
+        TreeSet<T> treeSet = new TreeSet<>(new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                Field[] field = o1.getClass().getDeclaredFields();//获取实体类的所有属性，返回field数组
+                int num = 0;   //用于识别属性相同的个数
+                int sum = 0;    //用于识别该对象除了集合的属性值个数
+                for (Field f : field) {//遍历所有的属性
+                    String type = f.getGenericType().toString();//获取属性的类型
+                    if (type.indexOf("java.util.List") < 0) {
+                        sum++;
+                        String name = f.getName(); // 获取属性的名字
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                        try {
+                            Method m = o1.getClass().getMethod("get" + name);
+                            Object value = m.invoke(o1);// 调用getter方法获取属性值
+                            Method m1 = o2.getClass().getMethod("get" + name);
+                            Object value1 = m1.invoke(o2);
+                            if (value.equals(value1)) {    //判断该属性值是否相同
+                                num++;
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+                if (num == sum) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return treeSet;
     }
 
     private String get(List<PositionUserDetail> list) throws SerException {

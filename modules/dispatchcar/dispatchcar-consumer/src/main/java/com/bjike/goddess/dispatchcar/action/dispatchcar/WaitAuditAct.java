@@ -1,6 +1,7 @@
 package com.bjike.goddess.dispatchcar.action.dispatchcar;
 
 import com.bjike.goddess.common.api.dto.Restrict;
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -8,14 +9,18 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
+import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -141,34 +146,17 @@ public class WaitAuditAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 资金核对意见
-     *
-     * @param id             出车记录id
-     * @param fundModuleSugg 意见
-     * @version v1
-     */
-    @GetMapping("v1/fundsugg")
-    public Result fundSugg(@RequestParam String id, @RequestParam String fundModuleSugg) throws ActException {
-        try {
-            dispatchCarInfoAPI.fundSugg(id, fundModuleSugg);
-            return new ActResult("核对成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
     /**
-     * 预算核对意见
+     * 预算模块负责人核对意见
      *
-     * @param id               出车记录id
-     * @param budgetModuleSugg 意见
      * @version v1
      */
     @GetMapping("v1/budgetsugg")
-    public Result budgetSugg(@RequestParam String id, @RequestParam String budgetModuleSugg) throws ActException {
+    public Result budgetSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
         try {
-            dispatchCarInfoAPI.budgetSugg(id, budgetModuleSugg);
+            dispatchCarInfoAPI.budgetSugg(to);
             return new ActResult("核对成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -192,4 +180,55 @@ public class WaitAuditAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 客户模块负责人核对意见
+     *
+     * @version v1
+     */
+    @GetMapping("v1/client")
+    public Result clientSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
+        try {
+            dispatchCarInfoAPI.clientSugg(to);
+            return new ActResult("核对成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 素养模块负责人核对意见
+     *
+     * @version v1
+     */
+    @GetMapping("v1/head")
+    public Result headSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
+        try {
+            dispatchCarInfoAPI.headSugg(to);
+            return new ActResult("核对成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 审核详情
+     * @param id 出车记录id
+     * @return class AuditDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAudit")
+    public Result findAudit(@RequestParam String id) throws ActException{
+        try {
+          AuditDetailBO dispatchCarInfo =   dispatchCarInfoAPI.findAudit(id);
+          AuditDetailVO auditDetailVO = BeanTransform.copyProperties(dispatchCarInfo,AuditDetailVO.class);
+          return ActResult.initialize(auditDetailVO);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -244,5 +244,4 @@ public class PositionDetailUserAct {
             throw new ActException(e.getMessage());
         }
     }
-
 }

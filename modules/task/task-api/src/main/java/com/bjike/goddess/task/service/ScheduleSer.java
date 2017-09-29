@@ -3,6 +3,7 @@ package com.bjike.goddess.task.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.dto.CollectDTO;
+import com.bjike.goddess.task.entity.Customize;
 import com.bjike.goddess.task.enums.CollectType;
 
 /**
@@ -19,4 +20,15 @@ public interface ScheduleSer {
     default String buildCollectHtml(Collect collect, CollectType type) throws SerException {
         return null;
     }
+
+    /**
+     * 自定义汇总
+     *
+     * @return
+     * @throws SerException
+     */
+    default String customizeCollect(Customize customize) throws SerException {
+        return null;
+    }
+
 }

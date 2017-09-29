@@ -3,6 +3,8 @@ package com.bjike.goddess.staffentry.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 员工入职注册
  *
@@ -31,24 +33,62 @@ public class StaffEntryRegisterTO extends BaseTO {
     @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "密码不能为空")
     private String password;
     /**
-     * 所属部门
+     * 所属部门/项目组
      */
     private String department;
-
-    /**
-     * 角色列表
-     */
-    private String role;
-
     /**
      * 职位
      */
     private String position;
 
     /**
-     * 项目组
+     * 联系电话
      */
-    private String projectGroup;
+    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "联系电话")
+    private String contactNum;
+
+    /**
+     * 入职日期
+     */
+    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "入职日期")
+    private String entryDate;
+    /**
+     * 是否住宿
+     */
+    @NotNull(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "是否住宿")
+    private Boolean lodge;
+    /**
+     * 是否使用公司电脑
+     */
+    @NotNull(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "是否使用公司电脑")
+    private Boolean useCompanyComputer;
+    /**
+     * 入职地址
+     */
+    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "入职地址")
+    private String entryAddress;
+    /**
+     * 是否入职
+     */
+    @NotNull(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "是否入职")
+    private Boolean entry;
+    /**
+     * 未入职原因
+     */
+    private String noEntryCause;
+    /**
+     * 地区
+     */
+    @NotBlank(groups = {StaffEntryRegisterTO.TestAdd.class} , message = "地区")
+    private String area;
+    /**
+     * 是否通告
+     */
+    private Boolean notice;
+    /**
+     * 注册邮箱使用手机号
+     */
+    private String registerUseNum;
 
     /**
      * 工作邮箱
@@ -111,12 +151,84 @@ public class StaffEntryRegisterTO extends BaseTO {
         this.department = department;
     }
 
-    public String getRole() {
-        return role;
+    public String getContactNum() {
+        return contactNum;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setContactNum(String contactNum) {
+        this.contactNum = contactNum;
+    }
+
+    public String getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(String entryDate) {
+        this.entryDate = entryDate;
+    }
+
+    public Boolean getLodge() {
+        return lodge;
+    }
+
+    public void setLodge(Boolean lodge) {
+        this.lodge = lodge;
+    }
+
+    public Boolean getUseCompanyComputer() {
+        return useCompanyComputer;
+    }
+
+    public void setUseCompanyComputer(Boolean useCompanyComputer) {
+        this.useCompanyComputer = useCompanyComputer;
+    }
+
+    public String getEntryAddress() {
+        return entryAddress;
+    }
+
+    public void setEntryAddress(String entryAddress) {
+        this.entryAddress = entryAddress;
+    }
+
+    public Boolean getEntry() {
+        return entry;
+    }
+
+    public void setEntry(Boolean entry) {
+        this.entry = entry;
+    }
+
+    public String getNoEntryCause() {
+        return noEntryCause;
+    }
+
+    public void setNoEntryCause(String noEntryCause) {
+        this.noEntryCause = noEntryCause;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public Boolean getNotice() {
+        return notice;
+    }
+
+    public void setNotice(Boolean notice) {
+        this.notice = notice;
+    }
+
+    public String getRegisterUseNum() {
+        return registerUseNum;
+    }
+
+    public void setRegisterUseNum(String registerUseNum) {
+        this.registerUseNum = registerUseNum;
     }
 
     public String getPosition() {
@@ -125,14 +237,6 @@ public class StaffEntryRegisterTO extends BaseTO {
 
     public void setPosition(String position) {
         this.position = position;
-    }
-
-    public String getProjectGroup() {
-        return projectGroup;
-    }
-
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
     }
 
     public String getWorkEmail() {

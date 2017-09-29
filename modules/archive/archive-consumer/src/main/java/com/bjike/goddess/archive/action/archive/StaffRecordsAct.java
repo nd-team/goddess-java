@@ -19,8 +19,9 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -54,7 +55,7 @@ public class StaffRecordsAct extends BaseFileAction {
     @Autowired
     private FileAPI fileAPI;
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private EntryRegisterAPI entryRegisterAPI;
 
 
     /**
@@ -247,15 +248,15 @@ public class StaffRecordsAct extends BaseFileAction {
     /**
      * 在职员工基本信息
      *
-     * @return class EntryBasicInfoBO
+     * @return class EntryRegisterVO
      * @version v1
      */
     @GetMapping("v1/employee/list")
     public Result listEmployee() throws ActException {
         try {
             staffRecordsAPI.listEmployee();
-            List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo();
-            return ActResult.initialize(entryBasicInfoBOList);
+            List<EntryRegisterBO> entryBasicInfoBOList = entryRegisterAPI.list();
+            return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBOList, EntryRegisterVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

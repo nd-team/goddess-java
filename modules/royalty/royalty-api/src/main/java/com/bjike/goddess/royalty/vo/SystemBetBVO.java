@@ -30,30 +30,47 @@ public class SystemBetBVO {
     private Double baseWeight;
 
     /**
-     * 基础得分（分值*目标-部门分配基础权重）
+     * 目标基础得分（分值（利润额）*目标-部门分配基础权重）
      */
     private Double basesScore;
-
     /**
-     * 制约得分
+     * 计划基础得分（计划分值（利润额）*目标-部门分配基础权重）
+     */
+    private Double basesScorePlan;
+    /**
+     * 实际基础得分（实际分值（利润额）*目标-部门分配基础权重）
+     */
+    private Double basesScorePractice;
+    /**
+     * 目标制约得分
      */
     private Double restrictScore;
     /**
-     * 部门
+     * 计划制约得分
      */
-    private String department;
+    private Double restrictScorePlan;
     /**
-     * 部门总得分（制约得分+基础得分）
+     * 实际制约得分
      */
-    private Double departmentTotalScore;
-//    /**
-//     * 体系间对赌表A
-//     */
-//    private SystemBetAVO systemBetAVO;
+    private Double restrictScorePractice;
+
+    /**
+     * 体系目标总得分（目标制约得分+目标基础得分）
+     */
+    private Double systemTotalScore;
+    /**
+     * 体系计划总得分（计划制约得分+计划基础得分）
+     */
+    private Double systemTotalScorePlan;
+    /**
+     * 体系实际总得分（实际制约得分+实际基础得分）
+     */
+    private Double systemTotalScorePractice;
+
     /**
      * 体系间对赌表C
      */
-    private List<SystemBetCVO> systemBetCVOS;
+    private List<SystemBetCVO> systemBetCBOS;
 
     public String getId() {
         return id;
@@ -96,35 +113,68 @@ public class SystemBetBVO {
     }
 
 
-    public Double getDepartmentTotalScore() {
-        return departmentTotalScore;
+    public Double getBasesScorePlan() {
+        return basesScorePlan;
     }
 
-    public void setDepartmentTotalScore(Double departmentTotalScore) {
-        this.departmentTotalScore = departmentTotalScore;
+    public void setBasesScorePlan(Double basesScorePlan) {
+        this.basesScorePlan = basesScorePlan;
     }
 
-    public String getDepartment() {
-        return department;
+    public Double getBasesScorePractice() {
+        return basesScorePractice;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setBasesScorePractice(Double basesScorePractice) {
+        this.basesScorePractice = basesScorePractice;
     }
 
-//    public SystemBetAVO getSystemBetAVO() {
-//        return systemBetAVO;
-//    }
-//
-//    public void setSystemBetAVO(SystemBetAVO systemBetAVO) {
-//        this.systemBetAVO = systemBetAVO;
-//    }
-
-    public List<SystemBetCVO> getSystemBetCVOS() {
-        return systemBetCVOS;
+    public Double getRestrictScorePlan() {
+        return restrictScorePlan;
     }
 
-    public void setSystemBetCVOS(List<SystemBetCVO> systemBetCVOS) {
-        this.systemBetCVOS = systemBetCVOS;
+    public void setRestrictScorePlan(Double restrictScorePlan) {
+        this.restrictScorePlan = restrictScorePlan;
+    }
+
+    public Double getRestrictScorePractice() {
+        return restrictScorePractice;
+    }
+
+    public void setRestrictScorePractice(Double restrictScorePractice) {
+        this.restrictScorePractice = restrictScorePractice;
+    }
+
+    public Double getSystemTotalScore() {
+        return systemTotalScore;
+    }
+
+    public void setSystemTotalScore(Double systemTotalScore) {
+        this.systemTotalScore = systemTotalScore;
+    }
+
+    public Double getSystemTotalScorePlan() {
+        return systemTotalScorePlan;
+    }
+
+    public void setSystemTotalScorePlan(Double systemTotalScorePlan) {
+        this.systemTotalScorePlan = systemTotalScorePlan;
+    }
+
+    public Double getSystemTotalScorePractice() {
+        return systemTotalScorePractice;
+    }
+
+    public void setSystemTotalScorePractice(Double systemTotalScorePractice) {
+        this.systemTotalScorePractice = systemTotalScorePractice;
+    }
+
+
+    public List<SystemBetCVO> getSystemBetCBOS() {
+        return systemBetCBOS;
+    }
+
+    public void setSystemBetCBOS(List<SystemBetCVO> systemBetCBOS) {
+        this.systemBetCBOS = systemBetCBOS;
     }
 }

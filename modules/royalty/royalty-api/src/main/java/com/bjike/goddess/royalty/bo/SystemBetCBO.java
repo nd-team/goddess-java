@@ -45,14 +45,17 @@ public class SystemBetCBO extends BaseBO {
      */
     private Boolean standard;
     /**
-     * 对赌得分（分值*目标-部门分配对赌权重）
+     * 目标对赌得分（分值（利润额）*目标-部门分配对赌权重）
      */
     private Double betScore;
-
-//    /**
-//     * 体系间对赌表B
-//     */
-//    private SystemBetBBO systemBetBBO;
+    /**
+     * 计划对赌得分（计划分值（利润额）*目标-部门分配对赌权重）
+     */
+    private Double betScorePlan;
+    /**
+     * 实际对赌得分（实际分值（利润额）*目标-部门分配对赌权重）
+     */
+    private Double betScorePractice;
     /**
      * 体系间对赌表d
      */
@@ -115,13 +118,21 @@ public class SystemBetCBO extends BaseBO {
         this.betScore = betScore;
     }
 
-//    public SystemBetBBO getSystemBetBBO() {
-//        return systemBetBBO;
-//    }
-//
-//    public void setSystemBetBBO(SystemBetBBO systemBetBBO) {
-//        this.systemBetBBO = systemBetBBO;
-//    }
+    public Double getBetScorePlan() {
+        return betScorePlan;
+    }
+
+    public void setBetScorePlan(Double betScorePlan) {
+        this.betScorePlan = betScorePlan;
+    }
+
+    public Double getBetScorePractice() {
+        return betScorePractice;
+    }
+
+    public void setBetScorePractice(Double betScorePractice) {
+        this.betScorePractice = betScorePractice;
+    }
 
     public List<SystemBetDBO> getSystemBetDBOS() {
         return systemBetDBOS;

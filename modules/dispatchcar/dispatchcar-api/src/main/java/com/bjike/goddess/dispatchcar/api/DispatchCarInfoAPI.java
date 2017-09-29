@@ -4,14 +4,12 @@ import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
-import com.bjike.goddess.dispatchcar.to.ConditionTO;
-import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
-import com.bjike.goddess.dispatchcar.to.FinanceCollectTO;
-import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.dispatchcar.to.*;
+import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 
 import java.util.List;
 
@@ -92,18 +90,31 @@ public interface DispatchCarInfoAPI {
     /**
      * 资金核对意见
      *
-     * @param id             出车记录id
-     * @param fundModuleSugg 意见
      */
-    void fundSugg(String id, String fundModuleSugg) throws SerException;
+    void fundSugg(PredictPayTO to) throws SerException;
 
     /**
      * 预算核对意见
      *
-     * @param id               出车记录id
-     * @param budgetModuleSugg 意见
      */
-    void budgetSugg(String id, String budgetModuleSugg) throws SerException;
+    void budgetSugg(DispatchCarInfoTO dispatchCarInfoTO,CheckChangeCarTO to) throws SerException;
+
+
+    /**
+     * 客户模块负责人核对意见
+     */
+    void clientSugg(CheckChangeCarTO to) throws SerException;
+
+
+    /**
+     * 素养模块负责人核对意见
+     */
+    void headSugg(CheckChangeCarTO to) throws SerException;
+
+    /**
+     * 财务模块负责人核对意见
+     */
+    void financialSugg(CheckChangeCarTO to) throws SerException;
 
     /**
      * 项目负责人或任务下发人审核
@@ -122,7 +133,7 @@ public interface DispatchCarInfoAPI {
      * @param receiveReceiptDate 签收日期
      * @param auditReceiptResult 审核结果
      */
-    void receiptAudit(String id, String auditReceiptSugg, String receiveReceiptDate, Boolean auditReceiptResult) throws SerException;
+//    void receiptAudit(String id, String auditReceiptSugg, String receiveReceiptDate, Boolean auditReceiptResult) throws SerException;
 
     /**
      * 付款
@@ -212,11 +223,8 @@ public interface DispatchCarInfoAPI {
     /**
      * 付款计划
      *
-     * @param id            出车记录
-     * @param budgetPayDate 预计付款时间
-     * @param payPlan       付款计划
      */
-    void predict(String id, String budgetPayDate, String payPlan) throws SerException;
+    void predict(PredictPayTO to) throws SerException;
 
     /**
      * 根据地区及项目组及项目名称及年份及月份查询出车记录
@@ -258,7 +266,7 @@ public interface DispatchCarInfoAPI {
      * 查询所有用车陪同人员,任务下达人,用车人
      * @throws SerException
      */
-    List<EntryBasicInfoBO> findAllEntry() throws SerException;
+    List<StaffEntryRegisterBO> findAllEntry() throws SerException;
 
 
     /**
@@ -266,4 +274,90 @@ public interface DispatchCarInfoAPI {
      * @throws SerException
      */
     List<OilCardBasicCarBO> findAllOil() throws SerException;
+
+    /**
+     * 查找所有项目名称
+     */
+    List<String> findAllProject() throws SerException;
+
+
+    /**
+     * 出车有误记录列表
+     */
+    List<DispatchCarInfoBO> findWrongRecord(DispatchCarInfoDTO dispatchCarInfoDTO) throws SerException;
+
+
+    /**
+     * 出车有误记录编辑
+     */
+    void correctMistake(DispatchCarInfoTO to) throws SerException;
+
+    /**
+     * 收到票据
+     */
+    void receivePaper(String id,Boolean isCorrect) throws SerException;
+
+    /**
+     * 寄件
+     */
+    void mail(MailTO to) throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param toList
+     * @throws SerException
+     */
+    default void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+        return;
+    }
+
+    ;
+
+    /**
+     * 导出
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportDispatchCarInfoTO to) throws SerException;
+
+
+    /**
+     * 导出Excel模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 支付司机金额汇总
+     */
+    List<PayDriverMoneyCollectBO> driverCollect(String startTime,String endTime) throws SerException;
+
+
+    /**
+     * 汇总
+     */
+    List<PayedCollectBO> collectPayed(String startTime,String endTime) throws SerException;
+
+    /**
+     * 出车情况汇总导出功能
+     */
+    byte[] exportExcel(CollectIntervalType collectIntervalType,CollectType collectType,ExportCollectPayedTO to) throws SerException;
+
+
+
+
+    /**
+     * 把旧服务武器上的数据拷贝到本地
+     */
+//    void copyServer() throws SerException;
+
+    /**
+     * 把旧服务器上的数据司机信息拷贝到本地
+     */
+    void copyDriver() throws SerException;
+
 }

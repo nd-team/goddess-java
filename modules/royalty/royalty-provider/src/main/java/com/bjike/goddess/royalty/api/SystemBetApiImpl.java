@@ -6,6 +6,7 @@ import com.bjike.goddess.royalty.dto.SystemBetADTO;
 import com.bjike.goddess.royalty.dto.SystemBetDDTO;
 import com.bjike.goddess.royalty.service.SystemBetSer;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
+import com.bjike.goddess.royalty.to.ProjectNameTO;
 import com.bjike.goddess.royalty.to.SystemBetATO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,11 +73,16 @@ public class SystemBetApiImpl implements SystemBetAPI {
     }
 
     @Override
-    public List<String> getDepartment() throws SerException {
-        return systemBetSer.getDepartment();
+    public List<String> system() throws SerException {
+        return systemBetSer.system();
     }
     @Override
     public SystemBetABO getSystem(String projectName) throws SerException {
         return systemBetSer.getSystem(projectName);
     }
+    @Override
+    public List<SystemBetABO> systemCollect(ProjectNameTO to) throws SerException {
+        return systemBetSer.systemCollect(to);
+    }
+
 }

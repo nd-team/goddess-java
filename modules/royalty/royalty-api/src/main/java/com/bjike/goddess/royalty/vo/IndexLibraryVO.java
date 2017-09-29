@@ -54,6 +54,18 @@ public class IndexLibraryVO {
      * 数据来源
      */
     private String dataSource;
+    /**
+     * 是否被选用
+     */
+    private Boolean choose;
+    /**
+     * 对赌承诺-确认目标值
+     */
+    private String confirmTargetValue;
+    /**
+     * 达标状态
+     */
+    private String standard;
 
 
     public String getId() {
@@ -126,5 +138,29 @@ public class IndexLibraryVO {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public Boolean getChoose() {
+        return choose;
+    }
+
+    public void setChoose(Boolean choose) {
+        this.choose = choose;
+    }
+
+    public String getConfirmTargetValue() {
+        return confirmTargetValue;
+    }
+
+    public void setConfirmTargetValue(String confirmTargetValue) {
+        this.confirmTargetValue = confirmTargetValue;
+    }
+
+    public String getStandard() {
+        return standard;
+    }
+
+    public void setStandard(String standard) {
+        this.standard = standard;
     }
 }

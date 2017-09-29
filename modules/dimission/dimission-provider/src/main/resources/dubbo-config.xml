@@ -31,7 +31,6 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailAPI"
                      id="positionDetailApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
 
     <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
     <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />

@@ -55,7 +55,7 @@ public interface CusPermissionAPI {
      *
      * @throws SerException
      */
-    default List<OpinionBO>  listOperateById(String id) throws SerException {
+    default List<OpinionBO> listOperateById(String id) throws SerException {
         return null;
     }
 

@@ -20,6 +20,7 @@ public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
     default List<CustomizeBO> list(CustomizeDTO dto) throws SerException {
         return null;
     }
+
     default Long count(CustomizeDTO dto) throws SerException {
         return null;
     }
@@ -29,6 +30,15 @@ public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
     }
 
     default void enable(String id, boolean enable) throws SerException {
+
+    }
+
+    /**
+     * 执行任务
+     *
+     * @throws SerException
+     */
+    default void executeTask() throws SerException {
 
     }
 

@@ -24,6 +24,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -310,8 +311,13 @@ public class BusInsuranceSerImpl extends ServiceImpl<BusInsurance, BusInsuranceD
     @Override
     public BusInsuranceBO addBusInsurance(BusInsuranceTO busInsuranceTO) throws SerException {
         checkPermission();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         BusInsurance busInsurance = BeanTransform.copyProperties(busInsuranceTO, BusInsurance.class, true);
         busInsurance.setCreateTime(LocalDateTime.now());
+        busInsurance.setMakeDate(LocalDate.now());
+        busInsurance.setMaker(userBO.getUsername());
         super.save(busInsurance);
         return BeanTransform.copyProperties(busInsurance, BusInsuranceBO.class);
     }

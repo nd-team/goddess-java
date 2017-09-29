@@ -152,4 +152,9 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public PositionDetailUserBO bo(PositionDetailUser entity, Set<String> positions) throws SerException {
         return positionDetailUserSer.bo(entity,positions);
     }
+
+    @Override
+    public Boolean isMarker(String userId) throws SerException {
+        return positionDetailUserSer.isMarker(userId);
+    }
 }

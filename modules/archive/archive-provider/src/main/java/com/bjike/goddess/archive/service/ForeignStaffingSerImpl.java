@@ -11,6 +11,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -268,22 +269,19 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
 
     @Override
     public List<String> getTime() throws SerException {
-        List<EntryRegister> entryRegisters = entryRegisterAPI.list();
+        List<EntryRegisterBO> entryRegisters = entryRegisterAPI.list();
         List<String> list = new ArrayList<>(0);
         if (!CollectionUtils.isEmpty(entryRegisters)) {
-            List<LocalDate> localDateList = entryRegisters.stream().map(EntryRegister::getGraduationDate).distinct().collect(Collectors.toList());
-            for (LocalDate localDate : localDateList) {
-                list.add(localDate.toString());
-            }
+            list = entryRegisters.stream().map(EntryRegisterBO::getGraduationDate).distinct().collect(Collectors.toList());
         }
         return list;
     }
 
     @Override
     public List<String> getSchool() throws SerException {
-        List<EntryRegister> entryRegisters = entryRegisterAPI.list();
+        List<EntryRegisterBO> entryRegisters = entryRegisterAPI.list();
         if (!CollectionUtils.isEmpty(entryRegisters)) {
-            List<String> list = entryRegisters.stream().map(EntryRegister::getSchoolTag).distinct().collect(Collectors.toList());
+            List<String> list = entryRegisters.stream().map(EntryRegisterBO::getSchoolTag).distinct().collect(Collectors.toList());
             return list;
         }
         return null;
@@ -291,9 +289,9 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
 
     @Override
     public List<String> getQQ() throws SerException {
-        List<EntryRegister> entryRegisters = entryRegisterAPI.list();
+        List<EntryRegisterBO> entryRegisters = entryRegisterAPI.list();
         if (!CollectionUtils.isEmpty(entryRegisters)) {
-            List<String> list = entryRegisters.stream().map(EntryRegister::getQq).distinct().collect(Collectors.toList());
+            List<String> list = entryRegisters.stream().map(EntryRegisterBO::getQq).distinct().collect(Collectors.toList());
             return list;
         }
         return null;

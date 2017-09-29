@@ -436,4 +436,14 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
         }
         return null;
     }
+
+    @Override
+    public Set<String> allName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<RemoveEmployee> list = super.findAll();
+        for(RemoveEmployee entity:list){
+            set.add(entity.getRemoveName());
+        }
+        return set;
+    }
 }

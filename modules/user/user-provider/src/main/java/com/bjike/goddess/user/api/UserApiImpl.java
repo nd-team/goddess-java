@@ -140,7 +140,7 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
-    public List<UserBO> findByDept(String... departmentId) throws SerException {
-        return userSer.findByDept(departmentId);
+    public List<UserBO> findByDept(String... department) throws SerException {
+        return userSer.findByDept(department);
     }
 }

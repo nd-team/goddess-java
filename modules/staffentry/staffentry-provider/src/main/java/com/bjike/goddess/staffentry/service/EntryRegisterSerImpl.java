@@ -1,10 +1,18 @@
 package com.bjike.goddess.staffentry.service;
 
+import com.bjike.goddess.assistance.api.ComputerSubsidiesAPI;
+import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
+import com.bjike.goddess.assistance.enums.SubsidiesStatus;
+import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
+import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
 import com.bjike.goddess.staffentry.entity.*;
@@ -25,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 入职登记业务实现
@@ -53,7 +62,12 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     private CredentialSer credentialSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
-
+    @Autowired
+    private SenioritySubsidiesAPI senioritySubsidiesAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ComputerSubsidiesAPI computerSubsidiesAPI;
 
     /**
      * 检测部门
@@ -78,6 +92,11 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         return flag;
     }
 
+    //所有人都有权限
+    private Boolean checkAllTrue() throws SerException {
+        return true;
+
+    }
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -86,7 +105,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = checkDepartIdentity("7");
         RpcTransmit.transmitUserToken(userToken);
-        if (flagSee || flagAdd) {
+        Boolean flagAllTrue = checkAllTrue();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdd || flagAllTrue) {
             return true;
         } else {
             return false;
@@ -140,7 +161,13 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
-        entryRegisterDTO.getSorts().add("createTime=desc");
+        if (checkDepartIdentity("2")) {
+            entryRegisterDTO.getSorts().add("createTime=desc");
+        } else {
+            UserBO userBO = userAPI.currentUser();
+            String userName = userBO.getUsername();
+            entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
+        }
         List<EntryRegister> entryRegisters = super.findByPage(entryRegisterDTO);
         return entryRegisters;
     }
@@ -203,25 +230,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
-    public List<EntryRegister> list() throws SerException {
-        return super.findAll();
-    }
-
-    @Override
-    public String getGender(String name) throws SerException {
-        if (StringUtils.isNotBlank(name)) {
-            EntryRegisterDTO dto = new EntryRegisterDTO();
-            dto.getConditions().add(Restrict.eq("username", name));
-            EntryRegister entity = super.findOne(dto);
-            if (null != entity) {
-                if (entity.getGender() == 0) {
-                    return "男";
-                } else {
-                    return "女";
-                }
-            }
-        }
-        return null;
+    public List<EntryRegisterBO> list() throws SerException {
+        List<EntryRegister> entryRegisters = super.findAll();
+        return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
     }
 
     @Override
@@ -336,7 +347,9 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             throw new SerException("员工编号不能为空");
         }
         try {
-            super.save(entryRegister);
+            StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegister.getUsername());//查看员工状态
+            entryRegister.setStaffStatus(staffStatus);
+            entryRegister = super.save(entryRegister);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
         }
@@ -358,6 +371,33 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
          */
         insertCredential(entryRegister, credentialTO);
 
+        //TODO 添加转正人员信息lijuntao
+
+        //添加公司补助中的工龄补助lijuntao
+        SenioritySubsidiesTO senioritySubsidiesTO = new SenioritySubsidiesTO();
+        senioritySubsidiesTO.setArea(entryRegister.getArea());
+        senioritySubsidiesTO.setName(entryRegister.getUsername());
+        senioritySubsidiesTO.setEmpNo(entryRegister.getEmpNumber());
+        senioritySubsidiesTO.setDepartment(entryRegister.getDepartment());
+        senioritySubsidiesTO.setJobs(entryRegister.getPosition());
+        senioritySubsidiesTO.setEntryDate(entryRegister.getInductionDate().toString());
+        senioritySubsidiesTO.setStartIssueDate(entryRegister.getInductionDate().plusMonths(13).toString());
+        senioritySubsidiesTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+        StaffStatus status = positionDetailUserAPI.statusByName(entryRegister.getUsername());
+        senioritySubsidiesTO.setStaffStatus(status);
+        senioritySubsidiesAPI.saveSen(senioritySubsidiesTO);
+        //添加电脑补助lijuntao
+        ComputerSubsidiesAddTO computerSubsidiesAddTO = new ComputerSubsidiesAddTO();
+        computerSubsidiesAddTO.setArea(entryRegister.getArea());
+        computerSubsidiesAddTO.setDepartment(entryRegister.getDepartment());
+        computerSubsidiesAddTO.setName(entryRegister.getUsername());
+        computerSubsidiesAddTO.setEntryDate(entryRegister.getInductionDate().toString());
+        computerSubsidiesAddTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
+        StaffStatus status1 = positionDetailUserAPI.statusByName(entryRegister.getUsername());
+        computerSubsidiesAddTO.setStaffStatus(status1);
+        computerSubsidiesAPI.saveComputer(computerSubsidiesAddTO);
+
+
         EntryRegisterBO bo = new EntryRegisterBO();
         BeanUtils.copyProperties(entryRegister, bo);
         return bo;
@@ -378,13 +418,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
                 temp.setPhone(null != familyMemberTO.getPhones() ? familyMemberTO.getPhones().get(i) : "");
                 temp.setEntryRegister(entryRegister);
 
-                if( StringUtils.isBlank( temp.getTitle() ) && StringUtils.isBlank( temp.getName())
-                        && temp.getAge()==0 && StringUtils.isBlank( temp.getUnit())
-                        && StringUtils.isBlank( temp.getPosition() ) && StringUtils.isBlank( temp.getPhone() )  ){
-
-                }else{
-                    familyMembers.add(temp);
-                }
+                familyMembers.add(temp);
             }
             familyMemberSer.save(familyMembers);
         }
@@ -399,27 +433,13 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             int countStartTime = studyExperienceTO.getStudyStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
                 StudyExperience temp = new StudyExperience();
-                if( null != studyExperienceTO.getStudyStartTimes() ){
-                    temp.setStartTime(StringUtils.isBlank(studyExperienceTO.getStudyStartTimes().get(i) )? null:LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                }else{
-                    temp.setStartTime(null );
-                }
-                if( null != studyExperienceTO.getStudyEndTimes() ){
-                    temp.setEndTime(StringUtils.isBlank(studyExperienceTO.getStudyEndTimes().get(i) )? null:LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                }else{
-                    temp.setEndTime(null );
-                }
-                temp.setSchool(null == studyExperienceTO.getSchools()? "":studyExperienceTO.getSchools().get(i));
-                temp.setCertificate(null == studyExperienceTO.getCertificates()? "":studyExperienceTO.getCertificates().get(i));
-
+                temp.setStartTime(StringUtils.isBlank(studyExperienceTO.getStudyStartTimes().get(i)) ? null : LocalDate.parse(studyExperienceTO.getStudyStartTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                temp.setEndTime(null == studyExperienceTO.getStudyEndTimes() ? null : (StringUtils.isBlank(studyExperienceTO.getStudyEndTimes().get(i)) ? null : LocalDate.parse(studyExperienceTO.getStudyEndTimes().get(i), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+                temp.setSchool(null == studyExperienceTO.getSchools() ? "" : studyExperienceTO.getSchools().get(i));
+                temp.setCertificate(null == studyExperienceTO.getCertificates() ? "" : studyExperienceTO.getCertificates().get(i));
                 temp.setEntryRegister(entryRegister);
 
-                if( null== temp.getStartTime() && null== temp.getEndTime()
-                        && StringUtils.isBlank( temp.getSchool()) && StringUtils.isBlank( temp.getCertificate()) ){
-
-                }else{
-                    studyExperienceTOS.add(temp);
-                }
+                studyExperienceTOS.add(temp);
             }
             studyExperienceSer.save(studyExperienceTOS);
         }
@@ -434,31 +454,13 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             int countStartTime = workExperienceTO.getWorkStartTimes().size();
             for (int i = 0; i < countStartTime; i++) {
                 WorkExperience temp = new WorkExperience();
-
-//                temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i)) ? null:LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
-                if( null != workExperienceTO.getWorkStartTimes() ){
-                    temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i) )? null:LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
-                }else{
-                    temp.setStartTime(null );
-                }
-//                temp.setEndTime(null == workExperienceTO.getWorkEndTimes() ? null:(StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i)) ? null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater)));
-                if( null != workExperienceTO.getWorkEndTimes() ){
-                    temp.setEndTime(StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i) )? null:LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater));
-                }else{
-                    temp.setEndTime(null );
-                }
-                temp.setFirm(null == workExperienceTO.getFirms()?"":workExperienceTO.getFirms().get(i));
-                temp.setJobDescription(null == workExperienceTO.getJobDescriptions()?"":workExperienceTO.getJobDescriptions().get(i));
-
+                temp.setStartTime(StringUtils.isBlank(workExperienceTO.getWorkStartTimes().get(i)) ? null : LocalDate.parse(workExperienceTO.getWorkStartTimes().get(i), formater));
+                temp.setEndTime(null == workExperienceTO.getWorkEndTimes() ? null : (StringUtils.isBlank(workExperienceTO.getWorkEndTimes().get(i)) ? null : LocalDate.parse(workExperienceTO.getWorkEndTimes().get(i), formater)));
+                temp.setFirm(null == workExperienceTO.getFirms() ? "" : workExperienceTO.getFirms().get(i));
+                temp.setJobDescription(null == workExperienceTO.getJobDescriptions() ? "" : workExperienceTO.getJobDescriptions().get(i));
                 temp.setEntryRegister(entryRegister);
 
-                if( null == temp.getStartTime() && null==temp.getEndTime()
-                        && StringUtils.isBlank(temp.getFirm()) && StringUtils.isBlank( temp.getJobDescription()) ){
-
-                }else{
-                    workExperienceTOS.add(temp);
-                }
-
+                workExperienceTOS.add(temp);
             }
             workExperienceSer.save(workExperienceTOS);
         }
@@ -473,19 +475,11 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             for (int i = 0; i < countName; i++) {
                 Credential temp = new Credential();
                 temp.setName(credentialTO.getNameses().get(i));
-//                temp.setObtainTime(null == credentialTO.getObtainTimes()?null:(StringUtils.isBlank(credentialTO.getObtainTimes().get(i))?null:LocalDate.parse(credentialTO.getObtainTimes().get(i),formater)));
-                if( null != credentialTO.getObtainTimes() ){
-                    temp.setObtainTime(StringUtils.isBlank(credentialTO.getObtainTimes().get(i) )? null:LocalDate.parse(credentialTO.getObtainTimes().get(i), formater));
-                }else{
-                    temp.setObtainTime(null );
-                }
+
+                temp.setObtainTime(null == credentialTO.getObtainTimes() ? null : (StringUtils.isBlank(credentialTO.getObtainTimes().get(i)) ? null : LocalDate.parse(credentialTO.getObtainTimes().get(i), formater)));
                 temp.setEntryRegister(entryRegister);
 
-                if( StringUtils.isBlank( temp.getName()) && null== temp.getObtainTime() ){
-
-                }else{
-                    credentialTOS.add(temp);
-                }
+                credentialTOS.add(temp);
             }
             credentialSer.save(credentialTOS);
         }
@@ -538,5 +532,77 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             }
         }
         return new ArrayList<>(set);
+    }
+
+    @Override
+    public String findEmpNum(String name) throws SerException {
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.eq("username", name));
+        List<EntryRegister> list = super.findByCis(entryRegisterDTO);
+        String empNum = "";
+        if (list != null && list.size() > 0) {
+            EntryRegister entryRegister = list.get(0);
+            empNum = entryRegister.getEmpNumber();
+        }
+        return empNum;
+    }
+
+    public EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
+        EntryOptionBO entryOptionBO = new EntryOptionBO();
+
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        dto.getConditions().add(Restrict.eq("empNumber", empNumer));
+        EntryRegister entryRegister = super.findOne(dto);
+        if (entryRegister != null) {
+            entryOptionBO.setName(entryRegister.getUsername());
+            entryOptionBO.setEntryTime(entryRegister.getInductionDate().toString());
+            entryOptionBO.setProfession(entryRegister.getProfession());
+            entryOptionBO.setEducation(entryRegister.getEducation());
+            entryOptionBO.setEmployeeID(empNumer);
+            entryOptionBO.setDepartment(entryRegister.getDepartment());
+            entryOptionBO.setArea(entryRegister.getArea());
+            entryOptionBO.setPosition(entryOptionBO.getPosition());
+        }
+        return entryOptionBO;
+    }
+
+    @Override
+    public String getGender(String username) throws SerException {
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        dto.getConditions().add(Restrict.eq("username", username));
+        List<EntryRegister> entryRegisters = super.findByCis(dto);
+        if (null != entryRegisters && entryRegisters.size() > 0) {
+            if (entryRegisters.get(0).getGender() == 1) {
+                return "男";
+            } else {
+                return "女";
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<EntryRegisterBO> map(EntryRegisterDTO dto) throws SerException {
+        List<EntryRegister> entryRegisters = super.findByCis(dto);
+        return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
+    }
+
+    @Override
+    public List<EntryRegisterBO> getEntryRegisterByName(String name) throws SerException {
+        EntryRegisterDTO dto = new EntryRegisterDTO();
+        dto.getConditions().add(Restrict.eq("username", name));
+        List<EntryRegister> entryRegisters = super.findByCis(dto);
+        return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
+    }
+
+    @Override
+    public String getEntryTime(String username) throws SerException {
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.eq("username", username));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        if (null != entryRegisters && entryRegisters.size() > 0) {
+            return DateUtil.dateToString(entryRegisters.stream().map(EntryRegister::getInductionDate).distinct().collect(Collectors.toList()).get(0));
+        }
+        return null;
     }
 }

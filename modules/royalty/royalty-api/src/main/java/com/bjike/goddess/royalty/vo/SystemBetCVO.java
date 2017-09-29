@@ -46,14 +46,22 @@ public class SystemBetCVO {
      */
     private Boolean standard;
     /**
-     * 对赌得分（分值*目标-部门分配对赌权重）
+     * 目标对赌得分（分值（利润额）*目标-部门分配对赌权重）
      */
     private Double betScore;
+    /**
+     * 计划对赌得分（计划分值（利润额）*目标-部门分配对赌权重）
+     */
+    private Double betScorePlan;
+    /**
+     * 实际对赌得分（实际分值（利润额）*目标-部门分配对赌权重）
+     */
+    private Double betScorePractice;
 
     /**
      * 体系间对赌表D
      */
-    private List<SystemBetDVO> systemBetDVOS;
+    private List<SystemBetDVO> systemBetDBOS;
 
 
     public String getId() {
@@ -121,12 +129,27 @@ public class SystemBetCVO {
         this.betScore = betScore;
     }
 
-
-    public List<SystemBetDVO> getSystemBetDVOS() {
-        return systemBetDVOS;
+    public Double getBetScorePlan() {
+        return betScorePlan;
     }
 
-    public void setSystemBetDVOS(List<SystemBetDVO> systemBetDVOS) {
-        this.systemBetDVOS = systemBetDVOS;
+    public void setBetScorePlan(Double betScorePlan) {
+        this.betScorePlan = betScorePlan;
+    }
+
+    public Double getBetScorePractice() {
+        return betScorePractice;
+    }
+
+    public void setBetScorePractice(Double betScorePractice) {
+        this.betScorePractice = betScorePractice;
+    }
+
+    public List<SystemBetDVO> getSystemBetDBOS() {
+        return systemBetDBOS;
+    }
+
+    public void setSystemBetDBOS(List<SystemBetDVO> systemBetDBOS) {
+        this.systemBetDBOS = systemBetDBOS;
     }
 }

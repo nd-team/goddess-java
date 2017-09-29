@@ -257,11 +257,11 @@ public interface UserAPI {
 
     /**
      * 获取部门人员
-     *
+     *@param department id或者部门名
      * @return UserBO
      * @throws SerException
      */
-    default List<UserBO> findByDept(String ... departmentId  ) throws SerException {
+    default List<UserBO> findByDept(String ... department  ) throws SerException {
         return null;
     }
 }
