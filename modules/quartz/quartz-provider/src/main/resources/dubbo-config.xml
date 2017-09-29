@@ -69,6 +69,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.businessinteraction.api.CollectEmailAPI"
                      id="businessinteractEmailApiImpl"/>
 
+    <!-- 组织结构-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.EmailAPI"
                      id="emailApiImpl"/>
     <!-- 物资汇总-->

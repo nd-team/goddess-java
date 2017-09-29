@@ -50,6 +50,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.DepartmentAPI" id="departmentApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.PositionAPI" id="positionApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 
 

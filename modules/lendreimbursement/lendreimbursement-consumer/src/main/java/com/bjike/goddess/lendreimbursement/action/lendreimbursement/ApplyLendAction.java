@@ -15,10 +15,8 @@ import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
-import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
-import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
-import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
-import com.bjike.goddess.lendreimbursement.vo.LendAuditDetailVO;
+import com.bjike.goddess.lendreimbursement.to.LendReturnSendTO;
+import com.bjike.goddess.lendreimbursement.vo.*;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -32,7 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 申请借款
@@ -905,6 +904,34 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
+
+    /**
+     * 网页版还款核对有误编辑
+     *
+     * @param lendReturnSendTO 申请借款信息lendReturnSendTO
+     * @return class ApplyLendVO
+     * @des 网页版还款核对有误编辑
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/edit/errorCheckReturn")
+    public Result editErrorCheckReturn(@Validated(LendReturnSendTO.TESTRETURNSEND.class) LendReturnSendTO lendReturnSendTO, BindingResult bindingResult) throws ActException {
+        try {
+            ApplyLendTO applyLendTO = new ApplyLendTO();
+            applyLendTO.setId(lendReturnSendTO.getId());
+            applyLendTO.setReimMoney(lendReturnSendTO.getReimMoney());
+            applyLendTO.setLendMoney(lendReturnSendTO.getLendMoney());
+            applyLendTO.setReturnMoney(lendReturnSendTO.getReturnMoney());
+            applyLendTO.setReturnDate(lendReturnSendTO.getReturnDate());
+            applyLendTO.setReturnWays(lendReturnSendTO.getReturnWays());
+            applyLendTO.setReturnAccount(lendReturnSendTO.getReturnAccount());
+            ApplyLendBO applyLendBO1 = applyLendAPI.editErrorReturn(applyLendTO);
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
     /**
      * 帐务核对总条数
      *
@@ -1105,11 +1132,20 @@ public class ApplyLendAction extends BaseFileAction {
     public Result getAllUser() throws ActException {
         try {
             List<String> areaList = applyLendAPI.getAllUser();
+//            areaLis
+            Collections.sort(areaList, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+
+                    return -1;
+                }
+            });
             return ActResult.initialize(areaList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取借款人汇总
      *
@@ -1277,5 +1313,7 @@ public class ApplyLendAction extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+
+
 
 }

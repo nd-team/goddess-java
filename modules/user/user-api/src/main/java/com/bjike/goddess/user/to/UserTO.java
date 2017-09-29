@@ -3,6 +3,7 @@ package com.bjike.goddess.user.to;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.user.enums.UserType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 用户业务传送对象
@@ -14,6 +15,9 @@ import com.bjike.goddess.user.enums.UserType;
  * @Copy: [com.bjike]
  */
 public class UserTO extends BaseTO {
+
+    public interface UPDATEPWD{}
+
     /**
      * 用户名
      */
@@ -31,6 +35,7 @@ public class UserTO extends BaseTO {
     /**
      * 登陆密码
      */
+    @NotBlank(groups ={ UserTO.UPDATEPWD.class} , message = "密码不能为空")
     private String password;
     /**
      * 头像

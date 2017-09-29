@@ -331,7 +331,7 @@ public class ApplyLendTO extends BaseTO {
     /**
      * 还款核对状态
      */
-    @NotBlank(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "核对内容不能为空")
+    @NotNull(groups = {ApplyLendTO.TESTCheckReturnMoney.class} , message = "核对内容不能为空")
     private LendRetunStatus lendRetunStatus;
 
     /**

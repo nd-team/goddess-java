@@ -352,6 +352,7 @@ public interface ApplyLendAPI {
         return null;
     }
 
+
     /**
      * 借款记录寄件编辑
      *
@@ -435,6 +436,16 @@ public interface ApplyLendAPI {
      * @return class ApplyLendBO
      */
     default ApplyLendBO phoneCheckReturn(PhoneLendReturnCheckTO phoneLendReturnCheckTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 网页版还款记录不通过编辑
+     * 当不通过才去编辑，否则不可以编辑
+     * @param applyLendTO 申请借款信息
+     * @return class ApplyLendBO
+     */
+    default ApplyLendBO editErrorReturn(ApplyLendTO applyLendTO) throws SerException {
         return null;
     }
 

@@ -31,13 +31,13 @@
 	<dubbo:service  ref="reimburseRecordLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordLogAPI" />
 	<dubbo:service  ref="lendPermissionApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionAPI" />
 	<dubbo:service  ref="lendPermissionOperateApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionOperateAPI" />
-	<dubbo:service  ref="ajoafinancelendmoneyApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancelendmoneyAPI" />
-	<dubbo:service  ref="ajoafinanceSubjectApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinanceSubjectAPI" />
-	<dubbo:service  ref="ajoafinancemattersApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancemattersAPI" />
-	<dubbo:service  ref="ajoafinancereimbursementApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementAPI" />
-	<dubbo:service  ref="ajoafinancereimbursementForApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementForAPI" />
-	<dubbo:service  ref="ajoafinancereimbursementLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementLogAPI" />
-	<dubbo:service  ref="ajoafinancereimbursementUserApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementUserAPI" />
+	<!--<dubbo:service  ref="ajoafinancelendmoneyApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancelendmoneyAPI" />-->
+	<!--<dubbo:service  ref="ajoafinanceSubjectApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinanceSubjectAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancemattersApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancemattersAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementForApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementForAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementLogAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementUserApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementUserAPI" />-->
 
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.

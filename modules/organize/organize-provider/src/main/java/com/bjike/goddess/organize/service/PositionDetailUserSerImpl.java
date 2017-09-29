@@ -10,17 +10,19 @@ import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.dto.PositionUserDetailDTO;
-import com.bjike.goddess.organize.entity.DepartmentDetail;
-import com.bjike.goddess.organize.entity.PositionDetail;
-import com.bjike.goddess.organize.entity.PositionDetailUser;
-import com.bjike.goddess.organize.entity.PositionUserDetail;
+import com.bjike.goddess.organize.entity.*;
 import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.enums.WorkStatus;
+import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.organize.to.PositionUserDetailTO;
+import com.bjike.goddess.organize.vo.PhoneLoginUserInfoVO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.entity.UserDetail;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -47,6 +49,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     private PositionDetailSer positionDetailSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private UserDetailAPI userDetailAPI;
     @Autowired
     private PositionUserDetailSer positionUserDetailSer;
     @Autowired
@@ -627,5 +631,62 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         return tar;
     }
+
+    @Override
+    public PhoneLoginUserInfoBO userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO) throws SerException {
+        PhoneLoginUserInfoBO bo = new PhoneLoginUserInfoBO();
+        //从用户那里拿员工编号
+        if( StringUtils.isBlank( phoneLoginUserInfoTO.getUserName())){
+            throw new SerException("用户名/工号/邮箱/手机号不能为空");
+        }
+        UserBO userBO = userAPI.findByAccountNumber( phoneLoginUserInfoTO.getUserName() );
+        if( null != userBO ){
+            //
+            bo.setEmpNumer( userBO.getEmployeeNumber());
+            bo.setUserName( userBO.getUsername() );
+            //查询用户性别
+            UserDetailBO userDetail = userDetailAPI.findByUserId( userBO.getId() );
+            if( null != userDetail ){
+                bo.setSex( userDetail.getSex().getCode()==0?"":( userDetail.getSex().getCode()==1?"男":"女") );
+            }
+            //查体系
+            PositionUserDetailDTO pUserDetail = new PositionUserDetailDTO();
+            pUserDetail.getConditions().add(Restrict.eq("userId", userBO.getId() ));
+            pUserDetail.getConditions().add(Restrict.eq("workStatus", 0 ));
+            List<PositionUserDetail> pUserDetailList = positionUserDetailSer.findByCis( pUserDetail );
+            if( pUserDetailList!= null && pUserDetailList.size()>0 ){
+                //拿到主职位id
+                String mainJob = pUserDetailList.get(0).getPositionId();
+                //去拿岗位名称
+                PositionDetail pd = positionDetailSer.findById( mainJob );
+                if( null != pd ){
+                    //匹配获取部门里面的体系
+                    PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
+                    positionDetailUserDTO.getConditions().add(Restrict.eq("userId", userBO.getId()));
+                    List<PositionDetailUser> positionDetailUserList = super.findByCis(positionDetailUserDTO);
+                    List<String> positionList = new ArrayList<>(0);
+                    if (null != positionDetailUserList && positionDetailUserList.size() > 0) {
+                        PositionDetailUser positionDetailUser = positionDetailUserList.get(0);
+                        for (PositionDetail positionDetail : positionDetailUser.getPositionSet()) {
+                            if( positionDetail.getPosition().equals(pd.getPosition() ) ){
+                                DepartmentDetail depart = positionDetail.getDepartment();
+                                if( null != depart ){
+                                    Hierarchy hierarchy = depart.getHierarchy();
+                                    if( null != hierarchy ){
+                                        //体系名
+                                        String hierarchyName = hierarchy.getHierarchy();
+                                        bo.setHierarchyName( hierarchyName );
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return bo;
+    }
+
 
 }
