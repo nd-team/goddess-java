@@ -1,5 +1,8 @@
 package com.bjike.goddess.royalty.action.royalty;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -8,7 +11,9 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.HierarchyAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.HierarchyVO;
 import com.bjike.goddess.royalty.api.SystemBetAPI;
@@ -46,6 +51,9 @@ public class SystemBetAction {
     private HierarchyAPI hierarchyAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -212,6 +220,27 @@ public class SystemBetAction {
     }
 
     /**
+     * 查询地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<AreaBO> list = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 查询未冻结部门项目组详细信息
      *
      * @return class DepartmentDetailVO
@@ -221,11 +250,11 @@ public class SystemBetAction {
     public Result department(HttpServletRequest request) throws ActException {
         try {
             List<DepartmentDetailBO> boList = new ArrayList<>();
-//            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
-//            if (moduleAPI.isCheck("organize")) {
-//                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN,userToken);
-            boList = departmentDetailAPI.findStatus();
-//            }
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+                boList = departmentDetailAPI.findStatus();
+            }
             return ActResult.initialize(BeanTransform.copyProperties(boList, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
