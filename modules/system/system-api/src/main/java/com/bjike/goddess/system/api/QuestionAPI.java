@@ -2,6 +2,7 @@ package com.bjike.goddess.system.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.system.bo.QuestionBO;
+import com.bjike.goddess.system.bo.QuestionBO1;
 import com.bjike.goddess.system.dto.QuestionDTO;
 import com.bjike.goddess.system.to.AuswerTO;
 import com.bjike.goddess.system.to.QuestionTO;
@@ -81,10 +82,10 @@ public interface QuestionAPI {
      * 详情
      *
      * @param id
-     * @return String
+     * @return QuestionBO1
      * @throws SerException
      */
-    default String detail(String id) throws SerException {
+    default QuestionBO1 detail(String id) throws SerException {
         return null;
     }
 

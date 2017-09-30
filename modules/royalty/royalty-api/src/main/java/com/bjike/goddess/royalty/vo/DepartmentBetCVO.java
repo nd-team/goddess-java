@@ -27,15 +27,15 @@ public class DepartmentBetCVO {
     private Double baseWeight;
 
     /**
-     * 目标基础得分（分值（利润额）*目标-部门分配基础权重）
+     * 目标基础得分（体系目标总得分*目标-部门分配基础权重）
      */
     private Double basesScore;
     /**
-     * 计划基础得分（计划分值（利润额）*目标-部门分配基础权重）
+     * 计划基础得分（体系计划总得分*目标-部门分配基础权重）
      */
     private Double basesScorePlan;
     /**
-     * 实际基础得分（实际分值（利润额）*目标-部门分配基础权重）
+     * 实际基础得分（体系实际总得分*目标-部门分配基础权重）
      */
     private Double basesScorePractice;
     /**
