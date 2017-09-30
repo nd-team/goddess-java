@@ -53,9 +53,9 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
 
     @Autowired
     private UserAPI userAPI;
-
     @Autowired
     private StaffEntryRegisterAPI entryBasicInfoAPI;
+
 
     @Autowired
     private InterviewInforAPI interviewInforAPI;
@@ -256,6 +256,7 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
         } else {
             throw new SerException("登录用户不是公司成员");
         }
+
     }
 
     @Override

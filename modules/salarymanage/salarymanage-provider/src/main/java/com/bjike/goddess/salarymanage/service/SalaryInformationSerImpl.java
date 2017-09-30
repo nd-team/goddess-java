@@ -78,6 +78,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
 
+
     @Autowired
     private ComputerSubsidiesAPI computerSubsidiesAPI;
 
