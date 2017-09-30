@@ -1,24 +1,25 @@
-package com.bjike.goddess.dimission.api;
+package com.bjike.goddess.dimission.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.dimission.bo.DimissionCollectBO;
-import com.bjike.goddess.dimission.bo.SituationBO;
-import com.bjike.goddess.dimission.dto.SituationDTO;
+import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.dimission.bo.InterviewBO;
+import com.bjike.goddess.dimission.dto.InterviewDTO;
+import com.bjike.goddess.dimission.entity.Interview;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
-import com.bjike.goddess.dimission.to.SituationTO;
+import com.bjike.goddess.dimission.to.InterviewTO;
 
 import java.util.List;
 
 /**
- * 离职办理节点情况业务接口
+ * 离职管理面谈业务接口
  *
  * @Author: [ zhuangkaiqin ]
- * @Date: [ 2017-09-28 02:23 ]
- * @Description: [ 离职办理节点情况业务接口 ]
+ * @Date: [ 2017-09-28 02:39 ]
+ * @Description: [ 离职管理面谈业务接口 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public interface SituationAPI {
+public interface InterviewSer extends Ser<Interview, InterviewDTO> {
 
     /**
      * 下拉导航权限
@@ -26,7 +27,6 @@ public interface SituationAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
-
     /**
      * 导航权限
      */
@@ -38,9 +38,10 @@ public interface SituationAPI {
      * 保存
      *
      * @param to
+     * @return
      * @throws SerException
      */
-    default SituationBO save(SituationTO to) throws SerException {
+    default InterviewBO add(InterviewTO to) throws SerException {
         return null;
     }
 
@@ -51,7 +52,7 @@ public interface SituationAPI {
      * @return
      * @throws SerException
      */
-    default SituationBO update(SituationTO to) throws SerException {
+    default InterviewBO edit(InterviewTO to) throws SerException {
         return null;
     }
 
@@ -62,7 +63,7 @@ public interface SituationAPI {
      * @return
      * @throws SerException
      */
-    default SituationBO delete(String id) throws SerException {
+    default InterviewBO delete(String id) throws SerException {
         return null;
     }
 
@@ -73,7 +74,7 @@ public interface SituationAPI {
      * @return
      * @throws SerException
      */
-    default List<SituationBO> list(SituationDTO dto) throws SerException {
+    default List<InterviewBO> list(InterviewDTO dto) throws SerException {
         return null;
     }
 
@@ -84,38 +85,51 @@ public interface SituationAPI {
      * @return
      * @throws SerException
      */
-    default SituationBO findById(String id) throws SerException {
+    default InterviewBO getById(String id) throws SerException {
         return null;
     }
 
     /**
-     * 离职自离表里的姓名
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<String> getName() throws SerException {
-        return null;
-    }
-
-    /**
-     * 判断是否是自离
+     * 是否需项目经理信息离职面谈
      *
      * @param name
      * @return
      * @throws SerException
      */
-    default Boolean isSelf(String name) throws SerException {
+    default Boolean judgeManager(String name) throws SerException {
         return null;
     }
 
     /**
-     * 离职管理汇总表
+     * 是否需模块负责人离职面谈
      *
+     * @param name
      * @return
      * @throws SerException
      */
-    default List<DimissionCollectBO> collect(String startTime, String endTime) throws SerException {
+    default Boolean judgePrincipal(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 是否需福利模块离职面谈
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default Boolean judgeWelfare(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 是否需要总经办离职面谈
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default Boolean judgeOffice(String name) throws SerException {
         return null;
     }
 }

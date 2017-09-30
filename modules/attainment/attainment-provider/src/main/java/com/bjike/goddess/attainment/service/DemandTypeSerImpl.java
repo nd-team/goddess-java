@@ -66,6 +66,7 @@ public class DemandTypeSerImpl extends ServiceImpl<DemandType, DemandTypeDTO> im
             throw new SerException("数据不存在");
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setDescription(to.getDescription());
         super.update(entity);
         return BeanTransform.copyProperties(entity, DemandTypeBO.class);
     }

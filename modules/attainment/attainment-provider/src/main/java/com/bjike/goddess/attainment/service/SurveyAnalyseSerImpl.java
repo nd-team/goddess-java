@@ -84,6 +84,8 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
+        entity.setResultTwo(to.getResultTwo());
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return this.transformBO(entity);
     }

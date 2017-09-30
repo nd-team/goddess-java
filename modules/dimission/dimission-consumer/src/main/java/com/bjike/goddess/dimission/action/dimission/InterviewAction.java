@@ -7,12 +7,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.dimission.api.SituationAPI;
-import com.bjike.goddess.dimission.dto.SituationDTO;
+import com.bjike.goddess.dimission.api.InterviewAPI;
+import com.bjike.goddess.dimission.dto.InterviewDTO;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
-import com.bjike.goddess.dimission.to.SituationTO;
-import com.bjike.goddess.dimission.vo.DimissionCollectVO;
-import com.bjike.goddess.dimission.vo.SituationVO;
+import com.bjike.goddess.dimission.to.InterviewTO;
+import com.bjike.goddess.dimission.vo.InterviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -21,19 +20,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 离职办理节点情况
+ * 离职管理面谈
  *
  * @Author: [ zhuangkaiqin ]
- * @Date: [ 2017-09-28 02:23 ]
- * @Description: [ 离职办理节点情况 ]
+ * @Date: [ 2017-09-28 02:39 ]
+ * @Description: [ 离职管理面谈 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("situation")
-public class SituationAction {
+@RequestMapping("interview")
+public class InterviewAction {
     @Autowired
-    private SituationAPI situationAPI;
+    private InterviewAPI interviewAPI;
 
     /**
      * 功能导航权限
@@ -46,7 +45,7 @@ public class SituationAction {
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
-            Boolean isHasPermission = situationAPI.guidePermission(guidePermissionTO);
+            Boolean isHasPermission = interviewAPI.guidePermission(guidePermissionTO);
             if (!isHasPermission) {
                 //int code, String msg
                 return new ActResult(0, "没有权限", false);
@@ -61,14 +60,14 @@ public class SituationAction {
     /**
      * 保存
      *
-     * @param to 工作交接传输对象
-     * @return class SituationVO
+     * @param to 离职管理面谈传输对象
+     * @return class InterviewVO
      * @version v1
      */
     @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) SituationTO to, BindingResult result) throws ActException {
+    public Result save(@Validated(ADD.class) InterviewTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(situationAPI.save(to), SituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(interviewAPI.save(to), InterviewVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -77,14 +76,14 @@ public class SituationAction {
     /**
      * 修改
      *
-     * @param to 工作交接传输对象
-     * @return class SituationVO
+     * @param to 离职管理面谈传输对象
+     * @return class InterviewVO
      * @version v1
      */
     @PutMapping("v1/update/{id}")
-    public Result update(@Validated(EDIT.class) SituationTO to, BindingResult result) throws ActException {
+    public Result update(@Validated(EDIT.class) InterviewTO to, BindingResult result) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(situationAPI.update(to), SituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(interviewAPI.update(to), InterviewVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -93,14 +92,14 @@ public class SituationAction {
     /**
      * 删除
      *
-     * @param id 工作交接数据id
-     * @return class SituationVO
+     * @param id 离职管理面谈数据id
+     * @return class InterviewVO
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(situationAPI.delete(id), SituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(interviewAPI.delete(id), InterviewVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -110,13 +109,13 @@ public class SituationAction {
      * 列表
      *
      * @param dto 离职办理节点情况
-     * @return class SituationVO
+     * @return class InterviewVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(SituationDTO dto) throws ActException {
+    public Result list(InterviewDTO dto) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(situationAPI.list(dto), SituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(interviewAPI.list(dto), InterviewVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -126,57 +125,69 @@ public class SituationAction {
      * 根据id获取数据
      *
      * @param id id
-     * @return class SituationVO
+     * @return class InterviewVO
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
     public Result findById(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(situationAPI.findById(id), SituationVO.class));
+            return ActResult.initialize(BeanTransform.copyProperties(interviewAPI.findById(id), InterviewVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 离职自离表里的姓名
+     * 是否需项目经理信息离职面谈
      *
      * @version v1
      */
-    @GetMapping("v1/getName")
-    public Result getName() throws ActException {
+    @GetMapping("v1/judge/manager")
+    public Result judgeManager(String name) throws ActException {
         try {
-            return ActResult.initialize(situationAPI.getName());
+            return ActResult.initialize(interviewAPI.judgeManager(name));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 判断是否是自离
+     * 是否需模块负责人离职面谈
      *
      * @version v1
      */
-    @GetMapping("v1/isSelf")
-    public Result isSelf(String name) throws ActException {
+    @GetMapping("v1/judge/principal")
+    public Result judgePrincipal(String name) throws ActException {
         try {
-            return ActResult.initialize(situationAPI.isSelf(name));
+            return ActResult.initialize(interviewAPI.judgePrincipal(name));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-
     /**
-     * 离职管理汇总表
+     * 是否需福利模块离职面谈
      *
-     * @return class DimissionCollectVO
      * @version v1
      */
-    @GetMapping("v1/collect")
-    public Result collect(String startTime, String endTime) throws ActException {
+    @GetMapping("v1/judge/welfare")
+    public Result judgeWelfare(String name) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(situationAPI.collect(startTime, endTime), DimissionCollectVO.class));
+            return ActResult.initialize(interviewAPI.judgeWelfare(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 是否需要总经办离职面谈
+     *
+     * @version v1
+     */
+    @GetMapping("v1/judge/office")
+    public Result judgeOffice(String name) throws ActException {
+        try {
+            return ActResult.initialize(interviewAPI.judgeOffice(name));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

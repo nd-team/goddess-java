@@ -135,6 +135,7 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
                 entity.setGradation(list.get(0));
             }
         }
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return this.transformBO(entity);
     }

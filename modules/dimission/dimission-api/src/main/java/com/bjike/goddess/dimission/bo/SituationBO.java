@@ -2,226 +2,262 @@ package com.bjike.goddess.dimission.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
 /**
-* 离职办理节点情况业务传输对象
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-09-28 11:28 ]
-* @Description:	[ 离职办理节点情况业务传输对象 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class SituationBO extends BaseBO { 
+ * 离职办理节点情况业务传输对象
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-09-28 02:23 ]
+ * @Description: [ 离职办理节点情况业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public class SituationBO extends BaseBO {
 
-/**
-* 地区
-*/
- private String  area; 
+    /**
+     * 地区
+     */
+    private String area;
 
-/**
-* 项目组/部门
-*/
- private String  department; 
+    /**
+     * 项目组/部门
+     */
+    private String department;
 
-/**
-* 岗位
-*/
- private String  position; 
+    /**
+     * 岗位
+     */
+    private String position;
 
-/**
-* 岗位层级
-*/
- private String  positionLever; 
+    /**
+     * 岗位层级
+     */
+    private String positionLever;
 
-/**
-* 姓名
-*/
- private String  name; 
+    /**
+     * 姓名
+     */
+    private String name;
 
-/**
-* 是否填写离职申请表
-*/
- private Boolean  isBuild; 
+    /**
+     * 是否填写离职申请表
+     */
+    private Boolean writeApply;
 
-/**
-* 是否待离职
-*/
- private Boolean  buildTime; 
+    /**
+     * 是否待离职
+     */
+    private Boolean waitDimission;
 
-/**
-* 是否已离职
-*/
- private Boolean  isComplete; 
+    /**
+     * 是否已离职
+     */
+    private Boolean left;
 
-/**
-* 是否正常离职
-*/
- private Boolean  aimAmount; 
+    /**
+     * 是否正常离职
+     */
+    private Boolean normalLeave;
 
-/**
-* 是否自离
-*/
- private Boolean  planAmount; 
+    /**
+     * 是否自离
+     */
+    private Boolean selfLeave;
 
-/**
-* 是否辞退
-*/
- private Boolean  actualAmount; 
+    /**
+     * 是否辞退
+     */
+    private Boolean dismiss;
 
-/**
-* 是否冻结账号
-*/
- private Boolean  informationProvide; 
+    /**
+     * 是否冻结账号
+     */
+    private Boolean freeze;
 
-/**
-* 是否可挽留
-*/
- private Boolean  messageProportion; 
+    /**
+     * 是否可挽留
+     */
+    private Boolean retained;
 
-/**
-* 是否工作交接数
-*/
- private Boolean  provideAccount; 
+    /**
+     * 是否工作交接
+     */
+    private Boolean workTransfer;
 
-/**
-* 是否可提前离职
-*/
- private Boolean  businessContracting; 
+    /**
+     * 是否可提前离职
+     */
+    private Boolean leaveEarly;
 
-/**
-* 是否需要延后离职
-*/
- private Boolean  businessProportion; 
+    /**
+     * 是否需要延后离职
+     */
+    private Boolean postponement;
 
-/**
-* 是否需填写《员工离职工作交接手续表》
-*/
- private Boolean  contractAccount; 
+    /**
+     * 是否需填写《员工离职工作交接手续表》
+     */
+    private Boolean handover;
 
-/**
-* 项目经理需审核是否可提前离职
-*/
- private Boolean  businessNegotiation; 
+    /**
+     * 项目经理需审核是否可提前离职
+     */
+    private Boolean managerAudit;
 
-/**
-* 模块负责人需审核是否可提前离职
-*/
- private Boolean  talkProportion; 
+    /**
+     * 模块负责人需审核是否可提前离职
+     */
+    private Boolean principalAudit;
 
 
+    public String getArea() {
+        return area;
+    }
 
- public String getArea () { 
- return area;
- } 
- public void setArea (String area ) { 
- this.area = area ; 
- } 
- public String getDepartment () { 
- return department;
- } 
- public void setDepartment (String department ) { 
- this.department = department ; 
- } 
- public String getPosition () { 
- return position;
- } 
- public void setPosition (String position ) { 
- this.position = position ; 
- } 
- public String getPositionLever () { 
- return positionLever;
- } 
- public void setPositionLever (String positionLever ) { 
- this.positionLever = positionLever ; 
- } 
- public String getName () { 
- return name;
- } 
- public void setName (String name ) { 
- this.name = name ; 
- } 
- public Boolean getIsBuild () { 
- return isBuild;
- } 
- public void setIsBuild (Boolean isBuild ) { 
- this.isBuild = isBuild ; 
- } 
- public Boolean getBuildTime () { 
- return buildTime;
- } 
- public void setBuildTime (Boolean buildTime ) { 
- this.buildTime = buildTime ; 
- } 
- public Boolean getIsComplete () { 
- return isComplete;
- } 
- public void setIsComplete (Boolean isComplete ) { 
- this.isComplete = isComplete ; 
- } 
- public Boolean getAimAmount () { 
- return aimAmount;
- } 
- public void setAimAmount (Boolean aimAmount ) { 
- this.aimAmount = aimAmount ; 
- } 
- public Boolean getPlanAmount () { 
- return planAmount;
- } 
- public void setPlanAmount (Boolean planAmount ) { 
- this.planAmount = planAmount ; 
- } 
- public Boolean getActualAmount () { 
- return actualAmount;
- } 
- public void setActualAmount (Boolean actualAmount ) { 
- this.actualAmount = actualAmount ; 
- } 
- public Boolean getInformationProvide () { 
- return informationProvide;
- } 
- public void setInformationProvide (Boolean informationProvide ) { 
- this.informationProvide = informationProvide ; 
- } 
- public Boolean getMessageProportion () { 
- return messageProportion;
- } 
- public void setMessageProportion (Boolean messageProportion ) { 
- this.messageProportion = messageProportion ; 
- } 
- public Boolean getProvideAccount () { 
- return provideAccount;
- } 
- public void setProvideAccount (Boolean provideAccount ) { 
- this.provideAccount = provideAccount ; 
- } 
- public Boolean getBusinessContracting () { 
- return businessContracting;
- } 
- public void setBusinessContracting (Boolean businessContracting ) { 
- this.businessContracting = businessContracting ; 
- } 
- public Boolean getBusinessProportion () { 
- return businessProportion;
- } 
- public void setBusinessProportion (Boolean businessProportion ) { 
- this.businessProportion = businessProportion ; 
- } 
- public Boolean getContractAccount () { 
- return contractAccount;
- } 
- public void setContractAccount (Boolean contractAccount ) { 
- this.contractAccount = contractAccount ; 
- } 
- public Boolean getBusinessNegotiation () { 
- return businessNegotiation;
- } 
- public void setBusinessNegotiation (Boolean businessNegotiation ) { 
- this.businessNegotiation = businessNegotiation ; 
- } 
- public Boolean getTalkProportion () { 
- return talkProportion;
- } 
- public void setTalkProportion (Boolean talkProportion ) { 
- this.talkProportion = talkProportion ; 
- } 
- }
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPositionLever() {
+        return positionLever;
+    }
+
+    public void setPositionLever(String positionLever) {
+        this.positionLever = positionLever;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getWriteApply() {
+        return writeApply;
+    }
+
+    public void setWriteApply(Boolean writeApply) {
+        this.writeApply = writeApply;
+    }
+
+    public Boolean getWaitDimission() {
+        return waitDimission;
+    }
+
+    public void setWaitDimission(Boolean waitDimission) {
+        this.waitDimission = waitDimission;
+    }
+
+    public Boolean getLeft() {
+        return left;
+    }
+
+    public void setLeft(Boolean left) {
+        this.left = left;
+    }
+
+    public Boolean getNormalLeave() {
+        return normalLeave;
+    }
+
+    public void setNormalLeave(Boolean normalLeave) {
+        this.normalLeave = normalLeave;
+    }
+
+    public Boolean getSelfLeave() {
+        return selfLeave;
+    }
+
+    public void setSelfLeave(Boolean selfLeave) {
+        this.selfLeave = selfLeave;
+    }
+
+    public Boolean getDismiss() {
+        return dismiss;
+    }
+
+    public void setDismiss(Boolean dismiss) {
+        this.dismiss = dismiss;
+    }
+
+    public Boolean getFreeze() {
+        return freeze;
+    }
+
+    public void setFreeze(Boolean freeze) {
+        this.freeze = freeze;
+    }
+
+    public Boolean getRetained() {
+        return retained;
+    }
+
+    public void setRetained(Boolean retained) {
+        this.retained = retained;
+    }
+
+    public Boolean getWorkTransfer() {
+        return workTransfer;
+    }
+
+    public void setWorkTransfer(Boolean workTransfer) {
+        this.workTransfer = workTransfer;
+    }
+
+    public Boolean getLeaveEarly() {
+        return leaveEarly;
+    }
+
+    public void setLeaveEarly(Boolean leaveEarly) {
+        this.leaveEarly = leaveEarly;
+    }
+
+    public Boolean getPostponement() {
+        return postponement;
+    }
+
+    public void setPostponement(Boolean postponement) {
+        this.postponement = postponement;
+    }
+
+    public Boolean getHandover() {
+        return handover;
+    }
+
+    public void setHandover(Boolean handover) {
+        this.handover = handover;
+    }
+
+    public Boolean getManagerAudit() {
+        return managerAudit;
+    }
+
+    public void setManagerAudit(Boolean managerAudit) {
+        this.managerAudit = managerAudit;
+    }
+
+    public Boolean getPrincipalAudit() {
+        return principalAudit;
+    }
+
+    public void setPrincipalAudit(Boolean principalAudit) {
+        this.principalAudit = principalAudit;
+    }
+}

@@ -3,16 +3,15 @@ package com.bjike.goddess.dimission.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
- * 离职办理节点情况数据传输对象
+ * 离职管理面谈数据传输对象
  *
  * @Author: [ zhuangkaiqin ]
- * @Date: [ 2017-09-28 02:23 ]
- * @Description: [ 离职办理节点情况数据传输对象 ]
+ * @Date: [ 2017-09-28 02:39 ]
+ * @Description: [ 离职管理面谈数据传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SituationDTO extends BaseDTO {
-
+public class InterviewDTO extends BaseDTO {
     /**
      * 姓名
      */
