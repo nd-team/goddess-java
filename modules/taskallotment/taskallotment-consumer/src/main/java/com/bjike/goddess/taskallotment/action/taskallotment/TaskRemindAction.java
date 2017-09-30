@@ -138,4 +138,20 @@ public class TaskRemindAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 定时发送邮件
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/send")
+    public Result send() throws ActException {
+        try {
+            taskRemindAPI.mail();
+            return new ActResult("发送成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

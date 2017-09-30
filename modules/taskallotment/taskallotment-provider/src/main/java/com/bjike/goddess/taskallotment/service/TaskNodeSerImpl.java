@@ -9,6 +9,7 @@ import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.taskallotment.bo.*;
+import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.QuestionDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
@@ -18,7 +19,6 @@ import com.bjike.goddess.taskallotment.to.CustomTitleTO;
 import com.bjike.goddess.taskallotment.to.QuestionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.user.api.UserAPI;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -71,6 +71,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             int i = 0;
             for (CustomTitleTO titleTO : titleTOS) {
                 i++;
+                if (titleTO.getMandatory()){
+                    if (null==titleTO.getContent()){
+                        throw new SerException(titleTO.getTitle()+"为必填字段");
+                    }
+                }
                 CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
                 customTitle.setTitleIndex(i);
                 customTitle.setTaskNode(entity);
@@ -90,7 +95,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         super.update(entity);
     }
 
-    private TaskNode update(TaskNodeTO to) throws SerException {
+    @Transactional(rollbackFor = {SerException.class})
+    public TaskNode update(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
         Table table = entity.getTable();
         LocalDateTime a = entity.getCreateTime();
@@ -114,6 +120,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             int i = 0;
             for (CustomTitleTO customTitleTO : customTitleTOS) {
                 i++;
+                if (customTitleTO.getMandatory()){
+                    if (null==customTitleTO.getContent()){
+                        throw new SerException(customTitleTO.getTitle()+"为必填字段");
+                    }
+                }
                 CustomTitle customTitle = BeanTransform.copyProperties(customTitleTO, CustomTitle.class, true);
                 customTitle.setTitleIndex(i);
                 customTitle.setTaskNode(entity);
@@ -147,14 +158,19 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public List<TaskNodeBO> list(TaskNodeDTO dto) throws SerException {
-        dto.getSorts().add("createTime=desc");
-        List<TaskNode> list = super.findByCis(dto, true);
-        List<TaskNodeBO> bos = new ArrayList<>();
-        for (TaskNode taskNode : list) {
-            bos.add(tranBO(taskNode));
+    public List<ProjectBO> list(ProjectDTO dto) throws SerException {
+        List<ProjectBO> list=projectSer.list(dto);
+        for (ProjectBO projectBO:list){
+            List<TableBO> tableBOS=projectBO.getTables();
+            for (TableBO t:tableBOS){
+                TaskNodeDTO taskNodeDTO=new TaskNodeDTO();
+                taskNodeDTO.getConditions().add(Restrict.eq("table.id",t.getId()));
+                List<TaskNode> taskNodes=super.findByCis(taskNodeDTO);
+                List<NodeBO> nodeBOS=BeanTransform.copyProperties(taskNodes,NodeBO.class);
+                t.setNodeS(nodeBOS);
+            }
         }
-        return bos;
+        return list;
     }
 
     private TaskNodeBO tranBO(TaskNode entity) throws SerException {
@@ -193,12 +209,13 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             String undone = toString(undoneTime, undoneType);
             bo.setUndoneTime(undone);
         }
-        Double delayTime = entity.getUndoneTime();
-        TimeType delayType = entity.getUndoneType();
+        Double delayTime = entity.getDelayTime();
+        TimeType delayType = entity.getDelayType();
         if (null != delayTime && null != delayType) {
             String delay = toString(delayTime, delayType);
             bo.setDelayTime(delay);
         }
+        bo.setTableId(entity.getTable().getId());
         return bo;
     }
 
@@ -245,10 +262,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     public Boolean checkTime(TaskNodeTO to) throws SerException {
         String execute = to.getExecute();
-        if (null==execute){
+        if (null == execute) {
             throw new SerException("该任务没有执行人");
         }
-        String time1=to.getStartTime().substring(0,to.getStartTime().indexOf(" "));
+        String time1 = to.getStartTime().substring(0, to.getStartTime().indexOf(" "));
         LocalDate date = DateUtil.parseDate(time1);
         TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{date, date}));
@@ -359,13 +376,13 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         String content = null;
         String email = null;
         if (null != charge && null != execute) {
-            content = name + "给您分发了您的执行任务，请上系查看";
+            content = name + "给您分发了您的执行任务，请上系统查看";
             email = internalContactsAPI.getEmail(execute);
         } else if (null != charge) {
-            content = name + "给您分发了您负责的任务，请上系查看";
+            content = name + "给您分发了您负责的任务，请上系统查看";
             email = internalContactsAPI.getEmail(charge);
         } else if (null != execute) {
-            content = name + "给您分发了您的执行任务，请上系查看";
+            content = name + "给您分发了您的执行任务，请上系统查看";
             email = internalContactsAPI.getEmail(execute);
         }
         if (null != email) {
@@ -395,7 +412,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         } else {
             tableId = tables.get(0).getId();
         }
-        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true,"table");
+        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true, "table");
         entity.setTable(tableSer.findById(tableId));
         entity.setInitiate(name);
         entity.setTaskStatus(TaskStatus.DOING);
@@ -443,11 +460,13 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void reback(String id) throws SerException {
         delete(id);
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void finish(String id) throws SerException {
         TaskNode entity = super.findById(id);
         if (entity == null) {
@@ -459,6 +478,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void unFinish(String id) throws SerException {
         TaskNode entity = super.findById(id);
         if (entity == null) {
@@ -470,6 +490,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void pass(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
@@ -482,6 +503,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void notPass(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
@@ -514,6 +536,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void allotment(TaskNodeTO to) throws SerException {
         String name = userAPI.currentUser().getUsername();
         TaskNode entity = super.findById(to.getId());
@@ -553,6 +576,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void report(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
@@ -560,8 +584,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endTime = entity.getEndTime();
-        Long mis = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                - endTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Long mis = endTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                - now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         if (mis < (3600000 * 3)) {   //需提前三小时上报
             throw new SerException("需在任务结束时间提前3小时上报");
         }
@@ -575,6 +599,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void initiateAgain(TaskNodeTO to) throws SerException {
         String name = userAPI.currentUser().getUsername();
         TaskNode entity = super.findById(to.getId());
@@ -599,6 +624,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void write(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
@@ -611,33 +637,63 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setEndExecute(DateUtil.parseDateTime(to.getEndExecute()));
         entity.setReimbursement(to.getReimbursement());
         entity.setQuestion(to.getQuestion());
+        entity.setSummary(to.getSummary());
+        entity.setActualTime(to.getActualTime());
+        entity.setActualType(to.getActualType());
+        entity.setUndoneTime(to.getUndoneTime());
+        entity.setUndoneType(to.getUndoneType());
+        entity.setFinishTime(DateUtil.parseDateTime(to.getFinishTime()));
         if (entity.getQuestion()) {
-            List<Question> questions = BeanTransform.copyProperties(to.getQuestions(), Question.class, true);
+            List<Question> questions = new ArrayList<>();
+            for (QuestionTO questionTO : to.getQuestions()) {
+                Question question = BeanTransform.copyProperties(questionTO, Question.class, true);
+                question.setTaskNode(entity);
+                questionSer.save(question);
+            }
             entity.setQuestions(questions);
         }
+        TimeType timeType = entity.getExecuteType();
+        double executeTime = entity.getExecuteTime();
+        switch (timeType) {
+            case MINUTE:
+                executeTime = executeTime / 60;
+                break;
+            case DAY:
+                executeTime = executeTime * 8;
+                break;
+        }
+        double efficiency = entity.getPlanNum() * 8 / entity.getActualNum() / executeTime;
+        efficiency = new BigDecimal(efficiency).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        entity.setEfficiency(efficiency);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
 
     @Override
     public List<PersonCountBO> personCount(TaskNodeDTO dto) throws SerException {
-        LocalDateTime start = DateUtil.parseDateTime(dto.getStartTime());
-        LocalDateTime end = DateUtil.parseDateTime(dto.getEndTime());
-        Set<String> areas = dto.getArea();
-        Set<String> departs = dto.getDepart();
-        Set<String> names = dto.getName();
-        dto.getConditions().add(Restrict.eq("startExecute", start));
-        dto.getConditions().add(Restrict.eq("endExecute", end));
+        LocalDate start = DateUtil.parseDate(dto.getStartTime());
+        LocalDate end = DateUtil.parseDate(dto.getEndTime());
+        String[] areas = dto.getArea();
+        String[] departs = dto.getDepart();
+        String[] names = dto.getName();
+        dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
+        dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
         return pCount(dto, areas, departs, names);
     }
 
-    private List<PersonCountBO> pCount(TaskNodeDTO dto, Set<String> areas, Set<String> departs, Set<String> names) throws SerException {
-        List<Project> projects = projectSer.findAll();
+    private List<PersonCountBO> pCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names) throws SerException {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.getConditions().add(Restrict.in("area", areas));
+        projectDTO.getConditions().add(Restrict.in("depart", departs));
+        List<Project> projects = projectSer.findByCis(projectDTO);
         List<PersonCountBO> personCountBOS = new ArrayList<>();
+        double differSum = 0;   //总合计
         for (String area : areas) {
+            double differArea = 0;   //地区合计
             PersonCountBO personCountBO = new PersonCountBO();
             List<PersonSonBO> personSonBOS = new ArrayList<>();
             for (String depart : departs) {
+                double differDepart = 0;   //部门合计
                 PersonSonBO personSonBO = new PersonSonBO();
                 List<PersonLastBO> personLastBOS = new ArrayList<>();
                 Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
@@ -654,14 +710,55 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                         PersonLastBO personLastBO = getPerson(taskNodes, name);
                         personLastBOS.add(personLastBO);
                     }
+                    differDepart += personLastBOS.stream().mapToDouble(PersonLastBO::getDiffer).sum();
+                    differArea += personLastBOS.stream().mapToDouble(PersonLastBO::getDiffer).sum();
+                    differSum += personLastBOS.stream().mapToDouble(PersonLastBO::getDiffer).sum();
                 }
                 personSonBO.setPersonLastS(personLastBOS);
                 personSonBOS.add(personSonBO);
+                PersonSonBO departCount = departCount(differDepart);
+                personSonBOS.add(departCount);
             }
             personCountBO.setPersonSonS(personSonBOS);
             personCountBOS.add(personCountBO);
+            PersonCountBO areaCount = sum(differArea, "地区合计");
+            personCountBOS.add(areaCount);
         }
+        PersonCountBO sum = sum(differSum, "总合计");
+        personCountBOS.add(sum);
         return personCountBOS;
+    }
+
+    //部门合计
+    private PersonSonBO departCount(Double differDepart) throws SerException {
+        PersonSonBO depart = new PersonSonBO();
+        depart.setDepart("合计");
+        List<PersonLastBO> lastBOS = new ArrayList<>();
+        PersonLastBO lastBO = new PersonLastBO();
+        lastBO.setDiffer(differDepart);
+        lastBOS.add(lastBO);
+        depart.setPersonLastS(lastBOS);
+        return depart;
+    }
+
+    //合计
+    private PersonCountBO sum(Double differDepart, String type) throws SerException {
+        PersonCountBO sum = new PersonCountBO();
+        if ("总合计".equals(type)) {
+            sum.setArea("总合计");
+        } else if ("地区合计".equals(type)) {
+            sum.setArea("合计");
+        }
+        List<PersonSonBO> sonBOS = new ArrayList<>();
+        PersonSonBO depart = new PersonSonBO();
+        List<PersonLastBO> lastBOS = new ArrayList<>();
+        PersonLastBO lastBO = new PersonLastBO();
+        lastBO.setDiffer(differDepart);
+        lastBOS.add(lastBO);
+        depart.setPersonLastS(lastBOS);
+        sonBOS.add(depart);
+        sum.setPersonSonS(sonBOS);
+        return sum;
     }
 
     private PersonLastBO getPerson(List<TaskNode> taskNodes, String name) throws SerException {
@@ -702,30 +799,49 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<TimeCountBO> timeCount(TaskNodeDTO dto) throws SerException {
-        LocalDateTime start = DateUtil.parseDateTime(dto.getStartTime());
-        LocalDateTime end = DateUtil.parseDateTime(dto.getEndTime());
-        Set<String> areas = dto.getArea();
-        Set<String> departs = dto.getDepart();
+        LocalDate start = DateUtil.parseDate(dto.getStartTime());
+        LocalDate end = DateUtil.parseDate(dto.getEndTime());
+        String[] areas = dto.getArea();
+        String[] departs = dto.getDepart();
         CountType countType = dto.getCountType();
-        dto.getConditions().add(Restrict.eq("startExecute", start));
-        dto.getConditions().add(Restrict.eq("endExecute", end));
+        dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
+        dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
         if (null == countType) {
             return tCount(dto, areas, departs);
         } else if (CountType.WHOLE.equals(countType)) {
-            return tCount(dto, areas(), departs());
+            List<String> as = areas();
+            String[] area = new String[as.size()];
+            if (!as.isEmpty()) {
+                area = as.toArray(area);
+            }
+            List<String> ds = departs();
+            String[] depart = new String[ds.size()];
+            if (!ds.isEmpty()) {
+                depart = ds.toArray(depart);
+            }
+            return tCount(dto, area, depart);
         } else if (CountType.DEPART.equals(countType)) {
             return tCount(dto, areas, departs);
         }
         return null;
     }
 
-    private List<TimeCountBO> tCount(TaskNodeDTO dto, Set<String> areas, Set<String> departs) throws SerException {
-        List<Project> projects = projectSer.findAll();
+    private List<TimeCountBO> tCount(TaskNodeDTO dto, String[] areas, String[] departs) throws SerException {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.getConditions().add(Restrict.in("area", areas));
+        projectDTO.getConditions().add(Restrict.in("depart", departs));
+        List<Project> projects = projectSer.findByCis(projectDTO);
         List<TimeCountBO> timeCountBOS = new ArrayList<>();
+        long noDifferSum = 0;
+        long haveDifferSum = 0;  //总合计
         for (String area : areas) {
+            long noDifferArea = 0;
+            long haveDifferArea = 0;  //地区合计
             TimeCountBO timeCountBO = new TimeCountBO();
             List<TimeSonBO> timeSonBOS = new ArrayList<>();
             for (String depart : departs) {
+                long noDifferDepart = 0;
+                long haveDifferDepart = 0;  //部门合计
                 Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
                 TableDTO tableDTO = new TableDTO();
                 if (!projectIds.isEmpty()) {
@@ -738,12 +854,53 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                     TimeSonBO timeSonBO = getTime(taskNodes);
                     timeSonBO.setDepart(depart);
                     timeSonBOS.add(timeSonBO);
+                    //部门合计
+                    haveDifferDepart += timeSonBOS.stream().mapToLong(TimeSonBO::getHaveDiffer).sum();
+                    noDifferDepart += timeSonBOS.stream().mapToLong(TimeSonBO::getNoDiffer).sum();
+                    //地区合计
+                    haveDifferArea += timeSonBOS.stream().mapToLong(TimeSonBO::getHaveDiffer).sum();
+                    noDifferArea += timeSonBOS.stream().mapToLong(TimeSonBO::getNoDiffer).sum();
+                    //总合计
+                    haveDifferSum += timeSonBOS.stream().mapToLong(TimeSonBO::getHaveDiffer).sum();
+                    noDifferSum += timeSonBOS.stream().mapToLong(TimeSonBO::getNoDiffer).sum();
                 }
+                TimeSonBO departCount = departCount(noDifferDepart, haveDifferDepart);
+                timeSonBOS.add(departCount);
             }
             timeCountBO.setTimeSonS(timeSonBOS);
             timeCountBOS.add(timeCountBO);
+            TimeCountBO areaCount = sum(noDifferArea, haveDifferArea, "地区合计");
+            timeCountBOS.add(areaCount);
         }
+        TimeCountBO sum = sum(noDifferSum, haveDifferSum, "总合计");
+        timeCountBOS.add(sum);
         return timeCountBOS;
+    }
+
+    //部门合计
+    private TimeSonBO departCount(Long noDiffer, Long haveDiffer) throws SerException {
+        TimeSonBO depart = new TimeSonBO();
+        depart.setDepart("合计");
+        depart.setNoDiffer(noDiffer);
+        depart.setHaveDiffer(haveDiffer);
+        return depart;
+    }
+
+    //合计
+    private TimeCountBO sum(Long noDiffer, Long haveDiffer, String type) throws SerException {
+        TimeCountBO sum = new TimeCountBO();
+        if ("总合计".equals(type)) {
+            sum.setArea("总合计");
+        } else if ("地区合计".equals(type)) {
+            sum.setArea("合计");
+        }
+        List<TimeSonBO> timeSonBOS = new ArrayList<>();
+        TimeSonBO depart = new TimeSonBO();
+        depart.setNoDiffer(noDiffer);
+        depart.setHaveDiffer(haveDiffer);
+        timeSonBOS.add(depart);
+        sum.setTimeSonS(timeSonBOS);
+        return sum;
     }
 
     private TimeSonBO getTime(List<TaskNode> taskNodes) throws SerException {
@@ -789,83 +946,221 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<ConfirmCountBO> confirmCount(TaskNodeDTO dto) throws SerException {
-        LocalDateTime start = DateUtil.parseDateTime(dto.getStartTime());
-        LocalDateTime end = DateUtil.parseDateTime(dto.getEndTime());
-        Set<String> areas = dto.getArea();
-        Set<String> departs = dto.getDepart();
-        Set<String> names = dto.getName();
+        LocalDate start = DateUtil.parseDate(dto.getStartTime());
+        LocalDate end = DateUtil.parseDate(dto.getEndTime());
+        String[] areas = dto.getArea();
+        String[] departs = dto.getDepart();
+        String[] names = dto.getName();
+        String[] tables = dto.getTables();
         CountType countType = dto.getCountType();
-        dto.getConditions().add(Restrict.eq("startExecute", start));
-        dto.getConditions().add(Restrict.eq("endExecute", end));
+        dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
+        dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
         if (null == countType) {
-            return cCount(dto, areas, departs, null);
+            return cCount(dto, areas, departs, null, tables);
         } else if (CountType.WHOLE.equals(countType)) {
-            return cCount(dto, areas(), departs(), null);
+            List<String> as = areas();
+            String[] area = new String[as.size()];
+            if (!as.isEmpty()) {
+                area = as.toArray(area);
+            }
+            List<String> ds = departs();
+            String[] depart = new String[ds.size()];
+            if (!ds.isEmpty()) {
+                depart = ds.toArray(depart);
+            }
+            return cCount(dto, area, depart, null, tables);
         } else if (CountType.DEPART.equals(countType)) {
-            return cCount(dto, areas, departs, null);
+            return cCount(dto, areas, departs, null, tables);
         } else if (CountType.PERSON.equals(countType)) {
-            return cCount(dto, areas, departs, names);
+            return cCount(dto, areas, departs, names, tables);
         }
         return null;
     }
 
-    private List<ConfirmCountBO> cCount(TaskNodeDTO dto, Set<String> areas, Set<String> departs, Set<String> names) throws SerException {
-        List<Project> projects = projectSer.findAll();
+    private List<ConfirmCountBO> cCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names, String[] ts) throws SerException {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.getConditions().add(Restrict.in("area", areas));
+        projectDTO.getConditions().add(Restrict.in("depart", departs));
+        List<Project> projects = projectSer.findByCis(projectDTO);
         List<ConfirmCountBO> confirmCountBOS = new ArrayList<>();
-        for (String area : areas) {
+        long haveInitiateSum = 0;
+        long noInitiateSum = 0;
+        long confirmSum = 0;
+        long unConfirmSum = 0;
+        long toConfirmSum = 0;     //总合计
+        for (String area : areas) {    //地区，最外层对象
+            long haveInitiateArea = 0;
+            long noInitiateArea = 0;
+            long confirmArea = 0;
+            long unConfirmArea = 0;
+            long toConfirmArea = 0;     //地区合计
             ConfirmCountBO confirmCountBO = new ConfirmCountBO();
             List<ConfirmSonBO> confirmSonBOS = new ArrayList<>();
-            for (String depart : departs) {
+            for (String depart : departs) {   //子层
                 ConfirmSonBO confirmSonBO = new ConfirmSonBO();
-                List<ConfirmGrandSonBO> confirmGrandSonBOS = new ArrayList<>();
-                List<ConfirmLastBO> confirmLastBOS = new ArrayList<>();
+                List<ConfirmTableBO> confirmTableBOS = new ArrayList<>();
                 Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
                 TableDTO tableDTO = new TableDTO();
                 if (!projectIds.isEmpty()) {
                     confirmCountBO.setArea(area);
                     confirmSonBO.setDepart(depart);
                     tableDTO.getConditions().add(Restrict.in("project.id", projectIds));
+                    if (null != ts) {
+                        tableDTO.getConditions().add(Restrict.in("name", ts));
+                    }
                     List<Table> tables = tableSer.findByCis(tableDTO);
                     Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
                     dto.getConditions().add(Restrict.in("table.id", tableIds));
                     List<TaskNode> taskNodes = super.findByCis(dto);
-                    if (null != names) {
-                        for (String name : names) {
+                    long haveInitiateDepart = 0;
+                    long noInitiateDepart = 0;
+                    long confirmDepart = 0;
+                    long unConfirmDepart = 0;
+                    long toConfirmDepart = 0;     //部门合计
+                    for (String table : tableIds) {   //孙子
+                        List<ConfirmGrandSonBO> confirmGrandSonBOS = new ArrayList<>();
+                        ConfirmTableBO tableBO = new ConfirmTableBO();
+                        tableBO.setTableName(tableSer.findById(table).getName());
+                        //最底层
+                        if (null != names) {
+                            for (String name : names) {
+                                List<ConfirmLastBO> confirmLastBOS = new ArrayList<>();
+                                ConfirmGrandSonBO confirmGrandSonBO = new ConfirmGrandSonBO();
+                                confirmGrandSonBO.setName(name);
+                                for (TaskType taskType : taskTypes()) {
+                                    ConfirmLastBO confirmLastBO = getConfirm1(taskNodes, taskType, name, table);
+                                    confirmLastBOS.add(confirmLastBO);
+                                }
+                                confirmGrandSonBO.setConfirmLastS(confirmLastBOS);
+                                confirmGrandSonBOS.add(confirmGrandSonBO);
+                                //部门合计
+                                haveInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                                noInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                                confirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                                unConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                                toConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                                //地区合计
+                                haveInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                                noInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                                confirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                                unConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                                toConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                                //总合计
+                                haveInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                                noInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                                confirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                                unConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                                toConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                            }
+                        } else {
+                            List<ConfirmLastBO> confirmLastBOS = new ArrayList<>();
                             ConfirmGrandSonBO confirmGrandSonBO = new ConfirmGrandSonBO();
-                            confirmGrandSonBO.setName(name);
                             for (TaskType taskType : taskTypes()) {
-                                ConfirmLastBO confirmLastBO = getConfirm1(taskNodes, taskType, name);
+                                ConfirmLastBO confirmLastBO = getConfirm(taskNodes, taskType, table);
                                 confirmLastBOS.add(confirmLastBO);
                             }
                             confirmGrandSonBO.setConfirmLastS(confirmLastBOS);
                             confirmGrandSonBOS.add(confirmGrandSonBO);
+                            //部门合计
+                            haveInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                            noInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                            confirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                            unConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                            toConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                            //地区合计
+                            haveInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                            noInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                            confirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                            unConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                            toConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                            //总合计
+                            haveInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                            noInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                            confirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                            unConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                            toConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
                         }
-                    } else {
-                        ConfirmGrandSonBO confirmGrandSonBO = new ConfirmGrandSonBO();
-                        for (TaskType taskType : taskTypes()) {
-                            ConfirmLastBO confirmLastBO = getConfirm(taskNodes, taskType);
-                            confirmLastBOS.add(confirmLastBO);
-                        }
-                        confirmGrandSonBO.setConfirmLastS(confirmLastBOS);
-                        confirmGrandSonBOS.add(confirmGrandSonBO);
+                        tableBO.setGrandSonS(confirmGrandSonBOS);
+                        confirmTableBOS.add(tableBO);
                     }
+                    confirmSonBO.setTableS(confirmTableBOS);
+                    confirmSonBOS.add(confirmSonBO);
+                    ConfirmSonBO departCount = departSum(haveInitiateDepart, noInitiateDepart, confirmDepart, unConfirmDepart, toConfirmDepart);
+                    confirmSonBOS.add(departCount);
                 }
-                confirmSonBO.setConfirmGrandSonS(confirmGrandSonBOS);
-                confirmSonBOS.add(confirmSonBO);
             }
             confirmCountBO.setConfirmSonS(confirmSonBOS);
             confirmCountBOS.add(confirmCountBO);
+            ConfirmCountBO areaCount = sum(haveInitiateArea, noInitiateArea, confirmArea, unConfirmArea, toConfirmArea, "地区合计");
+            confirmCountBOS.add(areaCount);
         }
+        ConfirmCountBO sum = sum(haveInitiateSum, noInitiateSum, confirmSum, unConfirmSum, toConfirmSum, "总合计");
+        confirmCountBOS.add(sum);
         return confirmCountBOS;
     }
 
-    private ConfirmLastBO getConfirm(List<TaskNode> taskNodes, TaskType taskType) throws SerException {
-        long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate())).count();
-        long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate())).count();
-        long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm()).count();
-        long unConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && (!taskNode.getConfirm())).count();
-        long toConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && null == taskNode.getConfirm()).count();
+    //部门合计
+    private ConfirmSonBO departSum(long haveInitiateDepart,
+                                   long noInitiateDepart,
+                                   long confirmDepart,
+                                   long unConfirmDepart,
+                                   long toConfirmDepart) throws SerException {
+        List<ConfirmLastBO> confirmLastS = new ArrayList<>();
+        ConfirmLastBO lastBO = new ConfirmLastBO(haveInitiateDepart, noInitiateDepart, confirmDepart, unConfirmDepart, toConfirmDepart);
+        confirmLastS.add(lastBO);
+        List<ConfirmGrandSonBO> grandSonS = new ArrayList<>();
+        ConfirmGrandSonBO grandSonBO = new ConfirmGrandSonBO();
+        grandSonBO.setConfirmLastS(confirmLastS);
+        grandSonS.add(grandSonBO);
+        List<ConfirmTableBO> tableS = new ArrayList<>();
+        ConfirmTableBO confirmTableBO = new ConfirmTableBO();
+        confirmTableBO.setGrandSonS(grandSonS);
+        tableS.add(confirmTableBO);
+        ConfirmSonBO departCount = new ConfirmSonBO();
+        departCount.setTableS(tableS);
+        departCount.setDepart("合计");
+        return departCount;
+    }
+
+    //总合计
+    private ConfirmCountBO sum(long haveInitiateDepart,
+                               long noInitiateDepart,
+                               long confirmDepart,
+                               long unConfirmDepart,
+                               long toConfirmDepart, String s) throws SerException {
+        List<ConfirmLastBO> confirmLastS = new ArrayList<>();
+        ConfirmLastBO lastBO = new ConfirmLastBO(haveInitiateDepart, noInitiateDepart, confirmDepart, unConfirmDepart, toConfirmDepart);
+        confirmLastS.add(lastBO);
+        List<ConfirmGrandSonBO> grandSonS = new ArrayList<>();
+        ConfirmGrandSonBO grandSonBO = new ConfirmGrandSonBO();
+        grandSonBO.setConfirmLastS(confirmLastS);
+        grandSonS.add(grandSonBO);
+        List<ConfirmTableBO> tableS = new ArrayList<>();
+        ConfirmTableBO confirmTableBO = new ConfirmTableBO();
+        confirmTableBO.setGrandSonS(grandSonS);
+        tableS.add(confirmTableBO);
+        ConfirmSonBO departCount = new ConfirmSonBO();
+        departCount.setTableS(tableS);
+        List<ConfirmSonBO> sonBOS = new ArrayList<>();
+        sonBOS.add(departCount);
+        ConfirmCountBO confirmCountBO = new ConfirmCountBO();
+        if ("总合计".equals(s)) {
+            confirmCountBO.setArea("总合计");
+        } else if ("地区合计".equals(s)) {
+            confirmCountBO.setArea("合计");
+        }
+        confirmCountBO.setConfirmSonS(sonBOS);
+        return confirmCountBO;
+    }
+
+    private ConfirmLastBO getConfirm(List<TaskNode> taskNodes, TaskType taskType, String tableId) throws SerException {
+        long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && tableId.equals(taskNode.getTable().getId())).count();
+        long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && tableId.equals(taskNode.getTable().getId())).count();
+        long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && tableId.equals(taskNode.getTable().getId())).count();
+        long unConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && (!taskNode.getConfirm()) && tableId.equals(taskNode.getTable().getId())).count();
+        long toConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && null == taskNode.getConfirm() && tableId.equals(taskNode.getTable().getId())).count();
         ConfirmLastBO confirmLastBO = new ConfirmLastBO();
+        confirmLastBO.setTaskType(taskType);
         confirmLastBO.setHaveInitiate(haveInitiate);
         confirmLastBO.setNoInitiate(noInitiate);
         confirmLastBO.setConfirm(confirm);
@@ -874,13 +1169,14 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return confirmLastBO;
     }
 
-    private ConfirmLastBO getConfirm1(List<TaskNode> taskNodes, TaskType taskType, String name) throws SerException {
-        long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && name.equals(taskNode.getExecute())).count();
-        long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && name.equals(taskNode.getExecute())).count();
-        long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && name.equals(taskNode.getExecute())).count();
-        long unConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && (!taskNode.getConfirm()) && name.equals(taskNode.getExecute())).count();
-        long toConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && null == taskNode.getConfirm() && name.equals(taskNode.getExecute())).count();
+    private ConfirmLastBO getConfirm1(List<TaskNode> taskNodes, TaskType taskType, String name, String tableId) throws SerException {
+        long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).count();
+        long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).count();
+        long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).count();
+        long unConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && (!taskNode.getConfirm()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).count();
+        long toConfirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && null == taskNode.getConfirm() && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).count();
         ConfirmLastBO confirmLastBO = new ConfirmLastBO();
+        confirmLastBO.setTaskType(taskType);
         confirmLastBO.setHaveInitiate(haveInitiate);
         confirmLastBO.setNoInitiate(noInitiate);
         confirmLastBO.setConfirm(confirm);
@@ -891,99 +1187,254 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<FinishCaseBO> finishCount(TaskNodeDTO dto) throws SerException {
-        LocalDateTime start = DateUtil.parseDateTime(dto.getStartTime());
-        LocalDateTime end = DateUtil.parseDateTime(dto.getEndTime());
-        Set<String> areas = dto.getArea();
-        Set<String> departs = dto.getDepart();
-        Set<String> names = dto.getName();
+        LocalDate start = DateUtil.parseDate(dto.getStartTime());
+        LocalDate end = DateUtil.parseDate(dto.getEndTime());
+        String[] areas = dto.getArea();
+        String[] departs = dto.getDepart();
+        String[] names = dto.getName();
+        String[] tables = dto.getTables();
         CountType countType = dto.getCountType();
-        dto.getConditions().add(Restrict.eq("startExecute", start));
-        dto.getConditions().add(Restrict.eq("endExecute", end));
+        dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
+        dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
         if (null == countType) {
-            return fCount(dto, areas, departs, null);
+            return fCount(dto, areas, departs, null, tables);
         } else if (CountType.WHOLE.equals(countType)) {
-            return fCount(dto, areas(), departs(), null);
+            List<String> as = areas();
+            String[] area = new String[as.size()];
+            if (!as.isEmpty()) {
+                area = as.toArray(area);
+            }
+            List<String> ds = departs();
+            String[] depart = new String[ds.size()];
+            if (!ds.isEmpty()) {
+                depart = ds.toArray(depart);
+            }
+            return fCount(dto, area, depart, null, tables);
         } else if (CountType.DEPART.equals(countType)) {
-            return fCount(dto, areas, departs, null);
+            return fCount(dto, areas, departs, null, tables);
         } else if (CountType.PERSON.equals(countType)) {
-            return fCount(dto, areas, departs, names);
+            return fCount(dto, areas, departs, names, tables);
         }
         return null;
     }
 
-    private List<FinishCaseBO> fCount(TaskNodeDTO dto, Set<String> areas, Set<String> departs, Set<String> names) throws SerException {
-        List<Project> projects = projectSer.findAll();
+    private List<FinishCaseBO> fCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names, String[] ts) throws SerException {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.getConditions().add(Restrict.in("area", areas));
+        projectDTO.getConditions().add(Restrict.in("depart", departs));
+        List<Project> projects = projectSer.findByCis(projectDTO);
         List<FinishCaseBO> finishCaseBOS = new ArrayList<>();
+        double planNumSum = 0;
+        double actualNumSum = 0;
+        double unFinishNumSum = 0;
+        double planTimeSum = 0;
+        double actualTimeSum = 0;
+        double unFinishTimeSum = 0;
+        double reportUnFinishSum = 0;
+        double unReportUnFinishSum = 0;   //总合计
         for (String area : areas) {
+            double planNumArea = 0;
+            double actualNumArea = 0;
+            double unFinishNumArea = 0;
+            double planTimeArea = 0;
+            double actualTimeArea = 0;
+            double unFinishTimeArea = 0;
+            double reportUnFinishArea = 0;
+            double unReportUnFinishArea = 0;   //地区合计
             FinishCaseBO finishCaseBO = new FinishCaseBO();
             List<CaseSonBO> caseSonBOS = new ArrayList<>();
             for (String depart : departs) {
+                double planNumDepart = 0;
+                double actualNumDepart = 0;
+                double unFinishNumDepart = 0;
+                double planTimeDepart = 0;
+                double actualTimeDepart = 0;
+                double unFinishTimeDepart = 0;
+                double reportUnFinishDepart = 0;
+                double unReportUnFinishDepart = 0;   //部门合计
                 CaseSonBO caseSonBO = new CaseSonBO();
-                List<CaseGrandSonBO> caseGrandSonS = new ArrayList<>();
-                List<CaseLastBO> caseLastBOS = new ArrayList<>();
+                List<CaseTableBO> tableBOS = new ArrayList<>();
                 Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
                 TableDTO tableDTO = new TableDTO();
                 if (!projectIds.isEmpty()) {
                     finishCaseBO.setArea(area);
                     caseSonBO.setDepart(depart);
                     tableDTO.getConditions().add(Restrict.in("project.id", projectIds));
+                    if (null != ts) {
+                        tableDTO.getConditions().add(Restrict.in("name", ts));
+                    }
                     List<Table> tables = tableSer.findByCis(tableDTO);
                     Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
                     dto.getConditions().add(Restrict.in("table.id", tableIds));
                     List<TaskNode> taskNodes = super.findByCis(dto);
-                    if (null != names) {
-                        for (String name : names) {
+                    for (String table : tableIds) {
+                        CaseTableBO tableBO = new CaseTableBO();
+                        List<CaseGrandSonBO> grandSonBOS = new ArrayList<>();
+                        tableBO.setTableName(tableSer.findById(table).getName());
+                        if (null != names) {
+                            for (String name : names) {
+                                List<CaseLastBO> caseLastBOS = new ArrayList<>();
+                                CaseGrandSonBO caseGrandSonBO = new CaseGrandSonBO();
+                                caseGrandSonBO.setName(name);
+                                for (TaskType taskType : taskTypes()) {
+                                    CaseLastBO caseLastBO = get1(taskNodes, taskType, name, table);
+                                    caseLastBOS.add(caseLastBO);
+                                }
+                                caseGrandSonBO.setCaseLastS(caseLastBOS);
+                                grandSonBOS.add(caseGrandSonBO);
+                                //部门合计
+                                planNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                                actualNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                                unFinishNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                                planTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                                actualTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                                unFinishTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                                reportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                                unReportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                                //地区合计
+                                planNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                                actualNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                                unFinishNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                                planTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                                actualTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                                unFinishTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                                reportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                                unReportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                                //总合计
+                                planNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                                actualNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                                unFinishNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                                planTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                                actualTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                                unFinishTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                                reportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                                unReportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                            }
+                        } else {
+                            List<CaseLastBO> caseLastBOS = new ArrayList<>();
                             CaseGrandSonBO caseGrandSonBO = new CaseGrandSonBO();
-                            caseGrandSonBO.setName(name);
                             for (TaskType taskType : taskTypes()) {
-                                CaseLastBO caseLastBO = get1(taskNodes, taskType, name);
+                                CaseLastBO caseLastBO = get(taskNodes, taskType, table);
                                 caseLastBOS.add(caseLastBO);
                             }
                             caseGrandSonBO.setCaseLastS(caseLastBOS);
-                            caseGrandSonS.add(caseGrandSonBO);
+                            grandSonBOS.add(caseGrandSonBO);
+                            //部门合计
+                            planNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                            actualNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                            unFinishNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                            planTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                            actualTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                            unFinishTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                            reportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                            unReportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                            //地区合计
+                            planNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                            actualNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                            unFinishNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                            planTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                            actualTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                            unFinishTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                            reportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                            unReportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                            //总合计
+                            planNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                            actualNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                            unFinishNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                            planTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                            actualTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                            unFinishTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                            reportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                            unReportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
                         }
-                    } else {
-                        CaseGrandSonBO caseGrandSonBO = new CaseGrandSonBO();
-                        for (TaskType taskType : taskTypes()) {
-                            CaseLastBO caseLastBO = get(taskNodes, taskType);
-                            caseLastBOS.add(caseLastBO);
-                        }
-                        caseGrandSonBO.setCaseLastS(caseLastBOS);
-                        caseGrandSonS.add(caseGrandSonBO);
+                        tableBO.setGrandSonS(grandSonBOS);
+                        tableBOS.add(tableBO);
                     }
                 }
-                caseSonBO.setCaseGrandSonS(caseGrandSonS);
+                caseSonBO.setCaseTableS(tableBOS);
                 caseSonBOS.add(caseSonBO);
+                CaseSonBO departCount = departCount(planNumDepart, actualNumDepart, unFinishNumDepart, planTimeDepart, actualTimeDepart, unFinishTimeDepart, reportUnFinishDepart, unReportUnFinishDepart);
+                caseSonBOS.add(departCount);
             }
             finishCaseBO.setCaseSonS(caseSonBOS);
             finishCaseBOS.add(finishCaseBO);
+            FinishCaseBO areaCount = sum(planNumArea, actualNumArea, unFinishNumArea, planTimeArea, actualTimeArea, unFinishTimeArea, reportUnFinishArea, unReportUnFinishArea, "地区合计");
+            finishCaseBOS.add(areaCount);
         }
+        FinishCaseBO sum = sum(planNumSum, actualNumSum, unFinishNumSum, planTimeSum, actualTimeSum, unFinishTimeSum, reportUnFinishSum, unReportUnFinishSum, "总合计");
+        finishCaseBOS.add(sum);
         return finishCaseBOS;
     }
 
-    private CaseLastBO get(List<TaskNode> taskNodes, TaskType taskType) throws SerException {
-        double planNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getPlanNum).sum();
-        double actualNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualNum).sum();
+    //部门合计
+    private CaseSonBO departCount(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish) throws SerException {
+        CaseLastBO lastBO = new CaseLastBO(planNum, actualNum, unFinishNum, planTime, actualTime, unFinishTime, reportUnFinish, unReportUnFinish);
+        CaseSonBO depart = new CaseSonBO();
+        depart.setDepart("合计");
+        List<CaseTableBO> caseTableS = new ArrayList<>();
+        CaseTableBO tableBO = new CaseTableBO();
+        List<CaseGrandSonBO> grandSonS = new ArrayList<>();
+        CaseGrandSonBO grandSonBO = new CaseGrandSonBO();
+        List<CaseLastBO> caseLastS = new ArrayList<>();
+        caseLastS.add(lastBO);
+        grandSonBO.setCaseLastS(caseLastS);
+        grandSonS.add(grandSonBO);
+        tableBO.setGrandSonS(grandSonS);
+        caseTableS.add(tableBO);
+        depart.setCaseTableS(caseTableS);
+        return depart;
+    }
+
+    //合计
+    private FinishCaseBO sum(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish, String type) throws SerException {
+        CaseLastBO lastBO = new CaseLastBO(planNum, actualNum, unFinishNum, planTime, actualTime, unFinishTime, reportUnFinish, unReportUnFinish);
+        CaseSonBO depart = new CaseSonBO();
+        List<CaseTableBO> caseTableS = new ArrayList<>();
+        CaseTableBO tableBO = new CaseTableBO();
+        List<CaseGrandSonBO> grandSonS = new ArrayList<>();
+        CaseGrandSonBO grandSonBO = new CaseGrandSonBO();
+        List<CaseLastBO> caseLastS = new ArrayList<>();
+        caseLastS.add(lastBO);
+        grandSonBO.setCaseLastS(caseLastS);
+        grandSonS.add(grandSonBO);
+        tableBO.setGrandSonS(grandSonS);
+        caseTableS.add(tableBO);
+        depart.setCaseTableS(caseTableS);
+        List<CaseSonBO> caseSonBOS = new ArrayList<>();
+        caseSonBOS.add(depart);
+        FinishCaseBO finishCaseBO = new FinishCaseBO();
+        if ("地区合计".equals(type)) {
+            finishCaseBO.setArea("合计");
+        } else if ("总合计".equals(type)) {
+            finishCaseBO.setArea("总合计");
+        }
+        finishCaseBO.setCaseSonS(caseSonBOS);
+        return finishCaseBO;
+    }
+
+    private CaseLastBO get(List<TaskNode> taskNodes, TaskType taskType, String tableId) throws SerException {
+        double planNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getPlanNum).sum();
+        double actualNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && null != taskNode.getActualNum() && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualNum).sum();
         double unFinishNum = planNum - actualNum;
-        double planMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getNeedTime).sum();
-        double planHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getNeedTime).sum();
-        double planDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getNeedTime).sum();
         double planTime = new BigDecimal(planMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + planDay * 8 + planHour;     //计划总工时
-        double actualMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualTime).sum();
-        double actualHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualTime).sum();
-        double actualDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
         double actualTime = new BigDecimal(actualMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + actualDay * 8 + actualHour;     //已完成工时
-        double undoneMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getUndoneTime).sum();
-        double undoneHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getUndoneTime).sum();
-        double undoneDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getUndoneTime).sum();
         double undoneTime = new BigDecimal(undoneMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + undoneDay * 8 + undoneHour;   //未完成工时
-        double reportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getDelayTime).sum();
-        double reportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getDelayTime).sum();
-        double reportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getDelayTime).sum();
         double reportUnFinish = new BigDecimal(reportUnFinishMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + reportUnFinishDay * 8 + reportUnFinishHour;   //上报未完成工时
-        double unReportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualTime).sum();
-        double unReportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualTime).sum();
-        double unReportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && (null != taskNode.getActualTime()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && (null != taskNode.getActualTime()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && (null != taskNode.getActualTime()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
         double unReportUnFinish = new BigDecimal(unReportUnFinishMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + unReportUnFinishDay * 8 + unReportUnFinishHour;  //未上报未完成工时
         CaseLastBO caseLastBO = new CaseLastBO();
         caseLastBO.setTaskType(taskType);
@@ -998,29 +1449,29 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return caseLastBO;
     }
 
-    private CaseLastBO get1(List<TaskNode> taskNodes, TaskType taskType, String name) throws SerException {
-        double planNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getPlanNum).sum();
-        double actualNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualNum).sum();
+    private CaseLastBO get1(List<TaskNode> taskNodes, TaskType taskType, String name, String tableId) throws SerException {
+        double planNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getPlanNum).sum();
+        double actualNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && (null != taskNode.getActualNum()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualNum).sum();
         double unFinishNum = planNum - actualNum;
-        double planMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
-        double planHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
-        double planDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getNeedTime).sum();
         double planTime = new BigDecimal(planMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + planDay * 8 + planHour;     //计划总工时
-        double actualMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
-        double actualHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
-        double actualDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
         double actualTime = new BigDecimal(actualMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + actualDay * 8 + actualHour;     //已完成工时
-        double undoneMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getUndoneTime).sum();
-        double undoneHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getUndoneTime).sum();
-        double undoneDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getUndoneType()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getUndoneTime).sum();
         double undoneTime = new BigDecimal(undoneMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + undoneDay * 8 + undoneHour;   //未完成工时
-        double reportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getDelayTime).sum();
-        double reportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getDelayTime).sum();
-        double reportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getDelayType()) && taskNode.getDelay() && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getDelayTime).sum();
         double reportUnFinish = new BigDecimal(reportUnFinishMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + reportUnFinishDay * 8 + reportUnFinishHour;   //上报未完成工时
-        double unReportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
-        double unReportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
-        double unReportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && (null != taskNode.getActualTime()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && (null != taskNode.getActualTime()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && (null != taskNode.getActualTime()) && tableId.equals(taskNode.getTable().getId())).mapToDouble(TaskNode::getActualTime).sum();
         double unReportUnFinish = new BigDecimal(unReportUnFinishMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + unReportUnFinishDay * 8 + unReportUnFinishHour;  //未上报未完成工时
         CaseLastBO caseLastBO = new CaseLastBO();
         caseLastBO.setTaskType(taskType);
@@ -1043,13 +1494,40 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return list;
     }
 
-    private Set<String> areas() throws SerException {
+    @Override
+    public List<String> areas() throws SerException {
         List<Project> list = projectSer.findAll();
-        return list.stream().map(project -> project.getArea()).collect(Collectors.toSet());
+        Set<String> s = list.stream().map(project -> project.getArea()).collect(Collectors.toSet());
+        return new ArrayList<>(s);
     }
 
-    private Set<String> departs() throws SerException {
+    @Override
+    public List<String> departs() throws SerException {
         List<Project> list = projectSer.findAll();
-        return list.stream().map(project -> project.getDepart()).collect(Collectors.toSet());
+        Set<String> s = list.stream().map(project -> project.getDepart()).collect(Collectors.toSet());
+        return new ArrayList<>(s);
+    }
+
+    @Override
+    public void confirm(String id) throws SerException {
+        TaskNode entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        entity.setConfirm(true);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public void unConfirm(TaskNodeTO to) throws SerException {
+        TaskNode entity = super.findById(to.getId());
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        entity.setConfirm(false);
+        entity.setReason(to.getReason());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
     }
 }

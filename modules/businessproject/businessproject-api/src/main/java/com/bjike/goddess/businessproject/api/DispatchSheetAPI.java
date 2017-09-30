@@ -174,4 +174,13 @@ public interface DispatchSheetAPI {
      */
     byte[] templateExcel() throws SerException;
 
+    /**
+     * chenjunhao
+     * 获取所有派工单号
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> nums() throws SerException;
+
 }

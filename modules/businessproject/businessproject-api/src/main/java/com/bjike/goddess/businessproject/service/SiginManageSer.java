@@ -10,6 +10,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同签订与立项管理业务接口
@@ -181,4 +182,13 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
     default Boolean findCompleteStatus(String projectName) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取所有立项情况
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> makeProjects() throws SerException;
 }

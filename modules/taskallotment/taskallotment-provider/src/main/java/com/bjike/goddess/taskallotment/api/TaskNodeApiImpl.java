@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
+import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.service.TaskNodeSer;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
@@ -25,7 +26,7 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     private TaskNodeSer taskNodeSer;
 
     @Override
-    public List<TaskNodeBO> list(TaskNodeDTO dto) throws SerException {
+    public List<ProjectBO> list(ProjectDTO dto) throws SerException {
         return taskNodeSer.list(dto);
     }
 
@@ -166,4 +167,13 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
         return taskNodeSer.myExecuteNum();
     }
 
+    @Override
+    public void confirm(String id) throws SerException {
+        taskNodeSer.confirm(id);
+    }
+
+    @Override
+    public void unConfirm(TaskNodeTO to) throws SerException {
+        taskNodeSer.unConfirm(to);
+    }
 }

@@ -70,4 +70,11 @@ public interface TimeSetSer extends Ser<TimeSet, TimeSetDTO> {
      * @throws SerException
      */
     Long count(TimeSetDTO dto) throws SerException;
+
+    /**
+     * 定时邮件发送
+     *
+     * @throws SerException
+     */
+    void send() throws SerException;
 }

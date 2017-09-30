@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -345,6 +347,21 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         List<DepartmentPeopleBO> list = super.findBySql(sql, DepartmentPeopleBO.class, new String[]{"peopleCount"});
         if (list != null && !list.isEmpty()) {
             return Integer.parseInt(list.get(0).getPeopleCount() + "");
+        }
+        return null;
+    }
+
+    @Override
+    //chenjunhao
+    public Set<String> departPersons(String departId) throws SerException {
+        String sql = "SELECT user_id id FROM organize_position_detail_user " +
+                "WHERE id IN (SELECT user_id FROM organize_position_detail_user_table " +
+                "WHERE position_id IN (SELECT id FROM organize_position_detail " +
+                "where department_id='" + departId + "'))";
+        String[] fileds = new String[]{"id"};
+        List<UserBO> userBOS = super.findBySql(sql, UserBO.class, fileds);
+        if (null != userBOS) {
+            return userBOS.stream().map(userBO -> userBO.getId()).collect(Collectors.toSet());
         }
         return null;
     }

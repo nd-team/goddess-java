@@ -113,4 +113,9 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     public byte[] templateExcel() throws SerException {
         return dispatchSheetSer.templateExcel();
     }
+
+    @Override
+    public Set<String> nums() throws SerException {
+        return dispatchSheetSer.nums();
+    }
 }

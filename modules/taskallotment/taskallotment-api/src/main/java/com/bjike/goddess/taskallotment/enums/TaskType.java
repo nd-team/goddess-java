@@ -32,4 +32,21 @@ public enum TaskType {
     public int getCode() {
         return this.code;
     }
+
+    @Override
+    public String toString() {
+        String s="";
+        switch (code){
+            case 0:
+                s="行政任务";
+                break;
+            case 1:
+                s="工程任务";
+                break;
+            case 2:
+                s="培训任务";
+                break;
+        }
+        return s;
+    }
 }

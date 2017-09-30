@@ -11,11 +11,11 @@ package com.bjike.goddess.taskallotment.enums;
  */
 public enum FinishStatus {
     /**
-     * 公司员工
+     * 已完成
      */
     FINISH(0),
     /**
-     * 部门
+     * 为完成
      */
     UNFINISHED(1);
 
