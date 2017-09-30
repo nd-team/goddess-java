@@ -130,4 +130,12 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public String getEntryTime(String username) throws SerException {
         return entryRegisterSer.getEntryTime(username);
     }
+    public List<String> findWorkingEmpNum() throws SerException {
+        return entryRegisterSer.findWorkingEmpNum();
+    }
+
+    @Override
+    public List<EntryOptionBO> findEmpDate() throws SerException {
+        return entryRegisterSer.findEmpDate();
+    }
 }

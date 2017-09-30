@@ -6,4 +6,5 @@ dependencies {
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:message:message-api")
     compile project(":modules:storage:storage-api")
+
 }

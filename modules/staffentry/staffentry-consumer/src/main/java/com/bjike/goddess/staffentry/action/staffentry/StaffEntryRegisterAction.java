@@ -285,7 +285,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/importExcel")
-    public Result importExcel(org.apache.catalina.servlet4preview.http.HttpServletRequest request) throws ActException {
+    public Result importExcel(HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
@@ -349,15 +349,15 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      * 发送邮件通告
      *
      * @param content 发送内容
-     * @param emails 发送对象
-     * @param ids 发送对象对应数据id
+     * @param emails  发送对象
+     * @param ids     发送对象对应数据id
      * @des 提醒确认
      * @version v1
      */
     @GetMapping("v1/notis")
-    public Result notis(@RequestParam String content,@RequestParam String[] emails,@RequestParam String[] ids) throws ActException {
+    public Result notis(@RequestParam String content, @RequestParam String[] emails, @RequestParam String[] ids) throws ActException {
         try {
-            staffEntryRegisterAPI.notis(content,emails,ids);
+            staffEntryRegisterAPI.notis(content, emails, ids);
             return new ActResult("send success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

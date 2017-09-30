@@ -232,4 +232,19 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default String getEntryTime(String username) throws SerException {
         return null;
     }
+    /**
+     * 获取所有的除了离职员工的编号
+     * @return
+     */
+    default List<String> findWorkingEmpNum() throws SerException{
+
+        return null;
+    }
+    /**
+     * 获取所有员工编号和对应的数据
+     * @return
+     */
+    default List<EntryOptionBO> findEmpDate() throws SerException{
+        return null;
+    }
 }

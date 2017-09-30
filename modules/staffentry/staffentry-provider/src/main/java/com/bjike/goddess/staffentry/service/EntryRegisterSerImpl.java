@@ -605,4 +605,32 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         return null;
     }
+    public List<String> findWorkingEmpNum() throws SerException {
+       List<String> empNums= new ArrayList<>();
+       EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+       entryRegisterDTO.getConditions().add(Restrict.ne("staffStatus",StaffStatus.HAVELEAVE));
+       List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+       for(EntryRegister entryRegister : entryRegisters){
+           empNums.add(entryRegister.getEmpNumber());
+       }
+       return empNums;
+    }
+
+    @Override
+    public List<EntryOptionBO> findEmpDate() throws SerException {
+        List<EntryRegister> entryRegisters = super.findAll();
+        List<EntryOptionBO> entryOptionBOS = new ArrayList<>();
+        if(entryRegisters!=null && entryRegisters.size()>0){
+            for (EntryRegister entryRegister : entryRegisters){
+                EntryOptionBO entryOptionBO = new EntryOptionBO();
+                entryOptionBO.setArea(entryRegister.getArea());
+                entryOptionBO.setName(entryRegister.getUsername());
+                entryOptionBO.setEmployeeID(entryRegister.getEmpNumber());
+                entryOptionBO.setDepartment(entryRegister.getDepartment());
+                entryOptionBO.setEntryTime(entryRegister.getInductionDate().toString());
+                entryOptionBOS.add(entryOptionBO);
+            }
+        }
+        return entryOptionBOS;
+    }
 }

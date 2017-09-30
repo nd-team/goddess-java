@@ -38,7 +38,8 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:staffentry:staffentry-api")
-
-compile("org.springframework.boot:spring-boot-starter-web")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile project(":modules:assemble:assemble-api")
+    compile("org.springframework.boot:spring-boot-starter-web")
 }
 
