@@ -35,8 +35,11 @@ import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.secure.api.AttachedAPI;
 import com.bjike.goddess.secure.bo.AttachedBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -73,7 +76,7 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     private LevelShowAPI levelShowAPI;
 
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private EntryRegisterAPI entryRegisterAPI;
 
     @Autowired
     private ComputerSubsidiesAPI computerSubsidiesAPI;
@@ -454,14 +457,14 @@ public class SalaryInformationSerImpl extends ServiceImpl<SalaryInformation, Sal
     }
 
     @Override
-    public List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException {
-        List<EntryBasicInfoBO> boList = new ArrayList<>(0);
+    public EntryOptionBO getByEmpNumber(String employeeId) throws SerException {
+        EntryOptionBO entryOptionBO = new EntryOptionBO();
         if (moduleAPI.isCheck("staffentry")) {
             String userToken = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
-            boList = entryBasicInfoAPI.getByEmpNumber(employeeId);
+            entryOptionBO = entryRegisterAPI.getEntryOptionByEmpNum(employeeId);
         }
-        return boList;
+        return entryOptionBO;
     }
 
     @Override

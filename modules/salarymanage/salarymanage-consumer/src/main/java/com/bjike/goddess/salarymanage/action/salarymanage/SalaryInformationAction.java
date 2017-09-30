@@ -41,7 +41,8 @@ import com.bjike.goddess.salarymanage.vo.SalaryInformationVO;
 import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.secure.vo.AttachedVO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.vo.EntryOptionVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -364,16 +365,16 @@ public class SalaryInformationAction extends BaseFileAction {
      * 根据员工编号来查询入职基本信息
      *
      * @param id
-     * @return class EntryBasicInfoVO
+     * @return class EntryOptionVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/entryBasic/{id}")
     public Result getByEmpNumber(@PathVariable String id) throws ActException {
         try {
-            List<EntryBasicInfoBO> boList = salaryInformationAPI.getByEmpNumber(id);
-            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList, EntryBasicInfoVO.class);
-            return ActResult.initialize(voList);
+            EntryOptionBO entryOptionBO = salaryInformationAPI.getByEmpNumber(id);
+            EntryOptionVO entryOptionVO = BeanTransform.copyProperties(entryOptionBO, EntryOptionVO.class);
+            return ActResult.initialize(entryOptionVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

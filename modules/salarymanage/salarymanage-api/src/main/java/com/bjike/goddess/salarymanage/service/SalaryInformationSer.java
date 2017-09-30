@@ -18,6 +18,8 @@ import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 
 import java.util.List;
 
@@ -139,7 +141,7 @@ public interface SalaryInformationSer extends Ser<SalaryInformation, SalaryInfor
      * @return
      * @throws SerException
      */
-    List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException;
+    EntryOptionBO getByEmpNumber(String employeeId) throws SerException;
 
     /**
      * 查询总条数

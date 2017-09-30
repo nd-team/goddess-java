@@ -21,8 +21,8 @@ import com.bjike.goddess.salarymanage.entity.SalaryConfirmRecord;
 import com.bjike.goddess.salarymanage.enums.GuideAddrStatus;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordTO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -55,7 +55,7 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     private UserAPI userAPI;
 
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private StaffEntryRegisterAPI entryBasicInfoAPI;
 
     @Autowired
     private InterviewInforAPI interviewInforAPI;
@@ -228,10 +228,10 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
             model.setArea(interviewInforBO.getArea());
             model.setPosition(interviewInforBO.getPosition());
             model.setDepartment(interviewInforBO.getDepartment());
-            List<EntryBasicInfoBO> boList = entryBasicInfoAPI.getEntryBasicInfoByName(user.getUsername());
+            List<EntryRegisterBO> boList = entryRegisterAPI.getEntryRegisterByName(user.getUsername());
             if (boList != null && boList.size() > 0) {
                 LocalDateTime nowTime = LocalDateTime.now();
-                LocalDate entryDate = DateUtil.parseDate(boList.get(0).getEntryTime());
+                LocalDate entryDate = DateUtil.parseDate(boList.get(0).getInductionDate());
                 LocalDateTime entryTime = DateUtil.parseDateTime(entryDate + " 00:00:00");
                 long time = nowTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                         - entryTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
@@ -240,15 +240,15 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
                 } else {
                     model.setIsEntry(false);
                 }
-                model.setEmployeeID(boList.get(0).getEmployeeID());
+                model.setEmployeeID(boList.get(0).getEmpNumber());
                 EntryRegisterBO entryRegisterBO = new EntryRegisterBO();
                 if(moduleAPI.isCheck("staffentry")){
-                    entryRegisterBO = entryRegisterAPI.getByNumber(boList.get(0).getEmployeeID());
+                    entryRegisterBO = entryRegisterAPI.getByNumber(boList.get(0).getEmpNumber());
                 }else{
                     throw new SerException("请去模块关联管理设置模块关联");
                 }
                 model.setNativePlace(entryRegisterBO.getNativePlace());
-                model.setEntryDate(DateUtil.parseDate(boList.get(0).getEntryTime()));
+                model.setEntryDate(DateUtil.parseDate(boList.get(0).getInductionDate()));
                 model.setIfconfirm(false);
             } else {
                 throw new SerException("面试模块没有获取到数据");

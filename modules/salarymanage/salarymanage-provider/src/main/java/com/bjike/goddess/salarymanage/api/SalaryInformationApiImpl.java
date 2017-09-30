@@ -22,6 +22,8 @@ import com.bjike.goddess.salarymanage.to.SalaryBasicTO;
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.secure.bo.AttachedBO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +100,7 @@ public class SalaryInformationApiImpl implements SalaryInformationAPI  {
     }
 
     @Override
-    public List<EntryBasicInfoBO> getByEmpNumber(String employeeId) throws SerException {
+    public EntryOptionBO getByEmpNumber(String employeeId) throws SerException {
         return salaryInformationSer.getByEmpNumber(employeeId);
     }
 
