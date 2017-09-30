@@ -21,6 +21,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import scala.util.parsing.combinator.testing.Str;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -455,9 +457,48 @@ public class SalaryCalculateResultSerImpl extends ServiceImpl<SalaryCalculateRes
         dto.getConditions().add(Restrict.eq("workAge",to.getWorkAge()));
         List<SalaryCalculateResult> list = super.findByCis(dto);
         if(list !=null && list.size() > 0){
-            super.update(model);
+            SalaryCalculateResult salaryCalculateResult = list.get(0);
+            super.update(salaryCalculateResult);
         }else{
             super.save(model);
         }
     }
+
+
+    private <T> TreeSet<T> filter() throws SerException {
+        TreeSet<T> treeSet = new TreeSet<>(new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                Field[] field = o1.getClass().getDeclaredFields();//获取实体类的所有属性，返回field数组
+                int num = 0;   //用于识别属性相同的个数
+                int sum = 0;    //用于识别该对象除了集合的属性值个数
+                for (Field f : field) {//遍历所有的属性
+                    String type = f.getGenericType().toString();//获取属性的类型
+                    if (type.indexOf("java.util.List") < 0) {
+                        sum++;
+                        String name = f.getName(); // 获取属性的名字
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                        try {
+                            Method m = o1.getClass().getMethod("get" + name);
+                            Object value = m.invoke(o1);// 调用getter方法获取属性值
+                            Method m1 = o2.getClass().getMethod("get" + name);
+                            Object value1 = m1.invoke(o2);
+                            if (value.equals(value1)) {    //判断该属性值是否相同
+                                num++;
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+                if (num == sum) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return treeSet;
+    }
+
 }

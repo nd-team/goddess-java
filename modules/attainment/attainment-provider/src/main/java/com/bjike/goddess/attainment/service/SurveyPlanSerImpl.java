@@ -107,6 +107,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
         entity.setDemand(demandSer.findById(to.getDemandId()));
         if (null == entity.getDemand())
             throw new SerException("选择的调研需求不存在,无法保存");
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return this.transformBO(entity);
     }

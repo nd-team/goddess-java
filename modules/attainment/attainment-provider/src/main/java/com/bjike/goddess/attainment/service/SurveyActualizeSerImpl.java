@@ -107,6 +107,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
         if (null == entity.getPlan())
             throw new SerException("调研计划不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
+        entity.setQuestionnaire(to.getQuestionnaire());
         super.update(entity);
         return this.transformBO(entity);
     }

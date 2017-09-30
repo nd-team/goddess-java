@@ -68,6 +68,7 @@ public class AttainmentWaySerImpl extends ServiceImpl<AttainmentWay, AttainmentW
         }
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
+        entity.setDescription(to.getDescription());
         super.update(entity);
         return BeanTransform.copyProperties(entity, AttainmentWayBO.class);
 

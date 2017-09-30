@@ -2,6 +2,7 @@ package com.bjike.goddess.salarymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,7 +21,7 @@ public class DepartmentBO extends BaseBO{
     /**
      * 业务方向子集
      */
-    private Set<BusinessDirectionBO> businessDirection;
+    private List<BusinessDirectionBO> businessDirection;
 
     public String getDepartment() {
         return department;
@@ -30,11 +31,11 @@ public class DepartmentBO extends BaseBO{
         this.department = department;
     }
 
-    public Set<BusinessDirectionBO> getBusinessDirection() {
+    public List<BusinessDirectionBO> getBusinessDirection() {
         return businessDirection;
     }
 
-    public void setBusinessDirection(Set<BusinessDirectionBO> businessDirection) {
+    public void setBusinessDirection(List<BusinessDirectionBO> businessDirection) {
         this.businessDirection = businessDirection;
     }
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.salarymanage.vo;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +25,7 @@ public class SkillPositionVO {
     /**
      * 基础子集
      */
-    private Set<WorkAgeVO> workAge;
+    private List<WorkAgeVO> workAge;
 
     public String getPosition() {
         return position;
@@ -42,11 +43,11 @@ public class SkillPositionVO {
         this.skill = skill;
     }
 
-    public Set<WorkAgeVO> getWorkAge() {
+    public List<WorkAgeVO> getWorkAge() {
         return workAge;
     }
 
-    public void setWorkAge(Set<WorkAgeVO> workAge) {
+    public void setWorkAge(List<WorkAgeVO> workAge) {
         this.workAge = workAge;
     }
 }
