@@ -2,6 +2,7 @@ package com.bjike.goddess.salarymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +27,7 @@ public class SkillPositionBO extends BaseBO{
     /**
      * 工作年限子集
      */
-    private Set<WorkAgeBO> workAge;
+    private List<WorkAgeBO> workAge;
 
     public String getSkill() {
         return skill;
@@ -44,11 +45,11 @@ public class SkillPositionBO extends BaseBO{
         this.position = position;
     }
 
-    public Set<WorkAgeBO> getWorkAge() {
+    public List<WorkAgeBO> getWorkAge() {
         return workAge;
     }
 
-    public void setWorkAge(Set<WorkAgeBO> workAge) {
+    public void setWorkAge(List<WorkAgeBO> workAge) {
         this.workAge = workAge;
     }
 }

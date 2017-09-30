@@ -1,5 +1,6 @@
 package com.bjike.goddess.salarymanage.vo;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public class BusinessDirectionVO {
     /**
      * 岗位子集
      */
-    private Set<SkillPositionVO> position;
+    private List<SkillPositionVO> position;
 
 
     public String getBusinessDirection() {
@@ -30,11 +31,11 @@ public class BusinessDirectionVO {
         this.businessDirection = businessDirection;
     }
 
-    public Set<SkillPositionVO> getPosition() {
+    public List<SkillPositionVO> getPosition() {
         return position;
     }
 
-    public void setPosition(Set<SkillPositionVO> position) {
+    public void setPosition(List<SkillPositionVO> position) {
         this.position = position;
     }
 }
