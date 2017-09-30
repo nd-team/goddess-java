@@ -10,4 +10,5 @@ compile project(":modules:message:message-api")
 compile project(":modules:dimission:dimission-api")
 compile project(":modules:regularization:regularization-api")
 compile project(":modules:archive:archive-api")
+compile project(":modules:intromanage:intromanage-api")
 }
