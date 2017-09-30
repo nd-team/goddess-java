@@ -3,6 +3,7 @@ package com.bjike.goddess.system.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.system.bo.FeatureListBO;
 import com.bjike.goddess.system.bo.QuestionBO;
+import com.bjike.goddess.system.bo.QuestionBO1;
 import com.bjike.goddess.system.dto.FeatureListDTO;
 import com.bjike.goddess.system.dto.QuestionDTO;
 import com.bjike.goddess.system.service.QuestionSer;
@@ -57,7 +58,7 @@ public class QuestionApiImpl implements QuestionAPI {
         questionSer.remove(id);
     }
     @Override
-    public String detail(String id) throws SerException{
+    public QuestionBO1 detail(String id) throws SerException{
         return questionSer.detail(id);
     }
 

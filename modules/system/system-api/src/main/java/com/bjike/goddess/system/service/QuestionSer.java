@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.system.bo.FeatureListBO;
 import com.bjike.goddess.system.bo.QuestionBO;
+import com.bjike.goddess.system.bo.QuestionBO1;
 import com.bjike.goddess.system.dto.FeatureListDTO;
 import com.bjike.goddess.system.dto.QuestionDTO;
 import com.bjike.goddess.system.entity.Question;
@@ -88,7 +89,7 @@ public interface QuestionSer extends Ser<Question, QuestionDTO> {
      * @return String
      * @throws SerException
      */
-    default String detail(String id) throws SerException{
+    default QuestionBO1 detail(String id) throws SerException{
         return null;
     }
 

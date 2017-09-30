@@ -1,4 +1,13 @@
 apply from: '../../../config.gradle'
 dependencies { 
 compile project(":common:common-api")
-compile project(":common:common-utils")} 
+compile project(":common:common-utils")
+compile project(":modules:user:user-api")
+compile project(":modules:organize:organize-api")
+compile project(":modules:assemble:assemble-api")
+compile project(":modules:contacts:contacts-api")
+compile project(":modules:message:message-api")
+compile project(":modules:dimission:dimission-api")
+compile project(":modules:regularization:regularization-api")
+compile project(":modules:archive:archive-api")
+}

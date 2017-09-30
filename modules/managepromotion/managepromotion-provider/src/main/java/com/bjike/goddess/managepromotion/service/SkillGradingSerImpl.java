@@ -593,20 +593,20 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
 
         //第二中情况
         List<CalculateBO> calculateTwo = new ArrayList<>();
-//        calculateTwo = calculateSecond(to);
         calculateTwo = caculateTwo(to);
+//        calculateTwo = caculateTwo(to);
 
 
         //第三中情况:补助+主项+两个其他补助
         List<CalculateBO> calculateThird = new ArrayList<>();
-//        calculateThird = caculateThird(to);
-        calculateThird = calculateThird(to);
+        calculateThird = caculateThird(to);
+//        calculateThird = calculateThird(to);
         //第四中情况:补助+主项+三个其他补助
         List<CalculateBO> calculateFour = new ArrayList<>();
-//        calculateFour = caculateFour(to);
-        calculateFour = calculateFour(to);
+        calculateFour = caculateFour(to);
+//        calculateFour = calculateFour(to);
         //第五中情况:补助+主项+四个其他补助
-        List<CalculateBO> calculateFive = new ArrayList<>();
+//        List<CalculateBO> calculateFive = new ArrayList<>();
 //        calculateFive = caculateFive(to);
 //        calculateFive = calculateFive(to);
         //第六中情况:补助+主项+五个其他补助
@@ -661,8 +661,7 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                 .append("JOIN")
                 .append(sqlComboTable1.toString())
                 .append("ON")
-                //AND skill1.major != skill.major
-                .append(" skill1.grade != skill.grade  AND skill.quotaJobTitle + skill.quotaJobTitle < " + to.getMoney() + " ")
+                .append(" skill1.grade != skill.grade AND skill1.major != skill.major AND skill.quotaJobTitle + skill.quotaJobTitle < " + to.getMoney() + " ")
                 .append(" AND skill.subsidiesAmount + skill.quotaJobTitle + skill1.subsidiesAmount = " + to.getMoney() + " ")
                 .append(" where skill.grade<skill1.grade ")
                 .append(" ) a where 1=1 ");
@@ -733,13 +732,13 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                 .append("JOIN")
                 .append(sqlComboTable1.toString())
                 .append("ON")
-                .append(" skill1.grade != skill.grade  AND skill.subsidiesAmount + skill.quotaJobTitle < " + to.getMoney() + " ")
+                .append(" skill1.grade != skill.grade and skill1.major != skill.major  AND skill.subsidiesAmount + skill.quotaJobTitle < " + to.getMoney() + " ")
                 .append(" AND skill.subsidiesAmount + skill.quotaJobTitle + skill1.subsidiesAmount < " + to.getMoney() + " ")
                 .append(" JOIN ")
                 .append(sqlComboTable2.toString())
                 .append(" ON ")
                 .append(" skill2.grade != skill1.grade AND skill2.grade != skill.grade ")
-//                .append(" AND skill2.major != skill1.major AND skill2.major != skill.major ")AND skill1.major != skill.major
+                .append(" AND skill2.major != skill1.major AND skill2.major != skill.major AND skill1.major != skill.major ")
                 .append(" AND skill.subsidiesAmount + skill.quotaJobTitle + skill1.subsidiesAmount + skill2.subsidiesAmount = " + to.getMoney() + " ")
                 .append(" where skill.grade<skill1.grade AND skill1.grade <skill2.grade ")
                 .append(" ) a where 1=1 ");
@@ -814,21 +813,21 @@ public class SkillGradingSerImpl extends ServiceImpl<SkillGrading, SkillGradingD
                 .append("JOIN")
                 .append(sqlComboTable1.toString())
                 .append("ON")
-                .append(" skill1.grade != skill.grade AND skill.subsidiesAmount + skill.quotaJobTitle  < " + to.getMoney() + " ")
+                .append(" skill1.grade != skill.grade and skill1.major != skill.major AND skill.subsidiesAmount + skill.quotaJobTitle  < " + to.getMoney() + " ")
                 .append(" AND skill.subsidiesAmount + skill.quotaJobTitle + skill1.subsidiesAmount < " + to.getMoney() + " ")
                 .append(" JOIN ")
                 .append(sqlComboTable2.toString())
                 .append(" ON ")
-                .append(" skill2.grade != skill1.grade AND skill2.grade != skill.grade ")
-//                .append(" and skill2.major != skill1.major AND skill2.major != skill.major ") AND skill1.major != skill.major
+                .append(" skill2.grade != skill1.grade AND skill2.grade != skill.grade AND skill1.grade != skill.grade ")
+                .append(" and skill2.major != skill1.major AND skill2.major != skill.major  AND skill1.major != skill.major ")
                 .append(" AND skill.subsidiesAmount + skill.quotaJobTitle + skill1.subsidiesAmount + skill2.subsidiesAmount < " + to.getMoney() + " ")
                 .append(" JOIN ")
                 .append(sqlComboTable3.toString())
                 .append(" ON ")
-                .append(" skill3.grade != skill2.grade AND skill3.grade != skill1.grade ")
-                .append(" AND skill3.grade != skill.grade ")
-//                .append(" and skill3.major != skill2.major AND skill3.major != skill1.major ")
-//                .append(" AND skill3.major != skill.major ")
+                .append(" skill3.grade != skill2.grade AND skill3.grade != skill1.grade AND skill3.grade != skill.grade ")
+                .append(" AND skill2.grade != skill1.grade AND skill2.grade != skill.grade AND skill1.grade != skill.grade ")
+                .append(" and skill3.major != skill2.major AND skill3.major != skill1.major AND skill3.major != skill.major ")
+                .append(" AND skill2.major != skill1.major AND skill2.major != skill.major AND skill1.major != skill.major")
                 .append(" AND skill.subsidiesAmount + skill.quotaJobTitle + skill1.subsidiesAmount + skill2.subsidiesAmount + skill3.subsidiesAmount = " + to.getMoney() + " ")
                 .append(" where skill.grade<skill1.grade AND skill1.grade <skill2.grade AND skill2.grade<skill3.grade ")
                 .append(" ) a where 1=1 ");

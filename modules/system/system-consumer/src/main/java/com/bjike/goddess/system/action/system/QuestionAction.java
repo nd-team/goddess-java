@@ -8,6 +8,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.system.api.QuestionAPI;
 import com.bjike.goddess.system.bo.QuestionBO;
+import com.bjike.goddess.system.bo.QuestionBO1;
 import com.bjike.goddess.system.dto.QuestionDTO;
 import com.bjike.goddess.system.to.AuswerTO;
 import com.bjike.goddess.system.to.QuestionTO;
@@ -150,13 +151,15 @@ public class QuestionAction {
      * 详情
      *
      * @param id id
+     * @return class QuestionBO1
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/detail/{id}")
     public Result detail(@PathVariable String id) throws ActException {
         try {
-            return ActResult.initialize(questionAPI.detail(id));
+            QuestionBO1 questionBO = questionAPI.detail(id);
+            return ActResult.initialize(questionBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.system.bo.AuswerBO;
 import com.bjike.goddess.system.bo.QuestionBO;
+import com.bjike.goddess.system.bo.QuestionBO1;
 import com.bjike.goddess.system.dto.AuswerDTO;
 import com.bjike.goddess.system.dto.QuestionDTO;
 import com.bjike.goddess.system.entity.Auswer;
@@ -103,7 +105,7 @@ public class QuestionSerImpl extends ServiceImpl<Question, QuestionDTO> implemen
     }
 
     @Override
-    public String detail(String id) throws SerException {
+    public QuestionBO1 detail(String id) throws SerException {
         Question question = super.findById(id);
         if (question == null) {
             throw new SerException("该对象不存在");
@@ -111,12 +113,10 @@ public class QuestionSerImpl extends ServiceImpl<Question, QuestionDTO> implemen
         AuswerDTO auswerDTO = new AuswerDTO();
         auswerDTO.getConditions().add(Restrict.eq("question.id", id));
         List<Auswer> auswers = auswerSer.findByCis(auswerDTO);
-        StringBuilder sb = new StringBuilder();
-        sb.append("<strong>问题：" + question.getRate() + "</strong></br>");
-        for (Auswer answer : auswers) {
-            sb.append(answer.getProvider() + "：" + answer.getAnswer() + "</br>");
-        }
-        return sb.toString();
+        List<AuswerBO> auswerBOS=BeanTransform.copyProperties(auswers,AuswerBO.class);
+        QuestionBO1 helpBO=BeanTransform.copyProperties(question,QuestionBO1.class);
+        helpBO.setAuswerBOS(auswerBOS);
+        return helpBO;
     }
 
     @Override

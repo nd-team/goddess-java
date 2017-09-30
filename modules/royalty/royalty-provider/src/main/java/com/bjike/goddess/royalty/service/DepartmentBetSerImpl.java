@@ -226,7 +226,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                                     DepartmentBetEDTO edto = new DepartmentBetEDTO();
                                     edto.getConditions().add(Restrict.eq("departmentBetD.id", departmentBetDBO.getId()));
                                     List<DepartmentBetE> listE = departmentBetESer.findByCis(edto);
-                                    List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetDBO.class);
+                                    List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetEBO.class);
                                     departmentBetDBO.setDepartmentBetEBOS(listEBO);
                                 }
                             }
@@ -269,7 +269,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                                         DepartmentBetEDTO edto = new DepartmentBetEDTO();
                                         edto.getConditions().add(Restrict.eq("departmentBetD.id", departmentBetDBO.getId()));
                                         List<DepartmentBetE> listE = departmentBetESer.findByCis(edto);
-                                        List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetDBO.class);
+                                        List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetEBO.class);
                                         departmentBetDBO.setDepartmentBetEBOS(listEBO);
                                     }
                                 }
@@ -299,6 +299,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
             for (DepartmentBetBTO departmentBetBTO : departmentBetBTOS) {
                 DepartmentBetB departmentBetB = BeanTransform.copyProperties(departmentBetBTO, DepartmentBetB.class, true);
                 departmentBetB.setDepartmentBetA(departmentBetA);
+                departmentBetB = departmentBetBSer.save(departmentBetB);
                 departmentBetBS.add(departmentBetB);
                 //C表
                 List<DepartmentBetCTO> departmentBetCTOS = departmentBetBTO.getDepartmentBetCTOS();
@@ -351,7 +352,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                         Double departmentTotalScorePlan = departmentBetC.getRestrictScorePlan() + basesScorePlan;
                         departmentBetC.setDepartmentTotalScorePlan(departmentTotalScorePlan);
                         //部门实际总得分（实际制约得分+实际基础得分）
-                        Double departmentTotalScorePractice = departmentBetC.getDepartmentTotalScorePractice() + basesScorePractice;
+                        Double departmentTotalScorePractice = departmentBetC.getRestrictScorePractice() + basesScorePractice;
                         departmentBetC.setDepartmentTotalScorePractice(departmentTotalScorePractice);
 
                         departmentBetC = departmentBetCSer.save(departmentBetC);
@@ -376,13 +377,15 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                                 //E表
                                 List<DepartmentBetFTO> departmentBetFTOS = departmentBetETO.getDepartmentBetFTOS();
                                 if (departmentBetFTOS != null) {
-                                    DepartmentBetE departmentBetE = BeanTransform.copyProperties(departmentBetETO, DepartmentBetE.class, true);
-                                    departmentBetE.setDepartmentBetD(departmentBetD);
-                                    if(departmentBetC.getDepartment().equals(departmentBetE.getUnmetAllocationDepartment())){
-                                        throw new SerException("部门和未达标分配部门不能是同一个");
+                                    for (DepartmentBetFTO departmentBetFTO : departmentBetFTOS) {
+                                        DepartmentBetE departmentBetE = BeanTransform.copyProperties(departmentBetFTO, DepartmentBetE.class, true);
+                                        departmentBetE.setDepartmentBetD(departmentBetD);
+                                        if (departmentBetC.getDepartment().equals(departmentBetE.getUnmetAllocationDepartment())) {
+                                            throw new SerException("部门和未达标分配部门不能是同一个");
+                                        }
+                                        departmentBetE = departmentBetESer.save(departmentBetE);
+                                        departmentBetES.add(departmentBetE);
                                     }
-                                    departmentBetE = departmentBetESer.save(departmentBetE);
-                                    departmentBetES.add(departmentBetE);
                                 }
                             }
                         }
@@ -501,7 +504,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                         Double departmentTotalScorePlan = departmentBetC.getRestrictScorePlan() + basesScorePlan;
                         departmentBetC.setDepartmentTotalScorePlan(departmentTotalScorePlan);
                         //部门实际总得分（实际制约得分+实际基础得分）
-                        Double departmentTotalScorePractice = departmentBetC.getDepartmentTotalScorePractice() + basesScorePractice;
+                        Double departmentTotalScorePractice = departmentBetC.getRestrictScorePractice() + basesScorePractice;
                         departmentBetC.setDepartmentTotalScorePractice(departmentTotalScorePractice);
                         departmentBetC.setId(null);
                         departmentBetCSer.update(departmentBetC);
@@ -530,14 +533,16 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                                 List<DepartmentBetE> departmentBetES = new ArrayList<>();
                                 List<DepartmentBetFTO> departmentBetFTOS = departmentBetETO.getDepartmentBetFTOS();
                                 if (departmentBetFTOS != null) {
-                                    DepartmentBetE departmentBetE = BeanTransform.copyProperties(departmentBetETO, DepartmentBetE.class, true);
-                                    departmentBetE.setDepartmentBetD(departmentBetD);
-                                    departmentBetE.setId(null);
-                                    if(departmentBetC.getDepartment().equals(departmentBetE.getUnmetAllocationDepartment())){
-                                        throw new SerException("部门和未达标分配部门不能是同一个");
+                                    for (DepartmentBetFTO departmentBetFTO : departmentBetFTOS) {
+                                        DepartmentBetE departmentBetE = BeanTransform.copyProperties(departmentBetFTO, DepartmentBetE.class, true);
+                                        departmentBetE.setDepartmentBetD(departmentBetD);
+                                        departmentBetE.setId(null);
+                                        if (departmentBetC.getDepartment().equals(departmentBetE.getUnmetAllocationDepartment())) {
+                                            throw new SerException("部门和未达标分配部门不能是同一个");
+                                        }
+                                        departmentBetESer.update(departmentBetE);
+                                        departmentBetES.add(departmentBetE);
                                     }
-                                    departmentBetESer.update(departmentBetE);
-                                    departmentBetES.add(departmentBetE);
                                 }
                             }
                         }
@@ -681,30 +686,30 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                 treeSetB.add(b);
                 Set<String> departments = departmentBetBOS.stream().map(departmentBetBO -> departmentBetBO.getDepartment()).collect(Collectors.toSet());
                 List<DepartmentBetCBO> departmentBetCBOS = new ArrayList<>();
-                for(String department:departments){
+                for (String department : departments) {
                     List<DepartmentBetBO> list = betBOS.stream().filter(departmentBetBO -> department.equals(departmentBetBO.getDepartment())).collect(Collectors.toList());
-                    List<DepartmentBetCBO> cbos = BeanTransform.copyProperties(list,DepartmentBetCBO.class);
+                    List<DepartmentBetCBO> cbos = BeanTransform.copyProperties(list, DepartmentBetCBO.class);
                     departmentBetCBOS.addAll(cbos);
                 }
 
                 TreeSet<DepartmentBetCBO> treeSetC = filter();
-                for(DepartmentBetCBO c:departmentBetCBOS){
+                for (DepartmentBetCBO c : departmentBetCBOS) {
                     treeSetC.add(c);
                     Set<String> indexNums = departmentBetBOS.stream().map(departmentBetBO -> departmentBetBO.getIndexNum()).collect(Collectors.toSet());
                     List<DepartmentBetDBO> departmentBetDBOS = new ArrayList<>();
-                    for(String indexNum:indexNums){
+                    for (String indexNum : indexNums) {
                         List<DepartmentBetBO> list = betBOS.stream().filter(departmentBetBO -> indexNum.equals(departmentBetBO.getIndexNum())).collect(Collectors.toList());
-                        List<DepartmentBetDBO> dbos = BeanTransform.copyProperties(list,DepartmentBetDBO.class);
+                        List<DepartmentBetDBO> dbos = BeanTransform.copyProperties(list, DepartmentBetDBO.class);
                         departmentBetDBOS.addAll(dbos);
                     }
                     TreeSet<DepartmentBetDBO> treeSetD = filter();
-                    for(DepartmentBetDBO d:departmentBetDBOS){
+                    for (DepartmentBetDBO d : departmentBetDBOS) {
                         treeSetD.add(d);
                         Set<String> unmetDepartments = departmentBetBOS.stream().map(departmentBetBO -> departmentBetBO.getUnmetAllocationDepartment()).collect(Collectors.toSet());
                         List<DepartmentBetEBO> departmentBetEBOS = new ArrayList<>();
-                        for(String unmetDepartment :unmetDepartments){
+                        for (String unmetDepartment : unmetDepartments) {
                             List<DepartmentBetBO> list = departmentBetBOS.stream().filter(departmentBetBO -> unmetDepartment.equals(departmentBetBO.getUnmetAllocationDepartment())).collect(Collectors.toList());
-                            List<DepartmentBetEBO> ebos = BeanTransform.copyProperties(list,DepartmentBetEBO.class);
+                            List<DepartmentBetEBO> ebos = BeanTransform.copyProperties(list, DepartmentBetEBO.class);
                             departmentBetEBOS.addAll(ebos);
                         }
                         TreeSet<DepartmentBetEBO> treeSetE = filter();

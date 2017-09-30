@@ -21,13 +21,13 @@ public class DepartmentBetE extends BaseEntity {
     /**
      * 未达标分配部门
      */
-    @Column(name = "unmetAllocationDepartment", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '未达标分配部门'")
+    @Column(name = "unmetAllocationDepartment",  columnDefinition = "VARCHAR(255)   COMMENT '未达标分配部门'")
     private String unmetAllocationDepartment;
 
     /**
      * 未达标分配
      */
-    @Column(name = "unmetAllocation", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '未达标分配'")
+    @Column(name = "unmetAllocation",  columnDefinition = "DECIMAL(10,2)   COMMENT '未达标分配'")
     private Double unmetAllocation;
 
 
