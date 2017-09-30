@@ -1,5 +1,6 @@
 package com.bjike.goddess.salarymanage.vo;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public class AreaVO {
     /**
      * 部门子集
      */
-    private Set<DepartmentVO> salaryTestDepartmentSet;
+    private List<DepartmentVO> salaryTestDepartmentSet;
 
     public String getArea() {
         return area;
@@ -28,11 +29,11 @@ public class AreaVO {
         this.area = area;
     }
 
-    public Set<DepartmentVO> getSalaryTestDepartmentSet() {
+    public List<DepartmentVO> getSalaryTestDepartmentSet() {
         return salaryTestDepartmentSet;
     }
 
-    public void setSalaryTestDepartmentSet(Set<DepartmentVO> salaryTestDepartmentSet) {
+    public void setSalaryTestDepartmentSet(List<DepartmentVO> salaryTestDepartmentSet) {
         this.salaryTestDepartmentSet = salaryTestDepartmentSet;
     }
 }

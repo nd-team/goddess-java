@@ -2,6 +2,7 @@ package com.bjike.goddess.salarymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,7 +21,7 @@ public class AreaBO extends BaseBO{
     /**
      * 部门子集
      */
-    private Set<DepartmentBO> salaryTestDepartmentSet;
+    private List<DepartmentBO> salaryTestDepartmentSet;
 
     public String getArea() {
         return area;
@@ -30,11 +31,11 @@ public class AreaBO extends BaseBO{
         this.area = area;
     }
 
-    public Set<DepartmentBO> getSalaryTestDepartmentSet() {
+    public List<DepartmentBO> getSalaryTestDepartmentSet() {
         return salaryTestDepartmentSet;
     }
 
-    public void setSalaryTestDepartmentSet(Set<DepartmentBO> salaryTestDepartmentSet) {
+    public void setSalaryTestDepartmentSet(List<DepartmentBO> salaryTestDepartmentSet) {
         this.salaryTestDepartmentSet = salaryTestDepartmentSet;
     }
 }

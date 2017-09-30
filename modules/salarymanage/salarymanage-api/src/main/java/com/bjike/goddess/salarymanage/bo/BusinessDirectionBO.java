@@ -4,6 +4,7 @@ package com.bjike.goddess.salarymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,7 +23,7 @@ public class BusinessDirectionBO extends BaseBO{
     /**
      * 岗位子集
      */
-    private Set<SkillPositionBO> position;
+    private List<SkillPositionBO> position;
 
     public String getBusinessDirection() {
         return businessDirection;
@@ -32,12 +33,11 @@ public class BusinessDirectionBO extends BaseBO{
         this.businessDirection = businessDirection;
     }
 
-
-    public Set<SkillPositionBO> getPosition() {
+    public List<SkillPositionBO> getPosition() {
         return position;
     }
 
-    public void setPosition(Set<SkillPositionBO> position) {
+    public void setPosition(List<SkillPositionBO> position) {
         this.position = position;
     }
 }
