@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -206,14 +207,14 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
             computerSubsidiesDTO.getConditions().add(Restrict.eq("name", computerSubsidiesDTO.getName()));
         }
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void saveComputer(ComputerSubsidiesAddTO computerSubsidiesAddTO) throws SerException {
         ComputerSubsidies computerSubsidies = BeanTransform.copyProperties(computerSubsidiesAddTO, ComputerSubsidies.class, true);
         computerSubsidies.setCreateTime(LocalDateTime.now());
         super.save(computerSubsidies);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void editComputer(ComputerSubsidiesTO computerSubsidiesTO) throws SerException {
         checkSeeIdentity();
@@ -230,7 +231,7 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
         super.update(computerSubsidies);
     }
 
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteTemp(String id) throws SerException {
         checkSeeIdentity();

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -109,7 +110,7 @@ public class SubsidySchemeSerImpl extends ServiceImpl<SubsidyScheme, SubsidySche
         return flag;
     }
 
-    private Boolean allTrueIdentity() throws SerException{
+    private Boolean allTrueIdentity() throws SerException {
         return true;
     }
 
@@ -158,6 +159,7 @@ public class SubsidySchemeSerImpl extends ServiceImpl<SubsidyScheme, SubsidySche
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countSubsidy(SubsidySchemeDTO subsidySchemeDTO) throws SerException {
         Long count = super.count(subsidySchemeDTO);
@@ -188,6 +190,7 @@ public class SubsidySchemeSerImpl extends ServiceImpl<SubsidyScheme, SubsidySche
         }
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidySchemeBO addSubsidy(SubsidySchemeTO subsidySchemeTO) throws SerException {
         checkSeeIdentity();
@@ -197,6 +200,7 @@ public class SubsidySchemeSerImpl extends ServiceImpl<SubsidyScheme, SubsidySche
         return BeanTransform.copyProperties(subsidyScheme, SubsidySchemeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidySchemeBO editSubsidy(SubsidySchemeTO subsidySchemeTO) throws SerException {
         checkSeeIdentity();
@@ -213,21 +217,23 @@ public class SubsidySchemeSerImpl extends ServiceImpl<SubsidyScheme, SubsidySche
         return BeanTransform.copyProperties(subsidyScheme, SubsidySchemeBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteSubsidy(String id) throws SerException {
         checkSeeIdentity();
         super.remove(id);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void manageAudit(SubsidySchemeTO subsidySchemeTO) throws SerException {
         checkAduitIdentity();
         SubsidyScheme subsidyScheme = super.findById(subsidySchemeTO.getId());
-        if (!subsidyScheme.getImplement()){
+        if (!subsidyScheme.getImplement()) {
             subsidyScheme.setManageOpinion(subsidySchemeTO.getManageOpinion());
             subsidyScheme.setImplement(subsidySchemeTO.getImplement());
             super.update(subsidyScheme);
-        }else{
+        } else {
             throw new SerException("该方案已被确定可以被实施,审核过了");
         }
     }

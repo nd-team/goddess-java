@@ -30,7 +30,7 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+//import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -65,8 +65,8 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     private LevelShowAPI levelShowAPI;
     @Autowired
     private MessageAPI messageAPI;
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+//    @Autowired
+//    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -509,7 +509,8 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("staffentry")) {
             RpcTransmit.transmitUserToken(token);
-            List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+//            List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+            List<EntryBasicInfoBO> list = null;
             if ((list != null) && (list.size() != 0)) {
                 LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
                 int entryYear = time.getYear();
@@ -595,7 +596,8 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
             String token = RpcTransmit.getUserToken();
             if (moduleAPI.isCheck("staffentry")) {
                 RpcTransmit.transmitUserToken(token);
-                List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+//                List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
+                List<EntryBasicInfoBO> list = null;
                 if ((list != null) && (list.size() != 0)) {
                     LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
                     int entryYear = time.getYear();

@@ -296,6 +296,8 @@ public class FreezeEquitySerImpl extends ServiceImpl<FreezeEquity, FreezeEquityD
         //删除交易明细记录
         equityTransactRecordDetailSer.deleteByTransactId(id);
         super.remove(id);
+        //重新设置所有股东的占股比例
+        equityTransactRecordSer.updateTransList();
     }
 
     @Override

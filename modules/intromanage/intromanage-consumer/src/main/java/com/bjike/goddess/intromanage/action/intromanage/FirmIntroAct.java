@@ -12,9 +12,13 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.intromanage.api.FirmIntroAPI;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
+import com.bjike.goddess.intromanage.entity.FirmIntro;
+import com.bjike.goddess.intromanage.excel.FirmIntroExcel;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
@@ -447,6 +451,34 @@ public class FirmIntroAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<FirmIntroExcel> tos = ExcelUtil.mergeExcelToClazz(is, FirmIntroExcel.class, excel);
+            List<FirmIntroTO> tocs = new ArrayList<>();
+//            for (FirmIntroExcel str : tos) {
+//                FirmIntroTO computerSubsidiesExcelTO = BeanTransform.copyProperties(str, FirmIntroTO.class, "entryDate", "confirmDate");
+//                computerSubsidiesExcelTO.setEntryDate(String.valueOf(str.getEntryDate()));
+//                computerSubsidiesExcelTO.setConfirmDate(String.valueOf(str.getConfirmDate()));
+//                tocs.add(computerSubsidiesExcelTO);
+//            }
+//            注意序列化
+//            computerSubsidiesAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }
