@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.dimission.api.InterviewAPI;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
@@ -73,6 +74,10 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     private ModuleAPI moduleAPI;
     @Autowired
     private StaffRecordsAPI staffRecordsAPI;
+    @Autowired
+    private InterviewAPI interviewSer;
+    @Autowired
+    private SituationSer situationSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -186,6 +191,30 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         obj.setName("workhandover");
         obj.setDescribesion("工作交接");
         if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate1 = interviewSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("interview");
+        obj.setDescribesion("离职管理面谈");
+        if (flagSeeCate1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate2 = situationSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("situation");
+        obj.setDescribesion("离职办理节点情况");
+        if (flagSeeCate2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

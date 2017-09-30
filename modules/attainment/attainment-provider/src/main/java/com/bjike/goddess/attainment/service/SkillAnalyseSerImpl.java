@@ -70,6 +70,7 @@ public class SkillAnalyseSerImpl extends ServiceImpl<SkillAnalyse, SkillAnalyseD
                     entity.setWriter(user.getUsername());
                     entity.setWriterTime(LocalDateTime.now());
                 }
+                entity.setRemark(to.getRemark());
                 super.update(entity);
                 return BeanTransform.copyProperties(entity, SkillAnalyseBO.class);
             } catch (SerException e) {

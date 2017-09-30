@@ -22,6 +22,8 @@
     <dubbo:service interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" ref="dimissionInfoApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.dimission.api.HandoverReferenceAPI" ref="handoverReferenceApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.dimission.api.WorkHandoverAPI" ref="workHandoverApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.dimission.api.SituationAPI" ref="situationApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.dimission.api.InterviewAPI" ref="interviewApiImpl"/>
 
 
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
