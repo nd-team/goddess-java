@@ -24,92 +24,92 @@ public class StaffEntryRegister extends BaseEntity {
     /**
      * 所属部门/项目组
      */
-    @Column(name = "department", columnDefinition = "VARCHAR(255)   COMMENT '所属部门'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '所属部门'")
     private String department;
     /**
      * 联系电话
      */
-    @Column(name = "contact_num", columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
     private String contactNum;
 
     /**
      * 入职日期
      */
-    @Column(name = "entryDate", columnDefinition = "DATE   COMMENT '入职日期'")
+    @Column(columnDefinition = "DATE   COMMENT '入职日期'")
     private LocalDate entryDate;
     /**
      * 是否住宿
      */
-    @Column(name = "lodge", columnDefinition = "TINYINT(2)   COMMENT '是否住宿'")
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '是否住宿'")
     private Boolean lodge;
     /**
      * 是否使用公司电脑
      */
-    @Column(name = "useCompanyComputer", columnDefinition = "TINYINT(2)   COMMENT '是否使用公司电脑'")
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '是否使用公司电脑'")
     private Boolean useCompanyComputer;
     /**
      * 入职地址
      */
-    @Column(name = "entryAddress", columnDefinition = "VARCHAR(255)   COMMENT '入职地址'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '入职地址'")
     private String entryAddress;
     /**
      * 是否入职
      */
-    @Column(name = "entry", columnDefinition = "TINYINT(2)   COMMENT '是否入职'")
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '是否入职'")
     private Boolean entry;
     /**
      * 未入职原因
      */
-    @Column(name = "noEntryCause", columnDefinition = "TEXT   COMMENT '未入职原因'")
+    @Column(columnDefinition = "TEXT   COMMENT '未入职原因'")
     private String noEntryCause;
     /**
      * 地区
      */
-    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
     /**
      * 是否通告
      */
-    @Column(name = "notice", columnDefinition = "TINYINT(2)   COMMENT '是否通告'")
+    @Column(columnDefinition = "TINYINT(2)   COMMENT '是否通告'")
     private Boolean notice;
     /**
      * 注册邮箱使用手机号
      */
-    @Column(name = "registerUseNum", columnDefinition = "VARCHAR(255)   COMMENT '注册邮箱使用手机号'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '注册邮箱使用手机号'")
     private String registerUseNum;
 
     /**
      * 职位
      */
-    @Column(name = "position", columnDefinition = "VARCHAR(255)   COMMENT '职位'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '职位'")
     private String position;
 
     /**
      * 工作邮箱
      */
-    @Column(name = "workEmail", columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱'")
     private String workEmail;
     /**
      * 工作邮箱密码
      */
-    @Column(name = "workEmailPassword", columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱密码'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '工作邮箱密码'")
     private String workEmailPassword;
     /**
      * 更改后的邮箱密码
      */
-    @Column(name = "contactNum", columnDefinition = "VARCHAR(255)   COMMENT '入职日期'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '入职日期'")
     private String changeEmailPassword;
     /**
      * 帐号密码是否已告知(是/否)
      */
-    @Column(name = "tellStatus", columnDefinition = "VARCHAR(255)   COMMENT '帐号密码是否已告知(是/否)'")
+    @Column(columnDefinition = "VARCHAR(255)   COMMENT '帐号密码是否已告知(是/否)'")
     private String tellStatus;
 
 
     /**
      * 用户id
      */
-    @Column(name = "userId", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '用户id'")
+    @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '用户id'")
     private String userId;
 
 

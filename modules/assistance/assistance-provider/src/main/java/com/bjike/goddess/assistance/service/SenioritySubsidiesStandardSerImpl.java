@@ -15,6 +15,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -174,7 +175,7 @@ public class SenioritySubsidiesStandardSerImpl extends ServiceImpl<SenioritySubs
         List<SenioritySubsidiesStandard> senioritySubsidiesStandards = super.findByPage(senioritySubsidiesStandardDTO);
         return BeanTransform.copyProperties(senioritySubsidiesStandards, SenioritySubsidiesStandardBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SenioritySubsidiesStandardBO addSenior(SenioritySubsidiesStandardTO senioritySubsidiesStandardTO) throws SerException {
         checkSeeIdentity();
@@ -183,7 +184,7 @@ public class SenioritySubsidiesStandardSerImpl extends ServiceImpl<SenioritySubs
         super.save(senioritySubsidiesStandard);
         return BeanTransform.copyProperties(senioritySubsidiesStandard, SenioritySubsidiesStandardBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SenioritySubsidiesStandardBO editSenior(SenioritySubsidiesStandardTO senioritySubsidiesStandardTO) throws SerException {
         checkSeeIdentity();
@@ -193,7 +194,7 @@ public class SenioritySubsidiesStandardSerImpl extends ServiceImpl<SenioritySubs
         super.update(senioritySubsidiesStandard);
         return BeanTransform.copyProperties(senioritySubsidiesStandard, SenioritySubsidiesStandardBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteSubsidy(String id) throws SerException {
         checkSeeIdentity();

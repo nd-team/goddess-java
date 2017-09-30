@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -194,14 +195,14 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
             senioritySubsidiesDTO.getConditions().add(Restrict.eq("name", senioritySubsidiesDTO.getName()));
         }
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void saveSen(SenioritySubsidiesTO senioritySubsidiesTO) throws SerException {
         SenioritySubsidies senioritySubsidies = BeanTransform.copyProperties(senioritySubsidiesTO, SenioritySubsidies.class, true);
         senioritySubsidies.setCreateTime(LocalDateTime.now());
         super.save(senioritySubsidies);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void editSen(SenioritySubsidiesTO senioritySubsidiesTO) throws SerException {
         SenioritySubsidies senioritySubsidies = super.findById(senioritySubsidiesTO.getId());

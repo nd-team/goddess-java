@@ -290,7 +290,7 @@ public class EntryRegisterAction {
      * 入职管理日汇总
      *
      * @param date 日期
-     * @return class SummationVO
+     * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
@@ -310,7 +310,7 @@ public class EntryRegisterAction {
      * @param year 年份
      * @param month 月份
      * @param week 周期
-     * @return class SummationVO
+     * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
@@ -329,7 +329,7 @@ public class EntryRegisterAction {
      *
      * @param year 年份
      * @param month 月份
-     * @return class SummationVO
+     * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
@@ -347,7 +347,7 @@ public class EntryRegisterAction {
      * 入职管理累计汇总
      *
      * @param date 截止日期
-     * @return class SummationVO
+     * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth

@@ -6,6 +6,7 @@ import com.bjike.goddess.intromanage.bo.BussinesBO;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
 import com.bjike.goddess.intromanage.entity.FirmIntro;
+import com.bjike.goddess.intromanage.excel.FirmIntroExcel;
 import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
 import com.bjike.goddess.intromanage.to.FirmIntroTO;
 import com.bjike.goddess.intromanage.to.GuidePermissionTO;
@@ -156,10 +157,10 @@ public interface FirmIntroSer extends Ser<FirmIntro, FirmIntroDTO> {
      */
     byte[] templateExport() throws SerException;
 
-//    /**
-//     * 导入
-//     *
-//     * @param temperatureSubsidiesExcelTOS 工龄补助
-//     */
-//    void importExcel(List<TemperatureSubsidiesExcelTO> temperatureSubsidiesExcelTOS) throws SerException;
+    /**
+     * 导入
+     *
+     * @param firmIntroTOS 公司简介
+     */
+    void importExcel(List<FirmIntroTO> firmIntroTOS) throws SerException;
 }

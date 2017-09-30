@@ -1112,4 +1112,8 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         return os.toByteArray();
     }
 
+    @Override
+    public void importExcel(List<FirmIntroTO> firmIntroTOS) throws SerException {
+
+    }
 }

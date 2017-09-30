@@ -234,6 +234,8 @@ public class EquityTransactRecordDetailSerImpl extends ServiceImpl<EquityTransac
         EquityTransactRecordDetailDTO equityTransactRecordDetailDTO = new EquityTransactRecordDetailDTO();
         equityTransactRecordDetailDTO.getConditions().add(Restrict.eq("transactId",transactId));
         List<EquityTransactRecordDetail> equityTransactRecordDetails = super.findByCis(equityTransactRecordDetailDTO);
-        super.remove(equityTransactRecordDetails);
+        if(equityTransactRecordDetails!=null && equityTransactRecordDetails.size()>0){
+            super.remove(equityTransactRecordDetails);
+        }
     }
 }

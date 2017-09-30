@@ -16,6 +16,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -114,11 +115,10 @@ public class CommunicationFormworkSerImpl extends ServiceImpl<CommunicationFormw
 
     @Override
     public List<CommunicationFormworkBO> list(CommunicationFormworkDTO dto) throws SerException {
-//        checkPermission();
         List<CommunicationFormwork> communicationFormworks = super.findByCis(dto);
         return BeanTransform.copyProperties(communicationFormworks, CommunicationFormworkBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CommunicationFormworkBO save(CommunicationFormworkTO to) throws SerException {
 //        checkPermission();
@@ -127,7 +127,7 @@ public class CommunicationFormworkSerImpl extends ServiceImpl<CommunicationFormw
         super.save(comm);
         return BeanTransform.copyProperties(comm, CommunicationFormworkBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void update(CommunicationFormworkTO to) throws SerException {
 //        checkPermission();
@@ -138,7 +138,7 @@ public class CommunicationFormworkSerImpl extends ServiceImpl<CommunicationFormw
         comm.setCreateTime(date);
         super.update(comm);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
 //        checkPermission();
