@@ -170,4 +170,9 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public PhoneLoginUserInfoBO userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO) throws SerException {
         return positionDetailUserSer.userLoginInfoByUserName( phoneLoginUserInfoTO );
     }
+
+    @Override
+    public List<String> names() throws SerException {
+        return positionDetailUserSer.names();
+    }
 }

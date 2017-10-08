@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: [dengjunren]
@@ -38,5 +39,10 @@ public class PositionUserDetailApiImpl implements PositionUserDetailAPI {
     @Override
     public Long getAreaNum(String startTime,String endTime) throws SerException {
         return positionUserDetailSer.getAreaNum(startTime,endTime);
+    }
+
+    @Override
+    public Map<String, String> departPosition(String userId) throws SerException {
+        return positionUserDetailSer.departPosition(userId);
     }
 }

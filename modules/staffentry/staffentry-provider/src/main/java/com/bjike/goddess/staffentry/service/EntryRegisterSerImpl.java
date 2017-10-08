@@ -605,23 +605,24 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         return null;
     }
+
     public List<String> findWorkingEmpNum() throws SerException {
-       List<String> empNums= new ArrayList<>();
-       EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
-       entryRegisterDTO.getConditions().add(Restrict.ne("staffStatus",StaffStatus.HAVELEAVE));
-       List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
-       for(EntryRegister entryRegister : entryRegisters){
-           empNums.add(entryRegister.getEmpNumber());
-       }
-       return empNums;
+        List<String> empNums = new ArrayList<>();
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.ne("staffStatus", StaffStatus.HAVELEAVE));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        for (EntryRegister entryRegister : entryRegisters) {
+            empNums.add(entryRegister.getEmpNumber());
+        }
+        return empNums;
     }
 
     @Override
     public List<EntryOptionBO> findEmpDate() throws SerException {
         List<EntryRegister> entryRegisters = super.findAll();
         List<EntryOptionBO> entryOptionBOS = new ArrayList<>();
-        if(entryRegisters!=null && entryRegisters.size()>0){
-            for (EntryRegister entryRegister : entryRegisters){
+        if (entryRegisters != null && entryRegisters.size() > 0) {
+            for (EntryRegister entryRegister : entryRegisters) {
                 EntryOptionBO entryOptionBO = new EntryOptionBO();
                 entryOptionBO.setArea(entryRegister.getArea());
                 entryOptionBO.setName(entryRegister.getUsername());
@@ -632,5 +633,11 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             }
         }
         return entryOptionBOS;
+    }
+
+    @Override
+    public Set<String> names() throws SerException {
+        List<EntryRegister> list = super.findAll();
+        return list.stream().map(entryRegister -> entryRegister.getUsername()).collect(Collectors.toSet());
     }
 }

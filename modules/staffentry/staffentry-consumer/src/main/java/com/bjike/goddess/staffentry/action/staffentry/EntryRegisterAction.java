@@ -10,9 +10,6 @@ import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
-import com.bjike.goddess.staffentry.entity.Credential;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
-import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.staffentry.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -43,9 +39,9 @@ public class EntryRegisterAction {
     private StaffEntryRegisterAPI staffEntryRegisterAPI;
 
 
-
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -55,11 +51,11 @@ public class EntryRegisterAction {
         try {
 
             Boolean isHasPermission = entryRegisterAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -106,8 +102,8 @@ public class EntryRegisterAction {
      * 入职登记列表
      *
      * @param entryRegisterDTO 入职登记dto
-     * @des 获取所有入职登记
      * @return class EntryRegisterVO
+     * @des 获取所有入职登记
      * @version v1
      */
     @GetMapping("v1/list")
@@ -124,67 +120,67 @@ public class EntryRegisterAction {
     /**
      * 添加员工入职
      *
-     * @param entryRegisterUtilTO   员工入职数据to
-     * @des 添加员工入职
+     * @param entryRegisterUtilTO 员工入职数据to
      * @return class EntryRegisterVO
+     * @des 添加员工入职
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addEntryRegister(@Validated(EntryRegisterUtilTO.TestBaseInfo.class) EntryRegisterUtilTO entryRegisterUtilTO ) throws ActException {
+    public Result addEntryRegister(@Validated(EntryRegisterUtilTO.TestBaseInfo.class) EntryRegisterUtilTO entryRegisterUtilTO) throws ActException {
 
         //组装数据
         EntryRegisterTO entryRegisterTO = new EntryRegisterTO();
-        FamilyMemberTO familyMemberTO = new FamilyMemberTO ();
-        StudyExperienceTO studyExperienceTO = new StudyExperienceTO ();
+        FamilyMemberTO familyMemberTO = new FamilyMemberTO();
+        StudyExperienceTO studyExperienceTO = new StudyExperienceTO();
         WorkExperienceTO workExperienceTO = new WorkExperienceTO();
-        CredentialTO credentialTO = new CredentialTO ();
+        CredentialTO credentialTO = new CredentialTO();
 
         //基本信息
-        entryRegisterTO = BeanTransform.copyProperties( entryRegisterUtilTO, EntryRegisterTO.class);
-        assembleData(entryRegisterUtilTO,  familyMemberTO,  studyExperienceTO,
-                 workExperienceTO,  credentialTO);
+        entryRegisterTO = BeanTransform.copyProperties(entryRegisterUtilTO, EntryRegisterTO.class);
+        assembleData(entryRegisterUtilTO, familyMemberTO, studyExperienceTO,
+                workExperienceTO, credentialTO);
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.insertEntryRegister(entryRegisterTO,
                     familyMemberTO, studyExperienceTO, workExperienceTO, credentialTO);
-            return ActResult.initialize(BeanTransform.copyProperties(entryRegisterBO1,EntryRegisterVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(entryRegisterBO1, EntryRegisterVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     private void assembleData(EntryRegisterUtilTO entryRegisterUtilTO, FamilyMemberTO familyMemberTO, StudyExperienceTO studyExperienceTO,
-        WorkExperienceTO workExperienceTO, CredentialTO credentialTO){
+                              WorkExperienceTO workExperienceTO, CredentialTO credentialTO) {
 
         //家庭成员
-        familyMemberTO.setTitles( entryRegisterUtilTO.getTitles());
-        familyMemberTO.setNames( entryRegisterUtilTO.getNames());
-        familyMemberTO.setAges( entryRegisterUtilTO.getAges());
-        familyMemberTO.setUnits( entryRegisterUtilTO.getUnits());
-        familyMemberTO.setPositions( entryRegisterUtilTO.getPositions());
-        familyMemberTO.setPhones( entryRegisterUtilTO.getPhones());
+        familyMemberTO.setTitles(entryRegisterUtilTO.getTitles());
+        familyMemberTO.setNames(entryRegisterUtilTO.getNames());
+        familyMemberTO.setAges(entryRegisterUtilTO.getAges());
+        familyMemberTO.setUnits(entryRegisterUtilTO.getUnits());
+        familyMemberTO.setPositions(entryRegisterUtilTO.getPositions());
+        familyMemberTO.setPhones(entryRegisterUtilTO.getPhones());
         //学习经历
-        studyExperienceTO.setStudyStartTimes( entryRegisterUtilTO.getStudyStartTimes());
-        studyExperienceTO.setStudyEndTimes( entryRegisterUtilTO.getStudyEndTimes());
-        studyExperienceTO.setSchools( entryRegisterUtilTO.getSchools());
-        studyExperienceTO.setCertificates( entryRegisterUtilTO.getCertificates());
+        studyExperienceTO.setStudyStartTimes(entryRegisterUtilTO.getStudyStartTimes());
+        studyExperienceTO.setStudyEndTimes(entryRegisterUtilTO.getStudyEndTimes());
+        studyExperienceTO.setSchools(entryRegisterUtilTO.getSchools());
+        studyExperienceTO.setCertificates(entryRegisterUtilTO.getCertificates());
         //工作经历
-        workExperienceTO.setWorkStartTimes( entryRegisterUtilTO.getWorkStartTimes());
-        workExperienceTO.setWorkEndTimes( entryRegisterUtilTO.getWorkEndTimes());
-        workExperienceTO.setFirms( entryRegisterUtilTO.getFirms());
-        workExperienceTO.setJobDescriptions( entryRegisterUtilTO.getJobDescriptions());
+        workExperienceTO.setWorkStartTimes(entryRegisterUtilTO.getWorkStartTimes());
+        workExperienceTO.setWorkEndTimes(entryRegisterUtilTO.getWorkEndTimes());
+        workExperienceTO.setFirms(entryRegisterUtilTO.getFirms());
+        workExperienceTO.setJobDescriptions(entryRegisterUtilTO.getJobDescriptions());
         //证书情况
-        credentialTO.setNameses( entryRegisterUtilTO.getNameses());
-        credentialTO.setObtainTimes( entryRegisterUtilTO.getObtainTimes());
+        credentialTO.setNameses(entryRegisterUtilTO.getNameses());
+        credentialTO.setObtainTimes(entryRegisterUtilTO.getObtainTimes());
     }
 
 
     /**
      * 编辑员工入职
      *
-     * @param entryRegisterUtilTO   员工入职数据to
-     * @des 编辑员工入职
+     * @param entryRegisterUtilTO 员工入职数据to
      * @return class EntryRegisterVO
+     * @des 编辑员工入职
      * @version v1
      */
     @LoginAuth
@@ -192,18 +188,18 @@ public class EntryRegisterAction {
     public Result editEntryRegister(@Validated(EntryRegisterUtilTO.TestBaseInfo.class) EntryRegisterUtilTO entryRegisterUtilTO) throws ActException {
         //组装数据
         EntryRegisterTO entryRegisterTO = new EntryRegisterTO();
-        FamilyMemberTO familyMemberTO = new FamilyMemberTO ();
-        StudyExperienceTO studyExperienceTO = new StudyExperienceTO ();
+        FamilyMemberTO familyMemberTO = new FamilyMemberTO();
+        StudyExperienceTO studyExperienceTO = new StudyExperienceTO();
         WorkExperienceTO workExperienceTO = new WorkExperienceTO();
-        CredentialTO credentialTO = new CredentialTO ();
+        CredentialTO credentialTO = new CredentialTO();
         //基本信息
-        entryRegisterTO = BeanTransform.copyProperties( entryRegisterUtilTO, EntryRegisterTO.class);
-        assembleData(entryRegisterUtilTO,  familyMemberTO,  studyExperienceTO,
-                workExperienceTO,  credentialTO);
+        entryRegisterTO = BeanTransform.copyProperties(entryRegisterUtilTO, EntryRegisterTO.class);
+        assembleData(entryRegisterUtilTO, familyMemberTO, studyExperienceTO,
+                workExperienceTO, credentialTO);
         try {
             EntryRegisterBO entryRegisterBO1 = entryRegisterAPI.editEntryRegister(entryRegisterTO,
                     familyMemberTO, studyExperienceTO, workExperienceTO, credentialTO);
-            return ActResult.initialize(BeanTransform.copyProperties(entryRegisterBO1,EntryRegisterVO.class,true));
+            return ActResult.initialize(BeanTransform.copyProperties(entryRegisterBO1, EntryRegisterVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -232,8 +228,8 @@ public class EntryRegisterAction {
      * 查找入职登记详细信息
      *
      * @param id 员工入职登记id
-     * @des 根据id查找某个员工入职登记
      * @return class EntryRegisterVO
+     * @des 根据id查找某个员工入职登记
      * @version v1
      */
     @GetMapping("v1/getEntryRegister/{id}")
@@ -247,15 +243,16 @@ public class EntryRegisterAction {
 
             EntryRegisterVO entryRegisterVO = BeanTransform.copyProperties(
                     bo, EntryRegisterVO.class);
-            entryRegisterVO.setFamilyMemberVOList( BeanTransform.copyProperties(fbo , FamilyMemberVO.class));
-            entryRegisterVO.setStudyExperienceVOList( BeanTransform.copyProperties(sbo , StudyExperienceVO.class));
-            entryRegisterVO.setWorkExperienceVOList( BeanTransform.copyProperties(wbo , WorkExperienceVO.class));
-            entryRegisterVO.setCredentialVOList( BeanTransform.copyProperties(cbo , CredentialVO.class));
+            entryRegisterVO.setFamilyMemberVOList(BeanTransform.copyProperties(fbo, FamilyMemberVO.class));
+            entryRegisterVO.setStudyExperienceVOList(BeanTransform.copyProperties(sbo, StudyExperienceVO.class));
+            entryRegisterVO.setWorkExperienceVOList(BeanTransform.copyProperties(wbo, WorkExperienceVO.class));
+            entryRegisterVO.setCredentialVOList(BeanTransform.copyProperties(cbo, CredentialVO.class));
             return ActResult.initialize(entryRegisterVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的员工编号
      *
@@ -271,6 +268,7 @@ public class EntryRegisterAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据员工编号获取数据
      *
@@ -286,6 +284,7 @@ public class EntryRegisterAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理日汇总
      *
@@ -304,45 +303,48 @@ public class EntryRegisterAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理周汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
-     * @param week 周期
+     * @param week  周期
      * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize/week")
-    public Result summarizeDay(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+    public Result summarizeDay(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
         try {
-            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year,month,week);
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year, month, week);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理月汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
      * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize/month")
-    public Result summarizeMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+    public Result summarizeMonth(Integer year, Integer month, HttpServletRequest request) throws ActException {
         try {
-            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaMonth(year,month);
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaMonth(year, month);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理累计汇总
      *
@@ -357,6 +359,22 @@ public class EntryRegisterAction {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaTotal(date);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * chenjunhao
+     * 获取所有入职人员的姓名
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/names")
+    public Result names() throws ActException {
+        try {
+            return ActResult.initialize(entryRegisterAPI.names());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
