@@ -1,79 +1,87 @@
-package com.bjike.goddess.businsurance.vo;
+package com.bjike.goddess.businsurance.excel;
 
 import com.bjike.goddess.businsurance.enums.BuyCasualtyStatus;
+import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
+
 
 /**
- * 团体意外险购买详情表现层对象
+ * 团体意外险购买详情导出
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-09-26 10:44 ]
- * @Description: [ 团体意外险购买详情表现层对象 ]
+ * @Description: [ 团体意外险购买详情导出 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CasualtyPurchasingDetailVO {
+public class CasualtyPurchasingDetailImport extends BaseBO{
 
-    /**
-     * id
-     */
-    private String id;
     /**
      * 被保人姓名
      */
+    @ExcelHeader(name = "被保人姓名",notNull = true)
     private String beApplicantName;
 
     /**
      * 员工编号
      */
+    @ExcelHeader(name = "员工编号",notNull = true)
     private String employeeNo;
 
     /**
      * 地区
      */
+    @ExcelHeader(name = "地区",notNull = true)
     private String area;
 
     /**
      * 项目组部门
      */
+    @ExcelHeader(name = "项目组部门",notNull = true)
     private String department;
 
     /**
      * 岗位
      */
+    @ExcelHeader(name = "岗位",notNull = true)
     private String jobs;
 
     /**
      * 入职日期
      */
+    @ExcelHeader(name = "入职日期",notNull = true)
     private String entryDate;
 
     /**
      * 离职日期
      */
+    @ExcelHeader(name = "离职日期")
     private String departureDate;
 
     /**
      * 是否购买社保
      */
-    private Boolean buySocialSecurity;
+    @ExcelHeader(name = "是否购买社保",notNull = true)
+    private String buySocialSecurity;
 
     /**
      * 停止购买时间
      */
+    @ExcelHeader(name = "停止购买时间",notNull = true)
     private String stopBuyTime;
 
     /**
      * 购买意外险状态
      */
+    @ExcelHeader(name = "购买意外险状态",notNull = true)
     private BuyCasualtyStatus buyCasualtyStatus;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getBeApplicantName() {
         return beApplicantName;
@@ -131,11 +139,11 @@ public class CasualtyPurchasingDetailVO {
         this.departureDate = departureDate;
     }
 
-    public Boolean getBuySocialSecurity() {
+    public String getBuySocialSecurity() {
         return buySocialSecurity;
     }
 
-    public void setBuySocialSecurity(Boolean buySocialSecurity) {
+    public void setBuySocialSecurity(String buySocialSecurity) {
         this.buySocialSecurity = buySocialSecurity;
     }
 

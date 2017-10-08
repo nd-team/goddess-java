@@ -267,6 +267,9 @@ public class GroupInsureSerImpl extends ServiceImpl<GroupInsure, GroupInsureDTO>
             case DOWNLOAD:
                 flag = guideIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;

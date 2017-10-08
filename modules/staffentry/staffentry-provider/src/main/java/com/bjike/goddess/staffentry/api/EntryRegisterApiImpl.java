@@ -138,4 +138,14 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     public List<EntryOptionBO> findEmpDate() throws SerException {
         return entryRegisterSer.findEmpDate();
     }
+
+    @Override
+    public Integer findNumByEntryDate(String[] date, String area, String dep) throws SerException {
+        return entryRegisterSer.findNumByEntryDate(date,area,dep);
+    }
+
+    @Override
+    public Integer findNumByEntryDate(String endDate, String area, String dep) throws SerException {
+        return entryRegisterSer.findNumByEntryDate(endDate,area,dep);
+    }
 }

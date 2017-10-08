@@ -1,5 +1,6 @@
 package com.bjike.goddess.businsurance.entity;
 
+import com.bjike.goddess.businsurance.enums.BuyCasualtyStatus;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Column;
@@ -26,13 +27,11 @@ public class CasualtyPurchasingDetail extends BaseEntity {
      */
     @Column(name = "beApplicantName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '被保人姓名'")
     private String beApplicantName;
-
     /**
      * 员工编号
      */
     @Column(name = "employeeNo", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
     private String employeeNo;
-
     /**
      * 地区
      */
@@ -56,11 +55,10 @@ public class CasualtyPurchasingDetail extends BaseEntity {
      */
     @Column(name = "entryDate", nullable = false, columnDefinition = "DATE   COMMENT '入职日期'")
     private LocalDate entryDate;
-
     /**
      * 离职日期
      */
-    @Column(name = "departureDate", nullable = false, columnDefinition = "DATE   COMMENT '离职日期'")
+    @Column(name = "departureDate", columnDefinition = "DATE   COMMENT '离职日期'")
     private LocalDate departureDate;
 
     /**
@@ -79,16 +77,7 @@ public class CasualtyPurchasingDetail extends BaseEntity {
      * 购买意外险状态
      */
     @Column(name = "buyCasualtyStatus", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '购买意外险状态'")
-    private String buyCasualtyStatus;
-
-
-    public String getBeApplicantName() {
-        return beApplicantName;
-    }
-
-    public void setBeApplicantName(String beApplicantName) {
-        this.beApplicantName = beApplicantName;
-    }
+    private BuyCasualtyStatus buyCasualtyStatus;
 
     public String getEmployeeNo() {
         return employeeNo;
@@ -96,6 +85,46 @@ public class CasualtyPurchasingDetail extends BaseEntity {
 
     public void setEmployeeNo(String employeeNo) {
         this.employeeNo = employeeNo;
+    }
+
+    public LocalDate getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(LocalDate departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public Boolean getBuySocialSecurity() {
+        return buySocialSecurity;
+    }
+
+    public void setBuySocialSecurity(Boolean buySocialSecurity) {
+        this.buySocialSecurity = buySocialSecurity;
+    }
+
+    public LocalDate getStopBuyTime() {
+        return stopBuyTime;
+    }
+
+    public void setStopBuyTime(LocalDate stopBuyTime) {
+        this.stopBuyTime = stopBuyTime;
+    }
+
+    public BuyCasualtyStatus getBuyCasualtyStatus() {
+        return buyCasualtyStatus;
+    }
+
+    public void setBuyCasualtyStatus(BuyCasualtyStatus buyCasualtyStatus) {
+        this.buyCasualtyStatus = buyCasualtyStatus;
+    }
+
+    public String getBeApplicantName() {
+        return beApplicantName;
+    }
+
+    public void setBeApplicantName(String beApplicantName) {
+        this.beApplicantName = beApplicantName;
     }
 
     public String getArea() {
@@ -128,37 +157,5 @@ public class CasualtyPurchasingDetail extends BaseEntity {
 
     public void setEntryDate(LocalDate entryDate) {
         this.entryDate = entryDate;
-    }
-
-    public LocalDate getDepartureDate() {
-        return departureDate;
-    }
-
-    public void setDepartureDate(LocalDate departureDate) {
-        this.departureDate = departureDate;
-    }
-
-    public Boolean getBuySocialSecurity() {
-        return buySocialSecurity;
-    }
-
-    public void setBuySocialSecurity(Boolean buySocialSecurity) {
-        this.buySocialSecurity = buySocialSecurity;
-    }
-
-    public LocalDate getStopBuyTime() {
-        return stopBuyTime;
-    }
-
-    public void setStopBuyTime(LocalDate stopBuyTime) {
-        this.stopBuyTime = stopBuyTime;
-    }
-
-    public String getBuyCasualtyStatus() {
-        return buyCasualtyStatus;
-    }
-
-    public void setBuyCasualtyStatus(String buyCasualtyStatus) {
-        this.buyCasualtyStatus = buyCasualtyStatus;
     }
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.businsurance.dto.CasualtyPurchasingListDTO;
 import com.bjike.goddess.businsurance.entity.CasualtyPurchasingList;
 import com.bjike.goddess.businsurance.excel.CasualtyPurchasingListExcel;
 import com.bjike.goddess.businsurance.to.CasualtyPurchasingListTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.businsurance.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businsurance.vo.CasualtyPurchasingListVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -53,6 +54,28 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     @Autowired
     private FileAPI fileAPI;
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = casualtyPurchasingListAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 总条数
      *
      * @param casualtyPurchasingListDTO 团体意外险购买名单dto
@@ -64,6 +87,24 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
         try {
             Long count = casualtyPurchasingListAPI.countCasualty(casualtyPurchasingListDTO);
             return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个团体意外险购买名单
+     * @param id id
+     * @return CasualtyPurchasingListVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/casualty/{id}")
+    public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+           CasualtyPurchasingListBO bo = casualtyPurchasingListAPI.getOneCasualty(id);
+            CasualtyPurchasingListVO vo = BeanTransform.copyProperties(bo, CasualtyPurchasingListVO.class, request);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -199,7 +240,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     /**
      * excel模板下载
      *
-     * @des 下载模板电脑补助
+     * @des 下载模板团体意外险购买名单
      * @version v1
      */
     @GetMapping("v1/templateExport")

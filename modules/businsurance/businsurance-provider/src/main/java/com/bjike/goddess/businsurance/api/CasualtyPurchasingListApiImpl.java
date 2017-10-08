@@ -5,6 +5,7 @@ import com.bjike.goddess.businsurance.dto.CasualtyPurchasingListDTO;
 import com.bjike.goddess.businsurance.entity.CasualtyPurchasingList;
 import com.bjike.goddess.businsurance.service.CasualtyPurchasingListSer;
 import com.bjike.goddess.businsurance.to.CasualtyPurchasingListTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,17 @@ import java.util.List;
 public class CasualtyPurchasingListApiImpl implements CasualtyPurchasingListAPI {
     @Autowired
     private CasualtyPurchasingListSer casualtyPurchasingListSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return casualtyPurchasingListSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return casualtyPurchasingListSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countCasualty(CasualtyPurchasingListDTO casualtyPurchasingListDTO) throws SerException {
         return casualtyPurchasingListSer.countCasualty(casualtyPurchasingListDTO);

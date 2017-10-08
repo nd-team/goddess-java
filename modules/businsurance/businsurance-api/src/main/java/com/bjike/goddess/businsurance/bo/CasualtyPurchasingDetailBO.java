@@ -1,5 +1,6 @@
 package com.bjike.goddess.businsurance.bo;
 
+import com.bjike.goddess.businsurance.enums.BuyCasualtyStatus;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
@@ -61,7 +62,7 @@ public class CasualtyPurchasingDetailBO extends BaseBO {
     /**
      * 购买意外险状态
      */
-    private String buyCasualtyStatus;
+    private BuyCasualtyStatus buyCasualtyStatus;
 
     public String getBeApplicantName() {
         return beApplicantName;
@@ -135,11 +136,11 @@ public class CasualtyPurchasingDetailBO extends BaseBO {
         this.stopBuyTime = stopBuyTime;
     }
 
-    public String getBuyCasualtyStatus() {
+    public BuyCasualtyStatus getBuyCasualtyStatus() {
         return buyCasualtyStatus;
     }
 
-    public void setBuyCasualtyStatus(String buyCasualtyStatus) {
+    public void setBuyCasualtyStatus(BuyCasualtyStatus buyCasualtyStatus) {
         this.buyCasualtyStatus = buyCasualtyStatus;
     }
 }

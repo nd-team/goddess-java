@@ -69,7 +69,14 @@ public interface TransferInfoAPI {
     default TransferInfoBO findByEmpNo(String empNo) throws SerException {
         return null;
     }
-
+    /**
+     * 手动生成数据
+     * @param transferInfoTO
+     * @throws SerException
+     */
+    default void saveTransferInfo(TransferInfoTO transferInfoTO) throws SerException{
+        return;
+    }
     /**
      * 跟进
      *

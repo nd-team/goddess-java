@@ -641,7 +641,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public List<EntrySummaryBO> summaDay(String summationDate) throws SerException {
-        if (StringUtils.isNotBlank(summationDate)) {
+        if (StringUtils.isBlank(summationDate)) {
             summationDate = LocalDate.now().toString();
         }
         String[] date = new String[]{summationDate, summationDate};

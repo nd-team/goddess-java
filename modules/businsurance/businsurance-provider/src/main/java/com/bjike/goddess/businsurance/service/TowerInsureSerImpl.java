@@ -54,6 +54,12 @@ public class TowerInsureSerImpl extends ServiceImpl<TowerInsure, TowerInsureDTO>
     private GroupInsureSer groupInsureSer;
     @Autowired
     private InsureRecordSer insureRecordSer;
+    @Autowired
+    private CasualtyPurchasingListSer casualtyPurchasingListSer;
+    @Autowired
+    private CasualtyPurchasingDetailSer casualtyPurchasingDetailSer;
+    @Autowired
+    private CommunicationFormworkSer communicationFormworkSer;
     /**
      * 检查权限(部门)
      *
@@ -310,6 +316,48 @@ public class TowerInsureSerImpl extends ServiceImpl<TowerInsure, TowerInsureDTO>
             }
             list.add(obj);
 
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagCasualList = casualtyPurchasingListSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("casualtypurchasinglist");
+            obj.setDescribesion("团体意外险购买名单");
+            if (flagCasualList) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagCasualDetail = casualtyPurchasingDetailSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("casualtypurchasingdetail");
+            obj.setDescribesion("团体意外险购买详情");
+            if (flagCasualDetail) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
+
+            RpcTransmit.transmitUserToken(userToken);
+            Boolean flagCommuniWork = communicationFormworkSer.sonPermission();
+            RpcTransmit.transmitUserToken(userToken);
+            obj = new SonPermissionObject();
+            obj.setName("communicationformwork");
+            obj.setDescribesion("各类交流沟通模板");
+            if (flagCommuniWork) {
+                obj.setFlag(true);
+            } else {
+                obj.setFlag(false);
+            }
+            list.add(obj);
+
 
             return list;
         }
@@ -355,6 +403,9 @@ public class TowerInsureSerImpl extends ServiceImpl<TowerInsure, TowerInsureDTO>
                 flag = guideIdentity();
                 break;
             case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
                 flag = guideIdentity();
                 break;
             default:

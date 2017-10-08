@@ -2,6 +2,7 @@ package com.bjike.goddess.regularization.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.regularization.type.Assess;
+import com.bjike.goddess.regularization.type.SexType;
 import com.bjike.goddess.regularization.type.StaffStatus;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,6 +18,9 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class TransferInfoTO extends BaseTO {
+    public interface testAdd{
+
+    }
     public interface testFollowUp{
 
     }
@@ -41,6 +45,65 @@ public class TransferInfoTO extends BaseTO {
     public interface testInterview{
 
     }
+    /**
+     * 地区
+     */
+    @NotNull(message = "地区不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String area;
+
+    /**
+     * 部门/项目组
+     */
+    @NotNull(message = "部门项目组不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String department;
+
+    /**
+     * 岗位
+     */
+    @NotNull(message = "岗位不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String jobs;
+
+    /**
+     * 姓名
+     */
+    @NotNull(message = "姓名不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String name;
+
+    /**
+     * 员工编号
+     */
+    @NotNull(message = "员工编号不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String empNo;
+
+    /**
+     * 性别
+     */
+    @NotNull(message = "性别不能为空",groups = {TransferInfoTO.testAdd.class})
+    private SexType gender;
+
+    /**
+     * 学历
+     */
+    @NotNull(message = "学历不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String education;
+
+    /**
+     * 专业
+     */
+    @NotNull(message = "专业不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String profession;
+
+    /**
+     * 工作年限
+     */
+    @NotNull(message = "工作年限不能为空",groups = {TransferInfoTO.testAdd.class})
+    private Double workingYear;
+
+    /**
+     * 入职时间
+     */
+    @NotNull(message = "入职时间不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String hiredate;
     /**
      * 三天是否跟进
      */
@@ -186,6 +249,86 @@ public class TransferInfoTO extends BaseTO {
      */
     @NotBlank(message = "面谈内容不能为空",groups = {TransferInfoTO.testInterview.class})
     private String interviewContent;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(String jobs) {
+        this.jobs = jobs;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmpNo() {
+        return empNo;
+    }
+
+    public void setEmpNo(String empNo) {
+        this.empNo = empNo;
+    }
+
+    public SexType getGender() {
+        return gender;
+    }
+
+    public void setGender(SexType gender) {
+        this.gender = gender;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
+    public Double getWorkingYear() {
+        return workingYear;
+    }
+
+    public void setWorkingYear(Double workingYear) {
+        this.workingYear = workingYear;
+    }
+
+    public String getHiredate() {
+        return hiredate;
+    }
+
+    public void setHiredate(String hiredate) {
+        this.hiredate = hiredate;
+    }
 
     public Assess getThreeFollow() {
         return threeFollow;

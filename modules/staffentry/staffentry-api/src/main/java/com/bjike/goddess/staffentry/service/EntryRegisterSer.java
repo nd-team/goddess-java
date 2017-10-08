@@ -247,4 +247,18 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default List<EntryOptionBO> findEmpDate() throws SerException{
         return null;
     }
+    /**
+     * 根据入职时间获取入职人数
+     * @return
+     */
+    default Integer findNumByEntryDate(String[] date,String area,String dep) throws SerException{
+        return null;
+    }
+    /**
+     * 根据入职时间获取入职人数
+     * @return
+     */
+    default Integer findNumByEntryDate(String endDate,String area,String dep) throws SerException{
+        return null;
+    }
 }

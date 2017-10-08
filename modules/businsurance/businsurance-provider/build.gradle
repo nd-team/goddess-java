@@ -31,6 +31,7 @@ dependencies {
     compile project(":modules:businsurance:businsurance-api")
     compile project(":modules:staffentry:staffentry-api")
     compile project(":modules:assemble:assemble-api")
+    compile project(":modules:secure:secure-api")
     compile project(":common:common-utils")
 }
 

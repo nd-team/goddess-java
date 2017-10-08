@@ -1,42 +1,38 @@
 package com.bjike.goddess.businsurance.service;
 
-import com.bjike.goddess.businsurance.bo.CarInsureBO;
-import com.bjike.goddess.businsurance.dto.CarInsureDTO;
-import com.bjike.goddess.businsurance.entity.CarInsure;
+import com.bjike.goddess.businsurance.bo.CommunicationFormworkBO;
+import com.bjike.goddess.businsurance.dto.CommunicationFormworkDTO;
+import com.bjike.goddess.businsurance.entity.CommunicationFormwork;
 import com.bjike.goddess.businsurance.enums.GuideAddrStatus;
-import com.bjike.goddess.businsurance.to.CarInsureTO;
+import com.bjike.goddess.businsurance.to.CommunicationFormworkTO;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.businsurance.dto.CarInsureDTO;
-import com.bjike.goddess.businsurance.entity.CarInsure;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 车险信息管理业务实现
+ * 各类交流沟通模块业务实现
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-04-22 11:00 ]
- * @Description: [ 车险信息管理业务实现 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-09-28 05:36 ]
+ * @Description: [ 各类交流沟通模块业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @CacheConfig(cacheNames = "businsuranceSerCache")
 @Service
-public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> implements CarInsureSer {
+public class CommunicationFormworkSerImpl extends ServiceImpl<CommunicationFormwork, CommunicationFormworkDTO> implements CommunicationFormworkSer {
+
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -268,161 +264,52 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
                 flag = true;
                 break;
         }
+
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
-    public Long countCarInsure(CarInsureDTO carInsureDTO) throws SerException {
-        Long count = super.count(carInsureDTO);
+    public Long countComm(CommunicationFormworkDTO dto) throws SerException {
+        Long count = super.count(dto);
         return count;
     }
 
     @Override
-    public List<CarInsureBO> listCarInsure(CarInsureDTO carInsureDTO) throws SerException {
-        checkPermission();
-        carInsureDTO.getSorts().add("createTime=desc");
-        List<CarInsure> list = super.findByCis(carInsureDTO,true);
-
-        return BeanTransform.copyProperties(list, CarInsureBO.class );
+    public CommunicationFormworkBO getOne(String id) throws SerException {
+        CommunicationFormwork com = super.findById(id);
+        return BeanTransform.copyProperties(com, CommunicationFormworkBO.class);
     }
 
-    @Transactional(rollbackFor = SerException.class)
     @Override
-    public CarInsureBO addCarInsure(CarInsureTO carInsureTO) throws SerException {
-        checkPermission();
-        CarInsure carInsure = BeanTransform.copyProperties(carInsureTO,CarInsure.class,true);
-
-        carInsure.setTotalFee( carInsureTO.getTotalFee() == null ? 0d : carInsureTO.getTotalFee());
-        carInsure.setCreateTime(LocalDateTime.now());
-        super.save( carInsure );
-        return BeanTransform.copyProperties(carInsure, CarInsureBO.class);
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public CarInsureBO editCarInsure(CarInsureTO carInsureTO) throws SerException {
-        checkPermission();
-        if(StringUtils.isBlank( carInsureTO.getId())){
-            throw new SerException("id不能为空");
-        }
-        CarInsure carInsure = BeanTransform.copyProperties(carInsureTO,CarInsure.class,true);
-        CarInsure cusLevel = super.findById( carInsureTO.getId() );
-
-        BeanUtils.copyProperties(carInsure , cusLevel ,"id","createTime");
-        cusLevel.setTotalFee( carInsureTO.getTotalFee() == null ? 0d : carInsureTO.getTotalFee());
-        cusLevel.setModifyTime(LocalDateTime.now());
-        super.update( cusLevel );
-        return BeanTransform.copyProperties(carInsure, CarInsureBO.class);
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public void deleteCarInsure(String id) throws SerException {
-        checkPermission();
-        if(StringUtils.isBlank(id)){
-            throw new SerException("id不能为空");
-        }
-        super.remove( id );
-    }
-
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public CarInsureBO editCar(CarInsureTO carInsureTO) throws SerException {
-        checkPermission();
-        if(StringUtils.isBlank(carInsureTO.getId())){
-            throw  new SerException("id不能为空");
-        }
-        CarInsure cusLevel = super.findById( carInsureTO.getId() );
-
-        cusLevel.setInsurer( carInsureTO.getInsurer());
-        cusLevel.setInsureIdCard( carInsureTO.getInsureIdCard());
-        cusLevel.setInsureAddr( carInsureTO.getInsureAddr());
-        cusLevel.setTel( carInsureTO.getTel());
-        cusLevel.setCarNumber( carInsureTO.getCarNumber());
-        cusLevel.setBrand( carInsureTO.getBrand());
-        cusLevel.setPriceChoice( carInsureTO.getPriceChoice());
-        cusLevel.setOwnNature( carInsureTO.getOwnNature());
-        cusLevel.setUseNature( carInsureTO.getUseNature());
-        cusLevel.setCarType( carInsureTO.getCarType());
-        cusLevel.setEngineNumber( carInsureTO.getEngineNumber());
-        cusLevel.setTransferCar( carInsureTO.getTransferCar());
-        cusLevel.setIdentityCode( carInsureTO.getIdentityCode());
-        cusLevel.setApprovePassenger( carInsureTO.getApprovePassenger());
-        cusLevel.setApproveLoad( carInsureTO.getApproveLoad());
-        cusLevel.setOutputVolume( carInsureTO.getOutputVolume());
-        cusLevel.setPower( carInsureTO.getPower());
-        cusLevel.setCarInitialDate( StringUtils.isBlank( carInsureTO.getCarInitialDate() )? null: LocalDate.parse( carInsureTO.getCarInitialDate()));
-        cusLevel.setModifyTime(LocalDateTime.now());
-        super.update( cusLevel );
-        return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
-    }
-
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public CarInsureBO editContext(CarInsureTO carInsureTO) throws SerException {
-        checkPermission();
-        if(StringUtils.isBlank(carInsureTO.getId())){
-            throw  new SerException("id不能为空");
-        }
-        CarInsure cusLevel = super.findById( carInsureTO.getId() );
-
-        cusLevel.setInsureType( carInsureTO.getInsureType());
-        cusLevel.setOrNotFee( carInsureTO.getOrNotFee());
-        cusLevel.setRateFloat( carInsureTO.getRateFloat());
-        cusLevel.setInsureLimitFee( carInsureTO.getInsureLimitFee());
-        cusLevel.setInsureFee( carInsureTO.getInsureFee()== null ? 0d: carInsureTO.getInsureFee());
-        cusLevel.setInsureTotalFee( carInsureTO.getInsureTotalFee()== null ? 0d: carInsureTO.getInsureTotalFee());
-        cusLevel.setModifyTime(LocalDateTime.now());
-        super.update( cusLevel );
-        return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
-    }
-
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public CarInsureBO editAppoint(CarInsureTO carInsureTO) throws SerException {
-        checkPermission();
-        if(StringUtils.isBlank(carInsureTO.getId())){
-            throw  new SerException("id不能为空");
-        }
-        CarInsure cusLevel = super.findById( carInsureTO.getId() );
-
-        cusLevel.setContentDetail( carInsureTO.getContentDetail());
-        cusLevel.setModifyTime(LocalDateTime.now());
-        super.update( cusLevel );
-        return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
+    public List<CommunicationFormworkBO> list(CommunicationFormworkDTO dto) throws SerException {
+        List<CommunicationFormwork> communicationFormworks = super.findByCis(dto);
+        return BeanTransform.copyProperties(communicationFormworks, CommunicationFormworkBO.class);
     }
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public CarInsureBO editSale(CarInsureTO carInsureTO) throws SerException {
+    public CommunicationFormworkBO save(CommunicationFormworkTO to) throws SerException {
         checkPermission();
-        if(StringUtils.isBlank(carInsureTO.getId())){
-            throw  new SerException("id不能为空");
-        }
-        CarInsure cusLevel = super.findById( carInsureTO.getId() );
-
-        cusLevel.setOrganName( carInsureTO.getOrganName());
-        cusLevel.setOperateName( carInsureTO.getOperateName());
-        cusLevel.setOrganAddr( carInsureTO.getOrganAddr());
-        cusLevel.setOrganContact( carInsureTO.getOrganContact());
-        cusLevel.setInterAddr( carInsureTO.getInterAddr());
-        cusLevel.setPostCode( carInsureTO.getPostCode());
-        cusLevel.setSignDate( StringUtils.isBlank( carInsureTO.getSignDate() )? null: LocalDate.parse(carInsureTO.getSignDate()));
-        cusLevel.setModifyTime(LocalDateTime.now());
-        super.update( cusLevel );
-        return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
+        CommunicationFormwork comm = BeanTransform.copyProperties(to, CommunicationFormwork.class, true);
+        comm.setCreateTime(LocalDateTime.now());
+        super.save(comm);
+        return BeanTransform.copyProperties(comm, CommunicationFormworkBO.class);
     }
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
-    public CarInsureBO getCarInsure(String id) throws SerException {
+    public void update(CommunicationFormworkTO to) throws SerException {
         checkPermission();
-        if(StringUtils.isBlank(id)){
-            throw  new SerException("id不能为空");
-        }
-        CarInsure cusLevel = super.findById( id  );
-        return BeanTransform.copyProperties(cusLevel, CarInsureBO.class);
+        CommunicationFormwork comm = super.findById(to.getId());
+        LocalDateTime date = comm.getCreateTime();
+        comm = BeanTransform.copyProperties(to, CommunicationFormwork.class, true);
+        comm.setModifyTime(LocalDateTime.now());
+        comm.setCreateTime(date);
+        super.update(comm);
     }
-    
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void delete(String id) throws SerException {
+        checkPermission();
+        super.remove(id);
+    }
 }

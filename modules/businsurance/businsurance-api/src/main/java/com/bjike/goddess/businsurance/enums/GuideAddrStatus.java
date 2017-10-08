@@ -57,7 +57,11 @@ public enum GuideAddrStatus {
     /**
      * 下载附件
      */
-    DOWNLOAD(11);
+    DOWNLOAD(11),
+    /**
+     * 汇总
+     */
+    COLLECT(12);
 
     private int code;
 

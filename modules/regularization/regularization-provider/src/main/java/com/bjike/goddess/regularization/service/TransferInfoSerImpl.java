@@ -1,5 +1,6 @@
 package com.bjike.goddess.regularization.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -14,6 +15,8 @@ import com.bjike.goddess.regularization.to.GuidePermissionTO;
 import com.bjike.goddess.regularization.to.TransferInfoTO;
 import com.bjike.goddess.regularization.type.GuideAddrStatus;
 import com.bjike.goddess.regularization.type.StaffStatus;
+import com.bjike.goddess.salarymanage.api.SalaryConfirmRecordAPI;
+import com.bjike.goddess.salarymanage.enums.Probation;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -45,6 +48,10 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private SalaryConfirmRecordAPI salaryConfirmRecordAPI;
 
 
     /**
@@ -505,6 +512,44 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         TransferInfo transferInfo = super.findOne(transferInfoDTO);
         return BeanTransform.copyProperties(transferInfo, TransferInfoBO.class);
     }
+
+    @Transactional(rollbackFor = {SerException.class})
+    @Override
+    public void saveTransferInfo(TransferInfoTO transferInfoTO) throws SerException {
+        TransferInfo transferInfo = BeanTransform.copyProperties(transferInfoTO, TransferInfo.class, true);
+        String probationaryPer = null;
+        LocalDate probationDue = null;
+        if (moduleAPI.isCheck("salarymanage")) {
+            Probation probation = salaryConfirmRecordAPI.findProbationById(transferInfoTO.getEmpNo());
+            if (null != probation) {
+                switch (probation) {
+                    case ONEMONTH:
+                        probationaryPer = "一个月";
+                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(1);
+                        break;
+                    case ONETWOMONTH:
+                        probationaryPer = "1-3个月";
+                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
+                        break;
+                    case THREEMONTH:
+                        probationaryPer = "三个月";
+                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
+                        break;
+                    default:
+                        probationaryPer = null;
+                        break;
+                }
+            }
+        }
+        transferInfo.setCreateTime(LocalDateTime.now());
+        transferInfo.setStaffStatus(StaffStatus.PROBATION);
+        if (null!=probationaryPer){
+            transferInfo.setProbationaryPer(probationaryPer);
+            transferInfo.setProbationDue(probationDue);
+        }
+        super.save(transferInfo);
+    }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void followUp(TransferInfoTO transferInfoTO) throws SerException {
@@ -519,6 +564,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         transferInfo.setModifyTime(LocalDateTime.now());
         super.update(transferInfo);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void welfareAssess(TransferInfoTO transferInfoTO) throws SerException {
@@ -533,6 +579,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("该员工还没有申请转正或者已经转正了");
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void planAssess(TransferInfoTO transferInfoTO) throws SerException {
@@ -549,6 +596,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("该员工还没有申请转正或者已经转正了");
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void budgetAssess(TransferInfoTO transferInfoTO) throws SerException {
@@ -561,6 +609,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("该员工还没有申请转正或者已经转正了");
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void moduleRespon(TransferInfoTO transferInfoTO) throws SerException {
@@ -578,6 +627,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("您已经审核过了");
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void projectManage(TransferInfoTO transferInfoTO) throws SerException {
@@ -595,6 +645,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("您已经审核过了");
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void genManage(TransferInfoTO transferInfoTO) throws SerException {
@@ -625,6 +676,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
             throw new SerException("您已经审核过了");
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void interview(TransferInfoTO transferInfoTO) throws SerException {
@@ -659,7 +711,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
 
     @Override
     public List<SummationBO> summaDay(String summDate) throws SerException {
-      checkPermission();
+        checkPermission();
         if (StringUtils.isBlank(summDate)) {
             summDate = LocalDate.now().toString();
         }
@@ -702,7 +754,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         String sql = "select min(createTime) as createTime from  " + getTableName(TransferInfo.class);
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
-            String startDate = StringUtils.substringBefore(String.valueOf(objects.get(0))," ");
+            String startDate = StringUtils.substringBefore(String.valueOf(objects.get(0)), " ");
             endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
             summationBOS = totalMethod(startDate, endDate);
         }
@@ -931,18 +983,4 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         return time;
     }
 
-    public static void main(String[] args) {
-        List<TransferInfo> transferInfos = new ArrayList<>();
-        TransferInfo transferInfo1 = new TransferInfo();
-        transferInfo1.setHiredate(LocalDate.now());
-        transferInfos.add(transferInfo1);
-        TransferInfo transferInfo2 = new TransferInfo();
-        transferInfo1.setHiredate(DateUtil.parseDate("2017-12-12"));
-        transferInfos.add(transferInfo2);
-        TransferInfo transferInfo3 = new TransferInfo();
-        transferInfo1.setHiredate(DateUtil.parseDate("2017-10-01"));
-        transferInfos.add(transferInfo3);
-        Optional<TransferInfo> olderStudent3 = transferInfos.stream().collect(Collectors.minBy(Comparator.comparing(TransferInfo::getHiredate)));
-        System.out.println(olderStudent3);
-    }
 }
