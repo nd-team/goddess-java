@@ -215,7 +215,11 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         temp.setWeight(positionIndexSetTO.getWeight());
         temp.setWeightSum(positionIndexSetTO.getWeightSum());
         temp.setTarget(positionIndexSetTO.getTarget());
-        temp.setWager(positionIndexSetTO.getWager());
+        if(positionIndexSetTO.getWager() > 1) {
+            temp.setWager(positionIndexSetTO.getWager());
+        }else{
+            throw new SerException("对赌值不能小于1");
+        }
         temp.setComplete(positionIndexSetTO.getComplete());
         temp.setExamWay(positionIndexSetTO.getExamWay());
         temp.setWhetherStandar(positionIndexSetTO.getComplete() > positionIndexSetTO.getTarget() ? "是" : "否");
@@ -265,38 +269,42 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
     }
 
     private void editDepartYearComplete(Double oldMonComplete, DepartMonIndexSet dMon) throws SerException {
-        //新的部门月度完成值
-        Double newComplete = dMon.getComplete();
-        //部门年度id
-        String yearId = dMon.getDepartYearIndexSetId();
-        DepartYearIndexSet dYear = departYearIndexSetSer.findById(yearId);
-        //部门月度旧完成值
-        Double oldYearComplete = dYear.getComplete();
+        if(dMon.getSeperateComeStatus().equals(SeperateComeStatus.DEPARTYEAR)) {
+            //新的部门月度完成值
+            Double newComplete = dMon.getComplete();
+            //部门年度id
+            String yearId = dMon.getDepartYearIndexSetId();
+            DepartYearIndexSet dYear = departYearIndexSetSer.findById(yearId);
+            //部门月度旧完成值
+            Double oldYearComplete = dYear.getComplete();
 
-        dYear.setComplete(dYear.getComplete() - oldMonComplete + newComplete);
-        dYear.setWhetherStandar(dYear.getComplete() > dYear.getTarget() ? "是" : "否");
-        dYear.setStandardRate(dYear.getComplete() / dYear.getWager());
-        dYear.setExamScore(dYear.getStandardRate() * dYear.getDepartYearWeight());
-        dYear.setModifyTime(LocalDateTime.now());
+            dYear.setComplete(dYear.getComplete() - oldMonComplete + newComplete);
+            dYear.setWhetherStandar(dYear.getComplete() > dYear.getTarget() ? "是" : "否");
+            dYear.setStandardRate(dYear.getComplete() / dYear.getWager());
+            dYear.setExamScore(dYear.getStandardRate() * dYear.getDepartYearWeight());
+            dYear.setModifyTime(LocalDateTime.now());
 
-        //修改年指标完成值
-        editYearComplete(oldYearComplete, dYear);
+            //修改年指标完成值
+            editYearComplete(oldYearComplete, dYear);
 
-        departYearIndexSetSer.update(dYear);
+            departYearIndexSetSer.update(dYear);
+        }
 
     }
 
     private void editYearComplete(Double oldYearComplete, DepartYearIndexSet dYear) throws SerException {
-        //新的部门年度完成值
-        Double newComplete = dYear.getComplete();
-        //年度id
-        String yearId = dYear.getYearIndexSetId();
-        YearIndexSet year = yearIndexSetSer.findById(yearId);
+        if(dYear.getSeperateComeStatus().equals(SeperateComeStatus.YEAR)) {
+            //新的部门年度完成值
+            Double newComplete = dYear.getComplete();
+            //年度id
+            String yearId = dYear.getYearIndexSetId();
+            YearIndexSet year = yearIndexSetSer.findById(yearId);
 
-        year.setComplete(year.getComplete() - oldYearComplete + newComplete);
-        year.setModifyTime(LocalDateTime.now());
+            year.setComplete(year.getComplete() - oldYearComplete + newComplete);
+            year.setModifyTime(LocalDateTime.now());
 
-        yearIndexSetSer.update(year);
+            yearIndexSetSer.update(year);
+        }
 
     }
 
