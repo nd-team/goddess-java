@@ -284,4 +284,13 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @throws SerException
      */
     List<String> departs() throws SerException;
+
+    /**
+     * 日报
+     * @param time 时间
+     * @param names 姓名数组
+     * @return
+     * @throws SerException
+     */
+    List<DayBO> dayReport(String time, String[] names) throws SerException;
 }

@@ -10,6 +10,7 @@ import com.bjike.goddess.attendance.entity.ArrestPoint;
 import com.bjike.goddess.attendance.entity.Punch;
 import com.bjike.goddess.attendance.entity.PunchGrandSon;
 import com.bjike.goddess.attendance.entity.PunchSon;
+import com.bjike.goddess.attendance.enums.PunchSource;
 import com.bjike.goddess.attendance.enums.PunchStatus;
 import com.bjike.goddess.attendance.enums.PunchType;
 import com.bjike.goddess.attendance.enums.Status;
@@ -94,9 +95,22 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             punchSon.setModifyTime(LocalDateTime.now());
             super.update(punchSon);
         }
-        Double longitude = to.getLongitude();
-        Double latitude = to.getLatitude();
-        PunchStatus punchStatus = punchStatus(longitude, latitude, userBO.getId());
+        PunchStatus punchStatus = null;
+        if (PunchSource.MOBILE.equals(to.getPunchSource())) {   //移动端
+            Double longitude = to.getLongitude();
+            Double latitude = to.getLatitude();
+            punchStatus = punchStatus(longitude, latitude, userBO.getUsername());
+        } else {   //pc端
+            DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(userBO.getUsername());
+            if (null == departmentDetailBO) {
+                throw new SerException("系统异常，无法查出当前用户所属地区");
+            }
+            if (to.getArea().contains(departmentDetailBO.getArea())) {
+                punchStatus = PunchStatus.NORMAL;
+            } else {
+                punchStatus = PunchStatus.OUTSIDE;    //外勤
+            }
+        }
         saveSon(punchSon, userBO.getUsername(), punchStatus, date);
         PunchSonBO bo = BeanTransform.copyProperties(punchSon, PunchSonBO.class);
         String status = findPunchStatus(punchSon);
@@ -116,19 +130,19 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             long num = num(name, date);
             boolean flag = false;
             boolean flag1 = false;
-            LocalDateTime time = DateUtil.parseDateTime(DateUtil.dateToString(date) + " 08:41:00");    //迟到大于十分钟没得免扣
+            LocalDateTime time = DateUtil.parseDateTime(DateUtil.dateToString(date) + " 08:40:00");    //迟到大于十分钟没得免扣
             long mis = DateUtil.mis(punchSon.getPunchTime(), time);
             if (mis >= 0) {
                 PunchGrandSon grandSon = new PunchGrandSon();
                 grandSon.setPunchSonId(punchSon.getId());
                 grandSon.setPunchStatus(PunchStatus.LATE);
                 punchGrandSonSer.save(grandSon);
-                flag = true;
-            } else if (num > 3) {    //当前月迟到次数大于三次(10分钟以内)
-                PunchGrandSon grandSon = new PunchGrandSon();
-                grandSon.setPunchSonId(punchSon.getId());
-                grandSon.setPunchStatus(PunchStatus.LATE);
-                punchGrandSonSer.save(grandSon);
+                if (num < 3) {    //当前月迟到次数小于三次(10分钟以内)，免扣
+                    PunchGrandSon grandSon1 = new PunchGrandSon();
+                    grandSon1.setPunchSonId(punchSon.getId());
+                    grandSon1.setPunchStatus(PunchStatus.FEE);
+                    punchGrandSonSer.save(grandSon1);
+                }
                 flag = true;
             }
             if (PunchStatus.OUTSIDE.equals(punchStatus)) {
@@ -138,7 +152,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
                 punchGrandSonSer.save(grandSon);
                 flag1 = true;
             }
-            if (!(flag || flag1)) {
+            if (!(flag || flag1)) {   //只要有一个条件不符合就算不正常
                 PunchGrandSon grandSon = new PunchGrandSon();
                 grandSon.setPunchSonId(punchSon.getId());
                 grandSon.setPunchStatus(PunchStatus.NORMAL);
@@ -155,8 +169,28 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
     private Long num(String name, LocalDate date) throws SerException {
         int year = date.getYear();
         int month = date.getMonthValue();
-        LocalDate start = DateUtil.getStartDayOfMonth(year, month);
-        LocalDate end = DateUtil.getEndDaYOfMonth(year, month);
+        int day = date.getDayOfMonth();
+        LocalDate start = null;
+        LocalDate end = null;
+        if (day < 21) {   //21号前算上个月的计薪周期
+            end = DateUtil.parseDate(year + "-" + month + "-20");    //当月的20号
+            if (1 != month) {
+                month = month - 1;
+            } else {    //1月的上一个月为上一年的12月
+                year = year - 1;
+                month = 12;
+            }
+            start = DateUtil.parseDate(year + "-" + month + "-21");   //上月的21号
+        } else {
+            start = DateUtil.parseDate(year + "-" + month + "-21");   //当月的21号
+            if (12 != month) {
+                month = month + 1;
+            } else {
+                year = year + 1;
+                month = 1;
+            }
+            end = DateUtil.parseDate(year + "-" + month + "-20");    //下月的20号
+        }
         LocalDate[] times = new LocalDate[]{start, end};
         PunchDTO punchDTO = new PunchDTO();
         punchDTO.getConditions().add(Restrict.eq("name", name));
@@ -171,7 +205,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
         for (PunchSon p : list) {
             LocalDate time = punchSer.findById(p.getPunchId()).getDate();
             LocalDateTime min = DateUtil.parseDateTime(DateUtil.dateToString(time) + " 08:31:00");
-            LocalDateTime max = DateUtil.parseDateTime(DateUtil.dateToString(time) + " 08:41:00");
+            LocalDateTime max = DateUtil.parseDateTime(DateUtil.dateToString(time) + " 08:40:00");
             long a = DateUtil.mis(p.getPunchTime(), min);
             long b = DateUtil.mis(p.getPunchTime(), max);
             if (a >= 0 && b < 0) {
@@ -183,16 +217,16 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
 
     @Override
     public String string(Double longitude, Double latitude, String area) throws SerException {
-        String userId = userAPI.currentUser().getId();
-        PunchStatus punchStatus = punchStatus(longitude, latitude, userId);
+        String name = userAPI.currentUser().getUsername();
+        PunchStatus punchStatus = punchStatus(longitude, latitude, name);
         if (PunchStatus.NORMAL.equals(punchStatus)) {
             return "已进入考勤范围：" + area;
         }
         return "您不在考勤范围内：" + area;
     }
 
-    private PunchStatus punchStatus(Double longitude, Double latitude, String userId) throws SerException {
-        DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(userId);
+    private PunchStatus punchStatus(Double longitude, Double latitude, String name) throws SerException {
+        DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(name);
         if (null == departmentDetailBO) {
             throw new SerException("系统异常，无法查出当前用户所属地区");
         }
@@ -240,13 +274,10 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
         }
         dto.getConditions().add(Restrict.eq("name", name));
         dto.getSorts().add("date=desc");
-        UserBO user = userAPI.findByUsername(name);
         String depart = null;
-        if (null != user) {
-            DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(user.getId());
-            if (null != departmentDetailBO) {
-                depart = departmentDetailBO.getDepartment();
-            }
+        DepartmentDetailBO departmentDetailBO = positionDetailUserAPI.areaAndDepart(name);
+        if (null != departmentDetailBO) {
+            depart = departmentDetailBO.getDepartment();
         }
         List<Punch> punches = punchSer.findByCis(dto);
         List<PunchBO> bos = new ArrayList<>();
