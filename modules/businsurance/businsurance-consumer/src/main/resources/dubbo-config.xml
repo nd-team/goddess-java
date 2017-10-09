@@ -24,6 +24,9 @@
 	<dubbo:reference  validation="true" id="groupInsureApiImpl" interface="com.bjike.goddess.businsurance.api.GroupInsureAPI" />
 	<dubbo:reference  validation="true" id="insureRecordApiImpl" interface="com.bjike.goddess.businsurance.api.InsureRecordAPI" />
 	<dubbo:reference  validation="true" id="towerInsureApiImpl" interface="com.bjike.goddess.businsurance.api.TowerInsureAPI" />
+	<dubbo:reference  validation="true" id="casualtyPurchasingListApiImpl" interface="com.bjike.goddess.businsurance.api.CasualtyPurchasingListAPI" />
+	<dubbo:reference  validation="true" id="casualtyPurchasingDetailApiImpl" interface="com.bjike.goddess.businsurance.api.CasualtyPurchasingDetailAPI" />
+	<dubbo:reference  validation="true" id="communicationFormworkApiImpl" interface="com.bjike.goddess.businsurance.api.CommunicationFormworkAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businsurance.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businsurance.api.CusPermissionOperateAPI" />
 

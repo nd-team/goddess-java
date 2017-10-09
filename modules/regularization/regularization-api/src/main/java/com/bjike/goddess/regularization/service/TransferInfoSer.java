@@ -72,6 +72,15 @@ public interface TransferInfoSer extends Ser<TransferInfo, TransferInfoDTO> {
     }
 
     /**
+     * 手动生成数据
+     * @param transferInfoTO
+     * @throws SerException
+     */
+    default void saveTransferInfo(TransferInfoTO transferInfoTO) throws SerException{
+        return;
+    }
+
+    /**
      * 跟进
      * @param transferInfoTO
      * @throws SerException

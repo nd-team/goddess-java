@@ -636,8 +636,36 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
+    public Integer findNumByEntryDate(String[] date,String area,String dep) throws SerException {
+        Integer num = 0;
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.between("inductionDate", date));
+        entryRegisterDTO.getConditions().add(Restrict.eq("area",area));
+        entryRegisterDTO.getConditions().add(Restrict.eq("department",dep));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        if (entryRegisters != null && entryRegisters.size() > 0) {
+            num = entryRegisters.size();
+        }
+        return num;
+    }
+
+    @Override
+    public Integer findNumByEntryDate(String endDate, String area, String dep) throws SerException {
+        Integer num = 0;
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.lt_eq("inductionDate", endDate));
+        entryRegisterDTO.getConditions().add(Restrict.eq("area",area));
+        entryRegisterDTO.getConditions().add(Restrict.eq("department",dep));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        if (entryRegisters != null && entryRegisters.size() > 0) {
+            num = entryRegisters.size();
+        }
+        return num;
+    }
+    @Override
     public Set<String> names() throws SerException {
         List<EntryRegister> list = super.findAll();
         return list.stream().map(entryRegister -> entryRegister.getUsername()).collect(Collectors.toSet());
+
     }
 }

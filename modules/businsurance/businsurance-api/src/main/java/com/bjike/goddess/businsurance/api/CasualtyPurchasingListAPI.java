@@ -3,6 +3,7 @@ package com.bjike.goddess.businsurance.api;
 import com.bjike.goddess.businsurance.bo.CasualtyPurchasingListBO;
 import com.bjike.goddess.businsurance.dto.CasualtyPurchasingListDTO;
 import com.bjike.goddess.businsurance.to.CasualtyPurchasingListTO;
+import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CasualtyPurchasingListAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 团体意外险购买名单总条数
      */

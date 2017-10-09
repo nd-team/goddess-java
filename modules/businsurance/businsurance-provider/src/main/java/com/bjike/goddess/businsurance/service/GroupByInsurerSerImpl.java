@@ -260,11 +260,13 @@ public class GroupByInsurerSerImpl extends ServiceImpl<GroupByInsurer, GroupByIn
             case DOWNLOAD:
                 flag = guideIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
         }
-
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }

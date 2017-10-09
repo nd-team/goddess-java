@@ -1,63 +1,63 @@
-package com.bjike.goddess.businsurance.to;
+package com.bjike.goddess.businsurance.excel;
 
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+
+import java.time.LocalDate;
+
 
 /**
- * 团体意外险购买详情
+ * 团体意外险购买详情导入
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-09-26 10:44 ]
- * @Description: [ 团体意外险购买详情 ]
+ * @Description: [ 团体意外险购买详情导入 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CasualtyPurchasingDetailTO extends BaseTO {
+public class CasualtyPurchasingDetailExcel extends BaseTO{
 
     /**
      * 被保人姓名
      */
-    @NotBlank(message = "被保人姓名不能为空",groups = {ADD.class})
+    @ExcelHeader(name = "被保人姓名",notNull = true)
     private String beApplicantName;
 
     /**
      * 员工编号
      */
-    @NotBlank(message = "员工编号不能为空",groups = {ADD.class})
+    @ExcelHeader(name = "员工编号",notNull = true)
     private String employeeNo;
 
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空",groups = {ADD.class})
+    @ExcelHeader(name = "地区",notNull = true)
     private String area;
 
     /**
      * 项目组部门
      */
-    @NotBlank(message = "项目组部门不能为空",groups = {ADD.class})
+    @ExcelHeader(name = "项目组部门",notNull = true)
     private String department;
 
     /**
      * 岗位
      */
-    @NotBlank(message = "岗位不能为空",groups = {ADD.class})
+    @ExcelHeader(name = "岗位",notNull = true)
     private String jobs;
 
     /**
      * 入职日期
      */
-    @NotBlank(message = "入职日期不能为空",groups = {ADD.class})
-    private String entryDate;
+    @ExcelHeader(name = "入职日期",notNull = true)
+    private LocalDate entryDate;
 
     /**
      * 停止购买时间
      */
-    @NotBlank(message = "停止购买时间不能为空",groups = {ADD.class, EDIT.class})
-    private String stopBuyTime;
-
+    @ExcelHeader(name = "停止购买时间",notNull = true)
+    private LocalDate stopBuyTime;
 
     public String getBeApplicantName() {
         return beApplicantName;
@@ -99,20 +99,19 @@ public class CasualtyPurchasingDetailTO extends BaseTO {
         this.jobs = jobs;
     }
 
-    public String getEntryDate() {
+    public LocalDate getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(String entryDate) {
+    public void setEntryDate(LocalDate entryDate) {
         this.entryDate = entryDate;
     }
 
-    public String getStopBuyTime() {
+    public LocalDate getStopBuyTime() {
         return stopBuyTime;
     }
 
-    public void setStopBuyTime(String stopBuyTime) {
+    public void setStopBuyTime(LocalDate stopBuyTime) {
         this.stopBuyTime = stopBuyTime;
     }
-
 }

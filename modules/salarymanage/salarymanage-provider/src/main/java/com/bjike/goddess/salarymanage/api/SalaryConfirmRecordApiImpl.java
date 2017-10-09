@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.salarymanage.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.salarymanage.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
+import com.bjike.goddess.salarymanage.enums.Probation;
 import com.bjike.goddess.salarymanage.service.SalaryConfirmRecordSer;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordTO;
@@ -76,5 +77,10 @@ public class SalaryConfirmRecordApiImpl implements SalaryConfirmRecordAPI  {
     @Override
     public void confirm(String id,Boolean ifConfirm) throws SerException {
         salaryConfirmRecordSer.confirm(id,ifConfirm);
+    }
+
+    @Override
+    public Probation findProbationById(String employeeID) throws SerException {
+        return salaryConfirmRecordSer.findProbationById(employeeID);
     }
 }

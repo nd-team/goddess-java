@@ -58,6 +58,11 @@ public class TransferInfoApiImpl implements TransferInfoAPI {
     }
 
     @Override
+    public void saveTransferInfo(TransferInfoTO transferInfoTO) throws SerException {
+        transferInfoSer.saveTransferInfo(transferInfoTO);
+    }
+
+    @Override
     public void followUp(TransferInfoTO transferInfoTO) throws SerException {
         transferInfoSer.followUp(transferInfoTO);
     }

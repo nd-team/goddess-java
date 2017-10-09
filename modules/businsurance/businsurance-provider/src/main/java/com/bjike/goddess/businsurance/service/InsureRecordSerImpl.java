@@ -266,6 +266,9 @@ public class InsureRecordSerImpl extends ServiceImpl<InsureRecord, InsureRecordD
             case DOWNLOAD:
                 flag = guideIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
