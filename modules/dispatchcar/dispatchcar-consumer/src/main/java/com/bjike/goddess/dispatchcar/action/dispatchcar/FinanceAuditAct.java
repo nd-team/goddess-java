@@ -12,6 +12,7 @@ import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
+import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
@@ -139,9 +140,9 @@ public class FinanceAuditAct extends BaseFileAction{
      * @version v1
      */
     @PostMapping("v1/financialSugg")
-    public Result financialSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException{
+    public Result financialSugg(@Validated(ADD.class) CheckChangeCarTO to, @Validated(ADD.class) DispatchCarInfoTO dispatchCarInfoTO,HttpServletRequest request) throws ActException{
         try {
-            dispatchCarInfoAPI.financialSugg(to);
+            dispatchCarInfoAPI.financialSugg(dispatchCarInfoTO,to);
             return new ActResult("核对成功");
         }catch (SerException e){
             throw new ActException(e.getMessage());
