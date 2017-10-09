@@ -89,8 +89,8 @@ public class ManageCommissionAction {
     @GetMapping("v1/projectName")
     public Result projectName() throws ActException {
         try {
-            List<String> proejctName = jobsBetAPI.getProjectName();
-            return ActResult.initialize(proejctName);
+            List<String> projectName = jobsBetAPI.getProjectName();
+            return ActResult.initialize(projectName);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

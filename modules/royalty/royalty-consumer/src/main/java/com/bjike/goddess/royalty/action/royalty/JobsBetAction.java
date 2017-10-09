@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 岗位间对赌表
@@ -149,6 +150,22 @@ public class JobsBetAction {
         try {
             jobsBetAPI.edit(jobsBetATO);
             return ActResult.initialize("edit success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有岗位表中的项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/projectName")
+    public Result projectName() throws ActException {
+        try {
+            Set<String> set = jobsBetAPI.projectName();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

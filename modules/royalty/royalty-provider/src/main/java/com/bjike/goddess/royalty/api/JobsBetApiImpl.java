@@ -2,12 +2,9 @@ package com.bjike.goddess.royalty.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.royalty.bo.JobsBetABO;
-import com.bjike.goddess.royalty.bo.JobsBetBO;
 import com.bjike.goddess.royalty.bo.ManageCommissionBO;
 import com.bjike.goddess.royalty.dto.JobsBetADTO;
-import com.bjike.goddess.royalty.dto.JobsBetDTO;
 import com.bjike.goddess.royalty.dto.JobsBetEDTO;
-import com.bjike.goddess.royalty.entity.JobsBetA;
 import com.bjike.goddess.royalty.service.JobsBetSer;
 import com.bjike.goddess.royalty.to.CollectTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 岗位间对赌表业务接口实现
@@ -31,6 +29,7 @@ import java.util.List;
 public class JobsBetApiImpl implements JobsBetAPI {
     @Autowired
     private JobsBetSer jobsBetSer;
+
     @Override
     public Boolean sonPermission() throws SerException {
         return jobsBetSer.sonPermission();
@@ -38,7 +37,7 @@ public class JobsBetApiImpl implements JobsBetAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return jobsBetSer.guidePermission( guidePermissionTO );
+        return jobsBetSer.guidePermission(guidePermissionTO);
     }
 
     @Override
@@ -67,17 +66,25 @@ public class JobsBetApiImpl implements JobsBetAPI {
     }
 
     @Override
+    public Set<String> projectName() throws SerException {
+        return jobsBetSer.projectName();
+    }
+
+    @Override
     public void delete(String id) throws SerException {
         jobsBetSer.delete(id);
     }
+
     @Override
     public List<JobsBetABO> jobsCollect(ProjectNameTO to) throws SerException {
         return jobsBetSer.jobsCollect(to);
     }
+
     @Override
     public List<ManageCommissionBO> collect(CollectTO to) throws SerException {
         return jobsBetSer.collect(to);
     }
+
     @Override
     public List<String> getProjectName() throws SerException {
         return jobsBetSer.getProjectName();

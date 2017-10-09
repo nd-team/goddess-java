@@ -14,6 +14,7 @@ import com.bjike.goddess.royalty.to.JobsBetATO;
 import com.bjike.goddess.royalty.to.ProjectNameTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 岗位间对赌表业务接口
@@ -83,7 +84,14 @@ public interface JobsBetSer extends Ser<JobsBet, JobsBetDTO> {
      */
     default void edit(JobsBetATO jobsBetATO) throws SerException {
     }
-
+    /**
+     * 获取所有岗位表的项目名称
+     *
+     * @throws SerException
+     */
+    default Set<String> projectName() throws SerException {
+        return null;
+    }
     /**
      * 根据id删除岗位间对赌表
      *

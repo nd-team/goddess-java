@@ -460,7 +460,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
         String sql = " SELECT a.area AS area,c.department AS department, " +
                 " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
                 " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
-                " WHERE year(betTime) = '" + year + "' month(betTime) = '" + month + "' " +
+                " WHERE year(betTime) = '" + year + "' and month(betTime) = '" + month + "' " +
                 " GROUP BY area,department ";
         String[] fields = new String[]{"area", "department", "bet", "practiceProfit"};
 

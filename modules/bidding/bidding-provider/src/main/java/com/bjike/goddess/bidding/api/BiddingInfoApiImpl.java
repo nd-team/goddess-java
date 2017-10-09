@@ -9,6 +9,7 @@ import com.bjike.goddess.bidding.service.BiddingInfoSer;
 import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
+import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,5 +113,29 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     @Override
     public List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
         return biddingInfoSer.totalCollect(to);
+    }
+
+    @Override
+    public List<String> info(SearchTO to) throws SerException {
+        return biddingInfoSer.info(to);
+    }
+    @Override
+    public List<String> txzbInfo(SearchTO to) throws SerException {
+        return biddingInfoSer.txzbInfo(to);
+    }
+
+    @Override
+    public List<String> zycgInfo(SearchTO to) throws SerException {
+        return biddingInfoSer.zycgInfo(to);
+    }
+
+    @Override
+    public List<String> toobiaoInfo(SearchTO to) throws SerException {
+        return biddingInfoSer.toobiaoInfo(to);
+    }
+
+    @Override
+    public List<String> schoolbidInfo(SearchTO to) throws SerException {
+        return biddingInfoSer.schoolbidInfo(to);
     }
 }
