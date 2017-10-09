@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.taskallotment.entity.Table;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 
+import java.util.Set;
+
 /**
 * 项目表业务接口
 * @Author:			[ chenjunhao ]
@@ -13,6 +15,12 @@ import com.bjike.goddess.taskallotment.dto.TableDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface TableSer extends Ser<Table, TableDTO> { 
-
+public interface TableSer extends Ser<Table, TableDTO> {
+ /**
+  * 根据项目获取项目表
+  * @param dto
+  * @return
+  * @throws SerException
+  */
+ Set<String> tables(TableDTO dto) throws SerException;
  }

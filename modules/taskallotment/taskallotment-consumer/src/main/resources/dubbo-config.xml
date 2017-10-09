@@ -23,9 +23,17 @@
 	<dubbo:reference  validation="true" id="taskRemindApiImpl" interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" />
 	<dubbo:reference  validation="true" id="timeSetApiImpl" interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" />
 	<dubbo:reference  validation="true" id="questionApiImpl" interface="com.bjike.goddess.taskallotment.api.QuestionAPI" />
-
+	<dubbo:reference  validation="true" id="confirmCountEmailApiImpl" interface="com.bjike.goddess.taskallotment.api.ConfirmCountEmailAPI" />
+	<dubbo:reference  validation="true" id="finishCountEmailApiImpl" interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" />
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
+	<dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
+	<dubbo:reference  validation="true" id="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 
 </beans>
 

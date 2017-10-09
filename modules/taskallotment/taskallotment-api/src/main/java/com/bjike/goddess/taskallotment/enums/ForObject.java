@@ -10,9 +10,9 @@ package com.bjike.goddess.taskallotment.enums;
  */
 public enum ForObject {
     /**
-     * 公司员工
+     * 全体
      */
-    STAFFING(0),
+    ALL(0),
     /**
      * 部门
      */
@@ -30,5 +30,22 @@ public enum ForObject {
 
     public int getCode() {
         return this.code;
+    }
+
+    @Override
+    public String toString() {
+        String s="";
+        switch (code){
+            case 0:
+                s="全体";
+                break;
+            case 1:
+                s="部门";
+                break;
+            case 2:
+                s="个人";
+                break;
+        }
+        return s;
     }
 }

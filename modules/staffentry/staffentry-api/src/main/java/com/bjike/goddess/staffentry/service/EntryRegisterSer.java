@@ -9,6 +9,7 @@ import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 入职登记业务接口
@@ -261,4 +262,13 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default Integer findNumByEntryDate(String endDate,String area,String dep) throws SerException{
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取所有入职人员的姓名
+     * @return
+     * @throws SerException
+     */
+    Set<String> names() throws SerException;
+
 }

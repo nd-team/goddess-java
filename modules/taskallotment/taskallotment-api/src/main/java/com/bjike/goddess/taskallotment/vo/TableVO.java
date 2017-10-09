@@ -1,6 +1,9 @@
 package com.bjike.goddess.taskallotment.vo;
 
+import com.bjike.goddess.taskallotment.bo.NodeBO;
 import com.bjike.goddess.taskallotment.enums.Status;
+
+import java.util.List;
 
 /**
  * 项目表表现层对象
@@ -26,6 +29,19 @@ public class TableVO {
      * 状态
      */
     private Status status;
+
+    /**
+     * 任务节点名称集合
+     */
+    private List<NodeBO> nodeS;
+
+    public List<NodeBO> getNodeS() {
+        return nodeS;
+    }
+
+    public void setNodeS(List<NodeBO> nodeS) {
+        this.nodeS = nodeS;
+    }
 
     public Status getStatus() {
         return status;

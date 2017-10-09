@@ -81,4 +81,9 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.outcarfare.api.MoneyReadyAPI" id="moneyReadyApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.outcarfare.api.WaitPayAPI" id="waitPayApiImpl"/>
 
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.ConfirmCountEmailAPI" id="confirmCountEmailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" id="finishCountEmailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" id="taskRemindApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" id="timeSetApiImpl"/>
+
 </beans>

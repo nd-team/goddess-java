@@ -3,6 +3,8 @@ package com.bjike.goddess.taskallotment.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.taskallotment.enums.Status;
 
+import java.util.List;
+
 /**
  * 项目表业务传输对象
  *
@@ -23,6 +25,19 @@ public class TableBO extends BaseBO {
      * 状态
      */
     private Status status;
+
+    /**
+     * 任务节点名称集合
+     */
+    private List<NodeBO> nodeS;
+
+    public List<NodeBO> getNodeS() {
+        return nodeS;
+    }
+
+    public void setNodeS(List<NodeBO> nodeS) {
+        this.nodeS = nodeS;
+    }
 
     public Status getStatus() {
         return status;

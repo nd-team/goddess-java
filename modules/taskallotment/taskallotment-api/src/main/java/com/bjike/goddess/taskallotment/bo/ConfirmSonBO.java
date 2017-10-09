@@ -21,7 +21,7 @@ public class ConfirmSonBO extends BaseBO {
     /**
      * 子表信息
      */
-    private List<ConfirmGrandSonBO> confirmGrandSonS;
+    private List<ConfirmTableBO> tableS;
 
     public String getDepart() {
         return depart;
@@ -31,11 +31,11 @@ public class ConfirmSonBO extends BaseBO {
         this.depart = depart;
     }
 
-    public List<ConfirmGrandSonBO> getConfirmGrandSonS() {
-        return confirmGrandSonS;
+    public List<ConfirmTableBO> getTableS() {
+        return tableS;
     }
 
-    public void setConfirmGrandSonS(List<ConfirmGrandSonBO> confirmGrandSonS) {
-        this.confirmGrandSonS = confirmGrandSonS;
+    public void setTableS(List<ConfirmTableBO> tableS) {
+        this.tableS = tableS;
     }
 }

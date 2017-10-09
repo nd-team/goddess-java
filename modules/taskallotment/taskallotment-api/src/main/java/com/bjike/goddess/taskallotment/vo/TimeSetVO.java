@@ -56,7 +56,7 @@ public class TimeSetVO {
     private String name;
 
     /**
-     * 制定时间
+     * 制定日期
      */
     private String time;
 

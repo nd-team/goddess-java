@@ -2,11 +2,7 @@ package com.bjike.goddess.organize.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.organize.bo.DepartPositionBO;
-import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
@@ -56,72 +52,72 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     void delete(String id) throws SerException;
 
     /**
-     * 根据用户id查询职位详细数据
+     * 根据姓名查询职位详细数据
      *
-     * @param user_id 用户id
+     * @param name name
      * @return
      * @throws SerException
      */
-    default List<PositionDetailBO> findPositionByUser(String user_id) throws SerException {
+    default List<PositionDetailBO> findPositionByUser(String name) throws SerException {
         return null;
     }
 
     /**
      * 获取用户职位数据
      *
-     * @param user_id 用户id
+     * @param name name
      * @return
      * @throws SerException
      */
-    default PositionDetailUserBO findOneByUser(String user_id) throws SerException {
+    default PositionDetailUserBO findOneByUser(String name) throws SerException {
         return null;
     }
 
     /**
      * 检测用户是否在指定职位中
      *
-     * @param user_id      用户id
+     * @param name         name
      * @param position_ids 职位id数组
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserPosition(String user_id, String[] position_ids) throws SerException {
+    default Boolean checkAsUserPosition(String name, String[] position_ids) throws SerException {
         return null;
     }
 
     /**
      * 检测用户是否在指定层级中
      *
-     * @param user_id         用户id
+     * @param name            name
      * @param arrangement_ids 层级id
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserArrangement(String user_id, String... arrangement_ids) throws SerException {
+    default Boolean checkAsUserArrangement(String name, String... arrangement_ids) throws SerException {
         return null;
     }
 
     /**
      * 检测用户是否在指定部门中
      *
-     * @param userId        用户id
+     * @param name          name
      * @param departmentIds 部门id
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
+    default Boolean checkAsUserDepartment(String name, String... departmentIds) throws SerException {
         return null;
     }
 
     /**
      * 检测用户是否在指定模块中
      *
-     * @param user_id    用户id
+     * @param name       name
      * @param module_ids 模块id
      * @return
      * @throws SerException
      */
-    default Boolean checkAsUserModule(String user_id, String... module_ids) throws SerException {
+    default Boolean checkAsUserModule(String name, String... module_ids) throws SerException {
         return null;
     }
 
@@ -157,6 +153,14 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     default List<UserBO> findByPosition(String position_id) throws SerException {
         return null;
     }
+
+    /**
+     * 查找该职位有多少人
+     * @param position_id
+     * @return
+     * @throws SerException
+     */
+    Integer findNumber(String position_id) throws SerException;
 
     /**
      * 获取用户列表
@@ -243,20 +247,21 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
 
     /**
      * chenjunhao
-     * 根据用户id获取该用户所属的部门地区
+     * 根据姓名获取该用户所属的部门地区
      *
-     * @param userId userId
+     * @param name name
      * @return
      * @throws SerException
      */
-    DepartmentDetailBO areaAndDepart(String userId) throws SerException;
-/*
-     * 判断是否是市场专业人员
-     *
-     * @param userId
-     * @return
-     * @throws SerException
-     */
+    DepartmentDetailBO areaAndDepart(String name) throws SerException;
+
+    /*
+         * 判断是否是市场专业人员
+         *
+         * @param userId
+         * @return
+         * @throws SerException
+         */
     default Boolean isMarker(String userId) throws SerException {
         return null;
     }
@@ -272,5 +277,14 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     default PhoneLoginUserInfoBO userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取入职了没有职位的员工
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> names() throws SerException;
 
 }

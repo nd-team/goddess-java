@@ -3,12 +3,15 @@ package com.bjike.goddess.taskallotment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.entity.Project;
 import com.bjike.goddess.taskallotment.service.ProjectSer;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
+import com.bjike.goddess.taskallotment.to.TableTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目列表业务接口实现
@@ -52,5 +55,25 @@ public class ProjectApiImpl implements ProjectAPI {
     @Override
     public Long count(ProjectDTO dto) throws SerException {
         return projectSer.count(dto);
+    }
+
+    @Override
+    public void editTable(TableTO tableTO) throws SerException {
+        projectSer.editTable(tableTO);
+    }
+
+    @Override
+    public Set<String> areas() throws SerException {
+        return projectSer.areas();
+    }
+
+    @Override
+    public Set<String> departs(ProjectDTO dto) throws SerException {
+        return projectSer.departs(dto);
+    }
+
+    @Override
+    public List<ProjectBO> projects(ProjectDTO dto) throws SerException {
+        return projectSer.projects(dto);
     }
 }

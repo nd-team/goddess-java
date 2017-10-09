@@ -662,4 +662,10 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         return num;
     }
+    @Override
+    public Set<String> names() throws SerException {
+        List<EntryRegister> list = super.findAll();
+        return list.stream().map(entryRegister -> entryRegister.getUsername()).collect(Collectors.toSet());
+
+    }
 }

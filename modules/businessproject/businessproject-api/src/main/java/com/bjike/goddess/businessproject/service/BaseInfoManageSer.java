@@ -143,6 +143,15 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
     Set<String> allInnerProjects() throws SerException;
 
     /**
+     * chenjunhao
+     * 获取所有合同外部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> outerProjects() throws SerException;
+
+    /**
      * 导出excel
      * chenjunhao
      *

@@ -3,7 +3,6 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
-import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -139,13 +138,15 @@ public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
      * @throws SerException
      */
     List<String> allDispatchNum() throws SerException;
+
     /**
      * 根据派工单编号获取派工信息
+     *
      * @param dispatchNum 派工单编号
      * @return calss DispatchSheetBO
      * @throws SerException
      */
-    List<DispatchSheetBO> getInfoByDispatchNum( String dispatchNum  ) throws SerException;
+    List<DispatchSheetBO> getInfoByDispatchNum(String dispatchNum) throws SerException;
 
     /**
      * 导出excel
@@ -173,4 +174,13 @@ public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
      * @throws SerException
      */
     byte[] templateExcel() throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取所有派工单号
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> nums() throws SerException;
 }

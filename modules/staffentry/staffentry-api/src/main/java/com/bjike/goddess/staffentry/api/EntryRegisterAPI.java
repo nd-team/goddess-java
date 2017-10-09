@@ -4,10 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 入职登记业务接口
@@ -231,19 +231,23 @@ public interface EntryRegisterAPI {
     default String getEntryTime(String username) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的除了离职员工的编号
+     *
      * @return
      */
-    default List<String> findWorkingEmpNum() throws SerException{
+    default List<String> findWorkingEmpNum() throws SerException {
 
         return null;
     }
+
     /**
      * 获取所有员工编号和对应的数据
+     *
      * @return
      */
-    default List<EntryOptionBO> findEmpDate() throws SerException{
+    default List<EntryOptionBO> findEmpDate() throws SerException {
         return null;
     }
     /**
@@ -260,4 +264,14 @@ public interface EntryRegisterAPI {
     default Integer findNumByEntryDate(String endDate,String area,String dep) throws SerException{
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取所有入职人员的姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> names() throws SerException;
+
 }

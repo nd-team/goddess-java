@@ -116,16 +116,16 @@ public class PositionDetailUserAct {
     }
 
     /**
-     * 根据用户id查询职位详细数据
+     * 根据姓名查询职位详细数据
      *
-     * @param id 用户id
-     * @return class PositionDetailUserVO
+     * @param name name
+     * @return class PositionDetailVO
      * @version v1
      */
-    @GetMapping("v1/findPositionByUser/{id}")
-    public Result findPositionByUser(@PathVariable String id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findPositionByUser/{name}")
+    public Result findPositionByUser(@PathVariable String name, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findPositionByUser(id), PositionDetailUserVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findPositionByUser(name), PositionDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -134,14 +134,14 @@ public class PositionDetailUserAct {
     /**
      * 获取用户职位数据
      *
-     * @param id 用户id
+     * @param name name
      * @return class PositionDetailUserVO
      * @version v1
      */
-    @GetMapping("v1/findOneByUser/{id}")
-    public Result findOneByUser(@PathVariable String id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/findOneByUser/{name}")
+    public Result findOneByUser(@PathVariable String name, HttpServletRequest request) throws ActException {
         try {
-            List<PositionDetailUserVO> vos = BeanTransform.copyProperties(positionDetailUserAPI.findOneByUser(id), PositionDetailUserVO.class, request);
+            PositionDetailUserVO vos = BeanTransform.copyProperties(positionDetailUserAPI.findOneByUser(name), PositionDetailUserVO.class, request);
             return ActResult.initialize(vos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -201,7 +201,7 @@ public class PositionDetailUserAct {
     }
 
     /**
-     * 获取用户列表
+     * 获取组织结构中的用户列表
      *
      * @return class UserVO
      * @version v1
@@ -209,7 +209,22 @@ public class PositionDetailUserAct {
     @GetMapping("v1/findUserList")
     public Result findUserList(HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findUserList(), UserVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(positionDetailUserAPI.findUserListInOrgan(), UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取入职了没有职位的员工
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/names")
+    public Result names() throws ActException {
+        try {
+            return ActResult.initialize(positionDetailUserAPI.names());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -256,7 +271,7 @@ public class PositionDetailUserAct {
      * @version v1
      */
     @GetMapping("v1/userName/userinfo")
-    public Result userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO , HttpServletRequest request) throws ActException {
+    public Result userLoginInfoByUserName(PhoneLoginUserInfoTO phoneLoginUserInfoTO, HttpServletRequest request) throws ActException {
         try {
             PhoneLoginUserInfoBO userBOS = positionDetailUserAPI.userLoginInfoByUserName(phoneLoginUserInfoTO);
             return ActResult.initialize(BeanTransform.copyProperties(userBOS, PhoneLoginUserInfoVO.class, request));

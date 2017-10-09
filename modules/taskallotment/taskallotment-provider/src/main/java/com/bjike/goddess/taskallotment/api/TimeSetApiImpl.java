@@ -53,4 +53,9 @@ public class TimeSetApiImpl implements TimeSetAPI {
     public Long count(TimeSetDTO dto) throws SerException {
         return timeSetSer.count(dto);
     }
+
+    @Override
+    public void send() throws SerException {
+        timeSetSer.send();
+    }
 }

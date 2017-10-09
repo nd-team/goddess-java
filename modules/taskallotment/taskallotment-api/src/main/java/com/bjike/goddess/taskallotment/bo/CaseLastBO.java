@@ -50,6 +50,20 @@ public class CaseLastBO extends BaseBO {
      */
     private Double unReportUnFinish;
 
+    public CaseLastBO() {
+    }
+
+    public CaseLastBO(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish) {
+        this.planNum = planNum;
+        this.actualNum = actualNum;
+        this.unFinishNum = unFinishNum;
+        this.planTime = planTime;
+        this.actualTime = actualTime;
+        this.unFinishTime = unFinishTime;
+        this.reportUnFinish = reportUnFinish;
+        this.unReportUnFinish = unReportUnFinish;
+    }
+
     public TaskType getTaskType() {
         return taskType;
     }

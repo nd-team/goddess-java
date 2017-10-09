@@ -329,9 +329,9 @@ public class EmailSerImpl extends ServiceImpl<Email, EmailDTO> implements EmailS
             List<PositionUserDetailBO> detailS = bo.getDetailS();
             int size = detailS.size();
             sb.append("<tr>");
-            sb.append("<td rowspan='" + size + "'>" + bo.getEmployeesNumber() + "</td>");
-            if (null != bo.getUsername()) {
-                sb.append("<td rowspan='" + size + "'>" + bo.getUsername() + "</td>");
+            sb.append("<td rowspan='" + size + "'>" + bo.getNumber() + "</td>");
+            if (null != bo.getName()) {
+                sb.append("<td rowspan='" + size + "'>" + bo.getName() + "</td>");
             } else {
                 sb.append("<td rowspan='" + size + "'> </td>");
             }
