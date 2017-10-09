@@ -70,7 +70,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             bo.setModuleId(moduleType.getId());
             bo.setModuleName(moduleType.getModule());
         }
-        bo.setCurrent(positionDetailUserSer.findByPosition(entity.getId()).size() + "人");
+        bo.setCurrent(positionDetailUserSer.findNumber(entity.getId()) + "人");
         //部门编号-层级编号+体系编号+职位编号
         bo.setShowNumber(String.format("%s-%s%s%s", department.getShowNumber(), arrangement.getSerialNumber(), department.getHierarchyNumber(), entity.getSerialNumber()));
         return bo;
@@ -269,7 +269,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         PositionDetail entity = super.findById(id);
         if (entity == null)
             throw new SerException("数据对象不能为空");
-        if (positionInstructionSer.findByPosition(id).size() != 0 || positionDetailUserSer.findByPosition(id).size() != 0)
+        if (positionInstructionSer.findByPosition(id).size() != 0 || positionDetailUserSer.findNumber(id) != 0)
             throw new SerException("此处已被引用,无法删除");
         super.remove(entity);
         return this.transformationToBO(entity);
@@ -362,7 +362,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
                                 if (null != p.getModule()) {
                                     positionBO.setModule(p.getModule().getModule());
                                 }
-                                positionBO.setCurrent(positionDetailUserSer.findByPosition(p.getId()).size() + "人");
+                                positionBO.setCurrent(positionDetailUserSer.findNumber(p.getId()) + "人");
                                 bos.add(positionBO);
                             }
                             reArrangementBO.setPositionS(bos);

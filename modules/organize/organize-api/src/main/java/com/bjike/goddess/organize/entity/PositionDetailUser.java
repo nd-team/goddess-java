@@ -22,10 +22,16 @@ import java.util.Set;
 public class PositionDetailUser extends BaseEntity {
 
     /**
-     * 用户表的信息
+     * 姓名
      */
-    @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户信息'", unique = true)
-    private String userId;
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'", unique = true)
+    private String name;
+
+    /**
+     * 员工编号
+     */
+    @Column(name = "number", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'", unique = true)
+    private String number;
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "organize_position_detail_user_table", joinColumns = {@JoinColumn(name = "user_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '用户id'")},
@@ -35,7 +41,7 @@ public class PositionDetailUser extends BaseEntity {
     /**
      * 人员状态
      */
-    @Column(columnDefinition = "TINYINT(2) comment '人员状态' ",nullable = false)
+    @Column(columnDefinition = "TINYINT(2) comment '人员状态' ", nullable = false)
     private StaffStatus staffStatus;
 
     public StaffStatus getStaffStatus() {
@@ -46,12 +52,20 @@ public class PositionDetailUser extends BaseEntity {
         this.staffStatus = staffStatus;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public Set<PositionDetail> getPositionSet() {

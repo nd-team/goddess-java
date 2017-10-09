@@ -25,9 +25,14 @@
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" ref="taskRemindApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" ref="timeSetApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.QuestionAPI" ref="questionApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.ConfirmCountEmailAPI" ref="confirmCountEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" ref="finishCountEmailApiImpl"/>
 
 	<dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 	<dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.contacts.api.CommonalityAPI" id="commonalityApiImpl"/>
 
 </beans>

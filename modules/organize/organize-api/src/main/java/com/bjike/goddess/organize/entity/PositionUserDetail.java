@@ -21,9 +21,9 @@ import javax.persistence.Table;
 @Table(name = "organize_position_user_detail")
 public class PositionUserDetail extends BaseEntity {
     /**
-     * 用户表id
+     * 用户职位id
      */
-    @Column(nullable = false,columnDefinition = "VARCHAR(36) COMMENT '用户id'")
+    @Column(nullable = false,columnDefinition = "VARCHAR(36) COMMENT '用户职位id'")
     private String userId;
     /**
      * 职位id

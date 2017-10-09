@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.enums;
 
 /**
  * 标准类型
+ *
  * @Author: [chenjunhao]
  * @Date: [2017-09-15 11:32]
  * @Description: [ ]
@@ -30,5 +31,22 @@ public enum StandardType {
 
     public int getCode() {
         return this.code;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+        switch (code) {
+            case 0:
+                s = "日工时标准";
+                break;
+            case 1:
+                s = "周工时标准";
+                break;
+            case 2:
+                s = "月工时标准";
+                break;
+        }
+        return s;
     }
 }

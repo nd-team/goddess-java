@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门详细业务实现
@@ -137,5 +138,10 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     @Override
     public Integer getAreaNum(String startTime, String endTime) throws SerException {
         return departmentDetailSer.getAreaNum(startTime, endTime);
+    }
+
+    @Override
+    public Set<String> departPersons(String departId) throws SerException {
+        return departmentDetailSer.departPersons(departId);
     }
 }

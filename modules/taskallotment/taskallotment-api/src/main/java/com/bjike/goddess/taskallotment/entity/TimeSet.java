@@ -63,13 +63,13 @@ public class TimeSet extends BaseEntity {
     /**
      * 提醒频率
      */
-    @Column(name = "remind", nullable = false, columnDefinition = "INT(11)   COMMENT '提醒频率'")
+    @Column(name = "remind", columnDefinition = "INT(11)   COMMENT '提醒频率'")
     private Integer remind;
 
     /**
      * 提醒间隔
      */
-    @Column(name = "spacing", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '提醒间隔'")
+    @Column(name = "spacing",columnDefinition = "TINYINT(2)   COMMENT '提醒间隔'")
     private Spacing spacing;
 
     /**
@@ -87,7 +87,7 @@ public class TimeSet extends BaseEntity {
     /**
      * 提醒对象
      */
-    @Column(name = "remindObject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '提醒对象'")
+    @Column(name = "remindObject", nullable = false, columnDefinition = "TEXT   COMMENT '提醒对象'")
     private String remindObject;
 
     /**
@@ -97,7 +97,7 @@ public class TimeSet extends BaseEntity {
     private String name;
 
     /**
-     * 制定时间
+     * 制定日期
      */
     @Column(name = "time", nullable = false, columnDefinition = "DATE   COMMENT '制定时间'")
     private LocalDate time;

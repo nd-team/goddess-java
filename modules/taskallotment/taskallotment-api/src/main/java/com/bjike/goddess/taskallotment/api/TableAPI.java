@@ -1,13 +1,26 @@
 package com.bjike.goddess.taskallotment.api;
 
-/**
-* 项目表业务接口
-* @Author:			[ chenjunhao ]
-* @Date:			[  2017-09-14 11:58 ]
-* @Description:	[ 项目表业务接口 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public interface TableAPI  { 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 
- }
+import java.util.Set;
+
+/**
+ * 项目表业务接口
+ *
+ * @Author: [ chenjunhao ]
+ * @Date: [ 2017-09-14 11:58 ]
+ * @Description: [ 项目表业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface TableAPI {
+    /**
+     * 根据项目获取项目表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Set<String> tables(TableDTO dto) throws SerException;
+}

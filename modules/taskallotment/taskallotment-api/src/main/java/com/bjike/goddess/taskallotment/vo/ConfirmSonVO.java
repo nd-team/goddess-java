@@ -19,7 +19,7 @@ public class ConfirmSonVO {
     /**
      * 子表信息
      */
-    private List<ConfirmGrandSonVO> confirmGrandSonS;
+    private List<ConfirmTableVO> tableS;
 
     public String getDepart() {
         return depart;
@@ -29,11 +29,11 @@ public class ConfirmSonVO {
         this.depart = depart;
     }
 
-    public List<ConfirmGrandSonVO> getConfirmGrandSonS() {
-        return confirmGrandSonS;
+    public List<ConfirmTableVO> getTableS() {
+        return tableS;
     }
 
-    public void setConfirmGrandSonS(List<ConfirmGrandSonVO> confirmGrandSonS) {
-        this.confirmGrandSonS = confirmGrandSonS;
+    public void setTableS(List<ConfirmTableVO> tableS) {
+        this.tableS = tableS;
     }
 }

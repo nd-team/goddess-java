@@ -10,6 +10,7 @@ import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门详细业务接口
@@ -240,14 +241,24 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     /**
      * 根据时间获取地区个数
      */
-    default Integer getAreaNum(String startTime,String endTime) throws SerException {
+    default Integer getAreaNum(String startTime, String endTime) throws SerException {
         return null;
     }
 
     /**
      * 根据时间获取项目组/部门个数
      */
-    default Integer getDepartmentNum(String startTime,String endTime) throws SerException {
+    default Integer getDepartmentNum(String startTime, String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取某部门下的所有员工
+     *
+     * @param departId
+     * @return
+     * @throws SerException
+     */
+    Set<String> departPersons(String departId) throws SerException;
 }

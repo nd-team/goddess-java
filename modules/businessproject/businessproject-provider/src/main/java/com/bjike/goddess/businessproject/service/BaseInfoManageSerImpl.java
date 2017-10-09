@@ -428,6 +428,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     }
 
     @Override
+    public Set<String> outerProjects() throws SerException {
+        List<BaseInfoManage> list = super.findAll();
+        Set<String> set = new HashSet<String>();
+        for (BaseInfoManage b : list) {
+            set.add(b.getOuterProject());
+        }
+        return set;
+    }
+
+    @Override
     public byte[] templateExcel() throws SerException {
         List<BaseInfoManageLeadExcel> toList = new ArrayList<BaseInfoManageLeadExcel>();
         BaseInfoManageLeadExcel baseInfoManageLeadExcel = new BaseInfoManageLeadExcel();

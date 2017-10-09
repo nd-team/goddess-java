@@ -48,13 +48,13 @@ public class TaskRemind extends BaseEntity {
     /**
      * 第二次提醒时间
      */
-    @Column(name = "secondTime", nullable = false, columnDefinition = "DATETIME   COMMENT '第二次提醒时间'")
+    @Column(name = "secondTime",  columnDefinition = "DATETIME   COMMENT '第二次提醒时间'")
     private LocalDateTime secondTime;
 
     /**
      * 第三次提醒时间
      */
-    @Column(name = "thridTime", nullable = false, columnDefinition = "DATETIME   COMMENT '第三次提醒时间'")
+    @Column(name = "thridTime",  columnDefinition = "DATETIME   COMMENT '第三次提醒时间'")
     private LocalDateTime thridTime;
 
 

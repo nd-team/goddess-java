@@ -17,19 +17,14 @@ import java.util.List;
 public class PositionDetailUserBO extends BaseBO {
 
     /**
-     * 用户信息
-     */
-    private String userId;
-
-    /**
      * 员工名称
      */
-    private String username;
+    private String name;
 
     /**
      * 员工编号
      */
-    private String employeesNumber;
+    private String number;
 
 //    /**
 //     * 职位
@@ -66,27 +61,19 @@ public class PositionDetailUserBO extends BaseBO {
         this.staffStatus = staffStatus;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNumber() {
+        return number;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmployeesNumber() {
-        return employeesNumber;
-    }
-
-    public void setEmployeesNumber(String employeesNumber) {
-        this.employeesNumber = employeesNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

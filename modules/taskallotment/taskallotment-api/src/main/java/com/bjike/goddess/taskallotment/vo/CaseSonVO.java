@@ -19,7 +19,7 @@ public class CaseSonVO {
     /**
      * 子对象
      */
-    private List<CaseGrandSonVO> caseGrandSonS;
+    private List<CaseTableVO> caseTableS;
 
     public String getDepart() {
         return depart;
@@ -29,11 +29,11 @@ public class CaseSonVO {
         this.depart = depart;
     }
 
-    public List<CaseGrandSonVO> getCaseGrandSonS() {
-        return caseGrandSonS;
+    public List<CaseTableVO> getCaseTableS() {
+        return caseTableS;
     }
 
-    public void setCaseGrandSonS(List<CaseGrandSonVO> caseGrandSonS) {
-        this.caseGrandSonS = caseGrandSonS;
+    public void setCaseTableS(List<CaseTableVO> caseTableS) {
+        this.caseTableS = caseTableS;
     }
 }

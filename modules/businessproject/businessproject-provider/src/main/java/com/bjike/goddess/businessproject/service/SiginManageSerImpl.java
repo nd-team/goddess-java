@@ -35,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -591,5 +592,11 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
+    }
+
+    @Override
+    public Set<String> makeProjects() throws SerException {
+        List<SiginManage> list = super.findAll();
+        return list.stream().map(siginManage -> siginManage.getMakeProject()).collect(Collectors.toSet());
     }
 }

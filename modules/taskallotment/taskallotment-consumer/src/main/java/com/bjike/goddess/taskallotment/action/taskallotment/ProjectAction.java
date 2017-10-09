@@ -1,5 +1,8 @@
 package com.bjike.goddess.taskallotment.action.taskallotment;
 
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+import com.bjike.goddess.businessproject.api.DispatchSheetAPI;
+import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -7,10 +10,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
+import com.bjike.goddess.taskallotment.to.TableTO;
 import com.bjike.goddess.taskallotment.vo.ProjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -34,6 +43,14 @@ import java.util.List;
 public class ProjectAction {
     @Autowired
     private ProjectAPI projectAPI;
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private SiginManageAPI siginManageAPI;
+    @Autowired
+    private DispatchSheetAPI dispatchSheetAPI;
 
     /**
      * 列表
@@ -133,6 +150,117 @@ public class ProjectAction {
     public Result count(ProjectDTO dto) throws ActException {
         try {
             return ActResult.initialize(projectAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑表
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/edit/table")
+    public Result editTable(@Validated(TableTO.EDITTABLE.class) TableTO to, BindingResult result) throws ActException {
+        try {
+            projectAPI.editTable(to);
+            return new ActResult("编辑成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有内部项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/inner/project")
+    public Result innerProject() throws ActException {
+        try {
+            return ActResult.initialize(baseInfoManageAPI.allInnerProjects());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/outer/project")
+    public Result outerProject() throws ActException {
+        try {
+            return ActResult.initialize(baseInfoManageAPI.outerProjects());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有立项情况
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/make/project")
+    public Result makeProjects() throws ActException {
+        try {
+            return ActResult.initialize(siginManageAPI.makeProjects());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有派工单号
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/nums")
+    public Result nums() throws ActException {
+        try {
+            return ActResult.initialize(dispatchSheetAPI.nums());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/areas")
+    public Result areas(HttpServletRequest request) throws ActException {
+        try {
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有部门
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/departs")
+    public Result departs(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

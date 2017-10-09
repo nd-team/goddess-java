@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 入职登记业务接口
@@ -137,5 +138,10 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     @Override
     public List<EntryOptionBO> findEmpDate() throws SerException {
         return entryRegisterSer.findEmpDate();
+    }
+
+    @Override
+    public Set<String> names() throws SerException {
+        return entryRegisterSer.names();
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.taskallotment.enums.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -58,6 +59,7 @@ public class ProjectTO extends BaseTO {
     /**
      * 状态
      */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "状态不能为空")
     private Status status;
 
     /**

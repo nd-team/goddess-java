@@ -1,5 +1,6 @@
 package com.bjike.goddess.taskallotment.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -8,10 +9,10 @@ import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
 import com.bjike.goddess.taskallotment.entity.Table;
+import com.bjike.goddess.taskallotment.enums.Status;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
 import com.bjike.goddess.taskallotment.to.TableTO;
 import com.bjike.goddess.user.api.UserAPI;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 项目列表业务实现
@@ -126,9 +129,33 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     @Override
     public void editTable(TableTO tableTO) throws SerException {
         Table entity = tableSer.findById(tableTO.getId());
-        Table table = BeanTransform.copyProperties(tableTO, Table.class, true);
-        BeanUtils.copyProperties(table, entity, "createTime", "id");
+        entity.setName(tableTO.getName());
+        entity.setStatus(tableTO.getStatus());
         entity.setModifyTime(LocalDateTime.now());
         tableSer.update(entity);
+    }
+
+    @Override
+    public Set<String> areas() throws SerException {
+        ProjectDTO dto = new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        List<Project> list = super.findByCis(dto);
+        return list.stream().map(project -> project.getArea()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<String> departs(ProjectDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        dto.getConditions().add(Restrict.in("area", dto.getAreas()));
+        List<Project> list = super.findByCis(dto);
+        return list.stream().map(project -> project.getDepart()).collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<ProjectBO> projects(ProjectDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        dto.getConditions().add(Restrict.in("depart", dto.getDeparts()));
+        List<Project> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list,ProjectBO.class);
     }
 }

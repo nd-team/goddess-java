@@ -22,6 +22,10 @@ public class TaskNodeVO {
      */
     private String id;
     /**
+     * 项目表id
+     */
+    private String tableId;
+    /**
      * 发起人
      */
     private String initiate;
@@ -185,6 +189,10 @@ public class TaskNodeVO {
      * 优先级
      */
     private Integer priority;
+    /**
+     * 工作效率
+     */
+    private Double efficiency;
 
     /**
      * 自定义字段信息
@@ -194,6 +202,22 @@ public class TaskNodeVO {
      * 问题信息
      */
     private List<QuestionVO> questions;
+
+    public Double getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(Double efficiency) {
+        this.efficiency = efficiency;
+    }
+
+    public String getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
+    }
 
     public String getId() {
         return id;
