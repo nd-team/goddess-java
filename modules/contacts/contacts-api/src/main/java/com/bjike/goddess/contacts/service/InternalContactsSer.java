@@ -194,4 +194,8 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
     default MobileInternalContactsBO findByMobileID(String id) throws SerException {
         return null;
     }
+
+    default void test(List<InternalContactsTO> tocs) throws SerException {
+        return;
+    }
 }

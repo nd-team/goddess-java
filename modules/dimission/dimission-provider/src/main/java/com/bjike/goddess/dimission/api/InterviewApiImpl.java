@@ -78,4 +78,9 @@ public class InterviewApiImpl implements InterviewAPI  {
     public Boolean judgeOffice(String name) throws SerException {
         return interviewSer.judgeOffice(name);
     }
+
+    @Override
+    public Boolean detainment(String name) throws SerException {
+        return interviewSer.detainment(name);
+    }
 }

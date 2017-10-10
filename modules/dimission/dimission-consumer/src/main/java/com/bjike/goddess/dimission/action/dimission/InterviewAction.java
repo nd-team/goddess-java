@@ -192,4 +192,18 @@ public class InterviewAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 是否可挽留
+     *
+     * @version v1
+     */
+    @GetMapping("v1/detainment")
+    public Result detainment(String name) throws ActException {
+        try {
+            return ActResult.initialize(interviewAPI.detainment(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

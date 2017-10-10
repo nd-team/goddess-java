@@ -93,8 +93,10 @@ public class SurveyDemandSerImpl extends ServiceImpl<SurveyDemand, SurveyDemandD
 //            scope = "公司";
 //        else
         String scopeName = "";
-        for (String name : to.getScopeNames())
+        for (String name : to.getScopeNames()) {
             scopeName += name + ",";
+        }
+        scopeName = scopeName.substring(0, scopeName.length()-1);
         entity.setScopeName(scopeName);
 
         if (moduleAPI.isCheck("organize")) {

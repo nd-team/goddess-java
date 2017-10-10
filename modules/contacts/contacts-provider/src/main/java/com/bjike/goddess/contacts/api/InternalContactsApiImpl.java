@@ -128,4 +128,9 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     public MobileInternalContactsBO findByMobileID(String id) throws SerException {
         return internalContactsSer.findByMobileID(id);
     }
+
+    @Override
+    public void test(List<InternalContactsTO> tocs) throws SerException {
+        internalContactsSer.test(tocs);
+    }
 }
