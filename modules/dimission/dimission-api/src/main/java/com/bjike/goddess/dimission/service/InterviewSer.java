@@ -132,4 +132,15 @@ public interface InterviewSer extends Ser<Interview, InterviewDTO> {
     default Boolean judgeOffice(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 是否可挽留
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default Boolean detainment(String name) throws SerException {
+        return null;
+    }
 }

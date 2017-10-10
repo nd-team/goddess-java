@@ -1,6 +1,7 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.voucher.bo.AccountInfoBO;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
@@ -299,6 +300,35 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<PartBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
         return voucherGenerateSer.findByMoney(dto);
+    }
+    @Override
+    public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.accountCollect(dto);
+    }
+
+    @Override
+    public byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException {
+        return voucherGenerateSer.exportExcelAccount(dto);
+    }
+
+    @Override
+    public List<String> accountArea() throws SerException {
+        return voucherGenerateSer.accountArea();
+    }
+
+    @Override
+    public List<String> accountProjectName() throws SerException {
+        return voucherGenerateSer.accountProjectName();
+    }
+
+    @Override
+    public List<String> accountProjectGroup() throws SerException {
+        return voucherGenerateSer.accountProjectGroup();
+    }
+
+    @Override
+    public List<String> accountSubject() throws SerException {
+        return voucherGenerateSer.accountSubject();
     }
 
     @Override

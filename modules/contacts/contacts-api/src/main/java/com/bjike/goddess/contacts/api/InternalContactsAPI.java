@@ -118,7 +118,7 @@ public interface InternalContactsAPI {
     /**
      * 下拉导航权限
      */
-    default Boolean sonPermission() throws  SerException {
+    default Boolean sonPermission() throws SerException {
         return null;
     }
 
@@ -192,5 +192,9 @@ public interface InternalContactsAPI {
      */
     default MobileInternalContactsBO findByMobileID(String id) throws SerException {
         return null;
+    }
+
+    default void test(List<InternalContactsTO> tocs) throws SerException {
+        return;
     }
 }

@@ -708,7 +708,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
                         Set<String> unmetDepartments = departmentBetBOS.stream().map(departmentBetBO -> departmentBetBO.getUnmetAllocationDepartment()).collect(Collectors.toSet());
                         List<DepartmentBetEBO> departmentBetEBOS = new ArrayList<>();
                         for (String unmetDepartment : unmetDepartments) {
-                            List<DepartmentBetBO> list = departmentBetBOS.stream().filter(departmentBetBO -> unmetDepartment.equals(departmentBetBO.getUnmetAllocationDepartment())).collect(Collectors.toList());
+                            List<DepartmentBetBO> list = betBOS.stream().filter(departmentBetBO -> unmetDepartment.equals(departmentBetBO.getUnmetAllocationDepartment())).collect(Collectors.toList());
                             List<DepartmentBetEBO> ebos = BeanTransform.copyProperties(list, DepartmentBetEBO.class);
                             departmentBetEBOS.addAll(ebos);
                         }
@@ -735,6 +735,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
         abo.setArea("合计分值");
         List<DepartmentBetBBO> bboList = new ArrayList<>();
         DepartmentBetBBO bbo = new DepartmentBetBBO();
+        bboList.add(bbo);
         abo.setDepartmentBetBBOS(bboList);
         List<DepartmentBetCBO> cboList = new ArrayList<>();
         DepartmentBetCBO cbo = new DepartmentBetCBO();
@@ -797,4 +798,13 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
         return treeSet;
     }
 
+    @Override
+    public Set<String> projectName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<DepartmentBetA> list = departmentBetASer.findAll();
+        for(DepartmentBetA a:list){
+            set.add(a.getProjectName());
+        }
+        return set;
+    }
 }

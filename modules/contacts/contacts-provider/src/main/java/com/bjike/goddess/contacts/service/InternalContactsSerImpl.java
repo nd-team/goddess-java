@@ -126,7 +126,6 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         List<UserBO> userBOList = userAPI.findByCis(userDTO);
         RpcTransmit.transmitUserToken(userToken);
 
-
         if (!CollectionUtils.isEmpty(userBOList)) {
             UserBO user = userBOList.get(0);
             EntryRegisterDTO entryBasicInfoDTO = new EntryRegisterDTO();
@@ -144,8 +143,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
                 RpcTransmit.transmitUserToken(userToken);
                 if (null != detailBO) {
-                    bo.setUsername(detailBO.getUsername());
-                    bo.setNumber(detailBO.getEmployeesNumber());
+                    bo.setUsername(detailBO.getName());
+                    bo.setNumber(detailBO.getNumber());
 
 //                        bo.setArea(user.get(0).getArea());
 //                        bo.setPosition(user.get(0).getPosition());
@@ -693,6 +692,21 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             return mobileInternalContactsBO;
         }
         return null;
+    }
+
+    @Override
+    public void test(List<InternalContactsTO> tocs) throws SerException {
+        List<InternalContacts> internalContacts = BeanTransform.copyProperties(tocs, InternalContacts.class, true);
+        for(InternalContacts internalContacts1 :internalContacts){
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("username",internalContacts1.getUserId()));
+            List<UserBO> users = userAPI.findByCis(userDTO);
+            if(null != users && users.size() > 0){
+                internalContacts1.setUserId(users.get(0).getId());
+            }
+        }
+
+        super.save(internalContacts);
     }
 
 

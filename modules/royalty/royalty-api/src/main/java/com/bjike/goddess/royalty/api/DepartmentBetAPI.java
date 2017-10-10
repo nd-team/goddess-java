@@ -13,6 +13,7 @@ import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.ProjectNameTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门间对赌表业务接口
@@ -80,7 +81,14 @@ public interface DepartmentBetAPI {
      */
     default void edit(DepartmentBetATO departmentBetATO) throws SerException {
     }
-
+    /**
+     * 获取所有部门表的项目名称
+     *
+     * @throws SerException
+     */
+    default Set<String> projectName() throws SerException {
+        return null;
+    }
 
     /**
      * 根据id删除部门间对赌表

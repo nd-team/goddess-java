@@ -13,7 +13,6 @@ import com.bjike.goddess.royalty.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -64,6 +63,8 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     private DepartmentBetCSer departmentBetCSer;
     @Autowired
     private DepartmentBetDSer departmentBetDSer;
+    @Autowired
+    private DepartmentBetESer departmentBetESer;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -414,7 +415,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                             for (JobsBetGTO jobsBetGTO : jobsBetGTOS) {
                                                 JobsBetF jobsBetF = BeanTransform.copyProperties(jobsBetGTO, JobsBetF.class, true);
                                                 jobsBetF.setJobsBetE(jobsBetE);
-                                                if(jobsBetD.getJobs().equals(jobsBetF.getUnmetAllocationJobs())){
+                                                if (jobsBetD.getJobs().equals(jobsBetF.getUnmetAllocationJobs())) {
                                                     throw new SerException("岗位不能和未达标分配岗位是同一个");
                                                 }
                                                 jobsBetF = jobsBetFSer.save(jobsBetF);
@@ -582,7 +583,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                                                 JobsBetF jobsBetF = BeanTransform.copyProperties(jobsBetGTO, JobsBetF.class, true);
                                                 jobsBetF.setJobsBetE(jobsBetE);
                                                 jobsBetF.setId(null);
-                                                if(jobsBetD.getJobs().equals(jobsBetF.getUnmetAllocationJobs())){
+                                                if (jobsBetD.getJobs().equals(jobsBetF.getUnmetAllocationJobs())) {
                                                     throw new SerException("岗位不能和未达标分配岗位是同一个");
                                                 }
                                                 jobsBetFSer.update(jobsBetF);
@@ -642,7 +643,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         }
         for (JobsBetC c : cList) {
             if (!cids.contains(c.getId())) {
-                jobsBetCSer.remove(id);
+                jobsBetCSer.remove(c.getId());
             }
         }
         for (JobsBetC c1 : jobsBetCSer.findAll()) {
@@ -650,7 +651,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         }
         for (JobsBetB b : bList) {
             if (!bids.contains(b.getId())) {
-                jobsBetBSer.remove(id);
+                jobsBetBSer.remove(b.getId());
             }
         }
         for (JobsBetB b1 : jobsBetBSer.findAll()) {
@@ -658,7 +659,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         }
         for (JobsBetA a : aList) {
             if (!aids.contains(a.getId())) {
-                jobsBetASer.remove(id);
+                jobsBetASer.remove(a.getId());
             }
         }
 
@@ -807,9 +808,11 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         abo.setArea("合计分值");
         List<JobsBetBBO> bboList = new ArrayList<>();
         JobsBetBBO bbo = new JobsBetBBO();
+        bboList.add(bbo);
         abo.setJobsBetBBOS(bboList);
         List<JobsBetCBO> cboList = new ArrayList<>();
         JobsBetCBO cbo = new JobsBetCBO();
+        cboList.add(cbo);
         bbo.setJobsBetCBOS(cboList);
         List<JobsBetDBO> dboList = new ArrayList<>();
         JobsBetDBO dbo = new JobsBetDBO();
@@ -872,268 +875,417 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
     }
 
     @Override
+    public Set<String> projectName() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<JobsBetA> list = jobsBetASer.findAll();
+        for (JobsBetA a : list) {
+            set.add(a.getProjectName());
+        }
+        return set;
+    }
+
+    @Override
     public List<ManageCommissionBO> collect(CollectTO to) throws SerException {
+        List<ManageCommissionBO> manageCommissionBOS = new ArrayList<>();
         SystemBetADTO systemBetADTO = new SystemBetADTO();
         if (null != to.getProjectName()) {
             systemBetADTO.getConditions().add(Restrict.in("projectName", to.getProjectName()));
         }
+        List<SystemBetABO> systemBetABOS = system(systemBetADTO);
+        List<SystemBetBBO> systemBetBBOS = null;
+        List<SystemBetCBO> systemBetCBOS = null;
+        for (SystemBetABO systemBetABO : systemBetABOS) {
+            SystemBetBDTO systemBetBDTO = new SystemBetBDTO();
+            systemBetBDTO.getConditions().add(Restrict.eq("systemBetA.id", systemBetABO.getId()));
+            List<SystemBetB> systemBetBS = systemBetBSer.findByCis(systemBetBDTO);
+            systemBetBBOS = BeanTransform.copyProperties(systemBetBS, SystemBetBBO.class);
+            for (SystemBetBBO systemBetBBO : systemBetBBOS) {
+                SystemBetCDTO systemBetCDTO = new SystemBetCDTO();
+                systemBetCDTO.getConditions().add(Restrict.eq("systemBetB.id", systemBetBBO.getId()));
+                List<SystemBetC> systemBetCS = systemBetCSer.findByCis(systemBetCDTO);
+                systemBetCBOS = BeanTransform.copyProperties(systemBetCS, SystemBetCBO.class);
+            }
+        }
+        Set<String> systems = systemBetBBOS.stream().map(SystemBetBBO::getSystem).collect(Collectors.toSet());
+        manageCommissionBOS = BeanTransform.copyProperties(systemBetABOS, ManageCommissionBO.class);
+        List<DepartmentBetCBO> departmentBetCBOS = null;
+        List<DepartmentBetDBO> departmentBetDBOS = null;
+        List<JobsBetDBO> jobsBetDBOS = null;
+        List<JobsBetEBO> jobsBetEBOS = null;
+        for (ManageCommissionBO bo : manageCommissionBOS) {
+            DepartmentBetADTO departmentBetADTO = new DepartmentBetADTO();
+            List<DepartmentBetABO> departmentBetABOS = department(departmentBetADTO);
+            for (DepartmentBetABO departmentBetABO : departmentBetABOS) {
+                DepartmentBetBDTO departmentBetBDTO = new DepartmentBetBDTO();
+                departmentBetBDTO.getConditions().add(Restrict.eq("departmentBetA.id", departmentBetABO.getId()));
+                List<DepartmentBetB> listB = departmentBetBSer.findByCis(departmentBetBDTO);
+                List<DepartmentBetBBO> listBBO = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
+                for (DepartmentBetBBO departmentBetBBO : listBBO) {
+                    if (systems.contains(departmentBetBBO.getSystem())) {
+                        bo.setDepartmentBetBBOS(listBBO);
+                        DepartmentBetCDTO cdto = new DepartmentBetCDTO();
+                        cdto.getConditions().add(Restrict.eq("departmentBetB.id", departmentBetBBO.getId()));
+                        List<DepartmentBetC> listC = departmentBetCSer.findByCis(cdto);
+                        departmentBetCBOS = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
+                        departmentBetBBO.setDepartmentBetCBOS(departmentBetCBOS);
+                        for (DepartmentBetCBO departmentBetCBO : departmentBetCBOS) {
+                            DepartmentBetDDTO ddto = new DepartmentBetDDTO();
+                            ddto.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetCBO.getId()));
+                            List<DepartmentBetD> listD = departmentBetDSer.findByCis(ddto);
+                            departmentBetDBOS = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
+                            departmentBetCBO.setDepartmentBetDBOS(departmentBetDBOS);
+                            if (departmentBetDBOS != null) {
+                                for (DepartmentBetDBO departmentBetDBO : departmentBetDBOS) {
+                                    DepartmentBetEDTO edto = new DepartmentBetEDTO();
+                                    edto.getConditions().add(Restrict.eq("departmentBetD.id", departmentBetDBO.getId()));
+                                    List<DepartmentBetE> listE = departmentBetESer.findByCis(edto);
+                                    List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetEBO.class);
+                                    departmentBetDBO.setDepartmentBetEBOS(listEBO);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            JobsBetADTO jobsBetADTO = new JobsBetADTO();
+            List<JobsBetABO> jobsBetABOS = job(jobsBetADTO);
+            for (JobsBetABO jobsBetABO : jobsBetABOS) {
+                JobsBetBDTO jobsBetBDTO = new JobsBetBDTO();
+                jobsBetBDTO.getConditions().add(Restrict.eq("jobsBetA.id", jobsBetABO.getId()));
+                List<JobsBetB> listB = jobsBetBSer.findByCis(jobsBetBDTO);
+                List<JobsBetBBO> listBBO = BeanTransform.copyProperties(listB, JobsBetBBO.class);
+                for (JobsBetBBO jobsBetBBO : listBBO) {
+                    if (systems.contains(jobsBetBBO.getSystem())) {
+                        bo.setJobsBetBBOS(listBBO);
+                        JobsBetCDTO cdto = new JobsBetCDTO();
+                        cdto.getConditions().add(Restrict.eq("jobsBetB.id", jobsBetBBO.getId()));
+                        List<JobsBetC> listC = jobsBetCSer.findByCis(cdto);
+                        List<JobsBetCBO> listCBO = BeanTransform.copyProperties(listC, JobsBetCBO.class);
+                        jobsBetBBO.setJobsBetCBOS(listCBO);
+                        if (listCBO != null) {
+                            for (JobsBetCBO jobsBetCBO : listCBO) {
+                                JobsBetDDTO ddto = new JobsBetDDTO();
+                                ddto.getConditions().add(Restrict.eq("jobsBetC.id", jobsBetCBO.getId()));
+                                List<JobsBetD> listD = jobsBetDSer.findByCis(ddto);
+                                jobsBetDBOS = BeanTransform.copyProperties(listD, JobsBetDBO.class);
+                                jobsBetCBO.setJobsBetDBOS(jobsBetDBOS);
+                                if (jobsBetDBOS != null) {
+                                    for (JobsBetDBO jobsBetDBO : jobsBetDBOS) {
+                                        JobsBetEDTO edto = new JobsBetEDTO();
+                                        edto.getConditions().add(Restrict.eq("jobsBetD.id", jobsBetDBO.getId()));
+                                        List<JobsBetE> listE = jobsBetESer.findByCis(edto);
+                                        jobsBetEBOS = BeanTransform.copyProperties(listE, JobsBetEBO.class);
+                                        jobsBetDBO.setJobsBetEBOS(jobsBetEBOS);
+                                        if (jobsBetEBOS != null) {
+                                            for (JobsBetEBO jobsBetEBO : jobsBetEBOS) {
+                                                JobsBetFDTO fdto = new JobsBetFDTO();
+                                                fdto.getConditions().add(Restrict.eq("jobsBetE.id", jobsBetEBO.getId()));
+                                                List<JobsBetF> listF = jobsBetFSer.findByCis(fdto);
+                                                List<JobsBetFBO> listFBO = BeanTransform.copyProperties(listF, JobsBetFBO.class);
+                                                jobsBetEBO.setJobsBetFBOS(listFBO);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //体系间对赌表目标基础得分
+        Double basesScoreSystem = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScore()).sum();
+        //体系间对赌表计划基础得分
+        Double basesScorePlanSystem = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePlan()).sum();
+        //体系间对赌表实际基础得分
+        Double basesScorePracticeSystem = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePractice()).sum();
+        //体系间对赌表目标制约得分
+        Double restrictScoreSystem = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScore()).sum();
+        //体系间对赌表计划制约得分
+        Double restrictScorePlanSystem = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScorePlan()).sum();
+        //体系间对赌表实际制约得分
+        Double restrictScorePracticeSystem = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScorePractice()).sum();
+        //体系间对赌表 体系目标总得分
+        Double systemTotalScore = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getSystemTotalScore()).sum();
+        //体系间对赌表体系计划总得分
+        Double systemTotalScorePlan = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getSystemTotalScorePlan()).sum();
+        //体系间对赌表体系实际总得分
+        Double systemTotalScorePractice = systemBetBBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getSystemTotalScorePractice()).sum();
+        //体系间对赌表目标对赌得分
+        Double betScoreSystem = systemBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScore()).sum();
+        //体系间对赌表计划对赌得分
+        Double betScorePlanSystem = systemBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePlan()).sum();
+        //体系间对赌表实际对赌得分
+        Double betScorePracticeSystem = systemBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePractice()).sum();
+        //部门间对赌表目标基础得分
+        Double basesScoreDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScore()).sum();
+        //部门间对赌表计划基础得分
+        Double basesScorePlanDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePlan()).sum();
+        //部门间对赌表实际基础得分
+        Double basesScorePracticeDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePractice()).sum();
+        //部门间对赌表目标制约得分
+        Double restrictScoreDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScore()).sum();
+        //部门间对赌表计划制约得分
+        Double restrictScorePlanDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScorePlan()).sum();
+        //部门间对赌表实际制约得分
+        Double restrictScorePracticeDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScorePractice()).sum();
+        //部门间对赌表部门目标总得分
+        Double departmentTotalScore = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getDepartmentTotalScore()).sum();
+        //部门间对赌表部门计划总得分
+        Double departmentTotalScorePlan = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getDepartmentTotalScorePlan()).sum();
+        //部门间对赌表部门实际总得分
+        Double departmentTotalScorePractice = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getDepartmentTotalScorePractice()).sum();
+        //部门间对赌表目标对赌得分
+         Double betScoreDepartment= departmentBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScore()).sum();
+        //部门间对赌表计划对赌得分
+         Double betScorePlanDepartment= departmentBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePlan()).sum();
+        //部门间对赌表实际对赌得分
+         Double betScorePracticeDepartment = departmentBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePractice()).sum();
+         //岗位间对赌表目标基础得分
+         Double basesScoreJob= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScore()).sum();
+         //岗位间对赌表计划基础得分
+         Double basesScorePlanJob= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePlan()).sum();
+         //岗位间对赌表实际基础得分
+         Double basesScorePracticeJob= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePractice()).sum();
+         //岗位间对赌表目标制约得分
+         Double restrictScoreJob= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScore()).sum();
+         //岗位间对赌表 计划制约得分
+         Double restrictScorePlanJob= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScorePlan()).sum();
+         //岗位间对赌表实际制约得分
+         Double restrictScorePracticeJob= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getRestrictScorePractice()).sum();
+         //岗位间对赌表目标总得分
+         Double totalScore= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getTotalScore()).sum();
+         //岗位间对赌表计划总得分
+         Double totalScorePlan= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getTotalScorePlan()).sum();
+         //岗位间对赌表实际总得分
+         Double totalScorePractice= jobsBetDBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getTotalScorePractice()).sum();
+         //岗位间对赌表目标对赌得分
+         Double betScoreJob= jobsBetEBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScore()).sum();
+         //岗位间对赌表计划对赌得分
+         Double betScorePlanJob= jobsBetEBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePlan()).sum();
+         //岗位间对赌表实际对赌得分
+         Double betScorePracticeJob= jobsBetEBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePractice()).sum();
+         ManageCommissionBO bo = new ManageCommissionBO();
+        bo.setProjectName("合计");
+        //体系
+        List<SystemBetBBO> systemBetBBOS1 = new ArrayList<>();
+        SystemBetBBO bbo = new SystemBetBBO();
+        bbo.setBasesScore(basesScoreSystem);
+        bbo.setBasesScorePlan(basesScorePlanSystem);
+        bbo.setBasesScorePractice(basesScorePracticeSystem);
+        bbo.setRestrictScore(restrictScoreSystem);
+        bbo.setRestrictScorePlan(restrictScorePlanSystem);
+        bbo.setRestrictScorePractice(restrictScorePracticeSystem);
+        bbo.setSystemTotalScore(systemTotalScore);
+        bbo.setSystemTotalScorePlan(systemTotalScorePlan);
+        bbo.setSystemTotalScorePractice(systemTotalScorePractice);
+        List<SystemBetCBO> systemBetCBOS1 = new ArrayList<>();
+        SystemBetCBO cbo = new SystemBetCBO();
+        cbo.setBetScore(betScoreSystem);
+        cbo.setBetScorePlan(betScorePlanSystem);
+        cbo.setBetScorePractice(betScorePracticeSystem);
+        systemBetCBOS1.add(cbo);
+        bbo.setSystemBetCBOS(systemBetCBOS1);
+        systemBetBBOS1.add(bbo);
+        bo.setSystemBetBBOS(systemBetBBOS1);
+        //部门
+        List<DepartmentBetABO> departmentBetABOS = new ArrayList<>();
+        DepartmentBetABO departmentBetABO = new DepartmentBetABO();
+        departmentBetABOS.add(departmentBetABO);
+        List<DepartmentBetBBO> departmentBetBBOS = new ArrayList<>();
+        DepartmentBetBBO departmentBetBBO = new DepartmentBetBBO();
+        departmentBetABO.setDepartmentBetBBOS(departmentBetBBOS);
+        departmentBetBBOS.add(departmentBetBBO);
+        List<DepartmentBetCBO> departmentBetCBOS1 = new ArrayList<>();
+        DepartmentBetCBO departmentBetCBO = new DepartmentBetCBO();
+        departmentBetCBO.setBasesScore(basesScoreDepartment);
+        departmentBetCBO.setBasesScorePlan(basesScorePlanDepartment);
+        departmentBetCBO.setBasesScorePractice(basesScorePracticeDepartment);
+        departmentBetCBO.setRestrictScore(restrictScoreDepartment);
+        departmentBetCBO.setRestrictScorePlan(restrictScorePlanDepartment);
+        departmentBetCBO.setRestrictScorePractice(restrictScorePracticeDepartment);
+        departmentBetCBO.setDepartmentTotalScore(departmentTotalScore);
+        departmentBetCBO.setDepartmentTotalScorePlan(departmentTotalScorePlan);
+        departmentBetCBO.setDepartmentTotalScorePractice(departmentTotalScorePractice);
+        departmentBetCBOS1.add(departmentBetCBO);
+        departmentBetBBO.setDepartmentBetCBOS(departmentBetCBOS1);
+        List<DepartmentBetDBO> departmentBetDBOS1 = new ArrayList<>();
+        DepartmentBetDBO departmentBetDBO = new DepartmentBetDBO();
+        departmentBetDBO.setBetScore(betScoreDepartment);
+        departmentBetDBO.setBetScorePlan(betScorePlanDepartment);
+        departmentBetDBO.setBetScorePractice(betScorePracticeDepartment);
+        departmentBetCBO.setDepartmentBetDBOS(departmentBetDBOS1);
+        departmentBetDBOS1.add(departmentBetDBO);
+        bo.setDepartmentBetBBOS(departmentBetBBOS);
+        //岗位
+        List<JobsBetABO> jobsBetABOS = new ArrayList<>();
+        JobsBetABO jobsBetABO = new JobsBetABO();
+        jobsBetABOS.add(jobsBetABO);
+        List<JobsBetBBO> jobsBetBBOS = new ArrayList<>();
+        JobsBetBBO jobsBetBBO = new JobsBetBBO();
+        jobsBetBBOS.add(jobsBetBBO);
+        jobsBetABO.setJobsBetBBOS(jobsBetBBOS);
+        List<JobsBetCBO> jobsBetCBOS = new ArrayList<>();
+        JobsBetCBO jobsBetCBO = new JobsBetCBO();
+        jobsBetCBOS.add(jobsBetCBO);
+        jobsBetBBO.setJobsBetCBOS(jobsBetCBOS);
+        List<JobsBetDBO> jobsBetDBOS1 = new ArrayList<>();
+        JobsBetDBO jobsBetDBO = new JobsBetDBO();
+        jobsBetDBO.setBasesScore(basesScoreJob);
+        jobsBetDBO.setBasesScorePlan(basesScorePlanJob);
+        jobsBetDBO.setBasesScorePractice(basesScorePracticeJob);
+        jobsBetDBO.setRestrictScore(restrictScoreJob);
+        jobsBetDBO.setRestrictScorePlan(restrictScorePlanJob);
+        jobsBetDBO.setRestrictScorePractice(restrictScorePracticeJob);
+        jobsBetDBO.setTotalScore(totalScore);
+        jobsBetDBO.setTotalScorePlan(totalScorePlan);
+        jobsBetDBO.setTotalScorePractice(totalScorePractice);
+        jobsBetDBOS1.add(jobsBetDBO);
+        jobsBetCBO.setJobsBetDBOS(jobsBetDBOS1);
+        List<JobsBetEBO> jobsBetEBOS1 = new ArrayList<>();
+        JobsBetEBO jobsBetEBO = new JobsBetEBO();
+        jobsBetEBO.setBetScore(betScoreJob);
+        jobsBetEBO.setBetScorePlan(betScorePlanJob);
+        jobsBetEBO.setBetScorePractice(betScorePracticeJob);
+        jobsBetEBOS1.add(jobsBetEBO);
+        jobsBetDBO.setJobsBetEBOS(jobsBetEBOS1);
+        bo.setJobsBetBBOS(jobsBetBBOS);
+        manageCommissionBOS.add(bo);
 
-        return manageCollect(systemBetADTO);
+        return manageCommissionBOS;
     }
 
-    public List<ManageCommissionBO> manageCollect(SystemBetADTO systemBetADTO) throws SerException {
-        String departmentBetBId = null;
-        List<SystemBetA> systemBetAS = systemBetASer.findByCis(systemBetADTO);
-        List<ManageCommissionBO> list = new ArrayList<>();
-        for (SystemBetA systemBetA : systemBetAS) {
-            SystemBetBDTO systemBetBDTO = new SystemBetBDTO();
-            systemBetBDTO.getConditions().add(Restrict.eq("systemBetA.id", systemBetA.getId()));
-            String[] ids = new String[]{systemBetA.getId()};
-            List<DepartmentBetBBO> departmentBetBBOS = null;
-            for (String id : ids) {
-                String[] feilds = new String[]{"system"};
-                String sql = "SELECT system AS system FROM royalty_systembetb WHERE systemBetA_id='" + id + "'";
-                departmentBetBBOS = super.findBySql(sql, DepartmentBetBBO.class, feilds);
-            }
-            Set<String> departments = new HashSet<>();
-            if (departmentBetBBOS != null && !departmentBetBBOS.isEmpty()) {
-                for (DepartmentBetBBO departmentBetBBO : departmentBetBBOS) {
-//                    departments.add(departmentBetBBO.getDepartment());
+    private List<SystemBetABO> system(SystemBetADTO adto) throws SerException {
+        List<SystemBetA> listA = systemBetASer.findByCis(adto);
+        List<SystemBetABO> listABO = BeanTransform.copyProperties(listA, SystemBetABO.class);
+        if (listABO != null) {
+            for (SystemBetABO systemBetABO : listABO) {
+                SystemBetBDTO dtoB = new SystemBetBDTO();
+                dtoB.getConditions().add(Restrict.eq("systemBetA.id", systemBetABO.getId()));
+                List<SystemBetB> listB = systemBetBSer.findByCis(dtoB);
+                List<SystemBetBBO> listBBO = BeanTransform.copyProperties(listB, SystemBetBBO.class);
+                systemBetABO.setSystemBetBBOS(listBBO);
+                if (listBBO != null) {
+                    for (SystemBetBBO systemBetBBO : listBBO) {
+                        SystemBetCDTO dtoC = new SystemBetCDTO();
+                        dtoC.getConditions().add(Restrict.eq("systemBetB.id", systemBetBBO.getId()));
+                        List<SystemBetC> listC = systemBetCSer.findByCis(dtoC);
+                        List<SystemBetCBO> cboList = BeanTransform.copyProperties(listC, SystemBetCBO.class);
+                        systemBetBBO.setSystemBetCBOS(cboList);
+                        if (cboList != null) {
+                            for (SystemBetCBO systemBetCBO : cboList) {
+                                SystemBetDDTO dtoD = new SystemBetDDTO();
+                                dtoD.getConditions().add(Restrict.eq("systemBetC.id", systemBetCBO.getId()));
+                                List<SystemBetD> listD = systemBetDSer.findByCis(dtoD);
+                                List<SystemBetDBO> dboList = BeanTransform.copyProperties(listD, SystemBetDBO.class);
+                                systemBetCBO.setSystemBetDBOS(dboList);
 
-                }
-            }
-            systemBetBDTO.getConditions().add(Restrict.in("department", departments));
-            for (String s : departments) {
-                DepartmentBetBDTO departmentBetBDTO = new DepartmentBetBDTO();
-                departmentBetBDTO.getConditions().add(Restrict.eq("department", s));
 
-                JobsBetBDTO jobsBetBDTO = new JobsBetBDTO();
-                jobsBetBDTO.getConditions().add(Restrict.eq("department", s));
-                List<JobsBetB> jobsBetBS = jobsBetBSer.findByCis(jobsBetBDTO);
-                for (JobsBetB jobsBetB : jobsBetBS) {
-
-                    JobsBetCDTO jobsBetCDTO = new JobsBetCDTO();
-                    jobsBetCDTO.getConditions().add(Restrict.eq("jobsBetB.id", jobsBetB.getId()));
-                    List<JobsBetC> jobsBetCS = jobsBetCSer.findByCis(jobsBetCDTO);
-                    for (JobsBetC jobsBetC : jobsBetCS) {
-
-                        JobsBetDDTO jobsBetDDTO = new JobsBetDDTO();
-                        jobsBetDDTO.getConditions().add(Restrict.eq("jobsBetC.id", jobsBetC.getId()));
-                        List<JobsBetD> jobsBetDS = jobsBetDSer.findByCis(jobsBetDDTO);
-                        for (JobsBetD jobsBetD : jobsBetDS) {
-
-                            JobsBetEDTO jobsBetEDTO = new JobsBetEDTO();
-                            jobsBetEDTO.getConditions().add(Restrict.eq("jobsBetD.id", jobsBetD.getId()));
-                            List<JobsBetE> jobsBetES = jobsBetESer.findByCis(jobsBetEDTO);
-                            for (JobsBetE jobsBetE : jobsBetES) {
-//                                ManageCommissionBO bo = new ManageCommissionBO();
-//                                bo.setProjectGroup(jobsBetB.getDepartment());
-//                                bo.setJobs(jobsBetC.getJobs());
-//                                bo.setJobsBaseWeight(jobsBetC.getBaseWeight());
-//                                bo.setJobsBasesScore(jobsBetC.getBasesScore());
-//                                bo.setJobsRestrictScore(jobsBetC.getRestrictScore());
-//                                bo.setJobsTotalScore(jobsBetC.getDepartmentTotalScore());
-//                                bo.setJobsBetWeight(jobsBetD.getBetWeight());
-//                                bo.setJobsIndexNum(jobsBetD.getIndexNum());
-//                                bo.setJobsIndexName(jobsBetD.getIndexName());
-//                                bo.setJobsConfirmTargetValue(jobsBetD.getConfirmTargetValue());
-//                                bo.setJobsStandard(jobsBetD.getStandard());
-//                                bo.setJobsBetScore(jobsBetD.getBetScore());
-//                                bo.setUnmetAllocationJobs(jobsBetE.getUnmetAllocationJobs());
-//                                bo.setJobsUnmetAllocation(jobsBetE.getUnmetAllocation());
-//                                list.add(bo);
                             }
 
                         }
 
-                    }
 
+                    }
                 }
 
-                List<DepartmentBetB> departmentBetBS = departmentBetBSer.findByCis(departmentBetBDTO);
-                if (departmentBetBS != null && !departmentBetBS.isEmpty()) {
-                    departmentBetBId = departmentBetBS.get(0).getId();
-                    for (DepartmentBetB departmentBetB : departmentBetBS) {
+            }
+        }
 
-                        DepartmentBetCDTO departmentBetCDTO = new DepartmentBetCDTO();
-                        departmentBetCDTO.getConditions().add(Restrict.eq("departmentBetB.id", departmentBetBId));
-                        List<DepartmentBetC> departmentBetCS = departmentBetCSer.findByCis(departmentBetCDTO);
-                        for (DepartmentBetC departmentBetC : departmentBetCS) {
+        return listABO;
+    }
 
-                            DepartmentBetDDTO departmentBetDDTO = new DepartmentBetDDTO();
-                            departmentBetDDTO.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetC.getId()));
-                            List<DepartmentBetD> departmentBetDS = departmentBetDSer.findByCis(departmentBetDDTO);
-                            for (DepartmentBetD departmentBetD : departmentBetDS) {
-//                                ManageCommissionBO bo = new ManageCommissionBO();
-//                                bo.setDepartment(departmentBetB.getDepartment());
-//                                bo.setDepartmentBaseWeight(departmentBetB.getBaseWeight());
-//                                bo.setDepartmentBasesScore(departmentBetB.getBasesScore());
-//                                bo.setDepartmentRestrictScore(departmentBetB.getRestrictScore());
-//                                bo.setDepartmentTotalScore(departmentBetB.getDepartmentTotalScore());
-//                                bo.setDepartmentBetWeight(departmentBetC.getBetWeight());
-//                                bo.setDepartmentIndexNum(departmentBetC.getIndexNum());
-//                                bo.setDepartmentIndexName(departmentBetC.getIndexName());
-//                                bo.setDepartmentConfirmTargetValue(departmentBetC.getConfirmTargetValue());
-//                                bo.setDepartmentStandard(departmentBetC.getStandard());
-//                                bo.setDepartmentBetScore(departmentBetC.getBetScore());
-//                                bo.setUnmetAllocationDepartment(departmentBetD.getUnmetAllocationDepartment());
-//                                bo.setDepartmentUnmetAllocation(departmentBetD.getUnmetAllocation());
-//                                list.add(bo);
+    private List<DepartmentBetABO> department(DepartmentBetADTO adto) throws SerException {
+        List<DepartmentBetA> listA = departmentBetASer.findByCis(adto);
+        List<DepartmentBetABO> listABO = BeanTransform.copyProperties(listA, DepartmentBetABO.class);
+        if (listABO != null) {
+            for (DepartmentBetABO departmentBetABO : listABO) {
+                DepartmentBetBDTO bdto = new DepartmentBetBDTO();
+                bdto.getConditions().add(Restrict.eq("departmentBetA.id", departmentBetABO.getId()));
+                List<DepartmentBetB> listB = departmentBetBSer.findByCis(bdto);
+                List<DepartmentBetBBO> listBBO = BeanTransform.copyProperties(listB, DepartmentBetBBO.class);
+                departmentBetABO.setDepartmentBetBBOS(listBBO);
+                if (listBBO != null) {
+                    for (DepartmentBetBBO departmentBetBBO : listBBO) {
+                        DepartmentBetCDTO cdto = new DepartmentBetCDTO();
+                        cdto.getConditions().add(Restrict.eq("departmentBetB.id", departmentBetBBO.getId()));
+                        List<DepartmentBetC> listC = departmentBetCSer.findByCis(cdto);
+                        List<DepartmentBetCBO> listCBO = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
+                        departmentBetBBO.setDepartmentBetCBOS(listCBO);
+                        if (listCBO != null) {
+                            for (DepartmentBetCBO departmentBetCBO : listCBO) {
+                                DepartmentBetDDTO ddto = new DepartmentBetDDTO();
+                                ddto.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetCBO.getId()));
+                                List<DepartmentBetD> listD = departmentBetDSer.findByCis(ddto);
+                                List<DepartmentBetDBO> listDBO = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
+                                departmentBetCBO.setDepartmentBetDBOS(listDBO);
+                                if (listDBO != null) {
+                                    for (DepartmentBetDBO departmentBetDBO : listDBO) {
+                                        DepartmentBetEDTO edto = new DepartmentBetEDTO();
+                                        edto.getConditions().add(Restrict.eq("departmentBetD.id", departmentBetDBO.getId()));
+                                        List<DepartmentBetE> listE = departmentBetESer.findByCis(edto);
+                                        List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetEBO.class);
+                                        departmentBetDBO.setDepartmentBetEBOS(listEBO);
+                                    }
+                                }
                             }
-
                         }
                     }
-
-
                 }
-                List<SystemBetB> systemBetBS = systemBetBSer.findByCis(systemBetBDTO);
+            }
+        }
+        return listABO;
+    }
 
-                for (SystemBetB systemBetB : systemBetBS) {
-
-                    SystemBetCDTO systemBetCDTO = new SystemBetCDTO();
-                    systemBetCDTO.getConditions().add(Restrict.eq("systemBetB.id", systemBetB.getId()));
-                    List<SystemBetC> systemBetCS = systemBetCSer.findByCis(systemBetCDTO);
-                    for (SystemBetC systemBetC : systemBetCS) {
-
-                        SystemBetDDTO systemBetDDTO = new SystemBetDDTO();
-                        systemBetDDTO.getConditions().add(Restrict.eq("systemBetC.id", systemBetC.getId()));
-                        List<SystemBetD> systemBetDS = systemBetDSer.findByCis(systemBetDDTO);
-                        for (SystemBetD systemBetD : systemBetDS) {
-
-//                            DepartmentBetBDTO departmentBetBDTO = new DepartmentBetBDTO();
-//                            departmentBetBDTO.getConditions().add(Restrict.eq("departmentBet", departmentBetA.getId()));
-//                            List<DepartmentBetB> departmentBetBS = departmentBetBSer.findByCis(departmentBetBDTO);
-//
-//                            for (DepartmentBetB departmentBetB : departmentBetBS) {
-
-
-                            ManageCommissionBO bo = new ManageCommissionBO();
-                            bo.setProjectName(systemBetA.getProjectName());
-//                            bo.setScore(systemBetA.getScore());
-                            bo.setSystem(systemBetB.getSystem());
-                            bo.setSystemBaseWeight(systemBetB.getBaseWeight());
-                            bo.setSystemBasesScore(systemBetB.getBasesScore());
-                            bo.setSystemRestrictScore(systemBetB.getRestrictScore());
-//                            bo.setSystemTotalScore(systemBetB.getDepartmentTotalScore());
-                            bo.setSystemBetWeight(systemBetC.getBetWeight());
-                            bo.setSystemIndexNum(systemBetC.getIndexNum());
-                            bo.setSystemIndexName(systemBetC.getIndexName());
-                            bo.setSystemConfirmTargetValue(systemBetC.getConfirmTargetValue());
-                            bo.setSystemStandard(systemBetC.getStandard());
-                            bo.setSystemBetScore(systemBetC.getBetScore());
-                            bo.setUnmetAllocationSystem(systemBetD.getUnmetAllocationSystem());
-                            bo.setSystemUnmetAllocation(systemBetD.getUnmetAllocation());
-//                            bo.setSystemDepartment(systemBetB.getDepartment());
-//                                bo.setDepartment(departmentBetB.getDepartment());
-//                                bo.setDepartmentBaseWeight(departmentBetB.getBaseWeight());
-//                                bo.setDepartmentBasesScore(departmentBetB.getBasesScore());
-//                                bo.setDepartmentRestrictScore(departmentBetB.getRestrictScore());
-//                                bo.setDepartmentTotalScore(departmentBetB.getDepartmentTotalScore());
-
-                            list.add(bo);
+    private List<JobsBetABO> job(JobsBetADTO adto) throws SerException {
+        List<JobsBetA> listA = jobsBetASer.findByCis(adto);
+        List<JobsBetABO> listABO = BeanTransform.copyProperties(listA, JobsBetABO.class);
+        if (listABO != null) {
+            for (JobsBetABO jobsBetABO : listABO) {
+                JobsBetBDTO bdto = new JobsBetBDTO();
+                bdto.getConditions().add(Restrict.eq("jobsBetA.id", jobsBetABO.getId()));
+                List<JobsBetB> listB = jobsBetBSer.findByCis(bdto);
+                List<JobsBetBBO> listBBO = BeanTransform.copyProperties(listB, JobsBetBBO.class);
+                jobsBetABO.setJobsBetBBOS(listBBO);
+                if (listBBO != null) {
+                    for (JobsBetBBO jobsBetBBO : listBBO) {
+                        JobsBetCDTO cdto = new JobsBetCDTO();
+                        cdto.getConditions().add(Restrict.eq("jobsBetB.id", jobsBetBBO.getId()));
+                        List<JobsBetC> listC = jobsBetCSer.findByCis(cdto);
+                        List<JobsBetCBO> listCBO = BeanTransform.copyProperties(listC, JobsBetCBO.class);
+                        jobsBetBBO.setJobsBetCBOS(listCBO);
+                        if (listCBO != null) {
+                            for (JobsBetCBO jobsBetCBO : listCBO) {
+                                JobsBetDDTO ddto = new JobsBetDDTO();
+                                ddto.getConditions().add(Restrict.eq("jobsBetC.id", jobsBetCBO.getId()));
+                                List<JobsBetD> listD = jobsBetDSer.findByCis(ddto);
+                                List<JobsBetDBO> listDBO = BeanTransform.copyProperties(listD, JobsBetDBO.class);
+                                jobsBetCBO.setJobsBetDBOS(listDBO);
+                                if (listDBO != null) {
+                                    for (JobsBetDBO jobsBetDBO : listDBO) {
+                                        JobsBetEDTO edto = new JobsBetEDTO();
+                                        edto.getConditions().add(Restrict.eq("jobsBetD.id", jobsBetDBO.getId()));
+                                        List<JobsBetE> listE = jobsBetESer.findByCis(edto);
+                                        List<JobsBetEBO> listEBO = BeanTransform.copyProperties(listE, JobsBetEBO.class);
+                                        jobsBetDBO.setJobsBetEBOS(listEBO);
+                                        if (listEBO != null) {
+                                            for (JobsBetEBO jobsBetEBO : listEBO) {
+                                                JobsBetFDTO fdto = new JobsBetFDTO();
+                                                fdto.getConditions().add(Restrict.eq("jobsBetE.id", jobsBetEBO.getId()));
+                                                List<JobsBetF> listF = jobsBetFSer.findByCis(fdto);
+                                                List<JobsBetFBO> listFBO = BeanTransform.copyProperties(listF, JobsBetFBO.class);
+                                                jobsBetEBO.setJobsBetFBOS(listFBO);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-
-                    }
-
-
-                }
-
-            }
-
-        }
-
-        Double systemBasesScore = 0.0; //基础得分
-        Double systemBetScore = 0.0; //对赌得分
-        Double systemRestrictScore = 0.0; //制约得分
-        Double systemTotalScore = 0.0;//部门总得分
-        Double departmentBasesScore = 0.0; //基础得分
-        Double departmentBetScore = 0.0; //对赌得分
-        Double departmentRestrictScore = 0.0; //制约得分
-        Double departmentTotalScore = 0.0;//部门总得分
-        Double jobsBasesScore = 0.0; //基础得分
-        Double jobsBetScore = 0.0; //对赌得分
-        Double jobsRestrictScore = 0.0; //制约得分
-        Double jobsTotalScore = 0.0;//部门总得分
-        ManageCommissionBO totalBO = null;
-        if (list != null) {
-            systemBasesScore = list.stream().filter(p -> p.getSystemBasesScore() != null).mapToDouble(p -> p.getSystemBasesScore()).sum();
-            systemBetScore = list.stream().filter(p -> p.getSystemBetScore() != null).mapToDouble(p -> p.getSystemBetScore()).sum();
-            systemRestrictScore = list.stream().filter(p -> p.getSystemRestrictScore() != null).mapToDouble(p -> p.getSystemRestrictScore()).sum();
-            systemTotalScore = list.stream().filter(p -> p.getSystemTotalScore() != null).mapToDouble(p -> p.getSystemTotalScore()).sum();
-
-            departmentBasesScore = list.stream().filter(p -> p.getDepartmentBasesScore() != null).mapToDouble(p -> p.getDepartmentBasesScore()).sum();
-            departmentBetScore = list.stream().filter(p -> p.getDepartmentBetScore() != null).mapToDouble(p -> p.getDepartmentBetScore()).sum();
-            departmentRestrictScore = list.stream().filter(p -> p.getDepartmentRestrictScore() != null).mapToDouble(p -> p.getDepartmentRestrictScore()).sum();
-            departmentTotalScore = list.stream().filter(p -> p.getDepartmentTotalScore() != null).mapToDouble(p -> p.getDepartmentTotalScore()).sum();
-
-            jobsBasesScore = list.stream().filter(p -> p.getJobsBasesScore() != null).mapToDouble(p -> p.getJobsBasesScore()).sum();
-            jobsBetScore = list.stream().filter(p -> p.getJobsBetScore() != null).mapToDouble(p -> p.getJobsBetScore()).sum();
-            jobsRestrictScore = list.stream().filter(p -> p.getJobsRestrictScore() != null).mapToDouble(p -> p.getJobsRestrictScore()).sum();
-            jobsTotalScore = list.stream().filter(p -> p.getTotalScore() != null).mapToDouble(p -> p.getTotalScore()).sum();
-
-
-            totalBO = new ManageCommissionBO("合计分值", systemBasesScore, systemBetScore, systemRestrictScore, systemTotalScore,
-                    departmentBasesScore, departmentBetScore, departmentRestrictScore, departmentTotalScore,
-                    jobsBasesScore, jobsBetScore, jobsRestrictScore, jobsTotalScore);
-
-        }
-        List<ManageCommissionBO> bos = new ArrayList<>();
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(i).getDepartment() != null && list.get(j).getSystem() != null) {
-
-                    if (list.get(i).getDepartment().equals(list.get(j).getSystem())) {
-                        ManageCommissionBO bo = list.get(i);
-                        ManageCommissionBO naBo = list.get(j);
-//                        bo.setProjectName(naBo.getProjectName());
-//                        bo.setScore(naBo.getScore());
-//                        bo.setSystem(naBo.getSystem());
-//                        bo.setSystemBaseWeight(naBo.getSystemBaseWeight());
-//                        bo.setSystemBetWeight(naBo.getSystemBetWeight());
-//                        bo.setSystemIndexNum(naBo.getSystemIndexNum());
-//                        bo.setSystemIndexName(naBo.getSystemIndexName());
-//                        bo.setSystemConfirmTargetValue(naBo.getSystemConfirmTargetValue());
-//                        bo.setSystemStandard(naBo.getSystemStandard());
-//                        bo.setSystemBasesScore(naBo.getSystemBasesScore());
-//                        bo.setSystemBetScore(naBo.getSystemBetScore());
-//                        bo.setUnmetAllocationSystem(naBo.getUnmetAllocationSystem());
-//                        bo.setSystemUnmetAllocation(naBo.getSystemUnmetAllocation());
-//                        bo.setSystemRestrictScore(naBo.getSystemRestrictScore());
-//                        bo.setSystemTotalScore(naBo.getSystemTotalScore());
-                        BeanUtils.copyProperties(naBo, bo, "department", "departmentBaseWeight", "departmentBetWeight",
-                                "departmentIndexNum", "departmentIndexName", "departmentConfirmTargetValue",
-                                "departmentStandard", "departmentBasesScore", "departmentBetScore",
-                                "unmetAllocationDepartment", "departmentUnmetAllocation", "departmentRestrictScore",
-                                "departmentTotalScore");
-                        bos.add(bo);
                     }
                 }
             }
         }
-        for (int i = 0; i < bos.size(); i++) {
-            for (int j = 0; j < list.size(); j++) {
-                if (bos.get(i).getDepartment() != null && list.get(j).getProjectGroup() != null) {
-
-                    if (bos.get(i).getDepartment().equals(list.get(j).getProjectGroup())) {
-                        ManageCommissionBO bo = bos.get(i);
-                        ManageCommissionBO naBo = list.get(j);
-                        BeanUtils.copyProperties(naBo, bo, "projectName", "score", "system",
-                                "systemBaseWeight", "systemBetWeight", "systemIndexNum", "systemIndexName",
-                                "systemConfirmTargetValue", "systemStandard", "systemBasesScore", "systemBetScore",
-                                "unmetAllocationSystem", "systemUnmetAllocation", "systemRestrictScore",
-                                "systemTotalScore", "department", "departmentBaseWeight", "departmentBetWeight",
-                                "departmentIndexNum", "departmentIndexName", "departmentConfirmTargetValue",
-                                "departmentStandard", "departmentBasesScore", "departmentBetScore",
-                                "unmetAllocationDepartment", "departmentUnmetAllocation", "departmentRestrictScore",
-                                "departmentTotalScore");
-                    }
-                }
-            }
-        }
-        if (null != totalBO) {
-            bos.add(totalBO);
-        }
-        return bos;
+        return listABO;
     }
 
     @Override

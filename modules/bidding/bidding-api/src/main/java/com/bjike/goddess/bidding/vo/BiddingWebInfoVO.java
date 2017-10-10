@@ -50,14 +50,6 @@ public class BiddingWebInfoVO {
      * 状态
      */
     private Status status;
-    /**
-     * 检索关键词
-     */
-    private String keyWords;
-    /**
-     * 检索频率
-     */
-    private String retrieveFrequency;
 
 
     public String getId() {
@@ -124,19 +116,4 @@ public class BiddingWebInfoVO {
         this.status = status;
     }
 
-    public String getKeyWords() {
-        return keyWords;
-    }
-
-    public void setKeyWords(String keyWords) {
-        this.keyWords = keyWords;
-    }
-
-    public String getRetrieveFrequency() {
-        return retrieveFrequency;
-    }
-
-    public void setRetrieveFrequency(String retrieveFrequency) {
-        this.retrieveFrequency = retrieveFrequency;
-    }
 }

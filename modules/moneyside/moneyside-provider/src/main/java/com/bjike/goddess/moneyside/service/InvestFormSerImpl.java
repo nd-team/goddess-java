@@ -215,7 +215,9 @@ public class InvestFormSerImpl extends ServiceImpl<InvestForm, InvestFormDTO> im
             throw new SerException("id不能为空");
         }
         InvestForm investForm = super.findById(investFormTO.getId());
-        BeanTransform.copyProperties(investFormTO,investForm,true);
+        LocalDateTime createTime = investForm.getCreateTime();
+        investForm = BeanTransform.copyProperties(investFormTO,InvestForm.class,true);
+        investForm.setCreateTime(createTime);
         investForm.setModifyTime(LocalDateTime.now());
         super.update(investForm);
         return BeanTransform.copyProperties(investForm,InvestFormBO.class);

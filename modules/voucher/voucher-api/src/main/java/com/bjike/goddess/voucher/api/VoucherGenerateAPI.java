@@ -1,6 +1,7 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.voucher.bo.AccountInfoBO;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
@@ -504,6 +505,55 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     default List<VoucherGenerateBO> allSales() throws SerException {
+        return null;
+    }
+    /**
+     * 根据日期地区项目组项目名称科目汇总明细帐
+     *
+     * @param dto
+     * @return class AccountInfoBO
+     * @throws SerException
+     */
+    default List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
+        return null;
+    }
+    /**
+     * 明细账导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException;
+    /**
+     * 从已过账那里获取所有地区
+     *
+     * @throws SerException
+     */
+    default List<String> accountArea() throws SerException {
+        return null;
+    }
+    /**
+     * 从已过账那里获取所有项目名称
+     *
+     * @throws SerException
+     */
+    default List<String> accountProjectName() throws SerException {
+        return null;
+    }
+    /**
+     * 从已过账那里获取所有项目组部门
+     *
+     * @throws SerException
+     */
+    default List<String> accountProjectGroup() throws SerException {
+        return null;
+    }
+    /**
+     * 从已过账那里获取所有科目
+     *
+     * @throws SerException
+     */
+    default List<String> accountSubject() throws SerException {
         return null;
     }
 

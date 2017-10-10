@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门间对赌表
@@ -185,6 +186,22 @@ public class DepartmentBetAction {
         try {
             List<String> departmentList = systemBetAPI.system();
             return ActResult.initialize(departmentList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有部门表中的项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/projectName")
+    public Result projectName() throws ActException {
+        try {
+            Set<String> set = departmentBetAPI.projectName();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
