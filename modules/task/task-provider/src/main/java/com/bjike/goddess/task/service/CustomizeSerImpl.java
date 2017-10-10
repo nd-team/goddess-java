@@ -8,6 +8,8 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.task.bo.CustomizeBO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
 import com.bjike.goddess.task.entity.Customize;
+import com.bjike.goddess.task.entity.Project;
+import com.bjike.goddess.task.entity.Table;
 import com.bjike.goddess.task.enums.NoticeType;
 import com.bjike.goddess.task.enums.SummaryType;
 import com.bjike.goddess.task.enums.TimeType;
@@ -37,11 +39,31 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     private UserAPI userAPI;
     @Autowired
     private ScheduleSer scheduleSer;
+    @Autowired
+    private ProjectSer projectSer;
+    @Autowired
+    private TableSer tableSer;
 
 
     @Override
     public List<CustomizeBO> list(CustomizeDTO dto) throws SerException {
-        return BeanTransform.copyProperties(super.findByPage(dto), CustomizeBO.class);
+        List<CustomizeBO> bos =  BeanTransform.copyProperties(super.findByPage(dto), CustomizeBO.class);
+        for(CustomizeBO bo: bos){
+           Project project =  projectSer.findById(bo.getProjectId());
+           if(null!=project){
+               bo.setProject(project.getName());
+           }
+           List<Table> tables = tableSer.findById(bo.getTablesId().split(","));
+            if(null!=tables && tables.size()>8){
+               String[] tableNames = new String[tables.size()];
+               int i=0;
+               for(Table table: tables){
+                   tableNames[i++]= table.getName();
+               }
+               bo.setTables(tableNames);
+            }
+        }
+        return  bos;
     }
 
     @Override

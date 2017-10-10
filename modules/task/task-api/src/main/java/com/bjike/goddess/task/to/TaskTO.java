@@ -20,7 +20,7 @@ public class TaskTO extends BaseTO {
      * 执行人
      */
     @NotNull(message = "执行人不能为空", groups = {ADD.class, EDIT.class})
-    private String execUsers[];
+    private String[] execUsers;
     /**
      * 任务量
      */
