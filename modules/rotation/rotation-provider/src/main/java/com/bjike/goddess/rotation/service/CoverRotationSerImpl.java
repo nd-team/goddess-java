@@ -13,7 +13,6 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.rotation.bo.CoverRotationBO;
 import com.bjike.goddess.rotation.bo.CoverRotationOpinionBO;
-import com.bjike.goddess.rotation.bo.FindNameBO;
 import com.bjike.goddess.rotation.dto.CoverRotationDTO;
 import com.bjike.goddess.rotation.entity.CoverRotation;
 import com.bjike.goddess.rotation.entity.CoverRotationOpinion;
@@ -23,9 +22,6 @@ import com.bjike.goddess.rotation.excel.SonPermissionObject;
 import com.bjike.goddess.rotation.to.CoverRotationOpinionTO;
 import com.bjike.goddess.rotation.to.CoverRotationTO;
 import com.bjike.goddess.rotation.to.GuidePermissionTO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +34,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+//import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+//import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 
 /**
  * 岗位轮换自荐业务实现
@@ -55,8 +54,8 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
     @Autowired
     private UserAPI userAPI;
 
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+//    @Autowired
+//    private EntryBasicInfoAPI entryBasicInfoAPI;
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
@@ -314,20 +313,20 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         return this.transformBOList(super.findByCis(dto));
     }
 
-    @Override
-    public List<FindNameBO> getName() throws SerException {
-        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
-        List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo(dto);
-        List<FindNameBO> list = new ArrayList<>();
-        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0) {
-            for (EntryBasicInfoBO bo : entryBasicInfoBOList) {
-                FindNameBO findNameBO = new FindNameBO();
-                findNameBO.setName(bo.getName());
-                list.add(findNameBO);
-            }
-        }
-        return list;
-    }
+//    @Override
+//    public List<FindNameBO> getName() throws SerException {
+//        EntryBasicInfoDTO dto = new EntryBasicInfoDTO();
+//        List<EntryBasicInfoBO> entryBasicInfoBOList = entryBasicInfoAPI.listEntryBasicInfo(dto);
+//        List<FindNameBO> list = new ArrayList<>();
+//        if (null != entryBasicInfoBOList && entryBasicInfoBOList.size() > 0) {
+//            for (EntryBasicInfoBO bo : entryBasicInfoBOList) {
+//                FindNameBO findNameBO = new FindNameBO();
+//                findNameBO.setName(bo.getName());
+//                list.add(findNameBO);
+//            }
+//        }
+//        return list;
+//    }
 
     /**
      * 核对查看权限（部门级别）

@@ -284,47 +284,67 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
-    public Boolean checkAsUserPosition(String name, String[] positionIds) throws SerException {
-        PositionDetailUser entity = this.findByUser(name);
-        if (null != entity && null != entity.getPositionSet() && null != positionIds)
-            for (PositionDetail detail : entity.getPositionSet())
-                for (String id : positionIds)
-                    if (detail.getId().equals(id))
-                        return true;
-        return false;
+    public Boolean checkAsUserPosition(String userId, String[] positionIds) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq(ID,userId));
+        UserBO userBO =  userAPI.findOne( userDTO );
+        if (userBO!=null ) {
+            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+            if (null != entity && null != entity.getPositionSet() && null != positionIds)
+                for (PositionDetail detail : entity.getPositionSet())
+                    for (String id : positionIds)
+                        if (detail.getId().equals(id))
+                            return true;
+        }
+            return false;
     }
 
     @Override
-    public Boolean checkAsUserArrangement(String name, String... arrangementIds) throws SerException {
-        PositionDetailUser entity = this.findByUser(name);
-        if (null != entity && null != entity.getPositionSet() && null != arrangementIds)
-            for (PositionDetail detail : entity.getPositionSet())
-                for (String id : arrangementIds)
-                    if (detail.getArrangement().getId().equals(id))
-                        return true;
-        return false;
+    public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq(ID,userId));
+        UserBO userBO =  userAPI.findOne( userDTO );
+        if (userBO!=null ) {
+            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+            if (null != entity && null != entity.getPositionSet() && null != arrangementIds)
+                for (PositionDetail detail : entity.getPositionSet())
+                    for (String id : arrangementIds)
+                        if (detail.getArrangement().getId().equals(id))
+                            return true;
+        }
+            return false;
     }
 
     @Override
-    public Boolean checkAsUserDepartment(String name, String... departmentIds) throws SerException {
-        PositionDetailUser entity = this.findByUser(name);
-        if (null != entity && null != entity.getPositionSet() && null != departmentIds)
-            for (PositionDetail detail : entity.getPositionSet())
-                for (String id : departmentIds)
-                    if (detail.getDepartment().getId().equals(id))
-                        return true;
-        return false;
+    public Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq(ID,userId));
+        UserBO userBO =  userAPI.findOne( userDTO );
+        if (userBO!=null ) {
+            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+            if (null != entity && null != entity.getPositionSet() && null != departmentIds)
+                for (PositionDetail detail : entity.getPositionSet())
+                    for (String id : departmentIds)
+                        if (detail.getDepartment().getId().equals(id))
+                            return true;
+        }
+            return false;
     }
 
     @Override
-    public Boolean checkAsUserModule(String name, String... moduleIds) throws SerException {
-        PositionDetailUser entity = this.findByUser(name);
-        if (null != entity && null != entity.getPositionSet() && null != moduleIds)
-            for (PositionDetail detail : entity.getPositionSet())
-                for (String id : moduleIds)
-                    if (detail.getModule().getId().equals(id))
-                        return true;
-        return false;
+    public Boolean checkAsUserModule(String userId, String... moduleIds) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq(ID,userId));
+        UserBO userBO =  userAPI.findOne( userDTO );
+        if (userBO!=null ) {
+            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+            if (null != entity && null != entity.getPositionSet() && null != moduleIds)
+                for (PositionDetail detail : entity.getPositionSet())
+                    for (String id : moduleIds)
+                        if (detail.getModule().getId().equals(id))
+                            return true;
+        }
+            return false;
     }
 
     @Override
