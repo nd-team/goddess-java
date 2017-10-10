@@ -1,6 +1,7 @@
 package com.bjike.goddess.royalty.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,14 +20,14 @@ public class CollectTO extends BaseTO {
     /**
      * 项目名称
      */
-    @NotNull(message = "项目名称不能为空",groups = CollectTO.TestCollect.class )
-    private String[] projectName;
+    @NotBlank(message = "项目名称不能为空",groups = CollectTO.TestCollect.class )
+    private String projectName;
 
-    public String[] getProjectName() {
+    public String getProjectName() {
         return projectName;
     }
 
-    public void setProjectName(String[] projectName) {
+    public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
 }

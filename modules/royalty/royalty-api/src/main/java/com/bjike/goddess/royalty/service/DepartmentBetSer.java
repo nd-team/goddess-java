@@ -3,18 +3,16 @@ package com.bjike.goddess.royalty.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.royalty.bo.DepartmentBetABO;
-import com.bjike.goddess.royalty.bo.DepartmentBetBO;
 import com.bjike.goddess.royalty.dto.DepartmentBetADTO;
-import com.bjike.goddess.royalty.dto.DepartmentBetBDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDDTO;
 import com.bjike.goddess.royalty.dto.DepartmentBetDTO;
 import com.bjike.goddess.royalty.entity.DepartmentBet;
 import com.bjike.goddess.royalty.to.DepartmentBetATO;
-import com.bjike.goddess.royalty.to.DepartmentBetTO;
 import com.bjike.goddess.royalty.to.GuidePermissionTO;
 import com.bjike.goddess.royalty.to.ProjectNameTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门间对赌表业务接口
@@ -39,6 +37,7 @@ public interface DepartmentBetSer extends Ser<DepartmentBet, DepartmentBetDTO> {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 部门间对赌表列表总条数
      */
@@ -93,6 +92,16 @@ public interface DepartmentBetSer extends Ser<DepartmentBet, DepartmentBetDTO> {
     default void delete(String id) throws SerException {
 
     }
+
+    /**
+     * 获取所有部门表的项目名称
+     *
+     * @throws SerException
+     */
+    default Set<String> projectName() throws SerException {
+        return null;
+    }
+
     /**
      * 汇总
      *

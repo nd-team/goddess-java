@@ -215,7 +215,9 @@ public class CashInvestSerImpl extends ServiceImpl<CashInvest, CashInvestDTO> im
             throw new SerException("id不能为空");
         }
         CashInvest cashInvest = super.findById(cashInvestTO.getId());
-        BeanTransform.copyProperties(cashInvestTO,cashInvest,true);
+        LocalDateTime createTime = cashInvest.getCreateTime();
+        cashInvest =  BeanTransform.copyProperties(cashInvestTO,CashInvest.class,true);
+        cashInvest.setCreateTime(createTime);
         cashInvest.setModifyTime(LocalDateTime.now());
         super.update(cashInvest);
         return BeanTransform.copyProperties(cashInvest,CashInvestBO.class);

@@ -11,9 +11,9 @@ import com.bjike.goddess.common.api.to.BaseTO;
  */
 public class SearchTO extends BaseTO{
     /**
-     * 地区
+     * url
      */
-    private String area;
+    private String url;
     /**
      * 标题
      */
@@ -31,12 +31,12 @@ public class SearchTO extends BaseTO{
      */
     private String endTime;
 
-    public String getArea() {
-        return area;
+    public String getUrl() {
+        return url;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getTitle() {

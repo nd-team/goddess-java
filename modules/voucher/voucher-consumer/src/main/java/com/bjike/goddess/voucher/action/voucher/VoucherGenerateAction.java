@@ -19,6 +19,7 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import com.bjike.goddess.voucher.bo.AccountInfoBO;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -29,6 +30,7 @@ import com.bjike.goddess.voucher.excel.VoucherTemplateImportExcel;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherFileTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
+import com.bjike.goddess.voucher.vo.AccountInfoVO;
 import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 记账凭证生成
@@ -949,6 +952,109 @@ public class VoucherGenerateAction extends BaseFileAction {
         try {
             List<String> userList = voucherGenerateAPI.listGroup();
             return ActResult.initialize(userList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 明细账列表
+     *
+     * @param dto
+     * @return class AccountInfoVO
+     * @throws ActException
+     * @des 根据日期或地区或项目名称或项目组部门或科目进行列表查看
+     * @version v1
+     */
+    @GetMapping("v1/account")
+    public Result account(VoucherGenerateDTO dto) throws ActException {
+        try {
+            List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto),AccountInfoVO.class);
+            for(AccountInfoVO accountInfoVO:accountInfoVOS){
+                accountInfoVO.setId(UUID.randomUUID().toString());
+            }
+            return ActResult.initialize(accountInfoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto 明细账
+     * @des 导出明细账
+     * @version v1
+     */
+    @GetMapping("v1/exportAccount")
+    public Result exportReport(VoucherGenerateDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "明细账.xlsx";
+            super.writeOutFile(response, voucherGenerateAPI.exportExcelAccount(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有已过账的地区
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountArea")
+    public Result accountArea() throws ActException {
+        try {
+            List<String> areaList = voucherGenerateAPI.accountArea();
+            return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有已过账的项目名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountProjectName")
+    public Result accountProjectName() throws ActException {
+        try {
+            List<String> projectNameList = voucherGenerateAPI.accountProjectName();
+            return ActResult.initialize(projectNameList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有已过账的项目组部门
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountProjectGroup")
+    public Result accountProjectGroup() throws ActException {
+        try {
+            List<String> projectGroupList = voucherGenerateAPI.accountProjectGroup();
+            return ActResult.initialize(projectGroupList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有已过账的一级科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/accountSubject")
+    public Result accountSubject() throws ActException {
+        try {
+            List<String> subjectList = voucherGenerateAPI.accountSubject();
+            return ActResult.initialize(subjectList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

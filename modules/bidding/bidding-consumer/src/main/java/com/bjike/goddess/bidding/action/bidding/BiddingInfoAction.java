@@ -3,11 +3,11 @@ package com.bjike.goddess.bidding.action.bidding;
 import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
-import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
+import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -23,7 +23,6 @@ import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("biddinginfo")
-public class BiddingInfoAction extends BaseFileAction{
+public class BiddingInfoAction extends BaseFileAction {
     @Autowired
     private BiddingInfoAPI biddingInfoAPI;
     @Autowired
@@ -58,7 +57,8 @@ public class BiddingInfoAction extends BaseFileAction{
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
 
-    private static  Logger logger = Logger.getLogger(BiddingInfoAction.class);
+    private static Logger logger = Logger.getLogger(BiddingInfoAction.class);
+
     /**
      * 模块设置导航权限
      *
@@ -274,6 +274,7 @@ public class BiddingInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取招标信息
      *
@@ -285,14 +286,15 @@ public class BiddingInfoAction extends BaseFileAction{
     @GetMapping("v1/getBiddingNum")
     public Result getBidding(String biddingNumber) throws ActException {
         try {
-            logger.info("获取招标信息开始:"+biddingNumber);
+            logger.info("获取招标信息开始:" + biddingNumber);
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.getBidding(biddingNumber);
-            logger.info("获取招标信息结果:"+biddingNumber);
+            logger.info("获取招标信息结果:" + biddingNumber);
             return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取项目名称
      *
@@ -308,6 +310,7 @@ public class BiddingInfoAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取编号
      *
@@ -404,12 +407,13 @@ public class BiddingInfoAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(BiddingDeleteFileTO.TestDEL.class) BiddingDeleteFileTO biddingDeleteFileTO, HttpServletRequest request) throws SerException {
-        if(null != biddingDeleteFileTO.getPaths() && biddingDeleteFileTO.getPaths().length>=0 ){
+        if (null != biddingDeleteFileTO.getPaths() && biddingDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(),biddingDeleteFileTO.getPaths());
+            fileAPI.delFile(storageToken.toString(), biddingDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
     }
+
     /**
      * 导出excel
      *
@@ -430,6 +434,7 @@ public class BiddingInfoAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 年份
      *
@@ -451,5 +456,81 @@ public class BiddingInfoAction extends BaseFileAction{
         }
     }
 
+    /**
+     * 获取网址内的信息
+     *
+     * @param to
+     * @throws ActException
+     */
+    @GetMapping("v1/info")
+    public Result info(SearchTO to) throws ActException {
+        try {
+            return ActResult.initialize(biddingInfoAPI.info(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
+    /**
+     * 工信部招标网获取信息
+     *
+     * @param to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/txzbInfo")
+    public Result txzbInfo(SearchTO to) throws ActException {
+        try {
+            return ActResult.initialize(biddingInfoAPI.txzbInfo(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 中央政府采购网获取信息
+     *
+     * @param to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/zycgInfo")
+    public Result zycgInfo(SearchTO to) throws ActException {
+        try {
+            return ActResult.initialize(biddingInfoAPI.zycgInfo(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 中国电力招标网获取信息
+     *
+     * @param to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/toobiaoInfo")
+    public Result toobiaoInfo(SearchTO to) throws ActException {
+        try {
+            return ActResult.initialize(biddingInfoAPI.toobiaoInfo(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 中国学校招标网获取信息
+     *
+     * @param to
+     * @throws SerException
+     * @version
+     */
+    @GetMapping("v1/schoolbidInfo")
+    public Result schoolbidInfo(SearchTO to) throws ActException {
+        try {
+            return ActResult.initialize(biddingInfoAPI.schoolbidInfo(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

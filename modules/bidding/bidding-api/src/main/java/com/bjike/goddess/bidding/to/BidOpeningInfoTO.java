@@ -51,7 +51,7 @@ public class BidOpeningInfoTO extends BaseTO {
     /**
      * 开标时间
      */
-    @NotBlank(message = "开标时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "开标时间不能为空,格式为年月日", groups = {ADD.class, EDIT.class})
     private String bidOpeningTime;
     /**
      * 开标地点

@@ -216,7 +216,9 @@ public class EquityInvestSerImpl extends ServiceImpl<EquityInvest, EquityInvestD
             throw new SerException("id不能为空");
         }
         EquityInvest equityInvest = super.findById(equityInvestTO.getId());
-        BeanTransform.copyProperties(equityInvestTO,equityInvest,true);
+        LocalDateTime createTime = equityInvest.getCreateTime();
+        equityInvest = BeanTransform.copyProperties(equityInvestTO,EquityInvest.class,true);
+        equityInvest.setCreateTime(createTime);
         equityInvest.setModifyTime(LocalDateTime.now());
         super.update(equityInvest);
         return BeanTransform.copyProperties(equityInvest,EquityInvestBO.class);

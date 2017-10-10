@@ -214,7 +214,9 @@ public class AccrualAllotSerImpl extends ServiceImpl<AccrualAllot, AccrualAllotD
             throw new SerException("id不能为空");
         }
         AccrualAllot accrualAllot = super.findById(accrualAllotTO.getId());
-        BeanTransform.copyProperties(accrualAllotTO, accrualAllot, true);
+        LocalDateTime createTime = accrualAllot.getCreateTime();
+        accrualAllot = BeanTransform.copyProperties(accrualAllotTO, AccrualAllot.class, true);
+        accrualAllot.setCreateTime(createTime);
         accrualAllot.setModifyTime(LocalDateTime.now());
         super.update(accrualAllot);
         return BeanTransform.copyProperties(accrualAllot, AccrualAllotBO.class);

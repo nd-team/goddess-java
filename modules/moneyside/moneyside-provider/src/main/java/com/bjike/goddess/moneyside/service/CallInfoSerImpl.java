@@ -243,7 +243,7 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
         } catch (Exception e) {
             throw new SerException("输入的日期格式有误");
         }
-        BeanUtils.copyProperties(callInfoTO, callInfo);
+        BeanTransform.copyProperties(callInfoTO, callInfo,true);
         //还需筹资总额(筹资总额-已筹资金额)
         callInfo.setNeedTotalFund(callInfoTO.getTotalFund() - callInfoTO.getHasBeenRaised());
         callInfo.setModifyTime(LocalDateTime.now());
@@ -333,8 +333,8 @@ public class CallInfoSerImpl extends ServiceImpl<CallInfo, CallInfoDTO> implemen
         dto.getConditions().add(Restrict.eq("innerProject", innerProject));
         CallInfo callInfo = new CallInfo();
         List<BaseInfoManageBO> boList = new ArrayList<>(0);
+        String userToken = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("businessproject")) {
-            String userToken = RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
             List<BaseInfoManageBO> list = baseInfoManageAPI.searchSiginManage(dto);
             if (StringUtils.isNotBlank(innerProject)) {
