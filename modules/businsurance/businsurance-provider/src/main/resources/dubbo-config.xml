@@ -24,6 +24,9 @@
 	<dubbo:service  ref="groupInsureApiImpl" interface="com.bjike.goddess.businsurance.api.GroupInsureAPI" />
 	<dubbo:service  ref="insureRecordApiImpl" interface="com.bjike.goddess.businsurance.api.InsureRecordAPI" />
 	<dubbo:service  ref="towerInsureApiImpl" interface="com.bjike.goddess.businsurance.api.TowerInsureAPI" />
+	<dubbo:service  ref="casualtyPurchasingListApiImpl" interface="com.bjike.goddess.businsurance.api.CasualtyPurchasingListAPI" />
+	<dubbo:service  ref="casualtyPurchasingDetailApiImpl" interface="com.bjike.goddess.businsurance.api.CasualtyPurchasingDetailAPI" />
+	<dubbo:service  ref="communicationFormworkApiImpl" interface="com.bjike.goddess.businsurance.api.CommunicationFormworkAPI" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businsurance.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businsurance.api.CusPermissionOperateAPI" />
 
@@ -42,6 +45,8 @@
 
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
+	<dubbo:reference  validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />
+	<dubbo:reference  validation="true" id="abandonApiImpl" interface="com.bjike.goddess.secure.api.AbandonAPI" />
 
 
 

@@ -1,4 +1,4 @@
-package com.bjike.goddess.taskallotment.action.taskallotment;
+package com.bjike.goddess.attendance.action.attendance;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
-* 问题
+* 日报
 * @Author:			[ chenjunhao ]
-* @Date:			[  2017-09-16 10:36 ]
-* @Description:	[ 问题 ]
+* @Date:			[  2017-10-07 10:28 ]
+* @Description:	[ 日报 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
 @RestController
-@RequestMapping("question")
-public class QuestionAction { 
+@RequestMapping("dayreport")
+public class DayReportAction { 
 
  }

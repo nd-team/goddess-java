@@ -4,7 +4,6 @@ import com.bjike.goddess.businessproject.bo.DispatchSheetBO;
 import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
-import com.bjike.goddess.businessproject.excel.ContractCategoryExcel;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -72,7 +71,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
-    private void checkAddIdentity() throws SerException{
+    private void checkAddIdentity() throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -111,7 +110,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -388,11 +387,11 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public List<DispatchSheetBO> getInfoByDispatchNum(String dispatchNum) throws SerException {
         DispatchSheetDTO dto = new DispatchSheetDTO();
-        if( StringUtils.isNotBlank(dispatchNum)){
-            dto.getConditions().add(Restrict.eq("dispatchNum",dispatchNum));
+        if (StringUtils.isNotBlank(dispatchNum)) {
+            dto.getConditions().add(Restrict.eq("dispatchNum", dispatchNum));
         }
-        List<DispatchSheet> list =  super.findByCis( dto );
-        return BeanTransform.copyProperties( list , DispatchSheetBO.class);
+        List<DispatchSheet> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, DispatchSheetBO.class);
     }
 
     @Override
@@ -459,5 +458,11 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public Set<String> nums() throws SerException {
+        List<DispatchSheet> list = super.findAll();
+        return list.stream().map(dispatchSheet -> dispatchSheet.getDispatchNum()).collect(Collectors.toSet());
     }
 }

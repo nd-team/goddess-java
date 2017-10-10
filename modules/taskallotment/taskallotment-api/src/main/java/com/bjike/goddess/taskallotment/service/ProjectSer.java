@@ -5,11 +5,11 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
-import com.bjike.goddess.taskallotment.entity.Table;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
 import com.bjike.goddess.taskallotment.to.TableTO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 项目列表业务接口
@@ -75,8 +75,35 @@ public interface ProjectSer extends Ser<Project, ProjectDTO> {
 
     /**
      * 编辑表
+     *
      * @param tableTO
      * @throws SerException
      */
     void editTable(TableTO tableTO) throws SerException;
+
+    /**
+     * 获取所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> areas() throws SerException;
+
+    /**
+     * 根据地区获取部门
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Set<String> departs(ProjectDTO dto) throws SerException;
+
+    /**
+     * 根据部门获取项目名称
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<ProjectBO> projects(ProjectDTO dto) throws SerException;
 }

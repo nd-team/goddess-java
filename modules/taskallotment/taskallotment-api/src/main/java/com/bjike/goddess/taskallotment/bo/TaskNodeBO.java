@@ -17,7 +17,10 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class TaskNodeBO extends BaseBO {
-
+    /**
+     * 项目表id
+     */
+    private String tableId;
     /**
      * 发起人
      */
@@ -182,6 +185,10 @@ public class TaskNodeBO extends BaseBO {
      * 优先级
      */
     private Integer priority;
+    /**
+     * 工作效率
+     */
+    private Double efficiency;
 
     /**
      * 自定义字段信息
@@ -191,6 +198,22 @@ public class TaskNodeBO extends BaseBO {
      * 问题信息
      */
     private List<QuestionBO> questions;
+
+    public Double getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(Double efficiency) {
+        this.efficiency = efficiency;
+    }
+
+    public String getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
+    }
 
     public String getInitiate() {
         return initiate;

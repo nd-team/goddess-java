@@ -19,6 +19,7 @@ import com.bjike.goddess.salarymanage.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryConfirmRecord;
 import com.bjike.goddess.salarymanage.enums.GuideAddrStatus;
+import com.bjike.goddess.salarymanage.enums.Probation;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
@@ -242,9 +243,9 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
                 }
                 model.setEmployeeID(boList.get(0).getEmpNumber());
                 EntryRegisterBO entryRegisterBO = new EntryRegisterBO();
-                if(moduleAPI.isCheck("staffentry")){
+                if (moduleAPI.isCheck("staffentry")) {
                     entryRegisterBO = entryRegisterAPI.getByNumber(boList.get(0).getEmpNumber());
-                }else{
+                } else {
                     throw new SerException("请去模块关联管理设置模块关联");
                 }
                 model.setNativePlace(entryRegisterBO.getNativePlace());
@@ -317,5 +318,16 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
         SalaryConfirmRecord salaryConfirmRecord = super.findById(id);
         salaryConfirmRecord.setIfconfirm(ifConfirm);
         super.update(salaryConfirmRecord);
+    }
+
+    @Override
+    public Probation findProbationById(String employeeID) throws SerException {
+        SalaryConfirmRecordDTO salaryConfirmRecordDTO = new SalaryConfirmRecordDTO();
+        salaryConfirmRecordDTO.getConditions().add(Restrict.eq("employeeID", employeeID));
+        SalaryConfirmRecord salaryConfirmRecord = super.findOne(salaryConfirmRecordDTO);
+        if (null != salaryConfirmRecord) {
+            return salaryConfirmRecord.getProbation();
+        }
+        return null;
     }
 }

@@ -93,6 +93,11 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     }
 
     @Override
+    public Set<String> outerProjects() throws SerException {
+        return baseInfoManageSer.outerProjects();
+    }
+
+    @Override
     public byte[] exportExcel(BaseInfoManageDTO dto) throws SerException {
         return baseInfoManageSer.exportExcel(dto);
     }

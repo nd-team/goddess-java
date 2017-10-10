@@ -3,6 +3,7 @@ package com.bjike.goddess.dispatchcar.api;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.*;
+import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
@@ -91,7 +92,7 @@ public interface DispatchCarInfoAPI {
      * 资金核对意见
      *
      */
-    void fundSugg(PredictPayTO to) throws SerException;
+    void fundSugg(DispatchCarInfoTO dispatchCarInfoTO,PredictPayTO to) throws SerException;
 
     /**
      * 预算核对意见
@@ -114,7 +115,7 @@ public interface DispatchCarInfoAPI {
     /**
      * 财务模块负责人核对意见
      */
-    void financialSugg(CheckChangeCarTO to) throws SerException;
+    void financialSugg(DispatchCarInfoTO dispatchCarInfoTO,CheckChangeCarTO to) throws SerException;
 
     /**
      * 项目负责人或任务下发人审核
@@ -359,5 +360,11 @@ public interface DispatchCarInfoAPI {
      * 把旧服务器上的数据司机信息拷贝到本地
      */
     void copyDriver() throws SerException;
+
+    /**
+     * 出车汇总
+     */
+    List<CollectDispatchcarBO> countCar(CollectDispatchcarDTO dispatchcarDTO) throws SerException;
+
 
 }

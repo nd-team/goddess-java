@@ -261,11 +261,13 @@ public class CarInsureSerImpl extends ServiceImpl<CarInsure, CarInsureDTO> imple
             case DOWNLOAD:
                 flag = guideIdentity();
                 break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
             default:
                 flag = true;
                 break;
         }
-
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }

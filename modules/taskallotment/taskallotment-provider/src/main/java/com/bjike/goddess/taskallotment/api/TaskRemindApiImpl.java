@@ -53,4 +53,9 @@ public class TaskRemindApiImpl implements TaskRemindAPI {
     public Long count(TaskRemindDTO dto) throws SerException {
         return taskRemindSer.count(dto);
     }
+
+    @Override
+    public void mail() throws SerException {
+        taskRemindSer.mail();
+    }
 }

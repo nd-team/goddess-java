@@ -6,7 +6,6 @@ import com.bjike.goddess.taskallotment.enums.*;
 import javax.persistence.*;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 
@@ -21,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "taskallotment_tasknode")
-public class TaskNode extends BaseEntity{
+public class TaskNode extends BaseEntity {
 
     /**
      * 发起人
@@ -67,7 +66,7 @@ public class TaskNode extends BaseEntity{
     /**
      * 任务内容
      */
-    @Column(name = "content", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务内容'")
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT   COMMENT '任务内容'")
     private String content;
 
     /**
@@ -189,6 +188,11 @@ public class TaskNode extends BaseEntity{
     @Column(name = "is_confirm", columnDefinition = "TINYINT(1)   COMMENT '确认状态'")
     private Boolean confirm;
     /**
+     * 不确认理由
+     */
+    @Column(name = "reason", columnDefinition = "TEXT   COMMENT '不确认理由'")
+    private String reason;
+    /**
      * 是否发生费用报销
      */
     @Column(name = "is_reimbursement", columnDefinition = "TINYINT(1)   COMMENT '是否发生费用报销'")
@@ -265,6 +269,12 @@ public class TaskNode extends BaseEntity{
      */
     @Column(name = "priority", columnDefinition = "INT(11)   COMMENT '优先级'")
     private Integer priority;
+
+    /**
+     * 工作效率
+     */
+    @Column(name = "efficiency", columnDefinition = "DECIMAL(10,2)    COMMENT '工作效率'")
+    private Double efficiency;
     /**
      * 项目表信息
      */
@@ -282,6 +292,22 @@ public class TaskNode extends BaseEntity{
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "taskNode")
     private List<Question> questions;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public Double getEfficiency() {
+        return efficiency;
+    }
+
+    public void setEfficiency(Double efficiency) {
+        this.efficiency = efficiency;
+    }
 
     public Integer getPriority() {
         return priority;

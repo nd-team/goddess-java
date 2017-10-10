@@ -6,6 +6,7 @@ import com.bjike.goddess.organize.dto.PositionUserDetailDTO;
 import com.bjike.goddess.organize.entity.PositionUserDetail;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ike on 17-9-6.
@@ -45,4 +46,14 @@ public interface PositionUserDetailSer extends Ser<PositionUserDetail, PositionU
     default Long getAreaNum(String startTime,String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取某员工所属的部门和岗位
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    Map<String, String> departPosition(String name) throws SerException;
 }

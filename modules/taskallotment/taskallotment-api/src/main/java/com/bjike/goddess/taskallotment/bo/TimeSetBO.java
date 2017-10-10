@@ -54,7 +54,7 @@ public class TimeSetBO extends BaseBO {
     private String name;
 
     /**
-     * 制定时间
+     * 制定日期
      */
     private String time;
 

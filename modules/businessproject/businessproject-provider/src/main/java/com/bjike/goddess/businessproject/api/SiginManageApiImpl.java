@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务项目合同签订与立项管理业务接口实现
@@ -112,5 +113,10 @@ public class SiginManageApiImpl implements SiginManageAPI {
     @Override
     public Boolean findCompleteStatus(String projectName) throws SerException {
         return siginManageSer.findCompleteStatus(projectName);
+    }
+
+    @Override
+    public Set<String> makeProjects() throws SerException {
+        return siginManageSer.makeProjects();
     }
 }

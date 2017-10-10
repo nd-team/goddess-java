@@ -70,4 +70,10 @@ public interface TaskRemindSer extends Ser<TaskRemind, TaskRemindDTO> {
      * @throws SerException
      */
     Long count(TaskRemindDTO dto) throws SerException;
+
+    /**
+     * 邮件定时发送
+     * @throws SerException
+     */
+    void mail() throws SerException;
 }

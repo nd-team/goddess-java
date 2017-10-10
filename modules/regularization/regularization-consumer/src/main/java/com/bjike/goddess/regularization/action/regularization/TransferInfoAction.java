@@ -119,6 +119,22 @@ public class TransferInfoAction {
     }
 
     /**
+     * 手动生成数据
+     *
+     * @param to 转正人员信息to
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/saveTransfer")
+    public Result saveTransfer(@Validated(value = {TransferInfoTO.testAdd.class}) TransferInfoTO to, BindingResult result) throws ActException {
+        try {
+            transferInfoAPI.saveTransferInfo(to);
+            return new ActResult("save success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
      * 跟进
      *
      * @param to 转正人员信息to

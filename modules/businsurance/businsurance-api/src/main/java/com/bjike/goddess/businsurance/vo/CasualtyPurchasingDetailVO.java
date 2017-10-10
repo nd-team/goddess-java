@@ -1,5 +1,7 @@
 package com.bjike.goddess.businsurance.vo;
 
+import com.bjike.goddess.businsurance.enums.BuyCasualtyStatus;
+
 /**
  * 团体意外险购买详情表现层对象
  *
@@ -63,7 +65,7 @@ public class CasualtyPurchasingDetailVO {
     /**
      * 购买意外险状态
      */
-    private String buyCasualtyStatus;
+    private BuyCasualtyStatus buyCasualtyStatus;
 
     public String getId() {
         return id;
@@ -145,11 +147,11 @@ public class CasualtyPurchasingDetailVO {
         this.stopBuyTime = stopBuyTime;
     }
 
-    public String getBuyCasualtyStatus() {
+    public BuyCasualtyStatus getBuyCasualtyStatus() {
         return buyCasualtyStatus;
     }
 
-    public void setBuyCasualtyStatus(String buyCasualtyStatus) {
+    public void setBuyCasualtyStatus(BuyCasualtyStatus buyCasualtyStatus) {
         this.buyCasualtyStatus = buyCasualtyStatus;
     }
 }

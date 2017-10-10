@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:regularization:regularization-api")
+    compile project(":modules:salarymanage:salarymanage-api")
     compile project(":common:common-utils")
 }
 

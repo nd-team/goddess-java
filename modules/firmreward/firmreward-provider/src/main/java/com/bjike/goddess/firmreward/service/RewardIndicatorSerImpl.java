@@ -249,7 +249,9 @@ public class RewardIndicatorSerImpl extends ServiceImpl<RewardIndicator, RewardI
      * @param model 奖励指标
      */
     private void updateRewardIndicator(RewardIndicatorTO to, RewardIndicator model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime date = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, RewardIndicator.class, true);
+        model.setCreateTime(date);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

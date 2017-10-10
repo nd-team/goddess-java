@@ -277,7 +277,9 @@ public class PrizeApplySerImpl extends ServiceImpl<PrizeApply, PrizeApplyDTO> im
      * @param model 奖品申请
      */
     private void updatePrizeApply(PrizeApplyTO to, PrizeApply model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime date = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, PrizeApply.class, true);
+        model.setCreateTime(date);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

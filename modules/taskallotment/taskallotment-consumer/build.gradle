@@ -37,8 +37,10 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
 
+    compile project(":modules:storage:storage-api")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile project(":modules:taskallotment:taskallotment-api")
-
+    compile project(":modules:businessproject:businessproject-api")
     compile("org.springframework.boot:spring-boot-starter-web")
 }
 

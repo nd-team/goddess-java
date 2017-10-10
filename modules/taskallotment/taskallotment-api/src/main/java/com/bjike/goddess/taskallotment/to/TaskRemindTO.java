@@ -1,6 +1,9 @@
 package com.bjike.goddess.taskallotment.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 任务提醒
@@ -16,21 +19,25 @@ public class TaskRemindTO extends BaseTO {
     /**
      * 项目名称
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "项目名称不能为空")
     private String project;
 
     /**
      * 项目表
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "项目表不能为空")
     private String projectTable;
 
     /**
      * 任务名
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "任务名不能为空")
     private String taskName;
 
     /**
      * 第一次提醒时间
      */
+    @NotBlank(groups = {ADD.class, EDIT.class},message = "第一次提醒时间不能为空")
     private String firstTime;
 
     /**

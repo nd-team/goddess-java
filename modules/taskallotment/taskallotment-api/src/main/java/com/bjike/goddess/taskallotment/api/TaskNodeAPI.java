@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
+import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 
@@ -24,7 +25,7 @@ public interface TaskNodeAPI {
      * @return
      * @throws SerException
      */
-    List<TaskNodeBO> list(TaskNodeDTO dto) throws SerException;
+    List<ProjectBO> list(ProjectDTO dto) throws SerException;
 
     /**
      * 添加
@@ -71,6 +72,7 @@ public interface TaskNodeAPI {
 
     /**
      * 检测某执行人某天的任务时长是否超过8小时
+     *
      * @param to
      * @return
      * @throws SerException
@@ -103,6 +105,7 @@ public interface TaskNodeAPI {
 
     /**
      * 我分发的任务总条数
+     *
      * @return
      * @throws SerException
      */
@@ -133,7 +136,24 @@ public interface TaskNodeAPI {
     void unFinish(String id) throws SerException;
 
     /**
+     * 确认接收任务
+     *
+     * @param id
+     * @throws SerException
+     */
+    void confirm(String id) throws SerException;
+
+    /**
+     * 不确认接收任务
+     *
+     * @param to
+     * @throws SerException
+     */
+    void unConfirm(TaskNodeTO to) throws SerException;
+
+    /**
      * 上报审核通过
+     *
      * @param to
      * @throws SerException
      */
@@ -141,6 +161,7 @@ public interface TaskNodeAPI {
 
     /**
      * 上报审核不通过
+     *
      * @param to
      * @throws SerException
      */
@@ -155,7 +176,8 @@ public interface TaskNodeAPI {
     List<TaskNodeBO> myCharge(TaskNodeDTO dto) throws SerException;
 
     /**
-     *我负责的任务总条数
+     * 我负责的任务总条数
+     *
      * @return
      * @throws SerException
      */
@@ -179,10 +201,12 @@ public interface TaskNodeAPI {
 
     /**
      * 我执行的任务总条数
+     *
      * @return
      * @throws SerException
      */
     Long myExecuteNum() throws SerException;
+
     /**
      * 上报任务
      *
@@ -242,4 +266,14 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     List<FinishCaseBO> finishCount(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 日报
+     *
+     * @param time  时间
+     * @param names 姓名数组
+     * @return
+     * @throws SerException
+     */
+    List<DayBO> dayReport(String time, String[] names) throws SerException;
 }

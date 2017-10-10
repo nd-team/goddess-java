@@ -20,10 +20,15 @@ import java.util.List;
 public class PositionDetailUserTO extends BaseTO {
 
     /**
-     * 用户信息
+     * 姓名
      */
-    @NotNull(message = "用户信息不能为空", groups = {ADD.class, EDIT.class})
-    private String userId;
+    @NotNull(message = "姓名", groups = {ADD.class})
+    private String name;
+    /**
+     * 员工编号
+     */
+    @NotNull(message = "员工编号", groups = {ADD.class})
+    private String number;
     /**
      * 职位详情
      */
@@ -42,12 +47,20 @@ public class PositionDetailUserTO extends BaseTO {
         this.staffStatus = staffStatus;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public List<PositionUserDetailTO> getDetailTOS() {

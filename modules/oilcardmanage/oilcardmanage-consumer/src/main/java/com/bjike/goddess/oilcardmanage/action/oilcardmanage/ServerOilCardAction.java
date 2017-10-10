@@ -1,4 +1,4 @@
-package com.bjike.goddess.taskallotment.action.taskallotment;
+package com.bjike.goddess.oilcardmanage.action.oilcardmanage;
 
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
-* 项目表
-* @Author:			[ chenjunhao ]
-* @Date:			[  2017-09-14 11:58 ]
-* @Description:	[ 项目表 ]
+* 旧服务器上的油卡信息
+* @Author:			[ jiangzaixuan ]
+* @Date:			[  2017-09-12 09:24 ]
+* @Description:	[ 旧服务器上的油卡信息 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
 @RestController
-@RequestMapping("table")
-public class TableAction { 
+@RequestMapping("serveroilcard")
+public class ServerOilCardAction { 
 
  }

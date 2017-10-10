@@ -6,6 +6,7 @@ import com.bjike.goddess.salarymanage.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryConfirmRecord;
 import com.bjike.goddess.salarymanage.dto.SalaryConfirmRecordDTO;
+import com.bjike.goddess.salarymanage.enums.Probation;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
@@ -78,4 +79,8 @@ public interface SalaryConfirmRecordSer extends Ser<SalaryConfirmRecord, SalaryC
      * 薪资确认
      */
     void confirm(String id,Boolean ifConfirm) throws SerException;
+    /**
+     * 根据员工编号获取同意试用期时长
+     */
+    Probation findProbationById(String employeeID) throws SerException;
  }

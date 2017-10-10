@@ -38,6 +38,17 @@ public class ConfirmLastBO extends BaseBO {
      */
     private Long toConfirm;
 
+    public ConfirmLastBO() {
+    }
+
+    public ConfirmLastBO(Long haveInitiate, Long noInitiate, Long confirm, Long unConfirm, Long toConfirm) {
+        this.haveInitiate = haveInitiate;
+        this.noInitiate = noInitiate;
+        this.confirm = confirm;
+        this.unConfirm = unConfirm;
+        this.toConfirm = toConfirm;
+    }
+
     public TaskType getTaskType() {
         return taskType;
     }

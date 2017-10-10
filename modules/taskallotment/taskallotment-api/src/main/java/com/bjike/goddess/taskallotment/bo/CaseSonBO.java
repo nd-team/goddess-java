@@ -21,7 +21,7 @@ public class CaseSonBO extends BaseBO {
     /**
      * 子对象
      */
-    private List<CaseGrandSonBO> caseGrandSonS;
+    private List<CaseTableBO> caseTableS;
 
     public String getDepart() {
         return depart;
@@ -31,11 +31,11 @@ public class CaseSonBO extends BaseBO {
         this.depart = depart;
     }
 
-    public List<CaseGrandSonBO> getCaseGrandSonS() {
-        return caseGrandSonS;
+    public List<CaseTableBO> getCaseTableS() {
+        return caseTableS;
     }
 
-    public void setCaseGrandSonS(List<CaseGrandSonBO> caseGrandSonS) {
-        this.caseGrandSonS = caseGrandSonS;
+    public void setCaseTableS(List<CaseTableBO> caseTableS) {
+        this.caseTableS = caseTableS;
     }
 }

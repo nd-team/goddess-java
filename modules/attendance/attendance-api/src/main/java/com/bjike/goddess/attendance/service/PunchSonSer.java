@@ -23,7 +23,7 @@ import java.util.List;
 public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
 
     /**
-     * 手机打卡
+     * 打卡
      *
      * @param to
      * @return

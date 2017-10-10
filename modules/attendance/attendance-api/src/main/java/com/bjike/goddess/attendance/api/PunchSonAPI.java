@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface PunchSonAPI {
     /**
-     * 手机打卡
+     * 打卡
      *
      * @param to
      * @return
