@@ -14,31 +14,34 @@ public class TaskRunner extends Thread {
     public static CustomizeSer customizeSer;
     private String name;//线程名
     private Thread t;
-    private boolean suspend=false; //暂停
-    private boolean update; //更新缓存
+    private boolean suspend = false; //暂停
 
     public TaskRunner(String name) {
         this.name = name;
     }
 
     @Override
-    public void run() {
-        try {
+    public void run()   {
             synchronized (this) {
                 while (true) {
-                    if(suspend){
-                        wait();
+                    if (suspend) {
+                        try {
+                            wait();
+
+                        }catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
                     }
-                    customizeSer.executeTask();
-                    Thread.sleep(500);
+                    try {
+                        customizeSer.executeTask();
+                        Thread.sleep(500);
+                    }catch (Exception e){
+                        throw  new RuntimeException(e.getMessage());
+                    }
+
+
                 }
             }
-        } catch (InterruptedException e) {
-            System.out.println("Thread " + name + " interrupted.");
-            e.printStackTrace();
-        }catch (SerException e){
-            e.printStackTrace();
-        }
 
     }
 

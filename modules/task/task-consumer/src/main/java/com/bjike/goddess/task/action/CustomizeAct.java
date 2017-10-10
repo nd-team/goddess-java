@@ -73,7 +73,7 @@ public class CustomizeAct {
     }
 
     /**
-     * 数量
+     * 删除
      *
      * @version v1
      */

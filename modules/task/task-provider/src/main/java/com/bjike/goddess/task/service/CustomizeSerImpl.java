@@ -57,6 +57,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         customize.setTablesId(StringUtils.join(to.getTables(), ","));
         customize.setFields(StringUtils.join(to.getFields(), ","));
         customize.setUser(nickname);
+        customize.setLastTime(LocalDateTime.now());
         super.save(customize);
         if (customize.getEnable()) {
             TaskSession.put(customize.getId(), customize);
@@ -102,15 +103,21 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         for (Customize customize : customizes) {
             if (isInvoking(customize)) { //是否可调用
                 //查询调用
-                scheduleSer.customizeCollect(customize);
+                try {
+                    scheduleSer.customizeCollect(customize);
+                }catch (Exception e) {  //异常也更新时间避免循环错误调用
+                    e.printStackTrace();
+                    customize.setLastTime(LocalDateTime.now());
+                    super.update(customize);
+                    TaskSession.remove(customize.getId());
+                }
                 customize.setLastTime(LocalDateTime.now());
                 TaskSession.put(customize.getId(), customize);
                 super.update(customize);
             }
         }
-
-
     }
+
 
     /**
      * 查询任务
@@ -118,7 +125,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
      * @return
      * @throws SerException
      */
-    private  boolean first =true;
+    private boolean first = true;
+
     private List<Customize> initTask() throws SerException {
         List<Customize> customizes = new ArrayList<>();
         if (null != TaskSession.sessions()) {
@@ -126,8 +134,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             for (Map.Entry<String, Customize> entry : map.entrySet()) {
                 customizes.add(entry.getValue());
             }
-        } else if(first){ //仅查询一次
-            first= false;
+        } else if (first) { //仅查询一次
+            first = false;
             CustomizeDTO dto = new CustomizeDTO();
             dto.getConditions().add(Restrict.eq("enable", true));
             customizes = super.findByCis(dto);
