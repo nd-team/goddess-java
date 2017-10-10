@@ -207,11 +207,10 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
             String[] strings = t.getRemindObject().split(",");
             mails = Arrays.asList(strings);
             if (t.getSendAll()) {
-                Set<String> userIds = departmentDetailAPI.departPersons(departId);
-                if (null != userIds) {
-                    for (String s : userIds) {
-                        String name = userAPI.findNameById(s);
-                        mails.add(name);
+                Set<String> names = departmentDetailAPI.departPersons(departId);
+                if (null != names) {
+                    for (String s : names) {
+                        mails.add(s);
                     }
                 }
             }

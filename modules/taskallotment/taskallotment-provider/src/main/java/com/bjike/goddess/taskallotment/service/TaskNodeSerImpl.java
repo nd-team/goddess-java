@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.QuestionDTO;
@@ -57,6 +58,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     private ProjectSer projectSer;
     @Autowired
     private QuestionSer questionSer;
+    @Autowired
+    private PositionUserDetailAPI positionUserDetailAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -71,9 +74,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             int i = 0;
             for (CustomTitleTO titleTO : titleTOS) {
                 i++;
-                if (titleTO.getMandatory()){
-                    if (null==titleTO.getContent()){
-                        throw new SerException(titleTO.getTitle()+"为必填字段");
+                if (titleTO.getMandatory()) {
+                    if (null == titleTO.getContent()) {
+                        throw new SerException(titleTO.getTitle() + "为必填字段");
                     }
                 }
                 CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
@@ -120,9 +123,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             int i = 0;
             for (CustomTitleTO customTitleTO : customTitleTOS) {
                 i++;
-                if (customTitleTO.getMandatory()){
-                    if (null==customTitleTO.getContent()){
-                        throw new SerException(customTitleTO.getTitle()+"为必填字段");
+                if (customTitleTO.getMandatory()) {
+                    if (null == customTitleTO.getContent()) {
+                        throw new SerException(customTitleTO.getTitle() + "为必填字段");
                     }
                 }
                 CustomTitle customTitle = BeanTransform.copyProperties(customTitleTO, CustomTitle.class, true);
@@ -159,14 +162,14 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<ProjectBO> list(ProjectDTO dto) throws SerException {
-        List<ProjectBO> list=projectSer.list(dto);
-        for (ProjectBO projectBO:list){
-            List<TableBO> tableBOS=projectBO.getTables();
-            for (TableBO t:tableBOS){
-                TaskNodeDTO taskNodeDTO=new TaskNodeDTO();
-                taskNodeDTO.getConditions().add(Restrict.eq("table.id",t.getId()));
-                List<TaskNode> taskNodes=super.findByCis(taskNodeDTO);
-                List<NodeBO> nodeBOS=BeanTransform.copyProperties(taskNodes,NodeBO.class);
+        List<ProjectBO> list = projectSer.list(dto);
+        for (ProjectBO projectBO : list) {
+            List<TableBO> tableBOS = projectBO.getTables();
+            for (TableBO t : tableBOS) {
+                TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                taskNodeDTO.getConditions().add(Restrict.eq("table.id", t.getId()));
+                List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
+                List<NodeBO> nodeBOS = BeanTransform.copyProperties(taskNodes, NodeBO.class);
                 t.setNodeS(nodeBOS);
             }
         }
@@ -1529,5 +1532,76 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setReason(to.getReason());
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
+    }
+
+    @Override
+    public List<DayBO> dayReport(String time, String[] names) throws SerException {
+        LocalDate date = DateUtil.parseDate(time);
+        List<DayBO> bos = new ArrayList<>();
+        for (String string : names) {
+            String depart = null;
+            String position = null;
+            Map<String, String> map = positionUserDetailAPI.departPosition(string);
+            Set<String> set = map.keySet();
+            for (String s : set) {
+                depart = s;
+                position = map.get(s);
+            }
+            TaskNodeDTO dto = new TaskNodeDTO();  //当天
+            dto.getConditions().add(Restrict.eq("execute", string));
+            dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{date, date}));
+            List<TaskNode> currents = super.findByCis(dto);
+            TaskNodeDTO next = new TaskNodeDTO();    //明天
+            next.getConditions().add(Restrict.eq("execute", string));
+            next.getConditions().add(Restrict.between("startTime", new LocalDate[]{date.plusDays(1), date.plusDays(1)}));
+            List<TaskNode> nexts = super.findByCis(next);
+            for (TaskNode current : currents) {
+                String name = current.getExecute();
+                DayBO bo = BeanTransform.copyProperties(current, DayBO.class);
+                bo.setName(name);
+                bo.setTime(time);
+                double taskTime = time(current.getNeedTime(), current.getNeedType());
+                bo.setTaskTime(taskTime);
+                bo.setDepart(depart);
+                bo.setPosition(position);
+                bos.add(bo);
+            }
+            for (int i = 0; i < bos.size(); i++) {
+                if (i < nexts.size()) {
+                    TaskNode taskNode = nexts.get(i);
+                    DayBO bo = bos.get(i);
+                    bo.setPlan(taskNode.getContent());
+                    bo.setPlanTime(time(taskNode.getNeedTime(), taskNode.getNeedType()));
+                }
+            }
+            if (nexts.size() > currents.size()) {    //明天任务条数比当天多的情况
+                int i = currents.size();
+                while (i < nexts.size()) {
+                    DayBO bo = new DayBO();
+                    bo.setTime(time);
+                    bo.setName(string);
+                    bo.setDepart(depart);
+                    bo.setPosition(position);
+                    TaskNode taskNode = nexts.get(i);
+                    bo.setPlan(taskNode.getContent());
+                    bo.setPlanTime(time(taskNode.getNeedTime(), taskNode.getNeedType()));
+                    bos.add(bo);
+                    i++;
+                }
+            }
+        }
+        return bos;
+    }
+
+    private Double time(double time, TimeType type) throws SerException {
+        switch (type) {
+            case MINUTE:
+                time = time / 60;
+                break;
+            case DAY:
+                time = time * 8;
+                break;
+        }
+        return time;
     }
 }

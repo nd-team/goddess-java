@@ -21,7 +21,11 @@ public enum PunchStatus {
     /**
      * 外勤
      */
-    OUTSIDE(2);
+    OUTSIDE(2),
+    /**
+     * 免扣
+     */
+    FEE(3);
     private int code;
 
     PunchStatus(int code) {
@@ -44,6 +48,9 @@ public enum PunchStatus {
                 break;
             case 2:
                 string = "外勤";
+                break;
+            case 3:
+                string = "免扣";
                 break;
         }
         return string;

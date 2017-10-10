@@ -13,6 +13,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.vo.UserVO;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import util.AddressUtils;
 import util.CheckMobile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,7 +80,7 @@ public class PunchAction {
     /**
      * 列表
      *
-     * @param dto 驻点设置数据传输
+     * @param dto dto
      * @return class PunchVO
      * @throws ActException
      * @version v1
@@ -110,27 +112,43 @@ public class PunchAction {
     }
 
     /**
-     * 打卡
+     * 移动端打卡
      *
-     * @param to 驻点设置传输对象
+     * @param to to
      * @return class PunchSonVO
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/punch")
-    public Result punch(@Validated(PunchSonTO.PHONE.class) PunchSonTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/phone")
+    public Result phone(@Validated(PunchSonTO.PHONE.class) PunchSonTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-//            try {
-//                if (check(request)) {   //判断是否为移动端
             to.setPunchSource(PunchSource.MOBILE);
             PunchSonBO bo = punchSonAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, PunchSonVO.class, request));
-//                }
-//                return null;  //todo:pc端打卡
-//            } catch (IOException e) {
-//                throw new ActException(e.getMessage());
-//            }
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * pc端打卡
+     *
+     * @param to to
+     * @return class PunchSonVO
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/pc")
+    public Result pc(@Validated(PunchSonTO.PC.class) PunchSonTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            String ip=IpUtil.getIp(request);
+            AddressUtils addressUtils = new AddressUtils();
+            String area = addressUtils.getAddresses("ip=" + ip, "utf-8");
+            to.setArea(area);
+            to.setPunchSource(PunchSource.PC);
+            PunchSonBO bo = punchSonAPI.save(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, PunchSonVO.class, request));
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -139,7 +157,7 @@ public class PunchAction {
     /**
      * 查找总记录数
      *
-     * @param dto 驻点设置数据传输
+     * @param dto dto
      * @throws ActException
      * @version v1
      */
