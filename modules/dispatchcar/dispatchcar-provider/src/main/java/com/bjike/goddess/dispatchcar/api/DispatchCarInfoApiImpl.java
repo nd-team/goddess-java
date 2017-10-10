@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.bo.*;
+import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
@@ -226,14 +227,15 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
         return dispatchCarInfoSer.findAllProject();
     }
 
-    @Override
-    public void fundSugg(PredictPayTO to) throws SerException {
-        dispatchCarInfoSer.fundSugg(to);
-    }
 
     @Override
     public void budgetSugg(DispatchCarInfoTO dispatchCarInfoTO, CheckChangeCarTO to) throws SerException {
         dispatchCarInfoSer.budgetSugg(dispatchCarInfoTO,to);
+    }
+
+    @Override
+    public void fundSugg(DispatchCarInfoTO dispatchCarInfoTO, PredictPayTO to) throws SerException {
+        dispatchCarInfoSer.fundSugg(dispatchCarInfoTO,to);
     }
 
     @Override
@@ -247,8 +249,8 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public void financialSugg(CheckChangeCarTO to) throws SerException {
-        dispatchCarInfoSer.financialSugg(to);
+    public void financialSugg(DispatchCarInfoTO dispatchCarInfoTO, CheckChangeCarTO to) throws SerException {
+
     }
 
     @Override
@@ -299,5 +301,10 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public byte[] exportExcel(CollectIntervalType collectIntervalType, CollectType collectType, ExportCollectPayedTO to) throws SerException {
         return dispatchCarInfoSer.exportExcel(collectIntervalType,collectType,to);
+    }
+
+    @Override
+    public List<CollectDispatchcarBO> countCar(CollectDispatchcarDTO dispatchcarDTO) throws SerException {
+        return dispatchCarInfoSer.countCar(dispatchcarDTO);
     }
 }

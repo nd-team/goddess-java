@@ -127,9 +127,9 @@ public class WaitPayAct extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/fundsugg")
-    public Result fundSugg(@Validated(ADD.class)PredictPayTO to) throws ActException {
+    public Result fundSugg( @RequestParam DispatchCarInfoTO dispatchCarInfoTO, @Validated(ADD.class) PredictPayTO to) throws ActException {
         try {
-            dispatchCarInfoAPI.fundSugg(to);
+            dispatchCarInfoAPI.fundSugg(dispatchCarInfoTO,to);
             return new ActResult("核对成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

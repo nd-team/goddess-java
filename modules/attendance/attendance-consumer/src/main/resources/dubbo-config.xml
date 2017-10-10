@@ -19,6 +19,8 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.PunchAPI" id="punchApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.PunchGrandSonAPI" id="punchGrandSonApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.PunchSonAPI" id="punchSonApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.DayReportAPI" id="dayReportApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAPI" id="vacateApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>

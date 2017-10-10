@@ -176,4 +176,9 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     public void unConfirm(TaskNodeTO to) throws SerException {
         taskNodeSer.unConfirm(to);
     }
+
+    @Override
+    public List<DayBO> dayReport(String time, String[] names) throws SerException {
+        return taskNodeSer.dayReport(time, names);
+    }
 }
