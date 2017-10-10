@@ -308,7 +308,7 @@ public class IndexHouseAction extends BaseFileAction {
                     fileName = "年度标类型报告.xlsx";
                     ExportExcelYearTO yearto = new ExportExcelYearTO();
                     if(StringUtils.isNotBlank(to.getIndexType())) {
-                        yearto.setDimension(to.getIndexType());
+                        yearto.setIndexType(to.getIndexType());
                     }
                     if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
                         yearto.setStartTime(to.getStartTime());
@@ -320,7 +320,7 @@ public class IndexHouseAction extends BaseFileAction {
                     fileName = "部门年度标类型报告.xlsx";
                     ExportExcelDepartTO dyearto = new ExportExcelDepartTO();
                     if(StringUtils.isNotBlank(to.getIndexType())) {
-                        dyearto.setDimension(to.getIndexType());
+                        dyearto.setIndexType(to.getIndexType());
                     }
                     if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
                         dyearto.setStartTime(to.getStartTime());
@@ -332,7 +332,7 @@ public class IndexHouseAction extends BaseFileAction {
                     fileName = "部门月度标类型报告.xlsx";
                     ExportExcelDepartTO dMonto = new ExportExcelDepartTO();
                     if(StringUtils.isNotBlank(to.getIndexType())) {
-                        dMonto.setDimension(to.getIndexType());
+                        dMonto.setIndexType(to.getIndexType());
                     }
                     if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
                         dMonto.setStartTime(to.getStartTime());
@@ -344,7 +344,7 @@ public class IndexHouseAction extends BaseFileAction {
                     fileName = "岗位标类型报告.xlsx";
                     ExportExcelPositTO postto = new ExportExcelPositTO();
                     if(StringUtils.isNotBlank(to.getIndexType())) {
-                        postto.setDimension(to.getIndexType());
+                        postto.setIndexType(to.getIndexType());
                     }
                     if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
                         postto.setStartTime(to.getStartTime());
@@ -356,7 +356,7 @@ public class IndexHouseAction extends BaseFileAction {
                     fileName = "个人标类型报告.xlsx";
                     ExportExcelPositTO perto = new ExportExcelPositTO();
                     if(StringUtils.isNotBlank(to.getIndexType())) {
-                        perto.setDimension(to.getIndexType());
+                        perto.setIndexType(to.getIndexType());
                     }
                     if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
                         perto.setStartTime(to.getStartTime());
@@ -368,7 +368,7 @@ public class IndexHouseAction extends BaseFileAction {
                     fileName = "年度指标类型报告.xlsx";
                     ExportExcelYearTO yearTo = new ExportExcelYearTO();
                     if(StringUtils.isNotBlank(to.getIndexType())) {
-                        yearTo.setDimension(to.getIndexType());
+                        yearTo.setIndexType(to.getIndexType());
                     }
                     if(StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
                         yearTo.setStartTime(to.getStartTime());

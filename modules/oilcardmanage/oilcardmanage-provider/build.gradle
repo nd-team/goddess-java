@@ -1,4 +1,4 @@
-apply from: '../../../config.gradle'
+apply from: '../../../config.gradle' 
 
 jar {
     String buildDir = project.buildDir
@@ -27,10 +27,8 @@ sourceSets {
 
 dependencies {
     compile project(":common:common-jpa")
-    compile project(":common:common-utils")
     compile project(":common:common-provider")
     compile project(":modules:oilcardmanage:oilcardmanage-api")
-    compile project(":modules:message:message-api")
-//    compile project(":modules:dispatchcar:dispatchcar-api")
-    compile project(":modules:contacts:contacts-api")
+    compile project(":common:common-utils")
 }
+

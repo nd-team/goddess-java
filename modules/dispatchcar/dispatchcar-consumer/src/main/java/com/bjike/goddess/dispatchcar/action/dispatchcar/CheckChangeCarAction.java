@@ -20,11 +20,11 @@ import java.util.List;
 
 /**
 * 出车核对修改记录
-* @Author:			[ jiangzaixuan ]
-* @Date:			[  2017-09-25 11:24 ]
+* @Author: [ Jason ]
+* @Date: [  2017-09-25 11:24 ]
 * @Description:	[ 出车核对修改记录 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
+* @Version: [ v1.0.0 ]
+* @Copy: [ com.bjike ]
 */
 @RestController
 @RequestMapping("checkchangecar")
@@ -55,8 +55,8 @@ public class CheckChangeCarAction {
     /**
      * 问题解决
      * @param to 出车
-     * @return
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/modify")
     public Result modify(@Validated(ADD.class) CorrectMistakeTO to) throws ActException{

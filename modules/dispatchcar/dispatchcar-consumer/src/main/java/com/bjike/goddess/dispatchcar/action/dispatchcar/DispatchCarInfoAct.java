@@ -315,7 +315,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     /**
      * 查询所有油卡信息
      *
-     * @return class OilCardBasicVO
+     * @return class OilCardBasicCarVO
      * @throws ActException
      * @version v1
      */

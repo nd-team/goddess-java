@@ -13,6 +13,7 @@ import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
+import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -154,9 +155,9 @@ public class WaitAuditAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/budgetsugg")
-    public Result budgetSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
+    public Result budgetSugg(@RequestParam DispatchCarInfoTO dispatchCarInfoTO,@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
         try {
-            dispatchCarInfoAPI.budgetSugg(to);
+            dispatchCarInfoAPI.budgetSugg(dispatchCarInfoTO,to);
             return new ActResult("核对成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

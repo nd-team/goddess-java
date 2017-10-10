@@ -36,7 +36,7 @@
 	<dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
 
 	<!--出车API -->
-	<!--<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl"/>-->
+	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl"/>
 
 	<!--组织结构API-->
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
