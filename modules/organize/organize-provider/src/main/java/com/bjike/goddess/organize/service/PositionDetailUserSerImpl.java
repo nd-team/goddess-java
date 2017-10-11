@@ -203,7 +203,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 //            if (!entity.getNumber().equals(to.getNumber()))
 //                this.checkUniqueNumber(to);
             try {
-                BeanTransform.copyProperties(to, entity, true,"name","number");
+                BeanTransform.copyProperties(to, entity, true, "name", "number");
                 entity.setPositionSet(new HashSet<>(0));
                 PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
                 detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
@@ -286,9 +286,9 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public Boolean checkAsUserPosition(String userId, String[] positionIds) throws SerException {
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID,userId));
-        UserBO userBO =  userAPI.findOne( userDTO );
-        if (userBO!=null ) {
+        userDTO.getConditions().add(Restrict.eq(ID, userId));
+        UserBO userBO = userAPI.findOne(userDTO);
+        if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
             if (null != entity && null != entity.getPositionSet() && null != positionIds)
                 for (PositionDetail detail : entity.getPositionSet())
@@ -296,15 +296,15 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                         if (detail.getId().equals(id))
                             return true;
         }
-            return false;
+        return false;
     }
 
     @Override
     public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID,userId));
-        UserBO userBO =  userAPI.findOne( userDTO );
-        if (userBO!=null ) {
+        userDTO.getConditions().add(Restrict.eq(ID, userId));
+        UserBO userBO = userAPI.findOne(userDTO);
+        if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
             if (null != entity && null != entity.getPositionSet() && null != arrangementIds)
                 for (PositionDetail detail : entity.getPositionSet())
@@ -312,15 +312,15 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                         if (detail.getArrangement().getId().equals(id))
                             return true;
         }
-            return false;
+        return false;
     }
 
     @Override
     public Boolean checkAsUserDepartment(String userId, String... departmentIds) throws SerException {
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID,userId));
-        UserBO userBO =  userAPI.findOne( userDTO );
-        if (userBO!=null ) {
+        userDTO.getConditions().add(Restrict.eq(ID, userId));
+        UserBO userBO = userAPI.findOne(userDTO);
+        if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
             if (null != entity && null != entity.getPositionSet() && null != departmentIds)
                 for (PositionDetail detail : entity.getPositionSet())
@@ -328,15 +328,15 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                         if (detail.getDepartment().getId().equals(id))
                             return true;
         }
-            return false;
+        return false;
     }
 
     @Override
     public Boolean checkAsUserModule(String userId, String... moduleIds) throws SerException {
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID,userId));
-        UserBO userBO =  userAPI.findOne( userDTO );
-        if (userBO!=null ) {
+        userDTO.getConditions().add(Restrict.eq(ID, userId));
+        UserBO userBO = userAPI.findOne(userDTO);
+        if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
             if (null != entity && null != entity.getPositionSet() && null != moduleIds)
                 for (PositionDetail detail : entity.getPositionSet())
@@ -344,7 +344,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                         if (detail.getModule().getId().equals(id))
                             return true;
         }
-            return false;
+        return false;
     }
 
     @Override
@@ -360,14 +360,16 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public List<UserBO> findByPosition(String position_id) throws SerException {
-        String[] fields = {"id", "userId"};
-        String sql = "SELECT user_id,position_id FROM  organize_position_detail_user_table WHERE position_id ='%s'";
+        String[] fields = {"id"};
+        String sql = "SELECT user_id FROM  organize_position_detail_user_table WHERE position_id ='%s'";
         List<PositionDetailUser> list = super.findBySql(String.format(sql, position_id), PositionDetailUser.class, fields);
         List<UserBO> bos = new ArrayList<>(0);
-        for (PositionDetailUser entity : list) {
-            UserBO userBO = userAPI.findByUsername(entity.getName());
-            if (null != userBO) {
-                bos.add(userBO);
+        if (null != list) {
+            for (PositionDetailUser entity : list) {
+                UserBO userBO = userAPI.findByUsername(super.findById(entity.getId()).getName());
+                if (null != userBO) {
+                    bos.add(userBO);
+                }
             }
         }
         return bos;
@@ -375,10 +377,10 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public Integer findNumber(String position_id) throws SerException {
-        String[] fields = {"id", "userId"};
-        String sql = "SELECT user_id,position_id FROM  organize_position_detail_user_table WHERE position_id ='%s'";
+        String[] fields = {"id"};
+        String sql = "SELECT user_id FROM organize_position_detail_user_table WHERE position_id ='%s'";
         List<PositionDetailUser> list = super.findBySql(String.format(sql, position_id), PositionDetailUser.class, fields);
-        if (null!=list){
+        if (null != list) {
             return list.size();
         }
         return 0;
