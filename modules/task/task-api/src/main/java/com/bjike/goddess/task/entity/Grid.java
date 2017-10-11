@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.*;
 
 /**
+ * 行列
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-15 17:35]
  * @Description: [ ]
@@ -14,24 +16,24 @@ import javax.persistence.*;
  */
 @Entity
 @javax.persistence.Table(name = "task_grid")
-public class Grid extends BaseEntity{
+public class Grid extends BaseEntity {
     /**
      * 行
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "rid", columnDefinition = "VARCHAR(36) COMMENT '行' ",nullable = false)
+    @JoinColumn(name = "rid", columnDefinition = "VARCHAR(36) COMMENT '行' ", nullable = false)
     private Row row;
     /**
      * 列
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "fid", columnDefinition = "VARCHAR(36) COMMENT '列' ",nullable = false)
+    @JoinColumn(name = "fid", columnDefinition = "VARCHAR(36) COMMENT '列' ", nullable = false)
     private Field field;
     /**
      * 值
      */
-    @OneToOne(optional = false, cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
-    @JoinColumn(name="vid",nullable = false)
+    @OneToOne(optional = false, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "vid", nullable = false)
     @JSONField(serialize = false)
     private Val val;
 

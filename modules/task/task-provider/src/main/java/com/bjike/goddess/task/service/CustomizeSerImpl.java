@@ -54,7 +54,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                bo.setProject(project.getName());
            }
            List<Table> tables = tableSer.findById(bo.getTablesId().split(","));
-            if(null!=tables && tables.size()>8){
+            if(null!=tables && tables.size()>0){
                String[] tableNames = new String[tables.size()];
                int i=0;
                for(Table table: tables){
