@@ -1,7 +1,11 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+<<<<<<< Updated upstream
 import com.bjike.goddess.voucher.bo.AccountInfoBO;
+=======
+import com.bjike.goddess.voucher.bo.AnalysisBO;
+>>>>>>> Stashed changes
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
@@ -9,6 +13,7 @@ import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.service.VoucherGenerateSer;
+import com.bjike.goddess.voucher.to.AnalysisTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +113,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    public Long posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return voucherGenerateSer.posting(voucherGenerateTO);
     }
 
@@ -354,5 +359,20 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public VoucherGenerateBO getByIdCJh(String id) throws SerException {
         return voucherGenerateSer.getByIdCJh(id);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> antiCheckAccount(String[] ids) throws SerException {
+        return voucherGenerateSer.antiCheckAccount(ids);
+    }
+
+    @Override
+    public List<VoucherGenerateBO> findCkRecordByTime(String month, Integer quart, String year) throws SerException {
+        return voucherGenerateSer.findCkRecordByTime(month,quart,year);
+    }
+
+    @Override
+    public AnalysisBO analysis(AnalysisTO to) throws SerException {
+        return voucherGenerateSer.analysis(to);
     }
 }

@@ -280,5 +280,21 @@ public class PositionDetailUserAct {
         }
     }
 
+    /**
+     * 检测用户职位权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkAsUserPosition")
+    public Result checkAsUserPosition(String userid , String[] poids ) throws ActException {
+        try {
+            Boolean userBOS = positionDetailUserAPI.checkAsUserPosition(userid,poids);
+            return ActResult.initialize( userBOS );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

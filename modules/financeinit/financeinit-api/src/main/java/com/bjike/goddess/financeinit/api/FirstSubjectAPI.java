@@ -36,10 +36,8 @@ public interface FirstSubjectAPI {
     }
 
 
-
     /**
      * 一级科目列表总条数
-     *
      */
     default Long countFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
         return null;
@@ -47,47 +45,69 @@ public interface FirstSubjectAPI {
 
     /**
      * 根据id获取一级科目列表
+     *
      * @return class FirstSubjectBO
      */
-    default FirstSubjectBO getOneById(String id) throws SerException {return null;}
+    default FirstSubjectBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 一级科目列表
+     *
      * @return class FirstSubjectBO
      */
-    default List<FirstSubjectBO> listFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param firstSubjectTO 一级科目信息
-     * @return class FirstSubjectBO
-     */
-    default FirstSubjectBO addFirstSubject(FirstSubjectTO firstSubjectTO) throws SerException { return null;}
+    default List<FirstSubjectBO> listFirstSubject(FirstSubjectDTO firstSubjectDTO) throws SerException {
+        return null;
+    }
 
     /**
-     *  编辑
+     * 添加
+     *
      * @param firstSubjectTO 一级科目信息
      * @return class FirstSubjectBO
      */
-    default FirstSubjectBO editFirstSubject(FirstSubjectTO firstSubjectTO) throws SerException { return null;}
+    default FirstSubjectBO addFirstSubject(FirstSubjectTO firstSubjectTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param firstSubjectTO 一级科目信息
+     * @return class FirstSubjectBO
+     */
+    default FirstSubjectBO editFirstSubject(FirstSubjectTO firstSubjectTO) throws SerException {
+        return null;
+    }
 
     /**
      * 删除级别
+     *
      * @param id id
      */
-    default void deleteFirstSubject(String id ) throws SerException {return;};
+    default void deleteFirstSubject(String id) throws SerException {
+        return;
+    }
+
+    ;
 
     /**
-     *  根据一级科目名称查找一级科目
+     * 根据一级科目名称查找一级科目
+     *
      * @param firstSubjectName 一级科目信息
      * @return class FirstSubjectBO
      */
-    default FirstSubjectBO getFirstSubject(String firstSubjectName) throws SerException { return null;}
+    default FirstSubjectBO getFirstSubject(String firstSubjectName) throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有一级科目列表
      */
-    default List<String> listAllFirst( ) throws SerException {return null;}
-
+    default List<String> listAllFirst() throws SerException {
+        return null;
+    }
 
 
     /**
@@ -102,16 +122,27 @@ public interface FirstSubjectAPI {
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(FirstSubjectDTO dto ) throws SerException;
+    byte[] exportExcel(FirstSubjectDTO dto) throws SerException;
 
     /**
      * 导出Excel导入模板
+     *
      * @throws SerException
      */
-    byte[] templateExport(  ) throws SerException;
+    byte[] templateExport() throws SerException;
 
 
+    /**
+     * 获取带有科目编号的一级科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> listAllFirstAndCode() throws SerException {
+        return null;
+    }
 }

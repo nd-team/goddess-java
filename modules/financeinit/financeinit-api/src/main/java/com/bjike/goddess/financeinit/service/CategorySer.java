@@ -121,4 +121,12 @@ public interface CategorySer extends Ser<Category, CategoryDTO> {
     default List<String> findByFirstName(String firstName) throws SerException {
         return null;
     }
+
+    /**
+     * 根据一级科目判断是否属于资产类
+     * zhuangkaiqin
+     */
+    default Boolean isAssets(String firstSubject) throws SerException {
+        return null;
+    }
 }

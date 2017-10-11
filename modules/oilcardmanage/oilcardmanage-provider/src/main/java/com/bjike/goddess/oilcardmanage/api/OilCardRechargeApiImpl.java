@@ -1,7 +1,6 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
@@ -86,8 +85,8 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
         oilCardRechargeSer.delete(id);
     }
 
-    @Override
-    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
-        return oilCardRechargeSer.findDispatch(oilCardCode,startTime,endTime);
-    }
+//    @Override
+//    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
+//        return oilCardRechargeSer.findDispatch(oilCardCode,startTime,endTime);
+//    }
 }
