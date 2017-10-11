@@ -26,7 +26,7 @@ public class IndicatorBO extends BaseBO {
     /**
      * 指标类型
      */
-    private Boolean type;
+    private String type;
 
     /**
      * 考核指标
@@ -90,11 +90,11 @@ public class IndicatorBO extends BaseBO {
         this.number = number;
     }
 
-    public Boolean getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Boolean type) {
+    public void setType(String type) {
         this.type = type;
     }
 

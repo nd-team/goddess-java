@@ -100,7 +100,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         super.update(entity);
         for (ModulesTO modulesTO : to.getModulesTOList()) {
             Modules modules = modulesSer.findById(modulesTO.getId());
-            BeanTransform.copyProperties(modulesTO, modules, "indicatorTOList", "workDetailsId");
+            BeanTransform.copyProperties(modulesTO, modules);
             modulesSer.update(modules);
             for (IndicatorTO indicatorTO : modulesTO.getIndicatorTOList()) {
                 Indicator indicator = indicatorSer.findById(indicatorTO.getId());
