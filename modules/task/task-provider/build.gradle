@@ -30,10 +30,10 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":common:common-utils")
     compile project(":modules:task:task-api")
-
     compile project(":modules:user:user-api")
     compile project(":modules:storage:storage-api")
     compile project(":modules:message:message-api")
+    compile project(":modules:organize:organize-api")
     compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.5')
 
 }

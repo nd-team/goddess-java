@@ -38,6 +38,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModulesAPI" id="modulesApiImpl"/>
 
 
 </beans>

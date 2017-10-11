@@ -10,6 +10,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.ModulesAPI;
 import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.bo.collect.Custom;
 import com.bjike.goddess.task.bo.collect.TaskCollect;
@@ -50,6 +51,8 @@ public class ScheduleSerImpl implements ScheduleSer {
     private TableSer tableSer;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ModulesAPI modulesAPI;
 
     @Override
     public Collect collect(CollectDTO dto) throws SerException {
@@ -102,7 +105,6 @@ public class ScheduleSerImpl implements ScheduleSer {
             username[i] = users.get(i).getNickname();
         }
         String names = "'" + StringUtils.join(username, "','") + "'";
-        //todo  TaskCollect 对象未设置 String module; //模块  String post; //岗位
         String sql;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT username, outProject, ");
@@ -133,20 +135,31 @@ public class ScheduleSerImpl implements ScheduleSer {
         sql = sb.toString();
         String[] fields = new String[]{"username", "outProject", "innerProject", "taskType",
                 "content", "remark", "planNum", "factNum", "differNum", "planDuration", "factDuration", "differDuration"};
-        List<TaskCollect> taskCollects = tableSer.findBySql(sql, TaskCollect.class, fields);
+        List<TaskCollect> taskCollects = tableSer.findBySql(sql, TaskCollect.class, fields); //查询指定多人的任务
         for (String user : username) {
             boolean exist = false;
+            Map<String, String> map = modulesAPI.findModuleAndPost(user);
             for (TaskCollect collect : taskCollects) {
                 if (user.equals(collect.getUsername())) {
                     exist = true;
+                    if (null != map) { //设置模块及职位
+                        collect.setModule(map.get("module"));
+                        collect.setPost(map.get("position"));
+                    }
                     break;
                 }
             }
-            if (!exist) {
+            if (!exist) { //不存在任务则添加空的对象
                 TaskCollect taskCollect = new TaskCollect();
+                if (null != map) { //设置模块及职位
+                    taskCollect.setModule(map.get("module"));
+                    taskCollect.setPost(map.get("position"));
+                }
                 taskCollect.setUsername(user);
                 taskCollects.add(taskCollect);
             }
+
+
         }
         return taskCollects;
     }
