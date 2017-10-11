@@ -25,6 +25,7 @@ public interface InterviewAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -127,5 +128,14 @@ public interface InterviewAPI {
         return null;
     }
 
-
+    /**
+     * 是否可挽留
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default Boolean detainment(String name) throws SerException {
+        return null;
+    }
 }

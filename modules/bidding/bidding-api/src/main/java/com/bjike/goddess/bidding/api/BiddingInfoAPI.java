@@ -189,12 +189,43 @@ public interface BiddingInfoAPI {
         return null;
     }
     /**
-     * 搜索
-     *
-     * @param to to
+     * 获取信息
+     * @param to
+     * @return
      * @throws SerException
      */
-    default void search(SearchTO to) throws SerException {
-    }
+    List<String> info(SearchTO to) throws SerException;
+    /**
+     * 工信部招标网获取信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<String> txzbInfo(SearchTO to) throws SerException;
 
+    /**
+     * 中央政府采购网获取信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<String> zycgInfo(SearchTO to) throws SerException;
+    /**
+     * 中国电力招标网获取信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<String> toobiaoInfo(SearchTO to) throws SerException;
+    /**
+     * 中国学校招标网获取信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<String> schoolbidInfo(SearchTO to) throws SerException;
 }

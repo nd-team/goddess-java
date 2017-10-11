@@ -12,11 +12,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
-import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
-import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.contacts.excel.InternalContactsExcel;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
@@ -339,5 +337,32 @@ public class InternalContactsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+//    /**
+//     * 导入Excel
+//     *
+//     * @param request 注入HttpServletRequest对象
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/test")
+//    public Result test(HttpServletRequest request) throws ActException {
+//        try {
+//            List<InputStream> inputStreams = super.getInputStreams(request);
+//            InputStream is = inputStreams.get(1);
+//            Excel excel = new Excel(0, 1);
+//            List<InternalContactsExcel> tos = ExcelUtil.excelToClazz(is, InternalContactsExcel.class, excel);
+//            List<InternalContactsTO> tocs = new ArrayList<>();
+//            for (InternalContactsExcel str : tos) {
+//                InternalContactsTO internalContactsTO = BeanTransform.copyProperties(str, InternalContactsTO.class);
+//                tocs.add(internalContactsTO);
+//            }
+//            //注意序列化
+//            internalContactsAPI.test(tocs);
+//            return new ActResult("导入成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 }

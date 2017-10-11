@@ -27,8 +27,7 @@ public interface ScheduleSer {
      * @return
      * @throws SerException
      */
-    default String customizeCollect(Customize customize) throws SerException {
-        return null;
+    default void customizeCollect(Customize customize) throws SerException {
     }
 
 }

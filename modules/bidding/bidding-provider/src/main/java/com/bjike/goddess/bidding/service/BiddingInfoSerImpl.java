@@ -23,17 +23,29 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +72,10 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     private CollectEmailSer collectEmailSer;
     @Autowired
     private BiddingAnswerQuestionsSer biddingAnswerQuestionsSer;
+    @Autowired
+    private BiddingTypeSer biddingTypeSer;
+    @Autowired
+    private BiddingAcceptSer biddingAcceptSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -197,6 +213,31 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         obj.setName("collectemail");
         obj.setDescribesion("招投标信息邮件发送");
         if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeType = biddingTypeSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("biddingtype");
+        obj.setDescribesion("招投标类型");
+        if (flagSeeType) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        Boolean flagSeeAccept = biddingAcceptSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("biddingaccept");
+        obj.setDescribesion("招标问题受理和处理");
+        if (flagSeeAccept) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -364,27 +405,27 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
          * 网站名称
          */
         if (StringUtils.isNotBlank(biddingInfoDTO.getWebName())) {
-            biddingInfoDTO.getConditions().add(Restrict.eq("webName", biddingInfoDTO.getWebName()));
+            biddingInfoDTO.getConditions().add(Restrict.like("webName", biddingInfoDTO.getWebName()));
         }
         /**
          * 网址
          */
         if (StringUtils.isNotBlank(biddingInfoDTO.getUrl())) {
-            biddingInfoDTO.getConditions().add(Restrict.eq("url", biddingInfoDTO.getUrl()));
+            biddingInfoDTO.getConditions().add(Restrict.like("url", biddingInfoDTO.getUrl()));
         }
         /**
          * 省份
          */
 
         if (StringUtils.isNotBlank(biddingInfoDTO.getProvinces())) {
-            biddingInfoDTO.getConditions().add(Restrict.eq("provinces", biddingInfoDTO.getProvinces()));
+            biddingInfoDTO.getConditions().add(Restrict.like("provinces", biddingInfoDTO.getProvinces()));
 
         }
         /**
          * 地市
          */
         if (StringUtils.isNotBlank(biddingInfoDTO.getCities())) {
-            biddingInfoDTO.getConditions().add(Restrict.eq("cities", biddingInfoDTO.getCities()));
+            biddingInfoDTO.getConditions().add(Restrict.like("cities", biddingInfoDTO.getCities()));
 
         }
     }
@@ -395,16 +436,12 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             throw new SerException("汇总失败，请选择地市");
         }
         List<BiddingInfoCollectBO> boList = new ArrayList<>();
-//        String[] citiesTemp = new String[cities.length];
-//        for (int i = 0; i < cities.length; i++) {
-//            citiesTemp[i] = cities[i];
-//        }
-        StringBuilder sb= new StringBuilder();
-        for (int i=0;i<cities.length;i++){
-            if (i==cities.length-1){
-                sb.append("'"+cities[i]+"'");
-            }else {
-                sb.append("'"+cities[i]+"',");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cities.length; i++) {
+            if (i == cities.length - 1) {
+                sb.append("'" + cities[i] + "'");
+            } else {
+                sb.append("'" + cities[i] + "',");
             }
         }
 
@@ -421,7 +458,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
 
         sql = " SELECT businessType,count(businessType) AS count " +
-                "FROM bidding_biddinginfo WHERE cities IN (" + sb.toString()+ ") GROUP BY businessType ";
+                "FROM bidding_biddinginfo WHERE cities IN (" + sb.toString() + ") GROUP BY businessType ";
         List<Object> object = super.findBySql(sql);
         Map<String, Integer> businessMap = new HashMap<>(object.size());
         if (null != object && object.size() > 0) {
@@ -432,12 +469,12 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
         }
         BiddingInfoCollectBO bo = new BiddingInfoCollectBO();
-        StringBuilder sb1= new StringBuilder();
-        for (int i=0;i<cities.length;i++){
-            if (i==cities.length-1){
-                sb1.append(""+cities[i]+"");
-            }else {
-                sb1.append(""+cities[i]+",");
+        StringBuilder sb1 = new StringBuilder();
+        for (int i = 0; i < cities.length; i++) {
+            if (i == cities.length - 1) {
+                sb1.append("" + cities[i] + "");
+            } else {
+                sb1.append("" + cities[i] + ",");
             }
         }
         bo.setCities(sb1.toString());
@@ -658,22 +695,399 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
 //    @Override
-//    public void search(SearchTO to) throws SerException {
+//    public List<String> info(SearchTO to) throws SerException {
 //        try {
-//            String strLine = null;
-//            StringBuffer sb = new StringBuffer();
-//            URL urlObj = new URL(url);
-//            InputStream streamObj = urlObj.openStream();
-//            InputStreamReader readerObj = new InputStreamReader(streamObj,
-//                    chartset);
-//            BufferedReader buffObj = new BufferedReader(readerObj);
-//            while ((strLine = buffObj.readLine()) != null) {
-//                sb.append(strLine);
+
+    //创建连接
+//            URL u = new URL(url);
+//            HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+//            //得到输入流 也就是读取源代码
+//            BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream(), "gbk"));
+//            String line = null;
+//            StringBuilder sb = new StringBuilder();
+//            while ((line = bf.readLine()) != null) {
+//                sb.append(line);
 //            }
-//            buffObj.close();
-//            return sb.toString();
-//        } catch (Exception e) {
+//            String url="";
+//            HttpGet request = new HttpGet(to.getUrl());
+//            HttpClient client = HttpClients.createDefault();
+//            HttpResponse response = client.execute(request);
+//            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+//
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(content);
+//            if (content.contains(to.getTitle())) {
+//                if (content.contains("<HR")) {
+//                    int index = sb.indexOf("<h1");
+//                    int nextIndex = sb.indexOf("/h1>");
+//                    while ((index >= 0 && nextIndex >= 0) && (nextIndex > index)) {
+//                        if (index < nextIndex) {
+//                            sb.delete(index, nextIndex + 1);
+//                        }
+//                        index = sb.indexOf("<h1");
+//                        nextIndex = sb.indexOf("/h1>");
+//                    }
+
+    //                }
+//                Pattern pattern = Pattern.compile("[\u4E00-\u9FA5|\\！|\\,|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
+//                Pattern pattern = Pattern.compile("<a.+" + to.getTitle() + ".+</a>");
+//                Matcher matcher = pattern.matcher(sb.toString());
+//                StringBuilder result = new StringBuilder();
+//                List<String> list = new ArrayList<>();
+//                List<String> list1 = new ArrayList<>();
+//                while (matcher.find()) {
+//                    list.add(matcher.group().toString());
+//                }
+//                for (String s : list) {
+//                    int index = s.indexOf("/");
+//                    StringBuilder target = new StringBuilder(s);
+//                    String string = "<a href=\"https://b2b.10086.cn";
+//                    if (index > 0) {
+//                        target.delete(0, index);
+//                    }
+//                    list1.add(new StringBuilder(string).append(target).toString());
+//                }
+//                return list1;
+//                return result.toString();
+//                if (content.contains("<script") || content.contains("/script>")) {
+//                    int index = sb.indexOf("<script");
+//                    int nextIndex = sb.indexOf("/script>");
+//                    while ((index >= 0 && nextIndex >= 0)&& (nextIndex > index)) {
+//                        if (index < nextIndex) {
+//                            sb.delete(index, nextIndex + 1);
+//                        }
+//                        index = sb.indexOf("<script");
+//                        nextIndex = sb.indexOf("/script>");
+//                    }
+//                }
+//                //进行源代码的匹配是否包含‘<’,'>'
+//                if (sb.toString().contains("<") || sb.toString().contains(">")) {
+//                    int index = sb.indexOf("<");
+//                    int nextIndex = sb.indexOf(">");
+//                    while ((index >= 0 && nextIndex >= 0) && (nextIndex > index)) {
+//                        //删除‘<’,'>'标签
+//                        sb.delete(index, nextIndex + 1);
+//                        index = sb.indexOf("<");
+//                        nextIndex = sb.indexOf(">");
+//                    }
+//                }
+//                Pattern pattern=Pattern.compile("[\u4E00-\u9FA5|\\！|\\,|\\。|\\（|\\）|\\《|\\》|\\“|\\”|\\？|\\：|\\；|\\【|\\】]");
+//                Matcher matcher=pattern.matcher(sb.toString());
+//                StringBuilder result=new StringBuilder();
+//                while (matcher.find()){
+//                    result.append(matcher.group());
+//                }
+//                return result.toString();
+//            }
 //            return null;
+//        } catch (Exception e) {
+//            throw new SerException(e.getMessage());
 //        }
 //    }
+    @Override
+    public List<String> info(SearchTO to) throws SerException {
+        try {
+            //网址与内容不相符
+            String url = "https://b2b.10086.cn/b2b/main/listVendorNoticeResult.html?noticeBean.noticeType=2";
+            HttpPost request = new HttpPost(url);
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("efFormEname", "POIX14"));
+            params.add(new BasicNameValuePair("methodName", "initLoad"));
+
+            request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+
+            if (content.contains(to.getTitle())) {
+                String a = content.replaceAll("\\r|\\n|\\t", "");
+                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
+                Matcher matcher = pattern.matcher(a);
+                List<String> list = new ArrayList<>();
+                List<String> list1 = new ArrayList<>();
+                while (matcher.find()) {
+                    list.add(matcher.group().toString());
+                }
+                for (String s : list) {
+                    int index = s.indexOf("/");
+                    StringBuilder target = new StringBuilder(s);
+                    String string = "<a href=\"https://b2b.10086.cn/";
+                    if (index > 0) {
+                        target.delete(0, index);
+                    }
+                    list1.add(new StringBuilder(string).append(target).toString());
+                }
+                return list1;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> txzbInfo(SearchTO to) throws SerException {
+        try {
+            String url = "http://txzb.miit.gov.cn/DispatchAction.do?reg=denglu&pagesize=11";
+            HttpPost request = new HttpPost(url);
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("efFormEname", "POIX14"));
+            params.add(new BasicNameValuePair("methodName", "initLoad"));
+
+            request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+
+            if (content.contains(to.getTitle())) {
+//                if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+
+
+                String a = content.replaceAll("\\r|\\n|\\t", "");
+                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
+                Matcher matcher = pattern.matcher(a);
+                List<String> list = new ArrayList<>();
+                List<String> list1 = new ArrayList<>();
+                while (matcher.find()) {
+                    list.add(matcher.group().toString());
+                }
+                for (String s : list) {
+                    int index = s.indexOf("/");
+                    StringBuilder target = new StringBuilder(s);
+                    String string = "<a href=\"https://txzb.miit.gov.cn/";
+                    if (index > 0) {
+                        target.delete(0, index);
+                    }
+                    list1.add(new StringBuilder(string).append(target).toString());
+                }
+                return list1;
+            }
+//            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> zycgInfo(SearchTO to) throws SerException {
+        try {
+
+            String url = "http://www.zycg.gov.cn/article/article_search";
+
+            HttpGet request = new HttpGet(url);
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+            System.out.println(sb.toString());
+            if (content.contains(to.getTitle())) {
+//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
+                String a = content.replaceAll("\\r|\\n|\\t", "");
+                Pattern pattern = Pattern.compile("<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
+                Matcher matcher = pattern.matcher(a);
+//                Matcher matcher = pattern.matcher(sb.toString());
+                System.out.println(matcher);
+                List<String> list = new ArrayList<>();
+                List<String> list1 = new ArrayList<>();
+                while (matcher.find()) {
+                    list.add(matcher.group().toString());
+                }
+                for (String s : list) {
+                    int index = s.indexOf("/");
+                    StringBuilder target = new StringBuilder(s);
+                    String string = "<a href=\"http://www.zycg.gov.cn/";
+                    if (index > 0) {
+                        target.delete(0, index);
+                    }
+                    list1.add(new StringBuilder(string).append(target).toString());
+                }
+                return list1;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public List<String> toobiaoInfo(SearchTO to) throws SerException {
+        try {
+
+            //搜索条件不成立
+            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0&kw=%E4%B8%AD%E5%9B%BD";
+
+            HttpGet request = new HttpGet(url);
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+            System.out.println(sb.toString());
+            if (content.contains(to.getTitle())) {
+//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
+                String a = content.replaceAll("\\r|\\n|\\t", "");
+                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>([^<]*)</a>");
+                Matcher matcher = pattern.matcher(a);
+//                Matcher matcher = pattern.matcher(sb.toString());
+                System.out.println(matcher);
+                List<String> list = new ArrayList<>();
+                List<String> list1 = new ArrayList<>();
+                while (matcher.find()) {
+                    list.add(matcher.group().toString());
+                }
+                for (String s : list) {
+                    int index = s.indexOf("/");
+                    StringBuilder target = new StringBuilder(s);
+                    String string = "<a href=\"http://search.qianlima.com/";
+                    if (index > 0) {
+                        target.delete(0, index);
+                    }
+                    list1.add(new StringBuilder(string).append(target).toString());
+                }
+                return list1;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public List<String> schoolbidInfo(SearchTO to) throws SerException {
+        try {
+
+            String url = "http://www.schoolbid.cn/search/?l=zb&k=%E4%B8%AD%E5%9B%BD&lb=0&www=www.schoolbid.cn&kb=zb&dq=&rq=365&lx=2&imageField.x=34&imageField.y=20&xdq=&username=&password=";
+
+            HttpGet request = new HttpGet(url);
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+            System.out.println(sb.toString());
+            if (content.contains("中国")) {
+//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
+                String a = content.replaceAll("\\r|\\n|\\t", "");
+                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>([^<]*)</a>");
+                Matcher matcher = pattern.matcher(a);
+//                Matcher matcher = pattern.matcher(sb.toString());
+                System.out.println(matcher);
+                List<String> list = new ArrayList<>();
+                List<String> list1 = new ArrayList<>();
+                while (matcher.find()) {
+                    list.add(matcher.group().toString());
+                }
+                for (String s : list) {
+                    int index = s.indexOf("/");
+                    StringBuilder target = new StringBuilder(s);
+                    String string = "<a href=\"http://www.schoolbid.cn/";
+                    if (index > 0) {
+                        target.delete(0, index);
+                    }
+                    list1.add(new StringBuilder(string).append(target).toString());
+                }
+                return list1;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+
+
+    }
+
+    public static void main(String[] args) throws SerException {
+//        try {
+//
+//            String url = "http://www.schoolbid.cn/search/?l=zb&k=&lb=0&www=www.schoolbid.cn&kb=zb&dq=&rq=365&lx=2&imageField.x=32&imageField.y=22&xdq=&username=&password=";
+//
+//            HttpGet request = new HttpGet(url);
+//            HttpClient client = HttpClients.createDefault();
+//            HttpResponse response = client.execute(request);
+//            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+//
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(content);
+//            System.out.println(sb.toString());
+//            if (content.contains("广东")) {
+//                String a = content.replaceAll("\\r|\\n|\\t", "");
+//                Pattern pattern = Pattern.compile("<li[^>]*>\\s*<a[^>]*>"+"广东"+"([^<]*)</span>");
+//                Matcher matcher = pattern.matcher(a);
+//                System.out.println(pattern);
+//                List<String> list = new ArrayList<>();
+//                List<String> list1 = new ArrayList<>();
+//                while (matcher.find()) {
+//                    list.add(matcher.group().toString());
+//                }
+//                for (String s : list) {
+//                    int index = s.indexOf("/");
+//                    StringBuilder target = new StringBuilder(s);
+//                    String string = "<a href=\"http://www.dlzb.com/";
+//                    if (index > 0) {
+//                        target.delete(0, index);
+//                    }
+//                    list1.add(new StringBuilder(string).append(target).toString());
+//                }
+//                System.out.println(list1);
+//            }
+//        } catch (Exception e) {
+//            throw new SerException(e.getMessage());
+//        }
+//    }
+        try {
+
+            String url = "http://www.zycg.gov.cn/article/article_search";
+
+            HttpGet request = new HttpGet(url);
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+            System.out.println(sb.toString());
+            if (content.contains("中国")) {
+//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
+                String a = content.replaceAll("\\r|\\n|\\t", "");
+                Pattern pattern = Pattern.compile("<a[^>]*>" + "中国" + "([^<]*)</a>");
+                Matcher matcher = pattern.matcher(a);
+//                Matcher matcher = pattern.matcher(sb.toString());
+                System.out.println(matcher);
+                List<String> list = new ArrayList<>();
+                List<String> list1 = new ArrayList<>();
+                while (matcher.find()) {
+                    list.add(matcher.group().toString());
+                }
+                for (String s : list) {
+                    int index = s.indexOf("/");
+                    StringBuilder target = new StringBuilder(s);
+                    String string = "<a href=\"http://www.zycg.gov.cn/";
+                    if (index > 0) {
+                        target.delete(0, index);
+                    }
+                    list1.add(new StringBuilder(string).append(target).toString());
+                }
+                System.out.println(list1);
+            }
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+
 }

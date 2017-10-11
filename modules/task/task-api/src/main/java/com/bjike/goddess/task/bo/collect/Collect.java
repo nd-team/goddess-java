@@ -29,6 +29,9 @@ public class Collect implements Serializable {
     private int scaleCount;//总规模数（从商务合同管理获取）
     @ExcelHeader(name = "出车数量")
     private int carCount;//出车数量（从出车记录管理获取）
+
+    private String department;//如果设置有值,则为部门汇总
+
     private List<Custom> customs = new ArrayList<>(); //自定义汇总
     /**
      * 部门汇总(今天)
@@ -118,5 +121,13 @@ public class Collect implements Serializable {
 
     public void setTomorrowCollects(List<TomorrowCollect> tomorrowCollects) {
         this.tomorrowCollects = tomorrowCollects;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

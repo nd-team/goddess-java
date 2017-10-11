@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 部门间对赌表业务接口实现
@@ -71,5 +72,9 @@ public class DepartmentBetApiImpl implements DepartmentBetAPI {
     @Override
     public List<DepartmentBetABO> departmentCollect(ProjectNameTO to) throws SerException {
         return departmentBetSer.departmentCollect(to);
+    }
+    @Override
+    public Set<String> projectName() throws SerException {
+        return departmentBetSer.projectName();
     }
 }

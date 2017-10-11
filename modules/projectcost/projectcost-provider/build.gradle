@@ -30,7 +30,7 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:projectcost:projectcost-api")
     compile project(":modules:otherexpenses:otherexpenses-api")
-    compile project(":modules:dispatchcar:dispatchcar-api")
+//    compile project(":modules:dispatchcar:dispatchcar-api")
     compile project(":common:common-utils")
     compile project(":modules:user:user-api")
 }

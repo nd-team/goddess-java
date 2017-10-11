@@ -216,7 +216,9 @@ public class CreditorsInvestSerImpl extends ServiceImpl<CreditorsInvest, Credito
             throw new SerException("id不能为空");
         }
         CreditorsInvest creditorsInvest = super.findById(creditorsInvestTO.getId());
-        BeanTransform.copyProperties(creditorsInvestTO,creditorsInvest,true);
+        LocalDateTime createTime = creditorsInvest.getCreateTime();
+        creditorsInvest = BeanTransform.copyProperties(creditorsInvestTO,CreditorsInvest.class,true);
+        creditorsInvest.setCreateTime(createTime);
         creditorsInvest.setModifyTime(LocalDateTime.now());
         super.update(creditorsInvest);
         return BeanTransform.copyProperties(creditorsInvest,CreditorsInvestBO.class);

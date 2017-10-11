@@ -10,9 +10,12 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -102,6 +105,30 @@ public class BiddingCollectAction {
                     biddingInfoAPI.totalCollect(to), BiddingCollectVO.class);
             return ActResult.initialize(biddingInfoCollectVOS);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取当前月有几周
+     *
+     * @param year  年份
+     * @param month 月份
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findWeek/{year}/{month}")
+    public Result findWeek(@PathVariable Integer year, @PathVariable Integer month) throws ActException {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);
+            int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= weekNum; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

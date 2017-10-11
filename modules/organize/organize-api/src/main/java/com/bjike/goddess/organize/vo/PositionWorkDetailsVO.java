@@ -180,7 +180,7 @@ public class PositionWorkDetailsVO {
     /**
      * 模块
      */
-    private List<ModulesVO> modulesVOList;
+    private List<ModulesVO> modulesBOList;
 
 
     public String getId() {
@@ -431,12 +431,12 @@ public class PositionWorkDetailsVO {
         isComplete = complete;
     }
 
-    public List<ModulesVO> getModulesVOList() {
-        return modulesVOList;
+    public List<ModulesVO> getModulesBOList() {
+        return modulesBOList;
     }
 
-    public void setModulesVOList(List<ModulesVO> modulesVOList) {
-        this.modulesVOList = modulesVOList;
+    public void setModulesBOList(List<ModulesVO> modulesBOList) {
+        this.modulesBOList = modulesBOList;
     }
 
     public String getProjectStageNum() {

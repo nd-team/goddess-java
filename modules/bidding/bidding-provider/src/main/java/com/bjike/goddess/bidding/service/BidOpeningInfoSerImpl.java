@@ -243,11 +243,13 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
             throw new SerException("id不能为空");
         }
         BidOpeningInfo bidOpeningInfo = super.findById(bidOpeningInfoTO.getId());
-        BeanTransform.copyProperties(bidOpeningInfoTO, bidOpeningInfo, true);
+        LocalDateTime createTime = bidOpeningInfo.getCreateTime();
+        bidOpeningInfo = BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfo.class, true);
         checkDate(bidOpeningInfoTO);
+        bidOpeningInfo.setCreateTime(createTime);
         bidOpeningInfo.setModifyTime(LocalDateTime.now());
         super.update(bidOpeningInfo);
-        return BeanTransform.copyProperties(bidOpeningInfoTO, BidOpeningInfoBO.class);
+        return BeanTransform.copyProperties(bidOpeningInfo, BidOpeningInfoBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -266,7 +268,7 @@ public class BidOpeningInfoSerImpl extends ServiceImpl<BidOpeningInfo, BidOpenin
          * 竞争公司
          */
         if (StringUtils.isNotBlank(bidOpeningInfoDTO.getCompetitive())) {
-            bidOpeningInfoDTO.getConditions().add(Restrict.eq("competitive", bidOpeningInfoDTO.getCompetitive()));
+            bidOpeningInfoDTO.getConditions().add(Restrict.like("competitive", bidOpeningInfoDTO.getCompetitive()));
         }
     }
 

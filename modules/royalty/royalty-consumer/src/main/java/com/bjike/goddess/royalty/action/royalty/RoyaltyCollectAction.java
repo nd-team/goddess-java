@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,6 +41,29 @@ import java.util.List;
 public class RoyaltyCollectAction {
     @Autowired
     private IndexLibraryAPI indexLibraryAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = indexLibraryAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
     /**
@@ -137,5 +161,26 @@ public class RoyaltyCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 年份
+     *
+     * @version v1
+     */
+    @GetMapping("v1/year")
+    public Result yearList() throws ActException {
+        try {
+            //获取所有年
+            List<String> yearList = new ArrayList<>();
+            int year = LocalDate.now().getYear();
+
+            for (int i = year - 5; i <= year + 5; i++) {
+                yearList.add(String.valueOf(i));
+            }
+            return ActResult.initialize(yearList);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

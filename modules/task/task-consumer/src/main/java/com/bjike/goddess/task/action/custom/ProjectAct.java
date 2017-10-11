@@ -1,21 +1,25 @@
-package com.bjike.goddess.task.action;
+package com.bjike.goddess.task.action.custom;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.task.api.TableAPI;
-import com.bjike.goddess.task.dto.TableDTO;
-import com.bjike.goddess.task.to.TableTO;
+import com.bjike.goddess.task.api.ProjectAPI;
+import com.bjike.goddess.task.bo.ProjectBO;
+import com.bjike.goddess.task.dto.ProjectDTO;
+import com.bjike.goddess.task.to.ProjectTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
+ * 项目
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-16 09:29]
  * @Description: [ ]
@@ -24,38 +28,40 @@ import org.springframework.web.bind.annotation.*;
  */
 @DefaultProperties
 @RestController
-@RequestMapping("table")
-public class TableAct {
+@RequestMapping("project")
+public class ProjectAct {
     @Autowired
-    private TableAPI tableAPI;
+    private ProjectAPI projectAPI;
 
     /**
-     * 列表
+     * 所有项目列表
      *
-     * @param dto
-     * @des 可以status, execStatus, projectId 为条件,status,execStatus,projectId为空时分页查询表
+     * @return class ProjectBO
+     * @des 默认分页
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(TableDTO dto) throws ActException {
+    public Result list(ProjectDTO dto) throws ActException {
         try {
-            return ActResult.initialize(tableAPI.list(dto, true));
+            List<ProjectBO> bos = projectAPI.list(dto, true);
+            return ActResult.initialize(bos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 项目下的所有表
+     * 用户项目列表
      *
-     * @des 可以status, execStatus, projectId 为条件,status,execStatus为空时查询项目下的所有表
+     * @return class ProjectBO
+     * @des 默认不分页
      * @version v1
      */
-    @GetMapping("v1/list/{projectId}")
-    public Result list(@PathVariable String projectId, TableDTO dto) throws ActException {
+    @GetMapping("v1/list/{userId}")
+    public Result list(@PathVariable String userId, ProjectDTO dto) throws ActException {
         try {
-            dto.setProjectId(projectId);
-            return ActResult.initialize(tableAPI.list(dto, false));
+            List<ProjectBO> bos = projectAPI.list(userId, dto);
+            return ActResult.initialize(bos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -63,17 +69,16 @@ public class TableAct {
 
 
     /**
-     * 添加表
+     * 项目添加
      *
-     * @param to 表信息
-     * @return
-     * @throws ActException
-     * @des names多个
+     * @param to 项目信息
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated({ADD.class}) TableTO to, BindingResult rs) throws ActException {
+    public Result add(@Validated({ADD.class}) ProjectTO to, BindingResult rs) throws ActException {
         try {
-            tableAPI.add(to);
+            projectAPI.add(to);
             return ActResult.initialize(true);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -81,33 +86,17 @@ public class TableAct {
     }
 
     /**
-     * 表删除
+     * 项目解冻
      *
-     * @param id 表id
-     * @return
+     * @param id 项目id
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @throws ActException
-     */
-    @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
-        try {
-            tableAPI.delete(id);
-            return ActResult.initialize(true);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 表解冻
-     *
-     * @param id 表id
-     * @return
-     * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/thaw/{id}")
     public Result thaw(@PathVariable String id) throws ActException {
         try {
-            tableAPI.thaw(id);
+            projectAPI.thaw(id);
             return ActResult.initialize(true);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -115,19 +104,21 @@ public class TableAct {
     }
 
     /**
-     * 表解冻
+     * 项目解冻
      *
-     * @param id 表id
-     * @return
+     * @param id 项目id
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @throws ActException
+     * @version v1
      */
     @PutMapping("v1/congeal/{id}")
     public Result congeal(@PathVariable String id) throws ActException {
         try {
-            tableAPI.congeal(id);
+            projectAPI.congeal(id);
             return ActResult.initialize(true);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
 }

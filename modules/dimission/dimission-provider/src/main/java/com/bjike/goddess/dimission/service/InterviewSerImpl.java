@@ -268,6 +268,23 @@ public class InterviewSerImpl extends ServiceImpl<Interview, InterviewDTO> imple
         return isManager(name);
     }
 
+    @Override
+    public Boolean detainment(String name) throws SerException {
+        DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+        dimissionInfoDTO.getConditions().add(Restrict.eq("type", 2));
+        dimissionInfoDTO.getConditions().add(Restrict.eq("username", name));
+        List<DimissionInfo> dimissionInfos = dimissionInfoSer.findByCis(dimissionInfoDTO);
+        if (null != dimissionInfos && dimissionInfos.size() > 0) {
+            String opinion = dimissionInfos.get(0).getLiableOpinion();
+            if ("可挽留".equals(opinion.substring(0, 3))) {
+                return true;
+            } else if ("不可挽留".equals(opinion.substring(0, 4))) {
+                return false;
+            }
+        }
+        return null;
+    }
+
 
     //根据名字获取地区,部门,岗位,岗位层级
     private Interview getDataByName(Interview entity) throws SerException {

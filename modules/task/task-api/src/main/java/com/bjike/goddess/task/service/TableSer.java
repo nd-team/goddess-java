@@ -30,6 +30,9 @@ public interface TableSer extends Ser<Table, TableDTO> {
     default List<Table> list(TableDTO dto) throws SerException {
         return null;
     }
+    default List<Table> findById(String ... ids) throws SerException {
+        return null;
+    }
 
     default List<Table> list(String projectId) throws SerException {
         return null;

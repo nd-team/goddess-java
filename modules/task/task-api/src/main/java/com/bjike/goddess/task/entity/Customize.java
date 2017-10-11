@@ -42,13 +42,13 @@ public class Customize extends BaseEntity {
     /**
      * 创建人
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '创建人' ", nullable = false)
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '创建人(非id)' ", nullable = false)
     private String user;
 
     /**
      * 汇总自定义字段
      */
-    @Column(columnDefinition = "TEXT COMMENT '汇总自定义字段,多个' ", nullable = false)
+    @Column(columnDefinition = "TEXT COMMENT '汇总自定义字段,多个(非id)' ", nullable = false)
     private String fields;
     /**
      * 定时时间类型
@@ -63,6 +63,12 @@ public class Customize extends BaseEntity {
     private String timeVal;
 
     /**
+     * 汇总部门
+     */
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '汇总部门(非id)'",nullable = false)
+    private String department;
+
+    /**
      * 通知类型
      */
     @Column(columnDefinition = "TINYINT(2) COMMENT '通知类型' ", nullable = false)
@@ -70,7 +76,7 @@ public class Customize extends BaseEntity {
     /**
      * 通知目标(部门,用户等,所有时为空)
      */
-    @Column(columnDefinition = "TEXT COMMENT 'noticeType:0-用户,1-部门,2-为空' ")
+    @Column(columnDefinition = "TEXT COMMENT 'noticeType:0-用户(username),1-部门(name),2-为空' ")
     private String noticeTarget;
 
     /**
@@ -86,7 +92,7 @@ public class Customize extends BaseEntity {
     /**
      * 汇总目标(部门,用户等,所有时为空)
      */
-    @Column(columnDefinition = "TEXT comment '汇总目标[summaryType:0-用户,1-部门,2-为空]' ")
+    @Column(columnDefinition = "TEXT comment '汇总目标[summaryType:0-用户(username),1-部门(name),2-为空]' ")
     private String summaryTarget;
     /**
      * 间隔类型
@@ -225,5 +231,11 @@ public class Customize extends BaseEntity {
         this.lastTime = lastTime;
     }
 
+    public String getDepartment() {
+        return department;
+    }
 
+    public void setDepartment(String department) {
+        this.department = department;
+    }
 }

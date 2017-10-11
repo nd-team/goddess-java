@@ -30,7 +30,7 @@ public class CustomizeTO extends BaseTO {
     /**
      * 项目
      */
-    @NotBlank(message = "项目不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "项目id不能为空", groups = {ADD.class, EDIT.class})
     private String projectId;
 
     /**
@@ -55,7 +55,12 @@ public class CustomizeTO extends BaseTO {
      * 定时时间间隔值
      */
     @NotBlank(message = "定时间隔值不能为空", groups = {ADD.class, EDIT.class})
-    private String timeVal;
+    private String timeVal;    /**
+
+     * 部门名
+     */
+    @NotBlank(message = "部门名", groups = {ADD.class, EDIT.class})
+    private String department;
 
     /**
      * 通知类型
@@ -63,7 +68,7 @@ public class CustomizeTO extends BaseTO {
     @NotNull(message = "通知类型不能为空", groups = {ADD.class, EDIT.class})
     private NoticeType noticeType;
     /**
-     * 通知目标(部门,用户等,所有时为空)
+     * 通知目标(部门(name),用户(username)等,所有时为空)
      */
     private String noticeTarget;
 
@@ -78,7 +83,7 @@ public class CustomizeTO extends BaseTO {
     @NotNull(message = "汇总类型不能为空", groups = {ADD.class, EDIT.class})
     private SummaryType summaryType;
     /**
-     * 汇总目标(部门,用户等,所有时为空)
+     * 汇总目标(部门(name),用户(username)等,所有时为空)
      */
     private String summaryTarget;
     /**
@@ -196,4 +201,11 @@ public class CustomizeTO extends BaseTO {
         this.dateVal = dateVal;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
 }

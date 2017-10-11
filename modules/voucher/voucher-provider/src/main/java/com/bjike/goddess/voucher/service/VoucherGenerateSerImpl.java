@@ -9,11 +9,13 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.bo.AccountInfoBO;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.PartOptionBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
@@ -22,6 +24,7 @@ import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
 import com.bjike.goddess.voucher.enums.*;
+import com.bjike.goddess.voucher.excel.AccountInfoExport;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.excel.VoucherExportExcel;
 import com.bjike.goddess.voucher.excel.VoucherTemplateExportExcel;
@@ -1590,6 +1593,137 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return area;
     }
 
+    @Override
+    public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
+        List<AccountInfoBO> boList = new ArrayList<>();
+        List<AccountInfoBO> boList1 = null;
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT voucherDate AS voucherDate,voucherWord AS voucherWord,voucherNum AS voucherNum, ");
+        sb.append(" area AS area,projectName AS projectName,projectGroup AS projectGroup,sumary AS sumary, ");
+        sb.append(" firstSubject AS firstSubject,secondSubject AS secondSubject,thirdSubject AS thirdSubject, ");
+        sb.append(" sum(borrowMoney) AS borrowMoney,sum(loanMoney) AS loanMoney ");
+        sb.append(" FROM voucher_vouchergenerate WHERE transferStatus=1 ");
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            sb.append(" and ( cast( voucherDate as date ) between '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "')");
+        }
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            sb.append(" and area = '" + dto.getArea() + "' ");
+        }
+        if (StringUtils.isNotBlank(dto.getProjectName())) {
+            sb.append(" and projectName = '" + dto.getProjectName() + "'");
+        }
+        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
+            sb.append(" and projectGroup = '" + dto.getProjectGroup() + "'");
+        }
+        if (StringUtils.isNotBlank(dto.getFirstSubject()) && StringUtils.isNotBlank(dto.getSecondSubject()) && StringUtils.isNotBlank(dto.getThirdSubject())) {
+            sb.append(" and firstSubject = '" + dto.getFirstSubject() + "'");
+            sb.append(" and secondSubject = '" + dto.getSecondSubject() + "'");
+            sb.append(" and thirdSubject = '" + dto.getThirdSubject() + "'");
+        }
+        sb.append(" GROUP BY voucherDate,voucherWord,voucherNum,area,projectName,projectGroup,sumary, ");
+        sb.append(" firstSubject,secondSubject,thirdSubject ORDER BY voucherDate DESC");
+        String[] fields = new String[]{"voucherDate", "voucherWord", "voucherNum", "area", "projectName", "projectGroup", "sumary",
+                "firstSubject", "secondSubject", "thirdSubject", "borrowMoney", "loanMoney"};
+        List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
+        for (AccountInfoBO accountInfoBO : accountInfoBOS) {
+            //todo 从财务初始化根据财务会计科目拿取方向，新的财务初始化会有这个字段，暂时用remark来代替
+            String sql = " SELECT remark AS direction FROM financeinit_firstsubject WHERE name='" + accountInfoBO.getFirstSubject() + "' ";
+            String[] field = new String[]{"direction"};
+            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
+            if (boList1 != null && !boList1.isEmpty()) {
+                accountInfoBO.setDirection(boList1.get(0).getDirection());
+            }
+            boList.add(accountInfoBO);
+        }
+        Double borrowMoney = boList.stream().filter(p -> p.getBorrowMoney() != null).mapToDouble(p -> p.getBorrowMoney()).sum();
+        Double loanMoney = boList.stream().filter(p -> p.getLoanMoney() != null).mapToDouble(p -> p.getLoanMoney()).sum();
+        AccountInfoBO bo = new AccountInfoBO();
+        bo.setArea("合计：");
+        bo.setBorrowMoney(borrowMoney);
+        bo.setLoanMoney(loanMoney);
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getFirstSubject()) && StringUtils.isNotBlank(dto.getSecondSubject()) && StringUtils.isNotBlank(dto.getThirdSubject())) {
+            dto.getConditions().add(Restrict.eq("firstSubject", dto.getFirstSubject()));
+            dto.getConditions().add(Restrict.eq("secondSubject", dto.getSecondSubject()));
+            dto.getConditions().add(Restrict.eq("thirdSubject", dto.getThirdSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.eq("area", dto.getArea()));
+        }
+        if (StringUtils.isNotBlank(dto.getProjectName())) {
+            dto.getConditions().add(Restrict.eq("projectName", dto.getProjectName()));
+        }
+        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
+            dto.getConditions().add(Restrict.eq("projectGroup", dto.getProjectGroup()));
+        }
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            String[] voucherDate = new String[]{dto.getStartTime(), dto.getEndTime()};
+            dto.getConditions().add(Restrict.between("voucherDate", voucherDate));
+        }
+        List<AccountInfoBO> boList = new ArrayList<>();
+        List<AccountInfoBO> boList1 = null;
+        List<VoucherGenerate> list = super.findByCis(dto);
+        List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
+        for (AccountInfoBO accountInfoBO : accountInfoBOS) {
+            String sql = " SELECT remark AS direction FROM financeinit_firstsubject WHERE name='" + accountInfoBO.getFirstSubject() + "' ";
+            String[] field = new String[]{"direction"};
+            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
+            if (boList1 != null && !boList1.isEmpty()) {
+                accountInfoBO.setDirection(boList1.get(0).getDirection());
+            }
+            boList.add(accountInfoBO);
+        }
+        List<AccountInfoExport> accountInfoExports = new ArrayList<>();
+        boList.stream().forEach(str -> {
+            AccountInfoExport export = BeanTransform.copyProperties(str, AccountInfoExport.class);
+            accountInfoExports.add(export);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(accountInfoExports, excel);
+        return bytes;
+    }
+
+    @Override
+    public List<String> accountArea() throws SerException {
+        String[] fields = new String[]{"area"};
+        String sql = "SELECT area AS area FROM voucher_vouchergenerate WHERE transferStatus=1 GROUP BY area ";
+        List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, fields);
+        List<String> areaList = list.stream().map(VoucherGenerate::getArea).collect(Collectors.toList());
+        return areaList;
+    }
+
+    @Override
+    public List<String> accountProjectName() throws SerException {
+        String[] fields = new String[]{"projectName"};
+        String sql = "SELECT projectName AS projectName FROM voucher_vouchergenerate WHERE transferStatus=1 GROUP BY projectName ";
+        List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, fields);
+        List<String> projectNameList = list.stream().map(VoucherGenerate::getProjectName).collect(Collectors.toList());
+        return projectNameList;
+    }
+
+    @Override
+    public List<String> accountProjectGroup() throws SerException {
+        String[] fields = new String[]{"projectGroup"};
+        String sql = "SELECT projectGroup AS projectGroup FROM voucher_vouchergenerate WHERE transferStatus=1 GROUP BY projectGroup ";
+        List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, fields);
+        List<String> projectGroupList = list.stream().map(VoucherGenerate::getProjectGroup).collect(Collectors.toList());
+        return projectGroupList;
+    }
+
+    @Override
+    public List<String> accountSubject() throws SerException {
+        String[] fields = new String[]{"firstSubject"};
+        String sql = "SELECT firstSubject AS firstSubject FROM voucher_vouchergenerate WHERE transferStatus=1 GROUP BY firstSubject ";
+        List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, fields);
+        List<String> firstSubjectList = list.stream().map(VoucherGenerate::getFirstSubject).collect(Collectors.toList());
+        return firstSubjectList;
+    }
+
     //Jason
     @Override
     public List<VoucherGenerateBO> findFundRecord(VoucherGenerateDTO dto) throws SerException {
@@ -1817,7 +1951,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 }
             }
         }
-            return null;
+        return null;
     }
 
     @Override
