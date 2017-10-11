@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 属性
+ * 列
  *
  * @Author: [liguiqin]
  * @Date: [2017-09-16 09:29]
@@ -49,7 +49,7 @@ public class FieldAct {
     }
 
     /**
-     * 添加列
+     * 添加
      *
      * @param to 列信息
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -67,7 +67,7 @@ public class FieldAct {
     }
 
     /**
-     * 删除列
+     * 删除
      *
      * @param id 列id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}

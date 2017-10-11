@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 节点
+ * 表节点
  *
  * @Author: [liguiqin]
  * @Date: [2017-09-19 11:15]
@@ -33,9 +33,9 @@ public class NodeAct {
     private NodeAPI nodeAPI;
 
     /**
-     * 表所有节点名称
+     * 列表
      *
-     * @param tableId
+     * @param tableId 表id
      * @return {name:'data',type:'list<string>',defaultValue:'',description:'字符串列表.'}
      * @version v1
      */
@@ -49,9 +49,10 @@ public class NodeAct {
     }
 
     /**
-     * 某个表某节点详情
+     * 节点详情
      *
-     * @param tableId
+     * @param tableId 表id
+     * @param node 节点
      * @return class FieldBO
      * @version v1
      */

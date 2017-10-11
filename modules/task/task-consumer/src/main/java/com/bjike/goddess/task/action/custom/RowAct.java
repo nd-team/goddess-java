@@ -67,7 +67,7 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 数量
+     * 数据量
      *
      * @param dto
      * @return {name:'data',type:'int',defaultValue:'',description:'数量.'}
@@ -85,10 +85,11 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 添加一行数据
+     * 添加
      *
      * @param to 行数据
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @des 添加数据时的 parameter如:添加姓名年龄两个字段(确保数据库列存在,不存在先添加列属性),?姓名=xxx&年龄=xxx
      * @throws ActException
      * @version v1
      */
@@ -115,7 +116,7 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 删除行
+     * 删除
      *
      * @param id 列id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -133,7 +134,7 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 从excel导入
+     * excel导入
      *
      * @param dto
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -152,7 +153,7 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 从excel导出
+     * excel导出
      *
      * @param dto
      * @return {name:'data',type:'byte',defaultValue:'',description:'文件流.'}

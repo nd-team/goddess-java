@@ -34,7 +34,7 @@ public class ProblemTypeAct {
     private ProblemTypeAPI problemTypeAPI;
 
     /**
-     * 添加
+     * 列表
      *
      * @param dto 问题
      * @return class ProblemTypeBO
@@ -86,6 +86,8 @@ public class ProblemTypeAct {
     }
 
     /**
+     * 编辑
+     *
      * @param to 问题
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @version v1

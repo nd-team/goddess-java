@@ -1,5 +1,6 @@
 package com.bjike.goddess.task.action.custom;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -8,6 +9,8 @@ import com.bjike.goddess.task.api.TaskAPI;
 import com.bjike.goddess.task.to.TaskTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +40,7 @@ public class TaskAct {
      * @version v1
      */
     @PostMapping("v1/issued")
-    public Result issued(TaskTO to) throws ActException {
+    public Result issued(@Validated(ADD.class) TaskTO to, BindingResult result) throws ActException {
         try {
             taskAPI.issued(to);
             return ActResult.initialize(true);

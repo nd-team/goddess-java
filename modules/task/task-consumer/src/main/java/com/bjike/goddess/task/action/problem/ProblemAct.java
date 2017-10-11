@@ -37,7 +37,7 @@ public class ProblemAct {
     private ProblemAPI problemAPI;
 
     /**
-     * 问题列表
+     * 列表
      *
      * @param dto
      * @return class ProblemBO
@@ -56,7 +56,7 @@ public class ProblemAct {
     }
 
     /**
-     * 问题列表数量
+     * 数据量
      *
      * @param dto
      * @return {name:'data',type:'int',defaultValue:'',description:'数量.'}
@@ -73,7 +73,7 @@ public class ProblemAct {
     }
 
     /**
-     * 问题修改
+     * 修改
      *
      * @param to
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -90,7 +90,7 @@ public class ProblemAct {
     }
 
     /**
-     * 问题删除
+     * 删除
      *
      * @param id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -107,7 +107,7 @@ public class ProblemAct {
     }
 
     /**
-     * 问题添加
+     * 添加
      *
      * @param to 问题
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -124,7 +124,7 @@ public class ProblemAct {
     }
 
     /**
-     * 问题添加
+     * 受理
      *
      * @param to 问题
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}

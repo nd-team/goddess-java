@@ -70,13 +70,13 @@ public class TableAct {
 
 
     /**
-     * 添加表
+     * 添加
      *
      * @param to 表信息
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @throws ActException
      * @version v1
-     * @des names多个
+     * @des names可为多个,多个时代表添加多个表
      */
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) TableTO to, BindingResult rs) throws ActException {
@@ -89,7 +89,7 @@ public class TableAct {
     }
 
     /**
-     * 表删除
+     * 删除
      *
      * @param id 表id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -107,7 +107,7 @@ public class TableAct {
     }
 
     /**
-     * 表解冻
+     * 解冻
      *
      * @param id 表id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -125,7 +125,7 @@ public class TableAct {
     }
 
     /**
-     * 表解冻
+     * 解冻
      *
      * @param id 表id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}

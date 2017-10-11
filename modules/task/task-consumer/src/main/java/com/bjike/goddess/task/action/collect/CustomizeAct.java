@@ -51,9 +51,9 @@ public class CustomizeAct {
     }
 
     /**
-     * 数量
+     * 数据量
      *
-     * @return {name:'data',type:'int',defaultValue:'',description:'数量.'}
+     * @return {name:'data',type:'int',defaultValue:'',description:'数据量.'}
      * @version v1
      */
     @GetMapping("v1/count")

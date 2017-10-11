@@ -69,7 +69,7 @@ public class ProjectAct {
 
 
     /**
-     * 项目添加
+     * 添加
      *
      * @param to 项目信息
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -86,7 +86,7 @@ public class ProjectAct {
     }
 
     /**
-     * 项目解冻
+     * 解冻
      *
      * @param id 项目id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
@@ -104,7 +104,7 @@ public class ProjectAct {
     }
 
     /**
-     * 项目解冻
+     * 解冻
      *
      * @param id 项目id
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
