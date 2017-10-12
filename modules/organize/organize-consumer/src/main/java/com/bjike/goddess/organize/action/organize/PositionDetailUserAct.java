@@ -280,5 +280,22 @@ public class PositionDetailUserAct {
         }
     }
 
+    /**
+     * 根据用户名获取体系和员工编号和性别
+     *
+     * @return class PhoneLoginUserInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkAsUserPosition")
+    public Result checkAsUserPosition(String userid, String[] position_ids) throws ActException {
+        try {
+            Boolean userBOS = positionDetailUserAPI.checkAsUserPosition(userid, position_ids);
+            return ActResult.initialize(userBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }
