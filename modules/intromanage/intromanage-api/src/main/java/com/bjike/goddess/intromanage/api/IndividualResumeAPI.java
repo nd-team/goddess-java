@@ -142,4 +142,18 @@ public interface IndividualResumeAPI {
     default SummationBO summaTotal(String endDate) throws SerException{
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
 }

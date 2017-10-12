@@ -137,5 +137,24 @@ public interface IndividualResumeSer extends Ser<IndividualResume, IndividualRes
     default SummationBO summaTotal(String endDate) throws SerException{
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
 
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param individualResumeTOS 公司简介
+     */
+    void importExcel(List<IndividualResumeTO> individualResumeTOS) throws SerException;
 }

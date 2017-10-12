@@ -67,14 +67,14 @@ public class AccountAction {
     /**
      * 列表总条数
      *
-     * @param customerBaseInfoDTO 账户来源信息dto
+     * @param accountDTO 账户来源信息dto
      * @des 获取所有账户来源信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(AccountDTO customerBaseInfoDTO) throws ActException {
+    public Result count(AccountDTO accountDTO) throws ActException {
         try {
-            Long count = accountAPI.countAccount(customerBaseInfoDTO);
+            Long count = accountAPI.countAccount(accountDTO);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -1,8 +1,10 @@
 package com.bjike.goddess.intromanage.action.intromanage;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.business.api.BusinessRegisterAPI;
 import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,12 +19,9 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.intromanage.api.FirmIntroAPI;
 import com.bjike.goddess.intromanage.bo.FirmIntroBO;
 import com.bjike.goddess.intromanage.dto.FirmIntroDTO;
-import com.bjike.goddess.intromanage.entity.FirmIntro;
+import com.bjike.goddess.intromanage.entity.*;
 import com.bjike.goddess.intromanage.excel.FirmIntroExcel;
-import com.bjike.goddess.intromanage.to.FirmDisplayFieldTO;
-import com.bjike.goddess.intromanage.to.FirmIntroTO;
-import com.bjike.goddess.intromanage.to.GuidePermissionTO;
-import com.bjike.goddess.intromanage.to.SiginManageDeleteFileTO;
+import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.vo.*;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -37,8 +36,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公司简介
@@ -421,7 +424,7 @@ public class FirmIntroAct extends BaseFileAction{
      * @des 导出公司简介
      * @version v1
      */
-//    @LoginAuth
+    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport( HttpServletResponse response) throws ActException {
         try {
@@ -463,22 +466,74 @@ public class FirmIntroAct extends BaseFileAction{
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<FirmIntroExcel> tos = ExcelUtil.mergeExcelToClazz(is, FirmIntroExcel.class, excel);
             List<FirmIntroTO> tocs = new ArrayList<>();
-//            for (FirmIntroExcel str : tos) {
-//                FirmIntroTO computerSubsidiesExcelTO = BeanTransform.copyProperties(str, FirmIntroTO.class, "entryDate", "confirmDate");
-//                computerSubsidiesExcelTO.setEntryDate(String.valueOf(str.getEntryDate()));
-//                computerSubsidiesExcelTO.setConfirmDate(String.valueOf(str.getConfirmDate()));
-//                tocs.add(computerSubsidiesExcelTO);
-//            }
-//            注意序列化
-//            computerSubsidiesAPI.importExcel(tocs);
+            Set<Integer> seqNum = new HashSet<>();
+            for (FirmIntroExcel firmIntroExcel:tos){
+                seqNum.add(firmIntroExcel.getSeqNum());
+            }
+            for (Integer seq : seqNum){
+                List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
+                List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
+                List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
+                List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
+                List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
+                List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
+                for(FirmIntroExcel str : tos){
+                    if(str.getSeqNum().equals(seq)){
+                        firmIntroExcels.add(str);
+                        HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str,HonorAndQualityTO.class);
+                        MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str,MainBusinessIntroTO.class);
+                        SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str,SuccessStoriesTO.class);
+                        CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str,CustomerAndPartnerTO.class);
+                        CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str,CommunicationPathTO.class);
+                        if(isCheckNull(honorAndQualityTO)){honorAndQualityTOS.add(honorAndQualityTO);}
+                        if(isCheckNull(mainBusinessIntroTO)){mainBusinessIntroTOS.add(mainBusinessIntroTO);}
+                        if(isCheckNull(successStoriesTO)){successStoriesTOS.add(successStoriesTO);}
+                        if(isCheckNull(customerAndPartnerTO)){customerAndPartnerTOS.add(customerAndPartnerTO);}
+                        if(isCheckNull(communicationPathTO)){communicationPathTOS.add(communicationPathTO);}
+                    }
+                }
+                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
+                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
+                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
+                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
+                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
+                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
+                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                firmIntroAPI.save(firmIntroTO);
+            }
+
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+    //判断某个类的所有属性是否都为空
+    public Boolean isCheckNull(Object obj){
+        Boolean bool = false;
+        if(null==obj){
+            bool = false;
+        }
+        for (Field f : obj.getClass().getDeclaredFields()) {
+                String name = f.getName(); // 获取属性的名字
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                try {
+                    Method m = obj.getClass().getMethod("get" + name);
+                    Object value = m.invoke(obj);// 调用getter方法获取属性值
+                    if (null!=value && !value.equals("")) {    //判断该属性值是否为空
+                        bool = true;
+                    }
+                } catch (Exception e) {
+
+                }
+
+        }
+        return bool;
     }
 }

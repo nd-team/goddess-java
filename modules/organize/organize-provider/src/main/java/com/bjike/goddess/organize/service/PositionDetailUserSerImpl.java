@@ -526,18 +526,14 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public StaffStatus statusByName(String name) throws SerException {
         //根据名字获取用户ｉｄ
-        StaffStatus staffStatus = StaffStatus.HAVELEAVE;
-//        UserBO userBO = userAPI.findByUsername(name);
-//        if (null != userBO) {
-//            String userId = userBO.getId();
         PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
         positionDetailUserDTO.getConditions().add(Restrict.eq("name", name));
         PositionDetailUser positionDetailUser = super.findOne(positionDetailUserDTO);
         if (null != positionDetailUser) {
-            staffStatus = positionDetailUser.getStaffStatus();
+            StaffStatus staffStatus = positionDetailUser.getStaffStatus();
+            return staffStatus;
         }
-//        }
-        return staffStatus;
+        return null;
     }
 
     @Override

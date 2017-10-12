@@ -83,11 +83,6 @@ public class SenioritySubsidies extends BaseEntity {
     @Column(name = "subsidiesStatus", nullable = false, columnDefinition = "INT(2)   COMMENT '补助状态'")
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 员工状态
-     */
-    @Column(name = "staffStatus", nullable = false, columnDefinition = "INT(2)   COMMENT '员工状态'")
-    private StaffStatus staffStatus;
 
     public String getArea() {
         return area;
@@ -169,11 +164,4 @@ public class SenioritySubsidies extends BaseEntity {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

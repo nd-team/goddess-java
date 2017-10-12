@@ -25,12 +25,12 @@ public enum StaffStatus {
     /**
      * 待离职
      */
-    @ExcelValue(name="已离职")
+    @ExcelValue(name="待离职")
     LEAVING(2),
     /**
      * 请假
      */
-    @ExcelValue(name="已离职")
+    @ExcelValue(name="请假")
     REST(3);
     private int code;
 

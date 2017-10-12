@@ -156,7 +156,7 @@ public class EntryRegisterVO {
     /**
      * 状态 
      */
-    private StaffStatus staffStatus;
+    private String staffStatus;
     /**
      * 家庭成员集合
      */
@@ -409,11 +409,11 @@ public class EntryRegisterVO {
         this.inductionDate = inductionDate;
     }
 
-    public StaffStatus getStaffStatus() {
+    public String getStaffStatus() {
         return staffStatus;
     }
 
-    public void setStaffStatus(StaffStatus staffStatus) {
+    public void setStaffStatus(String staffStatus) {
         this.staffStatus = staffStatus;
     }
 

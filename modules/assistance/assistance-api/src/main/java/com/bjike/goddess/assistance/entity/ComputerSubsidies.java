@@ -84,12 +84,6 @@ public class ComputerSubsidies extends BaseEntity {
     @Column(name = "subsidiesStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '补助状态'")
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 状态
-     */
-    @Column(name = "staffStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '状态'")
-    private StaffStatus staffStatus;
-
     public String getArea() {
         return area;
     }
@@ -170,11 +164,4 @@ public class ComputerSubsidies extends BaseEntity {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

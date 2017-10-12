@@ -175,17 +175,17 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
         }
         list.add(obj);
 
-        Boolean flagSeeEmail = currencySer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("currency");
-        obj.setDescribesion("财务初始化币别设置");
-        if (flagSeeEmail) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
+//        Boolean flagSeeEmail = currencySer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
+//        obj = new SonPermissionObject();
+//        obj.setName("currency");
+//        obj.setDescribesion("财务初始化币别设置");
+//        if (flagSeeEmail) {
+//            obj.setFlag(true);
+//        } else {
+//            obj.setFlag(false);
+//        }
+//        list.add(obj);
 
         return list;
     }

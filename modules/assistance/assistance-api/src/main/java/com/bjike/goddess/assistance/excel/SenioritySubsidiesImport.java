@@ -1,5 +1,6 @@
 package com.bjike.goddess.assistance.excel;
 
+import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
@@ -73,7 +74,7 @@ public class SenioritySubsidiesImport extends BaseBO {
      * 补助状态
      */
     @ExcelHeader(name = "补助状态", notNull = true)
-    private String subsidiesStatus;
+    private SubsidiesStatus subsidiesStatus;
 
     /**
      * 员工状态
@@ -153,11 +154,11 @@ public class SenioritySubsidiesImport extends BaseBO {
         this.gainGrant = gainGrant;
     }
 
-    public String getSubsidiesStatus() {
+    public SubsidiesStatus getSubsidiesStatus() {
         return subsidiesStatus;
     }
 
-    public void setSubsidiesStatus(String subsidiesStatus) {
+    public void setSubsidiesStatus(SubsidiesStatus subsidiesStatus) {
         this.subsidiesStatus = subsidiesStatus;
     }
 

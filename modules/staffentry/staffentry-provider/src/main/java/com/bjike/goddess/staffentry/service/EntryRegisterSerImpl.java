@@ -160,7 +160,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
-    public List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+    public List<EntryRegisterBO> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         if (checkDepartIdentity("2")) {
             entryRegisterDTO.getSorts().add("createTime=desc");
         } else {
@@ -169,7 +169,17 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
         }
         List<EntryRegister> entryRegisters = super.findByPage(entryRegisterDTO);
-        return entryRegisters;
+        List<EntryRegisterBO> entryRegisterBOS = BeanTransform.copyProperties(entryRegisters,EntryRegisterBO.class);
+        if(entryRegisterBOS!=null && entryRegisterBOS.size()>0){
+            for (EntryRegisterBO entryRegisterBO:entryRegisterBOS){
+                StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegisterBO.getUsername());//查看员工状态
+                if(staffStatus == null){
+                    entryRegisterBO.setStaffStatus("未获取到数据");
+                }
+                entryRegisterBO.setStaffStatus(staffStatus.toString());
+            }
+        }
+        return entryRegisterBOS;
     }
 
 
@@ -347,8 +357,6 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             throw new SerException("员工编号不能为空");
         }
         try {
-            StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegister.getUsername());//查看员工状态
-            entryRegister.setStaffStatus(staffStatus);
             entryRegister = super.save(entryRegister);
         } catch (SerException e) {
             throw new SerException(e.getMessage());
@@ -383,8 +391,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         senioritySubsidiesTO.setEntryDate(entryRegister.getInductionDate().toString());
         senioritySubsidiesTO.setStartIssueDate(entryRegister.getInductionDate().plusMonths(13).toString());
         senioritySubsidiesTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
-        StaffStatus status = positionDetailUserAPI.statusByName(entryRegister.getUsername());
-        senioritySubsidiesTO.setStaffStatus(status);
+//        StaffStatus status = positionDetailUserAPI.statusByName(entryRegister.getUsername());
+//        senioritySubsidiesTO.setStaffStatus(status);
         senioritySubsidiesAPI.saveSen(senioritySubsidiesTO);
         //添加电脑补助lijuntao
         ComputerSubsidiesAddTO computerSubsidiesAddTO = new ComputerSubsidiesAddTO();
@@ -393,8 +401,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         computerSubsidiesAddTO.setName(entryRegister.getUsername());
         computerSubsidiesAddTO.setEntryDate(entryRegister.getInductionDate().toString());
         computerSubsidiesAddTO.setSubsidiesStatus(SubsidiesStatus.NOSUBSIDIES);
-        StaffStatus status1 = positionDetailUserAPI.statusByName(entryRegister.getUsername());
-        computerSubsidiesAddTO.setStaffStatus(status1);
+//        StaffStatus status1 = positionDetailUserAPI.statusByName(entryRegister.getUsername());
+//        computerSubsidiesAddTO.setStaffStatus(status1);
         computerSubsidiesAPI.saveComputer(computerSubsidiesAddTO);
 
 

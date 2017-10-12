@@ -4,11 +4,11 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 币别
+ * 设置币别
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-29 03:53 ]
- * @Description: [ 币别 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-10 02:17 ]
+ * @Description: [ 设置币别 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -17,13 +17,12 @@ public class CurrencyTO extends BaseTO {
     /**
      * 代码
      */
-    @NotBlank(message = "代码不能为空")
+    @NotBlank()
     private String code;
 
     /**
      * 名称
      */
-    @NotBlank(message = "名称不能为空")
     private String name;
 
     /**
@@ -32,14 +31,9 @@ public class CurrencyTO extends BaseTO {
     private Double rate;
 
     /**
-     * 创建时间
+     * 是否本位币
      */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
+    private Boolean standardMoney;
 
 
     public String getCode() {
@@ -66,19 +60,11 @@ public class CurrencyTO extends BaseTO {
         this.rate = rate;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public Boolean getStandardMoney() {
+        return standardMoney;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setStandardMoney(Boolean standardMoney) {
+        this.standardMoney = standardMoney;
     }
 }
