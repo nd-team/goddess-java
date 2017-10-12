@@ -82,6 +82,8 @@ public class ScheduleSerImpl implements ScheduleSer {
         String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
         String end = DateUtil.dateToString(LocalDate.now().atTime(23, 59, 59));
         collect.setTodayCollects(initDateTask(users, start, end));
+        //可添加汇总   collectToday(collects);
+        //可添加明天汇总 collectTomorrow(collects);
         //明天任务
         start = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(00, 00, 01));
         end = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(23, 59, 59));
@@ -158,8 +160,6 @@ public class ScheduleSerImpl implements ScheduleSer {
                 taskCollect.setUsername(user);
                 taskCollects.add(taskCollect);
             }
-
-
         }
         return taskCollects;
     }
@@ -168,7 +168,6 @@ public class ScheduleSerImpl implements ScheduleSer {
      * 查询自定义汇总
      */
     private List<Custom> initCustoms(CollectDTO dto) throws SerException {
-
         String projectId = dto.getProjectId();
         String[] fields = dto.getFields();
         String cons = null;
@@ -204,12 +203,9 @@ public class ScheduleSerImpl implements ScheduleSer {
             String[] _fields = new String[]{"title", "count", "detail"};
             List<Custom> customs = tableSer.findBySql(sql, Custom.class, _fields);
             return customs;
-
         }
         return new ArrayList<>();
-
     }
-
 
     /**
      * 查询 outProject 外部项目,innerProject 内部项目,isFinish 是否完成,workerCount  人工量
@@ -323,10 +319,12 @@ public class ScheduleSerImpl implements ScheduleSer {
                 tables.add(table);
             }
             CustomCondition condition = initCondition(customize);
-            initFixedField(tables, condition); //初始化固定表头
-            initCustomField(tables, condition);//初始化自定义表头值
-            initCustomCollect(tables, project);
+            initFixedField(tables, condition); //初始化固定表头及内容
+            initCustomField(tables, condition);//初始化自定义表头
+            initCustomCollect(tables, project);//初始化自定义表头内容
             initDeptCollect(project, customize.getDepartment());//初始化部门汇总
+            collectToday(project.getTaskCollects()); //部门今天任务汇总
+            collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总
             project.setTables(tables);
             String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
             //邮件发送
@@ -355,6 +353,14 @@ public class ScheduleSerImpl implements ScheduleSer {
         }
     }
 
+    /**
+     * 邮件发送
+     *
+     * @param title
+     * @param content
+     * @param mails
+     * @throws SerException
+     */
     private void sendMail(String title, String content, List<String> mails) throws SerException {
         MessageTO to = new MessageTO(title, content);
         to.setSendType(SendType.EMAIL);
@@ -364,6 +370,13 @@ public class ScheduleSerImpl implements ScheduleSer {
         messageAPI.send(to);
     }
 
+    /**
+     * 初始化部门汇总
+     *
+     * @param project
+     * @param department
+     * @throws SerException
+     */
     private void initDeptCollect(CustomProject project, String department) throws SerException {
         List<UserBO> users = userAPI.findByDept(department);
         String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
@@ -378,7 +391,7 @@ public class ScheduleSerImpl implements ScheduleSer {
     }
 
     /**
-     * 手动汇总计算
+     * 手动汇总自定义计算
      *
      * @param tables
      * @param project
@@ -420,7 +433,6 @@ public class ScheduleSerImpl implements ScheduleSer {
                 }
             }
         }
-
         map.put("人员", String.valueOf(users.size()));
         map.put("计划工作量", String.valueOf(planNum));
         map.put("所需时长", String.valueOf(needTime));
@@ -434,7 +446,6 @@ public class ScheduleSerImpl implements ScheduleSer {
         StringBuilder sb = new StringBuilder();
         String start = condition.getStart();
         String end = condition.getEnd();
-
         sb.append("  SELECT a.title,a.content,a.titleType,b.tasknode_id as nodeId ");
         sb.append(" FROM taskallotment_customtitle a,( ");
         sb.append("  SELECT a.* ");
@@ -481,17 +492,20 @@ public class ScheduleSerImpl implements ScheduleSer {
                         }
                     }
                 }
-
             }
         }
-
-
     }
 
+    /**
+     * 初始化自定义表头
+     *
+     * @param table
+     * @param condition
+     * @throws SerException
+     */
     private void initCustomTitle(CustomTable table, CustomCondition condition) throws SerException {
         String start = condition.getStart();
         String end = condition.getEnd();
-        String sql;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT title AS title ");
         sb.append("  FROM( ");
@@ -514,7 +528,6 @@ public class ScheduleSerImpl implements ScheduleSer {
         objects.toArray(titles);
         table.setCustomTitles(titles);
     }
-
 
     /**
      * 初始化固定字段
@@ -560,12 +573,70 @@ public class ScheduleSerImpl implements ScheduleSer {
         }
     }
 
+    /**
+     * 今天任务汇总
+     * @param collects
+     */
+    private void collectToday(List<TaskCollect> collects){
+        TaskCollect collect = new TaskCollect();
+        collect.setUsername("汇总");
+        collect.setPlanNum(collects.stream().mapToDouble(c->{
+            double rs = c.getPlanNum()!=null? Double.parseDouble(c.getPlanNum()):0;
+            return rs;
+        }).sum()+"");
+        collect.setDifferNum(collects.stream().mapToDouble(c->{
+            double rs = c.getDifferNum()!=null? Double.parseDouble(c.getDifferNum()):0;
+            return rs;
+        }).sum()+"");
+        collect.setFactNum(collects.stream().mapToDouble(c->{
+            double rs = c.getFactNum()!=null? Double.parseDouble(c.getFactNum()):0;
+            return rs;
+        }).sum()+"");
+        collect.setFactDuration(collects.stream().mapToDouble(c->{
+            double rs = c.getFactDuration()!=null? Double.parseDouble(c.getFactDuration()):0;
+            return rs;
+        }).sum()+"");
+        collect.setDifferDuration(collects.stream().mapToDouble(c->{
+            double rs = c.getDifferDuration()!=null? Double.parseDouble(c.getDifferDuration()):0;
+            return rs;
+        }).sum()+"");
+        collect.setPlanDuration(collects.stream().mapToDouble(c->{
+            double rs = c.getPlanDuration()!=null? Double.parseDouble(c.getPlanDuration()):0;
+            return rs;
+        }).sum()+"");
+        collects.add(collect);
+    }
+    /**
+     * 明天任务汇总
+     * @param collects
+     */
+    private void collectTomorrow(List<TomorrowCollect> collects){
+        TomorrowCollect collect = new TomorrowCollect();
+        collect.setUsername("汇总");
+        collect.setPlanDuration(collects.stream().mapToDouble(c->{
+            double rs = c.getPlanDuration()!=null? Double.parseDouble(c.getPlanDuration()):0;
+            return rs;
+        }).sum()+"");
+        collect.setPlanNum(collects.stream().mapToDouble(c->{
+            double rs = c.getPlanNum()!=null? Double.parseDouble(c.getPlanNum()):0;
+            return rs;
+        }).sum()+"");
+        collects.add(collect);
+    }
+
+
+    /**
+     * 构建条件
+     *
+     * @param customize
+     * @return
+     * @throws SerException
+     */
     private CustomCondition initCondition(Customize customize) throws SerException {
         DateType dateType = customize.getDateType(); //日期条件
         LocalDateTime start = null;
         LocalDateTime end = null;
         List<UserBO> dept_users = null;//查询结果用户必须包含在此部门人员列表内
-
         List<UserBO> users = null;//指定查询汇总的人
         if (customize.getSummaryType().equals(SummaryType.DEPT)) {
             dept_users = userAPI.findByDept(customize.getSummaryTarget().split(","));
@@ -582,11 +653,11 @@ public class ScheduleSerImpl implements ScheduleSer {
                 break;
             case WEEK:
                 start = DateUtil.getStartWeek().atTime(00, 00, 01);
-                end = DateUtil.getEndWeek().atTime(00, 00, 01);
+                end = DateUtil.getEndWeek().atTime(23, 59, 59);
                 break;
             case MONTH:
                 start = DateUtil.getStartMonth().atTime(00, 00, 01);
-                end = DateUtil.getEndMonth().atTime(00, 00, 01);
+                end = DateUtil.getEndMonth().atTime(23, 59, 59);
                 break;
             case QUARTER:
                 start = DateUtil.getStartQuart();
@@ -594,7 +665,7 @@ public class ScheduleSerImpl implements ScheduleSer {
                 break;
             case YEAR:
                 start = DateUtil.getStartYear().atTime(00, 00, 01);
-                end = DateUtil.getEndYear().atTime(00, 00, 01);
+                end = DateUtil.getEndYear().atTime(23, 59, 59);
                 break;
         }
         String[] fields = customize.getFields().split(",");
@@ -620,7 +691,6 @@ public class ScheduleSerImpl implements ScheduleSer {
             }
             customCondition.setUsers(tmp_users);
         }
-
         return customCondition;
     }
 
@@ -636,6 +706,5 @@ public class ScheduleSerImpl implements ScheduleSer {
         }
         return null;
     }
-
 
 }
