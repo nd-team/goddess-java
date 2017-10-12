@@ -36,7 +36,7 @@ public class TaskRunner extends Thread {
                         customizeSer.executeTask();
                         Thread.sleep(500);
                     }catch (Exception e){
-                        throw  new RuntimeException(e.getMessage());
+                      e.printStackTrace();
                     }
 
 
