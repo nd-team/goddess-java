@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * html 构建类
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-28 11:49]
  * @Description: [ ]

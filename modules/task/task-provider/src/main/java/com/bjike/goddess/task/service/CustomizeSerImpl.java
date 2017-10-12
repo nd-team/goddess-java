@@ -125,7 +125,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     @Transactional
     @Override
     public void executeTask() throws SerException {
-        List<Customize> customizes = initTask();
+        List<Customize> customizes = queryTask(); //任务查询
         for (Customize customize : customizes) {
             if (isInvoking(customize)) { //是否可调用
                 //查询调用
@@ -152,7 +152,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
      */
     private boolean first = true;
 
-    private List<Customize> initTask() throws SerException {
+    private List<Customize> queryTask() throws SerException {
         List<Customize> customizes = new ArrayList<>();
         if (null != TaskSession.sessions()) {
             Map<String, Customize> map = TaskSession.sessions().asMap();
