@@ -1,9 +1,10 @@
 package com.bjike.goddess.task.quartz;
 
-import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.service.CustomizeSer;
 
 /**
+ * 定时任务执行线程
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-26 08:51]
  * @Description: [ ]
@@ -14,8 +15,7 @@ public class TaskRunner extends Thread {
     public static CustomizeSer customizeSer;
     private String name;//线程名
     private Thread t;
-    private boolean suspend=false; //暂停
-    private boolean update; //更新缓存
+    private boolean suspend = false; //暂停
 
     public TaskRunner(String name) {
         this.name = name;
@@ -23,21 +23,25 @@ public class TaskRunner extends Thread {
 
     @Override
     public void run() {
-        try {
-            synchronized (this) {
-                while (true) {
-                    if(suspend){
+        synchronized (this) {
+            while (true) {
+                if (suspend) {
+                    try {
                         wait();
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                }
+                try {
                     customizeSer.executeTask();
                     Thread.sleep(500);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
             }
-        } catch (InterruptedException e) {
-            System.out.println("Thread " + name + " interrupted.");
-            e.printStackTrace();
-        }catch (SerException e){
-            e.printStackTrace();
         }
 
     }

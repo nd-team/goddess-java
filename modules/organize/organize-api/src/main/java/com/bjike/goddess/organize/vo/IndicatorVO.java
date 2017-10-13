@@ -28,7 +28,7 @@ public class IndicatorVO {
     /**
      * 指标类型
      */
-    private Boolean type;
+    private String type;
 
     /**
      * 考核指标
@@ -99,11 +99,11 @@ public class IndicatorVO {
         this.number = number;
     }
 
-    public Boolean getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Boolean type) {
+    public void setType(String type) {
         this.type = type;
     }
 

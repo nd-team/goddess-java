@@ -56,6 +56,12 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
         return super.findByCis(dto);
     }
 
+    @Override
+    public List<Table> findById(String... ids) throws SerException {
+        TableDTO dto = new TableDTO();
+        dto.getConditions().add(Restrict.in("id", ids));
+        return super.findByCis(dto);
+    }
 
     @Override
     public List<Table> list(String projectId) throws SerException {

@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.entity.GET;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
+ * 行
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-15 17:17]
  * @Description: [ ]

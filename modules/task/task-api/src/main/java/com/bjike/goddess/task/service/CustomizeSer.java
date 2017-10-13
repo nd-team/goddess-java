@@ -17,6 +17,12 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
+    /**
+     * 自定义定时任务列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     default List<CustomizeBO> list(CustomizeDTO dto) throws SerException {
         return null;
     }
@@ -29,6 +35,12 @@ public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
 
     }
 
+    /**
+     * 启用或者关闭定时任务
+     * @param id
+     * @param enable
+     * @throws SerException
+     */
     default void enable(String id, boolean enable) throws SerException {
 
     }

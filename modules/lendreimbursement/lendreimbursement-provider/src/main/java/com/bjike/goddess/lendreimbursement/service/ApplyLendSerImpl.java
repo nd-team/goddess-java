@@ -2004,6 +2004,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
     /**
      * 申请
+     * 对比的日期为预计借款时间
+     * 要求是未付款且不在申请单有误里面
      *
      * @param applyLendDTO
      * @return
@@ -2022,9 +2024,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         LocalDate lendDate[] = new LocalDate[]{start, end};
 
         if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
-            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+            applyLendDTO.getConditions().add(Restrict.between("estimateLendDate", lendDate));//预计借款时间段查询
         }
-        //未收款且不在有误单里面
+        //未付款且不在有误单里面
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
         applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
 

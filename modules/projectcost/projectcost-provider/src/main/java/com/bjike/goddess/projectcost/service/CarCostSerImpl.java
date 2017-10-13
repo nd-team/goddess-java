@@ -5,10 +5,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
-import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-import com.bjike.goddess.dispatchcar.to.ConditionTO;
 import com.bjike.goddess.projectcost.bo.CarCostBO;
 import com.bjike.goddess.projectcost.dto.CarCostDTO;
 import com.bjike.goddess.projectcost.entity.CarCost;
@@ -23,9 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+//import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+//import com.bjike.goddess.dispatchcar.to.ConditionTO;
 
 /**
  * 车辆费用业务实现
@@ -40,57 +39,57 @@ import java.util.List;
 @Service
 public class CarCostSerImpl extends ServiceImpl<CarCost, CarCostDTO> implements CarCostSer {
 
-    @Autowired
-    private DispatchCarInfoAPI dispatchCarInfoAPI;
+//    @Autowired
+//    private DispatchCarInfoAPI dispatchCarInfoAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
-    @Override
-    public CarCostBO save(CarCostTO to) throws SerException {
-        CarCost entity = BeanTransform.copyProperties(to, CarCost.class);
-        this.countCost(entity);
-        super.save(entity);
-        return BeanTransform.copyProperties(entity, CarCostBO.class);
-    }
+//    @Override
+//    public CarCostBO save(CarCostTO to) throws SerException {
+//        CarCost entity = BeanTransform.copyProperties(to, CarCost.class);
+//        this.countCost(entity);
+//        super.save(entity);
+//        return BeanTransform.copyProperties(entity, CarCostBO.class);
+//    }
 
-    private void countCost(CarCost entity) throws SerException {
-        ConditionTO to = BeanTransform.copyProperties(entity, ConditionTO.class);
-        String format;
-//        if (entity.getMonth() >= 10)
-//            format = "%d-%d-01";
+//    private void countCost(CarCost entity) throws SerException {
+//        ConditionTO to = BeanTransform.copyProperties(entity, ConditionTO.class);
+//        String format;
+////        if (entity.getMonth() >= 10)
+////            format = "%d-%d-01";
+////        else
+////            format = "$d-0%d-01";
+//
+////        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
+//        LocalDate start = DateUtil.getStartDayOfMonth(entity.getYear(),entity.getMonth());
+//        LocalDate end = start.withDayOfMonth(start.getMonth().maxLength());
+//        to.setDispatchStartDate(start.toString());
+//        to.setDispatchEndDate(end.toString());
+//
+//        List<DispatchCarInfoBO> list = dispatchCarInfoAPI.getByConfition(to);
+//        if (null != list)
+//            entity.setActualDegree(list.size());
 //        else
-//            format = "$d-0%d-01";
+//            entity.setActualDegree(0);
+//        entity.setBalanceDegree(entity.getTargetDegree() - entity.getActualDegree() + 0d);
+//        entity.setTargetCost(entity.getTargetDegree() * entity.getUnivalent());
+//        entity.setActualCost(entity.getActualDegree() * entity.getUnivalent());
+//        entity.setBalanceCost(entity.getTargetCost() - entity.getActualCost());
+//    }
 
-//        LocalDate start = LocalDate.parse(String.format(format, entity.getYear(), entity.getMonth()));
-        LocalDate start = DateUtil.getStartDayOfMonth(entity.getYear(),entity.getMonth());
-        LocalDate end = start.withDayOfMonth(start.getMonth().maxLength());
-        to.setDispatchStartDate(start.toString());
-        to.setDispatchEndDate(end.toString());
-
-        List<DispatchCarInfoBO> list = dispatchCarInfoAPI.getByConfition(to);
-        if (null != list)
-            entity.setActualDegree(list.size());
-        else
-            entity.setActualDegree(0);
-        entity.setBalanceDegree(entity.getTargetDegree() - entity.getActualDegree() + 0d);
-        entity.setTargetCost(entity.getTargetDegree() * entity.getUnivalent());
-        entity.setActualCost(entity.getActualDegree() * entity.getUnivalent());
-        entity.setBalanceCost(entity.getTargetCost() - entity.getActualCost());
-    }
-
-    @Override
-    public CarCostBO update(CarCostTO to) throws SerException {
-        CarCost entity = super.findById(to.getId());
-        if (null == entity)
-            throw new SerException("该数据不存在");
-        BeanTransform.copyProperties(to, entity, true);
-        this.countCost(entity);
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
-        return BeanTransform.copyProperties(entity, CarCostBO.class);
-    }
+//    @Override
+//    public CarCostBO update(CarCostTO to) throws SerException {
+//        CarCost entity = super.findById(to.getId());
+//        if (null == entity)
+//            throw new SerException("该数据不存在");
+//        BeanTransform.copyProperties(to, entity, true);
+//        this.countCost(entity);
+//        entity.setModifyTime(LocalDateTime.now());
+//        super.update(entity);
+//        return BeanTransform.copyProperties(entity, CarCostBO.class);
+//    }
 
     @Override
     public CarCostBO delete(String id) throws SerException {

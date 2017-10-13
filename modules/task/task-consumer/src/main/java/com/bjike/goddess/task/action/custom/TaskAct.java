@@ -1,15 +1,19 @@
-package com.bjike.goddess.task.action;
+package com.bjike.goddess.task.action.custom;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.task.api.TaskAPI;
-import com.bjike.goddess.task.entity.Task;
 import com.bjike.goddess.task.to.TaskTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 任务
@@ -31,11 +35,12 @@ public class TaskAct {
     /**
      * 任务下发
      *
-     * @return
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/issued")
-    public Result issued(TaskTO to) throws ActException {
+    public Result issued(@Validated(ADD.class) TaskTO to, BindingResult result) throws ActException {
         try {
             taskAPI.issued(to);
             return ActResult.initialize(true);

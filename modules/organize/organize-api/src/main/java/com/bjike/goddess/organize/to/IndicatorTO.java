@@ -34,7 +34,7 @@ public class IndicatorTO extends BaseTO {
      * 指标类型
      */
     @NotNull(message = "指标类型不能为空", groups = {ADD.class, EDIT.class})
-    private Boolean type;
+    private String type;
 
     /**
      * 考核指标
@@ -107,11 +107,11 @@ public class IndicatorTO extends BaseTO {
         this.number = number;
     }
 
-    public Boolean getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Boolean type) {
+    public void setType(String type) {
         this.type = type;
     }
 

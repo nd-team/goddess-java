@@ -70,7 +70,7 @@ public class ModulesVO {
     /**
      * 指标
      */
-    private List<IndicatorVO> indicatorVOList;
+    private List<IndicatorVO> indicatorBOList;
 
 
     public String getId() {
@@ -161,11 +161,11 @@ public class ModulesVO {
         this.functions = functions;
     }
 
-    public List<IndicatorVO> getIndicatorVOList() {
-        return indicatorVOList;
+    public List<IndicatorVO> getIndicatorBOList() {
+        return indicatorBOList;
     }
 
-    public void setIndicatorVOList(List<IndicatorVO> indicatorVOList) {
-        this.indicatorVOList = indicatorVOList;
+    public void setIndicatorBOList(List<IndicatorVO> indicatorBOList) {
+        this.indicatorBOList = indicatorBOList;
     }
 }

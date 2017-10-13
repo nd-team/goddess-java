@@ -14,9 +14,23 @@ import com.bjike.goddess.task.enums.CollectType;
  * @Copy: [com.bjike]
  */
 public interface ScheduleSer {
+    /**
+     * 项目汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     default Collect collect(CollectDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 构建项目汇总html
+     * @param collect
+     * @param type
+     * @return
+     * @throws SerException
+     */
     default String buildCollectHtml(Collect collect, CollectType type) throws SerException {
         return null;
     }
@@ -27,8 +41,7 @@ public interface ScheduleSer {
      * @return
      * @throws SerException
      */
-    default String customizeCollect(Customize customize) throws SerException {
-        return null;
+    default void customizeCollect(Customize customize) throws SerException {
     }
 
 }

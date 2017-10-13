@@ -35,8 +35,8 @@ public class Indicator extends BaseEntity {
     /**
      * 指标类型
      */
-    @Column(name = "is_type", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '指标类型'", insertable = false)
-    private Boolean type;
+    @Column(name = "type", nullable = false, columnDefinition = "VARCHAR(255)  COMMENT '指标类型'")
+    private String type;
 
     /**
      * 考核指标
@@ -71,7 +71,7 @@ public class Indicator extends BaseEntity {
     /**
      * 是否达到指标
      */
-    @Column(name = "is_isReach", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否达到指标'", insertable = false)
+    @Column(name = "is_isReach", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否达到指标'")
     private Boolean isReach;
 
     /**
@@ -109,11 +109,11 @@ public class Indicator extends BaseEntity {
         this.number = number;
     }
 
-    public Boolean getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Boolean type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -188,4 +188,6 @@ public class Indicator extends BaseEntity {
     public void setRule(String rule) {
         this.rule = rule;
     }
+
+
 }

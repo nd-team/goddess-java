@@ -1,4 +1,4 @@
-package com.bjike.goddess.task.action;
+package com.bjike.goddess.task.action.custom;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.GET;
@@ -30,6 +30,8 @@ import java.util.Map;
 
 
 /**
+ * 行
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-16 09:29]
  * @Description: [ ]
@@ -51,8 +53,8 @@ public class RowAct extends BaseFileAction {
      * 列表
      *
      * @param dto
-     * @return
-     * @throws ActException
+     * @return {name:'data',type:'string',defaultValue:'',description:'json.'}
+     * @version v1
      */
     @GetMapping("v1/list")
     public String list(@Validated({GET.class}) RowDTO dto, BindingResult rs) throws ActException {
@@ -63,12 +65,14 @@ public class RowAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
-     * 列表
+     * 数据量
      *
      * @param dto
-     * @return
+     * @return {name:'data',type:'int',defaultValue:'',description:'数量.'}
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/count")
     public Result count(@Validated({GET.class}) RowDTO dto, BindingResult rs) throws ActException {
@@ -81,11 +85,13 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 添加一行数据
+     * 添加
      *
      * @param to 行数据
-     * @return
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @des 添加数据时的 parameter如:添加姓名年龄两个字段(确保数据库列存在,不存在先添加列属性),?姓名=xxx&年龄=xxx
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) RowTO to, BindingResult rs, HttpServletRequest request) throws ActException {
@@ -110,11 +116,12 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 删除行
+     * 删除
      *
      * @param id 列id
-     * @return
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @throws ActException
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
@@ -127,11 +134,12 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 从excel导入
+     * excel导入
      *
      * @param dto
-     * @return
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/excel/import")
     public Result excelImport(HttpServletRequest request, @Validated({ADD.class}) RowDTO dto, BindingResult rs) throws ActException {
@@ -145,11 +153,12 @@ public class RowAct extends BaseFileAction {
     }
 
     /**
-     * 从excel导出
+     * excel导出
      *
      * @param dto
-     * @return
+     * @return {name:'data',type:'byte',defaultValue:'',description:'文件流.'}
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/excel/export")
     public Result excelExport(@Validated({GET.class}) RowDTO dto, BindingResult rs, HttpServletResponse response) throws ActException {

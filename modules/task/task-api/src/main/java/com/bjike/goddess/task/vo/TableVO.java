@@ -1,6 +1,5 @@
 package com.bjike.goddess.task.vo;
 
-import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.task.enums.ExecStatus;
 
 import java.io.Serializable;

@@ -26,15 +26,42 @@ public interface TableSer extends Ser<Table, TableDTO> {
     default void add(TableTO to) throws SerException {
     }
 
-
+    /**
+     * 表列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
     default List<Table> list(TableDTO dto) throws SerException {
         return null;
     }
 
+    /**
+     * 通过id查询表
+     * @param ids
+     * @return
+     * @throws SerException
+     */
+    default List<Table> findById(String ... ids) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查询某项目下的表
+     * @param projectId
+     * @return
+     * @throws SerException
+     */
     default List<Table> list(String projectId) throws SerException {
         return null;
     }
 
+    /**
+     * 查询某行归属于哪个表
+     * @param rowId
+     * @return
+     * @throws SerException
+     */
     default Table findByRowId(String rowId) throws SerException {
         return null;
     }

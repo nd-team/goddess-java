@@ -1,4 +1,4 @@
-package com.bjike.goddess.task.action;
+package com.bjike.goddess.task.action.problem;
 
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.task.api.ProblemTypeAPI;
+import com.bjike.goddess.task.bo.ProblemTypeBO;
 import com.bjike.goddess.task.dto.ProblemTypeDTO;
 import com.bjike.goddess.task.to.ProblemTypeTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 问题类型
@@ -31,16 +34,18 @@ public class ProblemTypeAct {
     private ProblemTypeAPI problemTypeAPI;
 
     /**
-     * 添加
+     * 列表
      *
      * @param dto 问题
-     * @return
+     * @return class ProblemTypeBO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/list")
-    public Result list( ProblemTypeDTO dto) throws ActException {
+    public Result list(ProblemTypeDTO dto) throws ActException {
         try {
-            return ActResult.initialize( problemTypeAPI.list(dto));
+            List<ProblemTypeBO> bos = problemTypeAPI.list(dto);
+            return ActResult.initialize(bos);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -50,8 +55,8 @@ public class ProblemTypeAct {
      * 添加
      *
      * @param to 问题类型
-     * @return
-     * @throws ActException
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
      */
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) ProblemTypeTO to, BindingResult rs) throws ActException {
@@ -67,8 +72,8 @@ public class ProblemTypeAct {
      * 删除
      *
      * @param id 问题id
-     * @return
-     * @throws ActException
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
@@ -81,11 +86,12 @@ public class ProblemTypeAct {
     }
 
     /**
-     * 编辑类型名
+     * 编辑
      *
      * @param to 问题
-     * @return
-     * @throws ActException
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
+     * 编辑类型名
      */
     @PutMapping("v1/edit")
     public Result enable(@Validated({ADD.class}) ProblemTypeTO to, BindingResult rs) throws ActException {
@@ -101,11 +107,11 @@ public class ProblemTypeAct {
      * 开启关闭
      *
      * @param id 问题id
-     * @return
-     * @throws ActException
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
      */
     @PutMapping("v1/{id}/{enable}")
-    public Result enable(@PathVariable String id,@PathVariable Boolean enable) throws ActException {
+    public Result enable(@PathVariable String id, @PathVariable Boolean enable) throws ActException {
         try {
             problemTypeAPI.enable(id, enable);
             return ActResult.initialize(true);
@@ -113,7 +119,6 @@ public class ProblemTypeAct {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
 }
