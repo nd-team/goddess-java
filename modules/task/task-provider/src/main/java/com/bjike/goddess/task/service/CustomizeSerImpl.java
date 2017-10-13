@@ -136,8 +136,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 }
                 LocalDateTime now = LocalDateTime.now();
                 String sql = "UPDATE task_customize SET lastTime='%s' WHERE id='%s'";
-                customize.setLastTime(now);
                 super.executeSql(String.format(sql, DateUtil.dateToString(now), customize.getId()));
+                customize.setLastTime(now);
                 TaskSession.put(customize.getId(), customize);
             }
         }
@@ -193,7 +193,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 return true;
             }
         } else { //每天
-            String time = DateUtil.dateToString(LocalTime.now());
+            String time = DateUtil.dateToString(LocalTime.now());//截取到分钟
             time = StringUtils.substringBeforeLast(time, ":");
             //每天某个时间调用一次,TaskDaySession为空则表示没执行过
             if (time.equals(timeVal) && TaskDaySession.get(customize.getId()) == null) {
