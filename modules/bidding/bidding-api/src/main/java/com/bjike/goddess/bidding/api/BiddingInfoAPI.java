@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.api;
 import com.bjike.goddess.bidding.bo.BiddingCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
+import com.bjike.goddess.bidding.bo.InfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
@@ -188,13 +189,16 @@ public interface BiddingInfoAPI {
     default List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
         return null;
     }
+
     /**
-     * 获取信息
+     * 中国移动采购与招标网获取信息
+     *
      * @param to
-     * @return
+     * @return class InfoBO
      * @throws SerException
      */
-    List<String> info(SearchTO to) throws SerException;
+    List<InfoBO> info(SearchTO to) throws SerException;
+
     /**
      * 工信部招标网获取信息
      *
@@ -202,7 +206,7 @@ public interface BiddingInfoAPI {
      * @return
      * @throws SerException
      */
-    List<String> txzbInfo(SearchTO to) throws SerException;
+    List<InfoBO> txzbInfo(SearchTO to) throws SerException;
 
     /**
      * 中央政府采购网获取信息
@@ -211,7 +215,15 @@ public interface BiddingInfoAPI {
      * @return
      * @throws SerException
      */
-    List<String> zycgInfo(SearchTO to) throws SerException;
+    List<InfoBO> zycgInfo(SearchTO to) throws SerException;
+    /**
+     * 中国警务招标网获取信息
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<InfoBO> caigouInfo(SearchTO to) throws SerException;
     /**
      * 中国电力招标网获取信息
      *
@@ -219,7 +231,7 @@ public interface BiddingInfoAPI {
      * @return
      * @throws SerException
      */
-    List<String> toobiaoInfo(SearchTO to) throws SerException;
+    List<InfoBO> toobiaoInfo(SearchTO to) throws SerException;
     /**
      * 中国学校招标网获取信息
      *

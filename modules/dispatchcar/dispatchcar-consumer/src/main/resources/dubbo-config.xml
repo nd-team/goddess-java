@@ -19,7 +19,7 @@
     <!-- 出车API -->
 	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl" />
 
-	<dubbo:reference interface="com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI" id="oilCardBasicApiImpl" />
+	<!--<dubbo:reference interface="com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI" id="oilCardBasicApiImpl" />-->
 
 	<!-- 租车费用基本信息API -->
 	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI" id="leaseCarCostApiImpl" />
@@ -42,7 +42,7 @@
     <!-- 权限API -->
 	<dubbo:reference interface="com.bjike.goddess.dispatchcar.api.CusPermissionAPI" id="cusPermissionApiImpl" />
 
-	<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+	<!--<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />-->
 
 
 

@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.service;
 import com.bjike.goddess.bidding.bo.BiddingCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
+import com.bjike.goddess.bidding.bo.InfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
@@ -785,58 +786,125 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 //        }
 //    }
     @Override
-    public List<String> info(SearchTO to) throws SerException {
+    public List<InfoBO> info(SearchTO to) throws SerException {
         try {
-            //网址与内容不相符
+            List<InfoBO> boList = new ArrayList<>();
             String url = "https://b2b.10086.cn/b2b/main/listVendorNoticeResult.html?noticeBean.noticeType=2";
             HttpPost request = new HttpPost(url);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("efFormEname", "POIX14"));
-            params.add(new BasicNameValuePair("methodName", "initLoad"));
+            params.add(new BasicNameValuePair("page.currentPage", "1"));
+            params.add(new BasicNameValuePair("page.perPageSize", "200"));
+            params.add(new BasicNameValuePair("noticeBean.sourceCH", ""));
+            params.add(new BasicNameValuePair("noticeBean.source", ""));
+            params.add(new BasicNameValuePair("noticeBean.title", to.getTitle()));
+            params.add(new BasicNameValuePair("noticeBean.startDate", to.getStartTime()));
+            params.add(new BasicNameValuePair("noticeBean.endDate", to.getEndTime()));
 
             request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
             HttpClient client = HttpClients.createDefault();
             HttpResponse response = client.execute(request);
             String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(content);
-
-            if (content.contains(to.getTitle())) {
-                String a = content.replaceAll("\\r|\\n|\\t", "");
-                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
-                Matcher matcher = pattern.matcher(a);
-                List<String> list = new ArrayList<>();
-                List<String> list1 = new ArrayList<>();
-                while (matcher.find()) {
-                    list.add(matcher.group().toString());
-                }
-                for (String s : list) {
-                    int index = s.indexOf("/");
-                    StringBuilder target = new StringBuilder(s);
-                    String string = "<a href=\"https://b2b.10086.cn/";
-                    if (index > 0) {
-                        target.delete(0, index);
-                    }
-                    list1.add(new StringBuilder(string).append(target).toString());
-                }
-                return list1;
+            content = content.replaceAll("\\r|\\n|\\t", "");
+            List<InfoBO> infoBOS = init(content);
+            for (InfoBO s : infoBOS) {
+                s.setLink("https://b2b.10086.cn/b2b/main/viewNoticeContent.html?noticeBean.id=" + s.getId());
+                boList.add(s);
             }
-            return null;
+            return boList;
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
     }
 
+    public static List<InfoBO> init(String content) {
+        List<InfoBO> infoBOS = new ArrayList<>();
+        String[] strings = content.split("</tr>");
+        boolean first = true;
+        for (String s : strings) {
+            if (!first && s.trim().startsWith("<tr")) {
+                String name = StringUtils.substringAfterLast(s, " <a href=\"#this\"");
+                name = StringUtils.substringAfter(name, ">");
+                name = StringUtils.substringBefore(name, "</a>");
+                if (name.indexOf("title=") != -1) {
+                    name = name.replace("title=", "");
+                }
+                String id = StringUtils.substringAfter(s, "onclick=\"selectResult('");
+                id = StringUtils.substringBefore(id, "')\">");
+
+                String date = StringUtils.substringAfterLast(s, " align=\"left\">");
+                date = StringUtils.substringBefore(date, "</td>");
+                if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
+                    InfoBO infoBO = new InfoBO(name, date, id);
+                    infoBOS.add(infoBO);
+                }
+            }
+            first = false;
+
+        }
+        return infoBOS;
+
+    }
+
     @Override
-    public List<String> txzbInfo(SearchTO to) throws SerException {
+    public List<InfoBO> txzbInfo(SearchTO to) throws SerException {
+//        try {
+//            String url = "http://txzb.miit.gov.cn/DispatchAction.do?reg=denglu&pagesize=11";
+//            HttpPost request = new HttpPost(url);
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();
+//            params.add(new BasicNameValuePair("efFormEname", "POIX14"));
+//            params.add(new BasicNameValuePair("methodName", "initLoad"));
+//            params.add(new BasicNameValuePair("name", "中国"));
+//            params.add(new BasicNameValuePair("date1", ""));
+//            params.add(new BasicNameValuePair("date2", ""));
+//
+//            request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+//
+//            HttpClient client = HttpClients.createDefault();
+//            HttpResponse response = client.execute(request);
+//            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+//
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(content);
+//
+//            if (content.contains(to.getTitle())) {
+////                if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
+//
+//
+//                String a = content.replaceAll("\\r|\\n|\\t", "");
+//                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
+//                Matcher matcher = pattern.matcher(a);
+//                List<String> list = new ArrayList<>();
+//                List<String> list1 = new ArrayList<>();
+//                while (matcher.find()) {
+//                    list.add(matcher.group().toString());
+//                }
+//                for (String s : list) {
+//                    int index = s.indexOf("/");
+//                    StringBuilder target = new StringBuilder(s);
+//                    String string = "<a href=\"https://txzb.miit.gov.cn/";
+//                    if (index > 0) {
+//                        target.delete(0, index);
+//                    }
+//                    list1.add(new StringBuilder(string).append(target).toString());
+//                }
+//                return list1;
+//            }
+//            }
+//            return null;
+//        } catch (Exception e) {
+//            throw new SerException(e.getMessage());
+//        }
         try {
+            List<InfoBO> boList = new ArrayList<>();
             String url = "http://txzb.miit.gov.cn/DispatchAction.do?reg=denglu&pagesize=11";
             HttpPost request = new HttpPost(url);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("efFormEname", "POIX14"));
             params.add(new BasicNameValuePair("methodName", "initLoad"));
+            params.add(new BasicNameValuePair("name", to.getTitle()));
+            params.add(new BasicNameValuePair("date1", to.getStartTime()));
+            params.add(new BasicNameValuePair("date2", to.getEndTime()));
 
             request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
@@ -846,42 +914,49 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
             StringBuilder sb = new StringBuilder();
             sb.append(content);
-
-            if (content.contains(to.getTitle())) {
-//                if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
-
-
-                String a = content.replaceAll("\\r|\\n|\\t", "");
-                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
-                Matcher matcher = pattern.matcher(a);
-                List<String> list = new ArrayList<>();
-                List<String> list1 = new ArrayList<>();
-                while (matcher.find()) {
-                    list.add(matcher.group().toString());
-                }
-                for (String s : list) {
-                    int index = s.indexOf("/");
-                    StringBuilder target = new StringBuilder(s);
-                    String string = "<a href=\"https://txzb.miit.gov.cn/";
-                    if (index > 0) {
-                        target.delete(0, index);
-                    }
-                    list1.add(new StringBuilder(string).append(target).toString());
-                }
-                return list1;
+            content = content.replaceAll("\\r|\\n|\\t", "");
+            List<InfoBO> infoBOS = txzb(content);
+            for (InfoBO infoBO : infoBOS) {
+                infoBO.setLink("http://txzb.miit.gov.cn" + infoBO.getId());
+                boList.add(infoBO);
             }
-//            }
-            return null;
+            return boList;
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
     }
 
+    public static List<InfoBO> txzb(String content) {
+        List<InfoBO> boList = new ArrayList<>();
+        String[] strings = content.split("</tr>");
+        for (String s : strings) {
+            if (s.trim().startsWith("<tr")) {
+                String name = StringUtils.substringAfter(s, "target=\"_blank\" >");
+                name = StringUtils.substringBefore(name, "&nbsp;");
+                String id = StringUtils.substringAfter(s, "href=\"").trim();
+                id = StringUtils.substringBefore(id, "\"target=\"_blank\"");
+                if (id.indexOf("target=") != -1) {
+                    id = StringUtils.substringBefore(id, "\" target=");
+                }
+                String date = StringUtils.substringAfterLast(s, "&nbsp; ").trim();
+                date = StringUtils.substringBefore(date, "</a>");
+                System.out.println(name + "--" + id + "--" + date);
+                if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
+                    InfoBO infoBO = new InfoBO(name, date, id);
+                    boList.add(infoBO);
+                }
+            }
+        }
+        return boList;
+    }
+
+
     @Override
-    public List<String> zycgInfo(SearchTO to) throws SerException {
+    public List<InfoBO> zycgInfo(SearchTO to) throws SerException {
+        List<InfoBO> boList = new ArrayList<>();
         try {
 
-            String url = "http://www.zycg.gov.cn/article/article_search";
+            String url = "http://www.zycg.gov.cn/article/article_search?catalog=StockAffiche&page=1";
 
             HttpGet request = new HttpGet(url);
             HttpClient client = HttpClients.createDefault();
@@ -890,43 +965,95 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
             StringBuilder sb = new StringBuilder();
             sb.append(content);
-            System.out.println(sb.toString());
-            if (content.contains(to.getTitle())) {
-//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
-                String a = content.replaceAll("\\r|\\n|\\t", "");
-                Pattern pattern = Pattern.compile("<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
-                Matcher matcher = pattern.matcher(a);
-//                Matcher matcher = pattern.matcher(sb.toString());
-                System.out.println(matcher);
-                List<String> list = new ArrayList<>();
-                List<String> list1 = new ArrayList<>();
-                while (matcher.find()) {
-                    list.add(matcher.group().toString());
+            content = content.replaceAll("\\r|\\n|\\t", "");
+            List<InfoBO> infoBOS = zycg(content);
+            for (InfoBO infoBO : infoBOS) {
+                if (StringUtils.isNotBlank(to.getTitle()) && infoBO.getTitle().contains(to.getTitle())) {
+                    infoBO.setLink("http://www.zycg.gov.cn/article/show/" + infoBO.getId());
+                    boList.add(infoBO);
                 }
-                for (String s : list) {
-                    int index = s.indexOf("/");
-                    StringBuilder target = new StringBuilder(s);
-                    String string = "<a href=\"http://www.zycg.gov.cn/";
-                    if (index > 0) {
-                        target.delete(0, index);
-                    }
-                    list1.add(new StringBuilder(string).append(target).toString());
-                }
-                return list1;
             }
-            return null;
+            return boList;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+
+    }
+//    private Integer page()throws SerException{
+//
+//    }
+
+    public static List<InfoBO> zycg(String content) {
+        List<InfoBO> infoBOS = new ArrayList<>();
+        String[] strings = content.split("</li>");
+        for (String s : strings) {
+            if (s.trim().startsWith("<li>    <span>")) {
+                String date = StringUtils.substringBefore(s, "</span>");
+                date = StringUtils.substringAfter(date, "<span>").trim();
+                date = date.substring(1, date.length() - 1);
+                String id = StringUtils.substringAfter(s, "article/show/");
+                id = StringUtils.substringBefore(id, "\"  target").trim();
+                String name = StringUtils.substringBefore(s, "</a>");
+                name = StringUtils.substringAfterLast(name, ">").trim();
+                if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
+                    InfoBO infoBO = new InfoBO(name, date, id);
+                    infoBOS.add(infoBO);
+                }
+            }
+        }
+        return infoBOS;
+    }
+
+    @Override
+    public List<InfoBO> caigouInfo(SearchTO to) throws SerException {
+        try {
+            List<InfoBO> boList = new ArrayList<>();
+            HttpGet request = new HttpGet("http://www.110caigou.com/zhaobiao.asp");
+            HttpClient client = HttpClients.createDefault();
+            HttpResponse response = client.execute(request);
+            String content = EntityUtils.toString(response.getEntity(), "gb2312");
+            StringBuilder sb = new StringBuilder();
+            sb.append(content);
+            content = content.replaceAll("\\r|\\n|\\t", "");
+            List<InfoBO> infoBOS = caigou(content);
+            for (InfoBO infoBO : infoBOS) {
+//                if (StringUtils.isNotBlank(to.getTitle()) && to.getTitle().contains(infoBO.getTitle())) {
+                    infoBO.setLink("http://www.110caigou.com/showzhaobiao.asp?id=" + infoBO.getId());
+                    boList.add(infoBO);
+//                }
+            }
+            return boList;
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
 
     }
 
-    @Override
-    public List<String> toobiaoInfo(SearchTO to) throws SerException {
-        try {
+    public static List<InfoBO> caigou(String content) {
+        List<InfoBO> boList = new ArrayList<>();
+        String[] strings = content.split("</TR>");
+        for (String s : strings) {
+            if (s.trim().startsWith("<TR")) {
+                String date = StringUtils.substringBefore(s, "]");
+                date = StringUtils.substringAfter(date, "height=35>[").trim();
+                String id = StringUtils.substringAfter(s, "showzhaobiao.asp?id=");
+                id = StringUtils.substringBefore(id, "\" ").trim();
+                String name = StringUtils.substringBefore(s, "</A>");
+                name = StringUtils.substringAfterLast(name, ">").trim();
+                if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
+                    InfoBO infoBO = new InfoBO(name, date, id);
+                    boList.add(infoBO);
+                }
+            }
+        }
+        return boList;
+    }
 
-            //搜索条件不成立
-            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0&kw=%E4%B8%AD%E5%9B%BD";
+    @Override
+    public List<InfoBO> toobiaoInfo(SearchTO to) throws SerException {
+        try {
+            List<InfoBO> boList = new ArrayList<>();
+            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0";
 
             HttpGet request = new HttpGet(url);
             HttpClient client = HttpClients.createDefault();
@@ -935,35 +1062,37 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
             StringBuilder sb = new StringBuilder();
             sb.append(content);
-            System.out.println(sb.toString());
-            if (content.contains(to.getTitle())) {
-//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
-                String a = content.replaceAll("\\r|\\n|\\t", "");
-                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>([^<]*)</a>");
-                Matcher matcher = pattern.matcher(a);
-//                Matcher matcher = pattern.matcher(sb.toString());
-                System.out.println(matcher);
-                List<String> list = new ArrayList<>();
-                List<String> list1 = new ArrayList<>();
-                while (matcher.find()) {
-                    list.add(matcher.group().toString());
-                }
-                for (String s : list) {
-                    int index = s.indexOf("/");
-                    StringBuilder target = new StringBuilder(s);
-                    String string = "<a href=\"http://search.qianlima.com/";
-                    if (index > 0) {
-                        target.delete(0, index);
-                    }
-                    list1.add(new StringBuilder(string).append(target).toString());
-                }
-                return list1;
+            content = content.replaceAll("\\r|\\n|\\t", "");
+            List<InfoBO> infoBOS = dlzb(content);
+            for (InfoBO infoBO : infoBOS) {
+                infoBO.setLink("http://www.dlzb.com" + infoBO.getId());
+                boList.add(infoBO);
             }
-            return null;
+            return boList;
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
+    }
 
+    public static List<InfoBO> dlzb(String content) {
+        List<InfoBO> boList = new ArrayList<>();
+        String[] strings = content.split("</li>");
+        for (String s : strings) {
+            if (s.trim().startsWith("<li")) {
+
+                String name = StringUtils.substringBefore(s, "\">");
+                name = StringUtils.substringAfterLast(name, "title=\"").trim();
+                String id = StringUtils.substringAfter(s, "href=\"http://www.dlzb.com").trim();
+                id = StringUtils.substringBefore(id, "\" target=\"_blank\"");
+                String date = StringUtils.substringBefore(s, "</span>");
+                date = StringUtils.substringAfterLast(date, "class=\"gc_date\">").trim();
+                if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
+                    InfoBO infoBO = new InfoBO(name, date, id);
+                    boList.add(infoBO);
+                }
+            }
+        }
+        return boList;
     }
 
     @Override
@@ -1011,47 +1140,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     }
 
+
     public static void main(String[] args) throws SerException {
-//        try {
-//
-//            String url = "http://www.schoolbid.cn/search/?l=zb&k=&lb=0&www=www.schoolbid.cn&kb=zb&dq=&rq=365&lx=2&imageField.x=32&imageField.y=22&xdq=&username=&password=";
-//
-//            HttpGet request = new HttpGet(url);
-//            HttpClient client = HttpClients.createDefault();
-//            HttpResponse response = client.execute(request);
-//            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-//
-//            StringBuilder sb = new StringBuilder();
-//            sb.append(content);
-//            System.out.println(sb.toString());
-//            if (content.contains("广东")) {
-//                String a = content.replaceAll("\\r|\\n|\\t", "");
-//                Pattern pattern = Pattern.compile("<li[^>]*>\\s*<a[^>]*>"+"广东"+"([^<]*)</span>");
-//                Matcher matcher = pattern.matcher(a);
-//                System.out.println(pattern);
-//                List<String> list = new ArrayList<>();
-//                List<String> list1 = new ArrayList<>();
-//                while (matcher.find()) {
-//                    list.add(matcher.group().toString());
-//                }
-//                for (String s : list) {
-//                    int index = s.indexOf("/");
-//                    StringBuilder target = new StringBuilder(s);
-//                    String string = "<a href=\"http://www.dlzb.com/";
-//                    if (index > 0) {
-//                        target.delete(0, index);
-//                    }
-//                    list1.add(new StringBuilder(string).append(target).toString());
-//                }
-//                System.out.println(list1);
-//            }
-//        } catch (Exception e) {
-//            throw new SerException(e.getMessage());
-//        }
-//    }
         try {
 
-            String url = "http://www.zycg.gov.cn/article/article_search";
+            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0";
 
             HttpGet request = new HttpGet(url);
             HttpClient client = HttpClients.createDefault();
@@ -1060,34 +1153,32 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
             StringBuilder sb = new StringBuilder();
             sb.append(content);
-            System.out.println(sb.toString());
-            if (content.contains("中国")) {
-//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
-                String a = content.replaceAll("\\r|\\n|\\t", "");
-                Pattern pattern = Pattern.compile("<a[^>]*>" + "中国" + "([^<]*)</a>");
-                Matcher matcher = pattern.matcher(a);
-//                Matcher matcher = pattern.matcher(sb.toString());
-                System.out.println(matcher);
-                List<String> list = new ArrayList<>();
-                List<String> list1 = new ArrayList<>();
-                while (matcher.find()) {
-                    list.add(matcher.group().toString());
-                }
-                for (String s : list) {
-                    int index = s.indexOf("/");
-                    StringBuilder target = new StringBuilder(s);
-                    String string = "<a href=\"http://www.zycg.gov.cn/";
-                    if (index > 0) {
-                        target.delete(0, index);
-                    }
-                    list1.add(new StringBuilder(string).append(target).toString());
-                }
-                System.out.println(list1);
-            }
+            content = content.replaceAll("\\r|\\n|\\t", "");
+            dlzbs(content);
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
+
     }
 
+    public static void dlzbs(String content) {
+        String[] strings = content.split("</li>");
+        for (String s : strings) {
+            if (s.trim().startsWith("<li")) {
+
+                String name = StringUtils.substringBefore(s, "</a>");
+                name = StringUtils.substringAfterLast(name, ">").trim();
+                String id = StringUtils.substringAfter(s, "href=\"http://www.dlzb.com").trim();
+                id = StringUtils.substringBefore(id, "\" target=\"_blank\"");
+                String date = StringUtils.substringBefore(s, "</span>");
+                date = StringUtils.substringAfterLast(date, "class=\"gc_date\">").trim();
+                System.out.println("内容：" + name + "id：" + id + "日期：" + date);
+            }
+        }
+    }
 
 }
+
+
+
+

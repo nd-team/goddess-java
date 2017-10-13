@@ -2,7 +2,6 @@ package com.bjike.goddess.dispatchcar.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
-import com.bjike.goddess.carinfo.api.DriverAPI;
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
@@ -46,7 +45,6 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -54,7 +52,6 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -109,8 +106,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private ServerCarInfoSer carInfoSer;
 
-    @Autowired
-    private DriverAPI driverAPI;
+//    @Autowired
+//    private DriverAPI driverAPI;
 
     @Autowired
     private BaseInfoManageAPI baseInfoManageAPI;
@@ -522,7 +519,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void fundSugg(DispatchCarInfoTO dispatchCarInfoTO,PredictPayTO to) throws SerException {
+    public void fundSugg(DispatchCarInfoTO dispatchCarInfoTO, PredictPayTO to) throws SerException {
         UserBO userBO = userAPI.currentUser();
         List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser(userBO.getId());
         if (positionDetailBOS != null) {
@@ -535,7 +532,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                     model.setExpectPayDate(DateUtil.parseDate(to.getExpectPayDate()));
                     model.setPaymentSchedule(to.getPaymentSchedule());
                     //如果核对时问题描述或者问题类型不为空则数据存入到出车核对修改记录
-                    filter(dispatchCarInfoTO,model,checkChangeCar(to, model, userBO));
+                    filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
                     BeanTransform.copyProperties(to, model, "modifyTime", "createTime", "carSource", "companyDispatch", "addOilExplain", "supplementOil", "supplementFee", "oweOilExplain", "lessOil", "lessOilFee", "shouldAmount", "shouldAmountMoney", "addOilAmountMoney");
                     super.update(model);
                 } else {
@@ -563,7 +560,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                     model.setBudgetAuditTime(LocalDateTime.now());
                     //todo 核对修改记录
                     //如果核对时问题描述或者问题类型不为空则数据存入到出车核对修改记录
-                    filter(dispatchCarInfoTO,model,checkChangeCar(to, model, userBO));
+                    filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
                     BeanTransform.copyProperties(to, model, "modifyTime", "createTime", "carSource", "companyDispatch", "addOilExplain", "supplementOil", "supplementFee", "oweOilExplain", "lessOil", "lessOilFee", "shouldAmount", "shouldAmountMoney", "addOilAmountMoney");
                     super.update(model);
                 } else {
@@ -577,7 +574,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         }
     }
 
-    private void filter(Object o1, Object o2,CheckChangeCar checkChangeCar) throws SerException {    //o1 修改前的数据 o2 修改后的数据
+    private void filter(Object o1, Object o2, CheckChangeCar checkChangeCar) throws SerException {    //o1 修改前的数据 o2 修改后的数据
         Field[] field = o1.getClass().getDeclaredFields();//获取实体类的所有属性，返回field数组
         for (int i = 0; i < field.length; i++) {//遍历所有的属性
             String name = field[i].getName(); // 获取属性的名字
@@ -601,9 +598,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                                 System.out.println(col.columnDefinition());
                                 String dispatchcar = col.columnDefinition();
                                 dispatchcar = dispatchcar.substring(dispatchcar.indexOf("COMMENT"), dispatchcar.lastIndexOf("'") + 1);
-                                dispatchcar = dispatchcar.substring(dispatchcar.indexOf("'")+1,dispatchcar.lastIndexOf("'"));
+                                dispatchcar = dispatchcar.substring(dispatchcar.indexOf("'") + 1, dispatchcar.lastIndexOf("'"));
                                 System.out.println(dispatchcar);
-                                String content = dispatchcar+value1+": 修改为 "+value2;
+                                String content = dispatchcar + value1 + ": 修改为 " + value2;
                                 checkChangeCar.setContent(content);
                                 checkChangeCarSer.save(checkChangeCar);
                             } catch (NoSuchFieldException e) {
@@ -631,9 +628,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                                 System.out.println(col.columnDefinition());
                                 String dispatchcar = col.columnDefinition();
                                 dispatchcar = dispatchcar.substring(dispatchcar.indexOf("COMMENT"), dispatchcar.lastIndexOf("'") + 1);
-                                dispatchcar = dispatchcar.substring(dispatchcar.indexOf("'")+1,dispatchcar.lastIndexOf("'"));
+                                dispatchcar = dispatchcar.substring(dispatchcar.indexOf("'") + 1, dispatchcar.lastIndexOf("'"));
                                 System.out.println(dispatchcar);
-                                String content = dispatchcar+value1+": 修改为 "+value2;
+                                String content = dispatchcar + value1 + ": 修改为 " + value2;
                                 checkChangeCar.setContent(content);
                                 checkChangeCarSer.save(checkChangeCar);
                             } catch (NoSuchFieldException e) {
@@ -664,7 +661,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             f.setAccessible(true);
             Object v1 = f.get(obj1);
             Object v2 = f.get(Obj2);
-            if( ! equals(v1, v2) ){
+            if (!equals(v1, v2)) {
                 result.put(f.getName(), String.valueOf(equals(v1, v2)));
 
             }
@@ -781,7 +778,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public void financialSugg(DispatchCarInfoTO dispatchCarInfoTO,CheckChangeCarTO to) throws SerException {
+    public void financialSugg(DispatchCarInfoTO dispatchCarInfoTO, CheckChangeCarTO to) throws SerException {
         UserBO userBO = userAPI.currentUser();
         List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser(userBO.getId());
         if (positionDetailBOS != null && positionDetailBOS.size() > 0) {
@@ -793,7 +790,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                         model.setAccountModule(userBO.getUsername());
                         model.setAccountDate(LocalDateTime.now());
                         //如果核对时问题描述或者问题类型不为空则数据存入到出车核对修改记录
-                        filter(dispatchCarInfoTO,model,checkChangeCar(to, model, userBO));
+                        filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
                         BeanTransform.copyProperties(to, model, "modifyTime", "createTime", "carSource", "companyDispatch", "addOilExplain", "supplementOil", "supplementFee", "oweOilExplain", "lessOil", "lessOilFee", "shouldAmount", "shouldAmountMoney", "addOilAmountMoney");
                         super.update(model);
                     } else {
@@ -2108,7 +2105,6 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
 
-
     @Override
     public byte[] exportExcel(CollectIntervalType collectIntervalType, CollectType
             collectType, ExportCollectPayedTO to) throws SerException {
@@ -2359,74 +2355,74 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         List<DispatchCarInfo> dispatchCarInfos = super.findAll();
         LocalDate startDate = DateUtil.parseDate(dto.getStartTime());
         LocalDate endDate = DateUtil.parseDate(dto.getEndTime());
-        LocalDate startMonth = DateUtil.getStartDayOfMonth(startDate.getYear(),startDate.getMonth().getValue());
-        LocalDate endMonth = DateUtil.getEndDaYOfMonth(endDate.getYear(),endDate.getMonth().getValue());
-        LocalDate startYear = DateUtil.parseDate(startDate.getYear()+" 01-01");
-        LocalDate endYear = DateUtil.parseDate(endDate.getYear()+" 12-31");
-        LocalDate[] monthDates = new LocalDate[]{startMonth,endMonth};
-        LocalDate[] dayDates = new LocalDate[]{startDate,endDate};
-        LocalDate[] yearDates = new LocalDate[]{startYear,endYear};
+        LocalDate startMonth = DateUtil.getStartDayOfMonth(startDate.getYear(), startDate.getMonth().getValue());
+        LocalDate endMonth = DateUtil.getEndDaYOfMonth(endDate.getYear(), endDate.getMonth().getValue());
+        LocalDate startYear = DateUtil.parseDate(startDate.getYear() + " 01-01");
+        LocalDate endYear = DateUtil.parseDate(endDate.getYear() + " 12-31");
+        LocalDate[] monthDates = new LocalDate[]{startMonth, endMonth};
+        LocalDate[] dayDates = new LocalDate[]{startDate, endDate};
+        LocalDate[] yearDates = new LocalDate[]{startYear, endYear};
         List<CollectDispatchcarBO> collectDispatchcarBOS = new ArrayList<>();
         Set<String> date = new TreeSet<>();
-        for(DispatchCarInfo dispatchCarInfo :dispatchCarInfos) {
+        for (DispatchCarInfo dispatchCarInfo : dispatchCarInfos) {
             DispatchCarInfoDTO dispatchCarInfoDTO = new DispatchCarInfoDTO();
-            CollectDispatchcarBO collectDispatchcarBO = new CollectDispatchcarBO("","",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+            CollectDispatchcarBO collectDispatchcarBO = new CollectDispatchcarBO("", "", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             List<DispatchCarInfo> dispatchCarInfos1 = new ArrayList<>();
             if (dto.getCollectDispatchcarType() != null) {
                 switch (dto.getCollectDispatchcarType()) {
                     case DRIVER:
-                        dispatchCarInfoDTO.getConditions().add(Restrict.eq("driver",dispatchCarInfo.getDriver()));
-                        if (dto.getCollectDateType() != null){
-                            switch (dto.getCollectDateType()){
+                        dispatchCarInfoDTO.getConditions().add(Restrict.eq("driver", dispatchCarInfo.getDriver()));
+                        if (dto.getCollectDateType() != null) {
+                            switch (dto.getCollectDateType()) {
                                 case DAY:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",dayDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", dayDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         date.add(dispatchCarInfo1.getDispatchDate().toString());
                                     }
-                                    for(String date1 : date){
+                                    for (String date1 : date) {
                                         DispatchCarInfoDTO dispatchCarInfoDTO1 = new DispatchCarInfoDTO();
-                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("dispatchDate",DateUtil.parseDate(date1)));
-                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("driver",dispatchCarInfo.getDriver()));
+                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("dispatchDate", DateUtil.parseDate(date1)));
+                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("driver", dispatchCarInfo.getDriver()));
                                         List<DispatchCarInfo> dispatchCarInfos2 = super.findByCis(dispatchCarInfoDTO1);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getDriver());
                                         collectDispatchcarBO.setDate(dispatchCarInfo.getDispatchDate().toString());
                                     }
                                     break;
                                 case MONTH:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",monthDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", monthDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         String dispatchDate = dispatchCarInfo1.getDispatchDate().toString();
-                                        date.add(dispatchDate.substring(0,dispatchDate.length()-3));
+                                        date.add(dispatchDate.substring(0, dispatchDate.length() - 3));
                                     }
-                                    for(String date1 : date){
-                                        String[] files = new String[]{"driver","dispatchDate","carRentalCost","overWorkTime","overWorkCost","parkCost","roadCost","mealCost","addOilAmountMoney"};
-                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate = TO_Date('"+date1+"','YYYY-MM') and driver = '"+dispatchCarInfo.getDriver()+"'");
-                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(),DispatchCarInfo.class,files);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                    for (String date1 : date) {
+                                        String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
+                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate = TO_Date('" + date1 + "','YYYY-MM') and driver = '" + dispatchCarInfo.getDriver() + "'");
+                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getDriver());
-                                        collectDispatchcarBO.setDate(date1.substring(0,date1.length()-3)+"年"+Integer.valueOf(date1.substring(date1.length()-2,date1.length()))+"月");
+                                        collectDispatchcarBO.setDate(date1.substring(0, date1.length() - 3) + "年" + Integer.valueOf(date1.substring(date1.length() - 2, date1.length())) + "月");
                                     }
                                     break;
                                 case YEAR:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",yearDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", yearDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         String dispatchDate = dispatchCarInfo1.getDispatchDate().toString();
-                                        date.add(dispatchDate.substring(0,dispatchDate.length()-6));
+                                        date.add(dispatchDate.substring(0, dispatchDate.length() - 6));
                                     }
-                                    for(String date1 : date){
-                                        String[] files = new String[]{"driver","dispatchDate","carRentalCost","overWorkTime","overWorkCost","parkCost","roadCost","mealCost","addOilAmountMoney"};
-                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate between '"+date1+"/01/01 00:00:00 and '"+date1+"/12/31 23:59:59' and driver = '"+dispatchCarInfo.getDriver()+"'");
-                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(),DispatchCarInfo.class,files);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                    for (String date1 : date) {
+                                        String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
+                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate between '" + date1 + "/01/01 00:00:00 and '" + date1 + "/12/31 23:59:59' and driver = '" + dispatchCarInfo.getDriver() + "'");
+                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getDriver());
-                                        collectDispatchcarBO.setDate(date1+"年");
+                                        collectDispatchcarBO.setDate(date1 + "年");
                                     }
                                     break;
                             }
@@ -2434,58 +2430,58 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                         }
                         break;
                     case AREA:
-                        dispatchCarInfoDTO.getConditions().add(Restrict.eq("area",dispatchCarInfo.getArea()));
-                        if (dto.getCollectDateType() != null){
-                            switch (dto.getCollectDateType()){
+                        dispatchCarInfoDTO.getConditions().add(Restrict.eq("area", dispatchCarInfo.getArea()));
+                        if (dto.getCollectDateType() != null) {
+                            switch (dto.getCollectDateType()) {
                                 case DAY:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",dayDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", dayDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         date.add(dispatchCarInfo1.getDispatchDate().toString());
                                     }
-                                    for(String date1 : date){
+                                    for (String date1 : date) {
                                         DispatchCarInfoDTO dispatchCarInfoDTO1 = new DispatchCarInfoDTO();
-                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("dispatchDate",DateUtil.parseDate(date1)));
-                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("area",dispatchCarInfo.getArea()));
+                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("dispatchDate", DateUtil.parseDate(date1)));
+                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("area", dispatchCarInfo.getArea()));
                                         List<DispatchCarInfo> dispatchCarInfos2 = super.findByCis(dispatchCarInfoDTO1);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getArea());
                                         collectDispatchcarBO.setDate(dispatchCarInfo.getDispatchDate().toString());
                                     }
                                     break;
                                 case MONTH:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",monthDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", monthDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         String dispatchDate = dispatchCarInfo1.getDispatchDate().toString();
-                                        date.add(dispatchDate.substring(0,dispatchDate.length()-3));
+                                        date.add(dispatchDate.substring(0, dispatchDate.length() - 3));
                                     }
-                                    for(String date1 : date){
-                                        String[] files = new String[]{"driver","dispatchDate","carRentalCost","overWorkTime","overWorkCost","parkCost","roadCost","mealCost","addOilAmountMoney"};
-                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate = TO_Date('"+date1+"','YYYY-MM') and area = '"+dispatchCarInfo.getArea()+"'");
-                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(),DispatchCarInfo.class,files);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                    for (String date1 : date) {
+                                        String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
+                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate = TO_Date('" + date1 + "','YYYY-MM') and area = '" + dispatchCarInfo.getArea() + "'");
+                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getArea());
-                                        collectDispatchcarBO.setDate(date1.substring(0,date1.length()-3)+"年"+Integer.valueOf(date1.substring(date1.length()-2,date1.length()))+"月");
+                                        collectDispatchcarBO.setDate(date1.substring(0, date1.length() - 3) + "年" + Integer.valueOf(date1.substring(date1.length() - 2, date1.length())) + "月");
                                     }
                                     break;
                                 case YEAR:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",yearDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", yearDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         String dispatchDate = dispatchCarInfo1.getDispatchDate().toString();
-                                        date.add(dispatchDate.substring(0,dispatchDate.length()-6));
+                                        date.add(dispatchDate.substring(0, dispatchDate.length() - 6));
                                     }
-                                    for(String date1 : date){
-                                        String[] files = new String[]{"driver","dispatchDate","carRentalCost","overWorkTime","overWorkCost","parkCost","roadCost","mealCost","addOilAmountMoney"};
-                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo dispatchcar" + "WHERE dispatchDate between '"+date1+"/01/01 00:00:00 and '"+date1+"/12/31 23:59:59' and area = '"+dispatchCarInfo.getArea()+"'");
-                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(),DispatchCarInfo.class,files);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                    for (String date1 : date) {
+                                        String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
+                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo dispatchcar" + "WHERE dispatchDate between '" + date1 + "/01/01 00:00:00 and '" + date1 + "/12/31 23:59:59' and area = '" + dispatchCarInfo.getArea() + "'");
+                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getArea());
-                                        collectDispatchcarBO.setDate(date1+"年");
+                                        collectDispatchcarBO.setDate(date1 + "年");
                                     }
                                     break;
                             }
@@ -2493,58 +2489,58 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                         }
                         break;
                     case PROJECT:
-                        dispatchCarInfoDTO.getConditions().add(Restrict.eq("project",dispatchCarInfo.getProject()));
-                        if (dto.getCollectDateType() != null){
-                            switch (dto.getCollectDateType()){
+                        dispatchCarInfoDTO.getConditions().add(Restrict.eq("project", dispatchCarInfo.getProject()));
+                        if (dto.getCollectDateType() != null) {
+                            switch (dto.getCollectDateType()) {
                                 case DAY:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",dayDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", dayDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         date.add(dispatchCarInfo1.getDispatchDate().toString());
                                     }
-                                    for(String date1 : date){
+                                    for (String date1 : date) {
                                         DispatchCarInfoDTO dispatchCarInfoDTO1 = new DispatchCarInfoDTO();
-                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("dispatchDate",DateUtil.parseDate(date1)));
-                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("project",dispatchCarInfo.getProject()));
+                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("dispatchDate", DateUtil.parseDate(date1)));
+                                        dispatchCarInfoDTO1.getConditions().add(Restrict.eq("project", dispatchCarInfo.getProject()));
                                         List<DispatchCarInfo> dispatchCarInfos2 = super.findByCis(dispatchCarInfoDTO1);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getProject());
                                         collectDispatchcarBO.setDate(dispatchCarInfo.getDispatchDate().toString());
                                     }
                                     break;
                                 case MONTH:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",monthDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", monthDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         String dispatchDate = dispatchCarInfo1.getDispatchDate().toString();
-                                        date.add(dispatchDate.substring(0,dispatchDate.length()-3));
+                                        date.add(dispatchDate.substring(0, dispatchDate.length() - 3));
                                     }
-                                    for(String date1 : date){
-                                        String[] files = new String[]{"driver","dispatchDate","carRentalCost","overWorkTime","overWorkCost","parkCost","roadCost","mealCost","addOilAmountMoney"};
-                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate = TO_Date('"+date1+"','YYYY-MM') and project = '"+dispatchCarInfo.getProject()+"'");
-                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(),DispatchCarInfo.class,files);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                    for (String date1 : date) {
+                                        String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
+                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate = TO_Date('" + date1 + "','YYYY-MM') and project = '" + dispatchCarInfo.getProject() + "'");
+                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getProject());
-                                        collectDispatchcarBO.setDate(date1.substring(0,date1.length()-3)+"年"+Integer.valueOf(date1.substring(date1.length()-2,date1.length()))+"月");
+                                        collectDispatchcarBO.setDate(date1.substring(0, date1.length() - 3) + "年" + Integer.valueOf(date1.substring(date1.length() - 2, date1.length())) + "月");
                                     }
                                     break;
                                 case YEAR:
-                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate",yearDates));
+                                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", yearDates));
                                     dispatchCarInfos1 = super.findByCis(dispatchCarInfoDTO);
                                     //排除重复的日期
-                                    for(DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1){
+                                    for (DispatchCarInfo dispatchCarInfo1 : dispatchCarInfos1) {
                                         String dispatchDate = dispatchCarInfo1.getDispatchDate().toString();
-                                        date.add(dispatchDate.substring(0,dispatchDate.length()-6));
+                                        date.add(dispatchDate.substring(0, dispatchDate.length() - 6));
                                     }
-                                    for(String date1 : date){
-                                        String[] files = new String[]{"driver","dispatchDate","carRentalCost","overWorkTime","overWorkCost","parkCost","roadCost","mealCost","addOilAmountMoney"};
-                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate between '"+date1+"/01/01 00:00:00 and '"+date1+"/12/31 23:59:59' and project = '"+dispatchCarInfo.getProject()+"'");
-                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(),DispatchCarInfo.class,files);
-                                        collectDispatch(dispatchCarInfos2,collectDispatchcarBO);
+                                    for (String date1 : date) {
+                                        String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
+                                        StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + "WHERE dispatchDate between '" + date1 + "/01/01 00:00:00 and '" + date1 + "/12/31 23:59:59' and project = '" + dispatchCarInfo.getProject() + "'");
+                                        List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
+                                        collectDispatch(dispatchCarInfos2, collectDispatchcarBO);
                                         collectDispatchcarBO.setName(dispatchCarInfo.getProject());
-                                        collectDispatchcarBO.setDate(date1+"年");
+                                        collectDispatchcarBO.setDate(date1 + "年");
                                     }
                                     break;
                             }
@@ -2558,7 +2554,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         return collectDispatchcarBOS;
     }
 
-    public void collectDispatch(List<DispatchCarInfo> dispatchCarInfos1,CollectDispatchcarBO collectDispatchcarBO) throws SerException{
+    public void collectDispatch(List<DispatchCarInfo> dispatchCarInfos1, CollectDispatchcarBO collectDispatchcarBO) throws SerException {
 
         Double rentcarUnitCost = 0.0;
         Double overTimeWork = 0.0;
@@ -2574,7 +2570,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         rentcarUnitCost = dispatchCarInfos1.stream().filter(p -> p.getCarRentalCost() != null).mapToDouble(p -> p.getCarRentalCost()).sum();
         overTimeWork = dispatchCarInfos1.stream().filter(p -> p.getOverWorkTime() != null).mapToDouble(p -> p.getOverWorkTime()).sum();
         overTimeWorkPrice = dispatchCarInfos1.stream().filter(p -> p.getOverWorkCost() != null).mapToDouble(p -> p.getOverWorkCost()).sum();
-        overTimeWorkUnitCost = overTimeWorkPrice/overTimeWork;
+        overTimeWorkUnitCost = overTimeWorkPrice / overTimeWork;
         parkCost = dispatchCarInfos1.stream().filter(p -> p.getParkCost() != null).mapToDouble(p -> p.getParkCost()).sum();
         roadCost = dispatchCarInfos1.stream().filter(p -> p.getRoadCost() != null).mapToDouble(p -> p.getRoadCost()).sum();
         mealCost = dispatchCarInfos1.stream().filter(p -> p.getMealCost() != null).mapToDouble(p -> p.getMealCost()).sum();

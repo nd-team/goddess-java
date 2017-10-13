@@ -1,20 +1,15 @@
-package com.bjike.goddess.bidding.service;
+package com.bjike.goddess.receivable.service;
 
-import com.bjike.goddess.bidding.bo.BiddingAcceptBO;
-import com.bjike.goddess.bidding.dto.BiddingAcceptDTO;
-import com.bjike.goddess.bidding.entity.BiddingAccept;
-import com.bjike.goddess.bidding.enums.GuideAddrStatus;
-import com.bjike.goddess.bidding.excel.SonPermissionObject;
-import com.bjike.goddess.bidding.to.BiddingAcceptTO;
-import com.bjike.goddess.bidding.to.GuidePermissionTO;
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.api.PositionInstructionAPI;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.receivable.bo.MainIncomeBO;
+import com.bjike.goddess.receivable.dto.MainIncomeDTO;
+import com.bjike.goddess.receivable.entity.MainIncome;
+import com.bjike.goddess.receivable.enums.GuideAddrStatus;
+import com.bjike.goddess.receivable.to.GuidePermissionTO;
+import com.bjike.goddess.receivable.to.MainIncomeTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -27,20 +22,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 招标问题受理和处理业务实现
+ * 主营业务收入业务实现
  *
  * @Author: [ xiazhili ]
- * @Date: [ 2017-09-14 04:41 ]
- * @Description: [ 招标问题受理和处理业务实现 ]
+ * @Date: [ 2017-10-10 10:19 ]
+ * @Description: [ 主营业务收入业务实现 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@CacheConfig(cacheNames = "biddingSerCache")
+@CacheConfig(cacheNames = "receivableSerCache")
 @Service
-public class BiddingAcceptSerImpl extends ServiceImpl<BiddingAccept, BiddingAcceptDTO> implements BiddingAcceptSer {
-    @Autowired
-    private PositionDetailUserAPI positionDetailUserAPI;
-
+public class MainIncomeSerImpl extends ServiceImpl<MainIncome, MainIncomeDTO> implements MainIncomeSer {
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -185,62 +177,49 @@ public class BiddingAcceptSerImpl extends ServiceImpl<BiddingAccept, BiddingAcce
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
-
     @Override
-    public Long count(BiddingAcceptDTO dto) throws SerException {
-        search(dto);
+    public Long count(MainIncomeDTO dto) throws SerException {
         Long count = super.count(dto);
         return count;
     }
 
     @Override
-    public BiddingAcceptBO getOne(String id) throws SerException {
-        BiddingAccept biddingAccept = super.findById(id);
-        return BeanTransform.copyProperties(biddingAccept, BiddingAcceptBO.class);
+    public MainIncomeBO getOne(String id) throws SerException {
+        MainIncome mainIncome = super.findById(id);
+        return BeanTransform.copyProperties(mainIncome, MainIncomeBO.class);
     }
 
     @Override
-    public List<BiddingAcceptBO> list(BiddingAcceptDTO dto) throws SerException {
-        checkSeeIdentity();
-        search(dto);
-        List<BiddingAccept> biddingAccepts = super.findByCis(dto);
-        List<BiddingAcceptBO> biddingAcceptBOS = BeanTransform.copyProperties(biddingAccepts, BiddingAcceptBO.class);
-        return biddingAcceptBOS;
-    }
-
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public BiddingAcceptBO save(BiddingAcceptTO to) throws SerException {
-        checkAddIdentity();
-        UserBO userBO = userAPI.currentUser();
-        BiddingAccept biddingAccept = BeanTransform.copyProperties(to, BiddingAccept.class, true);
-        biddingAccept.setCreateTime(LocalDateTime.now());
-        biddingAccept.setInputUser(userBO.getUsername());
-//        String name = to.getProblemExhibitor();
-//        List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.getPositionDetail(name);
-//
-//        for (PositionDetailBO positionDetailBO : positionDetailBOS) {
-//            biddingAccept.setArea(positionDetailBO.getArea());
-//            biddingAccept.setDepartment(positionDetailBO.getDepartmentName());
-//        }
-        super.save(biddingAccept);
-        BiddingAcceptBO bo = BeanTransform.copyProperties(biddingAccept, BiddingAcceptBO.class);
-        return bo;
+    public List<MainIncomeBO> list(MainIncomeDTO dto) throws SerException {
+        List<MainIncome> mainIncomes = super.findByCis(dto);
+        List<MainIncomeBO> mainIncomeBOS = BeanTransform.copyProperties(mainIncomes, MainIncomeBO.class);
+        return mainIncomeBOS;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public BiddingAcceptBO edit(BiddingAcceptTO to) throws SerException {
-        checkAddIdentity();
-        if (StringUtils.isNotBlank(to.getId())) {
-            BiddingAccept biddingAccept = super.findById(to.getId());
-            BeanTransform.copyProperties(to, biddingAccept, true);
-            biddingAccept.setCreateTime(LocalDateTime.now());
-            super.update(biddingAccept);
-            BiddingAcceptBO bo = BeanTransform.copyProperties(biddingAccept, BiddingAcceptBO.class);
-            return bo;
-        } else {
+    public MainIncomeBO add(MainIncomeTO to) throws SerException {
+        MainIncome mainIncome = BeanTransform.copyProperties(to, MainIncome.class);
+        mainIncome.setCreateTime(LocalDateTime.now());
+        super.save(mainIncome);
+        MainIncomeBO mainIncomeBO = BeanTransform.copyProperties(mainIncome, MainIncomeBO.class);
+
+        return mainIncomeBO;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public MainIncomeBO edit(MainIncomeTO to) throws SerException {
+        if(StringUtils.isNotBlank(to.getId())){
+
+            MainIncome mainIncome = super.findById(to.getId());
+            LocalDateTime createTime = mainIncome.getCreateTime();
+            mainIncome = BeanTransform.copyProperties(to,MainIncome.class,true);
+            mainIncome.setCreateTime(createTime);
+            mainIncome.setModifyTime(LocalDateTime.now());
+            MainIncomeBO mainIncomeBO = BeanTransform.copyProperties(mainIncome,MainIncomeBO.class);
+            return mainIncomeBO;
+        }else {
             throw new SerException("id不能为空");
         }
     }
@@ -248,45 +227,10 @@ public class BiddingAcceptSerImpl extends ServiceImpl<BiddingAccept, BiddingAcce
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void remove(String id) throws SerException {
-        checkAddIdentity();
         if (StringUtils.isNotBlank(id)) {
             super.remove(id);
         } else {
             throw new SerException("id不能为空");
-        }
-    }
-
-    @Transactional(rollbackFor = SerException.class)
-    @Override
-    public BiddingAcceptBO notification(BiddingAcceptTO to) throws SerException {
-        checkAddIdentity();
-        if (StringUtils.isNotBlank(to.getId())) {
-            BiddingAccept biddingAccept = super.findById(to.getId());
-            BeanTransform.copyProperties(to, biddingAccept, true);
-            biddingAccept.setCreateTime(LocalDateTime.now());
-            super.save(biddingAccept);
-            BiddingAcceptBO bo = BeanTransform.copyProperties(biddingAccept, BiddingAcceptBO.class);
-            return bo;
-        } else {
-            throw new SerException("id不能为空");
-        }
-    }
-    private void search(BiddingAcceptDTO dto)throws SerException{
-        //问题提出人
-        if(StringUtils.isNotBlank(dto.getProblemExhibitor())){
-            dto.getConditions().add(Restrict.like("problemExhibitor",dto.getProblemExhibitor()));
-        }
-        //状态
-        if(StringUtils.isNotBlank(dto.getStatus())){
-            dto.getConditions().add(Restrict.like("status",dto.getStatus()));
-        }
-        //是否闭环
-        if(dto.getClosedLoop() != null){
-            dto.getConditions().add(Restrict.like("closedLoop",dto.getClosedLoop()));
-        }
-        //是否通报
-        if(dto.getNotification() != null){
-            dto.getConditions().add(Restrict.like("notification",dto.getNotification()));
         }
     }
 }

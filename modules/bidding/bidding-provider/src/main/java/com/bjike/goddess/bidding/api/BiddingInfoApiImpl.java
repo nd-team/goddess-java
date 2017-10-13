@@ -3,6 +3,7 @@ package com.bjike.goddess.bidding.api;
 import com.bjike.goddess.bidding.bo.BiddingCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
+import com.bjike.goddess.bidding.bo.InfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.service.BiddingInfoSer;
@@ -116,21 +117,26 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     }
 
     @Override
-    public List<String> info(SearchTO to) throws SerException {
+    public List<InfoBO> info(SearchTO to) throws SerException {
         return biddingInfoSer.info(to);
     }
     @Override
-    public List<String> txzbInfo(SearchTO to) throws SerException {
+    public List<InfoBO> txzbInfo(SearchTO to) throws SerException {
         return biddingInfoSer.txzbInfo(to);
     }
 
     @Override
-    public List<String> zycgInfo(SearchTO to) throws SerException {
+    public List<InfoBO> zycgInfo(SearchTO to) throws SerException {
         return biddingInfoSer.zycgInfo(to);
     }
 
     @Override
-    public List<String> toobiaoInfo(SearchTO to) throws SerException {
+    public List<InfoBO> caigouInfo(SearchTO to) throws SerException {
+        return biddingInfoSer.caigouInfo(to);
+    }
+
+    @Override
+    public List<InfoBO> toobiaoInfo(SearchTO to) throws SerException {
         return biddingInfoSer.toobiaoInfo(to);
     }
 
