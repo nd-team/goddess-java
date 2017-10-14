@@ -175,7 +175,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegisterBO.getUsername());//查看员工状态
                 if(staffStatus == null){
                     entryRegisterBO.setStaffStatus("未获取到数据");
-                }
+                }else
                 entryRegisterBO.setStaffStatus(staffStatus.toString());
             }
         }
@@ -279,7 +279,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         EntryRegister temp = super.findById(entryRegisterTO.getId());
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
-        BeanTransform.copyProperties(entryRegister, temp, "id", "createTime", "birthday", "graduationDate");
+        BeanTransform.copyProperties(entryRegister, temp,true, "id", "createTime", "birthday", "graduationDate");
         temp.setBirthday(entryRegister.getBirthday());
         temp.setGraduationDate(entryRegister.getGraduationDate());
         try {
@@ -353,6 +353,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
                                                WorkExperienceTO workExperienceTO, CredentialTO credentialTO) throws SerException {
 
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
+        entryRegister.setUpdateTime(LocalDate.now());
         if (StringUtils.isBlank(entryRegisterTO.getEmpNumber())) {
             throw new SerException("员工编号不能为空");
         }

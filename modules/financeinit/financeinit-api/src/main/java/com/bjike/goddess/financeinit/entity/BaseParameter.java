@@ -11,11 +11,11 @@ import javax.persistence.Table;
 
 
 /**
- * 初始化数据录入
+ * 基本参数
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-10-10 04:11 ]
- * @Description: [ 初始化数据录入 ]
+ * @Description: [ 基本参数 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

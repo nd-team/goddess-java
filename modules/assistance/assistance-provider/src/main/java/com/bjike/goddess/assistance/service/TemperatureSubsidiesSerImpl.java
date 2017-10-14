@@ -276,8 +276,10 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(temperatureSubsidiesBO.getName());//查看员工状态
                 if (staffStatus == null) {
                     temperatureSubsidiesBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    temperatureSubsidiesBO.setStaffStatus(staffStatus.toString());
                 }
-                temperatureSubsidiesBO.setStaffStatus(staffStatus.toString());
             }
         }
         return temperatureSubsidiesBOS;
@@ -329,8 +331,10 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
             StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
             if (staffStatus == null) {
                 excel.setStaffStatus("未获取到数据");
+            }else{
+
+                excel.setStaffStatus(staffStatus.toString());
             }
-            excel.setStaffStatus(staffStatus.toString());
             temperatureSubsidiesImports.add(excel);
         }
         Excel excel = new Excel(0, 2);

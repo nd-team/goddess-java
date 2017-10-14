@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -88,5 +89,25 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(companyBasicInfoExports, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> findCompanyName() throws SerException {
+        List<CompanyBasicInfo> companyBasicInfos = super.findAll();
+        List<String> CompanyNames = new ArrayList<>();
+        if(companyBasicInfos!=null && companyBasicInfos.size()>0){
+            for (CompanyBasicInfo companyBasicInfo : companyBasicInfos){
+                CompanyNames.add(companyBasicInfo.getCompanyName());
+            }
+        }
+        return CompanyNames;
+    }
+
+    @Override
+    public CompanyBasicInfoBO findByCompanyName(String companyName) throws SerException {
+        CompanyBasicInfoDTO companyBasicInfoDTO = new CompanyBasicInfoDTO();
+        companyBasicInfoDTO.getConditions().add(Restrict.eq("companyName",companyName));
+        CompanyBasicInfo companyBasicInfo = super.findOne(companyBasicInfoDTO);
+        return BeanTransform.copyProperties(companyBasicInfo,CompanyBasicInfoBO.class);
     }
 }

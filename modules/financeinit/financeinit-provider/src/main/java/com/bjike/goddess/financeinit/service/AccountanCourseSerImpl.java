@@ -35,7 +35,9 @@ import java.util.List;
 @Service
 public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, AccountanCourseDTO> implements AccountanCourseSer {
     @Override
-    public Long countCourse(AccountanCourseDTO accountanCourseDTO) throws SerException {
+    public Long countCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+        searchCodi(accountanCourseDTO);
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
         Long count = super.count(accountanCourseDTO);
         return count;
     }
@@ -48,11 +50,30 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         AccountanCourse accountanCourse = super.findById(id);
         return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
     }
+    public void searchCodi(AccountanCourseDTO accountanCourseDTO)throws SerException{
 
+        if(StringUtils.isNotBlank(accountanCourseDTO.getAccountanName())){
+            accountanCourseDTO.getConditions().add(Restrict.eq("accountanName",accountanCourseDTO.getAccountanName()));
+        }
+    }
     @Override
-    public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO) throws SerException {
+    public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+        searchCodi(accountanCourseDTO);
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
         List<AccountanCourse> list = super.findByCis(accountanCourseDTO, true);
         return BeanTransform.copyProperties(list, AccountanCourseBO.class);
+    }
+
+    @Override
+    public CategoryName belongByName(String accountanName) throws SerException {
+        CategoryName belongCategory = null;
+        AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
+        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName",accountanName));
+        AccountanCourse accountanCourse = super.findOne(accountanCourseDTO);
+        if(accountanCourse!=null){
+            belongCategory = accountanCourse.getBelongCategory();
+        }
+        return belongCategory;
     }
 
     @Override
@@ -127,5 +148,13 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         return bytes;
     }
 
-
+    @Override
+    public void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException {
+        List<AccountanCourse> accountanCourses = BeanTransform.copyProperties(accountanCourseTOS, AccountanCourse.class, true);
+        accountanCourses.stream().forEach(str -> {
+            str.setCreateTime(LocalDateTime.now());
+            str.setModifyTime(LocalDateTime.now());
+        });
+        super.save(accountanCourses);
+    }
 }

@@ -24,7 +24,7 @@ public class ProofWords extends BaseEntity {
     /**
      * 凭证字
      */
-    @Column(name = "proofCharacter", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '凭证字'")
+    @Column(name = "proofCharacter", nullable = false,unique = true,columnDefinition = "TINYINT(2)   COMMENT '凭证字'")
     private ProofCharacter proofCharacter;
 
 

@@ -24,7 +24,7 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
     /**
      * 会计科目列表总条数
      */
-    default Long countCourse(AccountanCourseDTO accountanCourseDTO) throws SerException {
+    default Long countCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
         return null;
     }
 
@@ -43,7 +43,13 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
      *
      * @return class AccountanCourseBO
      */
-    default List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO) throws SerException {
+    default List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+        return null;
+    }
+    /**
+     * 根据会计科目名称查询所属类型
+     */
+    default CategoryName belongByName(String accountanName) throws SerException {
         return null;
     }
 
@@ -98,10 +104,10 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
      */
     byte[] templateExport() throws SerException;
 
-//    /**
-//     * 导入
-//     *
-//     * @param casualtyPurchasingListTOS 工龄补助
-//     */
-//    void importExcel(List<CasualtyPurchasingListTO> casualtyPurchasingListTOS) throws SerException;
+    /**
+     * 导入
+     *
+     * @param accountanCourseTOS 会计科目
+     */
+    void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException;
 }

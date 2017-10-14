@@ -3,6 +3,7 @@ package com.bjike.goddess.financeinit.action.financeinit;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -20,7 +21,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,7 +37,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("account")
-public class AccountAction {
+public class AccountAction extends BaseFileAction{
 
     @Autowired
     private AccountAPI accountAPI;
@@ -209,6 +212,24 @@ public class AccountAction {
             throw new ActException(e.getMessage());
         }
     }
-
+    /**
+     * 导出excel
+     *
+     * @des 导出账户来源
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "账户来源.xlsx";
+            super.writeOutFile(response, accountAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
 
 }

@@ -1,22 +1,112 @@
 package com.bjike.goddess.financeinit.action.financeinit;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.financeinit.api.UseCommonlyAPI;
+import com.bjike.goddess.financeinit.bo.UseCommonlyBO;
+import com.bjike.goddess.financeinit.dto.UseCommonlyDTO;
+import com.bjike.goddess.financeinit.entity.UseCommonly;
+import com.bjike.goddess.financeinit.to.UseCommonlyTO;
+import com.bjike.goddess.financeinit.vo.UseCommonlyVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
-* 常用摘要
-* @Author:			[ lijuntao ]
-* @Date:			[  2017-10-10 03:19 ]
-* @Description:	[ 常用摘要 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 常用摘要
+ *
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-10-13 12:56 ]
+ * @Description: [ 常用摘要 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 @RestController
 @RequestMapping("usecommonly")
-public class UseCommonlyAction { 
+public class UseCommonlyAction {
+    @Autowired
+    private UseCommonlyAPI useCommonlyAPI;
 
- }
+    /**
+     * 列表总条数
+     *
+     * @param useCommonlyDTO 常用摘要dto
+     * @des 获取所有常用摘要总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(UseCommonlyDTO useCommonlyDTO) throws ActException {
+        try {
+            Long count = useCommonlyAPI.countUse(useCommonlyDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 一个常用摘要
+     *
+     * @param id 常用摘要id
+     * @return class UseCommonlyVO
+     * @des 根据id获取常用摘要
+     * @version v1
+     */
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
+        try {
+            UseCommonlyVO useCommonlyVO = BeanTransform.copyProperties(
+                    useCommonlyAPI.getOneById(id), UseCommonlyVO.class);
+            return ActResult.initialize(useCommonlyVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 常用摘要列表
+     *
+     * @param useCommonlyDTO 常用摘要dto
+     * @return class UseCommonlyVO
+     * @des 获取所有常用摘要
+     * @version v1
+     */
+    @GetMapping("v1/listAccount")
+    public Result findListAccount(UseCommonlyDTO useCommonlyDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            List<UseCommonlyVO> accountVOList = BeanTransform.copyProperties(
+                    useCommonlyAPI.listUse(useCommonlyDTO), UseCommonlyVO.class, request);
+            return ActResult.initialize(accountVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加凭证字
+     *
+     * @param useCommonlyTO 常用摘要数据to
+     * @return class UseCommonlyVO
+     * @des 添加常用摘要
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/add")
+    public Result addAccount(@Validated(value = ADD.class) UseCommonlyTO useCommonlyTO, BindingResult bindingResult) throws ActException {
+        try {
+            UseCommonlyBO useCommonlyBO = useCommonlyAPI.addUse(useCommonlyTO);
+            return ActResult.initialize(BeanTransform.copyProperties(useCommonlyBO, UseCommonlyVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+}

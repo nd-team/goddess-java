@@ -5,11 +5,11 @@ import com.bjike.goddess.financeinit.enums.AccountingSystem;
 import com.bjike.goddess.financeinit.enums.ScaleShape;
 
 /**
- * 初始化数据录入表现层对象
+ * 基本参数表现层对象
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-10-10 04:11 ]
- * @Description: [ 初始化数据录入表现层对象 ]
+ * @Description: [ 基本参数表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

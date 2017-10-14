@@ -210,8 +210,10 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(computerSubsidiesBO.getName());//查看员工状态
                 if (staffStatus == null) {
                     computerSubsidiesBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    computerSubsidiesBO.setStaffStatus(staffStatus.toString());
                 }
-                computerSubsidiesBO.setStaffStatus(staffStatus.toString());
             }
         }
         return computerSubsidiesBOS;
@@ -263,8 +265,10 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
             StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
             if (staffStatus == null) {
                 excel.setStaffStatus("未获取到数据");
+            }else{
+
+                excel.setStaffStatus(staffStatus.toString());
             }
-            excel.setStaffStatus(staffStatus.toString());
             computerSubsidiesImports.add(excel);
         }
         Excel excel = new Excel(0, 2);

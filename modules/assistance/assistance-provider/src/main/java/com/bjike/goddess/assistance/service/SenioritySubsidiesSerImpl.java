@@ -199,8 +199,10 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(senioritySubsidiesBO.getName());//查看员工状态
                 if (staffStatus == null) {
                     senioritySubsidiesBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    senioritySubsidiesBO.setStaffStatus(staffStatus.toString());
                 }
-                senioritySubsidiesBO.setStaffStatus(staffStatus.toString());
             }
         }
         return senioritySubsidiesBOS;
@@ -293,8 +295,10 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
             StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
             if (staffStatus == null) {
                 excel.setStaffStatus("未获取到数据");
+            }else {
+
+                excel.setStaffStatus(staffStatus.toString());
             }
-            excel.setStaffStatus(staffStatus.toString());
             senioritySubsidiesImports.add(excel);
         }
         Excel excel = new Excel(0, 2);

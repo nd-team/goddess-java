@@ -58,4 +58,14 @@ public class CompanyBasicInfoApiImpl implements CompanyBasicInfoAPI {
     public byte[] exportExcel() throws SerException {
         return companyBasicInfoSer.exportExcel();
     }
+
+    @Override
+    public List<String> findCompanyName() throws SerException {
+        return companyBasicInfoSer.findCompanyName();
+    }
+
+    @Override
+    public CompanyBasicInfoBO findByCompanyName(String companyName) throws SerException {
+        return companyBasicInfoSer.findByCompanyName(companyName);
+    }
 }

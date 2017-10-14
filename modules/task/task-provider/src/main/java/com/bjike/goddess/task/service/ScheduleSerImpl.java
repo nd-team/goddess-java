@@ -26,6 +26,8 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,7 @@ import java.util.*;
  */
 @Service
 public class ScheduleSerImpl implements ScheduleSer {
+    public static final Logger LOGGER = LoggerFactory.getLogger(ScheduleSerImpl.class);
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -297,60 +300,73 @@ public class ScheduleSerImpl implements ScheduleSer {
      */
     @Override
     public void customizeCollect(Customize customize) throws SerException {
-        CustomProject project = new CustomProject();
-        String sql = "SELECT p.name as projectName ,t.name as tableName,t.id as tid FROM taskallotment_project p ,taskallotment_table t  " +
-                "WHERE p.id='" + customize.getProjectId() + "'  " +
-                "AND t.project_id=p.id ";
-        if (StringUtils.isNotBlank(customize.getTablesId())) {
-            String[] tables = customize.getTablesId().split(",");
-            sql += "AND t.id in('" + StringUtils.join(tables, "','") + "')";
+        boolean available = true; //尝试调用消息接口,服务是否可用,如果不可用则不再进行查询操作
+        try {
+            messageAPI.read("");
+        } catch (Exception e) {
+            if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                available = false;
+                LOGGER.error("消息模块服务不可用!");
+            }
         }
-        //查询包含项目表
-        List<Object> objects = tableSer.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-            Object[] ot = (Object[]) objects.get(0);
-            project.setName(String.valueOf(ot[0])); //初始化项目
-            List<CustomTable> tables = new ArrayList<>(objects.size());
-            for (Object o : objects) { //初始化项目表
-                ot = (Object[]) o;
-                CustomTable table = new CustomTable();
-                table.setName(String.valueOf(ot[1]));
-                table.setTid(String.valueOf(ot[2]));
-                tables.add(table);
+        if (available) {
+            CustomProject project = new CustomProject();
+            String sql = "SELECT p.name as projectName ,t.name as tableName,t.id as tid FROM taskallotment_project p ,taskallotment_table t  " +
+                    "WHERE p.id='" + customize.getProjectId() + "'  " +
+                    "AND t.project_id=p.id ";
+            if (StringUtils.isNotBlank(customize.getTablesId())) {
+                String[] tables = customize.getTablesId().split(",");
+                sql += "AND t.id in('" + StringUtils.join(tables, "','") + "')";
             }
-            CustomCondition condition = initCondition(customize);
-            initFixedField(tables, condition); //初始化固定表头及内容
-            initCustomField(tables, condition);//初始化自定义表头
-            initCustomCollect(tables, project);//初始化自定义表头内容
-            initDeptCollect(project, customize.getDepartment());//初始化部门汇总
-            collectToday(project.getTaskCollects()); //部门今天任务汇总
-            collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总
-            project.setTables(tables);
-            String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
-            //邮件发送
-            List<String> mails = new ArrayList<>();
-            List<UserBO> userBOS = null;
-            NoticeType type = customize.getNoticeType();
-            if (type.equals(NoticeType.PERSON)) {
-                UserDTO dto = new UserDTO();
-                dto.getConditions().add(Restrict.in("username", customize.getNoticeTarget().split(",")));
-                userBOS = userAPI.findByCis(dto);
-            } else if (type.equals(NoticeType.DEPT)) {
-                userBOS = userAPI.findByDept(customize.getNoticeTarget().split(","));
-            } else {
-                userBOS = userAPI.findAllUser();
-            }
-            if (null != userBOS) {
-                for (UserBO user : userBOS) {
-                    if (null != user.getEmail()) {
-                        mails.add(user.getEmail());
+            //查询包含项目表
+            List<Object> objects = tableSer.findBySql(sql);
+            if (null != objects && objects.size() > 0) {
+                Object[] ot = (Object[]) objects.get(0);
+                project.setName(String.valueOf(ot[0])); //初始化项目
+                List<CustomTable> tables = new ArrayList<>(objects.size());
+                for (Object o : objects) { //初始化项目表
+                    ot = (Object[]) o;
+                    CustomTable table = new CustomTable();
+                    table.setName(String.valueOf(ot[1]));
+                    table.setTid(String.valueOf(ot[2]));
+                    tables.add(table);
+                }
+                CustomCondition condition = initCondition(customize);//初始化条件
+                initFixedField(tables, condition); //初始化固定表头及内容
+                initCustomField(tables, condition);//初始化自定义表头及内容
+                initCustomCollect(tables, project);//手动汇总自定义计算
+                //--------------------------------
+                initDeptCollect(project, customize.getDepartment());//初始化部门汇总
+                collectToday(project.getTaskCollects()); //部门今天任务汇总
+                collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总
+                project.setTables(tables);
+                String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
+                //邮件发送
+                List<String> mails = new ArrayList<>();
+                List<UserBO> userBOS = null;
+                NoticeType type = customize.getNoticeType();
+                if (type.equals(NoticeType.PERSON)) {
+                    UserDTO dto = new UserDTO();
+                    dto.getConditions().add(Restrict.in("username", customize.getNoticeTarget().split(",")));
+                    userBOS = userAPI.findByCis(dto);
+                } else if (type.equals(NoticeType.DEPT)) {
+                    userBOS = userAPI.findByDept(customize.getNoticeTarget().split(","));
+                } else {
+                    userBOS = userAPI.findAllUser();
+                }
+                if (null != userBOS) {
+                    for (UserBO user : userBOS) {
+                        if (null != user.getEmail()) {
+                            mails.add(user.getEmail());
+                        }
+                    }
+                    if (mails.size() > 0) {
+                        sendMail(customize.getName(), html, mails);
                     }
                 }
-                if (mails.size() > 0) {
-                    sendMail(customize.getName(), html, mails);
-                }
             }
         }
+
     }
 
     /**
@@ -575,52 +591,55 @@ public class ScheduleSerImpl implements ScheduleSer {
 
     /**
      * 今天任务汇总
+     *
      * @param collects
      */
-    private void collectToday(List<TaskCollect> collects){
+    private void collectToday(List<TaskCollect> collects) {
         TaskCollect collect = new TaskCollect();
         collect.setUsername("汇总");
-        collect.setPlanNum(collects.stream().mapToDouble(c->{
-            double rs = c.getPlanNum()!=null? Double.parseDouble(c.getPlanNum()):0;
+        collect.setPlanNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanNum() != null ? Double.parseDouble(c.getPlanNum()) : 0;
             return rs;
-        }).sum()+"");
-        collect.setDifferNum(collects.stream().mapToDouble(c->{
-            double rs = c.getDifferNum()!=null? Double.parseDouble(c.getDifferNum()):0;
+        }).sum() + "");
+        collect.setDifferNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getDifferNum() != null ? Double.parseDouble(c.getDifferNum()) : 0;
             return rs;
-        }).sum()+"");
-        collect.setFactNum(collects.stream().mapToDouble(c->{
-            double rs = c.getFactNum()!=null? Double.parseDouble(c.getFactNum()):0;
+        }).sum() + "");
+        collect.setFactNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getFactNum() != null ? Double.parseDouble(c.getFactNum()) : 0;
             return rs;
-        }).sum()+"");
-        collect.setFactDuration(collects.stream().mapToDouble(c->{
-            double rs = c.getFactDuration()!=null? Double.parseDouble(c.getFactDuration()):0;
+        }).sum() + "");
+        collect.setFactDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getFactDuration() != null ? Double.parseDouble(c.getFactDuration()) : 0;
             return rs;
-        }).sum()+"");
-        collect.setDifferDuration(collects.stream().mapToDouble(c->{
-            double rs = c.getDifferDuration()!=null? Double.parseDouble(c.getDifferDuration()):0;
+        }).sum() + "");
+        collect.setDifferDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getDifferDuration() != null ? Double.parseDouble(c.getDifferDuration()) : 0;
             return rs;
-        }).sum()+"");
-        collect.setPlanDuration(collects.stream().mapToDouble(c->{
-            double rs = c.getPlanDuration()!=null? Double.parseDouble(c.getPlanDuration()):0;
+        }).sum() + "");
+        collect.setPlanDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanDuration() != null ? Double.parseDouble(c.getPlanDuration()) : 0;
             return rs;
-        }).sum()+"");
+        }).sum() + "");
         collects.add(collect);
     }
+
     /**
      * 明天任务汇总
+     *
      * @param collects
      */
-    private void collectTomorrow(List<TomorrowCollect> collects){
+    private void collectTomorrow(List<TomorrowCollect> collects) {
         TomorrowCollect collect = new TomorrowCollect();
         collect.setUsername("汇总");
-        collect.setPlanDuration(collects.stream().mapToDouble(c->{
-            double rs = c.getPlanDuration()!=null? Double.parseDouble(c.getPlanDuration()):0;
+        collect.setPlanDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanDuration() != null ? Double.parseDouble(c.getPlanDuration()) : 0;
             return rs;
-        }).sum()+"");
-        collect.setPlanNum(collects.stream().mapToDouble(c->{
-            double rs = c.getPlanNum()!=null? Double.parseDouble(c.getPlanNum()):0;
+        }).sum() + "");
+        collect.setPlanNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanNum() != null ? Double.parseDouble(c.getPlanNum()) : 0;
             return rs;
-        }).sum()+"");
+        }).sum() + "");
         collects.add(collect);
     }
 

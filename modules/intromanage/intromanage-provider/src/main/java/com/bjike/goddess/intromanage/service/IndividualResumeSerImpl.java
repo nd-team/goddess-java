@@ -323,8 +323,10 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(individualResumeBO.getName());//查看员工状态
                 if (staffStatus == null) {
                     individualResumeBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    individualResumeBO.setStaffStatus(staffStatus.toString());
                 }
-                individualResumeBO.setStaffStatus(staffStatus.toString());
             }
         }
         return boList;
@@ -1190,8 +1192,10 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
                     StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
                     if (staffStatus == null) {
                         excel.setStaffStatus("未获取到数据");
+                    }else{
+
+                        excel.setStaffStatus(staffStatus.toString());//设置员工状态
                     }
-                    excel.setStaffStatus(staffStatus.toString());//设置员工状态
                     BeanTransform.copyProperties(staffReward, excel);
                     BeanTransform.copyProperties(staffHonor, excel);
                     BeanTransform.copyProperties(educateExperience, excel);

@@ -80,4 +80,21 @@ public interface CompanyBasicInfoSer extends Ser<CompanyBasicInfo, CompanyBasicI
      */
     byte[] exportExcel() throws SerException;
 
+    /**
+     * 获取所有的公司名称
+     * @return
+     * @throws SerException
+     */
+    default List<String> findCompanyName()throws SerException{
+        return null;
+    }
+    /**
+     * 根据公司名称获取数据
+     * @return
+     * @throws SerException
+     */
+    default CompanyBasicInfoBO findByCompanyName(String companyName)throws SerException{
+        return null;
+    }
+
 }

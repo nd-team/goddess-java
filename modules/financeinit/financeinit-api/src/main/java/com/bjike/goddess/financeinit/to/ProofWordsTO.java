@@ -1,7 +1,11 @@
 package com.bjike.goddess.financeinit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.financeinit.enums.ProofCharacter;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 凭证字
@@ -17,6 +21,7 @@ public class ProofWordsTO extends BaseTO {
     /**
      * 凭证字
      */
+    @NotNull(message = "凭证字不能为空",groups = {ADD.class})
     private ProofCharacter proofCharacter;
 
 
