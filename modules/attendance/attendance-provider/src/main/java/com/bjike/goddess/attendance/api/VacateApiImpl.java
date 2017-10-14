@@ -1,10 +1,14 @@
 package com.bjike.goddess.attendance.api;
 
+import com.bjike.goddess.attendance.bo.VacateBO;
+import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.service.VacateSer;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 请假管理业务接口实现
@@ -23,5 +27,10 @@ public class VacateApiImpl implements VacateAPI {
     @Override
     public Double getTime(VacateTO to) throws SerException {
         return vacateSer.getTime(to);
+    }
+
+    @Override
+    public List<VacateBO> findByCon(VacateConDTO vacateConDTO) throws SerException {
+        return vacateSer.findByCon(vacateConDTO);
     }
 }
