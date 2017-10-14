@@ -30,8 +30,7 @@ public abstract class PageDTO implements Serializable {
     }
 
     public Integer getPage() {
-        if (1 == this.page) return this.page;
-        return (this.page - 1) >= 0 ? (this.page - 1) : 0;
+        return (this.page - 1) > 0 ? (this.page - 1) : 1;
     }
 
     public void setPage(Integer page) {
