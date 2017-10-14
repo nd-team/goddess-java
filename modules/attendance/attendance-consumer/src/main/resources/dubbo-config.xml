@@ -21,9 +21,12 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.PunchSonAPI" id="punchSonApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.DayReportAPI" id="dayReportApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAPI" id="vacateApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.OverWorkAPI" id="overWorkApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.ExtralOverWorkAPI" id="extralOverWorkApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 
 </beans>

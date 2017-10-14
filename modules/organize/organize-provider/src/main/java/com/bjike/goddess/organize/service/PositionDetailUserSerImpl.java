@@ -30,6 +30,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     private ModulesSer modulesSer;
     @Autowired
     private ModuleTypeSer moduleTypeSer;
+
+    private static Logger logger = Logger.getLogger(PositionDetailUserSerImpl.class);
 
     private PositionDetailUserBO transformBO(PositionDetailUser entity) throws SerException {
         PositionDetailUserBO bo = BeanTransform.copyProperties(entity, PositionDetailUserBO.class);
@@ -283,22 +286,26 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         return super.findOne(dto);
     }
 
+
+
     @Override
-    public Boolean checkAsUserPosition(String userId, String[] positionIds) throws SerException {
+    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+        logger.info("开始给");
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq(ID, userId));
+        userDTO.getConditions().add(Restrict.eq(ID, name));
         UserBO userBO = userAPI.findOne(userDTO);
+        logger.info("开始给user");
         if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
-            if (null != entity && null != entity.getPositionSet() && null != positionIds)
+            logger.info("开始给uposit");
+            if (null != entity && null != entity.getPositionSet() && null != position_ids)
                 for (PositionDetail detail : entity.getPositionSet())
-                    for (String id : positionIds)
+                    for (String id : position_ids)
                         if (detail.getId().equals(id))
                             return true;
         }
         return false;
     }
-
     @Override
     public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
         UserDTO userDTO = new UserDTO();
@@ -347,6 +354,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         return false;
     }
 
+
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
@@ -361,7 +369,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public List<UserBO> findByPosition(String position_id) throws SerException {
         String[] fields = {"id"};
-        String sql = "SELECT user_id FROM  organize_position_detail_user_table WHERE position_id ='%s'";
+        String sql = "SELECT user_id as id FROM  organize_position_detail_user_table WHERE position_id ='%s'";
         List<PositionDetailUser> list = super.findBySql(String.format(sql, position_id), PositionDetailUser.class, fields);
         List<UserBO> bos = new ArrayList<>(0);
         if (null != list) {
@@ -378,7 +386,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public Integer findNumber(String position_id) throws SerException {
         String[] fields = {"id"};
-        String sql = "SELECT user_id FROM organize_position_detail_user_table WHERE position_id ='%s'";
+        String sql = "SELECT user_id as id  FROM organize_position_detail_user_table WHERE position_id ='%s'";
         List<PositionDetailUser> list = super.findBySql(String.format(sql, position_id), PositionDetailUser.class, fields);
         if (null != list) {
             return list.size();
@@ -482,7 +490,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 //                ,"position_id","user_id"
         };
 //        userId = "00a94d4e-5c1f-4ed9-8a1b-e9e5811c1c0e";
-        StringBuilder sql = new StringBuilder("SELECT d.pool, d.serialNumber, d.staff, d.arrangement_id, d.department_id, d.description, d.position, d.status, d.module_id");
+        StringBuilder sql = new StringBuilder("SELECT d.pool, d.serialNumber, d.staff, d.arrangement_id as arrangementId, d.department_id as departmentId, d.description, d.position, d.status, d.module_id as moduleId");
         sql.append(" FROM organize_position_detail_user b,");
         sql.append(" organize_position_detail_user_table c,organize_position_detail d ");
         sql.append(" WHERE b.id=c.user_id AND c.position_id=d.id ");

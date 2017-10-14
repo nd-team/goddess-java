@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--发布接口,供其他模块调用-->
+	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
+	<dubbo:service  ref="applyLendApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ApplyLendAPI" />
+	<dubbo:service  ref="applyLendCopyApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ApplyLendCopyAPI" />
+	<dubbo:service  ref="lendAuditDetailApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendAuditDetailAPI" />
+	<dubbo:service  ref="lendEditContentApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendEditContentAPI" />
+
+
+	<dubbo:service  ref="finoddinforApiImpl" interface="com.bjike.goddess.lendreimbursement.api.FinoddinforAPI" />
+	<dubbo:service  ref="reimburseAnalisisorApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAnalisisorAPI" />
+	<dubbo:service  ref="reimburseAuditLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI" />
+	<dubbo:service  ref="reimburseRecordApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI" />
+	<dubbo:service  ref="reimburseRecordLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordLogAPI" />
+	<dubbo:service  ref="lendPermissionApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionAPI" />
+	<dubbo:service  ref="lendPermissionOperateApiImpl" interface="com.bjike.goddess.lendreimbursement.api.LendPermissionOperateAPI" />
+	<!--<dubbo:service  ref="ajoafinancelendmoneyApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancelendmoneyAPI" />-->
+	<!--<dubbo:service  ref="ajoafinanceSubjectApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinanceSubjectAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancemattersApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancemattersAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementForApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementForAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementLogApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementLogAPI" />-->
+	<!--<dubbo:service  ref="ajoafinancereimbursementUserApiImpl" interface="com.bjike.goddess.lendreimbursement.api.AjoafinancereimbursementUserAPI" />-->
+
+
+	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+	否则不需要配置-->
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference validation="true" id="userDetailApiImpl" interface="com.bjike.goddess.user.api.UserDetailAPI" />
+	<dubbo:reference validation="true" id="positionApiImpl" interface="com.bjike.goddess.user.api.PositionAPI" />
+	<dubbo:reference validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
+	<dubbo:reference  validation="true" id="accountApiImpl" interface="com.bjike.goddess.financeinit.api.AccountAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+</beans>
