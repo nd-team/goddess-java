@@ -24,7 +24,7 @@ public final class APISession {
     private static final RuntimeException API_NOT_NULL = new RuntimeException("api不能为空");
 
     private static final LoadingCache<String, String> API_SESSION = CacheBuilder.newBuilder()
-            .expireAfterWrite(3, TimeUnit.MINUTES)
+            .expireAfterWrite(1, TimeUnit.DAYS)
             .maximumSize(1000)
             .removalListener(new RemovalListener<String, String>() {
                 @Override

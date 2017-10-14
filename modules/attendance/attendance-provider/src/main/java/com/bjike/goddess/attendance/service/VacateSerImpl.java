@@ -1,15 +1,18 @@
 package com.bjike.goddess.attendance.service;
 
 import com.bjike.goddess.attendance.bo.VacateBO;
+import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
 import com.bjike.goddess.attendance.entity.Vacate;
 import com.bjike.goddess.attendance.enums.EndTime;
 import com.bjike.goddess.attendance.enums.StartTime;
 import com.bjike.goddess.attendance.to.VacateTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -174,5 +177,19 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     @Override
     public Long count(VacateDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public List<VacateBO> findByCon(VacateConDTO vacateConDTO) throws SerException {
+        LocalDateTime start = LocalDateTime.parse(vacateConDTO.getStartTime());
+        LocalDateTime end = LocalDateTime.parse(vacateConDTO.getEndTime());
+
+        VacateDTO dto = new VacateDTO();
+        BeanTransform.copyProperties( vacateConDTO , dto);
+        dto.getConditions().add(Restrict.eq("name",vacateConDTO.getEmpName()));
+        dto.getConditions().add(Restrict.between("startTime",new LocalDateTime[]{start,end}));
+
+        List<Vacate> vacateList = super.findByCis( dto );
+        return BeanTransform.copyProperties(vacateList, VacateBO.class);
     }
 }

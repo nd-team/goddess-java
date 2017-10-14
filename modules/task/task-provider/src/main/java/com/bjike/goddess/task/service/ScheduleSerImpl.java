@@ -331,10 +331,11 @@ public class ScheduleSerImpl implements ScheduleSer {
                     table.setTid(String.valueOf(ot[2]));
                     tables.add(table);
                 }
-                CustomCondition condition = initCondition(customize);
+                CustomCondition condition = initCondition(customize);//初始化条件
                 initFixedField(tables, condition); //初始化固定表头及内容
-                initCustomField(tables, condition);//初始化自定义表头
-                initCustomCollect(tables, project);//初始化自定义表头内容
+                initCustomField(tables, condition);//初始化自定义表头及内容
+                initCustomCollect(tables, project);//手动汇总自定义计算
+                //--------------------------------
                 initDeptCollect(project, customize.getDepartment());//初始化部门汇总
                 collectToday(project.getTaskCollects()); //部门今天任务汇总
                 collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总

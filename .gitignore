@@ -18,3 +18,4 @@ settings.gradle
 **/rebel.xml
 **/src/main/webapp/public/js/lib/**
 **/*.xml.bak
+**/out/
