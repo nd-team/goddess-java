@@ -44,6 +44,11 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     }
 
     @Override
+    public void sendEmailRemind() throws SerException {
+        carSendEmailSer.sendEmailRemind();
+    }
+
+    @Override
     public List<DepartmentDetailBO> findDepartMent() throws SerException {
         return carSendEmailSer.findDepartMent();
     }
@@ -65,12 +70,12 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
 
     @Override
     public Boolean sonPermission() throws SerException {
-        return null;
+        return carSendEmailSer.sonPermission();
     }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return null;
+        return carSendEmailSer.guidePermission(guidePermissionTO);
     }
 
     @Override
@@ -87,5 +92,10 @@ public class CarSendEmailApiImpl implements CarSendEmailAPI {
     @Override
     public CarSendEmailBO findOne(String id) throws SerException {
         return carSendEmailSer.findOne(id);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        carSendEmailSer.delete(id);
     }
 }

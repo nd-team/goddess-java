@@ -21,7 +21,7 @@
     <dubbo:reference interface="com.bjike.goddess.rentcar.api.DriverInfoAPI" id="driverInfoApiImpl"/>
 
     <!-- 司机信息API -->
-    <dubbo:reference interface="com.bjike.goddess.rentcar.api.DriverRecruitAPI" id="driverRecruitApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.rentcar.api.DriverRecruitAPI" id="driverRecruitApiImpl1"/>
 
 
     <!-- 存储API -->
@@ -46,5 +46,6 @@
 
     <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.rentcar.api.CusPermissionAPI" />
     <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.rentcar.api.CusPermissionOperateAPI" />
+    <dubbo:reference  validation="true" id="collectDriverInfoApiImpl" interface="com.bjike.goddess.rentcar.api.CollectDriverInfoAPI" />
 
 </beans>

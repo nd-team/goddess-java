@@ -30,6 +30,11 @@ public class CarSendEmailTO extends BaseTO {
     @NotBlank(message = "项目组id", groups = {ADD.class, EDIT.class})
     private String projectManageId;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
     public String getPositionNameId() {
         return positionNameId;
     }
@@ -46,13 +51,11 @@ public class CarSendEmailTO extends BaseTO {
         this.projectManageId = projectManageId;
     }
 
-    @Override
-    public String getId() {
-        return super.getId();
+    public String getRemark() {
+        return remark;
     }
 
-    @Override
-    public void setId(String id) {
-        super.setId(id);
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
