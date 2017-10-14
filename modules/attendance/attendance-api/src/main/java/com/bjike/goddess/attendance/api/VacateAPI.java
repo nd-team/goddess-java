@@ -1,7 +1,12 @@
 package com.bjike.goddess.attendance.api;
 
+import com.bjike.goddess.attendance.bo.VacateBO;
+import com.bjike.goddess.attendance.dto.VacateConDTO;
+import com.bjike.goddess.attendance.entity.Vacate;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.common.api.exception.SerException;
+
+import java.util.List;
 
 /**
  * 请假管理业务接口
@@ -21,4 +26,12 @@ public interface VacateAPI {
      * @throws SerException
      */
     Double getTime(VacateTO to) throws SerException;
+
+    /**
+     * 根据请假人和请假开始时间查询请假数据
+     * @return
+     */
+    default List<VacateBO> findByCon(VacateConDTO vacateConDTO) throws SerException{return null;}
+
+
 }

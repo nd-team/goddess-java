@@ -37,7 +37,7 @@ public class OverWorkTO extends BaseTO {
     private String overWorker;
 
     /**
-     * 加班类型
+     * 加班类型(普通加班/节假日加班/其他....)
      */
     @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "加班类型不能为空")
     private String overType;

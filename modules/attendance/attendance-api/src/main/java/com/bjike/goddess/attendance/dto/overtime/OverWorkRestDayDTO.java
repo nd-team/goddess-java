@@ -4,25 +4,25 @@ import com.bjike.goddess.attendance.enums.AuditStatus;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
 /**
- * 加班数据传输对象
+ * 剩余加班数据传输对象
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-10-10 10:32 ]
- * @Description: [ 加班数据传输对象 ]
+ * @Description: [ 剩余加班数据传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class OverWorkDTO extends BaseDTO {
+public class OverWorkRestDayDTO extends BaseDTO {
 
     /**
-     * 加班人员
+     * 加班人员名
      */
     private String overWorker;
 
     /**
-     * 审核状态
+     * 核算截至时间(年月)
      */
-    private AuditStatus auditStatus;
+    private String checkEndTime;
 
 
     public String getOverWorker() {
@@ -33,11 +33,11 @@ public class OverWorkDTO extends BaseDTO {
         this.overWorker = overWorker;
     }
 
-    public AuditStatus getAuditStatus() {
-        return auditStatus;
+    public String getCheckEndTime() {
+        return checkEndTime;
     }
 
-    public void setAuditStatus(AuditStatus auditStatus) {
-        this.auditStatus = auditStatus;
+    public void setCheckEndTime(String checkEndTime) {
+        this.checkEndTime = checkEndTime;
     }
 }

@@ -22,9 +22,12 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.PunchSonAPI" ref="punchSonApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.DayReportAPI" ref="dayReportApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAPI" ref="vacateApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.OverWorkAPI" ref="overWorkApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.ExtralOverWorkAPI" ref="extralOverWorkApiImpl"/>
 
 	<dubbo:reference  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" id="taskNodeApiImpl"/>
 
 </beans>

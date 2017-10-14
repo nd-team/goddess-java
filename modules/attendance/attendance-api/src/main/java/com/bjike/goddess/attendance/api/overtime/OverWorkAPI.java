@@ -2,8 +2,11 @@ package com.bjike.goddess.attendance.api.overtime;
 
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
+import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverWorkRestDayDTO;
+import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
 import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
 import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
@@ -96,5 +99,48 @@ public interface OverWorkAPI {
         return null;
     }
 
+
+    /**
+     * 加班审核列表总条数
+     */
+    default Long countAudit(OverWorkDTO overWorkDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 加班审核列表
+     *
+     * @return class OverWorkBO
+     */
+    default List<OverWorkBO> listAudit(OverWorkDTO overWorkDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 审核加班
+     *
+     * @param auditTO 加班信息
+     * @return class OverWorkBO
+     */
+    default OverWorkBO auditOverWork(OverWorkAuditTO auditTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 剩余加班天数列表总条数
+     */
+    default Long countRestDay(OverWorkRestDayDTO overWorkRestDayDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 剩余加班天数列表
+     *
+     * @return class OverWorkRestDayBO
+     */
+    default List<OverWorkRestDayBO> listRestDay(OverWorkRestDayDTO overWorkRestDayDTO) throws SerException {
+        return null;
+    }
 
 }

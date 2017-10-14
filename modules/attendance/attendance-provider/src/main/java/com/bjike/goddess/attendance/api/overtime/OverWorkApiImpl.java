@@ -2,9 +2,12 @@ package com.bjike.goddess.attendance.api.overtime;
 
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
+import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverWorkRestDayDTO;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
+import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
 import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
 import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
@@ -74,4 +77,31 @@ public class OverWorkApiImpl implements OverWorkAPI {
     public OverLongAndRelaxDayVO caculateTime(OverLongAndRelaxdayDTO overLongAndRelaxdayDTO) throws SerException {
         return overWorkSer.caculateTime( overLongAndRelaxdayDTO );
     }
+
+    @Override
+    public Long countAudit(OverWorkDTO overWorkDTO) throws SerException {
+        return overWorkSer.countAudit( overWorkDTO);
+    }
+
+    @Override
+    public List<OverWorkBO> listAudit(OverWorkDTO overWorkDTO) throws SerException {
+        return overWorkSer.listAudit(overWorkDTO);
+    }
+
+    @Override
+    public OverWorkBO auditOverWork(OverWorkAuditTO auditTO) throws SerException {
+        return overWorkSer.auditOverWork(auditTO);
+    }
+
+    @Override
+    public Long countRestDay(OverWorkRestDayDTO overWorkRestDayDTO) throws SerException {
+        return overWorkSer.countRestDay(overWorkRestDayDTO);
+    }
+
+    @Override
+    public List<OverWorkRestDayBO> listRestDay(OverWorkRestDayDTO overWorkRestDayDTO) throws SerException {
+        return overWorkSer.listRestDay(overWorkRestDayDTO);
+    }
+
+
 }

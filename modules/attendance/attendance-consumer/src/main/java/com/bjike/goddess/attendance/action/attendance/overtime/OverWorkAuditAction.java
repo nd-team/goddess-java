@@ -3,9 +3,10 @@ package com.bjike.goddess.attendance.action.attendance.overtime;
 import com.bjike.goddess.attendance.api.overtime.OverWorkAPI;
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
-import com.bjike.goddess.attendance.dto.overtime.ExtralOverWorkDayDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
+import com.bjike.goddess.attendance.enums.AuditStatus;
+import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
 import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
 import com.bjike.goddess.attendance.vo.overtime.OverWorkVO;
@@ -21,21 +22,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 加班
+ * 加班审核
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-10-10 10:32 ]
- * @Description: [ 加班 ]
+ * @Description: [ 加班审核 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("overwork")
-public class OverWorkAction {
+@RequestMapping("overworkaudit")
+public class OverWorkAuditAction {
 
     @Autowired
     private OverWorkAPI overWorkAPI;
@@ -50,27 +50,8 @@ public class OverWorkAction {
     @GetMapping("v1/count")
     public Result count(OverWorkDTO overWorkDTO) throws ActException {
         try {
-            Long count = overWorkAPI.countOverWork(overWorkDTO);
+            Long count = overWorkAPI.countAudit(overWorkDTO);
             return ActResult.initialize(count);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 一个加班
-     *
-     * @param id 加班id
-     * @return class OverWorkVO
-     * @des 根据id获取加班
-     * @version v1
-     */
-    @GetMapping("v1/getOneById/{id}")
-    public Result getOneById(@PathVariable String id) throws ActException {
-        try {
-            OverWorkVO overWorkVO = BeanTransform.copyProperties(
-                    overWorkAPI.getOneById(id), OverWorkVO.class);
-            return ActResult.initialize(overWorkVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -88,7 +69,7 @@ public class OverWorkAction {
     public Result findListOverWork(OverWorkDTO overWorkDTO, BindingResult bindingResult) throws ActException {
         try {
             List<OverWorkVO> overWorkVOList = BeanTransform.copyProperties(
-                    overWorkAPI.listOverWork(overWorkDTO), OverWorkVO.class, true);
+                    overWorkAPI.listAudit(overWorkDTO), OverWorkVO.class, true);
             return ActResult.initialize(overWorkVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -96,18 +77,18 @@ public class OverWorkAction {
     }
 
     /**
-     * 添加
+     * 审核
      *
-     * @param overWorkTO 加班基本信息数据to
+     * @param overWorkAuditTO 加班基本信息数据to
      * @return class OverWorkVO
-     * @des 添加加班
+     * @des 审核加班
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/add")
-    public Result addOverWork(@Validated(OverWorkTO.TESTAddAndEdit.class) OverWorkTO overWorkTO, BindingResult bindingResult) throws ActException {
+    @PostMapping("v1/audit")
+    public Result auditOverWork(@Validated(OverWorkAuditTO.TESTAddAndEdit.class) OverWorkAuditTO overWorkAuditTO, BindingResult bindingResult) throws ActException {
         try {
-            OverWorkBO overWorkBO1 = overWorkAPI.addOverWork(overWorkTO);
+            OverWorkBO overWorkBO1 = overWorkAPI.auditOverWork(overWorkAuditTO);
             return ActResult.initialize(BeanTransform.copyProperties(overWorkBO1, OverWorkVO.class, true));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -193,7 +174,7 @@ public class OverWorkAction {
      * @return OverLongAndRelaxDayVO
      */
     @GetMapping("v1/caculateTime")
-    public Result caculateTime(@Validated(OverLongAndRelaxdayDTO.TestAdd.class) OverLongAndRelaxdayDTO overLongAndRelaxdayDTO ) throws ActException {
+    public Result caculateTime(@PathVariable OverLongAndRelaxdayDTO overLongAndRelaxdayDTO ) throws ActException {
         try {
             OverLongAndRelaxDayVO list = overWorkAPI.caculateTime( overLongAndRelaxdayDTO );
             return ActResult.initialize(list);

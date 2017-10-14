@@ -2,7 +2,6 @@ package com.bjike.goddess.attendance.to.overtime;
 
 import com.bjike.goddess.attendance.enums.AuditStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +16,8 @@ import javax.validation.constraints.NotNull;
  */
 public class OverWorkAuditTO extends BaseTO {
 
-    public  interface TESTAddAndEdit{}
+    public interface TESTAddAndEdit {
+    }
 
 
     /**
@@ -28,10 +28,8 @@ public class OverWorkAuditTO extends BaseTO {
     /**
      * 审核状态
      */
-    @NotNull(groups = {OverWorkAuditTO.TESTAddAndEdit.class} , message = "审核状态不能为空")
+    @NotNull(groups = {OverWorkAuditTO.TESTAddAndEdit.class}, message = "审核状态不能为空")
     private AuditStatus auditStatus;
-
-
 
 
     public String getAuditAdvice() {
