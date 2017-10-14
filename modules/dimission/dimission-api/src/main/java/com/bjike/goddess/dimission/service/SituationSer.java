@@ -120,4 +120,14 @@ public interface SituationSer extends Ser<Situation, SituationDTO> {
     default List<DimissionCollectBO> collect(String startTime, String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

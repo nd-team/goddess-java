@@ -33,6 +33,11 @@ public class AnalysisBO extends BaseBO {
 //     */
 //    private String brow;
 
+    /**
+     * 时间
+     */
+    private String startTime;
+
     public String getRatio() {
         return ratio;
     }
@@ -55,5 +60,13 @@ public class AnalysisBO extends BaseBO {
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 }

@@ -298,6 +298,12 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
         return dimissionCollectBOs;
     }
 
+    @Override
+    public Long getTotal() throws SerException {
+        SituationDTO situationDTO = new SituationDTO();
+        return super.count(situationDTO);
+    }
+
 
     //根据名字获取地区,部门,岗位,岗位层级
     private Situation getDataByName(Situation entity) throws SerException {

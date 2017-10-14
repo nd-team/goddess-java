@@ -285,6 +285,12 @@ public class InterviewSerImpl extends ServiceImpl<Interview, InterviewDTO> imple
         return null;
     }
 
+    @Override
+    public Long getTotal() throws SerException {
+        InterviewDTO interviewDTO = new InterviewDTO();
+        return super.count(interviewDTO);
+    }
+
 
     //根据名字获取地区,部门,岗位,岗位层级
     private Interview getDataByName(Interview entity) throws SerException {

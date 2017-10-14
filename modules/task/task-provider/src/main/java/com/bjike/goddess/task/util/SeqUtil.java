@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * 问题序列生成工具
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-20 14:02]
  * @Description: [ ]
@@ -34,6 +36,7 @@ public class SeqUtil {
             return genProblemNum(PROBLEM_NUM + PBM_ZERO); //假如为空,则从第一个开始IKE000001
         }
     }
+
     public static synchronized String genAcceptNum(String acceptNum) throws SerException {
         if (StringUtils.isNotBlank(acceptNum)) {
             int empLength = ACCEPT_NUM.length() + AET_ZERO.length();
@@ -51,7 +54,6 @@ public class SeqUtil {
             return genAcceptNum(ACCEPT_NUM + AET_ZERO); //假如为空,则从第一个开始IKE000001
         }
     }
-
 
 
 }

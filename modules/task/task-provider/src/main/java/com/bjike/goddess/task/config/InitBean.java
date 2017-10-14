@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 /**
+ * 初始化bean
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-26 09:00]
  * @Description: [ ]

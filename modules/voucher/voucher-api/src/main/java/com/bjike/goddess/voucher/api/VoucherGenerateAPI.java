@@ -1,14 +1,7 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-<<<<<<< Updated upstream
-import com.bjike.goddess.voucher.bo.AccountInfoBO;
-=======
-import com.bjike.goddess.voucher.bo.AnalysisBO;
->>>>>>> Stashed changes
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.PartOptionBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
@@ -512,6 +505,7 @@ public interface VoucherGenerateAPI {
     default List<VoucherGenerateBO> allSales() throws SerException {
         return null;
     }
+
     /**
      * 根据日期地区项目组项目名称科目汇总明细帐
      *
@@ -522,6 +516,7 @@ public interface VoucherGenerateAPI {
     default List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 明细账导出Excel
      *
@@ -529,6 +524,7 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException;
+
     /**
      * 从已过账那里获取所有地区
      *
@@ -537,6 +533,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountArea() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有项目名称
      *
@@ -545,6 +542,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountProjectName() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有项目组部门
      *
@@ -553,6 +551,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountProjectGroup() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有科目
      *
@@ -651,7 +650,14 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default AnalysisBO analysis(AnalysisTO to) throws SerException {
+    default List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录科目汇总柱状图
+     */
+    default List<HistogramBO> ctReSubHistogram() throws SerException {
         return null;
     }
 }

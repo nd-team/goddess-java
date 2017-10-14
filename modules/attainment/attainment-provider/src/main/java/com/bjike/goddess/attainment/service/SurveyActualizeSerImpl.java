@@ -7,7 +7,6 @@ import com.bjike.goddess.attainment.enums.GuideAddrStatus;
 import com.bjike.goddess.attainment.enums.SurveyStatus;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyActualizeTO;
-import com.bjike.goddess.common.api.dto.PageDTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -108,6 +107,7 @@ public class SurveyActualizeSerImpl extends ServiceImpl<SurveyActualize, SurveyA
             throw new SerException("调研计划不存在,无法保存");
         entity.setModifyTime(LocalDateTime.now());
         entity.setQuestionnaire(to.getQuestionnaire());
+        entity.setRemark(to.getRemark());
         super.update(entity);
         return this.transformBO(entity);
     }

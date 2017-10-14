@@ -74,4 +74,9 @@ public class SituationApiImpl implements SituationAPI  {
     public List<DimissionCollectBO> collect(String startTime, String endTime) throws SerException {
         return situationSer.collect(startTime, endTime);
     }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return situationSer.getTotal();
+    }
 }

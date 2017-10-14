@@ -4,7 +4,6 @@ import com.bjike.goddess.voucher.enums.AuditStatus;
 import com.bjike.goddess.voucher.enums.CheckStatus;
 import com.bjike.goddess.voucher.enums.TransferStatus;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -61,6 +60,17 @@ public class VoucherGenerateVO {
      * 贷方金额
      */
     private Double loanMoney;
+
+    /**
+     * 借方金额合计
+     */
+    private Double borrowMoneyTotal;
+
+    /**
+     * 贷方金额合计
+     */
+    private Double loanMoneyTotal;
+
 
     /**
      * 摘要
@@ -394,5 +404,21 @@ public class VoucherGenerateVO {
 
     public void setLoanMoneys(List<Double> loanMoneys) {
         this.loanMoneys = loanMoneys;
+    }
+
+    public Double getBorrowMoneyTotal() {
+        return borrowMoneyTotal;
+    }
+
+    public void setBorrowMoneyTotal(Double borrowMoneyTotal) {
+        this.borrowMoneyTotal = borrowMoneyTotal;
+    }
+
+    public Double getLoanMoneyTotal() {
+        return loanMoneyTotal;
+    }
+
+    public void setLoanMoneyTotal(Double loanMoneyTotal) {
+        this.loanMoneyTotal = loanMoneyTotal;
     }
 }

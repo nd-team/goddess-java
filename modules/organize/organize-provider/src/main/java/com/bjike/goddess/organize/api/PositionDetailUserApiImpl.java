@@ -1,18 +1,13 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.DepartPositionBO;
-import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
-import com.bjike.goddess.organize.vo.PhoneLoginUserInfoVO;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +43,17 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
 
     @Override
     public Boolean checkAsUserPosition(String user_id, String[] position_ids) throws SerException {
-        return positionDetailUserSer.checkAsUserPosition(user_id, position_ids);
+        return positionDetailUserSer.checkAsUserPosit2(user_id, position_ids);
+    }
+
+    @Override
+    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+        return positionDetailUserSer.checkAsUserPosit2(name,position_ids);
+    }
+
+    @Override
+    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+        return positionDetailUserSer.checkAsUserPosit2(name,position_ids);
     }
 
     @Override

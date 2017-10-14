@@ -21,11 +21,7 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-<<<<<<< Updated upstream
-import com.bjike.goddess.voucher.bo.AccountInfoBO;
-=======
 import com.bjike.goddess.voucher.bo.AnalysisBO;
->>>>>>> Stashed changes
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -37,11 +33,9 @@ import com.bjike.goddess.voucher.to.AnalysisTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherFileTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
-<<<<<<< Updated upstream
 import com.bjike.goddess.voucher.vo.AccountInfoVO;
-=======
 import com.bjike.goddess.voucher.vo.AnalysisVO;
->>>>>>> Stashed changes
+import com.bjike.goddess.voucher.vo.HistogramVO;
 import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -332,7 +326,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/split")
+    @PutMapping("v1/split")
     public Result split(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.split(voucherGenerateTO);
@@ -857,6 +851,24 @@ public class VoucherGenerateAction extends BaseFileAction {
     }
 
     /**
+     * 记账凭证记录柱状图
+     *
+     * @return class HistogramVO
+     * @des 根据月份汇总借方金额和贷方金额
+     * @version v1
+     */
+    @GetMapping("v1/ctReSubHistogram")
+    public Result ctReSubHistogram() throws ActException {
+        try {
+            List<HistogramVO> histogramVOs = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctReSubHistogram(), HistogramVO.class, true);
+            return ActResult.initialize(histogramVOs);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 记账凭证记录地区汇总
      *
      * @param voucherGenerateDTO 记账凭证信息dto
@@ -923,8 +935,8 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/analysis")
     public Result analysis(@Validated(ADD.class) AnalysisTO to, BindingResult bindingResult) throws ActException {
         try {
-            AnalysisBO analysisBO = voucherGenerateAPI.analysis(to);
-            return ActResult.initialize(BeanTransform.copyProperties(analysisBO, AnalysisVO.class));
+            List<AnalysisBO> analysisBOs = voucherGenerateAPI.analysis(to);
+            return ActResult.initialize(BeanTransform.copyProperties(analysisBOs, AnalysisVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -1039,8 +1051,8 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/account")
     public Result account(VoucherGenerateDTO dto) throws ActException {
         try {
-            List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto),AccountInfoVO.class);
-            for(AccountInfoVO accountInfoVO:accountInfoVOS){
+            List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto), AccountInfoVO.class);
+            for (AccountInfoVO accountInfoVO : accountInfoVOS) {
                 accountInfoVO.setId(UUID.randomUUID().toString());
             }
             return ActResult.initialize(accountInfoVOS);
@@ -1084,6 +1096,7 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有已过账的项目名称
      *
@@ -1099,6 +1112,7 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有已过账的项目组部门
      *
@@ -1114,6 +1128,7 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有已过账的一级科目
      *
@@ -1467,6 +1482,12 @@ public class VoucherGenerateAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 在已过账记录里面根据二级或三级统计金额
+     *
+     * @param dto
+     * @version v1
+     */
     @GetMapping("v1/findByMoney")
     public Result findByMoney(VoucherGenerateDTO dto) throws ActException {
         try {

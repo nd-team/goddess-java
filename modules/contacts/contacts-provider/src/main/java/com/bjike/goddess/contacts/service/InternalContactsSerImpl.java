@@ -632,7 +632,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
         searchMobileCondition(dto);
-        List<InternalContacts> list = super.findByPage(dto);
+        List<InternalContacts> list = super.findByCis(dto);
         List<InternalContactsBO> bos = this.transformBOList(list);
         if (!CollectionUtils.isEmpty(bos)) {
             List<MobileInternalContactsBO> mobileInternalContactsBOs = BeanTransform.copyProperties(bos, MobileInternalContactsBO.class, "headSculpture", "sex", "phoneNumber", "emergency", "emergencyPhone");

@@ -376,7 +376,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public AnalysisBO analysis(AnalysisTO to) throws SerException {
+    public List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
         if (StringUtils.isBlank(to.getBrow())) {
             if ("偏差分析".equals(to.getAnalysis())) {
                 to.setBrow("1000");
@@ -411,13 +411,79 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 to.setBrow(to.getBrow().substring(0, to.getBrow().indexOf("%")));
             }
         }
-        //得到本月偏差分析
         String month = "";
+        //得到偏差分析
+        if ("偏差分析".equals(to.getAnalysis())) {
+            return getVarianceAnalysisBOs(to, month);
+        }
+        //得到百分比分析
+        if ("百分比分析".equals(to.getAnalysis())) {
+            return getPercentageAnalysisBOs(to, month);
+        }
+        //得到增长率分析
+        if ("增长率分析".equals(to.getAnalysis())) {
+            return getVarianceRatioAnalysisBOs(to, month);
+        }
+        return null;
+    }
+
+    @Override
+    public List<HistogramBO> ctReSubHistogram() throws SerException {
+        String[] fields = new String[]{"borrowMoney", "loanMoney"};
+        String year = String.valueOf(LocalDate.now().getYear());
+
+        List<HistogramBO> histogramBOList = new ArrayList<>(0);
+        for (int i = 1; i < 13; i++) {
+            String startTime = year + "-" + i + "-01";
+            String endTime = "";
+            if (i <= 11) {
+                int j = i + 1;
+                endTime = year + "-" + j + "-01";
+            } else {
+                year = String.valueOf(LocalDate.now().getYear() + 1);
+                endTime = year + "-01-01";
+            }
+            StringBuilder sql = new StringBuilder("select sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ");
+            sql.append(" WHERE voucherDate BETWEEN '" + startTime + "' and '" + endTime + "' ;");
+            List<HistogramBO> histogramBOs = super.findBySql(sql.toString(), HistogramBO.class, fields);
+            if (null != histogramBOs && histogramBOs.size() > 0) {
+                HistogramBO histogramBO = histogramBOs.get(0);
+                if (i < 10) {
+                    histogramBO.setMonth(year + "-0" + i);
+                } else if (i >= 10 && i < 12) {
+                    histogramBO.setMonth(year + "-" + i);
+                } else {
+                    histogramBO.setMonth("2017-12");
+                }
+                histogramBOList.add(histogramBO);
+            } else {
+                HistogramBO histogramBO = new HistogramBO();
+                if (i < 10) {
+                    histogramBO.setMonth(year + "-0" + i);
+                } else if (i >= 10 && i < 12) {
+                    histogramBO.setMonth(year + "-" + i);
+                } else {
+                    histogramBO.setMonth("2017-12");
+                }
+                histogramBO.setBorrowMoney(0d);
+                histogramBO.setLoanMoney(0d);
+                histogramBOList.add(histogramBO);
+            }
+        }
+        return histogramBOList;
+    }
+
+    //得到偏差分析
+    private List<AnalysisBO> getVarianceAnalysisBOs(AnalysisTO to, String month) throws SerException {
         List<AnalysisBO> list1 = getVarianceAnalysis(to, month);
         //得到本月偏差分析的地区/项目组/时间段
 
         //得到上个月的偏差分析
-        List<AnalysisBO> list2 = getVarianceAnalysis(to, month);
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-")) + "-01";
+        }
+        List<AnalysisBO> list2 = getVarianceAnalysis(to, getLastMonth(month));
+
         List<AnalysisBO> analysisBOs = new ArrayList<>(0);
         for (AnalysisBO bo1 : list1) {
             for (AnalysisBO bo2 : list2) {
@@ -427,15 +493,37 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     analysisBO.setRatio(String.valueOf(Double.valueOf(bo1.getRatio()) - Double.valueOf(bo2.getRatio())));
                     if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
                         analysisBO.setWarning(true);
-                    }else {
+                    } else {
                         analysisBO.setWarning(false);
                     }
                     analysisBOs.add(analysisBO);
-                }else if(true){}
+                } else if (!list1.stream().map(AnalysisBO::getCondition).distinct().collect(Collectors.toList()).contains(bo2.getCondition())) {
+                    AnalysisBO analysisBO = new AnalysisBO();
+                    analysisBO.setCondition(bo2.getCondition());
+                    analysisBO.setRatio(bo2.getRatio());
+                    if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+                        analysisBO.setWarning(true);
+                    } else {
+                        analysisBO.setWarning(false);
+                    }
+                    analysisBOs.add(analysisBO);
+                }
+            }
+            if (!list2.stream().map(AnalysisBO::getCondition).distinct().collect(Collectors.toList()).contains(bo1.getCondition())) {
+                AnalysisBO analysisBO = new AnalysisBO();
+                analysisBO.setCondition(bo1.getCondition());
+                analysisBO.setRatio(bo1.getRatio());
+                if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+                    analysisBO.setWarning(true);
+                } else {
+                    analysisBO.setWarning(false);
+                }
+                analysisBOs.add(analysisBO);
             }
         }
-        return null;
+        return analysisBOs;
     }
+
 
     //查询本月偏差分析发生额
     private List<AnalysisBO> getVarianceAnalysis(AnalysisTO to, String month) throws SerException {
@@ -450,7 +538,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
         }
         String startTime = month + "-01";
-        String endTime = this.findEndDayOfMonth(month);
+        String endTime = this.findEndDayOfMonth(startTime);
 
         String fields[] = null;
         String tempSql = null;
@@ -460,8 +548,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             tempSql = "select area, firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ";
             tempSql1 = " group by area, firstSubject;";
         } else if ("projectGroup".equals(value)) {
-            fields = new String[]{"projectGroup", "firstSubject", "borrowMoney", "loanMoney"};
-            tempSql = "select projectGroup, firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ";
+            fields = new String[]{"area", "firstSubject", "borrowMoney", "loanMoney"};
+            tempSql = "select projectGroup as area, firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ";
             tempSql1 = " group by projectGroup, firstSubject;";
         } else {
             fields = new String[]{"firstSubject", "borrowMoney", "loanMoney"};
@@ -474,7 +562,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         sql.append(" and '" + endTime + "'");
         sql.append(tempSql1);
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
-        List<String> strList = list.stream().map(VoucherGenerate::getArea).distinct().collect(Collectors.toList());
+        List<String> strList = new ArrayList<>(0);
+        if (value.equals("area") || value.equals("projectGroup")) {
+            strList = list.stream().map(VoucherGenerate::getArea).distinct().collect(Collectors.toList());
+        }
         for (VoucherGenerate voucherGenerate : list) {
             //发生额
             Double temp = 0d;
@@ -497,6 +588,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
             AnalysisBO analysisBO = new AnalysisBO();
             analysisBO.setCondition(string);
+            analysisBO.setRatio(String.valueOf(temp));
+            if (temp > 1000) {
+                analysisBO.setWarning(true);
+            } else {
+                analysisBO.setWarning(false);
+            }
+            analysisBOs.add(analysisBO);
+        }
+        if (!value.equals("area") && !value.equals("projectGroup")) {
+            //发生额
+            Double temp = 0d;
+            for (VoucherGenerate voucherGenerate : list) {
+                temp += voucherGenerate.getBorrowMoney();
+            }
+            AnalysisBO analysisBO = new AnalysisBO();
+            analysisBO.setCondition("时间段");
             analysisBO.setRatio(String.valueOf(temp));
             if (temp > 1000) {
                 analysisBO.setWarning(true);
@@ -508,8 +615,62 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return analysisBOs;
     }
 
-    //查询百分比分析发生额Percentage
-    private List<AnalysisBO> getPercentageAnalysis(AnalysisTO to) throws SerException {
+    //得到百分比分析
+    private List<AnalysisBO> getPercentageAnalysisBOs(AnalysisTO to, String month) throws SerException {
+        List<AnalysisBO> list1 = getPercentageAnalysis(to, month);
+        //得到本月百分比分析的地区/项目组/时间段
+
+        //得到上个月的百分比分析
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-")) + "-01";
+        }
+        List<AnalysisBO> list2 = getPercentageAnalysis(to, getLastMonth(month));
+
+        List<AnalysisBO> analysisBOs = new ArrayList<>(0);
+        for (AnalysisBO bo1 : list1) {
+            for (AnalysisBO bo2 : list2) {
+                if (bo1.getCondition().equals(bo2.getCondition())) {
+                    AnalysisBO analysisBO = new AnalysisBO();
+                    analysisBO.setCondition(bo1.getCondition());
+                    analysisBO.setRatio(String.valueOf(convert(Double.valueOf(bo1.getRatio()) / Double.valueOf(bo2.getRatio()) * 100)));
+                    if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+                        analysisBO.setWarning(true);
+                    } else {
+                        analysisBO.setWarning(false);
+                    }
+                    analysisBO.setRatio(String.valueOf(convert(Double.valueOf(bo1.getRatio()) / Double.valueOf(bo2.getRatio()) * 100)) + "%");
+                    analysisBOs.add(analysisBO);
+                }
+//                else if (!list1.stream().map(AnalysisBO::getCondition).distinct().collect(Collectors.toList()).contains(bo2.getCondition())) {
+//                    AnalysisBO analysisBO = new AnalysisBO();
+//                    analysisBO.setCondition(bo2.getCondition());
+//                    analysisBO.setRatio(bo2.getRatio());
+//                    if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+//                        analysisBO.setWarning(true);
+//                    } else {
+//                        analysisBO.setWarning(false);
+//                    }
+//                    analysisBOs.add(analysisBO);
+//                }
+//            }
+//            if (!list2.stream().map(AnalysisBO::getCondition).distinct().collect(Collectors.toList()).contains(bo1.getCondition())) {
+//                AnalysisBO analysisBO = new AnalysisBO();
+//                analysisBO.setCondition(bo1.getCondition());
+//                analysisBO.setRatio(bo1.getRatio());
+//                if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+//                    analysisBO.setWarning(true);
+//                } else {
+//                    analysisBO.setWarning(false);
+//                }
+//                analysisBOs.add(analysisBO);
+//            }
+            }
+        }
+        return analysisBOs;
+    }
+
+    //查询该月百分比分析发生额
+    private List<AnalysisBO> getPercentageAnalysis(AnalysisTO to, String month) throws SerException {
         String value = "";
         if ("地区".equals(to.getAnalysisType().substring(0, 2))) {
             value = "area";
@@ -517,10 +678,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if ("项目".equals(to.getAnalysisType().substring(0, 2))) {
             value = "projectGroup";
         }
-
-        String month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
-        String startTime = month + "-01";
-        String endTime = this.findEndDayOfMonth(month);
+        String startTime = "";
+        String endTime = "";
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
+            startTime = month + "-01";
+            endTime = this.findEndDayOfMonth(startTime);
+        }
 
         String fields[] = null;
         String tempSql = null;
@@ -530,8 +694,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             tempSql = "select area, firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ";
             tempSql1 = " group by area, firstSubject;";
         } else if ("projectGroup".equals(value)) {
-            fields = new String[]{"projectGroup", "firstSubject", "borrowMoney", "loanMoney"};
-            tempSql = "select projectGroup, firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ";
+            fields = new String[]{"area", "firstSubject", "borrowMoney", "loanMoney"};
+            tempSql = "select projectGroup as area, firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ";
             tempSql1 = " group by projectGroup, firstSubject;";
         } else {
             fields = new String[]{"firstSubject", "borrowMoney", "loanMoney"};
@@ -540,11 +704,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
 
         StringBuilder sql = new StringBuilder(tempSql);
-        sql.append(" where voucherDate between '" + startTime + "'");
-        sql.append(" and '" + endTime + "'");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where voucherDate between '" + startTime + "'");
+            sql.append(" and '" + endTime + "'");
+        }
         sql.append(tempSql1);
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
-        List<String> strList = list.stream().map(VoucherGenerate::getArea).distinct().collect(Collectors.toList());
+        List<String> strList = new ArrayList<>(0);
+        if (value.equals("area") || value.equals("projectGroup")) {
+            strList = list.stream().map(VoucherGenerate::getArea).distinct().collect(Collectors.toList());
+        }
         for (VoucherGenerate voucherGenerate : list) {
             //发生额
             Double temp = 0d;
@@ -574,6 +743,84 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 analysisBO.setWarning(false);
             }
             analysisBOs.add(analysisBO);
+        }
+        if (!value.equals("area") && !value.equals("projectGroup")) {
+            //发生额
+            Double temp = 0d;
+            for (VoucherGenerate voucherGenerate : list) {
+                temp += voucherGenerate.getBorrowMoney();
+            }
+            AnalysisBO analysisBO = new AnalysisBO();
+            analysisBO.setCondition("时间段");
+            analysisBO.setRatio(String.valueOf(temp));
+            if (temp > 1000) {
+                analysisBO.setWarning(true);
+            } else {
+                analysisBO.setWarning(false);
+            }
+            analysisBOs.add(analysisBO);
+        }
+        return analysisBOs;
+    }
+
+    //得到增长率分析
+    private List<AnalysisBO> getVarianceRatioAnalysisBOs(AnalysisTO to, String month) throws SerException {
+        List<AnalysisBO> list1 = getVarianceAnalysis(to, month);
+        //得到本月偏差分析的地区/项目组/时间段
+
+        //得到上个月的偏差分析
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-")) + "-01";
+        }
+        List<AnalysisBO> list2 = getVarianceAnalysis(to, getLastMonth(month));
+
+        List<AnalysisBO> analysisBOs = new ArrayList<>(0);
+        for (AnalysisBO bo1 : list1) {
+            for (AnalysisBO bo2 : list2) {
+                if (bo1.getCondition().equals(bo2.getCondition())) {
+                    AnalysisBO analysisBO = new AnalysisBO();
+                    analysisBO.setCondition(bo1.getCondition());
+                    if (0d != Double.valueOf(bo2.getRatio())) {
+                        analysisBO.setRatio(String.valueOf(convert((Double.valueOf(bo1.getRatio()) - Double.valueOf(bo2.getRatio())) / Double.valueOf(bo2.getRatio()) * 100)));
+                    } else {
+                        analysisBO.setRatio("0");
+                    }
+                    if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+                        analysisBO.setWarning(true);
+                    } else {
+                        analysisBO.setWarning(false);
+                    }
+                    if (0d != Double.valueOf(bo2.getRatio())) {
+                        analysisBO.setRatio(String.valueOf(convert((Double.valueOf(bo1.getRatio()) - Double.valueOf(bo2.getRatio())) / Double.valueOf(bo2.getRatio()) * 100) + "%"));
+                    } else {
+                        analysisBO.setRatio("0%");
+                    }
+                    analysisBOs.add(analysisBO);
+                } else if (!list1.stream().map(AnalysisBO::getCondition).distinct().collect(Collectors.toList()).contains(bo2.getCondition())) {
+                    AnalysisBO analysisBO = new AnalysisBO();
+                    analysisBO.setCondition(bo2.getCondition());
+                    analysisBO.setRatio("0");
+                    if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+                        analysisBO.setWarning(true);
+                    } else {
+                        analysisBO.setWarning(false);
+                    }
+                    analysisBO.setRatio("0%");
+                    analysisBOs.add(analysisBO);
+                }
+            }
+            if (!list2.stream().map(AnalysisBO::getCondition).distinct().collect(Collectors.toList()).contains(bo1.getCondition())) {
+                AnalysisBO analysisBO = new AnalysisBO();
+                analysisBO.setCondition(bo1.getCondition());
+                analysisBO.setRatio("100");
+                if (Double.valueOf(analysisBO.getRatio()) > Double.valueOf(to.getBrow())) {
+                    analysisBO.setWarning(true);
+                } else {
+                    analysisBO.setWarning(false);
+                }
+                analysisBO.setRatio("100%");
+                analysisBOs.add(analysisBO);
+            }
         }
         return analysisBOs;
     }
@@ -616,6 +863,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     //获取凭证字号
+
     public Double generateVoucherNum(VoucherGenerate voucherGenerate) throws SerException {
         Double num = 1d;
         //凭证日期
@@ -823,9 +1071,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
         }
 
-
         return listBO;
-
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -1040,7 +1286,15 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1112,7 +1366,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1151,7 +1414,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1284,7 +1556,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1324,7 +1605,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
 
@@ -1365,7 +1655,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1405,7 +1704,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1503,7 +1811,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1541,7 +1858,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1580,7 +1906,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1619,7 +1954,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1713,7 +2057,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1752,7 +2105,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1791,7 +2153,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -1830,7 +2201,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+//        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        voucherGenerateBOs.stream().forEach(obj -> {
+            obj.setBorrowMoneyTotal(borrowMoneyTotal);
+            obj.setLoanMoneyTotal(loanMoneyTotal);
+        });
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -2880,6 +3260,30 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String endTime = sdf.format(lastDayOfMonth);
         return endTime;
+    }
+
+    //获取上个月的第一天
+    private String getLastMonth(String month) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        try {
+            date = dateFormat.parse(month);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date); // 设置为当前时间
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1); // 设置为上一个月
+        date = calendar.getTime();
+        String lastMonth = dateFormat.format(date);
+        lastMonth = lastMonth.substring(0, lastMonth.lastIndexOf("-"));
+        return lastMonth;
+    }
+
+    private Double convert(Double value) {
+        long l1 = Math.round(value * 100); //四舍五入
+        double ret = l1 / 100.0; //注意:使用 100.0 而不是 100
+        return ret;
     }
 
 }

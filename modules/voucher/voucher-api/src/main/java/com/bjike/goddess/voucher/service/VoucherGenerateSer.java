@@ -2,14 +2,7 @@ package com.bjike.goddess.voucher.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-<<<<<<< Updated upstream
-import com.bjike.goddess.voucher.bo.AccountInfoBO;
-=======
-import com.bjike.goddess.voucher.bo.AnalysisBO;
->>>>>>> Stashed changes
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.PartOptionBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -665,7 +658,14 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return
      * @throws SerException
      */
-    default AnalysisBO analysis(AnalysisTO to) throws SerException {
+    default List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据月份查询借方金额和贷方金额
+     */
+    default List<HistogramBO> ctReSubHistogram() throws SerException {
         return null;
     }
 }

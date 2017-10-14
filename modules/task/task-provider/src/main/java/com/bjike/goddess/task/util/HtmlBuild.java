@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * html 构建类
+ *
  * @Author: [liguiqin]
  * @Date: [2017-09-28 11:49]
  * @Description: [ ]
@@ -35,9 +37,9 @@ public class HtmlBuild {
     public static void buildTodayHtml(Collect collect, StringBuilder sb) throws SerException {
         StringBuilder sb_today = new StringBuilder();
         sb_today.append(nameTr);
-        if(StringUtils.isNotBlank(collect.getDepartment())){
-            int maxSize =  collect.getTodayCollects().size()+1;
-            sb_today.append("<td bgcolor=\"#ffffff\" rowspan='"+maxSize+"'>");
+        if (StringUtils.isNotBlank(collect.getDepartment())) {
+            int maxSize = collect.getTodayCollects().size() + 1;
+            sb_today.append("<td bgcolor=\"#ffffff\" rowspan='" + maxSize + "'>");
             sb_today.append(collect.getDepartment());
             sb_today.append(endTd);
         }
@@ -85,9 +87,9 @@ public class HtmlBuild {
         //构建明天任务
         StringBuilder sb_tomorrow = new StringBuilder();
         sb_tomorrow.append(nameTr);
-        if(StringUtils.isNotBlank(collect.getDepartment())){
-            int maxSize =  collect.getTomorrowCollects().size()+1;
-            sb_tomorrow.append("<td bgcolor=\"#ffffff\" rowspan='"+maxSize+"'>");
+        if (StringUtils.isNotBlank(collect.getDepartment())) {
+            int maxSize = collect.getTomorrowCollects().size() + 1;
+            sb_tomorrow.append("<td bgcolor=\"#ffffff\" rowspan='" + maxSize + "'>");
             sb_tomorrow.append(collect.getDepartment());
             sb_tomorrow.append(endTd);
         }
@@ -170,7 +172,7 @@ public class HtmlBuild {
      * @param project
      * @return
      */
-    public static String createCustomHtml(CustomProject project,String name) throws SerException {
+    public static String createCustomHtml(CustomProject project, String name) throws SerException {
         StringBuilder sb = new StringBuilder();
         List<CustomTable> tables = project.getTables();
         if (null != tables && tables.size() > 0) {
@@ -180,7 +182,7 @@ public class HtmlBuild {
 
             String[] customTitles = tables.get(0).getCustomTitles();
             sb = new StringBuilder("<table style='text-align:center;' border=1 width='95%' height='30px'  cellspacing='0'>");
-            sb.append("<tr ><td  style=\"font-weight:bold;color='#00CD00'\" colspan='"+(headers.size()+customTitles.length+2)+"'>"+name+"</td></tr>");
+            sb.append("<tr ><td  style=\"font-weight:bold;color='#00CD00'\" colspan='" + (headers.size() + customTitles.length + 2) + "'>" + name + "</td></tr>");
             sb.append(nameTr);
             sb.append(startTd);
             sb.append(" ");
@@ -202,8 +204,8 @@ public class HtmlBuild {
                 sb.append(endTd);
             }
             sb.append(endTr);
-            int projectMergeSize=0;
-            for(CustomTable table: project.getTables()){
+            int projectMergeSize = 0;
+            for (CustomTable table : project.getTables()) {
                 projectMergeSize += table.getFixedFields().size();
             }
             //构建内容
@@ -216,24 +218,24 @@ public class HtmlBuild {
                     if (is_p) {
                         val = project.getName();
                         is_p = false;
-                        sb.append("<td rowspan='"+projectMergeSize+"'>");
+                        sb.append("<td rowspan='" + projectMergeSize + "'>");
                         sb.append(val);
                         sb.append(endTd);
                     }
                     if (is_t) {
                         val = table.getName();
                         is_t = false;
-                        sb.append("<td rowspan='"+table.getFixedFields().size()+"'>");
+                        sb.append("<td rowspan='" + table.getFixedFields().size() + "'>");
                         sb.append(val);
                         sb.append(endTd);
                     }
 
                     createHtmlVal(sb, fixedField, headers);
                     //自定义
-                    for(String custom: customTitles){
-                         val="";
+                    for (String custom : customTitles) {
+                        val = "";
                         for (CustomField customField : fixedField.getCustomFields()) {
-                            if(customField.getName().equals(custom)){
+                            if (customField.getName().equals(custom)) {
                                 val = customField.getValue();
                                 break;
                             }
@@ -254,10 +256,10 @@ public class HtmlBuild {
             sb.append(startTd);
             sb.append(" ");
             sb.append(endTd);
-            String val="";
-            for(ExcelHeader header:headers){
-                for(Map.Entry<String,String> entry:project.getCollects().entrySet()){
-                    if(header.name().equals(entry.getKey())){
+            String val = "";
+            for (ExcelHeader header : headers) {
+                for (Map.Entry<String, String> entry : project.getCollects().entrySet()) {
+                    if (header.name().equals(entry.getKey())) {
                         val = entry.getValue();
                         break;
                     }
@@ -267,9 +269,9 @@ public class HtmlBuild {
                 sb.append(endTd);
             }
 
-            for(String custom: customTitles){
-                for(Map.Entry<String,String> entry:project.getCollects().entrySet()){
-                    if(custom.equals(entry.getKey())){
+            for (String custom : customTitles) {
+                for (Map.Entry<String, String> entry : project.getCollects().entrySet()) {
+                    if (custom.equals(entry.getKey())) {
                         val = entry.getValue();
                         break;
                     }
@@ -286,17 +288,16 @@ public class HtmlBuild {
             collect.setTomorrowCollects(project.getTomorrowCollects());
             collect.setDepartment(project.getDepartment()); //部门汇总
             sb.append("<tr style='height: 20px'>");
-            sb.append("<td style=\"font-weight:bold;color='green'\" align='left' colspan='"+customTitles.length+headers.size()+"'>今天任务</td>");
-            buildTodayHtml(collect,sb);
+            sb.append("<td style=\"font-weight:bold;color='green'\" align='left' colspan='" + customTitles.length + headers.size() + "'>今天任务</td>");
+            buildTodayHtml(collect, sb);
             sb.append(endTr);
             sb.append("<tr style='height: 20px'>");
-            sb.append("<td style=\"font-weight:bold;color='green'\" align='left' colspan='"+customTitles.length+headers.size()+"'>明天任务计划</td>");
-            buildTomorrowHtml(collect,sb);
+            sb.append("<td style=\"font-weight:bold;color='green'\" align='left' colspan='" + customTitles.length + headers.size() + "'>明天任务计划</td>");
+            buildTomorrowHtml(collect, sb);
             sb.append(endTr);
             sb.append("</table>");
         }
-        System.out.println(sb.toString());
         return sb.toString();
-
     }
+
 }

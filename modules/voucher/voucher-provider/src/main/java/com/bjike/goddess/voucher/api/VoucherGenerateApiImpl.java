@@ -1,14 +1,7 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-<<<<<<< Updated upstream
-import com.bjike.goddess.voucher.bo.AccountInfoBO;
-=======
-import com.bjike.goddess.voucher.bo.AnalysisBO;
->>>>>>> Stashed changes
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.PartOptionBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
@@ -372,7 +365,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public AnalysisBO analysis(AnalysisTO to) throws SerException {
+    public List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
         return voucherGenerateSer.analysis(to);
+    }
+
+    @Override
+    public List<HistogramBO> ctReSubHistogram() throws SerException {
+        return voucherGenerateSer.ctReSubHistogram();
     }
 }
