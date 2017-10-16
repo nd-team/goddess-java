@@ -72,7 +72,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
 
-        List<CusPermission> list = super.findByCis(cusPermissionDTO, true);
+        List<CusPermission> list = super.findByCis(cusPermissionDTO,true);
         List<CusPermissionBO> bo = new ArrayList<>();
         for (CusPermission str : list) {
             CusPermissionBO temp = BeanTransform.copyProperties(str, CusPermissionBO.class);

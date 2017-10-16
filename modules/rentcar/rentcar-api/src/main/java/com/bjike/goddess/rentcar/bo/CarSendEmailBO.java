@@ -31,6 +31,11 @@ public class CarSendEmailBO extends BaseBO {
      */
     private String projectName;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
     public String getPositionName() {
         return positionName;
     }
@@ -63,13 +68,11 @@ public class CarSendEmailBO extends BaseBO {
         this.projectManageId = projectManageId;
     }
 
-    @Override
-    public String getId() {
-        return super.getId();
+    public String getRemark() {
+        return remark;
     }
 
-    @Override
-    public void setId(String id) {
-        super.setId(id);
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

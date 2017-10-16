@@ -20,10 +20,10 @@
     <!--发布接口,供其他模块调用-->
 
     <!-- 司机信息 -->
-    <dubbo:service interface="com.bjike.goddess.rentcar.api.DriverInfoAPI" ref="driverInfoApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rentcar.api.DriverInfoAPI" ref="driverInfoApiImpl1"/>
 
     <!-- 招聘信息 -->
-    <dubbo:service interface="com.bjike.goddess.rentcar.api.DriverRecruitAPI" ref="driverRecruitApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rentcar.api.DriverRecruitAPI" ref="driverRecruitApiImpl1"/>
 
     <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
     <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
@@ -31,6 +31,7 @@
     <dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
     <dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 
+    <dubbo:reference  validation="true" id="driverRecruitApiImpl" interface="com.bjike.goddess.carinfo.api.DriverRecruitAPI" />
 
     <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
     <dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
@@ -38,12 +39,15 @@
     <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
     <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
     <dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+    <dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
     <dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.rentcar.api.CusPermissionAPI" />
     <dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.rentcar.api.CusPermissionOperateAPI" />
     <dubbo:service  ref="carSendEmailApiImpl" interface="com.bjike.goddess.rentcar.api.CarSendEmailAPI" />
+    <dubbo:service  ref="collectDriverInfoApiImpl" interface="com.bjike.goddess.rentcar.api.CollectDriverInfoAPI" />
 
     <dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.carinfo.api.DriverInfoAPI" id="driverInfoApiImpl"/>
 
 
 
