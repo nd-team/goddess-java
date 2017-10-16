@@ -1,6 +1,7 @@
 package com.bjike.goddess.regularization.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.regularization.bo.OptionBO;
 import com.bjike.goddess.regularization.bo.SummationBO;
 import com.bjike.goddess.regularization.bo.TransferInfoBO;
 import com.bjike.goddess.regularization.dto.TransferInfoDTO;
@@ -125,5 +126,25 @@ public class TransferInfoApiImpl implements TransferInfoAPI {
     @Override
     public List<SummationBO> summaTotal(String endDate) throws SerException {
         return transferInfoSer.summaTotal(endDate);
+    }
+
+    @Override
+    public OptionBO figureShowDay(String summDate) throws SerException {
+        return transferInfoSer.figureShowDay(summDate);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return transferInfoSer.figureShowWeek(year,month,week);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        return transferInfoSer.figureShowMonth(year,month);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        return transferInfoSer.figureShowTotal(endDate);
     }
 }

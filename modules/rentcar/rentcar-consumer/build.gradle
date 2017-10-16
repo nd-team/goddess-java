@@ -38,8 +38,8 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:rentcar:rentcar-api")
-compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
 compile("org.springframework.boot:spring-boot-starter-web")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 }
 

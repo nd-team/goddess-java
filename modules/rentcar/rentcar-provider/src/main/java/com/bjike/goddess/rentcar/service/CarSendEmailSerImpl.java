@@ -1,11 +1,12 @@
 package com.bjike.goddess.rentcar.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
-import com.bjike.goddess.contacts.bo.InternalContactsBO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -16,18 +17,14 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.entity.DepartmentDetail;
-import com.bjike.goddess.organize.entity.PositionDetail;
-import com.bjike.goddess.organize.to.DepartmentDetailTO;
-import com.bjike.goddess.organize.to.PositionDetailTO;
 import com.bjike.goddess.rentcar.bo.CarSendEmailBO;
+import com.bjike.goddess.rentcar.bo.DriverInfoBO;
 import com.bjike.goddess.rentcar.dto.CarSendEmailDTO;
+import com.bjike.goddess.rentcar.dto.DriverInfoDTO;
 import com.bjike.goddess.rentcar.entity.CarSendEmail;
-import com.bjike.goddess.rentcar.entity.CusPermission;
 import com.bjike.goddess.rentcar.enums.GuideAddrStatus;
 import com.bjike.goddess.rentcar.to.CarSendEmailTO;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
-import com.bjike.goddess.rentcar.vo.CarSendEmailVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
@@ -35,7 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +66,12 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private DriverInfoSer driverInfoSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -131,7 +136,7 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("1");
         } else {
             flag = true;
         }
@@ -208,16 +213,53 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         return flag;
     }
 
+    // 定时器规则 "0 0 10 * * ?" 每月每日上午10:00发送邮件
+    @Override
+    public void sendEmailRemind() throws SerException {
+        DriverInfoDTO driverInfoDTO = new DriverInfoDTO();
+        List<DriverInfoBO> driverInfos = driverInfoSer.pageList(driverInfoDTO);
+        for (DriverInfoBO driverInfoBO : driverInfos) {
+            LocalDate startTime = DateUtil.parseDate(driverInfoBO.getEndDate());
+            LocalDate endTime = LocalDate.now();
+            Long interval = ChronoUnit.DAYS.between(endTime, startTime);
+            List<String> receivers = new ArrayList<>();
+            //合同终止日期前15天发送邮件提醒福利模块负责人
+            if (interval <= 15) {
+                List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+                if (moduleAPI.isCheck("organize")) {
+                    for (UserBO userBO : userBOS) {
+                        List<String> position = positionDetailUserAPI.getPosition(userBO.getUsername());
+                        if (position.get(0).equals("福利模块负责人")) {
+                            receivers.add(userBO.getEmail());
+                        }
+                    }
+                } else {
+                    throw new SerException("请去模块关联管理添加组织结构的模块关联");
+                }
+            }
+            String[] sendUsers = (String[]) receivers.toArray(new String[receivers.size()]);
+            MessageTO messageTO = new MessageTO("合同终止提醒", driverInfoBO.getDriver() + "司机,合同终止日期（" + startTime.getYear() + "年" + startTime.getMonth() + "月" + startTime.getDayOfMonth() + "日）,快到期了，请跟进后续工作");
+            messageTO.setSendType(SendType.EMAIL);
+            messageTO.setMsgType(MsgType.SYS);//根据自己业务写
+            messageTO.setSendType(SendType.EMAIL);//根据自己业务写
+            messageTO.setRangeType(RangeType.SPECIFIED);//根据自己业务写
+            messageTO.setSenderId("SYSTEM");
+            messageTO.setSenderName("SYSTEM");
+            messageTO.setReceivers(sendUsers);
+        }
+
+    }
+
     // 定时器规则 "0 0 10 15 * ?" 每月15日上午10:00发送邮件
     @Override
     public void sendEmail() throws SerException {
         List<CarSendEmail> carSendEmails = super.findAll();
         List<String> receivers = new ArrayList<>();
         if (carSendEmails.size() > 0 && carSendEmails != null) {
-            for(CarSendEmail carSendEmail : carSendEmails) {
+            for (CarSendEmail carSendEmail : carSendEmails) {
                 List<UserBO> userBO = positionDetailUserAPI.findByPosition(carSendEmail.getPositionNameId());
                 if (userBO.size() > 0 && userBO != null) {
-                    List<User> users = BeanTransform.copyProperties(userBO, User.class,true);
+                    List<User> users = BeanTransform.copyProperties(userBO, User.class, true);
                     for (User user : users) {
                         receivers.add(user.getEmail());
                     }
@@ -227,8 +269,8 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
             MessageTO messageTO = new MessageTO("司机新增提醒", "是否要新增招聘司机");
             messageTO.setSendType(SendType.EMAIL);
             messageTO.setMsgType(MsgType.SYS);//根据自己业务写
-            messageTO.setSendType( SendType.EMAIL);//根据自己业务写
-            messageTO.setRangeType( RangeType.SPECIFIED);//根据自己业务写
+            messageTO.setSendType(SendType.EMAIL);//根据自己业务写
+            messageTO.setRangeType(RangeType.SPECIFIED);//根据自己业务写
             messageTO.setSenderId("SYSTEM");
             messageTO.setSenderName("SYSTEM");
             messageTO.setReceivers(sendUsers);
@@ -255,11 +297,11 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
 
     @Override
     public CarSendEmailBO add(CarSendEmailTO to) throws SerException {
-        CarSendEmail carSendEmail = BeanTransform.copyProperties(to, CarSendEmail.class,true);
+        CarSendEmail carSendEmail = BeanTransform.copyProperties(to, CarSendEmail.class, true);
         super.save(carSendEmail);
         DepartmentDetailBO detailB = departmentDetailAPI.findBOById(to.getProjectManageId());
         PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(to.getPositionNameId());
-        CarSendEmailBO carSendEmailBO = BeanTransform.copyProperties(to,CarSendEmailBO.class);
+        CarSendEmailBO carSendEmailBO = BeanTransform.copyProperties(to, CarSendEmailBO.class);
         carSendEmailBO.setPositionName(detailB.getDepartment());
         carSendEmailBO.setProjectName(positionDetailBO.getPosition());
         return carSendEmailBO;
@@ -268,30 +310,39 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     @Override
     public List<CarSendEmailBO> list() throws SerException {
         List<CarSendEmail> carSendEmailList = super.findAll();
-        List<CarSendEmailBO> boList = BeanTransform.copyProperties(carSendEmailList,CarSendEmailBO.class);
-        if(carSendEmailList != null && !carSendEmailList.isEmpty()) {
+        List<CarSendEmailBO> carSendEmailBOS = new ArrayList<>();
+        if (carSendEmailList != null && !carSendEmailList.isEmpty()) {
             for (CarSendEmail carSendEmail : carSendEmailList) {
-                for (CarSendEmailBO carSendEmailBO : boList) {
+                    CarSendEmailBO carSendEmailBO = new CarSendEmailBO();
                     DepartmentDetailBO detailBO = departmentDetailAPI.findBOById(carSendEmail.getProjectManageId());
                     PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(carSendEmail.getPositionNameId());
-                    carSendEmailBO.setProjectName(detailBO.getDepartment());
-                    carSendEmailBO.setPositionName(positionDetailBO.getPosition());
+                    if (null != detailBO) {
+                        carSendEmailBO.setProjectName(detailBO.getDepartment());
+                    }
+                    if (null != positionDetailBO) {
+                        carSendEmailBO.setPositionName(positionDetailBO.getPosition());
+                    }
+                    carSendEmailBO.setPositionNameId(carSendEmail.getPositionNameId());
+                    carSendEmailBO.setProjectManageId(carSendEmail.getProjectManageId());
+                    carSendEmailBO.setRemark(carSendEmail.getRemark());
+                    carSendEmailBO.setId(carSendEmail.getId());
+                    carSendEmailBOS.add(carSendEmailBO);
                 }
             }
-        }
-        return boList;
+        return carSendEmailBOS;
     }
 
     @Override
-    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException{
+    public CarSendEmailBO edit(CarSendEmailTO to) throws SerException {
         CarSendEmail model = super.findById(to.getId());
-        if(model != null){
+        if (model != null) {
             model.setModifyTime(LocalDateTime.now());
             model.setPositionNameId(to.getPositionNameId());
             model.setProjectManageId(to.getProjectManageId());
+            model.setRemark(to.getRemark());
             super.update(model);
-            return BeanTransform.copyProperties(model,CarSendEmailBO.class);
-        }else {
+            return BeanTransform.copyProperties(model, CarSendEmailBO.class);
+        } else {
             throw new SerException("非法Id,发送对象不能为空！");
         }
     }
@@ -301,9 +352,23 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         CarSendEmail carSendEmail = super.findById(id);
         DepartmentDetailBO departmentDetail = departmentDetailAPI.findBOById(carSendEmail.getProjectManageId());
         PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(carSendEmail.getPositionNameId());
-        CarSendEmailBO bo = BeanTransform.copyProperties(carSendEmail,CarSendEmailBO.class);
+        CarSendEmailBO bo = BeanTransform.copyProperties(carSendEmail, CarSendEmailBO.class);
         bo.setPositionName(positionDetailBO.getPosition());
         bo.setProjectName(departmentDetail.getDepartment());
         return bo;
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        if (id != null) {
+            CarSendEmail model = super.findById(id);
+            if (model != null) {
+                super.remove(model);
+            } else {
+                throw new SerException("传入的id有误");
+            }
+        } else {
+            throw new SerException("id不能为空");
+        }
     }
 }

@@ -143,19 +143,19 @@ public class Regularization extends BaseEntity {
     /**
      * 工作自述
      */
-    @Column(name = "jobReadme", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '工作自述'")
+    @Column(name = "jobReadme", nullable = false, columnDefinition = "TEXT COMMENT '工作自述'")
     private String jobReadme;
 
     /**
      * 工作总结
      */
-    @Column(name = "jobSummary", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '工作总结'")
+    @Column(name = "jobSummary", nullable = false, columnDefinition = "TEXT COMMENT '工作总结'")
     private String jobSummary;
 
     /**
      * 条件相关说明
      */
-    @Column(name = "criteriaAttention", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '条件相关说明'")
+    @Column(name = "criteriaAttention", nullable = false, columnDefinition = "TEXT COMMENT '条件相关说明'")
     private String criteriaAttention;
 
     /**

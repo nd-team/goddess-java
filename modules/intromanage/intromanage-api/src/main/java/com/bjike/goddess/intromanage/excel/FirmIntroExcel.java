@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.intromanage.type.DemandType;
 
+import java.time.LocalDate;
+
 
 /**
  * 公司简介导入
@@ -16,7 +18,11 @@ import com.bjike.goddess.intromanage.type.DemandType;
  * @Copy: [ com.bjike ]
  */
 public class FirmIntroExcel extends BaseTO {
-
+    /**
+     * 序号
+     */
+    @ExcelHeader(name = "序号", notNull = true)
+    private Integer seqNum;
     /**
      * 公司名称
      */
@@ -39,7 +45,7 @@ public class FirmIntroExcel extends BaseTO {
      * 注册时间
      */
     @ExcelHeader(name = "注册时间", notNull = true)
-    private String registerDate;
+    private LocalDate registerDate;
 
     /**
      * 公司精神
@@ -118,12 +124,6 @@ public class FirmIntroExcel extends BaseTO {
      */
     @ExcelHeader(name = "需求类型", notNull = true)
     private DemandType demandType;
-
-    /**
-     * 更新（制作）时间
-     */
-    @ExcelHeader(name = "更新（制作）时间", notNull = true)
-    private String updateDate;
 
     /**
      * 战略定位
@@ -224,6 +224,13 @@ public class FirmIntroExcel extends BaseTO {
     @ExcelHeader(name="分公司联系方式")
     private String branchPhone;
 
+    public Integer getSeqNum() {
+        return seqNum;
+    }
+
+    public void setSeqNum(Integer seqNum) {
+        this.seqNum = seqNum;
+    }
 
     public String getFirmName() {
         return firmName;
@@ -249,11 +256,11 @@ public class FirmIntroExcel extends BaseTO {
         this.registerMoney = registerMoney;
     }
 
-    public String getRegisterDate() {
+    public LocalDate getRegisterDate() {
         return registerDate;
     }
 
-    public void setRegisterDate(String registerDate) {
+    public void setRegisterDate(LocalDate registerDate) {
         this.registerDate = registerDate;
     }
 
@@ -359,14 +366,6 @@ public class FirmIntroExcel extends BaseTO {
 
     public void setDemandType(DemandType demandType) {
         this.demandType = demandType;
-    }
-
-    public String getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
     }
 
     public String getPositioning() {

@@ -69,11 +69,6 @@ public class ComputerSubsidiesAddTO extends BaseTO {
      */
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 状态
-     */
-    private StaffStatus staffStatus;
-
     public String getArea() {
         return area;
     }
@@ -154,11 +149,4 @@ public class ComputerSubsidiesAddTO extends BaseTO {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

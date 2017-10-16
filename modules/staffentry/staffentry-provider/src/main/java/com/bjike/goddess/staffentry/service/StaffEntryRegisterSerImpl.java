@@ -247,6 +247,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             String userId = userBO.getId();
             staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userId));
         }
+        staffEntryRegisterDTO.getSorts().add("createTime=desc");
         List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO, true);
         List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list, StaffEntryRegisterBO.class);
         if (list != null && list.size() > 0) {
@@ -295,6 +296,8 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         staffEntryRegister.setLodge(staffEntryRegisterTO.getLodge());
         staffEntryRegister.setUseCompanyComputer(staffEntryRegisterTO.getUseCompanyComputer());
         staffEntryRegister.setEntryAddress(staffEntryRegisterTO.getEntryAddress());
+        staffEntryRegister.setArea(staffEntryRegisterTO.getArea());
+        staffEntryRegister.setRegisterUseNum(staffEntryRegisterTO.getRegisterUseNum());
         staffEntryRegister.setEntry(staffEntryRegisterTO.getEntry());
         staffEntryRegister.setNoEntryCause(staffEntryRegisterTO.getNoEntryCause());
         staffEntryRegister.setWorkEmail(staffEntryRegisterTO.getWorkEmail());
@@ -443,6 +446,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public byte[] exportExcel() throws SerException {
+        checkMoudleIdentity("8");
         List<StaffEntryRegister> list = super.findAll();
         List<StaffEntryRegisterExport> staffEntryRegisterExports = new ArrayList<>();
         for (StaffEntryRegister str : list) {
@@ -455,8 +459,8 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             excel.setEntry(checkBool(str.getEntry()));
             excel.setNotice(checkBool(str.getNotice()));
             excel.setPassword(userBO.getPassword());
-            excel.setName(userBO.getUsername());
-            excel.setEmployeeNumber(userBO.getEmployeeNumber());
+            excel.setUserName(userBO.getUsername());
+            excel.setEmpNumber(userBO.getEmployeeNumber());
             staffEntryRegisterExports.add(excel);
         }
         Excel excel = new Excel(0, 2);
@@ -469,8 +473,8 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         List<StaffEntryRegisterExpTemplate> staffEntryRegisterExpTemplates = new ArrayList<>();
         StaffEntryRegisterExpTemplate excel = new StaffEntryRegisterExpTemplate();
         excel.setDepartment("研发部");
-        excel.setName("张三");
-        excel.setEmployeeNumber("ike002613");
+        excel.setUserName("张三");
+        excel.setEmpNumber("IKE100004");
         excel.setContactNum("13698659846");
         excel.setEntryDate("2017-09-12");
         excel.setLodge("是");
@@ -494,6 +498,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public void importExcel(List<StaffEntryRegisterTO> staffEntryRegisterTOS) throws SerException {
+        checkMoudleIdentity("8");
         for (StaffEntryRegisterTO staffEntryRegisterTO : staffEntryRegisterTOS) {
             addStaffEntryRegister(staffEntryRegisterTO);
         }
@@ -507,17 +512,19 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             UserDTO userDTO = new UserDTO();
             userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
             UserBO userBO = userAPI.findOne(userDTO);
-            sb.append(userBO.getUsername() + " " + staffEntryRegister.getContactNum() + " " + staffEntryRegister.getEntryDate() + " " + checkBool(staffEntryRegister.getLodge()) + "住宿 ");
-            sb.append(checkBool(staffEntryRegister.getUseCompanyComputer()) + "使用公司电脑 " + staffEntryRegister.getEntryAddress() + " " + staffEntryRegister.getDepartment() + " ");
-            sb.append(userBO.getEmployeeNumber() + " " + staffEntryRegister.getPosition() + " " + staffEntryRegister.getWorkEmail() + ";  ");
+            sb.append((userBO.getUsername() != null ? userBO.getUsername() : " ") + " " + (staffEntryRegister.getContactNum() != null ? staffEntryRegister.getContactNum() : " ") + " " + (staffEntryRegister.getEntryDate() != null ? staffEntryRegister.getEntryDate() : " ") + " " + checkBool(staffEntryRegister.getLodge()) + "住宿 ");
+            sb.append(checkBool(staffEntryRegister.getUseCompanyComputer()) + "使用公司电脑 " + (staffEntryRegister.getEntryAddress() != null ? staffEntryRegister.getEntryAddress() : " ") + " " + (staffEntryRegister.getDepartment() != null ? staffEntryRegister.getDepartment() : " ") + " ");
+            sb.append((userBO.getEmployeeNumber() != null ? userBO.getEmployeeNumber() : " ") + " " + (staffEntryRegister.getPosition() != null ? staffEntryRegister.getPosition() : " ") + " " + (staffEntryRegister.getWorkEmail() != null ? staffEntryRegister.getWorkEmail() : " ") + ";  ");
         }
         return sb.toString();
     }
 
     public String checkBool(Boolean bool) throws SerException {
         String name = "否";
-        if (bool) {
-            name = "是";
+        if (bool != null) {
+            if (bool) {
+                name = "是";
+            }
         }
         return name;
     }
