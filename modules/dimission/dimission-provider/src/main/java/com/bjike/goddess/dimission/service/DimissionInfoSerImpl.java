@@ -295,7 +295,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
             if (moduleAPI.isCheck("organize")) {
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-                bo.setEmployeeNumber(detailBO.getNumber());
+                if (null != detailBO) {
+                    bo.setEmployeeNumber(detailBO.getNumber());
+                }
                 bo.setArea("");
                 bo.setPosition("");
                 bo.setArrangement("");
@@ -828,7 +830,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         String sql = "select min(dimissionDate) as dimissionDate from " + getTableName(DimissionInfo.class);
         List<Object> objects = super.findBySql(sql);
         String startDate = "";
-        if(objects!=null && objects.size()>0){
+        if (objects != null && objects.size() > 0) {
             startDate = String.valueOf(objects.get(0));
         }
         return startDate;

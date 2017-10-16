@@ -99,7 +99,7 @@ public class TemperatureSubsidiesImport extends BaseBO {
      * 补助状态
      */
     @ExcelHeader(name = "补助状态", notNull = true)
-    private String subsidiesStatus;
+    private SubsidiesStatus subsidiesStatus;
 
     /**
      * 状态
@@ -203,11 +203,11 @@ public class TemperatureSubsidiesImport extends BaseBO {
         this.confirmDate = confirmDate;
     }
 
-    public String getSubsidiesStatus() {
+    public SubsidiesStatus getSubsidiesStatus() {
         return subsidiesStatus;
     }
 
-    public void setSubsidiesStatus(String subsidiesStatus) {
+    public void setSubsidiesStatus(SubsidiesStatus subsidiesStatus) {
         this.subsidiesStatus = subsidiesStatus;
     }
 

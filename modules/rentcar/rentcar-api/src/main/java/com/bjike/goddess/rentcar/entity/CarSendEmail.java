@@ -33,6 +33,11 @@ public class CarSendEmail extends BaseEntity {
     @Column(name = "positionNameId", nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '岗位Id'")
     private String positionNameId;
 
+    /**
+     * 备注
+     */
+    @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    private String remark;
 
 
 
@@ -52,5 +57,11 @@ public class CarSendEmail extends BaseEntity {
         this.projectManageId = projectManageId;
     }
 
+    public String getRemark() {
+        return remark;
+    }
 
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

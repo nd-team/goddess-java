@@ -170,7 +170,7 @@ public class InterviewAction {
      *
      * @version v1
      */
-    @GetMapping("v1/judge/principal")
+     @GetMapping("v1/judge/principal")
     public Result judgePrincipal(String name) throws ActException {
         try {
             return ActResult.initialize(interviewAPI.judgePrincipal(name));

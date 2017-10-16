@@ -22,7 +22,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Service("driverInfoApiImpl")
+@Service("driverInfoApiImpl1")
 public class DriverInfoApiImpl implements DriverInfoAPI {
 
     @Autowired
@@ -71,5 +71,15 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
     @Override
     public void audit(String id, String suggest, Boolean audit) throws SerException {
         driverInfoSer.audit(id,suggest,audit);
+    }
+
+    @Override
+    public void recissionAgreement(String id,Boolean breakAgreement, String liftTime) throws SerException {
+        driverInfoSer.recissionAgreement(id,breakAgreement,liftTime);
+    }
+
+    @Override
+    public DriverInfoBO findByName(String driverName) throws SerException {
+        return driverInfoSer.findByName(driverName);
     }
 }

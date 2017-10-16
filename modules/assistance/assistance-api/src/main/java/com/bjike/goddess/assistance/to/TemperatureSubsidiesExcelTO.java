@@ -100,12 +100,6 @@ public class TemperatureSubsidiesExcelTO extends BaseTO {
     @NotNull(message = "补助状态不能为空",groups = {ADD.class})
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 状态
-     */
-    @NotNull(message = "状态不能为空",groups = {ADD.class})
-    private StaffStatus staffStatus;
-
     public String getArea() {
         return area;
     }
@@ -210,11 +204,4 @@ public class TemperatureSubsidiesExcelTO extends BaseTO {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

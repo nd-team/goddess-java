@@ -6,11 +6,17 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
 import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
+import com.bjike.goddess.intromanage.excel.IndividualResumeExport;
+import com.bjike.goddess.intromanage.excel.IndividualResumeExportTemple;
 import com.bjike.goddess.intromanage.excel.SonPermissionObject;
 import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.type.DemandType;
@@ -20,16 +26,24 @@ import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -304,6 +318,17 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
             }
         }
         List<IndividualResumeBO> boList = BeanTransform.copyProperties(list, IndividualResumeBO.class);
+        if(boList!=null && boList.size()>0){
+            for (IndividualResumeBO individualResumeBO : boList) {
+                StaffStatus staffStatus = positionDetailUserAPI.statusByName(individualResumeBO.getName());//查看员工状态
+                if (staffStatus == null) {
+                    individualResumeBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    individualResumeBO.setStaffStatus(staffStatus.toString());
+                }
+            }
+        }
         return boList;
     }
 
@@ -446,8 +471,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         checkPermission();
         IndividualResume entity = BeanTransform.copyProperties(to, IndividualResume.class, true);
         entity.setUpdateDate(LocalDate.now());
-        StaffStatus staffStatus = positionDetailUserAPI.statusByName(to.getName());//查看员工状态
-        entity.setStaffStatus(staffStatus);
+//        StaffStatus staffStatus = positionDetailUserAPI.statusByName(to.getName());//查看员工状态
+//        entity.setStaffStatus(staffStatus);
         entity.setStatus(Status.THAW);
         entity = super.save(entity);
         IndividualResumeBO bo = BeanTransform.copyProperties(entity, IndividualResumeBO.class);
@@ -1108,5 +1133,348 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
         //已冻结有个人简介数
         summationBO.setHasFrozen(hasFrozen(date));
         return summationBO;
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        int maxs = 0;
+        List<IndividualResume> list = super.findAll();
+        List<IndividualResumeExport> individualResumeExports = new ArrayList<>();
+        List<Integer> maxList = new ArrayList<>();
+        if (list != null && list.size() > 0) {
+            Integer seqNum = 1;//序号
+            for (IndividualResume individualResume : list) {
+
+                //查询员工奖励
+                StaffRewardDTO staffRewardDTO = new StaffRewardDTO();
+                staffRewardDTO.getConditions().add(Restrict.eq("staffId", individualResume.getId()));
+                List<StaffReward> staffRewards = staffRewardSer.findByCis(staffRewardDTO);
+                int s = staffRewards == null ? 0 : staffRewards.size();
+                //查询员工荣誉
+                StaffHonorDTO staffHonorDTO = new StaffHonorDTO();
+                staffHonorDTO.getConditions().add(Restrict.eq("staffId", individualResume.getId()));
+                List<StaffHonor> staffHonors = staffHonorSer.findByCis(staffHonorDTO);
+                int t = staffHonors == null ? 0 : staffHonors.size();
+                //查询教育经历
+                EducateExperienceDTO educateExperienceDTO = new EducateExperienceDTO();
+                educateExperienceDTO.getConditions().add(Restrict.eq("staffId", individualResume.getId()));
+                List<EducateExperience> educateExperiences = educateExperienceSer.findByCis(educateExperienceDTO);
+                int e = educateExperiences == null ? 0 : educateExperiences.size();
+                //查询工作经历
+                WorkExperienceDTO workExperienceDTO = new WorkExperienceDTO();
+                workExperienceDTO.getConditions().add(Restrict.eq("staffId", individualResume.getId()));
+                List<WorkExperience> workExperiences = workExperienceSer.findByCis(workExperienceDTO);
+                int w = workExperiences == null ? 0 : workExperiences.size();
+                //查询证书情况
+                CredentialSituationDTO credentialSituationDTO = new CredentialSituationDTO();
+                credentialSituationDTO.getConditions().add(Restrict.eq("staffId", individualResume.getId()));
+                List<CredentialSituation> credentialSituations = credentialSituationSer.findByCis(credentialSituationDTO);
+                int c = credentialSituations == null ? 0 : credentialSituations.size();
+
+                //判断哪个list是最大的
+                List<Integer> integers = new ArrayList<>();
+                integers.add(s);
+                integers.add(t);
+                integers.add(e);
+                integers.add(w);
+                integers.add(c);
+                maxs = integers.stream().max(Comparator.comparing(u -> u)).get();//每一个主表对应的子表的最大集合长度
+                maxList.add(maxs);
+                for (int i = 0; i < maxs; i++) {
+                    IndividualResumeExport excel = new IndividualResumeExport();
+                    StaffReward staffReward = s > i ? staffRewards.get(i) : new StaffReward();
+                    StaffHonor staffHonor = t > i ? staffHonors.get(i) : new StaffHonor();
+                    EducateExperience educateExperience = e > i ? educateExperiences.get(i) : new EducateExperience();
+                    WorkExperience workExperience = w > i ? workExperiences.get(i) : new WorkExperience();
+                    CredentialSituation credentialSituation = c > i ? credentialSituations.get(i) : new CredentialSituation();
+                    BeanTransform.copyProperties(individualResume, excel, "whetherSocialSecurity");
+                    excel.setWhetherSocialSecurity(individualResume.getWhetherSocialSecurity() ? "是" : "否");
+                    StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
+                    if (staffStatus == null) {
+                        excel.setStaffStatus("未获取到数据");
+                    }else{
+
+                        excel.setStaffStatus(staffStatus.toString());//设置员工状态
+                    }
+                    BeanTransform.copyProperties(staffReward, excel);
+                    BeanTransform.copyProperties(staffHonor, excel);
+                    BeanTransform.copyProperties(educateExperience, excel);
+                    BeanTransform.copyProperties(workExperience, excel);
+                    BeanTransform.copyProperties(credentialSituation, excel);
+                    excel.setSeqNum(seqNum);
+                    individualResumeExports.add(excel);
+                }
+                seqNum++;
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(individualResumeExports, excel);
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+            int rowSize = list.size();
+            List<Field> fields = ClazzUtils.getFields(IndividualResumeExport.class); //获得列表对象属性
+//            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            int index = 1;
+            for (int j = 0; j < rowSize; j++) {
+                int mergeRowCount = maxList.get(j);
+                if (mergeRowCount != 1) {
+                    int firstRow = index;
+                    int lastRow = 0;
+                    lastRow = firstRow + mergeRowCount - 1;
+                    for (int i = 0; i < 40; i++) {
+                        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
+                    }
+                    index = lastRow + 1;
+                }
+            }
+
+            os = new ByteArrayOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return os.toByteArray();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<IndividualResumeExportTemple> individualResumeExportTemples = new ArrayList<>();
+        IndividualResumeExportTemple individualResumeExportTemple = new IndividualResumeExportTemple();
+        individualResumeExportTemple.setSeqNum(1);
+        individualResumeExportTemple.setArea("广州");
+        individualResumeExportTemple.setDepartment("研发部");
+        individualResumeExportTemple.setName("张三");
+        individualResumeExportTemple.setEmployeeId("ike001569");
+        individualResumeExportTemple.setPost("模块负责人");
+        individualResumeExportTemple.seteMsil("zhangsan_aj@163.com");
+        individualResumeExportTemple.setEntryDate("2017-12-12");
+        individualResumeExportTemple.setTenancyDuration("4");
+        individualResumeExportTemple.setPositiveTime("2017-12-12");
+        individualResumeExportTemple.setWhetherSocialSecurity("是");
+        individualResumeExportTemple.setBuySocialSecurityTime("2017-12-12");
+        individualResumeExportTemple.setSkillRank("三级");
+        individualResumeExportTemple.setManageCommission("二级");
+        individualResumeExportTemple.setItemCommission("2成");
+        individualResumeExportTemple.setManageGrade("2成");
+        individualResumeExportTemple.setAwardScore(12);
+        individualResumeExportTemple.setPenaltyScore(6);
+        individualResumeExportTemple.setEmpiricalValue("10");
+        individualResumeExportTemple.setSubsidyAmount("12");
+        individualResumeExportTemple.setAnnualLeave(8d);
+        individualResumeExportTemple.setIndividualVision("个人愿景");
+        individualResumeExportTemple.setPicture("个人图片");
+        individualResumeExportTemple.setHobbies("唱歌");
+        individualResumeExportTemple.setPersonalEmail("zhangsan@163.com");
+        individualResumeExportTemple.setDateOfBirth("2017-12-12");
+        individualResumeExportTemple.setQqNumber("639584569");
+        individualResumeExportTemple.setWechatId("69874595123");
+        individualResumeExportTemple.setMobile("16985694582");
+        individualResumeExportTemple.setEmergencyContact("李四");
+        individualResumeExportTemple.setEmergencyContactPhone("15596874596");
+        individualResumeExportTemple.setEducation("本科");
+        individualResumeExportTemple.setSpecialty("电子科技");
+        individualResumeExportTemple.setAcademy("清华大学");
+        individualResumeExportTemple.setGraduationTime("2017-12-12");
+        individualResumeExportTemple.setRegisteredAddress("临江");
+        individualResumeExportTemple.setWorkExperience("一年半");
+        individualResumeExportTemple.setStaffStatus("在职");
+        individualResumeExportTemple.setRewardsName("提建议");
+        individualResumeExportTemple.setPrize("洋娃娃");
+        individualResumeExportTemple.setBonus("0元");
+        individualResumeExportTemple.setHonorName("第一名");
+        individualResumeExportTemple.setHonorGrade("二级");
+        individualResumeExportTemple.setFirmSubsidy("高温补助");
+        individualResumeExportTemple.setEducatAddress("临江");
+        individualResumeExportTemple.setParticipatedActivity("做家教");
+        individualResumeExportTemple.setProjectExperience("issp");
+        individualResumeExportTemple.setCertificateTitle("证书名1");
+        individualResumeExportTemple.setCertificateTime("2017-12-12");
+        individualResumeExportTemple.setCertificateNo("012695");
+        individualResumeExportTemples.add(individualResumeExportTemple);
+
+
+        IndividualResumeExportTemple individualResumeExportTemple1 = new IndividualResumeExportTemple();
+        individualResumeExportTemple1.setSeqNum(1);
+        individualResumeExportTemple1.setArea("广州");
+        individualResumeExportTemple1.setDepartment("研发部");
+        individualResumeExportTemple1.setName("张三");
+        individualResumeExportTemple1.setEmployeeId("ike001569");
+        individualResumeExportTemple1.setPost("模块负责人");
+        individualResumeExportTemple1.seteMsil("zhangsan_aj@163.com");
+        individualResumeExportTemple1.setEntryDate("2017-12-12");
+        individualResumeExportTemple1.setTenancyDuration("4");
+        individualResumeExportTemple1.setPositiveTime("2017-12-12");
+        individualResumeExportTemple1.setWhetherSocialSecurity("是");
+        individualResumeExportTemple1.setBuySocialSecurityTime("2017-12-12");
+        individualResumeExportTemple1.setSkillRank("三级");
+        individualResumeExportTemple1.setManageCommission("二级");
+        individualResumeExportTemple1.setItemCommission("2成");
+        individualResumeExportTemple1.setManageGrade("2成");
+        individualResumeExportTemple1.setAwardScore(12);
+        individualResumeExportTemple1.setPenaltyScore(6);
+        individualResumeExportTemple1.setEmpiricalValue("10");
+        individualResumeExportTemple1.setSubsidyAmount("12");
+        individualResumeExportTemple1.setAnnualLeave(8d);
+        individualResumeExportTemple1.setIndividualVision("个人愿景");
+        individualResumeExportTemple1.setPicture("个人图片");
+        individualResumeExportTemple1.setHobbies("唱歌");
+        individualResumeExportTemple1.setPersonalEmail("zhangsan@163.com");
+        individualResumeExportTemple1.setDateOfBirth("2017-12-12");
+        individualResumeExportTemple1.setQqNumber("639584569");
+        individualResumeExportTemple1.setWechatId("69874595123");
+        individualResumeExportTemple1.setMobile("16985694582");
+        individualResumeExportTemple1.setEmergencyContact("李四");
+        individualResumeExportTemple1.setEmergencyContactPhone("15596874596");
+        individualResumeExportTemple1.setEducation("本科");
+        individualResumeExportTemple1.setSpecialty("电子科技");
+        individualResumeExportTemple1.setAcademy("清华大学");
+        individualResumeExportTemple1.setGraduationTime("2017-12-12");
+        individualResumeExportTemple1.setRegisteredAddress("临江");
+        individualResumeExportTemple1.setWorkExperience("一年半");
+        individualResumeExportTemple1.setStaffStatus("在职");
+        individualResumeExportTemple1.setRewardsName("业务好");
+        individualResumeExportTemple1.setBonus("200元");
+        individualResumeExportTemple1.setHonorName("优秀员工");
+        individualResumeExportTemple1.setHonorGrade("二级");
+        individualResumeExportTemple1.setParticipatedActivity("志愿者");
+        individualResumeExportTemple1.setProjectExperience("issp");
+        individualResumeExportTemple1.setCertificateTitle("证书名2");
+        individualResumeExportTemple1.setCertificateTime("2017-12-12");
+        individualResumeExportTemple1.setCertificateNo("0369545");
+        individualResumeExportTemples.add(individualResumeExportTemple1);
+
+
+        IndividualResumeExportTemple individualResumeExportTemple2 = new IndividualResumeExportTemple();
+        individualResumeExportTemple2.setSeqNum(1);
+        individualResumeExportTemple2.setArea("广州");
+        individualResumeExportTemple2.setDepartment("研发部");
+        individualResumeExportTemple2.setName("张三");
+        individualResumeExportTemple2.setEmployeeId("ike001569");
+        individualResumeExportTemple2.setPost("模块负责人");
+        individualResumeExportTemple2.seteMsil("zhangsan_aj@163.com");
+        individualResumeExportTemple2.setEntryDate("2017-12-12");
+        individualResumeExportTemple2.setTenancyDuration("4");
+        individualResumeExportTemple2.setPositiveTime("2017-12-12");
+        individualResumeExportTemple2.setWhetherSocialSecurity("是");
+        individualResumeExportTemple2.setBuySocialSecurityTime("2017-12-12");
+        individualResumeExportTemple2.setSkillRank("三级");
+        individualResumeExportTemple2.setManageCommission("二级");
+        individualResumeExportTemple2.setItemCommission("2成");
+        individualResumeExportTemple2.setManageGrade("2成");
+        individualResumeExportTemple2.setAwardScore(12);
+        individualResumeExportTemple2.setPenaltyScore(6);
+        individualResumeExportTemple2.setEmpiricalValue("10");
+        individualResumeExportTemple2.setSubsidyAmount("12");
+        individualResumeExportTemple2.setAnnualLeave(8d);
+        individualResumeExportTemple2.setIndividualVision("个人愿景");
+        individualResumeExportTemple2.setPicture("个人图片");
+        individualResumeExportTemple2.setHobbies("唱歌");
+        individualResumeExportTemple2.setPersonalEmail("zhangsan@163.com");
+        individualResumeExportTemple2.setDateOfBirth("2017-12-12");
+        individualResumeExportTemple2.setQqNumber("639584569");
+        individualResumeExportTemple2.setWechatId("69874595123");
+        individualResumeExportTemple2.setMobile("16985694582");
+        individualResumeExportTemple2.setEmergencyContact("李四");
+        individualResumeExportTemple2.setEmergencyContactPhone("15596874596");
+        individualResumeExportTemple2.setEducation("本科");
+        individualResumeExportTemple2.setSpecialty("电子科技");
+        individualResumeExportTemple2.setAcademy("清华大学");
+        individualResumeExportTemple2.setGraduationTime("2017-12-12");
+        individualResumeExportTemple2.setRegisteredAddress("临江");
+        individualResumeExportTemple2.setWorkExperience("一年半");
+        individualResumeExportTemple2.setStaffStatus("在职");
+        individualResumeExportTemple2.setHonorName("三号学生");
+        individualResumeExportTemple2.setHonorGrade("一级");
+        individualResumeExportTemple2.setParticipatedActivity("活动2");
+        individualResumeExportTemple2.setProjectExperience("项目1");
+        individualResumeExportTemple2.setCertificateTitle("证书名3");
+        individualResumeExportTemple2.setCertificateTime("2017-12-12");
+        individualResumeExportTemple2.setCertificateNo("63694452");
+        individualResumeExportTemples.add(individualResumeExportTemple2);
+
+        IndividualResumeExportTemple individualResumeExportTemple3 = new IndividualResumeExportTemple();
+        individualResumeExportTemple3.setSeqNum(2);
+        individualResumeExportTemple3.setArea("上海");
+        individualResumeExportTemple3.setDepartment("咨询部");
+        individualResumeExportTemple3.setName("赵六");
+        individualResumeExportTemple3.setEmployeeId("ike006959");
+        individualResumeExportTemple3.setPost("项目经理");
+        individualResumeExportTemple3.seteMsil("zhaoliu_aj@163.com");
+        individualResumeExportTemple3.setEntryDate("2017-12-12");
+        individualResumeExportTemple3.setTenancyDuration("2");
+        individualResumeExportTemple3.setPositiveTime("2017-12-12");
+        individualResumeExportTemple3.setWhetherSocialSecurity("是");
+        individualResumeExportTemple3.setBuySocialSecurityTime("2017-12-12");
+        individualResumeExportTemple3.setSkillRank("三级");
+        individualResumeExportTemple3.setManageCommission("二级");
+        individualResumeExportTemple3.setItemCommission("2成");
+        individualResumeExportTemple3.setManageGrade("2成");
+        individualResumeExportTemple3.setAwardScore(12);
+        individualResumeExportTemple3.setPenaltyScore(6);
+        individualResumeExportTemple3.setEmpiricalValue("10");
+        individualResumeExportTemple3.setSubsidyAmount("12");
+        individualResumeExportTemple3.setAnnualLeave(8d);
+        individualResumeExportTemple3.setIndividualVision("个人愿景2");
+        individualResumeExportTemple3.setPicture("美食图片");
+        individualResumeExportTemple3.setHobbies("打羽毛球");
+        individualResumeExportTemple3.setPersonalEmail("zhaoliu@163.com");
+        individualResumeExportTemple3.setDateOfBirth("2017-12-12");
+        individualResumeExportTemple3.setQqNumber("639584569");
+        individualResumeExportTemple3.setWechatId("69874595123");
+        individualResumeExportTemple3.setMobile("16985694582");
+        individualResumeExportTemple3.setEmergencyContact("爱因斯坦");
+        individualResumeExportTemple3.setEmergencyContactPhone("15596874596");
+        individualResumeExportTemple3.setEducation("本科");
+        individualResumeExportTemple3.setSpecialty("电子科技");
+        individualResumeExportTemple3.setAcademy("林科大");
+        individualResumeExportTemple3.setGraduationTime("2017-12-12");
+        individualResumeExportTemple3.setRegisteredAddress("临江");
+        individualResumeExportTemple3.setWorkExperience("一年半");
+        individualResumeExportTemple3.setStaffStatus("在职");
+        individualResumeExportTemple3.setRewardsName("提建议");
+        individualResumeExportTemple3.setBonus("100元");
+        individualResumeExportTemple3.setHonorName("好帮手");
+        individualResumeExportTemple3.setHonorGrade("二级");
+        individualResumeExportTemple3.setFirmSubsidy("电脑补助");
+        individualResumeExportTemple3.setEducatAddress("临江");
+        individualResumeExportTemple3.setParticipatedActivity("志愿者");
+        individualResumeExportTemple3.setProjectExperience("issp");
+        individualResumeExportTemple3.setCertificateTitle("证书名4");
+        individualResumeExportTemple3.setCertificateTime("2017-12-12");
+        individualResumeExportTemple3.setCertificateNo("07698238");
+        individualResumeExportTemples.add(individualResumeExportTemple3);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(individualResumeExportTemples, excel);
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+            List<Field> fields = ClazzUtils.getFields(IndividualResumeExportTemple.class); //获得列表对象属性
+            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            for (int i = 0; i < 39; i++) {
+                sheet.addMergedRegion(new CellRangeAddress(1, 3, i, i));
+            }
+
+
+            os = new ByteArrayOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return os.toByteArray();
+    }
+
+    @Override
+    public void importExcel(List<IndividualResumeTO> individualResumeTOS) throws SerException {
+
     }
 }

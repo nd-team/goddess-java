@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.dto.PositionUserDetailDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
@@ -43,9 +44,11 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
         if (null != positionUserDetails && positionUserDetails.size() > 0) {
             List<String> list = positionUserDetails.stream().map(PositionUserDetail::getUserId).distinct().collect(Collectors.toList());
             for (String id : list) {
-//                String name = positionDetailUserSer.getById(id).getName();
-                String name = userAPI.findNameById(id);
-                listName.add(name);
+                PositionDetailUserBO positionDetailUserBO = positionDetailUserSer.getById(id);
+//                String name = userAPI.findNameById(id);
+                if (null != positionDetailUserBO) {
+                    listName.add(positionDetailUserBO.getName());
+                }
             }
         }
 //        String[] arr = (String[]) listName.toArray(new String[listName.size()]);

@@ -51,10 +51,7 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
 
     @Override
     public List<EntryRegisterBO> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
-        List<EntryRegister> entryRegisters = entryRegisterSer.listEntryRegister(entryRegisterDTO);
-        List<EntryRegisterBO> entryRegisterBOS = BeanTransform.copyProperties( entryRegisters , EntryRegisterBO.class  );
-
-        return entryRegisterBOS;
+        return entryRegisterSer.listEntryRegister(entryRegisterDTO);
     }
 
     @Override

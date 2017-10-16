@@ -79,12 +79,6 @@ public class ComputerSubsidiesExcelTO extends BaseEntity {
     @NotNull(message = "补助状态不能为空",groups = {ADD.class})
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 状态
-     */
-    @NotNull(message = "状态不能为空",groups = {ADD.class})
-    private StaffStatus staffStatus;
-
     public String getArea() {
         return area;
     }
@@ -165,11 +159,4 @@ public class ComputerSubsidiesExcelTO extends BaseEntity {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

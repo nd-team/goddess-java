@@ -7,6 +7,7 @@ import com.bjike.goddess.financeinit.dto.AccountDTO;
 import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.financeinit.to.AccountTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
+import org.hibernate.boot.jaxb.SourceType;
 
 import java.util.List;
 import java.util.Set;
@@ -141,4 +142,14 @@ public interface AccountSer extends Ser<Account, AccountDTO> {
      * @throws SerException
      */
     String findByName(String name) throws SerException;
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+
+
+
 }

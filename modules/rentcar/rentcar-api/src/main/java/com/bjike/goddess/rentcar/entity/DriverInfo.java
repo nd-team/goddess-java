@@ -1,11 +1,13 @@
 package com.bjike.goddess.rentcar.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.rentcar.enums.AgreementStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -22,23 +24,41 @@ import java.time.LocalDate;
 public class DriverInfo extends BaseEntity {
 
 
-    /**
-     * 账务模块审核意见
-     */
-    @Column(name = "suggest", columnDefinition = "VARCHAR(255)   COMMENT '账务模块审核意见'")
-    private String suggest;
+//    /**
+//     * 账务模块审核意见
+//     */
+//    @Column(name = "suggest", columnDefinition = "VARCHAR(255)   COMMENT '账务模块审核意见'")
+//    private String suggest;
+
+//    /**
+//     * 审核结果
+//     */
+//    @Column(name = "is_audit", columnDefinition = "TINYINT(1)  COMMENT '审核结果'")
+//    private Boolean audit;
 
     /**
-     * 审核结果
+     * 车辆信息模块司机招聘的管理的id
      */
-    @Column(name = "is_audit", columnDefinition = "TINYINT(1)  COMMENT '审核结果'")
-    private Boolean audit;
+    @Column(name = "driverId", columnDefinition = "VARCHAR(255)   COMMENT '车辆信息模块司机招聘的管理的id'")
+    private String driverId;
 
     /**
      * 地区
      */
     @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
+
+    /**
+     * 项目组/部门
+     */
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组/部门'")
+    private String department;
+
+    /**
+     * 租车单价
+     */
+    @Column(name = "rentCarUtilCost", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '租车单价'")
+    private Double rentCarUtilCost;
 
     /**
      * 结算方式
@@ -111,6 +131,12 @@ public class DriverInfo extends BaseEntity {
      */
     @Column(name = "carFuel", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本车耗油'")
     private Double carFuel;
+
+    /**
+     * 是否确定签订协议
+     */
+    @Column(name = "enSureAgreement", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否确定租车协议'")
+    private Boolean enSureAgreement;
 
     /**
      * 是否签订租车协议
@@ -191,6 +217,12 @@ public class DriverInfo extends BaseEntity {
     private String cardBank;
 
     /**
+     * 协议状态
+     */
+    @Column(name = "agreementStatus", columnDefinition = "TINYINT(4)   COMMENT '协议状态'")
+    private AgreementStatus agreementStatus;
+
+    /**
      * 是否解约
      */
     @Column(name = "is_breakAgreement", columnDefinition = "TINYINT(1) COMMENT '是否解约'")
@@ -203,21 +235,18 @@ public class DriverInfo extends BaseEntity {
     private String remark;
 
 
-    public String getSuggest() {
-        return suggest;
-    }
+    /**
+     * 解除时间
+     */
+    @Column(name = "liftTime", columnDefinition = "DATETIME   COMMENT '解除时间'")
+    private LocalDateTime liftTime;
 
-    public void setSuggest(String suggest) {
-        this.suggest = suggest;
-    }
+    /**
+     * 是否为自己添加的数据
+     */
+    @Column(name = "ifAdd", columnDefinition = "TINYINT(1)   COMMENT '是否为自己添加的数据'")
+    private Boolean ifAdd;
 
-    public Boolean getAudit() {
-        return audit;
-    }
-
-    public void setAudit(Boolean audit) {
-        this.audit = audit;
-    }
 
     public String getArea() {
         return area;
@@ -441,5 +470,61 @@ public class DriverInfo extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public Double getRentCarUtilCost() {
+        return rentCarUtilCost;
+    }
+
+    public void setRentCarUtilCost(Double rentCarUtilCost) {
+        this.rentCarUtilCost = rentCarUtilCost;
+    }
+
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
+    }
+
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+        this.enSureAgreement = enSureAgreement;
+    }
+
+    public AgreementStatus getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(AgreementStatus agreementStatus) {
+        this.agreementStatus = agreementStatus;
+    }
+
+    public LocalDateTime getLiftTime() {
+        return liftTime;
+    }
+
+    public void setLiftTime(LocalDateTime liftTime) {
+        this.liftTime = liftTime;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
+    }
+
+    public Boolean getIfAdd() {
+        return ifAdd;
+    }
+
+    public void setIfAdd(Boolean ifAdd) {
+        this.ifAdd = ifAdd;
     }
 }

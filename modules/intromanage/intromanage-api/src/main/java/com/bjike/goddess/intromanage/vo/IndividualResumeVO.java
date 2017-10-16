@@ -211,7 +211,7 @@ public class IndividualResumeVO {
     /**
      * 员工状态
      */
-    private StaffStatus staffStatus;
+    private String staffStatus;
     /**
      * 状态
      */
@@ -569,11 +569,11 @@ public class IndividualResumeVO {
         this.updateDate = updateDate;
     }
 
-    public StaffStatus getStaffStatus() {
+    public String getStaffStatus() {
         return staffStatus;
     }
 
-    public void setStaffStatus(StaffStatus staffStatus) {
+    public void setStaffStatus(String staffStatus) {
         this.staffStatus = staffStatus;
     }
 

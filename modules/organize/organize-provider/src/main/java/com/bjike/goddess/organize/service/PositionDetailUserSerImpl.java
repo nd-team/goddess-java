@@ -318,7 +318,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             logger.info("开始给uposit");
             PositionDetailUserDTO dto = new PositionDetailUserDTO();
             dto.getConditions().add(Restrict.eq("name", name));
-            PositionDetailUser entity1= super.findOne(dto);
+            PositionDetailUser entity1 = super.findOne(dto);
             if (null != entity1 && null != entity1.getPositionSet() && null != position_ids)
                 for (PositionDetail detail : entity1.getPositionSet())
                     for (String id : position_ids)
@@ -519,15 +519,17 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         sql.append(" AND b.name= '" + name + "'");
         List<PositionDetailBO> positionDetails = positionDetailSer.findBySql(sql.toString(), PositionDetailBO.class, fields);
         List<PositionDetailBO> list = BeanTransform.copyProperties(positionDetails, PositionDetailBO.class);
-        for (PositionDetailBO positionDetailBO : list) {
-            DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
-            positionDetailBO.setDepartmentName(department.getDepartment());
-            Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
-            positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
-            Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());
-            positionDetailBO.setArrangementName(arrangement.getArrangement());
-            ModuleType modules = moduleTypeSer.findById(positionDetailBO.getModuleId());
-            positionDetailBO.setModuleName(modules.getModule());
+        if (null != list && list.size() > 0) {
+            for (PositionDetailBO positionDetailBO : list) {
+                DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
+                positionDetailBO.setDepartmentName(department.getDepartment());
+                Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
+                positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
+                Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());
+                positionDetailBO.setArrangementName(arrangement.getArrangement());
+                ModuleType modules = moduleTypeSer.findById(positionDetailBO.getModuleId());
+                positionDetailBO.setModuleName(modules.getModule());
+            }
         }
         return list;
     }
@@ -556,18 +558,14 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public StaffStatus statusByName(String name) throws SerException {
         //根据名字获取用户ｉｄ
-        StaffStatus staffStatus = StaffStatus.HAVELEAVE;
-//        UserBO userBO = userAPI.findByUsername(name);
-//        if (null != userBO) {
-//            String userId = userBO.getId();
         PositionDetailUserDTO positionDetailUserDTO = new PositionDetailUserDTO();
         positionDetailUserDTO.getConditions().add(Restrict.eq("name", name));
         PositionDetailUser positionDetailUser = super.findOne(positionDetailUserDTO);
         if (null != positionDetailUser) {
-            staffStatus = positionDetailUser.getStaffStatus();
+            StaffStatus staffStatus = positionDetailUser.getStaffStatus();
+            return staffStatus;
         }
-//        }
-        return staffStatus;
+        return null;
     }
 
     @Override

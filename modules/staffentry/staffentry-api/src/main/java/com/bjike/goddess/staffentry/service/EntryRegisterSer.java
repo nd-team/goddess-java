@@ -61,7 +61,7 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * @return class entryRegisterBO
      * @throws SerException
      */
-    default List<EntryRegister> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+    default List<EntryRegisterBO> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         return null;
     }
 

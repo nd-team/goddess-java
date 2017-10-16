@@ -336,7 +336,8 @@ public class InterviewSerImpl extends ServiceImpl<Interview, InterviewDTO> imple
                 arrangementId = opinionBO.getId();
             }
         }
-        if (StringUtils.isNotBlank(arrangementId)) {
+        if (StringUtils.isNotBlank(arrangementId) && userBO != null) {
+            positionDetailUserAPI.checkAsUserArrangement(userBO.getId(), arrangementId);
             return positionDetailUserAPI.checkAsUserArrangement(userBO.getId(), arrangementId);
         }
         return false;
@@ -354,7 +355,7 @@ public class InterviewSerImpl extends ServiceImpl<Interview, InterviewDTO> imple
                 arrangementId = opinionBO.getId();
             }
         }
-        if (StringUtils.isNotBlank(arrangementId)) {
+        if (StringUtils.isNotBlank(arrangementId) && userBO != null) {
             return positionDetailUserAPI.checkAsUserArrangement(userBO.getId(), arrangementId);
         }
         return false;

@@ -80,11 +80,6 @@ public class SenioritySubsidiesExcel extends BaseTO {
     @ExcelHeader(name = "补助状态", notNull = true)
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 员工状态
-     */
-    @ExcelHeader(name = "员工状态", notNull = true)
-    private StaffStatus staffStatus;
 
     public String getArea() {
         return area;
@@ -166,11 +161,4 @@ public class SenioritySubsidiesExcel extends BaseTO {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }
