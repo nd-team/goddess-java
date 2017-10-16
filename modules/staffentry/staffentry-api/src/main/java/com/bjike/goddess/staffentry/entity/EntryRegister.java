@@ -182,11 +182,6 @@ public class EntryRegister extends BaseEntity {
      */
     @Column(nullable = false, columnDefinition = "DATE COMMENT '入职日期'")
     private LocalDate inductionDate;
-    /**
-     * 状态 
-     */
-    @Column(nullable = false, columnDefinition = "TINYINT(255) COMMENT '状态'")
-    private StaffStatus staffStatus;
 
 
     public String getEmpNumber() {
@@ -413,11 +408,4 @@ public class EntryRegister extends BaseEntity {
         this.inductionDate = inductionDate;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

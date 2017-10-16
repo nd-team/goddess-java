@@ -71,7 +71,7 @@ public class SenioritySubsidiesVO {
     /**
      * 员工状态
      */
-    private StaffStatus staffStatus;
+    private String staffStatus;
 
     public String getId() {
         return id;
@@ -161,11 +161,11 @@ public class SenioritySubsidiesVO {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
+    public String getStaffStatus() {
         return staffStatus;
     }
 
-    public void setStaffStatus(StaffStatus staffStatus) {
+    public void setStaffStatus(String staffStatus) {
         this.staffStatus = staffStatus;
     }
 }

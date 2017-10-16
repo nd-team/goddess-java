@@ -1,5 +1,5 @@
 /**
- * 财务初始化模块业务接口
- * Created by tanghaixiang on 2017-03-29 03:53.
+ * 初始化数据录入业务接口
+ * Created by lijuntao on 2017-10-10 04:11.
  */
 package com.bjike.goddess.financeinit.action.financeinit;

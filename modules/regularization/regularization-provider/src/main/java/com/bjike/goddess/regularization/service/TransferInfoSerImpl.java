@@ -7,8 +7,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.regularization.bo.SummationBO;
-import com.bjike.goddess.regularization.bo.TransferInfoBO;
+import com.bjike.goddess.regularization.bo.*;
 import com.bjike.goddess.regularization.dto.TransferInfoDTO;
 import com.bjike.goddess.regularization.entity.TransferInfo;
 import com.bjike.goddess.regularization.to.GuidePermissionTO;
@@ -16,7 +15,6 @@ import com.bjike.goddess.regularization.to.TransferInfoTO;
 import com.bjike.goddess.regularization.type.GuideAddrStatus;
 import com.bjike.goddess.regularization.type.StaffStatus;
 import com.bjike.goddess.salarymanage.api.SalaryConfirmRecordAPI;
-import com.bjike.goddess.salarymanage.enums.Probation;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 转正人员信息业务实现
@@ -44,6 +41,18 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "regularizationSerCache")
 @Service
 public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoDTO> implements TransferInfoSer {
+
+    public static final String option_1 = "option = {title: {text: '";
+
+    public static final String option_2 = "'},tooltip: {},legend: {data:[";
+
+
+    public static final String option_3 = "]},xAxis: {data: [";
+
+    public static final String option_4 = "]},yAxis: {},series: [";
+
+    public static final String option_5 = "]}";
+
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
@@ -517,36 +526,46 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     @Override
     public void saveTransferInfo(TransferInfoTO transferInfoTO) throws SerException {
         TransferInfo transferInfo = BeanTransform.copyProperties(transferInfoTO, TransferInfo.class, true);
-        String probationaryPer = null;
         LocalDate probationDue = null;
-        if (moduleAPI.isCheck("salarymanage")) {
-            Probation probation = salaryConfirmRecordAPI.findProbationById(transferInfoTO.getEmpNo());
-            if (null != probation) {
-                switch (probation) {
-                    case ONEMONTH:
-                        probationaryPer = "一个月";
-                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(1);
-                        break;
-                    case ONETWOMONTH:
-                        probationaryPer = "1-3个月";
-                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
-                        break;
-                    case THREEMONTH:
-                        probationaryPer = "三个月";
-                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
-                        break;
-                    default:
-                        probationaryPer = null;
-                        break;
-                }
-            }
+        switch (transferInfoTO.getProbationaryPer()) {
+            case "1个月":
+                probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(1);
+                break;
+            case "1-3个月":
+                probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
+                break;
+            case "3个月":
+                probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
+                break;
+            default:
+                throw new SerException("请输入正确的格式,正确格式为(1个月/1-3个月/3个月)");
         }
+
+//        if (moduleAPI.isCheck("salarymanage")) {
+//            Probation probation = salaryConfirmRecordAPI.findProbationById(transferInfoTO.getEmpNo());
+//            if (null != probation) {
+//                switch (probation) {
+//                    case ONEMONTH:
+//                        probationaryPer = "一个月";
+//                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(1);
+//                        break;
+//                    case ONETWOMONTH:
+//                        probationaryPer = "1-3个月";
+//                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
+//                        break;
+//                    case THREEMONTH:
+//                        probationaryPer = "三个月";
+//                        probationDue = DateUtil.parseDate(transferInfoTO.getHiredate()).plusMonths(3);
+//                        break;
+//                    default:
+//                        probationaryPer = null;
+//                        break;
+//                }
+//            }
+//        }
         transferInfo.setCreateTime(LocalDateTime.now());
         transferInfo.setStaffStatus(StaffStatus.PROBATION);
-        if (null!=probationaryPer){
-            transferInfo.setProbationaryPer(probationaryPer);
-            transferInfo.setProbationDue(probationDue);
-        }
+        transferInfo.setProbationDue(probationDue);
         super.save(transferInfo);
     }
 
@@ -751,10 +770,10 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     public List<SummationBO> summaTotal(String endDate) throws SerException {
         checkPermission();
         List<SummationBO> summationBOS = new ArrayList<>();
-        String sql = "select min(createTime) as createTime from  " + getTableName(TransferInfo.class);
+        String sql = "select min(hiredate) as hiredate from  " + getTableName(TransferInfo.class);
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
-            String startDate = StringUtils.substringBefore(String.valueOf(objects.get(0)), " ");
+            String startDate = String.valueOf(objects.get(0));
             endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
             summationBOS = totalMethod(startDate, endDate);
         }
@@ -983,4 +1002,201 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         return time;
     }
 
+    @Override
+    public List<String> findDepartment() throws SerException {
+        List<TransferInfo> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (TransferInfo model : list) {
+            String department = model.getDepartment();
+            if (StringUtils.isNotBlank(model.getDepartment())) {
+                set.add(department);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    public OptionBO figureShowDay(String summDate) throws SerException {
+        if (StringUtils.isBlank(summDate)) {
+            summDate = LocalDate.now().toString();
+        }
+        String startDate = summDate;
+        String endDate = summDate;
+        String text_1 = "转正管理日汇总" + "(" + summDate + ")";
+        return totalShowMethod(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        checkPermission();
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        String[] date = getTimes(year, month, week);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "转正管理周汇总" + "(" + startDate + "-" + endDate + ")";
+        return totalShowMethod(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        checkPermission();
+        if (year == null || month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "转正管理月汇总" + "(" + month + "月)";
+        return totalShowMethod(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        checkPermission();
+        String startDate = " ";
+        String sql = "select min(hiredate) as hiredate from  " + getTableName(TransferInfo.class);
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+            endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        }
+        String text_1 = "转正管理累计汇总" + "(累计)";
+        return totalShowMethod(startDate, endDate, text_1);
+    }
+
+    public OptionBO totalShowMethod(String startDate, String endDate, String text_1) throws SerException {
+        List<FigureShowBO> figureShowBOS = new ArrayList<>();
+        List<String> deps = findDepartment();
+        if (deps != null && deps.size() > 0) {
+            for (String dep : deps) {
+                StringBuilder sb = new StringBuilder("select * from( ");
+                sb.append("(select count(*)as entryNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + startDate + "' AND '" + endDate + "' AND department = '" + dep + "')a,");
+                sb.append("(select count(*)as threeFollowNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + threeFront(startDate) + "' AND '" + threeFront(endDate) + "' AND department = '" + dep + "')b,");
+                sb.append("(select count(*)as weekFollowNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + weekFront(startDate) + "' AND '" + weekFront(endDate) + "' AND department = '" + dep + "')c,");
+                sb.append("(select count(*)as monthFollowNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + monthFront(startDate) + "' AND '" + monthFront(endDate) + "' AND department = '" + dep + "')d,");
+                sb.append("(select count(*)as stayPositiveNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + startDate + "' AND '" + endDate + "' AND department = '" + dep + "' AND staffStatus = " + StaffStatus.STAYPOSITIVE.getCode() + ")e,");
+                sb.append("(select count(*)as applyPositiveNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + startDate + "' AND '" + endDate + "' AND department = '" + dep + "' AND staffStatus = " + StaffStatus.POSITIVE.getCode() + ")f,");
+                sb.append("(select count(*)as hasPositiveNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + startDate + "' AND '" + endDate + "' AND department = '" + dep + "' AND staffStatus = " + StaffStatus.BECOMEMEM.getCode() + ")i,");
+                sb.append("(select count(*)as noInterviewNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + startDate + "' AND '" + endDate + "' AND department = '" + dep + "' AND interviewPeper is not NULL)j,");
+                sb.append("(select count(*)as noPositiveNum FROM regularization_transferinfo WHERE hiredate BETWEEN '" + startDate + "' AND '" + endDate + "' AND department = '" + dep + "' AND staffStatus != " + StaffStatus.BECOMEMEM.getCode() + ")k");
+                sb.append(" ) ");
+                List<Object> objects = super.findBySql(sb.toString());
+                Object[] obj = (Object[]) objects.get(0);
+                Integer entryNum = Integer.parseInt(String.valueOf(obj[0]));//入职数量
+                Integer threeFollowNum = Integer.parseInt(String.valueOf(obj[1]));//三天需跟进收集意见数
+                Integer weekFollowNum = Integer.parseInt(String.valueOf(obj[2]));//一周需跟进收集意见数
+                Integer monthFollowNum = Integer.parseInt(String.valueOf(obj[3]));//一个月需跟进收集意见数
+                Integer stayPositiveNum = Integer.parseInt(String.valueOf(obj[4]));//待转正人数
+                Integer applyPositiveNum = Integer.parseInt(String.valueOf(obj[5]));//申请转正人数
+                Integer hasPositiveNum = Integer.parseInt(String.valueOf(obj[6]));//已转正人数
+                Integer noInterviewNum = Integer.parseInt(String.valueOf(obj[7]));//已转正面谈人数
+                Integer noPositiveNum = Integer.parseInt(String.valueOf(obj[8]));//未转正人数
+
+                FigureShowBO figureShowBO = new FigureShowBO();
+                figureShowBO.setDepartment(dep);//项目组
+                figureShowBO.setEntryNum(entryNum);//入职数量
+                figureShowBO.setThreeFollowNum(threeFollowNum);//三天需跟进收集意见数
+                figureShowBO.setWeekFollowNum(weekFollowNum);//一周需跟进收集意见数
+                figureShowBO.setMonthFollowNum(monthFollowNum);//一个月需跟进收集意见数
+                figureShowBO.setStayPositiveNum(stayPositiveNum);//待转正人数
+                figureShowBO.setApplyPositiveNum(applyPositiveNum);//申请转正人数
+                figureShowBO.setHasPositiveNum(hasPositiveNum);//已转正人数
+                figureShowBO.setNoInterviewNum(noInterviewNum);//已转正面谈人数
+                figureShowBO.setNoPositiveNum(noPositiveNum);//未转正人数
+                figureShowBOS.add(figureShowBO);
+            }
+        }
+//        String option = option_1 + "%s" + option_2 + "%s" + option_3 + "%s" + option_4 + "%s" + option_5;
+//
+//        String text_3 = "'入职人数','三天需跟进收集意见数',' 一周需跟进收集意见数'," +
+//                "' 一个月需跟进收集意见数',' 待转正人数',' 申请转正人数'," +
+//                "' 已转正人数',' 已转正面谈人数',' 未转正人数'";
+//        StringBuilder text_2 = new StringBuilder();
+//        StringBuilder text_4 = new StringBuilder();
+//
+//        for (FigureShowBO figureShowBO : figureShowBOS) {
+//
+//            text_2.append("'").append(figureShowBO.getDepartment()).append("',");
+//
+//            StringBuilder number = new StringBuilder();
+//            number.append(figureShowBO.getEntryNum()).append(",")
+//                    .append(figureShowBO.getThreeFollowNum()).append(",")
+//                    .append(figureShowBO.getWeekFollowNum()).append(",")
+//                    .append(figureShowBO.getMonthFollowNum()).append(",")
+//                    .append(figureShowBO.getStayPositiveNum()).append(",")
+//                    .append(figureShowBO.getApplyPositiveNum()).append(",")
+//                    .append(figureShowBO.getHasPositiveNum()).append(",")
+//                    .append(figureShowBO.getNoInterviewNum()).append(",")
+//                    .append(figureShowBO.getNoPositiveNum());
+//
+//            text_4.append("{name: '").append(figureShowBO.getDepartment()).append("',type: 'bar',data: [").append(number).append("]},");
+//        }
+//        text_4.setLength(text_4.length() - 1);
+//        text_2.setLength(text_2.length() - 1);
+//        return String.format(option, text_1, text_2, text_3, text_4);
+
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_3 = new String[]{"入职人数", "三天需跟进收集意见数",
+                "一周需跟进收集意见数", "一个月需跟进收集意见数", "待转正人数",
+                "申请转正人数", "已转正人数", "已转正面谈人数", "未转正人数"};
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (figureShowBOS != null && figureShowBOS.size() > 0) {
+            for (FigureShowBO figureShowBO : figureShowBOS) {
+                text_list2.add(figureShowBO.getDepartment());
+
+                //柱状图数据
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(figureShowBO.getDepartment());
+                seriesBO.setType("bar");
+
+                Integer[] number = new Integer[]{figureShowBO.getEntryNum(), figureShowBO.getThreeFollowNum(),
+                        figureShowBO.getWeekFollowNum(), figureShowBO.getMonthFollowNum(), figureShowBO.getStayPositiveNum(),
+                        figureShowBO.getApplyPositiveNum(), figureShowBO.getHasPositiveNum(), figureShowBO.getNoInterviewNum(),
+                        figureShowBO.getNoPositiveNum()};
+                seriesBO.setData(number);
+                seriesBOList.add(seriesBO);
+            }
+        }
+
+        String[] text_2 = new String[text_list2.size()];
+        text_2 = text_list2.toArray(text_2);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
 }

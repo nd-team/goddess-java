@@ -21,6 +21,11 @@ import java.util.List;
 public class FirmIntroExport extends BaseBO {
 
     /**
+     * 序号
+     */
+    @ExcelHeader(name = "序号", notNull = true)
+    private Integer seqNum;
+    /**
      * 公司名称
      */
     @ExcelHeader(name = "公司名称", notNull = true)
@@ -227,6 +232,13 @@ public class FirmIntroExport extends BaseBO {
     @ExcelHeader(name="分公司联系方式")
     private String branchPhone;
 
+    public Integer getSeqNum() {
+        return seqNum;
+    }
+
+    public void setSeqNum(Integer seqNum) {
+        this.seqNum = seqNum;
+    }
 
     public String getFirmName() {
         return firmName;

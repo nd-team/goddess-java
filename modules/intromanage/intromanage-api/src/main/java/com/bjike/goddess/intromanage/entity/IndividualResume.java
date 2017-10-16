@@ -249,11 +249,6 @@ public class IndividualResume extends BaseEntity {
     @Column(name = "workExperience", columnDefinition = "VARCHAR(255) COMMENT '工作年限'")
     private String workExperience;
     /**
-     * 员工状态
-     */
-    @Column(name = "staffStatus", columnDefinition = "INT(2) COMMENT '员工状态'")
-    private StaffStatus staffStatus;
-    /**
      * 状态
      */
     @Column(name = "status", columnDefinition = "INT(2) COMMENT '状态'")
@@ -562,14 +557,6 @@ public class IndividualResume extends BaseEntity {
 
     public void setUpdateDate(LocalDate updateDate) {
         this.updateDate = updateDate;
-    }
-
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
     }
 
     public Status getStatus() {

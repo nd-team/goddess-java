@@ -83,7 +83,7 @@ public class TemperatureSubsidiesBO extends BaseBO {
     /**
      * 状态
      */
-    private StaffStatus staffStatus;
+    private String staffStatus;
 
     public String getArea() {
         return area;
@@ -189,11 +189,11 @@ public class TemperatureSubsidiesBO extends BaseBO {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public StaffStatus getStaffStatus() {
+    public String getStaffStatus() {
         return staffStatus;
     }
 
-    public void setStaffStatus(StaffStatus staffStatus) {
+    public void setStaffStatus(String staffStatus) {
         this.staffStatus = staffStatus;
     }
 }

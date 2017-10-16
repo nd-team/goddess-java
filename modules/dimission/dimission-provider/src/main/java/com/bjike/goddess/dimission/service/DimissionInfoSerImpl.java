@@ -296,7 +296,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
             if (moduleAPI.isCheck("organize")) {
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-                bo.setEmployeeNumber(detailBO.getEmployeesNumber());
+//                bo.setEmployeeNumber(detailBO.getEmployeesNumber());
                 bo.setArea("");
                 bo.setPosition("");
                 bo.setArrangement("");

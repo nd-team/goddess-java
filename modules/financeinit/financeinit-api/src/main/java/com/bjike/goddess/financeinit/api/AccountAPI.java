@@ -139,5 +139,11 @@ public interface AccountAPI {
      * @throws SerException
      */
     String findByName(String name) throws SerException;
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
 
 }
