@@ -25,6 +25,19 @@ public class DriverRecruitTO extends BaseTO {
     private String area;
 
     /**
+     * 项目组
+     */
+    @NotBlank(message = "项目组不能为空",groups = {ADD.class, EDIT.class})
+    private String department;
+
+    /**
+     * 信息收集时间
+     */
+    @NotBlank(message = "信息收集时间不能为空",groups = {ADD.class, EDIT.class})
+    private String informationCollecttionTime;
+
+
+    /**
      * 司机名称
      */
     @NotBlank(message = "司机名称不能为空",groups = {ADD.class, EDIT.class})
@@ -296,5 +309,22 @@ public class DriverRecruitTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getInformationCollecttionTime() {
+        return informationCollecttionTime;
+    }
+
+    public void setInformationCollecttionTime(String informationCollecttionTime) {
+        this.informationCollecttionTime = informationCollecttionTime;
     }
 }
