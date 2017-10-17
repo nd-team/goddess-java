@@ -25,13 +25,13 @@ public class PositionIndexSetExcel extends BaseTO {
      * 年份
      */
     @ExcelHeader(name = "年份",notNull = true)
-    private String year;
+    private Integer year;
 
     /**
      * 月份
      */
     @ExcelHeader(name = "月份",notNull = true)
-    private String month;
+    private Integer month;
 
     /**
      * 指标类型
@@ -199,19 +199,19 @@ public class PositionIndexSetExcel extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
