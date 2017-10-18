@@ -11,10 +11,14 @@ import com.bjike.goddess.dispatchcar.bo.CheckChangeCarBO;
 import com.bjike.goddess.dispatchcar.dto.CheckChangeCarDTO;
 import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
 import com.bjike.goddess.dispatchcar.to.CorrectMistakeTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.CheckChangeCarVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -31,6 +35,31 @@ import java.util.List;
 public class CheckChangeCarAction {
     @Autowired
     private CheckChangeCarAPI checkChangeCarAPI;
+
+
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = checkChangeCarAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -63,6 +92,25 @@ public class CheckChangeCarAction {
         try {
             checkChangeCarAPI.modify(to);
             return new ActResult("问题解决成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据id查询单个核对修改记录
+     * @param id
+     * @return class CheckChangeCarVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one")
+    public Result findOne(@RequestParam String id) throws ActException{
+        try {
+            CheckChangeCarBO checkChangeCarBO = checkChangeCarAPI.findOne(id);
+            CheckChangeCarVO checkChangeCarVO = BeanTransform.copyProperties(checkChangeCarBO,CheckChangeCarVO.class);
+            return ActResult.initialize(checkChangeCarVO);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
