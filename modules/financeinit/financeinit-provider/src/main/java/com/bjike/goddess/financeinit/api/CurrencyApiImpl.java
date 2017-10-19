@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.dto.CurrencyDTO;
 import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.service.CurrencySer;
 import com.bjike.goddess.financeinit.to.CurrencyTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,17 @@ import java.util.List;
 public class CurrencyApiImpl implements CurrencyAPI {
     @Autowired
     private CurrencySer currencySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return currencySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return currencySer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countCurren(CurrencyDTO currencyDTO) throws SerException {
         return currencySer.countCurren(currencyDTO);

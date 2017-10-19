@@ -12,13 +12,18 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
+import com.bjike.goddess.financeinit.bo.CourseDateBO;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
+import com.bjike.goddess.financeinit.vo.AccountAddDateVO;
 import com.bjike.goddess.financeinit.vo.AccountanCourseVO;
+import com.bjike.goddess.financeinit.vo.CourseDateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -45,7 +50,28 @@ import java.util.List;
 public class AccountanCourseAction extends BaseFileAction{
     @Autowired
     private AccountanCourseAPI accountanCourseAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = accountanCourseAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 资产类总条数
      *
@@ -395,10 +421,34 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
+    /**
+     * 根据会计科目名称获取所属类型
+     * @param accountanName
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/belongByName")
     public Result belongByName(@RequestParam String accountanName)throws ActException{
         try {
             CategoryName categoryName = accountanCourseAPI.belongByName(accountanName);
             return ActResult.initialize(categoryName);
+        } catch (SerException e) {
+            throw new ActException( e.getMessage());
+        }
+    }
+    /**
+     * 根据代码获取会计科目名称和方向
+     * @param code 代码
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/findByCode")
+    public Result findByCode(@RequestParam String code)throws ActException{
+        try {
+            CourseDateBO courseDateBO = accountanCourseAPI.findByCode(code);
+            CourseDateVO courseDateVO = BeanTransform.copyProperties(courseDateBO,CourseDateVO.class);
+            return ActResult.initialize(courseDateVO);
         } catch (SerException e) {
             throw new ActException( e.getMessage());
         }

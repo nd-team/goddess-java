@@ -5,6 +5,7 @@ import com.bjike.goddess.financeinit.bo.ProofWordsBO;
 import com.bjike.goddess.financeinit.dto.ProofWordsDTO;
 import com.bjike.goddess.financeinit.entity.ProofWords;
 import com.bjike.goddess.financeinit.service.ProofWordsSer;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.ProofWordsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,17 @@ import java.util.List;
 public class ProofWordsApiImpl implements ProofWordsAPI {
     @Autowired
     private ProofWordsSer proofWordsSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return proofWordsSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return proofWordsSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countProof(ProofWordsDTO proofWordsDTO) throws SerException {
         return proofWordsSer.countProof(proofWordsDTO);

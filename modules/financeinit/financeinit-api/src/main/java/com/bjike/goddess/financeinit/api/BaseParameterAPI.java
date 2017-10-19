@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.BaseParameterBO;
 import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BaseParameterAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 基本参数列表总条数
      */

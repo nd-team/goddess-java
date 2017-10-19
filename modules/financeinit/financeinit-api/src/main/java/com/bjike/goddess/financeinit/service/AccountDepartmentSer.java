@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.bo.AccountDepartmentBO;
 import com.bjike.goddess.financeinit.dto.AccountDepartmentDTO;
 import com.bjike.goddess.financeinit.entity.AccountDepartment;
 import com.bjike.goddess.financeinit.to.AccountDepartmentTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AccountDepartmentSer extends Ser<AccountDepartment, AccountDepartmentDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 核算部门列表总条数
      */

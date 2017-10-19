@@ -11,16 +11,16 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.BrokenOptionBO;
 import com.bjike.goddess.staffentry.bo.EntrySummaryBO;
+import com.bjike.goddess.staffentry.bo.OptionBO;
 import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.excel.StaffEntryRegisterExcel;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterTO;
-import com.bjike.goddess.staffentry.vo.EntrySummaryVO;
-import com.bjike.goddess.staffentry.vo.SonPermissionObject;
-import com.bjike.goddess.staffentry.vo.StaffEntryRegisterVO;
+import com.bjike.goddess.staffentry.vo.*;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -410,7 +410,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/day")
+    @GetMapping("v1/summarize/day")
     public Result summarizeDay(String date, HttpServletRequest request) throws ActException {
         try {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaDay(date);
@@ -431,7 +431,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/week")
+    @GetMapping("v1/summarize/week")
     public Result summarizeDay(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
         try {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year, month, week);
@@ -451,7 +451,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/month")
+    @GetMapping("v1/summarize/month")
     public Result summarizeMonth(Integer year, Integer month, HttpServletRequest request) throws ActException {
         try {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaMonth(year, month);
@@ -470,12 +470,104 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/total")
+    @GetMapping("v1/summarize/total")
     public Result summarizeMonth(String date, HttpServletRequest request) throws ActException {
         try {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaTotal(date);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
             return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 当日入职情况统计
+     *
+     * @param date 日期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String date, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffEntryRegisterAPI.figureShowDay(date);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 入职情况周统计
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffEntryRegisterAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 入职情况月统计
+     *
+     * @param year  年份
+     * @param month 月份
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/month")
+    public Result figureShowMonth(Integer year, Integer month, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffEntryRegisterAPI.figureShowMonth(year, month);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 入职情况累计统计
+     *
+     * @param date 截止日期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/total")
+    public Result figureShowTotal(String date, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffEntryRegisterAPI.figureShowTotal(date);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 入职管理年汇总折线图展示图
+     *
+     * @param year 截止日期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/brokenYear/year")
+    public Result figureShowTotal(Integer year, HttpServletRequest request) throws ActException {
+        try {
+            BrokenOptionBO brokenOptionBO = staffEntryRegisterAPI.brokenShowYear(year);
+            BrokenOptionVO brokenOptionVO = BeanTransform.copyProperties(brokenOptionBO, BrokenOptionVO.class);
+            return ActResult.initialize(brokenOptionVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

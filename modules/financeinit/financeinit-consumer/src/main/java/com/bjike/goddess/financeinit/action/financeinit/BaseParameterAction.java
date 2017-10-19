@@ -14,6 +14,7 @@ import com.bjike.goddess.financeinit.bo.BaseParameterBO;
 import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
 import com.bjike.goddess.financeinit.entity.BaseParameter;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.vo.BaseParameterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -40,7 +41,28 @@ public class BaseParameterAction {
     private BaseParameterAPI baseParameterAPI;
     @Autowired
     private CompanyBasicInfoAPI companyBasicInfoAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = baseParameterAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *

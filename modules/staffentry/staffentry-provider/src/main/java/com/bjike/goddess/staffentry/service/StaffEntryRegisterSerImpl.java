@@ -17,9 +17,7 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.staffentry.bo.EntrySummaryBO;
-import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
@@ -44,6 +42,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 
 /**
@@ -215,6 +214,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public Long countStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
+        seachCondi(staffEntryRegisterDTO);
         Long count = super.count(staffEntryRegisterDTO);
         return count;
     }
@@ -247,6 +247,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             String userId = userBO.getId();
             staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userId));
         }
+        seachCondi(staffEntryRegisterDTO);
         staffEntryRegisterDTO.getSorts().add("createTime=desc");
         List<StaffEntryRegister> list = super.findByCis(staffEntryRegisterDTO, true);
         List<StaffEntryRegisterBO> boList = BeanTransform.copyProperties(list, StaffEntryRegisterBO.class);
@@ -265,6 +266,17 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             }
         }
         return boList;
+    }
+
+    public void seachCondi(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
+        UserDTO userDTO = new UserDTO();
+        if (StringUtils.isNotBlank(staffEntryRegisterDTO.getName())) {
+            userDTO.getConditions().add(Restrict.eq("username", staffEntryRegisterDTO.getName()));
+            List<UserBO> userBOs = userAPI.findByCis(userDTO);
+            if (userBOs != null && userBOs.size() > 0) {
+                staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userBOs.get(0).getId()));
+            }
+        }
     }
 
     @Override
@@ -597,6 +609,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         return new ArrayList<>(set);
     }
 
+
     @Override
     public List<String> findDepByArea(String area) throws SerException {
         StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
@@ -610,6 +623,22 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             String projectName = model.getDepartment();
             if (StringUtils.isNotBlank(model.getDepartment())) {
                 set.add(projectName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> findDepartment() throws SerException {
+        List<StaffEntryRegister> list = super.findAll();
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (StaffEntryRegister model : list) {
+            String department = model.getDepartment();
+            if (StringUtils.isNotBlank(model.getDepartment())) {
+                set.add(department);
             }
         }
         return new ArrayList<>(set);
@@ -652,8 +681,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             summationDate = LocalDate.now().toString();
         }
         String[] date = new String[]{summationDate, summationDate};
-        totalMethod(date);
-        return null;
+        return totalMethod(date);
     }
 
     @Override
@@ -792,4 +820,260 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         return num;
     }
 
+    @Override
+    public OptionBO figureShowDay(String summationDate) throws SerException {
+        if (StringUtils.isBlank(summationDate)) {
+            summationDate = LocalDate.now().toString();
+        }
+        String text_1 = "当天入职情况统计(" + summationDate + ")";
+        String[] date = new String[]{summationDate, summationDate};
+        return figureTotalMethod(date, text_1);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        String[] date = getTimes(year, month, week);
+        String text_1 = "入职情况周统计" + "(" + date[0] + "-" + date[1] + ")";
+        return figureTotalMethod(date, text_1);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+//        checkPermission();
+        if (year == null || month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String[] date = new String[]{startDate, endDate};
+        String text_1 = "入职情况月统计" + "(" + year + "-" + month + ")";
+        return figureTotalMethod(date, text_1);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        String sql = "select min(entryDate) as entryDate from  " + getTableName(StaffEntryRegister.class);
+        List<Object> objects = super.findBySql(sql);
+        //获取用户注册中的最小入职时间
+        String startDate = "";
+        if (objects != null && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+        }
+        String[] date = new String[]{startDate,endDate};
+        String text_1 = "入职情况累计统计" + "(累计)";
+        return figureTotalMethod(date, text_1);
+    }
+
+
+    public OptionBO figureTotalMethod(String[] date, String text_1) throws SerException {
+        List<FigureShowDateBO> figureShowDateBOS = new ArrayList<>();
+        List<String> departments = findDepartment();
+        if (departments != null && departments.size() > 0) {
+            for (String department : departments) {
+                FigureShowDateBO figureShowDateBO = new FigureShowDateBO();
+                figureShowDateBO.setDepartment(department);
+                //TODO 由于招聘需求未明确修改所有本汇总字段计划入职人数未拿
+                figureShowDateBO.setPlanInductionNum(0);//计划入职人数
+                Integer num = 0;
+                StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
+                staffEntryRegisterDTO.getConditions().add(Restrict.between("entryDate", date));
+                staffEntryRegisterDTO.getConditions().add(Restrict.eq("department", department));
+                staffEntryRegisterDTO.getConditions().add(Restrict.eq("entry", true));
+                List<StaffEntryRegister> staffEntryRegisters = super.findByCis(staffEntryRegisterDTO);
+                if (staffEntryRegisters != null && staffEntryRegisters.size() > 0) {
+                    num = staffEntryRegisters.size();
+                }
+                figureShowDateBO.setRegistrationNum(num);//注册用户数
+                figureShowDateBOS.add(figureShowDateBO);
+            }
+            FigureShowDateBO figureShowDateBO1 = new FigureShowDateBO();
+            Integer planInductionNum = figureShowDateBOS.stream().mapToInt(FigureShowDateBO::getPlanInductionNum).sum();//计划入职人数总和;
+            Integer registrationNum = figureShowDateBOS.stream().mapToInt(FigureShowDateBO::getRegistrationNum).sum();//注册人数总和;
+            figureShowDateBO1.setDepartment("合计");
+            figureShowDateBO1.setPlanInductionNum(planInductionNum);
+            figureShowDateBO1.setRegistrationNum(registrationNum);
+            figureShowDateBOS.add(figureShowDateBO1);
+        }
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"计划入职人数", "注册用户数（入职人数）"};
+        legendBO.setData(text_2);
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();//1
+
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+//        tooltipBO.setTrigger("axis");
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (figureShowDateBOS != null && figureShowDateBOS.size() > 0) {
+            List<Integer> planInductionNums = new ArrayList<>();
+            List<Integer> registrationNums = new ArrayList<>();
+            for (FigureShowDateBO figureShowDateBO : figureShowDateBOS) {
+                text_list_3.add(figureShowDateBO.getDepartment());
+
+                //柱状图数据
+                planInductionNums.add(figureShowDateBO.getPlanInductionNum());
+                registrationNums.add(figureShowDateBO.getRegistrationNum());
+            }
+            Integer[] planInductionNum_str = new Integer[planInductionNums.size()];
+            planInductionNum_str = planInductionNums.toArray(planInductionNum_str);
+            Integer[] registrationNums_str = new Integer[registrationNums.size()];
+            registrationNums_str = registrationNums.toArray(registrationNums_str);
+            SeriesBO seriesBO1 = new SeriesBO();
+            seriesBO1.setName("计划入职人数");
+            seriesBO1.setType("bar");
+            seriesBO1.setData(planInductionNum_str);
+            seriesBOList.add(seriesBO1);
+            SeriesBO seriesBO2 = new SeriesBO();
+            seriesBO2.setName("注册用户数（入职人数）");
+            seriesBO2.setType("bar");
+            seriesBO2.setData(registrationNums_str);
+            seriesBOList.add(seriesBO2);
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+
+    @Override
+    public BrokenOptionBO brokenShowYear(Integer year) throws SerException {
+        year = year ==null?(LocalDate.now().getYear()):year;
+        List<BrokenLineDateBO> brokenLineDateBOS = new ArrayList<>();
+        for (int i=1;i<=12;i++){
+            String startDate = DateUtil.dateToString(LocalDate.of(year,i,1));
+            String endDate = DateUtil.dateToString(LocalDate.of(year,i,DateUtil.getDayByDate(year,i)));
+            String[] date = new String[]{startDate,endDate};
+
+            StaffEntryRegisterDTO staffEntryRegisterDTO = new StaffEntryRegisterDTO();
+            staffEntryRegisterDTO.getConditions().add(Restrict.between("entryDate", date));
+            staffEntryRegisterDTO.getConditions().add(Restrict.eq("entry", true));
+            List<StaffEntryRegister> staffEntryRegisters = super.findByCis(staffEntryRegisterDTO);
+            Integer registrationNum = 0;//注册人数
+            Integer planInductionNum = 0;//计划入职人数
+            if(staffEntryRegisters!=null && staffEntryRegisters.size()>0){
+                registrationNum = staffEntryRegisters.size();
+            }
+            BrokenLineDateBO brokenLineDateBO = new BrokenLineDateBO();
+            brokenLineDateBO.setYearMonth(year+"年"+i+"月");
+            //TODO 由于招聘需求未明确修改所有本汇总字段计划入职人数未拿
+            brokenLineDateBO.setPlanInductionNum(0);
+            brokenLineDateBO.setRegistrationNum(registrationNum);
+            brokenLineDateBOS.add(brokenLineDateBO);
+        }
+        BrokenLineDateBO brokenLineDateBO1 = new BrokenLineDateBO();
+        Integer totalRegistrationNum = brokenLineDateBOS.stream().mapToInt(BrokenLineDateBO::getRegistrationNum).sum();
+        Integer totalPlanInductionNum = brokenLineDateBOS.stream().mapToInt(BrokenLineDateBO::getPlanInductionNum).sum();
+        brokenLineDateBO1.setYearMonth("合计");
+        brokenLineDateBO1.setPlanInductionNum(totalPlanInductionNum);
+        brokenLineDateBO1.setRegistrationNum(totalRegistrationNum);
+        brokenLineDateBOS.add(brokenLineDateBO1);
+
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(year+"年度入职人数波动情况");
+
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        tooltipBO.setTrigger("axis");
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"计划入职人数", "注册用户数（入职人数）"};
+        legendBO.setData(text_2);
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+        yAxisBO.setType("value");
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        xAxisBO.setType("category");
+        xAxisBO.setBoundaryGap(false);
+        List<String> text_list_3 = new ArrayList<>();//1
+
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (brokenLineDateBOS != null && brokenLineDateBOS.size() > 0) {
+            List<Integer> planInductionNums = new ArrayList<>();
+            List<Integer> registrationNums = new ArrayList<>();
+            for (BrokenLineDateBO brokenLineDateBO : brokenLineDateBOS) {
+                text_list_3.add(brokenLineDateBO.getYearMonth());
+
+                //柱状图数据
+                planInductionNums.add(brokenLineDateBO.getPlanInductionNum());
+                registrationNums.add(brokenLineDateBO.getRegistrationNum());
+            }
+            Integer[] planInductionNum_str = new Integer[planInductionNums.size()];
+            planInductionNum_str = planInductionNums.toArray(planInductionNum_str);
+            Integer[] registrationNums_str = new Integer[registrationNums.size()];
+            registrationNums_str = registrationNums.toArray(registrationNums_str);
+            SeriesBO seriesBO1 = new SeriesBO();
+            seriesBO1.setName("计划入职人数");
+            seriesBO1.setType("line");
+            seriesBO1.setData(planInductionNum_str);
+            seriesBOList.add(seriesBO1);
+            SeriesBO seriesBO2 = new SeriesBO();
+            seriesBO2.setName("注册用户数（入职人数）");
+            seriesBO2.setType("line");
+            seriesBO2.setData(registrationNums_str);
+            seriesBOList.add(seriesBO2);
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        BrokenOptionBO brokenOptionBO = new BrokenOptionBO();
+        brokenOptionBO.setTitle(titleBO);
+        brokenOptionBO.setTooltip(tooltipBO);
+        brokenOptionBO.setLegend(legendBO);
+        brokenOptionBO.setxAxis(xAxisBO);
+        brokenOptionBO.setyAxis(yAxisBO);
+
+        brokenOptionBO.setSeries(text_4);
+        return brokenOptionBO;
+    }
 }

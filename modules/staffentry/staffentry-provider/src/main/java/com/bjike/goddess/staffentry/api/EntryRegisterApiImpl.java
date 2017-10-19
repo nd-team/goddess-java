@@ -151,4 +151,9 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
         return entryRegisterSer.names();
 
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return entryRegisterSer.templateExport();
+    }
 }

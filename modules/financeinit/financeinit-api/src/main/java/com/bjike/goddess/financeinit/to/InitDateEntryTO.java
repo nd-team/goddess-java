@@ -1,7 +1,11 @@
 package com.bjike.goddess.financeinit.to;
 
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 初始化数据录入
@@ -17,36 +21,43 @@ public class InitDateEntryTO extends BaseTO {
     /**
      * 代码
      */
+    @NotBlank(message = "代码不能为空",groups = {EDIT.class})
     private String code;
 
     /**
      * 会计科目名称
      */
+    @NotBlank(message = "会计科目名称不能为空",groups = {EDIT.class})
     private String accountanName;
 
     /**
      * 本年借方累计数
      */
+    @NotNull(message = "本年借方累计数不能为空",groups = {EDIT.class})
     private Double yearBorrowerNum;
 
     /**
      * 本年贷方累计数
      */
+    @NotNull(message = "本年贷方累计数不能为空",groups = {EDIT.class})
     private Double yearLenderNum;
 
     /**
      * 方向
      */
+    @NotNull(message = "方向数不能为空",groups = {EDIT.class})
     private BalanceDirection balanceDirection;
 
     /**
      * 期初余额
      */
+    @NotNull(message = "期初余额数不能为空",groups = {EDIT.class})
     private Double begingBalance;
 
     /**
      * 本年损益类累计数
      */
+    @NotNull(message = "本年损益类累计数不能为空",groups = {EDIT.class})
     private Double yearProfitLossNum;
 
 

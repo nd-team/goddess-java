@@ -5,6 +5,7 @@ import com.bjike.goddess.financeinit.bo.CompanyBasicInfoBO;
 import com.bjike.goddess.financeinit.dto.CompanyBasicInfoDTO;
 import com.bjike.goddess.financeinit.service.CompanyBasicInfoSer;
 import com.bjike.goddess.financeinit.to.CompanyBasicInfoTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ import java.util.List;
 public class CompanyBasicInfoApiImpl implements CompanyBasicInfoAPI {
     @Autowired
     private CompanyBasicInfoSer companyBasicInfoSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return companyBasicInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return companyBasicInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countBasicInfo(CompanyBasicInfoDTO companyBasicInfoDTO) throws SerException {

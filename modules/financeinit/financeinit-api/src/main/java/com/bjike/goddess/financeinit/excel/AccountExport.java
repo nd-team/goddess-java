@@ -20,7 +20,6 @@ import javax.persistence.Table;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
 public class AccountExport extends BaseBO {
 
     /**
