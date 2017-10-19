@@ -5,15 +5,16 @@ import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.bo.InfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
-import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -201,48 +202,84 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
     }
 
     /**
+     * 中国移动采购与招标网总条数(每页20条)
+     *
+     * @throws SerException
+     */
+    Long infoTotal() throws SerException;
+
+    /**
      * 中国移动采购与招标网获取信息
      *
-     * @param to
+     * @param dto
      * @return class InfoBO
      * @throws SerException
      */
-    List<InfoBO> info(SearchTO to) throws SerException;
+    List<InfoBO> info(SearchDTO dto) throws SerException;
+    /**
+     * 工信部招标网总条数(每页11条)
+     *
+     * @throws SerException
+     */
+    Long txzbTotal() throws SerException;
+
 
     /**
      * 工信部招标网获取信息
      *
-     * @param to
-     * @return
+     * @param dto
+     * @return class InfoBO
      * @throws SerException
      */
-    List<InfoBO> txzbInfo(SearchTO to) throws SerException;
+    List<InfoBO> txzbInfo(SearchDTO dto) throws SerException;
 
     /**
      * 中央政府采购网获取信息
      *
-     * @param to
-     * @return
+     * @param dto
+     * @return class InfoBO
      * @throws SerException
      */
-    List<InfoBO> zycgInfo(SearchTO to) throws SerException;
+    List<InfoBO> zycgInfo(SearchDTO dto) throws SerException;
+
+    /**
+     * 中央政府采购网总条数
+     *
+     * @throws SerException
+     */
+    Long zycyTotal() throws SerException;
+
     /**
      * 中国警务招标网获取信息
      *
-     * @param to
-     * @return
+     * @param dto
+     * @return class InfoBO
      * @throws SerException
      */
-    List<InfoBO> caigouInfo(SearchTO to) throws SerException;
+    List<InfoBO> caigouInfo(SearchDTO dto) throws SerException;
+
+    /**
+     * 中国警务招标网总条数
+     *
+     * @throws SerException
+     */
+    Long caigouTotal() throws SerException;
 
     /**
      * 中国电力招标网获取信息
      *
-     * @param to
-     * @return
+     * @param dto
+     * @return class InfoBO
      * @throws SerException
      */
-    List<InfoBO> toobiaoInfo(SearchTO to) throws SerException;
+    List<InfoBO> toobiaoInfo(SearchDTO dto) throws SerException;
+
+    /**
+     * 中国电力招标网总条数(每页23条)
+     *
+     * @throws SerException
+     */
+    Long toobiaoTotal() throws SerException;
 
     /**
      * 中国学校招标网获取信息
@@ -251,5 +288,5 @@ public interface BiddingInfoSer extends Ser<BiddingInfo, BiddingInfoDTO> {
      * @return
      * @throws SerException
      */
-    List<String> schoolbidInfo(SearchTO to) throws SerException;
+//    List<String> schoolbidInfo(SearchTO to) throws SerException;
 }

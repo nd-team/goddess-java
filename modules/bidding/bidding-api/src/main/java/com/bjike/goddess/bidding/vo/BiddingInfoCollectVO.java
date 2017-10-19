@@ -1,5 +1,8 @@
 package com.bjike.goddess.bidding.vo;
 
+import org.dom4j.io.STAXEventReader;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -7,12 +10,58 @@ import java.util.Map;
  */
 public class BiddingInfoCollectVO {
 
+//    /**
+//     * 地市
+//     */
+//    private List<String> cities;
+//    private Map<String, Integer> biddingMap;
+//    private Map<String,Integer> businessMap;
     /**
-     * 地市
+     * 招投标类型汇总集合
+     */
+    private List<Map<String, String>> biddingMap;
+    /**
+     * 业务类型汇总集合
+     */
+    private List<Map<String, String>> businessMap;
+    /**
+     * 个数
+     */
+    private Integer counts;
+
+    /**
+     * 地区
      */
     private String cities;
-    private Map<String, Integer> biddingMap;
-    private Map<String,Integer> businessMap;
+
+    /**
+     * remark
+     */
+    private String remark;
+
+    public List<Map<String, String>> getBiddingMap() {
+        return biddingMap;
+    }
+
+    public void setBiddingMap(List<Map<String, String>> biddingMap) {
+        this.biddingMap = biddingMap;
+    }
+
+    public List<Map<String, String>> getBusinessMap() {
+        return businessMap;
+    }
+
+    public void setBusinessMap(List<Map<String, String>> businessMap) {
+        this.businessMap = businessMap;
+    }
+
+    public Integer getCounts() {
+        return counts;
+    }
+
+    public void setCounts(Integer counts) {
+        this.counts = counts;
+    }
 
     public String getCities() {
         return cities;
@@ -22,19 +71,11 @@ public class BiddingInfoCollectVO {
         this.cities = cities;
     }
 
-    public Map<String, Integer> getBiddingMap() {
-        return biddingMap;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setBiddingMap(Map<String, Integer> biddingMap) {
-        this.biddingMap = biddingMap;
-    }
-
-    public Map<String, Integer> getBusinessMap() {
-        return businessMap;
-    }
-
-    public void setBusinessMap(Map<String, Integer> businessMap) {
-        this.businessMap = businessMap;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

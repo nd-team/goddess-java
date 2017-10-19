@@ -193,6 +193,7 @@ public class BiddingInfoTO extends BaseTO {
     /**
      * 项目测算是否通过
      */
+    @NotNull(message = "项目测算是否通过不能为空",groups = {ADD.class, EDIT.class})
     private Boolean passProjectEstimates;
     /**
      * 规模数量

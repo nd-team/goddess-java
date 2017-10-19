@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.receivable.bo.BackProgressBO;
@@ -21,12 +22,12 @@ import com.bjike.goddess.receivable.to.YearCollectTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -1063,9 +1064,9 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         StringBuilder officeSql = new StringBuilder();
         officeSql.append(" SELECT '办事处副总审批' AS subject,sum(A.taskCase) AS total,A.officeAudit AS time FROM" +
                 "  (SELECT  taskCase,substring(officeAudit,6,2)as officeAudit" +
-                "  FROM receivable_backprogress where officeAudit BETWEEN  '"+start+"' AND  '"+end+"')A GROUP BY A.officeAudit");
-        List<CollectBO> officeBOS = super.findBySql(officeSql.toString(),CollectBO.class,field);
-        if(officeBOS != null && officeBOS.size()>0){
+                "  FROM receivable_backprogress where officeAudit BETWEEN  '" + start + "' AND  '" + end + "')A GROUP BY A.officeAudit");
+        List<CollectBO> officeBOS = super.findBySql(officeSql.toString(), CollectBO.class, field);
+        if (officeBOS != null && officeBOS.size() > 0) {
             CollectDetailBO bo = new CollectDetailBO();
             officeBOS.stream().forEach(str -> {
                 Double money = str.getTotal();
@@ -1161,9 +1162,9 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         StringBuilder clearingSql = new StringBuilder();
         clearingSql.append(" SELECT '制作结算资料' AS subject,sum(A.taskCase) AS total,A.clearingData AS time FROM" +
                 "  (SELECT  taskCase,substring(clearingData,6,2)as clearingData" +
-                "   FROM receivable_backprogress where clearingData BETWEEN  '"+start+"' AND  '"+end+"')A GROUP BY A.clearingData ");
-        List<CollectBO> clearingBOS = super.findBySql(clearingSql.toString(),CollectBO.class,field);
-        if(clearingBOS != null && clearingBOS.size()>0){
+                "   FROM receivable_backprogress where clearingData BETWEEN  '" + start + "' AND  '" + end + "')A GROUP BY A.clearingData ");
+        List<CollectBO> clearingBOS = super.findBySql(clearingSql.toString(), CollectBO.class, field);
+        if (clearingBOS != null && clearingBOS.size() > 0) {
             CollectDetailBO bo = new CollectDetailBO();
             clearingBOS.stream().forEach(str -> {
                 Double money = str.getTotal();
@@ -1259,9 +1260,9 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         StringBuilder softSql = new StringBuilder();
         softSql.append(" SELECT '软调报告' AS subject,sum(A.taskCase) AS total,A.softCoreReport AS time FROM" +
                 "  (SELECT  taskCase,substring(softCoreReport,6,2)as softCoreReport" +
-                "   FROM receivable_backprogress where softCoreReport BETWEEN  '"+start+"' AND  '"+end+"')A GROUP BY A.softCoreReport ");
-        List<CollectBO> softBOS = super.findBySql(softSql.toString(),CollectBO.class,field);
-        if(softBOS != null && softBOS.size()>0){
+                "   FROM receivable_backprogress where softCoreReport BETWEEN  '" + start + "' AND  '" + end + "')A GROUP BY A.softCoreReport ");
+        List<CollectBO> softBOS = super.findBySql(softSql.toString(), CollectBO.class, field);
+        if (softBOS != null && softBOS.size() > 0) {
             CollectDetailBO bo = new CollectDetailBO();
             softBOS.stream().forEach(str -> {
                 Double money = str.getTotal();
@@ -1357,9 +1358,9 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         StringBuilder signatureSql = new StringBuilder();
         signatureSql.append(" SELECT '签字' AS subject,sum(A.taskCase) AS total,A.signature AS time FROM" +
                 "  (SELECT  taskCase,substring(signature,6,2)as signature" +
-                "   FROM receivable_backprogress where signature BETWEEN  '"+start+"' AND  '"+end+"')A GROUP BY A.signature");
-        List<CollectBO> signatureBOS = super.findBySql(signatureSql.toString(),CollectBO.class,field);
-        if(signatureBOS!= null &&  signatureBOS.size()>0){
+                "   FROM receivable_backprogress where signature BETWEEN  '" + start + "' AND  '" + end + "')A GROUP BY A.signature");
+        List<CollectBO> signatureBOS = super.findBySql(signatureSql.toString(), CollectBO.class, field);
+        if (signatureBOS != null && signatureBOS.size() > 0) {
             CollectDetailBO bo = new CollectDetailBO();
             signatureBOS.stream().forEach(str -> {
                 Double money = str.getTotal();
@@ -1455,9 +1456,9 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         StringBuilder completeSql = new StringBuilder();
         completeSql.append(" SELECT '完工时间' AS subject,sum(A.taskCase) AS total,A.completeTime AS time FROM" +
                 "  (SELECT  taskCase,substring(completeTime,6,2)as completeTime" +
-                "   FROM receivable_backprogress where completeTime BETWEEN  '"+start+"' AND  '"+end+"')A GROUP BY A.completeTime ");
-        List<CollectBO> completeBOS = super.findBySql(completeSql.toString(),CollectBO.class,field);
-        if(completeBOS != null && completeBOS.size()>0){
+                "   FROM receivable_backprogress where completeTime BETWEEN  '" + start + "' AND  '" + end + "')A GROUP BY A.completeTime ");
+        List<CollectBO> completeBOS = super.findBySql(completeSql.toString(), CollectBO.class, field);
+        if (completeBOS != null && completeBOS.size() > 0) {
             CollectDetailBO bo = new CollectDetailBO();
             completeBOS.stream().forEach(str -> {
                 Double money = str.getTotal();
@@ -1548,16 +1549,118 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
                     bo.getOctober() + bo.getNovember() + bo.getDecember();
             bo.setTotal(total);
             collectDetailBOS.add(bo);
+            try {
+                subtotal(collectDetailBOS);
+                aduitMoney(collectDetailBOS);
+                dataMoney(collectDetailBOS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        //结算资料完成金额
-        CollectDetailBO bo = new CollectDetailBO();
-        bo.setSubject("结算资料完成金额");
-        signatureBOS.stream().forEach(str->{
-        });
-        if(bo.getJanuary() == null){
-            bo.setJanuary(0d);
-        }
-        collectDetailBOS.add(bo);
+
+
         return collectDetailBOS;
+    }
+
+    //小计
+    private void subtotal(List<CollectDetailBO> collectDetailBOS) throws Exception {
+        CollectDetailBO detailBO = new CollectDetailBO();
+        detailBO.setSubject("小计");
+        Double total = 0.0;
+        String[] collectFields = new String[]{"january", "february", "march", "april", "may", "june",
+                "july", "august", "september", "october", "november", "december"};
+        for (String f : collectFields) {
+            for (CollectDetailBO bo : collectDetailBOS) {
+                if (bo.getSubject().equals("主营业务收入") || bo.getSubject().equals("预收帐款时间")) {
+                    List<Field> fields = ClazzUtils.getFields(bo.getClass());
+                    for (Field field : fields) {
+                        if (f.equals(field.getName())) {
+                            field.setAccessible(true);
+                            Object val = field.get(bo);
+                            setVal(detailBO, f, val);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+        total = detailBO.getJanuary() + detailBO.getFebruary() + detailBO.getMarch() + detailBO.getApril() +
+                detailBO.getMay() + detailBO.getJune() + detailBO.getJuly() + detailBO.getAugust() + detailBO.getSeptember() +
+                detailBO.getOctober() + detailBO.getNovember() + detailBO.getDecember();
+
+        detailBO.setTotal(total);
+        collectDetailBOS.add(detailBO);
+    }
+    //审批完成金额
+    private void aduitMoney(List<CollectDetailBO> collectDetailBOS) throws Exception{
+        CollectDetailBO detailBO = new CollectDetailBO();
+        detailBO.setSubject("审批完成金额");
+        Double total = 0.0;
+        String[] collectFields = new String[]{"january", "february", "march", "april", "may", "june",
+                "july", "august", "september", "october", "november", "december"};
+        for(String f:collectFields){
+            for(CollectDetailBO bo:collectDetailBOS){
+                if(bo.getSubject().equals("资料上传ERP系统") || bo.getSubject().equals("群主（项目经理）审核")
+                        ||bo.getSubject().equals("预接收申请") || bo.getSubject().equals("外包经理审核")
+                        ||bo.getSubject().equals("办事处副总审批")){
+                    List<Field> fields = ClazzUtils.getFields(bo.getClass());
+                    for(Field field:fields){
+                        if(f.equals(field.getName())){
+                            field.setAccessible(true);
+                            Object val = field.get(bo);
+                            setVal(detailBO,f,val);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        total = detailBO.getJanuary() + detailBO.getFebruary() + detailBO.getMarch() + detailBO.getApril() +
+                detailBO.getMay() + detailBO.getJune() + detailBO.getJuly() + detailBO.getAugust() + detailBO.getSeptember() +
+                detailBO.getOctober() + detailBO.getNovember() + detailBO.getDecember();
+        detailBO.setTotal(total);
+        collectDetailBOS.add(detailBO);
+    }
+    //结算资料完成金额
+    private void dataMoney(List<CollectDetailBO> collectDetailBOS) throws Exception{
+        CollectDetailBO detailBO = new CollectDetailBO();
+        detailBO.setSubject("结算资料完成金额");
+        Double total = 0.0;
+        String[] collectFields = new String[]{"january", "february", "march", "april", "may", "june",
+                "july", "august", "september", "october", "november", "december"};
+        for(String f:collectFields){
+            for(CollectDetailBO bo:collectDetailBOS){
+                if(bo.getSubject().equals("制作结算资料") || bo.getSubject().equals("软调报告")
+                        ||bo.getSubject().equals("签字")){
+                    List<Field> fields = ClazzUtils.getFields(bo.getClass());
+                    for(Field field:fields){
+                        if(f.equals(field.getName())){
+                            field.setAccessible(true);
+                            Object val = field.get(bo);
+                            setVal(detailBO,f,val);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        total = detailBO.getJanuary() + detailBO.getFebruary() + detailBO.getMarch() + detailBO.getApril() +
+                detailBO.getMay() + detailBO.getJune() + detailBO.getJuly() + detailBO.getAugust() + detailBO.getSeptember() +
+                detailBO.getOctober() + detailBO.getNovember() + detailBO.getDecember();
+        detailBO.setTotal(total);
+        collectDetailBOS.add(detailBO);
+    }
+    private void setVal(CollectDetailBO detailBO, String fieldName, Object val) throws Exception {
+        List<Field> fields = ClazzUtils.getFields(detailBO.getClass());
+        for (Field field : fields) {
+            if (fieldName.equals(field.getName())) {
+                field.setAccessible(true);
+                double v = null != val ? Double.parseDouble(String.valueOf(val)) : 0;
+                double o_v = field.get(detailBO) != null ? Double.parseDouble(String.valueOf(field.get(detailBO))) : 0;
+                field.set(detailBO, v + o_v);
+                break;
+            }
+        }
     }
 }

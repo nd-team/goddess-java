@@ -253,9 +253,9 @@ public class BiddingWebInfoAction {
     @GetMapping("v1/getWebInfo")
     public Result getWebInfo(String webName, HttpServletRequest request) throws ActException {
         try {
-            logger.info("获取网站信息开始:" + webName);
+//            logger.info("获取网站信息开始:" + webName);
             BiddingWebInfoBO biddingWebInfoBO = biddingWebInfoAPI.getWebInfo(webName);
-            logger.info("获取网站信息结果:" + webName);
+//            logger.info("获取网站信息结果:" + webName);
             return ActResult.initialize(BeanTransform.copyProperties(biddingWebInfoBO, BiddingWebInfoVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

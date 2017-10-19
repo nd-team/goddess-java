@@ -37,7 +37,7 @@ public interface AccountInfoManagementSer extends Ser<AccountInfoManagement, Acc
     /**
      * 外账资料管理列表总条数
      */
-    default Long countAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
+    default Long count(AccountInfoManagementDTO dto) throws SerException {
         return null;
     }
     /**
@@ -52,33 +52,33 @@ public interface AccountInfoManagementSer extends Ser<AccountInfoManagement, Acc
     /**
      * 外账资料管理
      *
-     * @param accountInfoManagementDTO 外账资料管理dto
+     * @param dto 外账资料管理dto
      * @return class AccountInfoManagementBO
      * @throws SerException
      */
-    default List<AccountInfoManagementBO> findListAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
+    default List<AccountInfoManagementBO> list(AccountInfoManagementDTO dto) throws SerException {
         return null;
     }
 
     /**
      * 添加外账资料管理
      *
-     * @param accountInfoManagementTO 外账资料管理数据to
+     * @param to 外账资料管理数据to
      * @return class AccountInfoManagementBO
      * @throws SerException
      */
-    default AccountInfoManagementBO insertAccountInfoManagement(AccountInfoManagementTO accountInfoManagementTO) throws SerException {
+    default AccountInfoManagementBO insert(AccountInfoManagementTO to) throws SerException {
         return null;
     }
 
     /**
      * 编辑外账资料管理
      *
-     * @param accountInfoManagementTO 外账资料管理数据to
+     * @param to 外账资料管理数据to
      * @return class AccountInfoManagementBO
      * @throws SerException
      */
-    default AccountInfoManagementBO editAccountInfoManagement(AccountInfoManagementTO accountInfoManagementTO) throws SerException {
+    default AccountInfoManagementBO edit(AccountInfoManagementTO to) throws SerException {
         return null;
     }
 
@@ -88,7 +88,7 @@ public interface AccountInfoManagementSer extends Ser<AccountInfoManagement, Acc
      * @param id
      * @throws SerException
      */
-    default void removeAccountInfoManagement(String id) throws SerException {
+    default void remove(String id) throws SerException {
 
     }
 

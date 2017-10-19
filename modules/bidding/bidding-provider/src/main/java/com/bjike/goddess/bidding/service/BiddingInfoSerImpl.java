@@ -5,6 +5,7 @@ import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.bo.InfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
 import com.bjike.goddess.bidding.excel.BiddingInfoExport;
@@ -12,7 +13,6 @@ import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
-import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -358,10 +358,10 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     @Override
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         checkAddIdentity();
-        checkDate(biddingInfoTO);
+//        checkDate(biddingInfoTO);
         BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true, "tenderModule");
         biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(), ","));
-        if (biddingInfo.getPassProjectEstimates().equals(0)) {
+        if (biddingInfo.getPassProjectEstimates().equals(false)) {
             biddingInfo.setOpportunity(false);
         } else {
             biddingInfo.setOpportunity(true);
@@ -379,10 +379,10 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
         BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true, "tenderModule");
-        checkDate(biddingInfoTO);
+//        checkDate(biddingInfoTO);
         biddingInfo.setModifyTime(LocalDateTime.now());
         biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(), ","));
-        if (biddingInfo.getPassProjectEstimates().equals(0)) {
+        if (biddingInfo.getPassProjectEstimates().equals(false)) {
             biddingInfo.setOpportunity(false);
         } else {
             biddingInfo.setOpportunity(true);
@@ -433,57 +433,151 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 
     @Override
     public List<BiddingInfoCollectBO> collectBiddingInfo(String[] cities) throws SerException {
-        if (cities == null || cities.length <= 0) {
-            throw new SerException("汇总失败，请选择地市");
-        }
         List<BiddingInfoCollectBO> boList = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < cities.length; i++) {
-            if (i == cities.length - 1) {
-                sb.append("'" + cities[i] + "'");
-            } else {
-                sb.append("'" + cities[i] + "',");
-            }
+        List<String> citie = Arrays.asList(cities);
+        BiddingInfoDTO dto = new BiddingInfoDTO();
+        List<BiddingInfo> biddingInfos = super.findByCis(dto);
+        //招投标类型
+        String biddingType = null;
+        List<String> biddingTypes = new ArrayList<>();
+        for (BiddingInfo biddingInfo : biddingInfos) {
+            biddingType = biddingInfo.getBiddingType();
+            biddingTypes.add(biddingType);
         }
 
-        String sql = "SELECT biddingType,count(biddingType) as count FROM bidding_biddinginfo " +
-                "WHERE cities IN (" + sb.toString() + ") GROUP BY biddingType ";
-        List<Object> objects = super.findBySql(sql);
-        Map<String, Integer> map = new HashMap<>(objects.size());
-        if (null != objects && objects.size() > 0) {
-            for (Object o : objects) {
-                Object[] val = (Object[]) o;
-                map.put(String.valueOf(val[0]), Integer.parseInt(String.valueOf(val[1])));
-            }
-
+        StringBuffer biddingTypesStr = new StringBuffer("");
+        for (String type : biddingTypes) {
+            biddingTypesStr.append("'" + type + "'" + ",");
         }
-
-        sql = " SELECT businessType,count(businessType) AS count " +
-                "FROM bidding_biddinginfo WHERE cities IN (" + sb.toString() + ") GROUP BY businessType ";
-        List<Object> object = super.findBySql(sql);
-        Map<String, Integer> businessMap = new HashMap<>(object.size());
-        if (null != object && object.size() > 0) {
-            for (Object o : object) {
-                Object[] val = (Object[]) o;
-                businessMap.put(String.valueOf(val[0]), Integer.parseInt(String.valueOf(val[1])));
-            }
-
+        //业务类型
+        String businessType = null;
+        List<String> businessTypes = new ArrayList<>();
+        for (BiddingInfo biddingInfo : biddingInfos) {
+            businessType = biddingInfo.getBusinessType();
+            businessTypes.add(businessType);
         }
+        StringBuffer businessTypeStr = new StringBuffer("");
+        for (String type : businessTypes) {
+            businessTypeStr.append("'" + type + "'" + ",");
+        }
+        for (String citieStr : citie) {
+            String[] fields = new String[]{"cities", "counts", "remark"};
+            //招投标类型
+            String sql = " SELECT cities AS cities,count(*) as counts,biddingType AS remark " +
+                    " FROM bidding_biddinginfo " +
+                    " WHERE biddingType IN (" + StringUtils.substringBeforeLast(biddingTypesStr + "", ",") + ") AND cities = '" + citieStr + "' GROUP BY biddingType,cities ORDER BY biddingType asc ";
+            List<Map<String, String>> biddingMap = new ArrayList<>();
+            List<BiddingInfoCollectBO> collectBOS = super.findBySql(sql, BiddingInfoCollectBO.class, fields);
+            biddingMap = sqlQueryString(biddingTypes, collectBOS, biddingMap);
+            //业务类型
+            String sql1 = " SELECT cities AS cities,count(*) as count,businessType AS businessType" +
+                    " FROM bidding_biddinginfo" +
+                    " WHERE businessType IN (" + StringUtils.substringBeforeLast(businessTypeStr + "", ",") + ") AND cities = '"+citieStr+"' GROUP BY businessType,cities ORDER BY businessType asc ";
+            List<Map<String, String>> businessMap = new ArrayList<>();
+            collectBOS = super.findBySql(sql1, BiddingInfoCollectBO.class, fields);
+            businessMap = sqlQueryString(businessTypes, collectBOS, businessMap);
+
+            BiddingInfoCollectBO bo = new BiddingInfoCollectBO();
+            bo.setCities(citieStr);
+            bo.setBiddingMap(biddingMap);
+            bo.setBusinessMap(businessMap);
+            boList.add(bo);
+        }
+        boList = calculate(citie,biddingTypes,businessTypes,boList);
+        return boList;
+
+    }
+    private List<BiddingInfoCollectBO> calculate(List<String> cities,List<String> biddingTypes,
+                                                 List<String> businessTypes,List<BiddingInfoCollectBO> boList)throws SerException{
+        StringBuffer citiesStr = new StringBuffer("");
+        for (String citie : cities) {
+            citiesStr.append("'" + citie + "',");
+        }
+        StringBuffer biddingTypesStr = new StringBuffer("");
+        for (String biddingType : biddingTypes) {
+            biddingTypesStr.append("'" + biddingType + "',");
+        }
+        StringBuffer businessTypesStr = new StringBuffer("");
+        for (String businessType : businessTypes) {
+            businessTypesStr.append("'" + businessType + "',");
+        }
+        String[] fields = new String[]{"counts", "remark"};
+        //招投标类型
+        String sql = " SELECT count(*) as counts,biddingType AS remark " +
+                " FROM bidding_biddinginfo " +
+                " WHERE biddingType IN (" + StringUtils.substringBeforeLast(biddingTypesStr + "", ",") + ") AND cities in(" + StringUtils.substringBeforeLast(citiesStr + "", ",") + ") GROUP BY biddingType ORDER BY biddingType asc ";
+        List<Map<String, String>> biddingMap = new ArrayList<>();
+        List<BiddingInfoCollectBO> collectBOS = super.findBySql(sql, BiddingInfoCollectBO.class, fields);
+        biddingMap = sqlQueryString(biddingTypes, collectBOS, biddingMap);
+        //业务类型
+        String sql1 = " SELECT count(*) as count,businessType AS businessType" +
+                " FROM bidding_biddinginfo" +
+                " WHERE businessType IN (" + StringUtils.substringBeforeLast(businessTypesStr + "", ",") + ") AND cities in (" + StringUtils.substringBeforeLast(citiesStr + "", ",") + ") GROUP BY businessType ORDER BY businessType asc ";
+        List<Map<String, String>> businessMap = new ArrayList<>();
+        collectBOS = super.findBySql(sql1, BiddingInfoCollectBO.class, fields);
+        businessMap = sqlQueryString(businessTypes, collectBOS, businessMap);
+
         BiddingInfoCollectBO bo = new BiddingInfoCollectBO();
-        StringBuilder sb1 = new StringBuilder();
-        for (int i = 0; i < cities.length; i++) {
-            if (i == cities.length - 1) {
-                sb1.append("" + cities[i] + "");
-            } else {
-                sb1.append("" + cities[i] + ",");
-            }
-        }
-        bo.setCities(sb1.toString());
-        bo.setBiddingMap(map);
+        bo.setCities("合计");
+        bo.setBiddingMap(biddingMap);
         bo.setBusinessMap(businessMap);
         boList.add(bo);
         return boList;
     }
+
+    /**
+     * 数据库查询返回，然后添加map数组
+     */
+    public List<Map<String, String>> sqlQueryString(List<String> obj, List<BiddingInfoCollectBO> collectBOS, List<Map<String, String>> mapList) throws SerException {
+        if (collectBOS != null && collectBOS.size() > 0) {
+            if (obj.size() == collectBOS.size()) {
+                for (BiddingInfoCollectBO cbo : collectBOS) {
+                    Map<String, String> areaMap = new HashMap<>();
+                    areaMap.put("remark", cbo.getRemark());
+                    areaMap.put("counts", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
+                    mapList.add(areaMap);
+                }
+            } else if (collectBOS.size() < obj.size()) {
+                List<String> cbStr = new ArrayList<>();
+                for (BiddingInfoCollectBO cb : collectBOS) {
+                    cbStr.add(cb.getRemark());
+                }
+
+                //获取到所有不同的  如：地区
+                List<String> diffrent = new ArrayList<>();
+                for (String o : obj) {
+                    if (!cbStr.contains(o)) {
+                        diffrent.add(o);
+                    }
+                }
+
+                //存map
+                for (BiddingInfoCollectBO cbo : collectBOS) {
+                    Map<String, String> areaMap = new HashMap<>();
+                    areaMap.put("remark", cbo.getRemark());
+                    areaMap.put("counts", String.valueOf(cbo.getCounts() == null ? 0 : cbo.getCounts()));
+                    mapList.add(areaMap);
+                }
+                for (String dif : diffrent) {
+                    Map<String, String> areaMap = new HashMap<>();
+                    areaMap.put("remark", dif);
+                    areaMap.put("counts", String.valueOf(0));
+                    mapList.add(areaMap);
+                }
+
+
+            }
+        }
+        Collections.sort(mapList, new Comparator<Map<String, String>>() {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2) {
+                //进行判断
+                return ((String) o1.get("remark")).compareTo((String) o2.get("remark"));
+            }
+        });
+        return mapList;
+    }
+
 
     @Override
     public BiddingInfoBO getBidding(String biddingNumber) throws SerException {
@@ -696,7 +790,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
 //    @Override
-//    public List<String> info(SearchTO to) throws SerException {
+//    public List<String> info(SearchDTO to) throws SerException {
 //        try {
 
     //创建连接
@@ -785,20 +879,32 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
 //            throw new SerException(e.getMessage());
 //        }
 //    }
+
+
     @Override
-    public List<InfoBO> info(SearchTO to) throws SerException {
+    public Long infoTotal() throws SerException {
+        long limit = 20;
+        long totals = 10 * limit;
+        return totals;
+    }
+
+
+    @Override
+    public List<InfoBO> info(SearchDTO dto) throws SerException {
         try {
             List<InfoBO> boList = new ArrayList<>();
             String url = "https://b2b.10086.cn/b2b/main/listVendorNoticeResult.html?noticeBean.noticeType=2";
             HttpPost request = new HttpPost(url);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("page.currentPage", "1"));
-            params.add(new BasicNameValuePair("page.perPageSize", "200"));
+            String page = String.valueOf(dto.getPage() + 1);
+            String limit = String.valueOf(21);
+            params.add(new BasicNameValuePair("page.currentPage", page));
+            params.add(new BasicNameValuePair("page.perPageSize", limit));
             params.add(new BasicNameValuePair("noticeBean.sourceCH", ""));
             params.add(new BasicNameValuePair("noticeBean.source", ""));
-            params.add(new BasicNameValuePair("noticeBean.title", to.getTitle()));
-            params.add(new BasicNameValuePair("noticeBean.startDate", to.getStartTime()));
-            params.add(new BasicNameValuePair("noticeBean.endDate", to.getEndTime()));
+            params.add(new BasicNameValuePair("noticeBean.title", dto.getTitle()));
+            params.add(new BasicNameValuePair("noticeBean.startDate", dto.getStartTime()));
+            params.add(new BasicNameValuePair("noticeBean.endDate", dto.getEndTime()));
 
             request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
@@ -817,7 +923,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
     }
 
-    public static List<InfoBO> init(String content) {
+    private static List<InfoBO> init(String content) {
         List<InfoBO> infoBOS = new ArrayList<>();
         String[] strings = content.split("</tr>");
         boolean first = true;
@@ -847,64 +953,27 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
     @Override
-    public List<InfoBO> txzbInfo(SearchTO to) throws SerException {
-//        try {
-//            String url = "http://txzb.miit.gov.cn/DispatchAction.do?reg=denglu&pagesize=11";
-//            HttpPost request = new HttpPost(url);
-//            List<NameValuePair> params = new ArrayList<NameValuePair>();
-//            params.add(new BasicNameValuePair("efFormEname", "POIX14"));
-//            params.add(new BasicNameValuePair("methodName", "initLoad"));
-//            params.add(new BasicNameValuePair("name", "中国"));
-//            params.add(new BasicNameValuePair("date1", ""));
-//            params.add(new BasicNameValuePair("date2", ""));
-//
-//            request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-//
-//            HttpClient client = HttpClients.createDefault();
-//            HttpResponse response = client.execute(request);
-//            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-//
-//            StringBuilder sb = new StringBuilder();
-//            sb.append(content);
-//
-//            if (content.contains(to.getTitle())) {
-////                if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
-//
-//
-//                String a = content.replaceAll("\\r|\\n|\\t", "");
+    public Long txzbTotal() throws SerException {
+        long limit = 11;
+        long totals = 20 * limit;
+        return totals;
+    }
+
+    @Override
+    public List<InfoBO> txzbInfo(SearchDTO dto) throws SerException {
 //                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>" + to.getTitle() + "([^<]*)</a>");
-//                Matcher matcher = pattern.matcher(a);
-//                List<String> list = new ArrayList<>();
-//                List<String> list1 = new ArrayList<>();
-//                while (matcher.find()) {
-//                    list.add(matcher.group().toString());
-//                }
-//                for (String s : list) {
-//                    int index = s.indexOf("/");
-//                    StringBuilder target = new StringBuilder(s);
-//                    String string = "<a href=\"https://txzb.miit.gov.cn/";
-//                    if (index > 0) {
-//                        target.delete(0, index);
-//                    }
-//                    list1.add(new StringBuilder(string).append(target).toString());
-//                }
-//                return list1;
-//            }
-//            }
-//            return null;
-//        } catch (Exception e) {
-//            throw new SerException(e.getMessage());
-//        }
         try {
             List<InfoBO> boList = new ArrayList<>();
             String url = "http://txzb.miit.gov.cn/DispatchAction.do?reg=denglu&pagesize=11";
             HttpPost request = new HttpPost(url);
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            String page = String.valueOf(dto.getPage() + 1);
             params.add(new BasicNameValuePair("efFormEname", "POIX14"));
             params.add(new BasicNameValuePair("methodName", "initLoad"));
-            params.add(new BasicNameValuePair("name", to.getTitle()));
-            params.add(new BasicNameValuePair("date1", to.getStartTime()));
-            params.add(new BasicNameValuePair("date2", to.getEndTime()));
+            params.add(new BasicNameValuePair("page", page));
+            params.add(new BasicNameValuePair("name", dto.getTitle()));
+            params.add(new BasicNameValuePair("date1", dto.getStartTime()));
+            params.add(new BasicNameValuePair("date2", dto.getEndTime()));
 
             request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
@@ -926,7 +995,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
     }
 
-    public static List<InfoBO> txzb(String content) {
+    private static List<InfoBO> txzb(String content) {
         List<InfoBO> boList = new ArrayList<>();
         String[] strings = content.split("</tr>");
         for (String s : strings) {
@@ -940,7 +1009,6 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
                 }
                 String date = StringUtils.substringAfterLast(s, "&nbsp; ").trim();
                 date = StringUtils.substringBefore(date, "</a>");
-                System.out.println(name + "--" + id + "--" + date);
                 if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
                     InfoBO infoBO = new InfoBO(name, date, id);
                     boList.add(infoBO);
@@ -950,13 +1018,11 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return boList;
     }
 
-
     @Override
-    public List<InfoBO> zycgInfo(SearchTO to) throws SerException {
+    public List<InfoBO> zycgInfo(SearchDTO dto) throws SerException {
         List<InfoBO> boList = new ArrayList<>();
         try {
-
-            String url = "http://www.zycg.gov.cn/article/article_search?catalog=StockAffiche&page=1";
+            String url = "http://www.zycg.gov.cn/article/article_search?catalog=StockAffiche&page=" + dto.getPage() + 1 + "";
 
             HttpGet request = new HttpGet(url);
             HttpClient client = HttpClients.createDefault();
@@ -967,9 +1033,28 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             sb.append(content);
             content = content.replaceAll("\\r|\\n|\\t", "");
             List<InfoBO> infoBOS = zycg(content);
+            String startTime = dto.getStartTime();
+            String endTime = dto.getEndTime();
+            LocalDate start = null;
+            LocalDate end = null;
+            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+                start = DateUtil.parseDate(startTime);
+                end = DateUtil.parseDate(endTime);
+            }
             for (InfoBO infoBO : infoBOS) {
-                if (StringUtils.isNotBlank(to.getTitle()) && infoBO.getTitle().contains(to.getTitle())) {
-                    infoBO.setLink("http://www.zycg.gov.cn/article/show/" + infoBO.getId());
+                LocalDate date = DateUtil.parseDate(infoBO.getDate());
+                infoBO.setLink("http://www.zycg.gov.cn/article/show/" + infoBO.getId());
+                if (StringUtils.isNotBlank(dto.getTitle()) && infoBO.getTitle().contains(dto.getTitle()) && (null != start) && (null != end)) {
+                    if ((date.isAfter(start) || date.isEqual(start)) && (date.isBefore(end) || date.isEqual(end))) {
+                        boList.add(infoBO);
+                    }
+                } else if (StringUtils.isNotBlank(dto.getTitle()) && infoBO.getTitle().contains(dto.getTitle())) {
+                    boList.add(infoBO);
+                } else if ((null != start) && (null != end)) {
+                    if ((date.isAfter(start) || date.isEqual(start)) && (date.isBefore(end) || date.isEqual(end))) {
+                        boList.add(infoBO);
+                    }
+                } else if (StringUtils.isBlank(dto.getTitle()) && StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)) {
                     boList.add(infoBO);
                 }
             }
@@ -979,11 +1064,38 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
 
     }
-//    private Integer page()throws SerException{
-//
-//    }
 
-    public static List<InfoBO> zycg(String content) {
+    @Override
+    public Long zycyTotal() throws SerException {
+        String url = "http://www.zycg.gov.cn/article/article_search?catalog=StockAffiche";
+        HttpGet request = new HttpGet(url);
+        HttpClient client = HttpClients.createDefault();
+        String content = "";
+        try {
+            HttpResponse response = client.execute(request);
+            content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(content);
+        content = content.replaceAll("\\r|\\n|\\t", "");
+        String reg = "共.+条记录";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(content);
+        long totals = 0;
+        if (matcher.find()) {
+            String s = matcher.group();
+            s = StringUtils.substringAfterLast(s, "共");
+            s = StringUtils.substring(s, 0, -3);
+            totals = Long.parseLong(s);
+        }
+
+        return totals;
+    }
+
+    private static List<InfoBO> zycg(String content) throws SerException {
         List<InfoBO> infoBOS = new ArrayList<>();
         String[] strings = content.split("</li>");
         for (String s : strings) {
@@ -1004,11 +1116,42 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return infoBOS;
     }
 
+
     @Override
-    public List<InfoBO> caigouInfo(SearchTO to) throws SerException {
+    public Long caigouTotal() throws SerException {
+        String url = "http://www.110caigou.com/zhaobiao.asp";
+        HttpGet request = new HttpGet(url);
+        HttpClient client = HttpClients.createDefault();
+        String content = "";
+        try {
+            HttpResponse response = client.execute(request);
+            content = EntityUtils.toString(response.getEntity(), "gb2312");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(content);
+        content = content.replaceAll("\\r|\\n|\\t", "");
+        String reg = "共搜索到.+条信息";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(content);
+        long totals = 0;
+        if (matcher.find()) {
+            String s = matcher.group();
+            s = StringUtils.substringAfterLast(s, "<font color=\"#FF2D00\">[");
+            s = StringUtils.substringBefore(s, "]</font>");
+            totals = Long.parseLong(s);
+        }
+
+        return totals;
+    }
+
+    @Override
+    public List<InfoBO> caigouInfo(SearchDTO dto) throws SerException {
         try {
             List<InfoBO> boList = new ArrayList<>();
-            HttpGet request = new HttpGet("http://www.110caigou.com/zhaobiao.asp");
+            HttpGet request = new HttpGet("http://www.110caigou.com/zhaobiao.asp?Page=" + dto.getPage() + 1 + "");
             HttpClient client = HttpClients.createDefault();
             HttpResponse response = client.execute(request);
             String content = EntityUtils.toString(response.getEntity(), "gb2312");
@@ -1016,11 +1159,30 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             sb.append(content);
             content = content.replaceAll("\\r|\\n|\\t", "");
             List<InfoBO> infoBOS = caigou(content);
+            String startTime = dto.getStartTime();
+            String endTime = dto.getEndTime();
+            LocalDate start = null;
+            LocalDate end = null;
+            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+                start = DateUtil.parseDate(startTime);
+                end = DateUtil.parseDate(endTime);
+            }
             for (InfoBO infoBO : infoBOS) {
-//                if (StringUtils.isNotBlank(to.getTitle()) && to.getTitle().contains(infoBO.getTitle())) {
-                    infoBO.setLink("http://www.110caigou.com/showzhaobiao.asp?id=" + infoBO.getId());
+                LocalDate date = DateUtil.parseDate(infoBO.getDate());
+                infoBO.setLink("http://www.110caigou.com/showzhaobiao.asp?id=" + infoBO.getId());
+                if (StringUtils.isNotBlank(dto.getTitle()) && infoBO.getTitle().contains(dto.getTitle()) && (null != start) && (null != end)) {
+                    if ((date.isAfter(start) || date.isEqual(start)) && (date.isBefore(end) || date.isEqual(end))) {
+                        boList.add(infoBO);
+                    }
+                } else if (StringUtils.isNotBlank(dto.getTitle()) && infoBO.getTitle().contains(dto.getTitle())) {
                     boList.add(infoBO);
-//                }
+                } else if ((null != start) && (null != end)) {
+                    if ((date.isAfter(start) || date.isEqual(start)) && (date.isBefore(end) || date.isEqual(end))) {
+                        boList.add(infoBO);
+                    }
+                } else if (StringUtils.isBlank(dto.getTitle()) && StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)) {
+                    boList.add(infoBO);
+                }
             }
             return boList;
         } catch (Exception e) {
@@ -1036,12 +1198,29 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             if (s.trim().startsWith("<TR")) {
                 String date = StringUtils.substringBefore(s, "]");
                 date = StringUtils.substringAfter(date, "height=35>[").trim();
+                if (date.length() > 0) {
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(date);
+                    String s1 = date.charAt(6) + "";
+                    try {
+                        Integer.parseInt(s1);
+                    } catch (Exception e) {
+                        sb.insert(5, "0");
+                    }
+                    if (sb.length() < 9) {
+                        sb.insert(9, "0");
+                    }
+                    date = sb.toString().replaceAll("/", "-");
+                }
+
                 String id = StringUtils.substringAfter(s, "showzhaobiao.asp?id=");
                 id = StringUtils.substringBefore(id, "\" ").trim();
                 String name = StringUtils.substringBefore(s, "</A>");
                 name = StringUtils.substringAfterLast(name, ">").trim();
                 if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(name) && StringUtils.isNotBlank(id)) {
                     InfoBO infoBO = new InfoBO(name, date, id);
+
                     boList.add(infoBO);
                 }
             }
@@ -1050,10 +1229,17 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     }
 
     @Override
-    public List<InfoBO> toobiaoInfo(SearchTO to) throws SerException {
+    public Long toobiaoTotal() throws SerException {
+        long limit = 23;
+        long totals = 10 * limit;
+        return totals;
+    }
+
+    @Override
+    public List<InfoBO> toobiaoInfo(SearchDTO dto) throws SerException {
         try {
             List<InfoBO> boList = new ArrayList<>();
-            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0";
+            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0&page=" + dto.getPage() + 1 + "";
 
             HttpGet request = new HttpGet(url);
             HttpClient client = HttpClients.createDefault();
@@ -1064,9 +1250,30 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             sb.append(content);
             content = content.replaceAll("\\r|\\n|\\t", "");
             List<InfoBO> infoBOS = dlzb(content);
+            String startTime = dto.getStartTime();
+            String endTime = dto.getEndTime();
+            LocalDate start = null;
+            LocalDate end = null;
+            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+                start = DateUtil.parseDate(startTime);
+                end = DateUtil.parseDate(endTime);
+            }
             for (InfoBO infoBO : infoBOS) {
+                LocalDate date = DateUtil.parseDate(infoBO.getDate());
                 infoBO.setLink("http://www.dlzb.com" + infoBO.getId());
-                boList.add(infoBO);
+                if (StringUtils.isNotBlank(dto.getTitle()) && infoBO.getTitle().contains(dto.getTitle()) && (null != start) && (null != end)) {
+                    if ((date.isAfter(start) || date.isEqual(start)) && (date.isBefore(end) || date.isEqual(end))) {
+                        boList.add(infoBO);
+                    }
+                } else if (StringUtils.isNotBlank(dto.getTitle()) && infoBO.getTitle().contains(dto.getTitle())) {
+                    boList.add(infoBO);
+                } else if ((null != start) && (null != end)) {
+                    if ((date.isAfter(start) || date.isEqual(start)) && (date.isBefore(end) || date.isEqual(end))) {
+                        boList.add(infoBO);
+                    }
+                } else if (StringUtils.isBlank(dto.getTitle()) && StringUtils.isBlank(startTime) && StringUtils.isBlank(endTime)) {
+                    boList.add(infoBO);
+                }
             }
             return boList;
         } catch (Exception e) {
@@ -1074,7 +1281,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         }
     }
 
-    public static List<InfoBO> dlzb(String content) {
+    private static List<InfoBO> dlzb(String content) {
         List<InfoBO> boList = new ArrayList<>();
         String[] strings = content.split("</li>");
         for (String s : strings) {
@@ -1095,88 +1302,50 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return boList;
     }
 
-    @Override
-    public List<String> schoolbidInfo(SearchTO to) throws SerException {
-        try {
-
-            String url = "http://www.schoolbid.cn/search/?l=zb&k=%E4%B8%AD%E5%9B%BD&lb=0&www=www.schoolbid.cn&kb=zb&dq=&rq=365&lx=2&imageField.x=34&imageField.y=20&xdq=&username=&password=";
-
-            HttpGet request = new HttpGet(url);
-            HttpClient client = HttpClients.createDefault();
-            HttpResponse response = client.execute(request);
-            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(content);
-            System.out.println(sb.toString());
-            if (content.contains("中国")) {
-//                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
-                String a = content.replaceAll("\\r|\\n|\\t", "");
-                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>([^<]*)</a>");
-                Matcher matcher = pattern.matcher(a);
-//                Matcher matcher = pattern.matcher(sb.toString());
-                System.out.println(matcher);
-                List<String> list = new ArrayList<>();
-                List<String> list1 = new ArrayList<>();
-                while (matcher.find()) {
-                    list.add(matcher.group().toString());
-                }
-                for (String s : list) {
-                    int index = s.indexOf("/");
-                    StringBuilder target = new StringBuilder(s);
-                    String string = "<a href=\"http://www.schoolbid.cn/";
-                    if (index > 0) {
-                        target.delete(0, index);
-                    }
-                    list1.add(new StringBuilder(string).append(target).toString());
-                }
-                return list1;
-            }
-            return null;
-        } catch (Exception e) {
-            throw new SerException(e.getMessage());
-        }
-
-
-    }
-
-
-    public static void main(String[] args) throws SerException {
-        try {
-
-            String url = "http://www.dlzb.com/zb/search.php?catid=0&areaid=0";
-
-            HttpGet request = new HttpGet(url);
-            HttpClient client = HttpClients.createDefault();
-            HttpResponse response = client.execute(request);
-            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(content);
-            content = content.replaceAll("\\r|\\n|\\t", "");
-            dlzbs(content);
-        } catch (Exception e) {
-            throw new SerException(e.getMessage());
-        }
-
-    }
-
-    public static void dlzbs(String content) {
-        String[] strings = content.split("</li>");
-        for (String s : strings) {
-            if (s.trim().startsWith("<li")) {
-
-                String name = StringUtils.substringBefore(s, "</a>");
-                name = StringUtils.substringAfterLast(name, ">").trim();
-                String id = StringUtils.substringAfter(s, "href=\"http://www.dlzb.com").trim();
-                id = StringUtils.substringBefore(id, "\" target=\"_blank\"");
-                String date = StringUtils.substringBefore(s, "</span>");
-                date = StringUtils.substringAfterLast(date, "class=\"gc_date\">").trim();
-                System.out.println("内容：" + name + "id：" + id + "日期：" + date);
-            }
-        }
-    }
-
+//    @Override
+//    public List<String> schoolbidInfo(SearchDTO dto) throws SerException {
+//        try {
+//
+//            String url = "http://www.schoolbid.cn/search/?l=zb&k=%E4%B8%AD%E5%9B%BD&lb=0&www=www.schoolbid.cn&kb=zb&dq=&rq=365&lx=2&imageField.x=34&imageField.y=20&xdq=&username=&password=";
+//
+//            HttpGet request = new HttpGet(url);
+//            HttpClient client = HttpClients.createDefault();
+//            HttpResponse response = client.execute(request);
+//            String content = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+//
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(content);
+//            System.out.println(sb.toString());
+//            if (content.contains("中国")) {
+////                Pattern pattern = Pattern.compile("<a.+" + "中国" + ".+</a>");
+//                String a = content.replaceAll("\\r|\\n|\\t", "");
+//                Pattern pattern = Pattern.compile("<td[^>]*>\\s*<a[^>]*>([^<]*)</a>");
+//                Matcher matcher = pattern.matcher(a);
+////                Matcher matcher = pattern.matcher(sb.toString());
+//                System.out.println(matcher);
+//                List<String> list = new ArrayList<>();
+//                List<String> list1 = new ArrayList<>();
+//                while (matcher.find()) {
+//                    list.add(matcher.group().toString());
+//                }
+//                for (String s : list) {
+//                    int index = s.indexOf("/");
+//                    StringBuilder target = new StringBuilder(s);
+//                    String string = "<a href=\"http://www.schoolbid.cn/";
+//                    if (index > 0) {
+//                        target.delete(0, index);
+//                    }
+//                    list1.add(new StringBuilder(string).append(target).toString());
+//                }
+//                return list1;
+//            }
+//            return null;
+//        } catch (Exception e) {
+//            throw new SerException(e.getMessage());
+//        }
+//
+//
+//    }
 }
 
 

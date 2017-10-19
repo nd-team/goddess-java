@@ -26,7 +26,7 @@ public class MainIncomeTO extends BaseTO {
     private String time;
 
     /**
-     * 名字
+     * 主营业务收入
      */
 
     @NotBlank(message = "名字不能为空",groups = {MainIncomeTO.TestAdd.class,MainIncomeTO.TestEdit.class})

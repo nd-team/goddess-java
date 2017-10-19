@@ -26,6 +26,19 @@ public class InfoVO {
      */
     private String link;
 
+    /**
+     * 总条数
+     */
+    private Integer total;
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     public String getLink() {
         return link;
     }

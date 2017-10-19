@@ -22,59 +22,59 @@ public class TaxManagementTO extends BaseTO {
     /**
      * 公司
      */
-    @NotBlank(message = "公司不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "公司不能为空", groups = {ADD.class, EDIT.class})
     private String company;
 
     /**
-     * 所属月份
+     * 国地税标志
      */
-    @NotBlank(message = "所属月份不能为空",groups = {ADD.class, EDIT.class})
-    private String month;
+    @NotBlank(message = "国地税标志不能为空", groups = {ADD.class})
+    private String landTaxMark;
+    /**
+     * 税款所属期起
+     */
+    @NotBlank(message = "税款所属期起不能为空", groups = {ADD.class})
+    private String taxStart;
+    /**
+     * 税款所属期止
+     */
+    @NotBlank(message = "税款所属期止不能为空", groups = {ADD.class})
+    private String taxEnd;
 
     /**
-     * 税种
+     * 税种品名
      */
-    @NotBlank(message = "税种不能为空",groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "税种品名不能为空", groups = {ADD.class})
     private String taxType;
 
     /**
      * 税率(%)
      */
-    @NotNull(message = "税率(%)不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "税率(%)不能为空", groups = {ADD.class})
     private Double rate;
 
     /**
      * 税金
      */
-    @NotNull(message = "税金不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "税金不能为空", groups = {ADD.class, EDIT.class})
     private Double tax;
+
+    /**
+     * 申报期限
+     */
+    @NotBlank(message = "申报期限不能为空", groups = {ADD.class})
+    private String deadlineFor;
+    /**
+     * 申报日期
+     */
+    @NotBlank(message = "申报日期不能为空", groups = {ADD.class, EDIT.class})
+    private String deadlineDate;
 
     /**
      * 缴税状态
      */
+    @NotNull(message = "缴税状态不能为空", groups = {ADD.class, EDIT.class})
     private PaymentStatus paymentStatus;
-
-    /**
-     * 付款日期
-     */
-    @NotBlank(message = "付款日期不能为空",groups = {EDIT.class})
-    private String paymentDate;
-
-    /**
-     * 付款单位
-     */
-    @NotBlank(message = "付款单位不能为空",groups = {EDIT.class})
-    private String paymentUnit;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
-
 
     public String getCompany() {
         return company;
@@ -84,12 +84,28 @@ public class TaxManagementTO extends BaseTO {
         this.company = company;
     }
 
-    public String getMonth() {
-        return month;
+    public String getLandTaxMark() {
+        return landTaxMark;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
+    public void setLandTaxMark(String landTaxMark) {
+        this.landTaxMark = landTaxMark;
+    }
+
+    public String getTaxStart() {
+        return taxStart;
+    }
+
+    public void setTaxStart(String taxStart) {
+        this.taxStart = taxStart;
+    }
+
+    public String getTaxEnd() {
+        return taxEnd;
+    }
+
+    public void setTaxEnd(String taxEnd) {
+        this.taxEnd = taxEnd;
     }
 
     public String getTaxType() {
@@ -116,43 +132,27 @@ public class TaxManagementTO extends BaseTO {
         this.tax = tax;
     }
 
+    public String getDeadlineFor() {
+        return deadlineFor;
+    }
+
+    public void setDeadlineFor(String deadlineFor) {
+        this.deadlineFor = deadlineFor;
+    }
+
+    public String getDeadlineDate() {
+        return deadlineDate;
+    }
+
+    public void setDeadlineDate(String deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
 
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
-    }
-
-    public String getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(String paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public String getPaymentUnit() {
-        return paymentUnit;
-    }
-
-    public void setPaymentUnit(String paymentUnit) {
-        this.paymentUnit = paymentUnit;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }
