@@ -96,9 +96,7 @@ public class ExcelUtil {
                                 } else if (null != val) {
                                     setFieldValue(obj, eh.name(), val, fields);
                                 }
-                            }else if(headers.size() <= j){
-                                System.out.println( "cellSize:"+cellSize+"j:"+j+"head:"+headers.size());
-                            }else {
+                            } else {
                                 throw new ActException("不符合导入表格要求");
                             }
 
