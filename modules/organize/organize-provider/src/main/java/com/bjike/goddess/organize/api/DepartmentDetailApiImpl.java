@@ -144,4 +144,10 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public Set<String> departPersons(String departId) throws SerException {
         return departmentDetailSer.departPersons(departId);
     }
+
+    @Override
+    public List<DepartmentDetailBO> departByName(String[] departs) throws SerException {
+        return departmentDetailSer.departByName(departs);
+    }
+
 }

@@ -314,4 +314,13 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
      * 根据员工姓名查询离职信息
      */
     List<DimissionInfo> findByName(String userName) throws SerException;
+
+    /**
+     * chenjunhao
+     * 获取某员工的离职时间
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    String getTime(String name) throws SerException;
 }

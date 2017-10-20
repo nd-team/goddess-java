@@ -7,10 +7,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.api.TaskRemindAPI;
+import com.bjike.goddess.taskallotment.bo.ProjectBO;
+import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.bo.TaskRemindBO;
 import com.bjike.goddess.taskallotment.dto.TaskRemindDTO;
 import com.bjike.goddess.taskallotment.to.TaskRemindTO;
+import com.bjike.goddess.taskallotment.vo.ProjectVO;
+import com.bjike.goddess.taskallotment.vo.TableVO;
 import com.bjike.goddess.taskallotment.vo.TaskRemindVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -34,6 +39,8 @@ import java.util.List;
 public class TaskRemindAction {
     @Autowired
     private TaskRemindAPI taskRemindAPI;
+    @Autowired
+    private ProjectAPI projectAPI;
 
     /**
      * 列表
@@ -150,6 +157,57 @@ public class TaskRemindAction {
         try {
             taskRemindAPI.mail();
             return new ActResult("发送成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目名称
+     *
+     * @return class ProjectVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/projects")
+    public Result projects(HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectBO> list = projectAPI.projects();
+            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目获取项目表
+     *
+     * @param projectId 项目id
+     * @return class TableVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/tables/{projectId}")
+    public Result tables(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+        try {
+            List<TableBO> list = projectAPI.tables(projectId);
+            return ActResult.initialize(BeanTransform.copyProperties(list, TableVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目表获取任务名
+     *
+     * @param tableId 项目表id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/task/names/{tableId}")
+    public Result taskNames(@PathVariable String tableId) throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.tables(tableId));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

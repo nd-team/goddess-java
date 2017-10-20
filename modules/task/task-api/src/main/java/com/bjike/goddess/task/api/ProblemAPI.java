@@ -79,4 +79,13 @@ public interface ProblemAPI {
     default void accept(AcceptTO to) throws SerException {
 
     }
+
+    /**
+     * 通过id查找
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    ProblemBO findByID(String id) throws SerException;
 }

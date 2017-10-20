@@ -26,6 +26,22 @@ public class TaskNodeVO {
      */
     private String tableId;
     /**
+     * 部门
+     */
+    private String depart;
+    /**
+     * 项目名
+     */
+    private String project;
+    /**
+     * 内部项目名称
+     */
+    private String innerProject;
+    /**
+     * 项目表
+     */
+    private String table;
+    /**
      * 发起人
      */
     private String initiate;
@@ -202,6 +218,38 @@ public class TaskNodeVO {
      * 问题信息
      */
     private List<QuestionVO> questions;
+
+    public String getDepart() {
+        return depart;
+    }
+
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getInnerProject() {
+        return innerProject;
+    }
+
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
 
     public Double getEfficiency() {
         return efficiency;
