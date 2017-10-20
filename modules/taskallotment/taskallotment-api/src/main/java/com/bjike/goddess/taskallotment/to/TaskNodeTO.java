@@ -30,6 +30,7 @@ public class TaskNodeTO extends BaseTO {
     public interface WRITE{}
     public interface REPORT{}
     public interface AGAIN{}
+    public interface CONFIRM{}
     /**
      * 地区
      */
@@ -58,7 +59,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 任务名称
      */
-    @NotBlank(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class}, message = "任务名称不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.CONFIRM.class}, message = "任务名称不能为空")
     private String taskName;
 
     /**
@@ -69,7 +70,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 执行人
      */
-    @NotBlank(groups = TaskNodeTO.AGAIN.class,message = "执行人不能为空")
+    @NotBlank(groups = {TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class},message = "执行人不能为空")
     private String execute;
 
     /**
@@ -81,48 +82,49 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 任务类型
      */
-    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class}, message = "任务类型不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.CONFIRM.class}, message = "任务类型不能为空")
     private TaskType taskType;
 
     /**
      * 任务内容
      */
-    @NotBlank(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class}, message = "任务类型不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.CONFIRM.class}, message = "任务类型不能为空")
     private String content;
 
     /**
      * 计划任务量
      */
     @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class}, message = "计划任务量必须大于0")
-    @NotNull(groups = {ADD.class,TaskNodeTO.AGAIN.class}, message = "任务类型不能为空")
+    @NotNull(groups = {ADD.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "任务类型不能为空")
     private Double planNum;
     /**
      * 完成任务量
      */
+    @NotNull(groups = TaskNodeTO.CONFIRM.class,message = "完成任务量不能为空")
     private Double actualNum;
 
     /**
      * 所需时长
      */
-    @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class}, message = "所需时长必须大于0")
+    @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "所需时长必须大于0")
     @NotNull(groups = {ADD.class,TaskNodeTO.AGAIN.class}, message = "所需时长不能为空")
     private Double needTime;
 
     /**
      * 所需时长时间类型
      */
-    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class}, message = "所需时长时间类型不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.CONFIRM.class}, message = "所需时长时间类型不能为空")
     private TimeType needType;
 
     /**
      * 任务开始时间
      */
-    @NotBlank(groups = {TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class},message = "任务开始时间不能为空")
+    @NotBlank(groups = {TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class},message = "任务开始时间不能为空")
     private String startTime;
     /**
      * 任务结束时间
      */
-    @NotBlank(groups = {TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class},message = "任务结束时间不能为空")
+    @NotBlank(groups = {TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class},message = "任务结束时间不能为空")
     private String endTime;
 
     /**
@@ -170,13 +172,13 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 实际时长
      */
-    @DecimalMin(value = "0.00",groups = TaskNodeTO.WRITE.class,message = "实际时长不能小于0")
-    @NotNull(groups = TaskNodeTO.WRITE.class,message = "实际时长不能为空")
+    @DecimalMin(value = "0.00",groups = {TaskNodeTO.WRITE.class,TaskNodeTO.CONFIRM.class},message = "实际时长不能小于0")
+    @NotNull(groups = {TaskNodeTO.WRITE.class,TaskNodeTO.CONFIRM.class},message = "实际时长不能为空")
     private Double actualTime;
     /**
      * 实际时长时间类型
      */
-    @NotNull(groups = TaskNodeTO.WRITE.class,message = "实际时长时间类型不能为空")
+    @NotNull(groups = {TaskNodeTO.WRITE.class,TaskNodeTO.CONFIRM.class},message = "实际时长时间类型不能为空")
     private TimeType actualType;
     /**
      * 未完成时长
@@ -213,7 +215,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 是否发生费用报销
      */
-    @NotNull(groups = TaskNodeTO.WRITE.class,message = "是否发生费用报销不能为空")
+    @NotNull(groups = {TaskNodeTO.WRITE.class,TaskNodeTO.CONFIRM.class},message = "是否发生费用报销不能为空")
     private Boolean reimbursement;
 
     /**

@@ -1,4 +1,4 @@
-package com.bjike.goddess.taskallotment.bo;
+package com.bjike.goddess.taskallotment.bo.DayReport;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.taskallotment.enums.TaskType;

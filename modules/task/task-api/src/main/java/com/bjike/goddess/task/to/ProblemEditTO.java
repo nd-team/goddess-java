@@ -103,7 +103,7 @@ public class ProblemEditTO extends BaseTO {
     /**
      * 受理人
      */
-    @NotBlank(message = "受理人不能为空", groups = {EDIT.class})
+//    @NotBlank(message = "受理人不能为空", groups = {EDIT.class})
 
     private String accepter;
 
@@ -111,43 +111,43 @@ public class ProblemEditTO extends BaseTO {
     /**
      * 问题受理所属部门
      */
-    @NotBlank(message = "问题受理所属部门不能为空", groups = {EDIT.class})
+//    @NotBlank(message = "问题受理所属部门不能为空", groups = {EDIT.class})
 
     private String acceptDepartment;
     /**
      * 问题跟进处理计划完成时间
      */
-    @NotBlank(message = "问题跟进处理计划完成时间不能为空", groups = {EDIT.class})
+//    @NotBlank(message = "问题跟进处理计划完成时间不能为空", groups = {EDIT.class})
 
     private String planFinishTime;
     /**
      * 问题跟进处理实际完成时间
      */
-    @NotBlank(message = "问题跟进处理实际完成时间不能为空", groups = {EDIT.class})
+//    @NotBlank(message = "问题跟进处理实际完成时间不能为空", groups = {EDIT.class})
 
     private String finishTime;
     /**
      * 问题处理结果
      */
-    @NotBlank(message = "问题处理结果不能为空", groups = {EDIT.class})
+//    @NotBlank(message = "问题处理结果不能为空", groups = {EDIT.class})
 
     private String result;
     /**
      * 是否闭环
      */
-    @NotNull(message = "是否闭环不能为空", groups = {EDIT.class})
+//    @NotNull(message = "是否闭环不能为空", groups = {EDIT.class})
 
     private Boolean closedLoop;
     /**
      * 是否需要协调
      */
-    @NotNull(message = "是否需要协调不能为空", groups = {EDIT.class})
+//    @NotNull(message = "是否需要协调不能为空", groups = {EDIT.class})
 
     private Boolean needGive;
     /**
      * 协调结果
      */
-    @NotBlank(message = "协调结果不能为空", groups = {EDIT.class})
+//    @NotBlank(message = "协调结果不能为空", groups = {EDIT.class})
 
     private String giveResult;
 

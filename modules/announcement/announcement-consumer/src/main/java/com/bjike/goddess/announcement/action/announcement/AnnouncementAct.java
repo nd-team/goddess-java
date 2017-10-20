@@ -23,6 +23,7 @@ import com.bjike.goddess.contacts.vo.CommonalityVO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.enums.FileType;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.bo.UserBO;
@@ -38,9 +39,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * 公告
@@ -184,7 +187,10 @@ public class AnnouncementAct extends BaseFileAction {
     public Result announcement(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             AnnouncementBO bo = announcementAPI.findByID(id);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, AnnouncementVO.class, request));
+            AnnouncementVO vo=BeanTransform.copyProperties(bo,AnnouncementVO.class,request);
+            List<String> photos=photos(vo.getId(),request);
+            vo.setPhotos(photos);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -565,10 +571,6 @@ public class AnnouncementAct extends BaseFileAction {
 
     /**
      * 通过request获取上传文件
-     *
-     * @param request
-     * @return
-     * @throws SerException
      */
     private List<MultipartFile> getMultipartFile(HttpServletRequest request) throws SerException {
 
@@ -582,9 +584,6 @@ public class AnnouncementAct extends BaseFileAction {
 
     /**
      * 上传是否合理
-     *
-     * @param request
-     * @return
      */
     private boolean isMultipartContent(HttpServletRequest request) {
         if (!"post".equals(request.getMethod().toLowerCase())) {
@@ -596,6 +595,61 @@ public class AnnouncementAct extends BaseFileAction {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private List<String> photos(String id, HttpServletRequest request) throws SerException {
+        List<String> list1 = new ArrayList<>();
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            String path = "/announcement/announcement/" + id;
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            List<FileVO> list = new ArrayList<>();
+            //只返回图片
+            if (null != files) {
+                list = files.stream().filter(fileVO -> FileType.BMP.equals(fileVO.getFileType()) || FileType.PNG.equals(fileVO.getFileType()) || FileType.GIF.equals(fileVO.getFileType()) || FileType.JPG.equals(fileVO.getFileType()) || FileType.JPEG.equals(fileVO.getFileType())).collect(Collectors.toList());
+//                for (FileVO fileVO : list) {
+//                    FileInfo fileInfo1 = new FileInfo();
+//                    fileInfo1.setPath(fileVO.getPath());
+//                    fileInfo1.setStorageToken(storageToken.toString());
+//                    String path1 = fileAPI.getRealPath(fileInfo1);
+//                    list1.add(path1);
+//                }
+                for (FileVO vo : list) {
+                    list1.add(vo.getPath());
+                }
+            }
+            return list1;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    /**
+     * 移动端列表
+     *
+     * @return class AnnouncementVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/list")
+    public Result phoneList(HttpServletRequest request) throws ActException {
+        try {
+            List<AnnouncementVO> vos=new ArrayList<>();
+            List<AnnouncementBO> list = announcementAPI.phoneList();
+            for (AnnouncementBO bo:list){
+                AnnouncementVO vo=BeanTransform.copyProperties(bo,AnnouncementVO.class,request);
+                List<String> photos=photos(vo.getId(),request);
+                vo.setPhotos(photos);
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

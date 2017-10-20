@@ -138,4 +138,9 @@ public class AnnouncementApiImpl implements AnnouncementAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return announcementSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<AnnouncementBO> phoneList() throws SerException {
+        return announcementSer.phoneList();
+    }
 }
