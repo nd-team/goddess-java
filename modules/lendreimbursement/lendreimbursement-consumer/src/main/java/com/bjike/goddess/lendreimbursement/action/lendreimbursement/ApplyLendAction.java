@@ -1147,7 +1147,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取借款人汇总
+     * 获取汇总的借款人条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取借款人集合
@@ -1164,7 +1164,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取地区汇总
+     * 获取汇总的地区条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取地区集合
@@ -1181,7 +1181,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目组汇总
+     * 获取汇总的项目组条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目组集合
@@ -1198,7 +1198,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目名汇总
+     * 获取汇总的项目名称条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目名集合

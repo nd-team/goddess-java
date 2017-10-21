@@ -34,6 +34,7 @@ import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -77,12 +78,14 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Autowired
     private ApplyLendSer applyLendSer;
 
+    private Logger logger = Logger.getLogger(ReimburseRecordSerImpl.class);
+
     /**
      * 检查权限
      *
      * @throws SerException
      */
-    private Boolean checkPermission( String idFlag ) throws SerException {
+    private Boolean checkPermission(String idFlag) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -90,22 +93,19 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         String userName = userBO.getUsername();
         //岗位权限
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission( idFlag );
+            flag = cusPermissionSer.getCusPermission(idFlag);
         } else {
             flag = true;
         }
-        if (!flag) {
-            throw new SerException("您不是财务模块人员,没有该操作权限");
-        }
         RpcTransmit.transmitUserToken(userToken);
-        return flag ;
+        return flag;
 
     }
 
     /**
      * 核对查看权限（部门级别）
      */
-    private Boolean guideIdentity(String idFlag ) throws SerException {
+    private Boolean guideIdentity(String idFlag) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -324,6 +324,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         Boolean listpermission = cusPermissionSer.getCusPermission("reim-ListAll");
         RpcTransmit.transmitUserToken(userToken);
         String userName = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         if (!listpermission && !"admin".equals(userName.toLowerCase())) {
             //没有查看所有数据的权限，则只能查看自己的数据
             if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -364,29 +365,22 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (!listpermission && !"admin".equals(userName.toLowerCase())) {
             //没有查看所有数据的权限，则只能查看自己的数据
             if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
                 sql.append(" and r2.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
             } else {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", userName));
                 sql.append(" and r2.reimer = '" + userName + "' ");
             }
             if (StringUtils.isNotBlank(reimburseRecordDTO.getCharger())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("charger", reimburseRecordDTO.getCharger()));
                 sql.append(" and r2.charger = '" + reimburseRecordDTO.getCharger() + "' ");
             } else {
-//                reimburseRecordDTO.getConditions().add(Restrict.or("charger", userName));
                 sql.append(" or r2.charger = '" + userName + "' ");
             }
-//            reimburseRecordDTO.getConditions().add(Restrict.or("filler", userName));
             sql.append(" or r2.filler = '" + userName + "' ");
             RpcTransmit.transmitUserToken(userToken);
         } else {
             if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
                 sql.append(" and r2.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
             }
             if (StringUtils.isNotBlank(reimburseRecordDTO.getCharger())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("charger", reimburseRecordDTO.getCharger()));
                 sql.append(" and r2.charger = '" + reimburseRecordDTO.getCharger() + "' ");
             }
         }
@@ -486,7 +480,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         applyLendDTO.getConditions().add(Restrict.lt("lendDate", todayDate.minusDays(15)));
 //        applyLendDTO.getConditions().add(Restrict.eq("lendMoney", 0d));
         //还款状态为非通过的
-        applyLendDTO.getConditions().add(Restrict.ne("LendRetunStatus", 2));
+        applyLendDTO.getConditions().add(Restrict.ne("lendRetunStatus", 2));
         List<ApplyLend> applyLendList = applyLendSer.findByCis(applyLendDTO);
         if (applyLendList != null && applyLendList.size() > 0) {
             throw new SerException("报销人有超过15天的借款未还，请先还款，再来报销");
@@ -509,12 +503,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecord.setPayCondition("否");
         reimburseRecord.setReimStatus(ReimStatus.NONE);
 
-
         //冻结该报销单，说明已经被使用了
         FinoddinforDTO finoddinforDTO = new FinoddinforDTO();
         finoddinforDTO.getConditions().add(Restrict.eq("runNum", runNum));
-//        List<Finoddinfor> finoddinforList=  finoddinforSer.findByCis(finoddinforDTO);
-//        finoddinforSer.congealFinoddinfor(finoddinforSer.findOne(finoddinforDTO).getId());
         Finoddinfor finoddinfor = finoddinforSer.findOne(finoddinforDTO);
         finoddinfor.setStatus(Status.CONGEAL);
         finoddinfor.setModifyTime(LocalDateTime.now());
@@ -822,7 +813,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
-        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
+//        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
 
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -847,7 +838,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
 
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
-        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
+//        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
@@ -861,6 +852,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         reimburseRecordDTO = addCondition(reimburseRecordDTO);
 
+        reimburseRecordDTO.getSorts().add("createTime=desc");
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
@@ -892,7 +884,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             throw new SerException("id不能为空");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
-        if (!userName.equals(temp.getCharger()) || !userName.equals("admin")) {
+        if (!userName.equals(temp.getCharger()) && !userName.equals("admin")) {
             throw new SerException("您不是负责人，不能审核");
         }
 
@@ -916,6 +908,14 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             temp.setReimStatus(ReimStatus.CHARGEPASS);
         } else if ("不通过".equals(reimburseRecordTO.getChargerAuditStatus())) {
             temp.setReimStatus(ReimStatus.CHARGENOTPASS);
+
+            //把寄件信息清空
+            temp.setSendDate(null);
+            temp.setSendRecevier("");
+            temp.setReceiveArea("");
+            temp.setReceiveAddr("");
+            temp.setSendCondition("");
+            temp.setSender("");
         }
         temp.setModifyTime(LocalDateTime.now());
 
@@ -1033,7 +1033,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecord.setSendRecevier(reimburseRecordTO.getSendRecevier());
         reimburseRecord.setReceiveArea(reimburseRecordTO.getReceiveArea());
         reimburseRecord.setReceiveAddr(reimburseRecordTO.getReceiveAddr());
+        reimburseRecord.setSendCondition(reimburseRecordTO.getSendCondition());
         reimburseRecord.setSender(userName);
+        reimburseRecord.setModifyTime(LocalDateTime.now());
 
         super.update(reimburseRecord);
 
@@ -1046,7 +1048,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("reimStatus", 1));
         dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-        dto.getConditions().add(Restrict.eq("is_analisisAll", false));
+        dto.getConditions().add(Restrict.eq("analisisIsAll", false));
         dto.getSorts().add("createTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -1074,7 +1076,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("reimStatus", 1));
         dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-        dto.getConditions().add(Restrict.eq("is_analisisAll", false));
+        dto.getConditions().add(Restrict.eq("analisisIsAll", false));
         dto.getSorts().add("createTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -1090,10 +1092,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.between("occureDate", new String[]{reimburseRecordDTO.getStartTime(), reimburseRecordDTO.getEndTime()}));
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
         }
 
         dto = addCondition(dto);
+        dto.getSorts().add("createTime=desc");
 
         List<ReimburseRecord> recordBOList = super.findByCis(dto, true);
         List<ReimburseRecordBO> recordBOList1 = BeanTransform.copyProperties(recordBOList, ReimburseRecordBO.class);
@@ -1118,6 +1121,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         UserBO userBO = userAPI.currentUser();
 
+
         //审核日志表
         ReimburseAuditLogDTO reimburseAuditLogDTO = new ReimburseAuditLogDTO();
         reimburseAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
@@ -1125,49 +1129,54 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
 
         if (listReimAuditLog != null && listReimAuditLog.size() > 0) {
-//            if (StringUtils.isNotBlank(listReimAuditLog.get(0).getAuditStatus())
-//                    && !"未处理".equals(listReimAuditLog.get(0).getAuditStatus())) {
-//                throw new SerException("您已经分析过，不可以继续分析");
-//            } else {
-                if (StringUtils.isBlank(reimburseRecordTO.getChargerAuditStatus()) ||
-                        (reimburseRecordTO.getChargerAuditStatus().equals("不通过") && reimburseRecordTO.getChargerAuditStatus().equals("通过"))) {
-                    throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
-                }
-                listReimAuditLog.stream().forEach(str -> {
-                    str.setContent("分析意见:" + reimburseRecordTO.getAuditAdvice());
-                    str.setAuditTime(LocalDate.now());
-                    str.setModifyTime(LocalDateTime.now());
-                    if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
-                        str.setAuditStatus("分析通过");
-                    } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
-                        str.setAuditStatus("分析不通过");
-                    }
-                });
-                reimburseAuditLogSer.update(listReimAuditLog);
-//            }
-        }else if(listReimAuditLog==null && "admin".equals(userBO.getUsername().toLowerCase())){
-            List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser( userBO.getId() );
-            ReimburseAuditLog logs = new ReimburseAuditLog();
-            logs.setCreateTime(LocalDateTime.now());
-            logs.setAuditTime(LocalDate.now());
-            logs.setEmpNum(userBO.getEmployeeNumber());
-            logs.setUserName(userBO.getUsername() );
-            logs.setPosition( positionDetailBOS != null && positionDetailBOS.size()>0 ? positionDetailBOS.get(0).getPosition():"");
-            logs.setReimrecordId( temp.getId());
-            if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
-                logs.setAuditStatus("分析通过");
-            } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
-                logs.setAuditStatus("分析不通过");
+            if (StringUtils.isBlank(reimburseRecordTO.getChargerAuditStatus()) ||
+                    (reimburseRecordTO.getChargerAuditStatus().equals("不通过") && reimburseRecordTO.getChargerAuditStatus().equals("通过"))) {
+                throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
             }
-            reimburseAuditLogSer.save( logs );
+            listReimAuditLog.stream().forEach(str -> {
+                str.setContent("分析意见:" + reimburseRecordTO.getAuditAdvice());
+                str.setAuditTime(LocalDate.now());
+                str.setModifyTime(LocalDateTime.now());
+                if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
+                    str.setAuditStatus("分析通过");
+                } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
+                    str.setAuditStatus("分析不通过");
+                }
+            });
+            reimburseAuditLogSer.update(listReimAuditLog);
+//            }
+        } else if (listReimAuditLog == null || listReimAuditLog.size() <= 0) {
+//            List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser( userBO.getId() );
+//            ReimburseAuditLog logs = new ReimburseAuditLog();
+//            logs.setCreateTime(LocalDateTime.now());
+//            logs.setAuditTime(LocalDate.now());
+//            logs.setEmpNum(userBO.getEmployeeNumber());
+//            logs.setUserName(userBO.getUsername() );
+//            logs.setPosition( positionDetailBOS != null && positionDetailBOS.size()>0 ? positionDetailBOS.get(0).getPosition():"");
+//            logs.setReimrecordId( temp.getId());
+//            if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
+//                logs.setAuditStatus("分析通过");
+//            } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
+//                logs.setAuditStatus("分析不通过");
+//            }
+//            reimburseAuditLogSer.save( logs );
+
+            //先去报销分析人员里面看一下是不是有设置分析人员
+            ReimburseAnalisisorDTO analisisorDTO = new ReimburseAnalisisorDTO();
+            List<ReimburseAnalisisor> listReimAuditor = reimburseAnalisisorSer.findByCis(analisisorDTO);
+            if (listReimAuditor == null || listReimAuditor.size() < 0) {
+                throw new SerException("还没有可以分析的分析人员，请去'报销分析人员设置'里面去设置可以分析的人员,再重新添加报销数据");
+            }else {
+                throw new SerException("您不是该条记录的分析人员，不可以分析");
+            }
         }
 
         //查看一下规定的分析人员是否全部分析完了，若分析完了，就把报销表里面的“isAnalisisAll”改为true
         ReimburseAuditLogDTO checkAuditLogDTO = new ReimburseAuditLogDTO();
         checkAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
         checkAuditLogDTO.getConditions().add(Restrict.eq("auditStatus", "未处理"));
-        List<ReimburseAuditLog> listAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
-        if (listAuditLog == null) {
+        List<ReimburseAuditLog> listAuditLog = reimburseAuditLogSer.findByCis(checkAuditLogDTO);
+        if (listAuditLog == null || listAuditLog.size() <= 0) {
             temp.setAnalisisIsAll(true);
             super.update(temp);
         }
@@ -1189,29 +1198,50 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         UserBO userBO = userAPI.currentUser();
         String userName = userBO.getUsername();
-        UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
-        PositionBO positionBO = null;
-        if (udetailBO != null) {
-            positionBO = positionAPI.findById(udetailBO.getPositionId());
-        }
+
 
         //审核日志记录
-        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
-        reimburseAuditLog.setUserName(userName);
-        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
-        reimburseAuditLog.setAuditTime(LocalDate.now());
-        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
-        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
-        reimburseAuditLog.setAuditStatus("申请冻结");
-        reimburseAuditLog.setContent("");
-        reimburseAuditLog.setCreateTime(LocalDateTime.now());
-        reimburseAuditLog.setModifyTime(LocalDateTime.now());
+        //审核日志表
+        ReimburseAuditLogDTO reimburseAuditLogDTO = new ReimburseAuditLogDTO();
+        reimburseAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
+        reimburseAuditLogDTO.getConditions().add(Restrict.eq("userName", userName));
+        List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
+        if (listReimAuditLog == null || listReimAuditLog.size() <= 0) {
+            //先去报销分析人员里面看一下是不是有设置分析人员
+            ReimburseAnalisisorDTO analisisorDTO = new ReimburseAnalisisorDTO();
+            List<ReimburseAnalisisor> listReimAuditor = reimburseAnalisisorSer.findByCis(analisisorDTO);
+            if (listReimAuditor == null || listReimAuditor.size() < 0) {
+                throw new SerException("还没有可以分析的分析人员，请去'报销分析人员设置'里面去设置可以分析的人员,再重新添加报销数据");
+            }else {
+                throw new SerException("您不是该条记录的分析人员，不可以分析");
+            }
+        }
 
-        reimburseAuditLogSer.save(reimburseAuditLog);
+        for (ReimburseAuditLog log : listReimAuditLog) {
+            if (userName.equals(log.getUserName())) {
+                log.setUserName(userName);
+                log.setEmpNum(userBO.getEmployeeNumber());
+                log.setAuditTime(LocalDate.now());
+                log.setReimrecordId(reimburseRecordTO.getId());
+                log.setAuditStatus("申请冻结");
+                log.setContent(reimburseRecordTO.getAuditAdvice());
+                log.setModifyTime(LocalDateTime.now());
+                reimburseAuditLogSer.update(log);
+            }
+        }
 
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
         temp.setReimStatus(ReimStatus.CONGEL);
         temp.setModifyTime(LocalDateTime.now());
+
+        //查看一下规定的分析人员是否全部分析完了，若分析完了，就把报销表里面的“isAnalisisAll”改为true
+        ReimburseAuditLogDTO checkAuditLogDTO = new ReimburseAuditLogDTO();
+        checkAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
+        checkAuditLogDTO.getConditions().add(Restrict.eq("auditStatus", "未处理"));
+        List<ReimburseAuditLog> listAuditLog = reimburseAuditLogSer.findByCis(checkAuditLogDTO);
+        if (listAuditLog == null || listAuditLog.size() <= 0) {
+            temp.setAnalisisIsAll(true);
+        }
 
         super.update(temp);
         return BeanTransform.copyProperties(temp, ReimburseRecordBO.class);
@@ -1225,22 +1255,23 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        //查询分析人员表
-        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
-        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
-        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
-        if (analisisorList == null || analisisorList.size() <= 0) {
-            return 0L;
-        }
-        //查询审核分析表,如果已分析了的，就不会有
+//        //查询分析人员表
+//        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
+//        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
+//        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
+//        if (analisisorList == null || analisisorList.size() <= 0) {
+//            return 0L;
+//        }
+        //查询审核分析表,如果已分析了的，就有
         String[] fields = new String[]{"count"};
         StringBuffer sql = new StringBuffer("");
         sql.append(" SELECT count(*) as count ")
                 .append(" from lendreimbursement_reimburserecord  ")
-                .append(" where id NOT IN ( ")
+                .append(" where id  IN ( ")
                 .append(" SELECT record.id FROM lendreimbursement_reimburserecord record ")
                 .append(" INNER JOIN lendreimbursement_reimburseauditlog log ")
-                .append(" ON record.id = log.reimrecordId AND log.auditStatus = '未处理' ")
+                .append("  ON record.id = log.reimrecordId AND log.auditStatus in( '申请冻结','分析通过','分析不通过') ")
+                .append(" and log.userName = '" + userBO.getUsername() + "' ")
                 .append(" ) and reimStatus = 1 AND ticketCondition = '是' ");
         //and reimer = '' and reimNumber = '' and occureDate BETWEEN '' and ''
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -1258,6 +1289,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
             sql.append(" and reimer = '" + reimburseRecordDTO.getReimer() + "' ");
         }
+        logger.info("总条数" + sql);
 
         List<ReimburseRecordBO> count = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
         return count != null ? count.size() : 0L;
@@ -1271,13 +1303,13 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        //查询分析人员表
-        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
-        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
-        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
-        if (analisisorList == null || analisisorList.size() <= 0) {
-            return null;
-        }
+//        //查询分析人员表
+//        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
+//        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
+//        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
+//        if (analisisorList == null || analisisorList.size() <= 0) {
+//            return null;
+//        }
         //查询审核分析表,如果已分析了的，就会有
         String[] fields = new String[]{"id", "AccountFlag", "addContent", "area", "attender", "auditAdvice",
                 "budgetPayTime", "charger", "chargerAuditStatus", "chargerAuditTime", "commitDate",
@@ -1294,10 +1326,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                 .append(" receiveTicketTime, receiveTicketer , reimMoney , reimNumber , reimStatus , reimer , reimerRemark , ")
                 .append(" secondSubject , summary , thirdSubject , ticketCondition ,ticketNumber , ticketQuantity ,receiveTicketCheck ")
                 .append(" from lendreimbursement_reimburserecord  ")
-                .append(" where id NOT IN ( ")
+                .append(" where id IN ( ")
                 .append(" SELECT record.id FROM lendreimbursement_reimburserecord record ")
                 .append(" INNER JOIN lendreimbursement_reimburseauditlog log ")
-                .append(" ON record.id = log.reimrecordId AND log.auditStatus = '未处理' ")
+                .append("  ON record.id = log.reimrecordId AND log.auditStatus in( '申请冻结','分析通过','分析不通过') ")
+                .append(" and log.userName = '" + userBO.getUsername() + "' ")
                 .append(" ) and reimStatus = 1 AND ticketCondition = '是' ");
         //and reimer = '' and reimNumber = '' and occureDate BETWEEN '' and ''
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -1317,7 +1350,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         }
         sql.append(" order by modifyTime desc ");
         sql.append(" limit " + (reimburseRecordDTO.getPage()) + "," + reimburseRecordDTO.getLimit() + " ");
-
+        logger.info("分析列表" + sql);
         List<ReimburseRecordBO> list = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
         return list;
 
@@ -1350,6 +1383,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecordDTO.getConditions().add(Restrict.isNull("accountCheckPassOr"));
         reimburseRecordDTO.getConditions().add(Restrict.or("accountCheckPassOr", "否"));
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
+        reimburseRecordDTO.getSorts().add("createTime=desc");
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
@@ -1376,7 +1412,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        List<ReimburseAnalisisorBO> reimburseRecordBOList = reimburseAnalisisorSer.findBySql(sql.toString(), ReimburseAnalisisorBO.class, fields);
         sql.append("select count(*) as count ")
                 .append(" from  lendreimbursement_reimburseauditlog ")
-                .append("  WHERE reimrecordId = '" + reimburseRecordTO.getId() + " and auditStatus ='未处理' ') ");
+                .append("  WHERE reimrecordId = '" + reimburseRecordTO.getId() + "' and auditStatus ='未处理' ");
 
         List<ReimburseAuditLogBO> audirLogBOList = reimburseAuditLogSer.findBySql(sql.toString(), ReimburseAuditLogBO.class, fields);
 
@@ -1513,12 +1549,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             throw new SerException("报销单号不能为空，至少要有一个");
         }
         String[] reimNumbers = reimburseRecordTO.getReimNumbers();
-        StringBuffer sb = new StringBuffer(" ");
-        for (String str : reimNumbers) {
-            sb.append("'" + str + "' , ");
-        }
+
         ReimburseRecordDTO dto = new ReimburseRecordDTO();
-        dto.getConditions().add(Restrict.in("reimNumber", StringUtils.substringBeforeLast(sb.toString(), ",")));
+        dto.getConditions().add(Restrict.in("reimNumber", reimNumbers));
         List<ReimburseRecord> recordList = super.findByCis(dto);
 
         recordList.stream().forEach(str -> {
@@ -1654,6 +1687,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         dto = addCondition(dto);
 
+        dto.getSorts().add("createTime=desc");
         List<ReimburseRecord> recordList = super.findByCis(dto, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
         return boList;
@@ -2224,22 +2258,23 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             case WAITAUDIT:
                 //待审核（负责人未审核或分析人申请冻结后负责人还未确认冻结的情况）
                 dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
-                dto.getConditions().add(Restrict.or("ticketCondition", "否"));
+//                dto.getConditions().add(Restrict.or("ticketCondition", "否"));
 
                 break;
             case WAITANALISIS:
                 //待分析(负责人审核通过)
                 dto.getConditions().add(Restrict.eq("reimStatus", 1));
                 dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-                dto.getConditions().add(Restrict.eq("is_analisisAll", false));
+                dto.getConditions().add(Restrict.eq("analisisIsAll", false));
 
                 break;
             case WAITCHECK:
                 //待核对(帐务核对和付款未通过或还未付款的)
-                //负责人通过，且分析的人全部分析完，且还未付款
+                //负责人通过，且分析的人全部分析完，且还未付款,且帐务核对为null
                 dto.getConditions().add(Restrict.eq("reimStatus", 1));
-                dto.getConditions().add(Restrict.eq("is_analisisAll", true));
+                dto.getConditions().add(Restrict.eq("analisisIsAll", true));
                 dto.getConditions().add(Restrict.ne("payCondition", "是"));
+                dto.getConditions().add(Restrict.isNull("accountCheckPassOr"));
 
                 break;
             case HASREIM:
@@ -2278,15 +2313,26 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                         if (ReimStatus.CHARGEPASS.equals(reimStatus) && "是".equals(ticketCondition)) {
                             str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITANALISIS);
                         }
+                        //   待解冻（负责人未通过）
+                        if ("不通过".equals(chargeAuditStatus) || ReimStatus.CHARGECONGEL.equals(reimStatus)) {
+                            //  待解冻 (负责人审核不通过/确认冻结/帐务核对不通过)
+                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+                        }
                     } else if (analisisIsAll) {
                         //待核对(帐务核对和付款未通过或还未付款的)
-                        if (ReimStatus.CHARGEPASS.equals(reimStatus)) {
+                        if (ReimStatus.CHARGEPASS.equals(reimStatus) && StringUtils.isBlank(accountCheckPassOr)) {
                             str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITCHECK);
+                        } else if (ReimStatus.CHARGEPASS.equals(reimStatus) && "否".equals(accountCheckPassOr)) {
+                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+                        }else if( ReimStatus.CONGEL.equals(reimStatus) ){
+                            //已经分析完，但是是申请冻结状态
+                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITAUDIT);
                         }
-                    } else if ("不通过".equals(chargeAuditStatus) || ReimStatus.CHARGECONGEL.equals(reimStatus)
-                            || "否".equals(accountCheckPassOr)) {
-                        //待解冻 (负责人审核不通过/确认冻结/帐务核对不通过)
-                        str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+//                        if ("不通过".equals(chargeAuditStatus) || ReimStatus.CHARGECONGEL.equals(reimStatus)
+//                                || "否".equals(accountCheckPassOr)) {
+//                            //待解冻 (负责人审核不通过/确认冻结/帐务核对不通过)
+//                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+//                        }
                     }
 
                 } else if ("是".equals(payCondition)) {
@@ -2321,16 +2367,27 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             case WAITAUDIT:
                 //待审核（负责人未审核或分析人申请冻结后负责人还未确认冻结的情况）
                 if (null == record.getSendDate()) {
-                    //说明没有寄件
-                    showStatus = ReimPhoneShowStatus.GOSEND;
+                    //说明没有寄件,而且是报销人身份
+                    if (userName.toLowerCase().equals(record.getReimer())) {
+                        showStatus = ReimPhoneShowStatus.GOSEND;
+                    } else {
+                        showStatus = ReimPhoneShowStatus.NONE;
+                    }
                 } else {
                     //已填寄件，则看是审核人还是非审核人
                     if ("admin".equals(userName.toLowerCase()) || userName.toLowerCase().equals(charger)) {
-                        showStatus = ReimPhoneShowStatus.GOAUDIT;
+                        if (!reimStatus.equals(ReimStatus.CONGEL)) {
+                            //负责人第一次审核
+                            showStatus = ReimPhoneShowStatus.GOAUDIT;
+                        } else if (reimStatus.equals(ReimStatus.CONGEL)) {
+                            //负责人第二次审核，即是否确认冻结
+                            showStatus = ReimPhoneShowStatus.CONGELAUDIT;
+                        }
                     } else {
                         showStatus = ReimPhoneShowStatus.SENDDETAIL;
                     }
                 }
+
                 break;
             case WAITANALISIS:
                 //待分析(负责人审核通过)
@@ -2341,43 +2398,44 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                 reimburseAuditLogDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
                 List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
 
-                if ((listReimAuditLog != null && listReimAuditLog.size() > 0) || "admin".equals(userName.toLowerCase()) ) {
-                    if( ReimStatus.CHARGEPASS.equals(reimStatus) && !analisisIsAll ){
+                //不给admin来分析
+                if ((listReimAuditLog != null && listReimAuditLog.size() > 0) && !"admin".equals(userName.toLowerCase())) {
+                    if (ReimStatus.CHARGEPASS.equals(reimStatus) && !analisisIsAll) {
                         showStatus = ReimPhoneShowStatus.GOANALISIS;
                     }
-                }else{
+                } else {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
             case WAITCHECK:
                 //待核对(帐务核对和付款还未付款的或付款未通过（这个未通过的放到待解冻里面去了）)
-                //负责人通过，且分析的人全部分析完，且还未付款
+                //负责人通过，且分析的人全部分析完，且还未付款,且帐务核对为null
                 //有权限和admin
                 Boolean flag = checkPermission("reim-accountCheckAndPay");
-                if( flag ) {
-                    if (ReimStatus.CHARGEPASS.equals(reimStatus) && analisisIsAll && "否".equals(payCondition)) {
+                if (flag) {
+                    if (ReimStatus.CHARGEPASS.equals(reimStatus) && analisisIsAll && "否".equals(payCondition) && StringUtils.isBlank(accountCheckPassOr)) {
                         showStatus = ReimPhoneShowStatus.GOCHECK;
                     }
-                }else{
+                } else {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
             case HASREIM:
                 //已报销
-                if( "是".equals(payCondition)  ){
+                if ("是".equals(payCondition)) {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
             case WAITTHAW:
                 //待解冻(负责人审核不通过/负责人确认冻结/付款核对不通过（accountCheckPassOr='否'这个是不可以给重新编辑，因为已经不给报销了）/分析人申请冻结（已经转入待审核里面）)
-                if( "admin".equals(userName.toLowerCase()) || userName.equals(record.getReimer()) ){
-                    if( ReimStatus.CHARGENOTPASS.equals( reimStatus )  ){
+                if ("admin".equals(userName.toLowerCase()) || userName.equals(record.getReimer())) {
+                    if (ReimStatus.CHARGENOTPASS.equals(reimStatus)) {
                         showStatus = ReimPhoneShowStatus.WAITTHAWEDIT;
                     }
-                    if(  "否".equals(accountCheckPassOr) ){
+                    if ("否".equals(accountCheckPassOr)) {
                         showStatus = ReimPhoneShowStatus.NONE;
                     }
-                }else{
+                } else {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;

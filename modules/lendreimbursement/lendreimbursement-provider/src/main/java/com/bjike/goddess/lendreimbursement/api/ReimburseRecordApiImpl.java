@@ -145,7 +145,6 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     public List<ReimburseRecordBO> listHasAnalisys(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.listHasAnalisys(reimburseRecordDTO);
     }
-
     @Override
     public Long countAccountCheck(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.countAccountCheck(reimburseRecordDTO);
