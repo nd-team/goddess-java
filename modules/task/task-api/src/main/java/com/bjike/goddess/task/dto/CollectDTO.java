@@ -2,6 +2,9 @@ package com.bjike.goddess.task.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.task.enums.CollectType;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: [liguiqin]
@@ -11,9 +14,11 @@ import com.bjike.goddess.task.enums.CollectType;
  * @Copy: [com.bjike]
  */
 public class CollectDTO extends BaseDTO {
+    public interface COUNT{}
     /**
      * 项目
      */
+    @NotBlank(groups = CollectDTO.COUNT.class,message ="项目不能为空")
     private String projectId;
     /**
      * 多个表(为空时查询所有表)
@@ -22,6 +27,7 @@ public class CollectDTO extends BaseDTO {
     /**
      * 是否需要固定表头
      */
+    @NotNull(groups = CollectDTO.COUNT.class,message ="是否需要固定表头不能为空")
     private boolean needFixed = true;
 
     /**
@@ -31,6 +37,7 @@ public class CollectDTO extends BaseDTO {
     /**
      * 自定义汇总类型
      */
+    @NotNull(groups = CollectDTO.COUNT.class,message ="自定义汇总类型不能为空")
     private CollectType type;
 
     public String getProjectId() {

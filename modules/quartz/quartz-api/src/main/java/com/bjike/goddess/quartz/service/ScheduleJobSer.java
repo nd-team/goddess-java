@@ -59,7 +59,7 @@ public interface ScheduleJobSer extends Ser<ScheduleJob, ScheduleJobDTO> {
     }
 
     /**
-     * 获取有效的调度任务
+     * 获取所有的调度任务
      *
      * @return
      * @throws SerException

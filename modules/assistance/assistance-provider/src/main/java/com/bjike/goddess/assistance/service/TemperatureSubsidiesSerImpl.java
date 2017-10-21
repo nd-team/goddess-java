@@ -5,6 +5,7 @@ import com.bjike.goddess.assistance.dto.TemperatureSubsidiesDTO;
 import com.bjike.goddess.assistance.entity.TemperatureSubsidies;
 import com.bjike.goddess.assistance.enums.GuideAddrStatus;
 import com.bjike.goddess.assistance.excel.TemperatureSubsidiesImport;
+import com.bjike.goddess.assistance.excel.TemperatureSubsidiesImportTemple;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.TemperatureSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.TemperatureSubsidiesTO;
@@ -19,11 +20,12 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
-import com.bjike.goddess.message.entity.Message;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -48,10 +50,10 @@ import java.util.List;
 @CacheConfig(cacheNames = "assistanceSerCache")
 @Service
 public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidies, TemperatureSubsidiesDTO> implements TemperatureSubsidiesSer {
-   @Autowired
-   private InternalContactsAPI internalContactsAPI;
-   @Autowired
-   private MessageAPI messageAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private MessageAPI messageAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
@@ -64,6 +66,8 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     private SubsidySchemeSer subsidySchemeSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对添加删除修改查看权限（部门级别）
@@ -138,6 +142,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     private Boolean allTrueIdentity() throws SerException {
         return true;
     }
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
@@ -247,7 +252,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         return flag;
     }
 
-   @Override
+    @Override
     public Long countTempera(TemperatureSubsidiesDTO temperatureSubsidiesDTO) throws SerException {
         seachCondition(temperatureSubsidiesDTO);
         Long count = super.count(temperatureSubsidiesDTO);
@@ -257,7 +262,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     @Override
     public TemperatureSubsidiesBO getOneById(String id) throws SerException {
         TemperatureSubsidies temperatureSubsidies = super.findById(id);
-        return BeanTransform.copyProperties(temperatureSubsidies,TemperatureSubsidiesBO.class);
+        return BeanTransform.copyProperties(temperatureSubsidies, TemperatureSubsidiesBO.class);
     }
 
     @Override
@@ -265,21 +270,33 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         checkSeeIdentity();
         seachCondition(temperatureSubsidiesDTO);
         List<TemperatureSubsidies> temperatureSubsidies = super.findByPage(temperatureSubsidiesDTO);
-        return BeanTransform.copyProperties(temperatureSubsidies,TemperatureSubsidiesBO.class);
+        List<TemperatureSubsidiesBO> temperatureSubsidiesBOS = BeanTransform.copyProperties(temperatureSubsidies, TemperatureSubsidiesBO.class);
+        if(temperatureSubsidiesBOS!=null&&temperatureSubsidiesBOS.size()>0){
+            for (TemperatureSubsidiesBO temperatureSubsidiesBO : temperatureSubsidiesBOS) {
+                StaffStatus staffStatus = positionDetailUserAPI.statusByName(temperatureSubsidiesBO.getName());//查看员工状态
+                if (staffStatus == null) {
+                    temperatureSubsidiesBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    temperatureSubsidiesBO.setStaffStatus(staffStatus.toString());
+                }
+            }
+        }
+        return temperatureSubsidiesBOS;
     }
 
-    public void seachCondition(TemperatureSubsidiesDTO temperatureSubsidiesDTO) throws SerException{
-        if(StringUtils.isNotBlank(temperatureSubsidiesDTO.getName())){
-            temperatureSubsidiesDTO.getConditions().add(Restrict.eq("name",temperatureSubsidiesDTO.getName()));
+    public void seachCondition(TemperatureSubsidiesDTO temperatureSubsidiesDTO) throws SerException {
+        if (StringUtils.isNotBlank(temperatureSubsidiesDTO.getName())) {
+            temperatureSubsidiesDTO.getConditions().add(Restrict.eq("name", temperatureSubsidiesDTO.getName()));
         }
     }
 
     @Override
     public void saveTempera(TemperatureSubsidiesTO temperatureSubsidiesTO) throws SerException {
         checkSeeIdentity();
-        TemperatureSubsidies temperatureSubsidies = BeanTransform.copyProperties(temperatureSubsidiesTO,TemperatureSubsidies.class,true);
+        TemperatureSubsidies temperatureSubsidies = BeanTransform.copyProperties(temperatureSubsidiesTO, TemperatureSubsidies.class, true);
         temperatureSubsidies.setCreateTime(LocalDateTime.now());
-        temperatureSubsidies.setSubsidiesAmount(temperatureSubsidiesTO.getDays()*temperatureSubsidiesTO.getSubsidiesPrice());
+        temperatureSubsidies.setSubsidiesAmount(temperatureSubsidiesTO.getDays() * temperatureSubsidiesTO.getSubsidiesPrice());
         super.save(temperatureSubsidies);
     }
 
@@ -287,12 +304,12 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     public void editTempera(TemperatureSubsidiesTO temperatureSubsidiesTO) throws SerException {
         checkSeeIdentity();
         TemperatureSubsidies temperatureSubsidies = super.findById(temperatureSubsidiesTO.getId());
-        if(!temperatureSubsidies.getConfirm()){
-            BeanTransform.copyProperties(temperatureSubsidies,temperatureSubsidies,true);
+        if (!temperatureSubsidies.getConfirm()) {
+            BeanTransform.copyProperties(temperatureSubsidies, temperatureSubsidies, true);
             temperatureSubsidies.setCreateTime(LocalDateTime.now());
-            temperatureSubsidies.setSubsidiesAmount(temperatureSubsidiesTO.getDays()*temperatureSubsidiesTO.getSubsidiesPrice());
+            temperatureSubsidies.setSubsidiesAmount(temperatureSubsidiesTO.getDays() * temperatureSubsidiesTO.getSubsidiesPrice());
             super.update(temperatureSubsidies);
-        }else{
+        } else {
             throw new SerException("已经被确认了就不能被修改了");
         }
     }
@@ -305,13 +322,21 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
 
     @Override
     public byte[] exportExcel() throws SerException {
-//        checkSeeIdentity();
+        checkSeeIdentity();
         List<TemperatureSubsidies> list = super.findAll();
         List<TemperatureSubsidiesImport> temperatureSubsidiesImports = new ArrayList<>();
-        list.stream().forEach(str -> {
-            TemperatureSubsidiesImport excel = BeanTransform.copyProperties(str, TemperatureSubsidiesImport.class);
+
+        for (TemperatureSubsidies temperatureSubsidies : list){
+            TemperatureSubsidiesImport excel = BeanTransform.copyProperties(temperatureSubsidies, TemperatureSubsidiesImport.class);
+            StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
+            if (staffStatus == null) {
+                excel.setStaffStatus("未获取到数据");
+            }else{
+
+                excel.setStaffStatus(staffStatus.toString());
+            }
             temperatureSubsidiesImports.add(excel);
-        });
+        }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(temperatureSubsidiesImports, excel);
         return bytes;
@@ -319,31 +344,30 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
 
     @Override
     public byte[] templateExport() throws SerException {
-        List<TemperatureSubsidiesImport> temperatureSubsidiesImports = new ArrayList<>();
-        TemperatureSubsidiesImport excel = new TemperatureSubsidiesImport();
+        List<TemperatureSubsidiesImportTemple> temperatureSubsidiesImportTemples = new ArrayList<>();
+        TemperatureSubsidiesImportTemple excel = new TemperatureSubsidiesImportTemple();
         excel.setArea("广州");
         excel.setDepartment("研发部");
-        excel.setName( "张三" );
-        excel.setEntryDate( "2017-09-12");
-        excel.setSalaryStartDate( "2017-09-12");
-        excel.setSalaryEndDate( "2017-12-12");
-        excel.setOutdoorWorkDate( "2017-12-12");
+        excel.setName("张三");
+        excel.setEntryDate("2017-09-12");
+        excel.setSalaryStartDate("2017-09-12");
+        excel.setSalaryEndDate("2017-12-12");
+        excel.setOutdoorWorkDate("2017-12-12");
         excel.setDays(10);
-        excel.setSubsidiesPrice( 100d);
-        excel.setSubsidiesAmount( 1000d);
+        excel.setSubsidiesPrice(100d);
+        excel.setSubsidiesAmount(1000d);
         excel.setConfirm("是");
         excel.setConfirmDate("2017-12-12");
-        excel.setSubsidiesStatus( "在补助");
-        excel.setStaffStatus( "在职");
-        temperatureSubsidiesImports.add(excel);
+        excel.setSubsidiesStatus("在补助");
+        temperatureSubsidiesImportTemples.add(excel);
         Excel exce = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(temperatureSubsidiesImports, exce);
+        byte[] bytes = ExcelUtil.clazzToExcel(temperatureSubsidiesImportTemples, exce);
         return bytes;
     }
 
     @Override
     public void importExcel(List<TemperatureSubsidiesExcelTO> temperatureSubsidiesExcelTOS) throws SerException {
-//        checkSeeIdentity();
+        checkSeeIdentity();
         List<TemperatureSubsidies> senioritySubsidies = BeanTransform.copyProperties(temperatureSubsidiesExcelTOS, TemperatureSubsidies.class, true);
         senioritySubsidies.stream().forEach(str -> {
             str.setCreateTime(LocalDateTime.now());
@@ -357,9 +381,9 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         TemperatureSubsidies temperatureSubsidies = super.findById(id);
         String email = internalContactsAPI.getEmail(temperatureSubsidies.getName());
         //如果该员工邮箱存在发送邮件,否则就不发
-        if(StringUtils.isNotBlank(email)){
+        if (StringUtils.isNotBlank(email)) {
             StringBuffer content = new StringBuffer();
-            content.append(temperatureSubsidies.getName()+"你好! 请确认: "+temperatureSubsidies.getSalaryStartDate()+temperatureSubsidies.getSalaryEndDate()+"的高温补助.");
+            content.append(temperatureSubsidies.getName() + "你好! 请确认: " + temperatureSubsidies.getSalaryStartDate() + temperatureSubsidies.getSalaryEndDate() + "的高温补助.");
             MessageTO messageTO = new MessageTO();
             messageTO.setContent(content.toString());
             messageTO.setTitle("确认提醒");
@@ -373,7 +397,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     }
 
     @Override
-    public void confirm(String id,Boolean confirm) throws SerException {
+    public void confirm(String id, Boolean confirm) throws SerException {
         TemperatureSubsidies temperatureSubsidies = super.findById(id);
         temperatureSubsidies.setConfirm(confirm);
         temperatureSubsidies.setConfirmDate(LocalDate.now());
@@ -386,10 +410,10 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         TemperatureSubsidiesDTO dto = new TemperatureSubsidiesDTO();
         LocalDate startTime = DateUtil.parseDate(paytStartTime);
         LocalDate endTime = DateUtil.parseDate(payEndTime);
-        LocalDate[] time = new LocalDate[]{startTime,endTime};
-        dto.getConditions().add(Restrict.between("entryDate",time));
+        LocalDate[] time = new LocalDate[]{startTime, endTime};
+        dto.getConditions().add(Restrict.between("entryDate", time));
         TemperatureSubsidies temperatureSubsidies = super.findOne(dto);
-        TemperatureSubsidiesBO temperatureSubsidiesBO = BeanTransform.copyProperties(temperatureSubsidies,TemperatureSubsidiesBO.class,false);
+        TemperatureSubsidiesBO temperatureSubsidiesBO = BeanTransform.copyProperties(temperatureSubsidies, TemperatureSubsidiesBO.class, false);
         return temperatureSubsidiesBO;
     }
 }

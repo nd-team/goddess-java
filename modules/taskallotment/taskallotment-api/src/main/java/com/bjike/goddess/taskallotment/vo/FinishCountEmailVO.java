@@ -1,9 +1,6 @@
 package com.bjike.goddess.taskallotment.vo;
 
-import com.bjike.goddess.taskallotment.enums.CountType;
-import com.bjike.goddess.taskallotment.enums.ForObject;
-import com.bjike.goddess.taskallotment.enums.Spacing;
-import com.bjike.goddess.taskallotment.enums.Status;
+import com.bjike.goddess.taskallotment.enums.*;
 
 /**
  * 完成情况汇总设置表现层对象
@@ -24,7 +21,10 @@ public class FinishCountEmailVO {
      * 汇总表名称
      */
     private String name;
-
+    /**
+     * 地区
+     */
+    private String area;
     /**
      * 项目组
      */
@@ -64,11 +64,28 @@ public class FinishCountEmailVO {
      * 通报对象
      */
     private ForObject forObject;
+    /**
+     * 通报部门
+     */
+    private String forDeparts;
+
+    /**
+     * 通报个人
+     */
+    private String forPersons;
+    /**
+     * 汇总频率
+     */
+    private CountFrequency countFrequency;
 
     /**
      * 汇总对象
      */
     private CountType countType;
+    /**
+     * 汇总个人
+     */
+    private String countPersons;
     /**
      * 汇总开始时间
      */
@@ -92,6 +109,46 @@ public class FinishCountEmailVO {
      * 备注
      */
     private String remark;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getForDeparts() {
+        return forDeparts;
+    }
+
+    public void setForDeparts(String forDeparts) {
+        this.forDeparts = forDeparts;
+    }
+
+    public String getForPersons() {
+        return forPersons;
+    }
+
+    public void setForPersons(String forPersons) {
+        this.forPersons = forPersons;
+    }
+
+    public CountFrequency getCountFrequency() {
+        return countFrequency;
+    }
+
+    public void setCountFrequency(CountFrequency countFrequency) {
+        this.countFrequency = countFrequency;
+    }
+
+    public String getCountPersons() {
+        return countPersons;
+    }
+
+    public void setCountPersons(String countPersons) {
+        this.countPersons = countPersons;
+    }
 
     public String getStartTime() {
         return startTime;

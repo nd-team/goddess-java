@@ -138,7 +138,8 @@ public class CarSendEmailAction {
     @GetMapping("v1/list")
     public Result list() throws ActException{
         try {
-            List<CarSendEmailVO> vo = BeanTransform.copyProperties(carSendEmailAPI.list(),CarSendEmailVO.class,true);
+            List<CarSendEmailBO> boList = carSendEmailAPI.list();
+            List<CarSendEmailVO> vo = BeanTransform.copyProperties(boList,CarSendEmailVO.class,true);
             return ActResult.initialize(vo);
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -153,7 +154,22 @@ public class CarSendEmailAction {
     public Result sendEmail() throws ActException{
         try {
             carSendEmailAPI.sendEmail();
-            return new ActResult();
+            return new ActResult("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 发送邮件提醒功能
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/sendEmail/remind")
+    public Result sendEmailRemind() throws ActException{
+        try {
+            carSendEmailAPI.sendEmailRemind();
+            return new ActResult("发送邮件成功");
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
@@ -182,12 +198,29 @@ public class CarSendEmailAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/find/one/{id}")
-    public Result findOne(String id) throws ActException{
+    @GetMapping("v1/find/one")
+    public Result findOne(@RequestParam String id) throws ActException{
         try {
             CarSendEmailBO bo = carSendEmailAPI.findOne(id);
             CarSendEmailVO vo = BeanTransform.copyProperties(bo,CarSendEmailVO.class);
             return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 删除
+     * @param id
+     * @throws ActException
+     * @version v1
+     */
+    @DeleteMapping("v1/delete")
+    public Result delete(@RequestParam String id) throws ActException{
+        try {
+            carSendEmailAPI.delete(id);
+            return new ActResult("删除成功");
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

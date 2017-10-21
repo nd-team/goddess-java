@@ -140,4 +140,9 @@ public class PositionDetailApiImpl implements PositionDetailAPI {
     public String number(PositionDetailTO to) throws SerException {
         return positionDetailSer.number(to);
     }
+
+    @Override
+    public List<String> positionNames() throws SerException {
+        return positionDetailSer.positionNames();
+    }
 }

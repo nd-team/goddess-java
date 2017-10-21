@@ -22,6 +22,7 @@ import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.to.DeleteFileTO;
+import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.taskallotment.vo.*;
 import com.bjike.goddess.user.api.UserAPI;
@@ -67,6 +68,29 @@ public class TaskNodeAction extends BaseFileAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private UserAPI userAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = taskNodeAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -255,9 +279,9 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/initiate/num")
-    public Result myInitiateNum() throws ActException {
+    public Result myInitiateNum(TaskNodeDTO dto) throws ActException {
         try {
-            return ActResult.initialize(taskNodeAPI.myInitiateNum());
+            return ActResult.initialize(taskNodeAPI.myInitiateNum(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -283,14 +307,14 @@ public class TaskNodeAction extends BaseFileAction {
     /**
      * 确认完成
      *
-     * @param id id
+     * @param to to
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/finish/{id}")
-    public Result finish(@PathVariable String id) throws ActException {
+    @PutMapping("v1/finish")
+    public Result finish(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to,BindingResult result) throws ActException {
         try {
-            taskNodeAPI.finish(id);
+            taskNodeAPI.finish(to);
             return new ActResult("确认完成成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -300,14 +324,14 @@ public class TaskNodeAction extends BaseFileAction {
     /**
      * 确认未完成
      *
-     * @param id id
+     * @param to to
      * @throws ActException
      * @version v1
      */
-    @PutMapping("v1/unFinish/{id}")
-    public Result unFinish(@PathVariable String id) throws ActException {
+    @PutMapping("v1/unFinish")
+    public Result unFinish(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to,BindingResult result) throws ActException {
         try {
-            taskNodeAPI.unFinish(id);
+            taskNodeAPI.unFinish(to);
             return new ActResult("确认未完成成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -373,9 +397,9 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/charge/num")
-    public Result myChargeNum() throws ActException {
+    public Result myChargeNum(TaskNodeDTO dto) throws ActException {
         try {
-            return ActResult.initialize(taskNodeAPI.myChargeNum());
+            return ActResult.initialize(taskNodeAPI.myChargeNum(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -423,9 +447,9 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/execute/num")
-    public Result myExecuteNum() throws ActException {
+    public Result myExecuteNum(TaskNodeDTO dto) throws ActException {
         try {
-            return ActResult.initialize(taskNodeAPI.myExecuteNum());
+            return ActResult.initialize(taskNodeAPI.myExecuteNum(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -439,7 +463,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/confirm/{id}")
-    public Result confirm(String id) throws ActException {
+    public Result confirm(@PathVariable String id) throws ActException {
         try {
             taskNodeAPI.confirm(id);
             return new ActResult("确认接收任务成功");
@@ -736,13 +760,15 @@ public class TaskNodeAction extends BaseFileAction {
     public Result countTables(@Validated(ProjectDTO.PROJECT.class) ProjectDTO dto, BindingResult result) throws ActException {
         try {
             List<ProjectBO> list = projectAPI.projects(dto);
-            List<String> projectIds = list.stream().map(projectBO -> projectBO.getId()).collect(Collectors.toList());
-            if (!projectIds.isEmpty()) {
-                String[] strings = new String[projectIds.size()];
-                strings = projectIds.toArray(strings);
-                TableDTO tableDTO = new TableDTO();
-                tableDTO.setProjectIds(strings);
-                return ActResult.initialize(tableAPI.tables(tableDTO));
+            if (null != list) {
+                List<String> projectIds = list.stream().map(projectBO -> projectBO.getId()).collect(Collectors.toList());
+                if (!projectIds.isEmpty()) {
+                    String[] strings = new String[projectIds.size()];
+                    strings = projectIds.toArray(strings);
+                    TableDTO tableDTO = new TableDTO();
+                    tableDTO.setProjectIds(strings);
+                    return ActResult.initialize(tableAPI.tables(tableDTO));
+                }
             }
             return ActResult.initialize(null);
         } catch (SerException e) {

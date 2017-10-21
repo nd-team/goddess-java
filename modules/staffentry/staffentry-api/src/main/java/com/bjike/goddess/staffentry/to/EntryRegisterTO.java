@@ -150,10 +150,6 @@ public class EntryRegisterTO extends BaseTO {
      */
     private String inductionDate;
     /**
-     * 状态 
-     */
-    private StaffStatus staffStatus;
-    /**
      * 家庭成员集合
      */
     private List<FamilyMemberTO> familyMemberBOList;
@@ -398,13 +394,6 @@ public class EntryRegisterTO extends BaseTO {
         this.inductionDate = inductionDate;
     }
 
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 
     public List<FamilyMemberTO> getFamilyMemberBOList() {
         return familyMemberBOList;

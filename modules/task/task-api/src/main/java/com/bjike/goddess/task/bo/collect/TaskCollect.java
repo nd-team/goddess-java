@@ -34,7 +34,7 @@ public class TaskCollect {
     @ExcelHeader(name = "计划任务时长")
     private String planDuration; //计划任务时长
     @ExcelHeader(name = "实际人工")
-    private String factDuration; //实际人工
+    private String factDuration; //实际人工时长
     @ExcelHeader(name = "差异任务时长")
     private String differDuration; //差异任务时长
     @ExcelHeader(name = "备注")

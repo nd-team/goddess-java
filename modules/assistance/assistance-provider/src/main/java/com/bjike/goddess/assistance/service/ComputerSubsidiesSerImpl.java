@@ -7,6 +7,7 @@ import com.bjike.goddess.assistance.enums.GuideAddrStatus;
 import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.assistance.enums.Usage;
 import com.bjike.goddess.assistance.excel.ComputerSubsidiesImport;
+import com.bjike.goddess.assistance.excel.ComputerSubsidiesImportTemple;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
@@ -25,6 +26,8 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +61,8 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对添加删除修改查看权限（部门级别）
@@ -199,7 +204,19 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
         searchCondition(computerSubsidiesDTO);
         computerSubsidiesDTO.getSorts().add("modifyTime=desc");
         List<ComputerSubsidies> computerSubsidies = super.findByPage(computerSubsidiesDTO);
-        return BeanTransform.copyProperties(computerSubsidies, ComputerSubsidiesBO.class);
+        List<ComputerSubsidiesBO> computerSubsidiesBOS = BeanTransform.copyProperties(computerSubsidies, ComputerSubsidiesBO.class);
+        if(computerSubsidiesBOS!=null&&computerSubsidies.size()>0){
+            for (ComputerSubsidiesBO computerSubsidiesBO : computerSubsidiesBOS) {
+                StaffStatus staffStatus = positionDetailUserAPI.statusByName(computerSubsidiesBO.getName());//查看员工状态
+                if (staffStatus == null) {
+                    computerSubsidiesBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    computerSubsidiesBO.setStaffStatus(staffStatus.toString());
+                }
+            }
+        }
+        return computerSubsidiesBOS;
     }
 
     public void searchCondition(ComputerSubsidiesDTO computerSubsidiesDTO) throws SerException {
@@ -240,13 +257,20 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
 
     @Override
     public byte[] exportExcel() throws SerException {
-//        checkSeeIdentity();
+        checkSeeIdentity();
         List<ComputerSubsidies> list = super.findAll();
         List<ComputerSubsidiesImport> computerSubsidiesImports = new ArrayList<>();
-        list.stream().forEach(str -> {
-            ComputerSubsidiesImport excel = BeanTransform.copyProperties(str, ComputerSubsidiesImport.class);
+        for (ComputerSubsidies computerSubsidies : list){
+            ComputerSubsidiesImport excel = BeanTransform.copyProperties(computerSubsidies, ComputerSubsidiesImport.class);
+            StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
+            if (staffStatus == null) {
+                excel.setStaffStatus("未获取到数据");
+            }else{
+
+                excel.setStaffStatus(staffStatus.toString());
+            }
             computerSubsidiesImports.add(excel);
-        });
+        }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(computerSubsidiesImports, excel);
         return bytes;
@@ -254,8 +278,8 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
 
     @Override
     public byte[] templateExport() throws SerException {
-        List<ComputerSubsidiesImport> computerSubsidiesImports = new ArrayList<>();
-        ComputerSubsidiesImport excel = new ComputerSubsidiesImport();
+        List<ComputerSubsidiesImportTemple> computerSubsidiesImportTemples = new ArrayList<>();
+        ComputerSubsidiesImportTemple excel = new ComputerSubsidiesImportTemple();
         excel.setArea("广州");
         excel.setDepartment("研发部");
         excel.setName("张三");
@@ -266,10 +290,9 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
         excel.setConfirm("是");
         excel.setConfirmDate("2017-12-12");
         excel.setSubsidiesStatus("在补助");
-        excel.setStaffStatus("在职");
-        computerSubsidiesImports.add(excel);
+        computerSubsidiesImportTemples.add(excel);
         Excel exce = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(computerSubsidiesImports, exce);
+        byte[] bytes = ExcelUtil.clazzToExcel(computerSubsidiesImportTemples, exce);
         return bytes;
     }
 

@@ -58,7 +58,7 @@ public class ComputerSubsidiesImport extends BaseBO {
      * 使用情况
      */
     @ExcelHeader(name = "使用情况")
-    private String usage;
+    private Usage usage;
 
     /**
      * 电脑补助额
@@ -82,7 +82,7 @@ public class ComputerSubsidiesImport extends BaseBO {
      * 补助状态
      */
     @ExcelHeader(name = "补助状态", notNull = true)
-    private String subsidiesStatus;
+    private SubsidiesStatus subsidiesStatus;
 
     /**
      * 状态
@@ -130,11 +130,11 @@ public class ComputerSubsidiesImport extends BaseBO {
         this.necklineComputer = necklineComputer;
     }
 
-    public String getUsage() {
+    public Usage getUsage() {
         return usage;
     }
 
-    public void setUsage(String usage) {
+    public void setUsage(Usage usage) {
         this.usage = usage;
     }
 
@@ -162,11 +162,11 @@ public class ComputerSubsidiesImport extends BaseBO {
         this.confirmDate = confirmDate;
     }
 
-    public String getSubsidiesStatus() {
+    public SubsidiesStatus getSubsidiesStatus() {
         return subsidiesStatus;
     }
 
-    public void setSubsidiesStatus(String subsidiesStatus) {
+    public void setSubsidiesStatus(SubsidiesStatus subsidiesStatus) {
         this.subsidiesStatus = subsidiesStatus;
     }
 

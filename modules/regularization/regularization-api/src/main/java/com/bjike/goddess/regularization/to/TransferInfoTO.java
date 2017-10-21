@@ -48,31 +48,31 @@ public class TransferInfoTO extends BaseTO {
     /**
      * 地区
      */
-    @NotNull(message = "地区不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "地区不能为空",groups = {TransferInfoTO.testAdd.class})
     private String area;
 
     /**
      * 部门/项目组
      */
-    @NotNull(message = "部门项目组不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "部门项目组不能为空",groups = {TransferInfoTO.testAdd.class})
     private String department;
 
     /**
      * 岗位
      */
-    @NotNull(message = "岗位不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "岗位不能为空",groups = {TransferInfoTO.testAdd.class})
     private String jobs;
 
     /**
      * 姓名
      */
-    @NotNull(message = "姓名不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "姓名不能为空",groups = {TransferInfoTO.testAdd.class})
     private String name;
 
     /**
      * 员工编号
      */
-    @NotNull(message = "员工编号不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "员工编号不能为空",groups = {TransferInfoTO.testAdd.class})
     private String empNo;
 
     /**
@@ -84,13 +84,13 @@ public class TransferInfoTO extends BaseTO {
     /**
      * 学历
      */
-    @NotNull(message = "学历不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "学历不能为空",groups = {TransferInfoTO.testAdd.class})
     private String education;
 
     /**
      * 专业
      */
-    @NotNull(message = "专业不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "专业不能为空",groups = {TransferInfoTO.testAdd.class})
     private String profession;
 
     /**
@@ -102,8 +102,14 @@ public class TransferInfoTO extends BaseTO {
     /**
      * 入职时间
      */
-    @NotNull(message = "入职时间不能为空",groups = {TransferInfoTO.testAdd.class})
+    @NotBlank(message = "入职时间不能为空",groups = {TransferInfoTO.testAdd.class})
     private String hiredate;
+    /**
+     * 同意试用期时长
+     */
+
+    @NotBlank(message = "同意试用期时长不能为空",groups = {TransferInfoTO.testAdd.class})
+    private String probationaryPer;
     /**
      * 三天是否跟进
      */
@@ -528,5 +534,13 @@ public class TransferInfoTO extends BaseTO {
 
     public void setInterviewContent(String interviewContent) {
         this.interviewContent = interviewContent;
+    }
+
+    public String getProbationaryPer() {
+        return probationaryPer;
+    }
+
+    public void setProbationaryPer(String probationaryPer) {
+        this.probationaryPer = probationaryPer;
     }
 }

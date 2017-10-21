@@ -65,11 +65,6 @@ public class SenioritySubsidiesTO extends BaseTO {
      */
     private SubsidiesStatus subsidiesStatus;
 
-    /**
-     * 员工状态
-     */
-    private StaffStatus staffStatus;
-
     public String getArea() {
         return area;
     }
@@ -148,13 +143,5 @@ public class SenioritySubsidiesTO extends BaseTO {
 
     public void setSubsidiesStatus(SubsidiesStatus subsidiesStatus) {
         this.subsidiesStatus = subsidiesStatus;
-    }
-
-    public StaffStatus getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(StaffStatus staffStatus) {
-        this.staffStatus = staffStatus;
     }
 }

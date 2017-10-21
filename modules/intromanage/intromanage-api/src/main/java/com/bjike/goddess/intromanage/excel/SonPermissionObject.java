@@ -3,7 +3,7 @@ package com.bjike.goddess.intromanage.excel;
 import java.io.Serializable;
 
 /**
- * 市场活动下拉导航权限控制
+ * 商务项目合同下拉导航权限控制
  *
  * @Author: [tanghaixiang]
  * @Date: [2017-06-08 10:30]
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SonPermissionObject implements Serializable {
+public class SonPermissionObject implements Serializable{
     /**
      * 导航名
      */

@@ -301,6 +301,8 @@ public class ChangeEquityTypeSerImpl extends ServiceImpl<ChangeEquityType, Chang
         equityTransactRecordDetailSer.deleteByTransactId(id);
         //删除本条记录
         super.remove(id);
+        //重新设置所有股东的占股比例
+        equityTransactRecordSer.updateTransList();
     }
 
 }

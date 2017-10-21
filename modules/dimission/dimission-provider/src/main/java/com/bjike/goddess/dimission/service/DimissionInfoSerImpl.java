@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dimission.api.InterviewAPI;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
@@ -23,7 +24,6 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.bo.PositionUserDetailBO;
 import com.bjike.goddess.organize.enums.WorkStatus;
-import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -296,7 +296,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
             if (moduleAPI.isCheck("organize")) {
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-                bo.setEmployeeNumber(detailBO.getEmployeesNumber());
+//                bo.setEmployeeNumber(detailBO.getEmployeesNumber());
                 bo.setArea("");
                 bo.setPosition("");
                 bo.setArrangement("");
@@ -829,7 +829,7 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         String sql = "select min(dimissionDate) as dimissionDate from " + getTableName(DimissionInfo.class);
         List<Object> objects = super.findBySql(sql);
         String startDate = "";
-        if(objects!=null && objects.size()>0){
+        if (objects != null && objects.size() > 0) {
             startDate = String.valueOf(objects.get(0));
         }
         return startDate;
@@ -841,5 +841,29 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         dto.getConditions().add(Restrict.eq("username", userName));
         List<DimissionInfo> list = super.findByCis(dto);
         return list;
+    }
+
+    @Override
+    public String getTime(String name) throws SerException {
+        DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+        dimissionInfoDTO.getConditions().add(Restrict.eq("username", name));
+        List<DimissionInfo> list = super.findByCis(dimissionInfoDTO);
+        if (!list.isEmpty()) {
+            DimissionInfo dimissionInfo = list.get(0);
+            if ((null != dimissionInfo.getHandle()) && ConfirmationType.AFFIRM.equals(dimissionInfo.getHandle())) {
+                if ((null != dimissionInfo.getAdvance()) && (dimissionInfo.getAdvance())) {
+                    LocalDate advanceDate = dimissionInfo.getAdvanceDate();
+                    if (null != advanceDate) {
+                        return DateUtil.dateToString(advanceDate);   //提前离职
+                    }
+                } else {
+                    LocalDate dimissionDate = dimissionInfo.getDimissionDate();
+                    if (null != dimissionDate) {
+                        return DateUtil.dateToString(dimissionDate);   //正常离职
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

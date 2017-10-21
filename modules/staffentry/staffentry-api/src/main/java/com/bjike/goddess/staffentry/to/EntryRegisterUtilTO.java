@@ -158,7 +158,26 @@ public class EntryRegisterUtilTO implements Serializable  {
      */
     @NotBlank(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "兴趣爱好不能为空")
     private String hobbies;
-
+    /**
+     * 地区
+     */
+    @NotBlank(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "地区不能为空")
+    private String area;
+    /**
+     * 部门/项目组
+     */
+    @NotBlank(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "部门/项目组不能为空")
+    private String department;
+    /**
+     * 职位 
+     */
+    @NotBlank(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "职位不能为空")
+    private String position;
+    /**
+     * 入职日期 
+     */
+    @NotBlank(groups = {EntryRegisterUtilTO.TestBaseInfo.class} , message = "入职日期不能为空")
+    private String inductionDate;
     /**
      * 家庭成员称谓集合
      */
@@ -425,6 +444,38 @@ public class EntryRegisterUtilTO implements Serializable  {
 
     public void setHobbies(String hobbies) {
         this.hobbies = hobbies;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getInductionDate() {
+        return inductionDate;
+    }
+
+    public void setInductionDate(String inductionDate) {
+        this.inductionDate = inductionDate;
     }
 
     public List<String> getTitles() {

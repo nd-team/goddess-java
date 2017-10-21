@@ -1,5 +1,7 @@
 package com.bjike.goddess.rentcar.vo;
 
+import com.bjike.goddess.rentcar.enums.AgreementStatus;
+
 /**
  * 租车协议管理表现层对象
  *
@@ -15,20 +17,35 @@ public class DriverInfoVO {
      * id
      */
     private String id;
-    /**
-     * 账务模块审核意见
-     */
-    private String suggest;
+//    /**
+//     * 账务模块审核意见
+//     */
+//    private String suggest;
+//
+//    /**
+//     * 审核结果
+//     */
+//    private Boolean audit;
 
     /**
-     * 审核结果
+     * 更新时间
      */
-    private Boolean audit;
+    private String modifyTime;
 
     /**
      * 地区
      */
     private String area;
+
+    /**
+     * 项目组(部门)
+     */
+    private String department;
+
+    /**
+     * 租车单价
+     */
+    private Double rentCarUtilCost;
 
     /**
      * 结算方式
@@ -89,6 +106,12 @@ public class DriverInfoVO {
      * 本车耗油
      */
     private Double carFuel;
+
+    /**
+     * 是否确定签订协议
+     */
+    private Boolean enSureAgreement;
+
 
     /**
      * 是否签订租车协议
@@ -156,6 +179,11 @@ public class DriverInfoVO {
     private String cardBank;
 
     /**
+     * 协议状态
+     */
+    private AgreementStatus agreementStatus;
+
+    /**
      * 是否解约
      */
     private Boolean breakAgreement;
@@ -165,6 +193,31 @@ public class DriverInfoVO {
      */
     private String remark;
 
+    /**
+     * 解除时间
+     */
+    private String liftTime;
+
+    /**
+     * 是否为自己添加的数据
+     */
+    private Boolean ifAdd;
+
+    public Boolean getIfAdd() {
+        return ifAdd;
+    }
+
+    public void setIfAdd(Boolean ifAdd) {
+        this.ifAdd = ifAdd;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 
     public String getId() {
         return id;
@@ -174,20 +227,45 @@ public class DriverInfoVO {
         this.id = id;
     }
 
-    public String getSuggest() {
-        return suggest;
+
+    public String getDepartment() {
+        return department;
     }
 
-    public void setSuggest(String suggest) {
-        this.suggest = suggest;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
-    public Boolean getAudit() {
-        return audit;
+    public Double getRentCarUtilCost() {
+        return rentCarUtilCost;
     }
 
-    public void setAudit(Boolean audit) {
-        this.audit = audit;
+    public void setRentCarUtilCost(Double rentCarUtilCost) {
+        this.rentCarUtilCost = rentCarUtilCost;
+    }
+
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
+    }
+
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+        this.enSureAgreement = enSureAgreement;
+    }
+
+    public AgreementStatus getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(AgreementStatus agreementStatus) {
+        this.agreementStatus = agreementStatus;
+    }
+
+    public String getLiftTime() {
+        return liftTime;
+    }
+
+    public void setLiftTime(String liftTime) {
+        this.liftTime = liftTime;
     }
 
     public String getArea() {

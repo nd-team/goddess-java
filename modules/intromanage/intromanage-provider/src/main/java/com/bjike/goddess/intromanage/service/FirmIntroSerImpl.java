@@ -14,6 +14,7 @@ import com.bjike.goddess.intromanage.bo.*;
 import com.bjike.goddess.intromanage.dto.*;
 import com.bjike.goddess.intromanage.entity.*;
 import com.bjike.goddess.intromanage.excel.FirmIntroExport;
+import com.bjike.goddess.intromanage.excel.FirmIntroExportTemple;
 import com.bjike.goddess.intromanage.to.*;
 import com.bjike.goddess.intromanage.type.DemandType;
 import com.bjike.goddess.intromanage.type.GuideAddrStatus;
@@ -100,7 +101,6 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             throw new SerException("您不是本部门人员,没有该操作权限");
         }
         RpcTransmit.transmitUserToken(userToken);
-
     }
 
 
@@ -370,6 +370,8 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
         FirmIntroBO bo = BeanTransform.copyProperties(entity, FirmIntroBO.class);
         String firmId = bo.getId();
         saveSubObj(to, firmId);
+        String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         return bo;
     }
 
@@ -847,13 +849,12 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
     @Override
     public byte[] exportExcel() throws SerException {
         int maxs = 0;
-        int firstMax = 0;
         List<FirmIntro> list = super.findAll();
         List<FirmIntroExport> firmIntroExports = new ArrayList<>();
         List<Integer> maxList = new ArrayList<>();
         if (list != null && list.size() > 0) {
+            Integer seqNum = 1;//序号
             for (FirmIntro firmIntro : list) {
-
                 //查询荣誉与资质
                 HonorAndQualityDTO honorAndQualityDTO = new HonorAndQualityDTO();
                 honorAndQualityDTO.getConditions().add(Restrict.eq("firmId", firmIntro.getId()));
@@ -901,8 +902,10 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
                     BeanTransform.copyProperties(successStories1, excel);
                     BeanTransform.copyProperties(customerAndPartner, excel);
                     BeanTransform.copyProperties(communicationPath, excel);
+                    excel.setSeqNum(seqNum);
                     firmIntroExports.add(excel);
                 }
+                seqNum++;
             }
         }
         Excel excel = new Excel(0, 2);
@@ -914,17 +917,20 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             wb = new XSSFWorkbook(is);
             XSSFSheet sheet;
             sheet = wb.getSheetAt(0);
-//            XSSFCellStyle style = wb.createCellStyle();
-//            style.setAlignment(HorizontalAlignment.FILL);
             int rowSize = list.size();
             List<Field> fields = ClazzUtils.getFields(FirmIntroExport.class); //获得列表对象属性
             List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            int index =1;
             for (int j = 0; j < rowSize; j++) {
                 int mergeRowCount = maxList.get(j);
-                int firstRow = mergeRowCount * j + 1;
-                int lastRow = mergeRowCount * j == 0 ? mergeRowCount : mergeRowCount * (j + 1);
-                for (int i = 0; i < 19; i++) {
-                    sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
+                if(mergeRowCount!=1){
+                    int firstRow = index;
+                    int lastRow =0;
+                    lastRow = firstRow+mergeRowCount-1;
+                    for (int i = 0; i < 20; i++) {
+                        sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
+                    }
+                    index =lastRow+1;
                 }
             }
 
@@ -939,151 +945,150 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
 
     @Override
     public byte[] templateExport() throws SerException {
-        List<FirmIntroExport> firmIntroExports = new ArrayList<>();
-        FirmIntroExport firmIntroExport = new FirmIntroExport();
-        firmIntroExport.setFirmName("北京艾佳天城");
-        firmIntroExport.setFirmNature("自营");
-        firmIntroExport.setRegisterMoney("10000万");
-        firmIntroExport.setRegisterDate("2017-01-01");
-        firmIntroExport.setFirmSpirit("积极向上");
-        firmIntroExport.setServiceAwareness("顾客是上帝");
-        firmIntroExport.setFirmTenet("创新");
-        firmIntroExport.setTalentView("不错过任何一个人才");
-        firmIntroExport.setOperationView("自营");
-        firmIntroExport.setQualityView("正品");
-        firmIntroExport.setOrganization("平台");
-        firmIntroExport.setManageModel("一对一");
-        firmIntroExport.setServiceTeamIntro("是一个很好的团体");
-        firmIntroExport.setStaffNo("231");
-        firmIntroExport.setIncludeArea("2321");
-        firmIntroExport.setSolvingScheme("解决方案");
-        firmIntroExport.setDemandType(DemandType.BIDDING);
-        firmIntroExport.setUpdateDate("2017-12-11");
-        firmIntroExport.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
-        firmIntroExport.setSoftwareCopyright("研发证");
-        firmIntroExport.setBusinessType("销售");
-        firmIntroExport.setProjectSubject("issp项目科目");
-        firmIntroExport.setCommunication("移动");
-        firmIntroExport.setSoftware("java issp");
-        firmIntroExport.setSystemIntegration("commit");
-        firmIntroExport.setMarketingPlanning("营销策划");
-        firmIntroExport.setOperators("北京艾佳");
-        firmIntroExport.setManufacturer("三星");
-        firmIntroExport.setGovernmentUnit("天河政府");
-        firmIntroExport.setPartner("三星");
-        firmIntroExport.setHeadOfficeAddress("北京");
-        firmIntroExport.setHeadOfficeContact("13698765824");
-        firmIntroExport.setBranchAddress("广州");
-        firmIntroExport.setBranchPhone("16987564533");
-        firmIntroExports.add(firmIntroExport);
+        List<FirmIntroExportTemple> firmIntroExportTemples = new ArrayList<>();
+        FirmIntroExportTemple firmIntroExportTemple = new FirmIntroExportTemple();
+        firmIntroExportTemple.setSeqNum(1);
+        firmIntroExportTemple.setFirmName("北京艾佳天城");
+        firmIntroExportTemple.setFirmNature("自营");
+        firmIntroExportTemple.setRegisterMoney("10000万");
+        firmIntroExportTemple.setRegisterDate("2017-01-01");
+        firmIntroExportTemple.setFirmSpirit("积极向上");
+        firmIntroExportTemple.setServiceAwareness("顾客是上帝");
+        firmIntroExportTemple.setFirmTenet("创新");
+        firmIntroExportTemple.setTalentView("不错过任何一个人才");
+        firmIntroExportTemple.setOperationView("自营");
+        firmIntroExportTemple.setQualityView("正品");
+        firmIntroExportTemple.setOrganization("平台");
+        firmIntroExportTemple.setManageModel("一对一");
+        firmIntroExportTemple.setServiceTeamIntro("是一个很好的团体");
+        firmIntroExportTemple.setStaffNo("231");
+        firmIntroExportTemple.setIncludeArea("2321");
+        firmIntroExportTemple.setSolvingScheme("解决方案");
+        firmIntroExportTemple.setDemandType(DemandType.BIDDING);
+        firmIntroExportTemple.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
+        firmIntroExportTemple.setSoftwareCopyright("研发证");
+        firmIntroExportTemple.setBusinessType("销售");
+        firmIntroExportTemple.setProjectSubject("issp项目科目");
+        firmIntroExportTemple.setCommunication("移动");
+        firmIntroExportTemple.setSoftware("java issp");
+        firmIntroExportTemple.setSystemIntegration("commit");
+        firmIntroExportTemple.setMarketingPlanning("营销策划");
+        firmIntroExportTemple.setOperators("北京艾佳");
+        firmIntroExportTemple.setManufacturer("三星");
+        firmIntroExportTemple.setGovernmentUnit("天河政府");
+        firmIntroExportTemple.setPartner("三星");
+        firmIntroExportTemple.setHeadOfficeAddress("北京");
+        firmIntroExportTemple.setHeadOfficeContact("13698765824");
+        firmIntroExportTemple.setBranchAddress("广州");
+        firmIntroExportTemple.setBranchPhone("16987564533");
+        firmIntroExportTemples.add(firmIntroExportTemple);
 
-        FirmIntroExport firmIntroExport2 = new FirmIntroExport();
-        firmIntroExport2.setFirmName("北京艾佳天城");
-        firmIntroExport2.setFirmNature("自营");
-        firmIntroExport2.setRegisterMoney("10000万");
-        firmIntroExport2.setRegisterDate("2017-01-01");
-        firmIntroExport2.setFirmSpirit("积极向上");
-        firmIntroExport2.setServiceAwareness("顾客是上帝");
-        firmIntroExport2.setFirmTenet("创新");
-        firmIntroExport2.setTalentView("不错过任何一个人才");
-        firmIntroExport2.setOperationView("自营");
-        firmIntroExport2.setQualityView("正品");
-        firmIntroExport2.setOrganization("平台");
-        firmIntroExport2.setManageModel("一对一");
-        firmIntroExport2.setServiceTeamIntro("是一个很好的团体");
-        firmIntroExport2.setStaffNo("231");
-        firmIntroExport2.setIncludeArea("2321");
-        firmIntroExport2.setSolvingScheme("解决方案");
-        firmIntroExport2.setDemandType(DemandType.BIDDING);
-        firmIntroExport2.setUpdateDate("2017-12-11");
-        firmIntroExport2.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
-        firmIntroExport2.setSoftwareCopyright("荣誉证书");
-        firmIntroExport2.setBusinessType("策划");
-        firmIntroExport2.setProjectSubject("社群联盟科目");
-        firmIntroExport2.setCommunication("联通");
-        firmIntroExport2.setSoftware("ios issp");
-        firmIntroExport2.setSystemIntegration("user");
-        firmIntroExport2.setMarketingPlanning("计划计划");
-        firmIntroExport2.setOperators("礼尚往来");
-        firmIntroExport2.setManufacturer("天秤");
-        firmIntroExport2.setGovernmentUnit("白云政府");
-        firmIntroExport2.setPartner("ipon");
-        firmIntroExport2.setHeadOfficeAddress("佛上");
-        firmIntroExport2.setHeadOfficeContact("19564856234");
-        firmIntroExport2.setBranchAddress("佛山");
-        firmIntroExport2.setBranchPhone("3697564523");
-        firmIntroExports.add(firmIntroExport2);
+        FirmIntroExportTemple firmIntroExportTemple1 = new FirmIntroExportTemple();
+        firmIntroExportTemple1.setSeqNum(1);
+        firmIntroExportTemple1.setFirmName("北京艾佳天城");
+        firmIntroExportTemple1.setFirmNature("自营");
+        firmIntroExportTemple1.setRegisterMoney("10000万");
+        firmIntroExportTemple1.setRegisterDate("2017-01-01");
+        firmIntroExportTemple1.setFirmSpirit("积极向上");
+        firmIntroExportTemple1.setServiceAwareness("顾客是上帝");
+        firmIntroExportTemple1.setFirmTenet("创新");
+        firmIntroExportTemple1.setTalentView("不错过任何一个人才");
+        firmIntroExportTemple1.setOperationView("自营");
+        firmIntroExportTemple1.setQualityView("正品");
+        firmIntroExportTemple1.setOrganization("平台");
+        firmIntroExportTemple1.setManageModel("一对一");
+        firmIntroExportTemple1.setServiceTeamIntro("是一个很好的团体");
+        firmIntroExportTemple1.setStaffNo("231");
+        firmIntroExportTemple1.setIncludeArea("2321");
+        firmIntroExportTemple1.setSolvingScheme("解决方案");
+        firmIntroExportTemple1.setDemandType(DemandType.BIDDING);
+        firmIntroExportTemple1.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
+        firmIntroExportTemple1.setSoftwareCopyright("荣誉证书");
+        firmIntroExportTemple1.setBusinessType("策划");
+        firmIntroExportTemple1.setProjectSubject("社群联盟科目");
+        firmIntroExportTemple1.setCommunication("联通");
+        firmIntroExportTemple1.setSoftware("ios issp");
+        firmIntroExportTemple1.setSystemIntegration("user");
+        firmIntroExportTemple1.setMarketingPlanning("计划计划");
+        firmIntroExportTemple1.setOperators("礼尚往来");
+        firmIntroExportTemple1.setManufacturer("天秤");
+        firmIntroExportTemple1.setGovernmentUnit("白云政府");
+        firmIntroExportTemple1.setPartner("ipon");
+        firmIntroExportTemple1.setHeadOfficeAddress("佛上");
+        firmIntroExportTemple1.setHeadOfficeContact("19564856234");
+        firmIntroExportTemple1.setBranchAddress("佛山");
+        firmIntroExportTemple1.setBranchPhone("3697564523");
+        firmIntroExportTemples.add(firmIntroExportTemple1);
 
-        FirmIntroExport firmIntroExport3 = new FirmIntroExport();
-        firmIntroExport3.setFirmName("北京艾佳天城");
-        firmIntroExport3.setFirmNature("自营");
-        firmIntroExport3.setRegisterMoney("10000万");
-        firmIntroExport3.setRegisterDate("2017-01-01");
-        firmIntroExport3.setFirmSpirit("积极向上");
-        firmIntroExport3.setServiceAwareness("顾客是上帝");
-        firmIntroExport3.setFirmTenet("创新");
-        firmIntroExport3.setTalentView("不错过任何一个人才");
-        firmIntroExport3.setOperationView("自营");
-        firmIntroExport3.setQualityView("正品");
-        firmIntroExport3.setOrganization("平台");
-        firmIntroExport3.setManageModel("一对一");
-        firmIntroExport3.setServiceTeamIntro("是一个很好的团体");
-        firmIntroExport3.setStaffNo("231");
-        firmIntroExport3.setIncludeArea("2321");
-        firmIntroExport3.setSolvingScheme("解决方案");
-        firmIntroExport3.setDemandType(DemandType.BIDDING);
-        firmIntroExport3.setUpdateDate("2017-12-11");
-        firmIntroExport3.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
-        firmIntroExport3.setSoftwareCopyright("利丰");
-        firmIntroExport3.setCommunication("联通");
-        firmIntroExport3.setSoftware("ios issp");
-        firmIntroExport3.setSystemIntegration("user");
-        firmIntroExport3.setMarketingPlanning("计划计划");
-        firmIntroExport3.setOperators("礼尚往来");
-        firmIntroExport3.setManufacturer("天秤");
-        firmIntroExport3.setGovernmentUnit("白云政府");
-        firmIntroExport3.setPartner("ipon");
-        firmIntroExports.add(firmIntroExport3);
+        FirmIntroExportTemple firmIntroExportTemple2 = new FirmIntroExportTemple();
+        firmIntroExportTemple2.setSeqNum(1);
+        firmIntroExportTemple2.setFirmName("北京艾佳天城");
+        firmIntroExportTemple2.setFirmNature("自营");
+        firmIntroExportTemple2.setRegisterMoney("10000万");
+        firmIntroExportTemple2.setRegisterDate("2017-01-01");
+        firmIntroExportTemple2.setFirmSpirit("积极向上");
+        firmIntroExportTemple2.setServiceAwareness("顾客是上帝");
+        firmIntroExportTemple2.setFirmTenet("创新");
+        firmIntroExportTemple2.setTalentView("不错过任何一个人才");
+        firmIntroExportTemple2.setOperationView("自营");
+        firmIntroExportTemple2.setQualityView("正品");
+        firmIntroExportTemple2.setOrganization("平台");
+        firmIntroExportTemple2.setManageModel("一对一");
+        firmIntroExportTemple2.setServiceTeamIntro("是一个很好的团体");
+        firmIntroExportTemple2.setStaffNo("231");
+        firmIntroExportTemple2.setIncludeArea("2321");
+        firmIntroExportTemple2.setSolvingScheme("解决方案");
+        firmIntroExportTemple2.setDemandType(DemandType.BIDDING);
+        firmIntroExportTemple2.setPositioning("战略定位战略定位战略定位战略定位战略定位战略定位");
+        firmIntroExportTemple2.setSoftwareCopyright("利丰");
+        firmIntroExportTemple2.setCommunication("联通");
+        firmIntroExportTemple2.setSoftware("ios issp");
+        firmIntroExportTemple2.setSystemIntegration("user");
+        firmIntroExportTemple2.setMarketingPlanning("计划计划");
+        firmIntroExportTemple2.setOperators("礼尚往来");
+        firmIntroExportTemple2.setManufacturer("天秤");
+        firmIntroExportTemple2.setGovernmentUnit("白云政府");
+        firmIntroExportTemple2.setPartner("ipon");
+        firmIntroExportTemples.add(firmIntroExportTemple2);
 
-        FirmIntroExport firmIntroExport4 = new FirmIntroExport();
-        firmIntroExport4.setFirmName("粒上皇制作有限公司");
-        firmIntroExport4.setFirmNature("私立的");
-        firmIntroExport4.setRegisterMoney("600万");
-        firmIntroExport4.setRegisterDate("2013-12-12");
-        firmIntroExport4.setFirmSpirit("努力努力");
-        firmIntroExport4.setServiceAwareness("认真负责");
-        firmIntroExport4.setFirmTenet("取糟粕");
-        firmIntroExport4.setTalentView("巴拉巴拉");
-        firmIntroExport4.setOperationView("私立私立");
-        firmIntroExport4.setQualityView("质量号");
-        firmIntroExport4.setOrganization("尚峰形式");
-        firmIntroExport4.setManageModel("一对多");
-        firmIntroExport4.setServiceTeamIntro("团队能力号");
-        firmIntroExport4.setStaffNo("34323");
-        firmIntroExport4.setIncludeArea("53234");
-        firmIntroExport4.setSolvingScheme("不好解决");
-        firmIntroExport4.setDemandType(DemandType.INDUCTION_TRAINING);
-        firmIntroExport4.setUpdateDate("2017-12-11");
-        firmIntroExport4.setPositioning("首先然后其次");
-        firmIntroExport4.setSoftwareCopyright("荣誉证书");
-        firmIntroExport4.setBusinessType("策划");
-        firmIntroExport4.setProjectSubject("社群联盟科目");
-        firmIntroExport4.setCommunication("联通");
-        firmIntroExport4.setSoftware("ios issp");
-        firmIntroExport4.setSystemIntegration("user");
-        firmIntroExport4.setMarketingPlanning("计划计划");
-        firmIntroExport4.setOperators("礼尚往来");
-        firmIntroExport4.setManufacturer("天秤");
-        firmIntroExport4.setGovernmentUnit("白云政府");
-        firmIntroExport4.setPartner("ipon");
-        firmIntroExport4.setHeadOfficeAddress("佛上");
-        firmIntroExport4.setHeadOfficeContact("19564856234");
-        firmIntroExport4.setBranchAddress("佛山");
-        firmIntroExport4.setBranchPhone("3697564523");
-        firmIntroExports.add(firmIntroExport4);
-//        List<Integer> maxList = new ArrayList<>();
+        FirmIntroExportTemple firmIntroExportTemple3 = new FirmIntroExportTemple();
+        firmIntroExportTemple3.setSeqNum(2);
+        firmIntroExportTemple3.setFirmName("粒上皇制作有限公司");
+        firmIntroExportTemple3.setFirmNature("私立的");
+        firmIntroExportTemple3.setRegisterMoney("600万");
+        firmIntroExportTemple3.setRegisterDate("2013-12-12");
+        firmIntroExportTemple3.setFirmSpirit("努力努力");
+        firmIntroExportTemple3.setServiceAwareness("认真负责");
+        firmIntroExportTemple3.setFirmTenet("取糟粕");
+        firmIntroExportTemple3.setTalentView("巴拉巴拉");
+        firmIntroExportTemple3.setOperationView("私立私立");
+        firmIntroExportTemple3.setQualityView("质量号");
+        firmIntroExportTemple3.setOrganization("尚峰形式");
+        firmIntroExportTemple3.setManageModel("一对多");
+        firmIntroExportTemple3.setServiceTeamIntro("团队能力号");
+        firmIntroExportTemple3.setStaffNo("34323");
+        firmIntroExportTemple3.setIncludeArea("53234");
+        firmIntroExportTemple3.setSolvingScheme("不好解决");
+        firmIntroExportTemple3.setDemandType(DemandType.INDUCTION_TRAINING);
+        firmIntroExportTemple3.setPositioning("首先然后其次");
+        firmIntroExportTemple3.setSoftwareCopyright("荣誉证书");
+        firmIntroExportTemple3.setBusinessType("策划");
+        firmIntroExportTemple3.setProjectSubject("社群联盟科目");
+        firmIntroExportTemple3.setCommunication("联通");
+        firmIntroExportTemple3.setSoftware("ios issp");
+        firmIntroExportTemple3.setSystemIntegration("user");
+        firmIntroExportTemple3.setMarketingPlanning("计划计划");
+        firmIntroExportTemple3.setOperators("礼尚往来");
+        firmIntroExportTemple3.setManufacturer("天秤");
+        firmIntroExportTemple3.setGovernmentUnit("白云政府");
+        firmIntroExportTemple3.setPartner("ipon");
+        firmIntroExportTemple3.setHeadOfficeAddress("佛上");
+        firmIntroExportTemple3.setHeadOfficeContact("19564856234");
+        firmIntroExportTemple3.setBranchAddress("佛山");
+        firmIntroExportTemple3.setBranchPhone("3697564523");
+        firmIntroExportTemples.add(firmIntroExportTemple3);
         Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(firmIntroExports, excel);
+        byte[] bytes = ExcelUtil.clazzToExcel(firmIntroExportTemples, excel);
         XSSFWorkbook wb = null;
         ByteArrayOutputStream os = null;
         try {
@@ -1091,18 +1096,12 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             wb = new XSSFWorkbook(is);
             XSSFSheet sheet;
             sheet = wb.getSheetAt(0);
-//            int rowSize = list.size();
             List<Field> fields = ClazzUtils.getFields(FirmIntroExport.class); //获得列表对象属性
             List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
-//            for (int j = 0; j < 2; j++) {
-//                int mergeRowCount = maxList.get(j);
-//                int firstRow = mergeRowCount * j + 1;
-//                int lastRow = mergeRowCount * j == 0 ? mergeRowCount : mergeRowCount * (j + 1);
             for (int i = 0; i < 19; i++) {
                 sheet.addMergedRegion(new CellRangeAddress(1, 3, i, i));
             }
 
-//            }
 
             os = new ByteArrayOutputStream();
             wb.write(os);

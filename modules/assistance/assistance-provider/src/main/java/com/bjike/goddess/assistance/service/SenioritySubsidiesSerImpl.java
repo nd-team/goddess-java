@@ -8,6 +8,7 @@ import com.bjike.goddess.assistance.entity.SenioritySubsidiesStandard;
 import com.bjike.goddess.assistance.enums.GuideAddrStatus;
 import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.assistance.excel.SenioritySubsidiesImport;
+import com.bjike.goddess.assistance.excel.SenioritySubsidiesImportTemple;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -17,6 +18,8 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +51,8 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对添加删除修改查看权限（部门级别）
@@ -187,7 +192,20 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
         checkSeeIdentity();
         searchCondition(senioritySubsidiesDTO);
         List<SenioritySubsidies> senioritySubsidiesList = super.findByPage(senioritySubsidiesDTO);
-        return BeanTransform.copyProperties(senioritySubsidiesList, SenioritySubsidiesBO.class);
+        List<SenioritySubsidiesBO> senioritySubsidiesBOS = BeanTransform.copyProperties(senioritySubsidiesList, SenioritySubsidiesBO.class);
+        if(senioritySubsidiesBOS!=null&&senioritySubsidiesBOS.size()>0){
+
+            for (SenioritySubsidiesBO senioritySubsidiesBO : senioritySubsidiesBOS) {
+                StaffStatus staffStatus = positionDetailUserAPI.statusByName(senioritySubsidiesBO.getName());//查看员工状态
+                if (staffStatus == null) {
+                    senioritySubsidiesBO.setStaffStatus("未获取到数据");
+                }else{
+
+                    senioritySubsidiesBO.setStaffStatus(staffStatus.toString());
+                }
+            }
+        }
+        return senioritySubsidiesBOS;
     }
 
     public void searchCondition(SenioritySubsidiesDTO senioritySubsidiesDTO) throws SerException {
@@ -272,10 +290,17 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
         checkSeeIdentity();
         List<SenioritySubsidies> list = super.findAll();
         List<SenioritySubsidiesImport> senioritySubsidiesImports = new ArrayList<>();
-        list.stream().forEach(str -> {
-            SenioritySubsidiesImport excel = BeanTransform.copyProperties(str, SenioritySubsidiesImport.class);
+        for (SenioritySubsidies senioritySubsidies : list){
+            SenioritySubsidiesImport excel = BeanTransform.copyProperties(senioritySubsidies, SenioritySubsidiesImport.class);
+            StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
+            if (staffStatus == null) {
+                excel.setStaffStatus("未获取到数据");
+            }else {
+
+                excel.setStaffStatus(staffStatus.toString());
+            }
             senioritySubsidiesImports.add(excel);
-        });
+        }
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(senioritySubsidiesImports, excel);
         return bytes;
@@ -283,8 +308,8 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
 
     @Override
     public byte[] templateExport() throws SerException {
-        List<SenioritySubsidiesImport> senioritySubsidiesImports = new ArrayList<>();
-        SenioritySubsidiesImport excel = new SenioritySubsidiesImport();
+        List<SenioritySubsidiesImportTemple> senioritySubsidiesImportTemples = new ArrayList<>();
+        SenioritySubsidiesImportTemple excel = new SenioritySubsidiesImportTemple();
         excel.setArea("广州");
         excel.setName("张三");
         excel.setEmpNo("9658426");
@@ -295,10 +320,9 @@ public class SenioritySubsidiesSerImpl extends ServiceImpl<SenioritySubsidies, S
         excel.setCompanyLength(13);
         excel.setGainGrant(100d);
         excel.setSubsidiesStatus("在补助");
-        excel.setStaffStatus("在职");
-        senioritySubsidiesImports.add(excel);
+        senioritySubsidiesImportTemples.add(excel);
         Excel exce = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(senioritySubsidiesImports, exce);
+        byte[] bytes = ExcelUtil.clazzToExcel(senioritySubsidiesImportTemples, exce);
         return bytes;
     }
 

@@ -45,6 +45,11 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
     void sendEmail() throws SerException;
 
     /**
+     * 发送邮件提醒
+     */
+    void sendEmailRemind() throws SerException;
+
+    /**
      * 获取项目组信息
      * @return
      * @throws SerException
@@ -107,4 +112,10 @@ public interface CarSendEmailSer extends Ser<CarSendEmail, CarSendEmailDTO> {
      * @throws SerException
      */
     CarSendEmailBO findOne(String id) throws SerException;
+
+
+    /**
+     * 删除
+     */
+    void delete(String id) throws SerException;
 }

@@ -38,6 +38,7 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:financeinit:financeinit-api")
+compile project(":modules:assemble:assemble-api")
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }

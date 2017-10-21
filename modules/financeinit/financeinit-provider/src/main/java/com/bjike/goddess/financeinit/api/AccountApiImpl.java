@@ -94,4 +94,9 @@ public class AccountApiImpl implements AccountAPI {
     public String findByName(String name) throws SerException {
         return accountSer.findByName(name);
     }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return accountSer.exportExcel();
+    }
 }

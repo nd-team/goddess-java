@@ -5,11 +5,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.bo.AccountBO;
 import com.bjike.goddess.financeinit.dto.AccountDTO;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
 import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
+import com.bjike.goddess.financeinit.excel.AccountExport;
 import com.bjike.goddess.financeinit.to.AccountTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -281,4 +285,20 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         List<String> accountOrigin = list.stream().map(Account::getName).collect(Collectors.toList());
         return accountOrigin;
     }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        List<Account> list = super.findAll();
+        List<AccountExport> accountExports = new ArrayList<>();
+
+        for (Account account : list){
+            AccountExport excel = BeanTransform.copyProperties(account, AccountExport.class);
+            accountExports.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(accountExports, excel);
+        return bytes;
+    }
+
+
 }

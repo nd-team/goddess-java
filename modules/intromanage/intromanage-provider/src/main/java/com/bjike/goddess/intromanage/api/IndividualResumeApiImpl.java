@@ -150,4 +150,15 @@ public class IndividualResumeApiImpl implements IndividualResumeAPI {
     public SummationBO summaTotal(String endDate) throws SerException {
         return individualResumeSer.summaTotal(endDate);
     }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return individualResumeSer.exportExcel();
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return individualResumeSer.templateExport();
+    }
+
 }

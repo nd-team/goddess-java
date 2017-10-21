@@ -3,9 +3,12 @@ package com.bjike.goddess.taskallotment.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.taskallotment.bo.*;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.entity.TaskNode;
+import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 
 import java.util.List;
@@ -20,6 +23,21 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 列表
      *
@@ -111,7 +129,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @return
      * @throws SerException
      */
-    Long myInitiateNum() throws SerException;
+    Long myInitiateNum(TaskNodeDTO dto) throws SerException;
 
     /**
      * 撤回任务
@@ -140,18 +158,18 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
     /**
      * 确认完成
      *
-     * @param id
+     * @param to
      * @throws SerException
      */
-    void finish(String id) throws SerException;
+    void finish(TaskNodeTO to) throws SerException;
 
     /**
      * 确认未完成
      *
-     * @param id
+     * @param to
      * @throws SerException
      */
-    void unFinish(String id) throws SerException;
+    void unFinish(TaskNodeTO to) throws SerException;
 
     /**
      * 上报审核通过
@@ -183,7 +201,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @return
      * @throws SerException
      */
-    Long myChargeNum() throws SerException;
+    Long myChargeNum(TaskNodeDTO dto) throws SerException;
 
     /**
      * 分配我负责的任务
@@ -207,7 +225,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @return
      * @throws SerException
      */
-    Long myExecuteNum() throws SerException;
+    Long myExecuteNum(TaskNodeDTO dto) throws SerException;
 
     /**
      * 上报任务
@@ -287,10 +305,40 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 日报
-     * @param time 时间
+     *
+     * @param time  时间
      * @param names 姓名数组
      * @return
      * @throws SerException
      */
     List<DayBO> dayReport(String time, String[] names) throws SerException;
+
+    /**
+     * 日报汇总
+     *
+     * @param startTime
+     * @param endTime
+     * @param departIds
+     * @return
+     * @throws SerException
+     */
+    DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException;
+
+    /**
+     * 获取某人当天的任务完成天数
+     *
+     * @param date
+     * @return
+     * @throws SerException
+     */
+    Double finishDay(String date, String name) throws SerException;
+
+    /**
+     * 获取某些人某天的任务完成情况
+     * @param names
+     * @param date
+     * @return
+     * @throws SerException
+     */
+    List<ObjectBO> taskSituation(String[] names, String date) throws SerException;
 }

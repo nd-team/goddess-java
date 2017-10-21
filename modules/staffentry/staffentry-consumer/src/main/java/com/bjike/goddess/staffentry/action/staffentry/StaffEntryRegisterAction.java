@@ -192,7 +192,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addUsers(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO) throws ActException {
+    public Result addUsers(@Validated(StaffEntryRegisterTO.TestAdd.class) StaffEntryRegisterTO staffEntryRegisterTO,BindingResult bindingResult) throws ActException {
         try {
             StaffEntryRegisterBO staffEntryRegisterBO = staffEntryRegisterAPI.addStaffEntryRegister(staffEntryRegisterTO);
             return ActResult.initialize(BeanTransform.copyProperties(staffEntryRegisterBO, StaffEntryRegisterVO.class));
@@ -295,8 +295,12 @@ public class StaffEntryRegisterAction extends BaseFileAction {
             List<StaffEntryRegisterExcel> tos = ExcelUtil.excelToClazz(is, StaffEntryRegisterExcel.class, excel);
             List<StaffEntryRegisterTO> tocs = new ArrayList<>();
             for (StaffEntryRegisterExcel str : tos) {
-                StaffEntryRegisterTO staffEntryRegisterTO = BeanTransform.copyProperties(str, StaffEntryRegisterTO.class, "entryDate");
+                StaffEntryRegisterTO staffEntryRegisterTO = BeanTransform.copyProperties(str, StaffEntryRegisterTO.class, "entryDate", "notice", "entry", "useCompanyComputer", "lodge");
                 staffEntryRegisterTO.setEntryDate(String.valueOf(str.getEntryDate()));
+                staffEntryRegisterTO.setNotice(stringToBool(str.getNotice()));
+                staffEntryRegisterTO.setEntry(stringToBool(str.getEntry()));
+                staffEntryRegisterTO.setUseCompanyComputer(stringToBool(str.getUseCompanyComputer()));
+                staffEntryRegisterTO.setLodge(stringToBool(str.getLodge()));
                 tocs.add(staffEntryRegisterTO);
             }
             //注意序列化
@@ -305,6 +309,21 @@ public class StaffEntryRegisterAction extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+
+    public Boolean stringToBool(String type) throws ActException {
+        Boolean bool = false;
+        switch (type) {
+            case "是":
+                bool = true;
+                break;
+            case "否":
+                bool = false;
+                break;
+            default:
+                throw new ActException("格式输入不正确,正确的格式为(是/否)");
+        }
+        return bool;
     }
 
     /**
@@ -382,6 +401,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理日汇总
      *
@@ -400,45 +420,48 @@ public class StaffEntryRegisterAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理周汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
-     * @param week 周期
+     * @param week  周期
      * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize/week")
-    public Result summarizeDay(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+    public Result summarizeDay(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
         try {
-            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year,month,week);
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year, month, week);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理月汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
      * @return class EntrySummaryVO
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/summarize/month")
-    public Result summarizeMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+    public Result summarizeMonth(Integer year, Integer month, HttpServletRequest request) throws ActException {
         try {
-            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaMonth(year,month);
+            List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaMonth(year, month);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职管理累计汇总
      *

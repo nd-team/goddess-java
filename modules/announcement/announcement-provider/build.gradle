@@ -34,6 +34,8 @@ dependencies {
     compile project(":modules:message:message-api")
     compile project(":modules:contacts:contacts-api")
     compile project(":modules:organize:organize-api")
+    compile project(":modules:push:push-api")
     compile project(":common:common-utils")
+    compile files("lib/json-20151123.jar")
 }
 

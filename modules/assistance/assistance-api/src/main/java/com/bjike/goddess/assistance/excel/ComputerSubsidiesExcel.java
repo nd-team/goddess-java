@@ -78,11 +78,6 @@ public class ComputerSubsidiesExcel extends BaseTO {
     @ExcelHeader(name = "补助状态", notNull = true)
     private String subsidiesStatus;
 
-    /**
-     * 状态
-     */
-    @ExcelHeader(name = "状态", notNull = true)
-    private String staffStatus;
 
     public String getArea() {
         return area;
@@ -164,11 +159,4 @@ public class ComputerSubsidiesExcel extends BaseTO {
         this.subsidiesStatus = subsidiesStatus;
     }
 
-    public String getStaffStatus() {
-        return staffStatus;
-    }
-
-    public void setStaffStatus(String staffStatus) {
-        this.staffStatus = staffStatus;
-    }
 }

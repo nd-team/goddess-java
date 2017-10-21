@@ -26,6 +26,8 @@ public interface CustomizeAPI {
 
     }
 
+    void edit(CustomizeTO to) throws SerException;
+
     default void delete(String id) throws SerException {
 
     }
@@ -33,4 +35,12 @@ public interface CustomizeAPI {
     default void enable(String id, boolean enable) throws SerException {
 
     }
+
+    /**
+     * 通过id查找
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    CustomizeBO findByID(String id) throws SerException;
 }

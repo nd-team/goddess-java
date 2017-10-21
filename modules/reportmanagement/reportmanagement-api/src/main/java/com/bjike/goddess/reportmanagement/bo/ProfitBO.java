@@ -1,6 +1,8 @@
 package com.bjike.goddess.reportmanagement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.reportmanagement.enums.ProfitType;
+import com.bjike.goddess.reportmanagement.enums.Type;
 
 /**
  * 利润表业务传输对象
@@ -32,6 +34,32 @@ public class ProfitBO extends BaseBO {
      * 本年累计数
      */
     private Double currentYearAmount;
+
+    /**
+     * 利润类型
+     */
+    private ProfitType profitType;
+
+    /**
+     * 运算类型
+     */
+    private Type type;
+
+    public ProfitType getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(ProfitType profitType) {
+        this.profitType = profitType;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     public Integer getNum() {
         return num;

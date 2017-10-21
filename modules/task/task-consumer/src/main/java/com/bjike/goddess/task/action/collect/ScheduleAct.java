@@ -6,6 +6,8 @@ import com.bjike.goddess.task.api.ScheduleAPI;
 import com.bjike.goddess.task.dto.CollectDTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +37,7 @@ public class ScheduleAct {
      * @version v1
      */
     @GetMapping("v1/collect")
-    public String collect(CollectDTO dto) throws ActException {
+    public String collect(@Validated(CollectDTO.COUNT.class) CollectDTO dto, BindingResult rs) throws ActException {
         try {
             String result = scheduleAPI.collect(dto);
             return result;

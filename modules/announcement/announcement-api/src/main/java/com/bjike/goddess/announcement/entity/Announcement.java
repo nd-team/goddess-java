@@ -61,7 +61,7 @@ public class Announcement extends BaseEntity {
     /**
      * 发布对象
      */
-    @Column(name = "recipient", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发布对象'")
+    @Column(name = "recipient", nullable = false, columnDefinition = "TEXT   COMMENT '发布对象'")
     private String recipient;
 
     /**

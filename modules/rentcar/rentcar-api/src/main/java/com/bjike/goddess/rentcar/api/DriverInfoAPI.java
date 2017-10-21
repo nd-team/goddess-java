@@ -88,4 +88,15 @@ public interface DriverInfoAPI {
      * @param audit 结果
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+
+    /**
+     * 解除协议
+     */
+    void recissionAgreement(String id,Boolean breakAgreement,String liftTime ) throws SerException;
+
+    /**
+     * 根据司机名称获取数据
+     */
+    DriverInfoBO findByName(String driverName) throws SerException;
 }

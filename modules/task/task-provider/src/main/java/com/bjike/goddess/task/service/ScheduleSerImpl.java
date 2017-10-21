@@ -10,6 +10,10 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.ModulesAPI;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.bo.collect.Custom;
 import com.bjike.goddess.task.bo.collect.TaskCollect;
@@ -20,11 +24,11 @@ import com.bjike.goddess.task.entity.Customize;
 import com.bjike.goddess.task.enums.*;
 import com.bjike.goddess.task.util.HtmlBuild;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,22 +46,34 @@ import java.util.*;
  */
 @Service
 public class ScheduleSerImpl implements ScheduleSer {
+    public static final Logger LOGGER = LoggerFactory.getLogger(ScheduleSerImpl.class);
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private UserDetailAPI userDetailAPI;
+    private PositionUserDetailAPI positionUserDetailAPI;
     @Autowired
     private TableSer tableSer;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ModulesAPI modulesAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     @Override
     public Collect collect(CollectDTO dto) throws SerException {
         UserBO user = userAPI.currentUser();
-        String userId = user.getId();
-        UserDetailBO detail = userDetailAPI.findByUserId(userId);
-        String departmentId = detail.getDepartmentId();
-        List<UserBO> users = userAPI.findByDept(departmentId); //查询自己所在部门的所有用户
+        Map<String, String> map = positionUserDetailAPI.departPosition(user.getUsername());
+        Set<String> names = null;
+        if (null != map) {
+            Set<String> set = map.keySet();
+            for (String s : set) {
+                List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(new String[]{s});
+                if (null != detailBOS && !detailBOS.isEmpty()) {
+                    names = departmentDetailAPI.departPersons(detailBOS.get(0).getId());
+                }
+            }
+        }
         Collect collect = new Collect();
         if (dto.isNeedFixed()) {
             String sql = getSql(dto);
@@ -78,12 +94,18 @@ public class ScheduleSerImpl implements ScheduleSer {
         //今天任务
         String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
         String end = DateUtil.dateToString(LocalDate.now().atTime(23, 59, 59));
-        collect.setTodayCollects(initDateTask(users, start, end));
+        if (null != initDateTask(names, start, end)) {
+            collect.setTodayCollects(initDateTask(names, start, end));
+        }
+        //可添加汇总   collectToday(collects);
+        //可添加明天汇总 collectTomorrow(collects);
         //明天任务
         start = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(00, 00, 01));
         end = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(23, 59, 59));
-        List<TaskCollect> taskCollects = initDateTask(users, start, end);
-        collect.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        List<TaskCollect> taskCollects = initDateTask(names, start, end);
+        if (null != taskCollects) {
+            collect.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        }
         return collect;
     }
 
@@ -96,66 +118,78 @@ public class ScheduleSerImpl implements ScheduleSer {
      * @return
      * @throws SerException
      */
-    private List<TaskCollect> initDateTask(List<UserBO> users, String startTime, String endTime) throws SerException {
-        String[] username = new String[users.size()];
-        for (int i = 0; i < users.size(); i++) {
-            username[i] = users.get(i).getNickname();
-        }
-        String names = "'" + StringUtils.join(username, "','") + "'";
-        //todo  TaskCollect 对象未设置 String module; //模块  String post; //岗位
-        String sql;
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT username, outProject, ");
-        sb.append("  innerProject, ");
-        sb.append("  taskType, ");
-        sb.append(" content, ");
-        sb.append(" remark, ");
-        sb.append(" planNum, ");
-        sb.append(" factNum,differNum, ");
-        sb.append("  planDuration, factDuration, ");
-        sb.append("  factDuration-planDuration AS differDuration ");
-        sb.append(" FROM( ");
-        sb.append(" SELECT tn.execute AS username,p.project AS outProject,p.innerProject  , ");
-        sb.append(" tn.content,tn.remark,planNum,actualNum AS factNum,(actualNum-planNum ) AS differNum, ");
-        sb.append(" CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
-        sb.append(" CASE needType   WHEN '1' THEN 60*needTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
-        sb.append(" CASE actualType   WHEN '1' THEN 60*actualTime   WHEN '2' THEN 24*60*actualTime  ELSE actualTime END  AS factDuration ");
-        sb.append(" FROM taskallotment_tasknode tn ,taskallotment_table t,");
-        sb.append(" taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
-        sb.append(" AND ( ");
-        sb.append(" tn.startTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
-        sb.append(" OR tn.endTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
-        sb.append(" OR tn.startTime < '" + startTime + "' ");
-        sb.append(" OR tn.endTime > '" + endTime + "' ");
-        sb.append(" ) AND execute IN (" + names + ")  ");
-        sb.append(" ) a ");
-        sb.append(" ORDER BY username");
-        sql = sb.toString();
-        String[] fields = new String[]{"username", "outProject", "innerProject", "taskType",
-                "content", "remark", "planNum", "factNum", "differNum", "planDuration", "factDuration", "differDuration"};
-        List<TaskCollect> taskCollects = tableSer.findBySql(sql, TaskCollect.class, fields);
-        for (String user : username) {
-            boolean exist = false;
-            for (TaskCollect collect : taskCollects) {
-                if (user.equals(collect.getUsername())) {
-                    exist = true;
-                    break;
+    private List<TaskCollect> initDateTask(Set<String> users, String startTime, String endTime) throws SerException {
+        if (null != users) {
+            String[] username = new String[users.size()];
+            int i = 0;
+            for (String s : users) {
+                username[i] = s;
+                i++;
+            }
+            String names = "'" + StringUtils.join(username, "','") + "'";
+            String sql;
+            StringBuilder sb = new StringBuilder();
+            sb.append(" SELECT username, outProject, ");
+            sb.append("  innerProject, ");
+            sb.append("  taskType, ");
+            sb.append(" content, ");
+            sb.append(" remark, ");
+            sb.append(" planNum, ");
+            sb.append(" factNum,differNum, ");
+            sb.append("  planDuration, factDuration, ");
+            sb.append("  factDuration-planDuration AS differDuration ");
+            sb.append(" FROM( ");
+            sb.append(" SELECT tn.execute AS username,p.project AS outProject,p.innerProject  , ");
+            sb.append(" tn.content,tn.remark,planNum,actualNum AS factNum,(actualNum-planNum ) AS differNum, ");
+            sb.append(" CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
+            sb.append(" CASE needType   WHEN '1' THEN 60*needTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
+            sb.append(" CASE actualType   WHEN '1' THEN 60*actualTime   WHEN '2' THEN 24*60*actualTime  ELSE actualTime END  AS factDuration ");
+            sb.append(" FROM taskallotment_tasknode tn ,taskallotment_table t,");
+            sb.append(" taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
+            sb.append(" AND ( ");
+            sb.append(" tn.startTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
+            sb.append(" OR tn.endTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
+            sb.append(" OR tn.startTime < '" + startTime + "' ");
+            sb.append(" OR tn.endTime > '" + endTime + "' ");
+            sb.append(" ) AND execute IN (" + names + ")  ");
+            sb.append(" ) a ");
+            sb.append(" ORDER BY username");
+            sql = sb.toString();
+            String[] fields = new String[]{"username", "outProject", "innerProject", "taskType",
+                    "content", "remark", "planNum", "factNum", "differNum", "planDuration", "factDuration", "differDuration"};
+            List<TaskCollect> taskCollects = tableSer.findBySql(sql, TaskCollect.class, fields); //查询指定多人的任务
+            for (String user : username) {
+                boolean exist = false;
+                Map<String, String> map = modulesAPI.findModuleAndPost(user);
+                for (TaskCollect collect : taskCollects) {
+                    if (user.equals(collect.getUsername())) {
+                        exist = true;
+                        if (null != map) { //设置模块及职位
+                            collect.setModule(map.get("module"));
+                            collect.setPost(map.get("position"));
+                        }
+                        break;
+                    }
+                }
+                if (!exist) { //不存在任务则添加空的对象
+                    TaskCollect taskCollect = new TaskCollect();
+                    if (null != map) { //设置模块及职位
+                        taskCollect.setModule(map.get("module"));
+                        taskCollect.setPost(map.get("position"));
+                    }
+                    taskCollect.setUsername(user);
+                    taskCollects.add(taskCollect);
                 }
             }
-            if (!exist) {
-                TaskCollect taskCollect = new TaskCollect();
-                taskCollect.setUsername(user);
-                taskCollects.add(taskCollect);
-            }
+            return taskCollects;
         }
-        return taskCollects;
+        return null;
     }
 
     /**
      * 查询自定义汇总
      */
     private List<Custom> initCustoms(CollectDTO dto) throws SerException {
-
         String projectId = dto.getProjectId();
         String[] fields = dto.getFields();
         String cons = null;
@@ -191,12 +225,9 @@ public class ScheduleSerImpl implements ScheduleSer {
             String[] _fields = new String[]{"title", "count", "detail"};
             List<Custom> customs = tableSer.findBySql(sql, Custom.class, _fields);
             return customs;
-
         }
         return new ArrayList<>();
-
     }
-
 
     /**
      * 查询 outProject 外部项目,innerProject 内部项目,isFinish 是否完成,workerCount  人工量
@@ -288,60 +319,83 @@ public class ScheduleSerImpl implements ScheduleSer {
      */
     @Override
     public void customizeCollect(Customize customize) throws SerException {
-        CustomProject project = new CustomProject();
-        String sql = "SELECT p.name as projectName ,t.name as tableName,t.id as tid FROM taskallotment_project p ,taskallotment_table t  " +
-                "WHERE p.id='" + customize.getProjectId() + "'  " +
-                "AND t.project_id=p.id ";
-        if (StringUtils.isNotBlank(customize.getTablesId())) {
-            String[] tables = customize.getTablesId().split(",");
-            sql += "AND t.id in('" + StringUtils.join(tables, "','") + "')";
+        boolean available = true; //尝试调用消息接口,服务是否可用,如果不可用则不再进行查询操作
+        try {
+            messageAPI.read("");
+        } catch (Exception e) {
+            if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                available = false;
+                LOGGER.error("消息模块服务不可用!");
+            }
         }
-        //查询包含项目表
-        List<Object> objects = tableSer.findBySql(sql);
-        if (null != objects && objects.size() > 0) {
-            Object[] ot = (Object[]) objects.get(0);
-            project.setName(String.valueOf(ot[0])); //初始化项目
-            List<CustomTable> tables = new ArrayList<>(objects.size());
-            for (Object o : objects) { //初始化项目表
-                ot = (Object[]) o;
-                CustomTable table = new CustomTable();
-                table.setName(String.valueOf(ot[1]));
-                table.setTid(String.valueOf(ot[2]));
-                tables.add(table);
+        if (available) {
+            CustomProject project = new CustomProject();
+            String sql = "SELECT p.name as projectName ,t.name as tableName,t.id as tid FROM taskallotment_project p ,taskallotment_table t  " +
+                    "WHERE p.id='" + customize.getProjectId() + "'  " +
+                    "AND t.project_id=p.id ";
+            if (StringUtils.isNotBlank(customize.getTablesId())) {
+                String[] tables = customize.getTablesId().split(",");
+                sql += "AND t.id in('" + StringUtils.join(tables, "','") + "')";
             }
-            CustomCondition condition = initCondition(customize);
-            initFixedField(tables, condition); //初始化固定表头
-            initCustomField(tables, condition);//初始化自定义表头值
-            initCustomCollect(tables, project);
-            initDeptCollect(project, customize.getDepartment());//初始化部门汇总
-            project.setTables(tables);
-            String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
-            //邮件发送
-            List<String> mails = new ArrayList<>();
-            List<UserBO> userBOS = null;
-            NoticeType type = customize.getNoticeType();
-            if (type.equals(NoticeType.PERSON)) {
-                UserDTO dto = new UserDTO();
-                dto.getConditions().add(Restrict.in("username", customize.getNoticeTarget().split(",")));
-                userBOS = userAPI.findByCis(dto);
-            } else if (type.equals(NoticeType.DEPT)) {
-                userBOS = userAPI.findByDept(customize.getNoticeTarget().split(","));
-            } else {
-                userBOS = userAPI.findAllUser();
-            }
-            if (null != userBOS) {
-                for (UserBO user : userBOS) {
-                    if (null != user.getEmail()) {
-                        mails.add(user.getEmail());
+            //查询包含项目表
+            List<Object> objects = tableSer.findBySql(sql);
+            if (null != objects && objects.size() > 0) {
+                Object[] ot = (Object[]) objects.get(0);
+                project.setName(String.valueOf(ot[0])); //初始化项目
+                List<CustomTable> tables = new ArrayList<>(objects.size());
+                for (Object o : objects) { //初始化项目表
+                    ot = (Object[]) o;
+                    CustomTable table = new CustomTable();
+                    table.setName(String.valueOf(ot[1]));
+                    table.setTid(String.valueOf(ot[2]));
+                    tables.add(table);
+                }
+                CustomCondition condition = initCondition(customize);//初始化条件
+                initFixedField(tables, condition); //初始化固定表头及内容
+                initCustomField(tables, condition);//初始化自定义表头及内容
+                initCustomCollect(tables, project);//手动汇总自定义计算
+                //--------------------------------
+                initDeptCollect(project, customize.getDepartment());//初始化部门汇总
+                collectToday(project.getTaskCollects()); //部门今天任务汇总
+                collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总
+                project.setTables(tables);
+                String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
+                //邮件发送
+                List<String> mails = new ArrayList<>();
+                List<UserBO> userBOS = null;
+                NoticeType type = customize.getNoticeType();
+                if (type.equals(NoticeType.PERSON)) {
+                    UserDTO dto = new UserDTO();
+                    dto.getConditions().add(Restrict.in("username", customize.getNoticeTarget().split(",")));
+                    userBOS = userAPI.findByCis(dto);
+                } else if (type.equals(NoticeType.DEPT)) {
+                    userBOS = userAPI.findByDept(customize.getNoticeTarget().split(","));
+                } else {
+                    userBOS = userAPI.findAllUser();
+                }
+                if (null != userBOS) {
+                    for (UserBO user : userBOS) {
+                        if (null != user.getEmail()) {
+                            mails.add(user.getEmail());
+                        }
+                    }
+                    if (mails.size() > 0) {
+                        sendMail(customize.getName(), html, mails);
                     }
                 }
-                if (mails.size() > 0) {
-                    sendMail(customize.getName(), html, mails);
-                }
             }
         }
+
     }
 
+    /**
+     * 邮件发送
+     *
+     * @param title
+     * @param content
+     * @param mails
+     * @throws SerException
+     */
     private void sendMail(String title, String content, List<String> mails) throws SerException {
         MessageTO to = new MessageTO(title, content);
         to.setSendType(SendType.EMAIL);
@@ -351,21 +405,36 @@ public class ScheduleSerImpl implements ScheduleSer {
         messageAPI.send(to);
     }
 
+    /**
+     * 初始化部门汇总
+     *
+     * @param project
+     * @param department
+     * @throws SerException
+     */
     private void initDeptCollect(CustomProject project, String department) throws SerException {
-        List<UserBO> users = userAPI.findByDept(department);
+        Set<String> names = null;
+        List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(new String[]{department});
+        if (null != detailBOS && !detailBOS.isEmpty()) {
+            names = departmentDetailAPI.departPersons(detailBOS.get(0).getId());
+        }
         String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
         String end = DateUtil.dateToString(LocalDate.now().atTime(23, 59, 59));
-        project.setTaskCollects(initDateTask(users, start, end));
+        if (null != initDateTask(names, start, end)) {
+            project.setTaskCollects(initDateTask(names, start, end));
+        }
         //明天任务
         start = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(00, 00, 01));
         end = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(23, 59, 59));
-        List<TaskCollect> taskCollects = initDateTask(users, start, end);
-        project.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        List<TaskCollect> taskCollects = initDateTask(names, start, end);
+        if (null != taskCollects) {
+            project.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        }
         project.setDepartment(department);
     }
 
     /**
-     * 手动汇总计算
+     * 手动汇总自定义计算
      *
      * @param tables
      * @param project
@@ -407,7 +476,6 @@ public class ScheduleSerImpl implements ScheduleSer {
                 }
             }
         }
-
         map.put("人员", String.valueOf(users.size()));
         map.put("计划工作量", String.valueOf(planNum));
         map.put("所需时长", String.valueOf(needTime));
@@ -421,7 +489,6 @@ public class ScheduleSerImpl implements ScheduleSer {
         StringBuilder sb = new StringBuilder();
         String start = condition.getStart();
         String end = condition.getEnd();
-
         sb.append("  SELECT a.title,a.content,a.titleType,b.tasknode_id as nodeId ");
         sb.append(" FROM taskallotment_customtitle a,( ");
         sb.append("  SELECT a.* ");
@@ -468,17 +535,20 @@ public class ScheduleSerImpl implements ScheduleSer {
                         }
                     }
                 }
-
             }
         }
-
-
     }
 
+    /**
+     * 初始化自定义表头
+     *
+     * @param table
+     * @param condition
+     * @throws SerException
+     */
     private void initCustomTitle(CustomTable table, CustomCondition condition) throws SerException {
         String start = condition.getStart();
         String end = condition.getEnd();
-        String sql;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT title AS title ");
         sb.append("  FROM( ");
@@ -501,7 +571,6 @@ public class ScheduleSerImpl implements ScheduleSer {
         objects.toArray(titles);
         table.setCustomTitles(titles);
     }
-
 
     /**
      * 初始化固定字段
@@ -547,12 +616,73 @@ public class ScheduleSerImpl implements ScheduleSer {
         }
     }
 
+    /**
+     * 今天任务汇总
+     *
+     * @param collects
+     */
+    private void collectToday(List<TaskCollect> collects) {
+        TaskCollect collect = new TaskCollect();
+        collect.setUsername("汇总");
+        collect.setPlanNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanNum() != null ? Double.parseDouble(c.getPlanNum()) : 0;
+            return rs;
+        }).sum() + "");
+        collect.setDifferNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getDifferNum() != null ? Double.parseDouble(c.getDifferNum()) : 0;
+            return rs;
+        }).sum() + "");
+        collect.setFactNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getFactNum() != null ? Double.parseDouble(c.getFactNum()) : 0;
+            return rs;
+        }).sum() + "");
+        collect.setFactDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getFactDuration() != null ? Double.parseDouble(c.getFactDuration()) : 0;
+            return rs;
+        }).sum() + "");
+        collect.setDifferDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getDifferDuration() != null ? Double.parseDouble(c.getDifferDuration()) : 0;
+            return rs;
+        }).sum() + "");
+        collect.setPlanDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanDuration() != null ? Double.parseDouble(c.getPlanDuration()) : 0;
+            return rs;
+        }).sum() + "");
+        collects.add(collect);
+    }
+
+    /**
+     * 明天任务汇总
+     *
+     * @param collects
+     */
+    private void collectTomorrow(List<TomorrowCollect> collects) {
+        TomorrowCollect collect = new TomorrowCollect();
+        collect.setUsername("汇总");
+        collect.setPlanDuration(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanDuration() != null ? Double.parseDouble(c.getPlanDuration()) : 0;
+            return rs;
+        }).sum() + "");
+        collect.setPlanNum(collects.stream().mapToDouble(c -> {
+            double rs = c.getPlanNum() != null ? Double.parseDouble(c.getPlanNum()) : 0;
+            return rs;
+        }).sum() + "");
+        collects.add(collect);
+    }
+
+
+    /**
+     * 构建条件
+     *
+     * @param customize
+     * @return
+     * @throws SerException
+     */
     private CustomCondition initCondition(Customize customize) throws SerException {
         DateType dateType = customize.getDateType(); //日期条件
         LocalDateTime start = null;
         LocalDateTime end = null;
         List<UserBO> dept_users = null;//查询结果用户必须包含在此部门人员列表内
-
         List<UserBO> users = null;//指定查询汇总的人
         if (customize.getSummaryType().equals(SummaryType.DEPT)) {
             dept_users = userAPI.findByDept(customize.getSummaryTarget().split(","));
@@ -569,11 +699,11 @@ public class ScheduleSerImpl implements ScheduleSer {
                 break;
             case WEEK:
                 start = DateUtil.getStartWeek().atTime(00, 00, 01);
-                end = DateUtil.getEndWeek().atTime(00, 00, 01);
+                end = DateUtil.getEndWeek().atTime(23, 59, 59);
                 break;
             case MONTH:
                 start = DateUtil.getStartMonth().atTime(00, 00, 01);
-                end = DateUtil.getEndMonth().atTime(00, 00, 01);
+                end = DateUtil.getEndMonth().atTime(23, 59, 59);
                 break;
             case QUARTER:
                 start = DateUtil.getStartQuart();
@@ -581,7 +711,7 @@ public class ScheduleSerImpl implements ScheduleSer {
                 break;
             case YEAR:
                 start = DateUtil.getStartYear().atTime(00, 00, 01);
-                end = DateUtil.getEndYear().atTime(00, 00, 01);
+                end = DateUtil.getEndYear().atTime(23, 59, 59);
                 break;
         }
         String[] fields = customize.getFields().split(",");
@@ -607,7 +737,6 @@ public class ScheduleSerImpl implements ScheduleSer {
             }
             customCondition.setUsers(tmp_users);
         }
-
         return customCondition;
     }
 
@@ -623,6 +752,5 @@ public class ScheduleSerImpl implements ScheduleSer {
         }
         return null;
     }
-
 
 }

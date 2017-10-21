@@ -8,19 +8,24 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.task.bo.CustomizeBO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
 import com.bjike.goddess.task.entity.Customize;
-import com.bjike.goddess.task.entity.Project;
-import com.bjike.goddess.task.entity.Table;
 import com.bjike.goddess.task.enums.NoticeType;
 import com.bjike.goddess.task.enums.SummaryType;
 import com.bjike.goddess.task.enums.TimeType;
+import com.bjike.goddess.task.quartz.TaskDaySession;
 import com.bjike.goddess.task.quartz.TaskSession;
 import com.bjike.goddess.task.to.CustomizeTO;
+import com.bjike.goddess.taskallotment.api.ProjectAPI;
+import com.bjike.goddess.taskallotment.api.TableAPI;
+import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,30 +45,25 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     @Autowired
     private ScheduleSer scheduleSer;
     @Autowired
-    private ProjectSer projectSer;
+    private ProjectAPI projectAPI;
     @Autowired
-    private TableSer tableSer;
+    private TableAPI tableAPI;
 
 
     @Override
     public List<CustomizeBO> list(CustomizeDTO dto) throws SerException {
-        List<CustomizeBO> bos =  BeanTransform.copyProperties(super.findByPage(dto), CustomizeBO.class);
-        for(CustomizeBO bo: bos){
-           Project project =  projectSer.findById(bo.getProjectId());
-           if(null!=project){
-               bo.setProject(project.getName());
-           }
-           List<Table> tables = tableSer.findById(bo.getTablesId().split(","));
-            if(null!=tables && tables.size()>8){
-               String[] tableNames = new String[tables.size()];
-               int i=0;
-               for(Table table: tables){
-                   tableNames[i++]= table.getName();
-               }
-               bo.setTables(tableNames);
+        List<CustomizeBO> bos = BeanTransform.copyProperties(super.findByPage(dto), CustomizeBO.class);
+        if (null != bos) {
+            for (CustomizeBO bo : bos) {
+                bo.setCollectName(super.findById(bo.getId()).getName());
+                ProjectBO project = projectAPI.findByID(bo.getProjectId());
+                if (null != project) {
+                    bo.setProject(project.getProject());
+                }
+                bo.setTables(tableAPI.names(bo.getTablesId().split(",")));
             }
         }
-        return  bos;
+        return bos;
     }
 
     @Override
@@ -73,16 +73,34 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
 
     @Override
     public void add(CustomizeTO to) throws SerException {
-        String nickname = userAPI.currentUser().getNickname();
+        String nickname = userAPI.currentUser().getUsername();
         validated(to);
         Customize customize = BeanTransform.copyProperties(to, Customize.class, "tables", "fields");
         customize.setTablesId(StringUtils.join(to.getTables(), ","));
         customize.setFields(StringUtils.join(to.getFields(), ","));
         customize.setUser(nickname);
+        customize.setName(to.getCollectName());
         customize.setLastTime(LocalDateTime.now());
         super.save(customize);
         if (customize.getEnable()) {
             TaskSession.put(customize.getId(), customize);
+        }
+    }
+
+    @Override
+    public void edit(CustomizeTO to) throws SerException {
+        Customize entity=super.findById(to.getId());
+        validated(to);
+        Customize customize = BeanTransform.copyProperties(to, Customize.class, "tables", "fields");
+        customize.setTablesId(StringUtils.join(to.getTables(), ","));
+        customize.setFields(StringUtils.join(to.getFields(), ","));
+        customize.setName(to.getCollectName());
+        customize.setLastTime(LocalDateTime.now());
+        BeanUtils.copyProperties(customize,entity,"id","user","createTime");
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        if (entity.getEnable()) {
+            TaskSession.put(entity.getId(), entity);
         }
     }
 
@@ -116,26 +134,30 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             if (StringUtils.isBlank(to.getNoticeTarget())) {
                 throw new SerException("请指定提醒部门或者人员");
             }
+        }try {
+            Integer.parseInt(to.getTimeVal());
+        }catch (Exception e){
+            throw new SerException("定时时间间隔值必须为整数数字");
         }
     }
 
+    @Transactional
     @Override
     public void executeTask() throws SerException {
-        List<Customize> customizes = initTask();
+        List<Customize> customizes = queryTask(); //任务查询
         for (Customize customize : customizes) {
             if (isInvoking(customize)) { //是否可调用
                 //查询调用
                 try {
                     scheduleSer.customizeCollect(customize);
-                }catch (Exception e) {  //异常也更新时间避免循环错误调用
+                } catch (Exception e) { //不进行异常处理
                     e.printStackTrace();
-                    customize.setLastTime(LocalDateTime.now());
-                    super.update(customize);
-                    TaskSession.remove(customize.getId());
                 }
-                customize.setLastTime(LocalDateTime.now());
+                LocalDateTime now = LocalDateTime.now();
+                String sql = "UPDATE task_customize SET lastTime='%s' WHERE id='%s'";
+                super.executeSql(String.format(sql, DateUtil.dateToString(now), customize.getId()));
+                customize.setLastTime(now);
                 TaskSession.put(customize.getId(), customize);
-                super.update(customize);
             }
         }
     }
@@ -149,7 +171,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
      */
     private boolean first = true;
 
-    private List<Customize> initTask() throws SerException {
+    private List<Customize> queryTask() throws SerException {
         List<Customize> customizes = new ArrayList<>();
         if (null != TaskSession.sessions()) {
             Map<String, Customize> map = TaskSession.sessions().asMap();
@@ -174,26 +196,33 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
      * @param customize
      * @return
      */
-    private boolean isInvoking(Customize customize) {
+    private boolean isInvoking(Customize customize) throws SerException {
         TimeType type = customize.getTimeType();
         String timeVal = customize.getTimeVal();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime last = customize.getLastTime();
         if (!type.equals(TimeType.EVERYDAY)) { //每隔时间段
             int second = 0;
-            if (type.equals(TimeType.MINUTE)) {
-                second = Integer.parseInt(timeVal) * 60;
-            } else if (type.equals(TimeType.HOUR)) {
-                second = Integer.parseInt(timeVal) * 60 * 60;
-            }
-            if (second < ChronoUnit.SECONDS.between(last, now)) {
-                return true;
+            try {
+                Integer.parseInt(timeVal);
+                if (type.equals(TimeType.MINUTE)) {
+                    second = Integer.parseInt(timeVal) * 60;
+                } else if (type.equals(TimeType.HOUR)) {
+                    second = Integer.parseInt(timeVal) * 60 * 60;
+                }
+                if (second < ChronoUnit.SECONDS.between(last, now)) {
+                    return true;
+                }
+            }catch (Exception e){
+                return false;
             }
         } else { //每天
-            String time = DateUtil.dateToString(LocalDateTime.now());
-            time = StringUtils.substringAfter(time, " ");
+            String time = DateUtil.dateToString(LocalTime.now());//截取到分钟
             time = StringUtils.substringBeforeLast(time, ":");
-            if (time.equals(timeVal)) {
+            //每天某个时间调用一次,TaskDaySession为空则表示没执行过
+            if (time.equals(timeVal) && TaskDaySession.get(customize.getId()) == null) {
+                //缓存两分钟后销毁(time与timeVal会在一分钟内多次匹配,TaskDaySession只要保存有该id,表示已经执行过)
+                TaskDaySession.put(customize.getId(), time);
                 return true;
             }
         }

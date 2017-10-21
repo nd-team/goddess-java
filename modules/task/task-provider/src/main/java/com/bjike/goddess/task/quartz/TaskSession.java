@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
+/**任务定时缓存
  * @Author: [liguiqin]
  * @Date: [2017-04-12 09:46]
  * @Description: [ ]
