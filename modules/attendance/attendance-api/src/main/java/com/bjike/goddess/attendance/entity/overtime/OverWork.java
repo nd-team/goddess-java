@@ -113,7 +113,7 @@ public class OverWork extends BaseEntity {
     /**
      * 审核状态
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '审核状态' DEFAULT 0 ",insertable = false )
+    @Column(name = "auditStatus", nullable = false, columnDefinition = "INT(2)   COMMENT '审核状态' ")
     private AuditStatus auditStatus;
 
 

@@ -106,25 +106,33 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         return boList;
     }
 
+
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OverWorkBO addOverWork(OverWorkTO overWorkTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        OverWork overWork = BeanTransform.copyProperties(overWorkTO,OverWork.class,true);
+        OverWork overWork = new OverWork();
+        BeanTransform.copyProperties(overWorkTO,overWork,"overStartTime","overEndTime");
+        overWork.setOverStartTime( DateUtil.parseDateTime(overWorkTO.getOverStartTime()) );
+        overWork.setOverEndTime( DateUtil.parseDateTime(overWorkTO.getOverEndTime()) );
+        overWork.setAuditStatus(AuditStatus.NONE);
         super.save( overWork );
         //如果是项目经理下发的任务，则不用审核，将审核状态改为已通过
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
-        String position= "";
-        for(Map.Entry str : positMap.entrySet()){
-            position= (String)str.getValue();
-        }
-        if( position.contains("项目经理")){
-            OverWork temp = super.findById( overWork.getId() );
-            temp.setAuditStatus(AuditStatus.AGREE);
-            super.update( temp );
+        if(null != positMap) {
+            String position = "";
+            for (Map.Entry str : positMap.entrySet()) {
+                position = (String) str.getValue();
+            }
+            if (position.contains("项目经理")) {
+                OverWork temp = super.findById(overWork.getId());
+                temp.setAuditStatus(AuditStatus.AGREE);
+                super.update(temp);
+            }
         }
         return BeanTransform.copyProperties( overWork, OverWorkBO.class);
     }

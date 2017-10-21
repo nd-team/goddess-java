@@ -37,7 +37,7 @@ public class ExtralOverWorkAction {
     private ExtralOverWorkAPI extralOverWorkAPI;
 
     /**
-     *列表总条数
+     * 列表总条数
      *
      * @param overWorkDTO 补班信息dto
      * @des 获取所有补班信息总条数
@@ -156,7 +156,7 @@ public class ExtralOverWorkAction {
      * @param extralOverWorkDayDTO 补班天数
      * @des 获取补班天数
      * @version v1
-     * @return ExtralOverWorkDayVO
+     * @return class ExtralOverWorkDayVO
      */
     @GetMapping("v1/caculateTime")
     public Result caculateTime(@Validated(ExtralOverWorkDayDTO.TestAdd.class) ExtralOverWorkDayDTO extralOverWorkDayDTO ) throws ActException {
