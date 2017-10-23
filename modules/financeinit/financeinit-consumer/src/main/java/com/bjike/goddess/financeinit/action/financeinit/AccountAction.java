@@ -202,8 +202,7 @@ public class AccountAction extends BaseFileAction {
 
     /**
      * 获取所有的会计科目名称和对应的代码
-     *
-     * @return
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/accountanNameCode")
@@ -219,8 +218,7 @@ public class AccountAction extends BaseFileAction {
 
     /**
      * 根据一级科目代码获取二级科目名称
-     *
-     * @return
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/sendName/code")
@@ -235,7 +233,7 @@ public class AccountAction extends BaseFileAction {
     /**
      * 根据一级科目代码获取三级科目名称
      *
-     * @return
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/thirdName/code")

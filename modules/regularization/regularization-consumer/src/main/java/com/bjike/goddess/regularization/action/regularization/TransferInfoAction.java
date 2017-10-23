@@ -309,7 +309,7 @@ public class TransferInfoAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/summarize/week")
-    public Result summarizeDay(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+    public Result summarizeWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
         try {
             List<SummationBO> boList = transferInfoAPI.summaWeek(year, month, week);
             List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
@@ -348,7 +348,7 @@ public class TransferInfoAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/summarize/total")
-    public Result summarizeMonth(String date, HttpServletRequest request) throws ActException {
+    public Result summarizeTotal(String date, HttpServletRequest request) throws ActException {
         try {
             List<SummationBO> boList = transferInfoAPI.summaTotal(date);
             List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);

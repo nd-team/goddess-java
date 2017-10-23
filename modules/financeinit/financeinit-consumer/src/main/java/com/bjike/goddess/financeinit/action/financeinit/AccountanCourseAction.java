@@ -362,7 +362,7 @@ public class AccountanCourseAction extends BaseFileAction{
      */
     @LoginAuth
     @PostMapping("v1/importExcel")
-    public Result importExcel(org.apache.catalina.servlet4preview.http.HttpServletRequest request) throws ActException {
+    public Result importExcel(HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
@@ -424,8 +424,8 @@ public class AccountanCourseAction extends BaseFileAction{
 
     /**
      * 根据会计科目名称获取所属类型
-     * @param accountanName
-     * @return
+     * @param accountanName 会计科目名称
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/belongByName")
@@ -440,7 +440,7 @@ public class AccountanCourseAction extends BaseFileAction{
     /**
      * 根据代码获取会计科目名称和方向
      * @param code 代码
-     * @return
+     * @version v1
      * @throws ActException
      */
     @GetMapping("v1/findByCode")

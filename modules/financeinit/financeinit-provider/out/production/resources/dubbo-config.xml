@@ -28,6 +28,8 @@
 	<dubbo:service  ref="proofWordsApiImpl" interface="com.bjike.goddess.financeinit.api.ProofWordsAPI" />
 	<dubbo:service  ref="useCommonlyApiImpl" interface="com.bjike.goddess.financeinit.api.UseCommonlyAPI" />
 	<dubbo:service  ref="withUnitApiImpl" interface="com.bjike.goddess.financeinit.api.WithUnitAPI" />
+	<dubbo:service  ref="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
+	<dubbo:service  ref="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.financeinit.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.financeinit.api.CusPermissionOperateAPI" />
 

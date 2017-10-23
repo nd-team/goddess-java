@@ -432,7 +432,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/summarize/week")
-    public Result summarizeDay(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+    public Result summarizeWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
         try {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaWeek(year, month, week);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
@@ -471,7 +471,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/summarize/total")
-    public Result summarizeMonth(String date, HttpServletRequest request) throws ActException {
+    public Result summarizeTotal(String date, HttpServletRequest request) throws ActException {
         try {
             List<EntrySummaryBO> boList = staffEntryRegisterAPI.summaTotal(date);
             List<EntrySummaryVO> voList = BeanTransform.copyProperties(boList, EntrySummaryVO.class, request);
@@ -563,7 +563,7 @@ public class StaffEntryRegisterAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/brokenYear/year")
-    public Result figureShowTotal(Integer year, HttpServletRequest request) throws ActException {
+    public Result brokenYear(Integer year, HttpServletRequest request) throws ActException {
         try {
             BrokenOptionBO brokenOptionBO = staffEntryRegisterAPI.brokenShowYear(year);
             BrokenOptionVO brokenOptionVO = BeanTransform.copyProperties(brokenOptionBO, BrokenOptionVO.class);

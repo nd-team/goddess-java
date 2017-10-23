@@ -388,7 +388,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 
         if (moduleFlag) {
             flag = true;
