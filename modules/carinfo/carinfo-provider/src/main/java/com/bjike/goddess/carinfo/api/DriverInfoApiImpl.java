@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 车辆信息管理业务接口实现
+ * 司机信息接口实现
  *
  * @Author: [ jason ]
  * @Date: [ 2017-07-13 07:46 ]
@@ -76,5 +76,10 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
     @Override
     public DriverInfoBO findByDriver(String driver) throws SerException {
         return driverInfoSer.findByDriver(driver);
+    }
+
+    @Override
+    public void copyDriver() throws SerException {
+        driverInfoSer.copyDriver();
     }
 }

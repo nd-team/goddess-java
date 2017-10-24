@@ -1,5 +1,6 @@
 package com.bjike.goddess.balancecard.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.balancecard.bo.DepartMonIndexSetBO;
 import com.bjike.goddess.balancecard.dto.PositionIndexSetDTO;
 import com.bjike.goddess.balancecard.entity.DepartYearIndexSet;
@@ -22,6 +23,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +59,12 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
     private YearIndexSetSer yearIndexSetSer;
     @Autowired
     private BalancecardPermissionSer cusPermissionSer;
+
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -514,7 +522,7 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
                         positionIndexSet.setDepartYearWeight(temp.getDepartYearWeight());
                         positionIndexSet.setDepartYearWager(temp.getDepartYearWager());
                         positionIndexSet.setPosition(str.getPostName());
-                        positionIndexSet.setPositioner(userBO.getUsername());
+                        positionIndexSet.setPositioner(str.getCharger());
                         positionIndexSet.setWeight(str.getWeight());
                         positionIndexSet.setWeightSum(100d);
                         positionIndexSet.setTarget(str.getSerparateTarget());
@@ -534,6 +542,12 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
                         positionIndexSet.setDepartMonIndexSetId(temp.getId());
                         positionIndexSet.setCreateTime(LocalDateTime.now());
                         positionIndexSet.setModifyTime(LocalDateTime.now());
+                        if (moduleAPI.isCheck("staffentry")){
+                            String employeeNumber = entryRegisterAPI.findEmpNum(str.getCharger());
+                            positionIndexSet.setPositionerNumber(employeeNumber);
+                        }else {
+                            throw new SerException("请去模块管理设置入职关联");
+                        }
                         saveList.add(positionIndexSet);
                     }
                     if (saveList != null && saveList.size() > 0) {
@@ -586,12 +600,12 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
         if (StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime())) {
             LocalDate start = LocalDate.parse(to.getStartTime());
             LocalDate end = LocalDate.parse(to.getEndTime());
-            String startYear = String.valueOf(start.getYear());
-            String endYear = String.valueOf(end.getYear());
-            String startMon = String.valueOf(start.getMonthValue());
-            String endMon = String.valueOf(end.getMonthValue());
-            String[] years = new String[]{startYear, endYear};
-            String[] months = new String[]{startMon, endMon};
+            Integer startYear = start.getYear();
+            Integer endYear = end.getYear();
+            Integer startMon = start.getMonthValue();
+            Integer endMon = end.getMonthValue();
+            Integer[] years = new Integer[]{startYear, endYear};
+            Integer[] months = new Integer[]{startMon, endMon};
             dto.getConditions().add(Restrict.between("year", years));
             dto.getConditions().add(Restrict.between("month", months));
         }
@@ -652,7 +666,7 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
         if (StringUtils.isBlank(to.getIndexName())) {
             throw new SerException("第" + row + "行的指标名称不能为空");
         }
-        if (StringUtils.isBlank(to.getYear())) {
+        if (to.getYear() == null) {
             throw new SerException("第" + row + "行的年份不能为空");
         }
         if (null == to.getDescribtion()) {
@@ -686,8 +700,8 @@ public class DepartMonIndexSetSerImpl extends ServiceImpl<DepartMonIndexSet, Dep
 
         DepartMonIndexSetExcel excel = new DepartMonIndexSetExcel();
         excel.setIndexName("指标名称");
-        excel.setYear( "年份" );
-        excel.setMonth("月份");
+        excel.setYear(2017);
+        excel.setMonth(12);
         excel.setIndexType("指标类型");
         excel.setDimension("维度");
         excel.setDepartment("责任部门");

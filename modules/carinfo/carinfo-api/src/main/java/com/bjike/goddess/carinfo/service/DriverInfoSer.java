@@ -73,4 +73,9 @@ public interface DriverInfoSer extends Ser<DriverInfo, DriverInfoDTO> {
      * @param driver 司机名称
      */
     DriverInfoBO findByDriver(String driver) throws SerException;
+
+    /**
+     * 拷贝旧服务器上的数据到本地
+     */
+    void copyDriver() throws SerException;
 }
