@@ -25,6 +25,12 @@ public class DriverInfoTO extends BaseTO {
     private String area;
 
     /**
+     * 项目组
+     */
+    @NotBlank(message = "项目组不能为空", groups = {ADD.class,EDIT.class})
+    private String department;
+
+    /**
      * 结算方式
      */
     @NotBlank(message = "结算方式不能为空",groups = {ADD.class, EDIT.class})
@@ -96,17 +102,17 @@ public class DriverInfoTO extends BaseTO {
     @NotNull(message = "本车耗油不能为空",groups = {ADD.class, EDIT.class})
     private Double carFuel;
 
-    /**
-     * 是否签订租车协议
-     */
-    @NotNull(message = "是否签订租车协议不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean agreement;
+//    /**
+//     * 是否签订租车协议
+//     */
+//    @NotNull(message = "是否签订租车协议不能为空",groups = {ADD.class, EDIT.class})
+//    private Boolean agreement;
 
-    /**
-     * 是否提供协议附件
-     */
-    @NotNull(message = "是否提供协议附件不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean attachment;
+//    /**
+//     * 是否提供协议附件
+//     */
+//    @NotNull(message = "是否提供协议附件不能为空",groups = {ADD.class, EDIT.class})
+//    private Boolean attachment;
 
     /**
      * 签订日期
@@ -126,11 +132,11 @@ public class DriverInfoTO extends BaseTO {
     @NotBlank(message = "合同终止日期不能为空",groups = {ADD.class, EDIT.class})
     private String endDate;
 
-    /**
-     * 是否提供行驶证照片
-     */
-    @NotNull(message = "是否提供行驶证照片不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean travel;
+//    /**
+//     * 是否提供行驶证照片
+//     */
+//    @NotNull(message = "是否提供行驶证照片不能为空",groups = {ADD.class, EDIT.class})
+//    private Boolean travel;
 
     /**
      * 行驶证所有者
@@ -138,11 +144,11 @@ public class DriverInfoTO extends BaseTO {
     @NotBlank(message = "行驶证所有者不能为空",groups = {ADD.class, EDIT.class})
     private String travelName;
 
-    /**
-     * 是否提供驾驶证照片
-     */
-    @NotNull(message = "是否提供驾驶证照片不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean driverLicense;
+//    /**
+//     * 是否提供驾驶证照片
+//     */
+//    @NotNull(message = "是否提供驾驶证照片不能为空",groups = {ADD.class, EDIT.class})
+//    private Boolean driverLicense;
 
     /**
      * 驾驶证所有者
@@ -150,11 +156,11 @@ public class DriverInfoTO extends BaseTO {
     @NotBlank(message = "驾驶证所有者不能为空",groups = {ADD.class, EDIT.class})
     private String licenseName;
 
-    /**
-     * 是否提供本车辆保险
-     */
-    @NotNull(message = "是否提供本车辆保险不能为空",groups = {ADD.class, EDIT.class})
-    private Boolean carInsurance;
+//    /**
+//     * 是否提供本车辆保险
+//     */
+//    @NotNull(message = "是否提供本车辆保险不能为空",groups = {ADD.class, EDIT.class})
+//    private Boolean carInsurance;
 
     /**
      * 开户人
@@ -280,21 +286,6 @@ public class DriverInfoTO extends BaseTO {
         this.carFuel = carFuel;
     }
 
-    public Boolean getAgreement() {
-        return agreement;
-    }
-
-    public void setAgreement(Boolean agreement) {
-        this.agreement = agreement;
-    }
-
-    public Boolean getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Boolean attachment) {
-        this.attachment = attachment;
-    }
 
     public String getBuyDate() {
         return buyDate;
@@ -328,28 +319,12 @@ public class DriverInfoTO extends BaseTO {
         this.endDate = endDate;
     }
 
-    public Boolean getTravel() {
-        return travel;
-    }
-
-    public void setTravel(Boolean travel) {
-        this.travel = travel;
-    }
-
     public String getTravelName() {
         return travelName;
     }
 
     public void setTravelName(String travelName) {
         this.travelName = travelName;
-    }
-
-    public Boolean getDriverLicense() {
-        return driverLicense;
-    }
-
-    public void setDriverLicense(Boolean driverLicense) {
-        this.driverLicense = driverLicense;
     }
 
     public String getLicenseName() {
@@ -360,13 +335,6 @@ public class DriverInfoTO extends BaseTO {
         this.licenseName = licenseName;
     }
 
-    public Boolean getCarInsurance() {
-        return carInsurance;
-    }
-
-    public void setCarInsurance(Boolean carInsurance) {
-        this.carInsurance = carInsurance;
-    }
 
     public String getCardUser() {
         return cardUser;

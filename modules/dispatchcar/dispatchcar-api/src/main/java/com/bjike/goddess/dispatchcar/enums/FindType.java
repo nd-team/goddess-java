@@ -1,5 +1,7 @@
 package com.bjike.goddess.dispatchcar.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 查询类型
  *
@@ -13,22 +15,27 @@ public enum FindType {
     /**
      * 等待审核
      */
+    @ExcelValue(name = "等待审核")
     WAITAUDIT(0),
     /**
      * 财务核对
      */
+    @ExcelValue(name = "财务核对")
     FINANCEAUDIT(1),
     /**
      * 等待付款
      */
+    @ExcelValue(name = "等待付款")
     WAITPAY(2),
     /**
      * 已付款
      */
+    @ExcelValue(name = "已付款")
     PAYED(3),
     /**
      * 有误
      */
+    @ExcelValue(name = "有误")
     WRONG(4);
 
     private int code;

@@ -38,6 +38,8 @@ compile(project(":common:common-consumer")){
 }
 
 compile project(":modules:dispatchcar:dispatchcar-api")
+compile project(":modules:oilcardmanage:oilcardmanage-api")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
 compile("org.springframework.boot:spring-boot-starter-web")
 }

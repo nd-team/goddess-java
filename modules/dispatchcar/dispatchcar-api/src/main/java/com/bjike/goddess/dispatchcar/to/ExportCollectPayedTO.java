@@ -1,5 +1,11 @@
 package com.bjike.goddess.dispatchcar.to;
 
+import com.bjike.goddess.message.entity.Message;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+
 /**
  * @Author: [jiangzaixuan]
  * @Date: [2017-09-27 16:51]
@@ -7,30 +13,35 @@ package com.bjike.goddess.dispatchcar.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ExportCollectPayedTO {
+public class ExportCollectPayedTO implements Serializable{
     /**
      * 根据日导出的日期
      */
+    @NotBlank (message = "根据日导出的日期不能为空")
     private String exportDay;
 
     /**
      * 根据周导出的日期
      */
+    @NotBlank (message = "根据周导出的日期不能为空")
     private String weekDay;
 
     /**
      * 年
      */
-    private String year;
+    @NotNull(message = "年不能为空")
+    private Integer year;
 
     /**
      * 月
      */
+    @NotBlank (message = "月不能为空")
     private String month;
 
     /**
      * 季度
      */
+    @NotNull(message = "季度不能为空")
     private Integer quarter;
     public String getExportDay() {
         return exportDay;
@@ -48,11 +59,11 @@ public class ExportCollectPayedTO {
         this.weekDay = weekDay;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

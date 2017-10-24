@@ -14,7 +14,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+//import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -40,8 +40,8 @@ public class DriverInfoAct {
     @Autowired
     private DriverInfoAPI driverInfoAPI;
 
-    @Autowired
-    private UserSetPermissionAPI userSetPermissionAPI;
+//    @Autowired
+//    private UserSetPermissionAPI userSetPermissionAPI;
 
 
 
@@ -51,27 +51,27 @@ public class DriverInfoAct {
      * @throws ActException
      * @version v1
      */
-    @LoginAuth
-    @GetMapping("v1/setButtonPermission")
-    public Result setButtonPermission() throws ActException {
-        List<SonPermissionObject> list = new ArrayList<>();
-        try {
-            SonPermissionObject obj = new SonPermissionObject();
-            obj.setName("cuspermission");
-            obj.setDescribesion("设置");
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
-            if (!isHasPermission) {
-                //int code, String msg
-                obj.setFlag(false);
-            } else {
-                obj.setFlag(true);
-            }
-            list.add(obj);
-            return new ActResult(0, "设置权限", list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @LoginAuth
+//    @GetMapping("v1/setButtonPermission")
+//    public Result setButtonPermission() throws ActException {
+//        List<SonPermissionObject> list = new ArrayList<>();
+//        try {
+//            SonPermissionObject obj = new SonPermissionObject();
+//            obj.setName("cuspermission");
+//            obj.setDescribesion("设置");
+//            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+//            if (!isHasPermission) {
+//                //int code, String msg
+//                obj.setFlag(false);
+//            } else {
+//                obj.setFlag(true);
+//            }
+//            list.add(obj);
+//            return new ActResult(0, "设置权限", list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
     /**
@@ -235,6 +235,16 @@ public class DriverInfoAct {
             driverInfoAPI.audit(id,suggest,audit);
             return new ActResult("审核成功");
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    @GetMapping("v1/copy/server")
+    public Result copyServer() throws ActException{
+        try {
+            driverInfoAPI.copyDriver();
+            return new ActResult("拷贝成功");
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }

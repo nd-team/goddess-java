@@ -1,5 +1,7 @@
 package com.bjike.goddess.dispatchcar.bo;
 
+import java.io.Serializable;
+
 /**
  * @Author: [jiangzaixuan]
  * @Date: [2017-10-07 15:57]
@@ -7,7 +9,7 @@ package com.bjike.goddess.dispatchcar.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CollectDispatchcarBO {
+public class CollectDispatchcarBO implements Serializable{
     /**
      * 名称
      */
@@ -165,20 +167,20 @@ public class CollectDispatchcarBO {
         this.overTimeWorkPriceUnitCost = overTimeWorkPriceUnitCost;
     }
 
-    public CollectDispatchcarBO(String name, String date, Double rentcarUnitCost, Double overTimeWork, Double overTimeWorkPrice, Double overTimeWorkPriceUnitCost,Double parkCost, Double roadCost, Double mealCost, Double totalOne, Double addOilAmountMoney, Double totalTwo){
-        this.addOilAmountMoney = addOilAmountMoney;
-        this.date = date;
-        this.name = name;
-        this.rentcarUnitCost = rentcarUnitCost;
-        this.overTimeWork = overTimeWork;
-        this.overTimeWorkPrice = overTimeWorkPrice;
-        this.overTimeWorkPriceUnitCost = overTimeWorkPriceUnitCost;
-        this.parkCost = parkCost;
-        this.roadCost = roadCost;
-        this.mealCost = mealCost;
-        this.totalOne = totalOne;
-        this.addOilAmountMoney = addOilAmountMoney;
-        this.totalTwo = totalTwo;
-    }
+//    public CollectDispatchcarBO(String name, String date, Double rentcarUnitCost, Double overTimeWork, Double overTimeWorkPrice, Double overTimeWorkPriceUnitCost,Double parkCost, Double roadCost, Double mealCost, Double totalOne, Double addOilAmountMoney, Double totalTwo){
+//        this.addOilAmountMoney = addOilAmountMoney;
+//        this.date = date;
+//        this.name = name;
+//        this.rentcarUnitCost = rentcarUnitCost;
+//        this.overTimeWork = overTimeWork;
+//        this.overTimeWorkPrice = overTimeWorkPrice;
+//        this.overTimeWorkPriceUnitCost = overTimeWorkPriceUnitCost;
+//        this.parkCost = parkCost;
+//        this.roadCost = roadCost;
+//        this.mealCost = mealCost;
+//        this.totalOne = totalOne;
+//        this.addOilAmountMoney = addOilAmountMoney;
+//        this.totalTwo = totalTwo;
+//    }
 }
 
