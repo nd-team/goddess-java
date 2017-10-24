@@ -23,19 +23,29 @@ public class TaxManagement extends BaseEntity {
     /**
      * 公司
      */
-    @Column(name = "company", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司'")
+    @Column(name = "company",  columnDefinition = "VARCHAR(255)   COMMENT '公司'")
     private String company;
 
     /**
-     * 所属月份
+     * 国地税标志
      */
-    @Column(name = "month", nullable = false,columnDefinition = "DATE   COMMENT '所属月份'")
-    private LocalDate month;
+    @Column(name = "landTaxMark", columnDefinition = "VARCHAR(255)   COMMENT '国地税标志'")
+    private String landTaxMark;
+    /**
+     * 税款所属期起
+     */
+    @Column(name = "taxStart", columnDefinition = "DATE   COMMENT '税款所属期起'")
+    private LocalDate taxStart;
+    /**
+     * 税款所属期止
+     */
+    @Column(name = "taxEnd", columnDefinition = "DATE   COMMENT '税款所属期止'")
+    private LocalDate taxEnd;
 
     /**
-     * 税种
+     * 税种品名
      */
-    @Column(name = "taxType", nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '税种'")
+    @Column(name = "taxType", columnDefinition = "VARCHAR(255)   COMMENT '税种品名'")
     private String taxType;
 
     /**
@@ -51,23 +61,21 @@ public class TaxManagement extends BaseEntity {
     private Double tax;
 
     /**
+     * 申报期限
+     */
+    @Column(name = "deadlineFor", columnDefinition = "DATE   COMMENT '申报期限'")
+    private LocalDate deadlineFor;
+    /**
+     * 申报日期
+     */
+    @Column(name = "deadlineDate", columnDefinition = "DATE   COMMENT '申报日期'")
+    private LocalDate deadlineDate;
+
+    /**
      * 缴税状态
      */
     @Column(name = "paymentStatus", columnDefinition = "TINYINT(2)   COMMENT '缴费状态'")
     private PaymentStatus paymentStatus;
-
-    /**
-     * 付款日期
-     */
-    @Column(name = "paymentDate", columnDefinition = "DATE   COMMENT '付款日期'")
-    private LocalDate paymentDate;
-
-    /**
-     * 付款单位
-     */
-    @Column(name = "paymentUnit", columnDefinition = "VARCHAR(255)   COMMENT '付款单位'")
-    private String paymentUnit;
-
 
     public String getCompany() {
         return company;
@@ -77,12 +85,28 @@ public class TaxManagement extends BaseEntity {
         this.company = company;
     }
 
-    public LocalDate getMonth() {
-        return month;
+    public String getLandTaxMark() {
+        return landTaxMark;
     }
 
-    public void setMonth(LocalDate month) {
-        this.month = month;
+    public void setLandTaxMark(String landTaxMark) {
+        this.landTaxMark = landTaxMark;
+    }
+
+    public LocalDate getTaxStart() {
+        return taxStart;
+    }
+
+    public void setTaxStart(LocalDate taxStart) {
+        this.taxStart = taxStart;
+    }
+
+    public LocalDate getTaxEnd() {
+        return taxEnd;
+    }
+
+    public void setTaxEnd(LocalDate taxEnd) {
+        this.taxEnd = taxEnd;
     }
 
     public String getTaxType() {
@@ -109,27 +133,27 @@ public class TaxManagement extends BaseEntity {
         this.tax = tax;
     }
 
+    public LocalDate getDeadlineFor() {
+        return deadlineFor;
+    }
+
+    public void setDeadlineFor(LocalDate deadlineFor) {
+        this.deadlineFor = deadlineFor;
+    }
+
+    public LocalDate getDeadlineDate() {
+        return deadlineDate;
+    }
+
+    public void setDeadlineDate(LocalDate deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
 
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
-    }
-
-    public LocalDate getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(LocalDate paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public String getPaymentUnit() {
-        return paymentUnit;
-    }
-
-    public void setPaymentUnit(String paymentUnit) {
-        this.paymentUnit = paymentUnit;
     }
 }

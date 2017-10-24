@@ -115,6 +115,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private ServerCarInfoSer carInfoSer;
 
+//    @Autowired
+//    private DriverAPI driverAPI;
+
     @Autowired
     private BaseInfoManageAPI baseInfoManageAPI;
 
