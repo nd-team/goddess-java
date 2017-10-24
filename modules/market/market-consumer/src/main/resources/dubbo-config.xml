@@ -18,8 +18,8 @@
 	<!--<dubbo:reference validation="true" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" id="customerBaseInfoApiImpl"/>
 -->
 
-	<dubbo:reference  validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
-	<dubbo:reference  validation="true" id="marketEmailApiImpl" interface="com.bjike.goddess.market.api.CollectEmailAPI" />
+	<dubbo:reference  validation="true" id="marketInfoRecordApiImpl" interface="com.bjike.goddess.market.api.MarketInfoRecordAPI" />
+	<dubbo:reference  validation="true" id="marketInfoPreAnalysisApiImpl" interface="com.bjike.goddess.market.api.MarketInfoPreAnalysisAPI" />
 
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.market.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.market.api.CusPermissionOperateAPI" />

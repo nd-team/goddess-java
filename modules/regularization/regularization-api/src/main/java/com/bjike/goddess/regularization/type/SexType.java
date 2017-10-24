@@ -1,6 +1,8 @@
 package com.bjike.goddess.regularization.type;
 
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 性别
  *
@@ -14,14 +16,17 @@ public enum SexType {
     /**
      * 无
      */
+    @ExcelValue(name = "无")
     NONE(0),
     /**
      * 男
      */
+    @ExcelValue(name = "男")
     MAN(1),
     /**
      * 女
      */
+    @ExcelValue(name = "女")
     WOMAN(2);
 
     private int code;

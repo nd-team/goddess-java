@@ -13,6 +13,7 @@ import com.bjike.goddess.financeinit.api.AccountDepartmentAPI;
 import com.bjike.goddess.financeinit.bo.AccountDepartmentBO;
 import com.bjike.goddess.financeinit.dto.AccountDepartmentDTO;
 import com.bjike.goddess.financeinit.to.AccountDepartmentTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.vo.AccountDepartmentVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
@@ -50,7 +51,28 @@ public class AccountDepartmentAction {
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = accountDepartmentAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *

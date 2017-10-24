@@ -180,4 +180,9 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public List<String> names() throws SerException {
         return positionDetailUserSer.names();
     }
+
+    @Override
+    public String customRepPerson() throws SerException {
+        return positionDetailUserSer.customRepPerson();
+    }
 }

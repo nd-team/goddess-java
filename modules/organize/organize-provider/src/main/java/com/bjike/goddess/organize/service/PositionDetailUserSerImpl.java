@@ -772,4 +772,15 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         return result;
     }
+
+    @Override
+    public String customRepPerson() throws SerException {
+        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')))";
+        List<Object> objs = arrangementSer.findBySql(sql);
+        if(objs!=null && objs.size()>0){
+            String name = String.valueOf(objs.get(0));
+            return name;
+        }
+        return null;
+    }
 }

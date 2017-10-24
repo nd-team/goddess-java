@@ -309,4 +309,12 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      */
     List<String> names() throws SerException;
 
+    /**
+     * lijuntao
+     * 获取客户模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String customRepPerson() throws SerException;
 }

@@ -10,25 +10,39 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.*;
 import com.bjike.goddess.staffentry.entity.*;
 import com.bjike.goddess.staffentry.enums.GuideAddrStatus;
+import com.bjike.goddess.staffentry.excel.EntryRegisterExpTemplate;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.soap.Text;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -146,6 +160,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        searchCondi(entryRegisterDTO);
         Long count = super.count(entryRegisterDTO);
         return count;
     }
@@ -161,6 +176,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public List<EntryRegisterBO> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        searchCondi(entryRegisterDTO);
         if (checkDepartIdentity("2")) {
             entryRegisterDTO.getSorts().add("createTime=desc");
         } else {
@@ -169,19 +185,24 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
             entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
         }
         List<EntryRegister> entryRegisters = super.findByPage(entryRegisterDTO);
-        List<EntryRegisterBO> entryRegisterBOS = BeanTransform.copyProperties(entryRegisters,EntryRegisterBO.class);
-        if(entryRegisterBOS!=null && entryRegisterBOS.size()>0){
-            for (EntryRegisterBO entryRegisterBO:entryRegisterBOS){
+        List<EntryRegisterBO> entryRegisterBOS = BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class);
+        if (entryRegisterBOS != null && entryRegisterBOS.size() > 0) {
+            for (EntryRegisterBO entryRegisterBO : entryRegisterBOS) {
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegisterBO.getUsername());//查看员工状态
-                if(staffStatus == null){
+                if (staffStatus == null) {
                     entryRegisterBO.setStaffStatus("未获取到数据");
-                }else
-                entryRegisterBO.setStaffStatus(staffStatus.toString());
+                } else
+                    entryRegisterBO.setStaffStatus(staffStatus.toString());
             }
         }
         return entryRegisterBOS;
     }
 
+    public void searchCondi(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        if (StringUtils.isNotBlank(entryRegisterDTO.getUsername())) {
+            entryRegisterDTO.getConditions().add(Restrict.eq("username", entryRegisterDTO.getUsername()));
+        }
+    }
 
     @Override
     public EntryRegisterBO getEntryRegisterDetail(String id) throws SerException {
@@ -245,6 +266,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         return BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class, false);
     }
 
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void removeEntryRegister(String id) throws SerException {
@@ -279,7 +301,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         EntryRegister temp = super.findById(entryRegisterTO.getId());
         EntryRegister entryRegister = BeanTransform.copyProperties(entryRegisterTO, EntryRegister.class, true);
-        BeanTransform.copyProperties(entryRegister, temp,true, "id", "createTime", "birthday", "graduationDate");
+        BeanTransform.copyProperties(entryRegister, temp, true, "id", "createTime", "birthday", "graduationDate");
         temp.setBirthday(entryRegister.getBirthday());
         temp.setGraduationDate(entryRegister.getGraduationDate());
         try {
@@ -646,12 +668,12 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
-    public Integer findNumByEntryDate(String[] date,String area,String dep) throws SerException {
+    public Integer findNumByEntryDate(String[] date, String area, String dep) throws SerException {
         Integer num = 0;
         EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
         entryRegisterDTO.getConditions().add(Restrict.between("inductionDate", date));
-        entryRegisterDTO.getConditions().add(Restrict.eq("area",area));
-        entryRegisterDTO.getConditions().add(Restrict.eq("department",dep));
+        entryRegisterDTO.getConditions().add(Restrict.eq("area", area));
+        entryRegisterDTO.getConditions().add(Restrict.eq("department", dep));
         List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
         if (entryRegisters != null && entryRegisters.size() > 0) {
             num = entryRegisters.size();
@@ -664,18 +686,229 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         Integer num = 0;
         EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
         entryRegisterDTO.getConditions().add(Restrict.lt_eq("inductionDate", endDate));
-        entryRegisterDTO.getConditions().add(Restrict.eq("area",area));
-        entryRegisterDTO.getConditions().add(Restrict.eq("department",dep));
+        entryRegisterDTO.getConditions().add(Restrict.eq("area", area));
+        entryRegisterDTO.getConditions().add(Restrict.eq("department", dep));
         List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
         if (entryRegisters != null && entryRegisters.size() > 0) {
             num = entryRegisters.size();
         }
         return num;
     }
+
     @Override
     public Set<String> names() throws SerException {
         List<EntryRegister> list = super.findAll();
         return list.stream().map(entryRegister -> entryRegister.getUsername()).collect(Collectors.toSet());
 
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<EntryRegisterExpTemplate> entryRegisterExpTemplateList = new ArrayList<>();
+        EntryRegisterExpTemplate entryRegisterExpTemplate=  new EntryRegisterExpTemplate();
+        entryRegisterExpTemplate.setEmpNumber("test");
+        entryRegisterExpTemplate.setUsername("test");
+        entryRegisterExpTemplate.setGender(0);
+        entryRegisterExpTemplate.setBirthday("2017/12/12");
+        entryRegisterExpTemplate.setNation("test");
+        entryRegisterExpTemplate.setMarriage("test");
+        entryRegisterExpTemplate.setPoliticsStatus("test");
+        entryRegisterExpTemplate.setNativePlace("test");
+        entryRegisterExpTemplate.setStature("test");
+        entryRegisterExpTemplate.setProfession("test");
+        entryRegisterExpTemplate.setEducation("test");
+        entryRegisterExpTemplate.setSchoolTag("test");
+        entryRegisterExpTemplate.setGraduationDate("test");
+        entryRegisterExpTemplate.setHealthStatus("test");
+        entryRegisterExpTemplate.setQq("test");
+        entryRegisterExpTemplate.setPhone("test");
+        entryRegisterExpTemplate.setEmail("test");
+        entryRegisterExpTemplate.setEmergencyContact("test");
+        entryRegisterExpTemplate.setPhoneNumber("test");
+        entryRegisterExpTemplate.setIdCard("test");
+        entryRegisterExpTemplate.setRegisteredAddress("test");
+        entryRegisterExpTemplate.setLocation("test");
+        entryRegisterExpTemplate.setHobbies("test");
+        entryRegisterExpTemplate.setArea("test");
+        entryRegisterExpTemplate.setDepartment("test");
+        entryRegisterExpTemplate.setPosition("test");
+        entryRegisterExpTemplate.setInductionDate("test");
+        entryRegisterExpTemplate.setTitle("test");
+        entryRegisterExpTemplate.setName("test");
+        entryRegisterExpTemplate.setAge(19);
+        entryRegisterExpTemplate.setUnit("test");
+        entryRegisterExpTemplate.setPositionf("test");
+        entryRegisterExpTemplate.setPhonef("test");
+        entryRegisterExpTemplate.setStartTime("2017/01/01");
+        entryRegisterExpTemplate.setEndTime("2017/12/12");
+        entryRegisterExpTemplate.setSchool("test");
+        entryRegisterExpTemplate.setCertificate("test");
+        entryRegisterExpTemplate.setWorkStartTime("2017/01/01");
+        entryRegisterExpTemplate.setWorkEndTime("2017/12/12");
+        entryRegisterExpTemplate.setFirm("test");
+        entryRegisterExpTemplate.setJobDescription("test");
+        entryRegisterExpTemplate.setName1("test");
+        entryRegisterExpTemplate.setObtainTime("2017/12/12");
+        entryRegisterExpTemplateList.add(entryRegisterExpTemplate);
+
+        EntryRegisterExpTemplate entryRegisterExpTemplate2=  new EntryRegisterExpTemplate();
+        entryRegisterExpTemplate2.setEmpNumber("test");
+        entryRegisterExpTemplate2.setUsername("test");
+        entryRegisterExpTemplate2.setGender(0);
+        entryRegisterExpTemplate2.setBirthday("2017/12/12");
+        entryRegisterExpTemplate2.setNation("test");
+        entryRegisterExpTemplate2.setMarriage("test");
+        entryRegisterExpTemplate2.setPoliticsStatus("test");
+        entryRegisterExpTemplate2.setNativePlace("test");
+        entryRegisterExpTemplate2.setStature("test");
+        entryRegisterExpTemplate2.setProfession("test");
+        entryRegisterExpTemplate2.setEducation("test");
+        entryRegisterExpTemplate2.setSchoolTag("test");
+        entryRegisterExpTemplate2.setGraduationDate("test");
+        entryRegisterExpTemplate2.setHealthStatus("test");
+        entryRegisterExpTemplate2.setQq("test");
+        entryRegisterExpTemplate2.setPhone("test");
+        entryRegisterExpTemplate2.setEmail("test");
+        entryRegisterExpTemplate2.setEmergencyContact("test");
+        entryRegisterExpTemplate2.setPhoneNumber("test");
+        entryRegisterExpTemplate2.setIdCard("test");
+        entryRegisterExpTemplate2.setRegisteredAddress("test");
+        entryRegisterExpTemplate2.setLocation("test");
+        entryRegisterExpTemplate2.setHobbies("test");
+        entryRegisterExpTemplate2.setArea("test");
+        entryRegisterExpTemplate2.setDepartment("test");
+        entryRegisterExpTemplate2.setPosition("test");
+        entryRegisterExpTemplate2.setInductionDate("test");
+        entryRegisterExpTemplate2.setTitle("test");
+        entryRegisterExpTemplate2.setName("test");
+        entryRegisterExpTemplate2.setAge(19);
+        entryRegisterExpTemplate2.setUnit("test");
+        entryRegisterExpTemplate2.setPositionf("test");
+        entryRegisterExpTemplate2.setPhonef("test");
+        entryRegisterExpTemplate2.setStartTime("2017/01/01");
+        entryRegisterExpTemplate2.setEndTime("2017/12/12");
+        entryRegisterExpTemplate2.setSchool("test");
+        entryRegisterExpTemplate2.setCertificate("test");
+        entryRegisterExpTemplate2.setWorkStartTime("2017/01/01");
+        entryRegisterExpTemplate2.setWorkEndTime("2017/12/12");
+        entryRegisterExpTemplate2.setFirm("test");
+        entryRegisterExpTemplate2.setJobDescription("test");
+        entryRegisterExpTemplate2.setName1("test");
+        entryRegisterExpTemplate2.setObtainTime("2017/12/12");
+        entryRegisterExpTemplateList.add(entryRegisterExpTemplate2);
+
+        EntryRegisterExpTemplate entryRegisterExpTemplate3=  new EntryRegisterExpTemplate();
+        entryRegisterExpTemplate3.setEmpNumber("test");
+        entryRegisterExpTemplate3.setUsername("test");
+        entryRegisterExpTemplate3.setGender(0);
+        entryRegisterExpTemplate3.setBirthday("2017/12/12");
+        entryRegisterExpTemplate3.setNation("test");
+        entryRegisterExpTemplate3.setMarriage("test");
+        entryRegisterExpTemplate3.setPoliticsStatus("test");
+        entryRegisterExpTemplate3.setNativePlace("test");
+        entryRegisterExpTemplate3.setStature("test");
+        entryRegisterExpTemplate3.setProfession("test");
+        entryRegisterExpTemplate3.setEducation("test");
+        entryRegisterExpTemplate3.setSchoolTag("test");
+        entryRegisterExpTemplate3.setGraduationDate("test");
+        entryRegisterExpTemplate3.setHealthStatus("test");
+        entryRegisterExpTemplate3.setQq("test");
+        entryRegisterExpTemplate3.setPhone("test");
+        entryRegisterExpTemplate3.setEmail("test");
+        entryRegisterExpTemplate3.setEmergencyContact("test");
+        entryRegisterExpTemplate3.setPhoneNumber("test");
+        entryRegisterExpTemplate3.setIdCard("test");
+        entryRegisterExpTemplate3.setRegisteredAddress("test");
+        entryRegisterExpTemplate3.setLocation("test");
+        entryRegisterExpTemplate3.setHobbies("test");
+        entryRegisterExpTemplate3.setArea("test");
+        entryRegisterExpTemplate3.setDepartment("test");
+        entryRegisterExpTemplate3.setPosition("test");
+        entryRegisterExpTemplate3.setInductionDate("test");
+        entryRegisterExpTemplate3.setTitle("test");
+        entryRegisterExpTemplate3.setName("test");
+        entryRegisterExpTemplate3.setAge(19);
+        entryRegisterExpTemplate3.setUnit("test");
+        entryRegisterExpTemplate3.setPositionf("test");
+        entryRegisterExpTemplate3.setPhonef("test");
+        entryRegisterExpTemplate3.setStartTime("2017/01/01");
+        entryRegisterExpTemplate3.setEndTime("2017/12/12");
+        entryRegisterExpTemplate3.setSchool("test");
+        entryRegisterExpTemplate3.setCertificate("test");
+        entryRegisterExpTemplate3.setWorkStartTime("2017/01/01");
+        entryRegisterExpTemplate3.setWorkEndTime("2017/12/12");
+        entryRegisterExpTemplate3.setFirm("test");
+        entryRegisterExpTemplate3.setJobDescription("test");
+        entryRegisterExpTemplate3.setName1("test");
+        entryRegisterExpTemplate3.setObtainTime("2017/12/12");
+        entryRegisterExpTemplateList.add(entryRegisterExpTemplate3);
+
+        EntryRegisterExpTemplate entryRegisterExpTemplate4=  new EntryRegisterExpTemplate();
+        entryRegisterExpTemplate4.setEmpNumber("test");
+        entryRegisterExpTemplate4.setUsername("test");
+        entryRegisterExpTemplate4.setGender(0);
+        entryRegisterExpTemplate4.setBirthday("2017/12/12");
+        entryRegisterExpTemplate4.setNation("test");
+        entryRegisterExpTemplate4.setMarriage("test");
+        entryRegisterExpTemplate4.setPoliticsStatus("test");
+        entryRegisterExpTemplate4.setNativePlace("test");
+        entryRegisterExpTemplate4.setStature("test");
+        entryRegisterExpTemplate4.setProfession("test");
+        entryRegisterExpTemplate4.setEducation("test");
+        entryRegisterExpTemplate4.setSchoolTag("test");
+        entryRegisterExpTemplate4.setGraduationDate("test");
+        entryRegisterExpTemplate4.setHealthStatus("test");
+        entryRegisterExpTemplate4.setQq("test");
+        entryRegisterExpTemplate4.setPhone("test");
+        entryRegisterExpTemplate4.setEmail("test");
+        entryRegisterExpTemplate4.setEmergencyContact("test");
+        entryRegisterExpTemplate4.setPhoneNumber("test");
+        entryRegisterExpTemplate4.setIdCard("test");
+        entryRegisterExpTemplate4.setRegisteredAddress("test");
+        entryRegisterExpTemplate4.setLocation("test");
+        entryRegisterExpTemplate4.setHobbies("test");
+        entryRegisterExpTemplate4.setArea("test");
+        entryRegisterExpTemplate4.setDepartment("test");
+        entryRegisterExpTemplate4.setPosition("test");
+        entryRegisterExpTemplate4.setInductionDate("test");
+        entryRegisterExpTemplate4.setTitle("test");
+        entryRegisterExpTemplate4.setName("test");
+        entryRegisterExpTemplate4.setAge(19);
+        entryRegisterExpTemplate4.setUnit("test");
+        entryRegisterExpTemplate4.setPositionf("test");
+        entryRegisterExpTemplate4.setPhonef("test");
+        entryRegisterExpTemplate4.setStartTime("2017/01/01");
+        entryRegisterExpTemplate4.setEndTime("2017/12/12");
+        entryRegisterExpTemplate4.setSchool("test");
+        entryRegisterExpTemplate4.setCertificate("test");
+        entryRegisterExpTemplate4.setWorkStartTime("2017/01/01");
+        entryRegisterExpTemplate4.setWorkEndTime("2017/12/12");
+        entryRegisterExpTemplate4.setFirm("test");
+        entryRegisterExpTemplate4.setJobDescription("test");
+        entryRegisterExpTemplate4.setName1("test");
+        entryRegisterExpTemplate4.setObtainTime("2017/12/12");
+        entryRegisterExpTemplateList.add(entryRegisterExpTemplate4);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(entryRegisterExpTemplateList, excel);
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+            List<Field> fields = ClazzUtils.getFields(EntryRegisterExpTemplate.class); //获得列表对象属性
+            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            for (int i = 0; i < 27; i++) {
+                sheet.addMergedRegion(new CellRangeAddress(1, 4, i, i));
+            }
+
+
+            os = new ByteArrayOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return os.toByteArray();
     }
 }

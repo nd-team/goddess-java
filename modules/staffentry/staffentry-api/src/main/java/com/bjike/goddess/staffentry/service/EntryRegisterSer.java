@@ -270,5 +270,17 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * @throws SerException
      */
     Set<String> names() throws SerException;
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
+    /**
+     * 导入
+     *
+     * @param firmIntroTOS 公司简介
+     */
+//    void importExcel(List<FirmIntroTO> firmIntroTOS) throws SerException;
 }
