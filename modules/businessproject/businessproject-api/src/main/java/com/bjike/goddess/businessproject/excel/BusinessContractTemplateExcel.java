@@ -199,7 +199,7 @@ public class BusinessContractTemplateExcel extends BaseTO {
      * 合同规模数量
      */
     @ExcelHeader(name="合同规模数量")
-    private Double scaleContract;
+    private Integer scaleContract;
 
     /**
      * 合同规模数是否有差异
@@ -691,11 +691,11 @@ public class BusinessContractTemplateExcel extends BaseTO {
         this.scale = scale;
     }
 
-    public Double getScaleContract() {
+    public Integer getScaleContract() {
         return scaleContract;
     }
 
-    public void setScaleContract(Double scaleContract) {
+    public void setScaleContract(Integer scaleContract) {
         this.scaleContract = scaleContract;
     }
 

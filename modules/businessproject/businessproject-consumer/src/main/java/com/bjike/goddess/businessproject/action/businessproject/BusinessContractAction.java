@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -235,6 +236,23 @@ public class BusinessContractAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 预立项
+     *
+     * @param to 商务项目合同数据bo
+     * @return class BusinessContractVO
+     * @des 预立项
+     * @version v1
+     */
+    @PostMapping("v1/hadContract")
+    public Result hadContract(@Validated() BusinessContractTO to,BindingResult result) throws ActException {
+        try {
+            BusinessContractBO bo = businessContractAPI.hadContract(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 预立项目
@@ -308,7 +326,6 @@ public class BusinessContractAction extends BaseFileAction {
         }
     }
 
-
     /**
      * 获取所有地区
      *
@@ -342,88 +359,88 @@ public class BusinessContractAction extends BaseFileAction {
             for (BusinessContractExcel str : tos) {
                 BusinessContractTO contractTO = BeanTransform.copyProperties(str, BusinessContractTO.class,
                         "measurePass", "notification", "commonSubcontractor", "taskFinish", "taskContract",
-                        "makeContract", "scaleBalance", "solutionBalance", "implement", "partial",
+                         "scaleBalance", "solutionBalance", "implement", "partial",
                         "persist", "settlementProcess", "account", "closeSingle", "archive");
                 //测算是否通过
-                if (contractTO.getMeasurePass().equals("是")) {
+                if (str.getMeasurePass().equals("是")) {
                     contractTO.setMeasurePass(true);
                 } else {
                     contractTO.setMeasurePass(false);
                 }
                 //是否通报
-                if (contractTO.getNotification().equals("是")) {
+                if (str.getNotification().equals("是")) {
                     contractTO.setNotification(true);
                 } else {
                     contractTO.setNotification(false);
                 }
                 //是否有共同分包单位
-                if (contractTO.getCommonSubcontractor().equals("是")) {
+                if (str.getCommonSubcontractor().equals("是")) {
                     contractTO.setCommonSubcontractor(true);
                 } else {
                     contractTO.setCommonSubcontractor(false);
                 }
                 //派工归属清理是否完成
-                if (contractTO.getTaskFinish().equals("是")) {
+                if (str.getTaskFinish().equals("是")) {
                     contractTO.setTaskFinish(true);
                 } else {
                     contractTO.setTaskFinish(false);
                 }
                 //是否有合同派工合同
-                if (contractTO.getTaskContract().equals("是")) {
+                if (str.getTaskContract().equals("是")) {
                     contractTO.setTaskContract(true);
                 } else {
                     contractTO.setTaskContract(false);
                 }
                 //合同规模数是否有差异
-                if (contractTO.getScaleBalance().equals("是")) {
+                if (str.getScaleBalance().equals("是")) {
                     contractTO.setScaleBalance(true);
                 } else {
                     contractTO.setScaleBalance(false);
                 }
                 //是否解决差异问题
-                if (contractTO.getSolutionBalance().equals("是")) {
+                if (str.getSolutionBalance().equals("是")) {
                     contractTO.setSolutionBalance(true);
                 } else {
                     contractTO.setSolutionBalance(false);
                 }
                 //预估项目是否确认实施
-                if (contractTO.getImplement().equals("是")) {
+                if (str.getImplement().equals("是")) {
                     contractTO.setImplement(true);
                 } else {
                     contractTO.setImplement(false);
                 }
                 //是否分批结算
-                if (contractTO.getPartial().equals("是")) {
+                if (str.getPartial().equals("是")) {
                     contractTO.setPartial(true);
                 } else {
                     contractTO.setPartial(false);
                 }
                 //是否为持续
-                if (contractTO.getPersist().equals("是")) {
+                if (str.getPersist().equals("是")) {
                     contractTO.setPersist(true);
                 } else {
                     contractTO.setPersist(false);
                 }
                 //是否正在走结算流程
-                if (contractTO.getSettlementProcess().equals("是")) {
+                if (str.getSettlementProcess().equals("是")) {
                     contractTO.setSettlementProcess(true);
                 } else {
                     contractTO.setSettlementProcess(false);
                 }
                 //是否到账
-                if (contractTO.getAccount().equals("是")) {
+                if (str.getAccount().equals("是")) {
                     contractTO.setAccount(true);
                 } else {
                     contractTO.setAccount(false);
                 }
                 //是否闭单
-                if (contractTO.getCloseSingle().equals("是")) {
+                if (str.getCloseSingle().equals("是")) {
                     contractTO.setCloseSingle(true);
                 } else {
                     contractTO.setCloseSingle(false);
                 }
                 //合同是否已归档
-                if (contractTO.getArchive().equals("是")) {
+                if (str.getArchive().equals("是")) {
                     contractTO.setArchive(true);
                 } else {
                     contractTO.setArchive(false);
@@ -439,6 +456,7 @@ public class BusinessContractAction extends BaseFileAction {
     }
 
 
+
     /**
      * 导出excel
      *
@@ -448,7 +466,7 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport(@Validated() BusinessContractDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
+    public Result exportReport(@Validated(BusinessContractDTO.EXPORT.class) BusinessContractDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
         try {
             String fileName = "商务项目合同.xlsx";
             super.writeOutFile(response, businessContractAPI.exportExcel(dto), fileName);

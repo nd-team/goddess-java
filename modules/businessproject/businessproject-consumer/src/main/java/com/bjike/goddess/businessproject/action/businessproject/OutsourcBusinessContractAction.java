@@ -143,6 +143,24 @@ public class OutsourcBusinessContractAction extends BaseFileAction {
 //        }
 //    }
 
+    /**
+     * 编辑供应商
+     *
+     * @param to 外包半外包项目合同管理数据bo
+     * @return class OutsourcBusinessContractVO
+     * @des 编辑供应商
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/supplier")
+    public Result supplier(OutsourcBusinessContractTO to) throws ActException {
+        try {
+            OutsourcBusinessContractBO bo = outsourcBusinessContractAPI.supplier(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, OutsourcBusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 编辑外包半外包项目合同管理
@@ -212,70 +230,65 @@ public class OutsourcBusinessContractAction extends BaseFileAction {
             List<OutsourcBusinessContractExcel> tos = ExcelUtil.excelToClazz(is, OutsourcBusinessContractExcel.class, excel);
             List<OutsourcBusinessContractTO> tocs = new ArrayList<>();
             for (OutsourcBusinessContractExcel str : tos) {
-                OutsourcBusinessContractTO contractTO = BeanTransform.copyProperties(str, OutsourcBusinessContractTO.class, "measurePass", "taskContract", "makeContract", "cooperation", "complete",
+                OutsourcBusinessContractTO contractTO = BeanTransform.copyProperties(str, OutsourcBusinessContractTO.class,
+                        "measurePass", "taskContract", "cooperation", "complete",
                         "qualifiedGist", "accept", "acceptorPass", "account", "pay", "closedLoop");
 //              //测算是否通过
-                if (contractTO.getMeasurePass().equals("是")) {
+                if (str.getMeasurePass().equals("是")) {
                     contractTO.setMeasurePass(true);
                 } else {
                     contractTO.setMeasurePass(false);
                 }
                 //是否有合同派工
-                if (contractTO.getTaskContract().equals("是")) {
+                if (str.getTaskContract().equals("是")) {
                     contractTO.setTaskContract(true);
                 } else {
                     contractTO.setTaskContract(false);
                 }
-                //是否有合同立项
-                if (contractTO.getMakeContract().equals("是")) {
-                    contractTO.setMakeContract(true);
-                } else {
-                    contractTO.setMakeContract(false);
-                }
                 //是否确定合作
-                if (contractTO.getCooperation().equals("是")) {
+                if (str.getCooperation().equals("是")) {
                     contractTO.setCooperation(true);
                 } else {
                     contractTO.setCooperation(false);
                 }
                 //是否完工
-                if (contractTO.getComplete().equals("是")) {
+                if (str.getComplete().equals("是")) {
                     contractTO.setComplete(true);
                 } else {
                     contractTO.setComplete(false);
                 }
                 //是否提供完工合格依据
-                if (contractTO.getQualifiedGist().equals("是")) {
+                if (str.getQualifiedGist().equals("是")) {
                     contractTO.setQualifiedGist(true);
                 } else {
                     contractTO.setQualifiedGist(false);
                 }
                 //是否验收
-                if (contractTO.getAccept().equals("是")) {
+                if (str.getAccept().equals("是")) {
                     contractTO.setAccept(true);
                 } else {
                     contractTO.setAccept(false);
                 }
                 //验收是否通过
-                if (contractTO.getAcceptorPass().equals("是")) {
+                if (str.getAcceptorPass().equals("是")) {
                     contractTO.setAcceptorPass(true);
                 } else {
                     contractTO.setAcceptorPass(false);
                 }
                 //是否到账
-                if (contractTO.getAccount().equals("是")) {
+                if (str.getAccount().equals("是")) {
                     contractTO.setAccount(true);
                 } else {
                     contractTO.setAccount(false);
                 }
                 //是否付款成功
-                if (contractTO.getPay().equals("是")) {
+                if (str.getPay().equals("是")) {
                     contractTO.setPay(true);
                 } else {
                     contractTO.setPay(false);
                 }
                 //是否闭环
-                if (contractTO.getClosedLoop().equals("是")) {
+                if (str.getClosedLoop().equals("是")) {
                     contractTO.setClosedLoop(true);
                 } else {
                     contractTO.setClosedLoop(false);

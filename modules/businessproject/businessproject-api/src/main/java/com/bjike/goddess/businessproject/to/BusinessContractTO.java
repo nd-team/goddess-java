@@ -45,7 +45,6 @@ public class BusinessContractTO extends BaseTO {
     /**
      * 通报时间
      */
-    @NotBlank(message = "通报时间不能为空",groups = {BusinessContractTO.Notification.class})
     private String notificationTime;
 
     /**
@@ -410,6 +409,18 @@ public class BusinessContractTO extends BaseTO {
      */
     private String storageLocation;
 
+    /**
+     * 发送邮件模板
+     */
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getMeasureClassify() {
         return measureClassify;

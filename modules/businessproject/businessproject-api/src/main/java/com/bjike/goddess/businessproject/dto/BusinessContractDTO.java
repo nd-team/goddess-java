@@ -2,6 +2,8 @@ package com.bjike.goddess.businessproject.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 商务项目合同数据传输对象
  *
@@ -12,6 +14,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class BusinessContractDTO extends BaseDTO {
+    public interface EXPORT{}
     /**
      * 签订时间
      */
@@ -48,6 +51,7 @@ public class BusinessContractDTO extends BaseDTO {
     /**
      * 地区
      */
+    @NotNull(message = "地区不能为空",groups = {BusinessContractDTO.EXPORT.class})
     private String[] areas;
 
     public String[] getAreas() {

@@ -1,0 +1,57 @@
+Manifest-Version: 1.0
+Class-Path: lib/log4j-over-slf4j-1.7.24.jar lib/message-api-1.0.jar li
+ b/snakeyaml-1.17.jar lib/android-json-0.0.20131108.vaadin1.jar lib/ju
+ l-to-slf4j-1.7.24.jar lib/antlr-2.7.7.jar lib/spring-cloud-context-1.
+ 2.0.RELEASE.jar lib/hamcrest-core-1.3.jar lib/bcpkix-jdk15on-1.55.jar
+  lib/javassist-3.21.0-GA.jar lib/aspectjweaver-1.8.9.jar lib/httpmime
+ -4.5.3.jar lib/jackson-annotations-2.8.0.jar lib/spring-security-rsa-
+ 1.0.3.RELEASE.jar lib/common-consumer-1.0.jar lib/zkclient-0.10.jar l
+ ib/user-api-1.0.jar lib/snappy-java-1.1.2.6.jar lib/organize-api-1.0.
+ jar lib/commons-logging-1.2.jar lib/spring-boot-starter-logging-1.5.2
+ .RELEASE.jar lib/common-api-1.0.jar lib/tomcat-embed-websocket-8.5.11
+ .jar lib/hystrix-javanica-1.5.10.jar lib/tomcat-embed-core-8.5.11.jar
+  lib/hibernate-core-5.0.12.Final.jar lib/slf4j-api-1.7.24.jar lib/dom
+ 4j-1.6.1.jar lib/hamcrest-library-1.3.jar lib/spring-boot-starter-tes
+ t-1.5.2.RELEASE.jar lib/spring-boot-starter-tomcat-1.5.2.RELEASE.jar 
+ lib/spring-boot-autoconfigure-1.5.2.RELEASE.jar lib/log4j-1.2.16.jar 
+ lib/hystrix-serialization-1.5.10.jar lib/commons-email-1.4.jar lib/lo
+ gback-classic-1.1.11.jar lib/json-smart-2.2.1.jar lib/accessors-smart
+ -1.1.jar lib/dubbo-2.5.4-SNAPSHOT.jar lib/geronimo-jta_1.1_spec-1.1.1
+ .jar lib/spring-boot-test-1.5.2.RELEASE.jar lib/contacts-api-1.0.jar 
+ lib/commons-io-2.5.jar lib/tcc-transaction-api-1.1.5.jar lib/stax-api
+ -1.0.1.jar lib/spring-boot-starter-1.5.2.RELEASE.jar lib/validation-a
+ pi-1.1.0.Final.jar lib/spring-beans-4.3.7.RELEASE.jar lib/spring-clou
+ d-starter-1.2.0.RELEASE.jar lib/kafka-clients-0.10.2.0.jar lib/httpco
+ re-4.4.6.jar lib/javax.mail-1.5.6.jar lib/jackson-core-2.8.7.jar lib/
+ commons-collections4-4.1.jar lib/spring-cloud-starter-hystrix-1.3.0.R
+ ELEASE.jar lib/spring-context-4.3.7.RELEASE.jar lib/commons-configura
+ tion-1.8.jar lib/archive-api-1.0.jar lib/kafka_2.10-0.10.2.0.jar lib/
+ mockito-core-1.10.19.jar lib/spring-boot-1.5.2.RELEASE.jar lib/hystri
+ x-metrics-event-stream-1.5.10.jar lib/scala-library-2.10.6.jar lib/co
+ mmons-lang3-3.5.jar lib/jline-0.9.94.jar lib/jopt-simple-5.0.3.jar li
+ b/spring-webmvc-4.3.7.RELEASE.jar lib/hibernate-entitymanager-5.0.12.
+ Final.jar lib/jboss-logging-3.3.0.Final.jar lib/storage-api-1.0.jar l
+ ib/curvesapi-1.04.jar lib/jcl-over-slf4j-1.7.24.jar lib/hibernate-val
+ idator-5.3.4.Final.jar lib/hibernate-jpa-2.1-api-1.0.0.Final.jar lib/
+ spring-aop-4.3.7.RELEASE.jar lib/annual-api-1.0.jar lib/hystrix-core-
+ 1.5.10.jar lib/xmlbeans-2.6.0.jar lib/spring-boot-starter-web-1.5.2.R
+ ELEASE.jar lib/poi-ooxml-3.16.jar lib/fastjson-1.2.23.jar lib/spring-
+ core-4.3.7.RELEASE.jar lib/spring-expression-4.3.7.RELEASE.jar lib/js
+ on-path-2.2.0.jar lib/tomcat-embed-el-8.5.11.jar lib/lz4-1.3.0.jar li
+ b/spring-test-4.3.7.RELEASE.jar lib/metrics-core-2.2.0.jar lib/logbac
+ k-core-1.1.11.jar lib/spring-web-4.3.7.RELEASE.jar lib/common-utils-1
+ .0.jar lib/guava-21.0.jar lib/spring-security-crypto-4.2.2.RELEASE.ja
+ r lib/HdrHistogram-2.1.9.jar lib/spring-boot-test-autoconfigure-1.5.2
+ .RELEASE.jar lib/rxjava-1.2.0.jar lib/netty-3.10.5.Final.jar lib/spri
+ ng-cloud-starter-archaius-1.3.0.RELEASE.jar lib/jsonassert-1.4.0.jar 
+ lib/jandex-2.0.0.Final.jar lib/poi-ooxml-schemas-3.16.jar lib/commons
+ -codec-1.10.jar lib/customer-api-1.0.jar lib/asm-5.0.4.jar lib/classm
+ ate-1.3.3.jar lib/objenesis-2.1.jar lib/httpclient-4.5.3.jar lib/hibe
+ rnate-commons-annotations-5.0.1.Final.jar lib/jackson-databind-2.8.7.
+ jar lib/spring-cloud-netflix-core-1.3.0.RELEASE.jar lib/spring-cloud-
+ commons-1.2.0.RELEASE.jar lib/assertj-core-2.6.0.jar lib/activation-1
+ .1.1.jar lib/javax.servlet-api-3.1.0.jar lib/zookeeper-3.4.9.jar lib/
+ poi-3.16.jar lib/aspectjrt-1.8.9.jar lib/buyticket-api-1.0.jar lib/ju
+ nit-4.12.jar
+Main-Class: com.bjike.goddess.buyticket.Application
+

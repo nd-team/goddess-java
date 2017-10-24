@@ -2,7 +2,9 @@ package com.bjike.goddess.businessproject.action.businessproject;
 
 import com.bjike.goddess.businessproject.api.BusinessContractAPI;
 import com.bjike.goddess.businessproject.bo.BrokenOptionBO;
+import com.bjike.goddess.businessproject.bo.BrokenOptionMakeBO;
 import com.bjike.goddess.businessproject.bo.OptionBO;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -385,7 +387,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/dayAreaMakeFigureCollect")
     public Result dayAreaMakeFigureCollect(String time) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.dayAreaMakeFigureCollect(time);
+            OptionMakeBO bo = businessContractAPI.dayAreaMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -404,7 +406,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/weekAreaMakeFigureCollect")
     public Result weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.weekAreaMakeFigureCollect(year, month, week);
+            OptionMakeBO bo = businessContractAPI.weekAreaMakeFigureCollect(year, month, week);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -416,13 +418,14 @@ public class BusinessContractFigureAction extends BaseFileAction {
      *
      * @param year
      * @param month
+     * @return class OptionMakeBO
      * @des 各地区合同立项情况金额图表月份汇总
      * @version v1
      */
     @GetMapping("v1/monthAreaMakeFigureCollect")
     public Result monthAreaMakeFigureCollect(Integer year, Integer month) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.monthAreaMakeFigureCollect(year, month);
+            OptionMakeBO bo = businessContractAPI.monthAreaMakeFigureCollect(year, month);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -440,7 +443,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/quarterAreaMakeFigureCollect")
     public Result quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.quarterAreaMakeFigureCollect(year, quarter);
+            OptionMakeBO bo = businessContractAPI.quarterAreaMakeFigureCollect(year, quarter);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -457,7 +460,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/yearAreaMakeFigureCollect")
     public Result yearAreaMakeFigureCollect(Integer year) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.yearAreaMakeFigureCollect(year);
+            OptionMakeBO bo = businessContractAPI.yearAreaMakeFigureCollect(year);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -474,7 +477,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/totalAreaMakeFigureCollect")
     public Result totalAreaMakeFigureCollect(String time) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.totalAreaMakeFigureCollect(time);
+            OptionMakeBO bo = businessContractAPI.totalAreaMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -491,7 +494,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/dayProjectGroupMakeFigureCollect")
     public Result dayProjectGroupMakeFigureCollect(String time) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.dayProjectGroupMakeFigureCollect(time);
+            OptionMakeBO bo = businessContractAPI.dayProjectGroupMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -510,7 +513,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/weekProjectGroupMakeFigureCollect")
     public Result weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.weekProjectGroupMakeFigureCollect(year, month, week);
+            OptionMakeBO bo = businessContractAPI.weekProjectGroupMakeFigureCollect(year, month, week);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -528,7 +531,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/monthProjectGroupMakeFigureCollect")
     public Result monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.monthProjectGroupMakeFigureCollect(year, month);
+            OptionMakeBO bo = businessContractAPI.monthProjectGroupMakeFigureCollect(year, month);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -546,7 +549,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/quarterProjectGroupMakeFigureCollect")
     public Result quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.quarterProjectGroupMakeFigureCollect(year, quarter);
+            OptionMakeBO bo = businessContractAPI.quarterProjectGroupMakeFigureCollect(year, quarter);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -563,7 +566,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/yearProjectGroupMakeFigureCollect")
     public Result yearProjectGroupMakeFigureCollect(Integer year) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.yearProjectGroupMakeFigureCollect(year);
+            OptionMakeBO bo = businessContractAPI.yearProjectGroupMakeFigureCollect(year);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -580,7 +583,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/totalProjectGroupMakeFigureCollect")
     public Result totalProjectGroupMakeFigureCollect(String time) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.totalProjectGroupMakeFigureCollect(time);
+            OptionMakeBO bo = businessContractAPI.totalProjectGroupMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -597,7 +600,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/dayMajorMakeFigureCollect")
     public Result dayMajorMakeFigureCollect(String time) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.dayMajorMakeFigureCollect(time);
+            OptionMakeBO bo = businessContractAPI.dayMajorMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -616,7 +619,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/weekMajorMakeFigureCollect")
     public Result weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.weekMajorMakeFigureCollect(year, month, week);
+            OptionMakeBO bo = businessContractAPI.weekMajorMakeFigureCollect(year, month, week);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -634,7 +637,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/monthMajorMakeFigureCollect")
     public Result monthMajorMakeFigureCollect(Integer year, Integer month) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.monthMajorMakeFigureCollect(year, month);
+            OptionMakeBO bo = businessContractAPI.monthMajorMakeFigureCollect(year, month);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -652,7 +655,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/quarterMajorMakeFigureCollect")
     public Result quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.quarterMajorMakeFigureCollect(year, quarter);
+            OptionMakeBO bo = businessContractAPI.quarterMajorMakeFigureCollect(year, quarter);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -669,7 +672,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/yearMajorMakeFigureCollect")
     public Result yearMajorMakeFigureCollect(Integer year) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.yearMajorMakeFigureCollect(year);
+            OptionMakeBO bo = businessContractAPI.yearMajorMakeFigureCollect(year);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -686,7 +689,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
     @GetMapping("v1/totalMajorMakeFigureCollect")
     public Result totalMajorMakeFigureCollect(String time) throws ActException {
         try {
-            OptionBO bo = businessContractAPI.totalMajorMakeFigureCollect(time);
+            OptionMakeBO bo = businessContractAPI.totalMajorMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -998,6 +1001,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
      * 各专业工期合同立项情况图表累计汇总
      *
      * @param time
+     * @return class OptionBO
      * @des 各专业工期合同立项情况图表累计汇总
      * @version v1
      */
@@ -1015,6 +1019,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
      * 合同规模数汇总
      *
      * @param year
+     * @return class BrokenOptionBO
      * @des 合同规模数汇总
      * @version v1
      */
@@ -1027,26 +1032,30 @@ public class BusinessContractFigureAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 合同立项情况金额汇总
      *
      * @param year
+     * @return class BrokenOptionMakeBO
      * @des 合同立项情况金额汇总
      * @version v1
      */
     @GetMapping("v1/makeMoney")
     public Result makeMoney(Integer year) throws ActException {
         try {
-            BrokenOptionBO bo = businessContractAPI.makeMoney(year);
+            BrokenOptionMakeBO bo = businessContractAPI.makeMoney(year);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 合同立项情况汇总
      *
      * @param year
+     * @return class BrokenOptionBO
      * @des 合同立项情况汇总
      * @version v1
      */
