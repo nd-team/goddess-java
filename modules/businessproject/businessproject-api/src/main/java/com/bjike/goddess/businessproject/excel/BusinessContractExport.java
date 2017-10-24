@@ -197,7 +197,7 @@ public class BusinessContractExport extends BaseTO {
      * 合同规模数量
      */
     @ExcelHeader(name="合同规模数量")
-    private Integer scaleContract;
+    private Double scaleContract;
 
     /**
      * 合同规模数是否有差异
@@ -704,11 +704,11 @@ public class BusinessContractExport extends BaseTO {
         this.scale = scale;
     }
 
-    public Integer getScaleContract() {
+    public Double getScaleContract() {
         return scaleContract;
     }
 
-    public void setScaleContract(Integer scaleContract) {
+    public void setScaleContract(Double scaleContract) {
         this.scaleContract = scaleContract;
     }
 

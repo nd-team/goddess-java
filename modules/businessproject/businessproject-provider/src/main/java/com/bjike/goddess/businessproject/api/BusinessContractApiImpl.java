@@ -84,10 +84,6 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
         return businessContractSer.budgetIdea(to);
     }
     @Override
-    public BusinessContractBO hadContract(BusinessContractTO to) throws SerException {
-        return businessContractSer.hadContract(to);
-    }
-    @Override
     public BusinessContractBO advance(BusinessContractTO to) throws SerException {
         return businessContractSer.advance(to);
     }
@@ -224,91 +220,91 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
         return businessContractSer.totalMajorScaleFigureCollect(time);
     }
     @Override
-    public OptionMakeBO dayAreaMakeFigureCollect(String time) throws SerException {
+    public OptionBO dayAreaMakeFigureCollect(String time) throws SerException {
         return businessContractSer.dayAreaMakeFigureCollect(time);
     }
 
     @Override
-    public OptionMakeBO weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    public OptionBO weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return businessContractSer.weekAreaMakeFigureCollect(year, month, week);
     }
 
     @Override
-    public OptionMakeBO monthAreaMakeFigureCollect(Integer year, Integer month) throws SerException {
+    public OptionBO monthAreaMakeFigureCollect(Integer year, Integer month) throws SerException {
         return businessContractSer.monthAreaMakeFigureCollect(year, month);
     }
 
     @Override
-    public OptionMakeBO quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    public OptionBO quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return businessContractSer.quarterAreaMakeFigureCollect(year, quarter);
     }
 
     @Override
-    public OptionMakeBO yearAreaMakeFigureCollect(Integer year) throws SerException {
+    public OptionBO yearAreaMakeFigureCollect(Integer year) throws SerException {
         return businessContractSer.yearAreaMakeFigureCollect(year);
     }
 
     @Override
-    public OptionMakeBO totalAreaMakeFigureCollect(String time) throws SerException {
+    public OptionBO totalAreaMakeFigureCollect(String time) throws SerException {
         return businessContractSer.totalAreaMakeFigureCollect(time);
     }
     @Override
-    public OptionMakeBO dayProjectGroupMakeFigureCollect(String time) throws SerException {
+    public OptionBO dayProjectGroupMakeFigureCollect(String time) throws SerException {
         return businessContractSer.dayProjectGroupMakeFigureCollect(time);
     }
 
     @Override
-    public OptionMakeBO weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    public OptionBO weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return businessContractSer.weekProjectGroupMakeFigureCollect(year, month, week);
     }
 
     @Override
-    public OptionMakeBO monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws SerException {
+    public OptionBO monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws SerException {
         return businessContractSer.monthProjectGroupMakeFigureCollect(year, month);
     }
 
     @Override
-    public OptionMakeBO quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    public OptionBO quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return businessContractSer.quarterProjectGroupMakeFigureCollect(year, quarter);
     }
 
     @Override
-    public OptionMakeBO yearProjectGroupMakeFigureCollect(Integer year) throws SerException {
+    public OptionBO yearProjectGroupMakeFigureCollect(Integer year) throws SerException {
         return businessContractSer.yearProjectGroupMakeFigureCollect(year);
     }
 
     @Override
-    public OptionMakeBO totalProjectGroupMakeFigureCollect(String time) throws SerException {
+    public OptionBO totalProjectGroupMakeFigureCollect(String time) throws SerException {
         return businessContractSer.totalProjectGroupMakeFigureCollect(time);
     }
 
     @Override
-    public OptionMakeBO dayMajorMakeFigureCollect(String time) throws SerException {
+    public OptionBO dayMajorMakeFigureCollect(String time) throws SerException {
         return businessContractSer.dayMajorMakeFigureCollect(time);
     }
 
     @Override
-    public OptionMakeBO weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    public OptionBO weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return businessContractSer.weekMajorMakeFigureCollect(year, month, week);
     }
 
     @Override
-    public OptionMakeBO monthMajorMakeFigureCollect(Integer year, Integer month) throws SerException {
+    public OptionBO monthMajorMakeFigureCollect(Integer year, Integer month) throws SerException {
         return businessContractSer.monthMajorMakeFigureCollect(year, month);
     }
 
     @Override
-    public OptionMakeBO quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    public OptionBO quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return businessContractSer.quarterMajorMakeFigureCollect(year, quarter);
     }
 
     @Override
-    public OptionMakeBO yearMajorMakeFigureCollect(Integer year) throws SerException {
+    public OptionBO yearMajorMakeFigureCollect(Integer year) throws SerException {
         return businessContractSer.yearMajorMakeFigureCollect(year);
     }
 
     @Override
-    public OptionMakeBO totalMajorMakeFigureCollect(String time) throws SerException {
+    public OptionBO totalMajorMakeFigureCollect(String time) throws SerException {
         return businessContractSer.totalMajorMakeFigureCollect(time);
     }
     @Override
@@ -406,7 +402,7 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     }
 
     @Override
-    public BrokenOptionMakeBO makeMoney(Integer year) throws SerException {
+    public BrokenOptionBO makeMoney(Integer year) throws SerException {
         return businessContractSer.makeMoney(year);
     }
 

@@ -27,10 +27,6 @@ public class MakeCaseFigureBO extends BaseBO {
      */
     private String major;
     /**
-     * 年月份
-     */
-    private String yearMonth;
-    /**
      * 已派工金额
      */
     private Double taskMoney;
@@ -42,14 +38,6 @@ public class MakeCaseFigureBO extends BaseBO {
      * 预估总金额
      */
     private Double forecastMoney;
-
-    public String getYearMonth() {
-        return yearMonth;
-    }
-
-    public void setYearMonth(String yearMonth) {
-        this.yearMonth = yearMonth;
-    }
 
     public String getArea() {
         return area;

@@ -24,6 +24,19 @@ public class SeriesBO extends BaseBO{
      */
     private Integer[] data;
 
+    /**
+     * 数据
+     */
+    private Double[] datas;
+
+    public Double[] getDatas() {
+        return datas;
+    }
+
+    public void setDatas(Double[] datas) {
+        this.datas = datas;
+    }
+
     public String getName() {
         return name;
     }
