@@ -21,9 +21,19 @@ public class ManagerBO extends BaseBO {
     private int area;
 
     /**
+     * 地区
+     */
+    private String areas;
+
+    /**
      * 项目组/部门
      */
     private int department;
+
+    /**
+     * 项目组/部门
+     */
+    private String departments;
 
     /**
      * 内部项目数
@@ -203,5 +213,21 @@ public class ManagerBO extends BaseBO {
 
     public void setWaitDimissionNum(Long waitDimissionNum) {
         this.waitDimissionNum = waitDimissionNum;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
+    }
+
+    public String getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(String departments) {
+        this.departments = departments;
     }
 }

@@ -19,6 +19,7 @@ import com.bjike.goddess.dimission.enums.GuideAddrStatus;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.SituationTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.OptionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -30,7 +31,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -304,6 +307,44 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
         return super.count(situationDTO);
     }
 
+    @Override
+    public OptionBO figureShowMonth(String month) throws SerException {
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
+        }
+        month = month + "-01";
+        String startTime = findFirstDayOfMonth(month);
+        String endTime = findEndDayOfMonth(month);
+
+        //获取地区,部门,岗位层级
+        String[] fields = new String[]{"department"};
+        StringBuilder sql = new StringBuilder(" select department from dimission_situation ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "'");
+            sql.append(" and '" + endTime + "'");
+        }
+        List<DistinctCollectConditionBO> distinctCollectConditionBOs = super.findBySql(sql.toString(), DistinctCollectConditionBO.class, fields);
+
+
+        TreeSet<DistinctCollectConditionBO> treeSet = this.filter();
+        for (DistinctCollectConditionBO distinctCollectConditionBO : distinctCollectConditionBOs) {
+            treeSet.add(distinctCollectConditionBO);
+        }
+
+        List<DimissionCollectBO> dimissionCollectBOs = new ArrayList<>(0);
+        for (DistinctCollectConditionBO distinctCollectConditionBO : treeSet) {
+            dimissionCollectBOs.add(getDimissionCollectBO(distinctCollectConditionBO, startTime, endTime));
+        }
+        return dimissionCollectBOs;
+
+
+
+
+
+
+
+    }
+
 
     //根据名字获取地区,部门,岗位,岗位层级
     private Situation getDataByName(Situation entity) throws SerException {
@@ -344,6 +385,9 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
         String value = "";
         String table = "";
         DimissionCollectBO dimissionCollectBO = new DimissionCollectBO();
+        dimissionCollectBO.setArea(collectConditionBO.getArea());
+        dimissionCollectBO.setDepartment(collectConditionBO.getDepartment());
+        dimissionCollectBO.setPositionLever(collectConditionBO.getPositionLever());
         value = "is_writeApply";
         table = "dimission_situation";
         collectConditionBO.setValue(value);
@@ -550,5 +594,51 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
 
         String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return dayAfter;
+    }
+
+    //获取某一个月的第一天
+    private String findFirstDayOfMonth(String month) throws SerException {
+        Date date = null;
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = fmt.parse(month);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstDayOfMonth = calendar.getTime();
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayOfMonth = calendar.getTime();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startTime = sdf.format(firstDayOfMonth);
+        return startTime;
+    }
+
+    //获取某一个月的最后一天
+    private String findEndDayOfMonth(String month) throws SerException {
+        Date date = null;
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = fmt.parse(month);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstDayOfMonth = calendar.getTime();
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayOfMonth = calendar.getTime();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String endTime = sdf.format(lastDayOfMonth);
+        return endTime;
     }
 }

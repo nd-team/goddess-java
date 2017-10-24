@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.ManagerBO;
+import com.bjike.goddess.organize.bo.OptionBO;
 import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
 import com.bjike.goddess.organize.service.PositionWorkDetailsSer;
@@ -9,6 +10,8 @@ import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -69,5 +72,35 @@ public class PositionWorkDetailsApiImpl implements PositionWorkDetailsAPI {
     @Override
     public List<ManagerBO> totalCollect() throws SerException {
         return positionWorkDetailsSer.totalCollect();
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return positionWorkDetailsSer.figureShowWeek(year,month,week);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(String month) throws SerException {
+        return positionWorkDetailsSer.figureShowMonth(month);
+    }
+
+    @Override
+    public OptionBO figureShowAll() throws SerException {
+        return positionWorkDetailsSer.figureShowAll();
+    }
+
+    @Override
+    public OptionBO figureShowDay(String day) throws SerException {
+        return positionWorkDetailsSer.figureShowDay(day);
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return positionWorkDetailsSer.exportExcel();
+    }
+
+    @Override
+    public void importExcel(InputStream is) throws SerException {
+        positionWorkDetailsSer.importExcel(is);
     }
 }

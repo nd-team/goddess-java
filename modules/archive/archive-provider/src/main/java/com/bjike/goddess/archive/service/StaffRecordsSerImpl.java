@@ -1,9 +1,6 @@
 package com.bjike.goddess.archive.service;
 
-import com.bjike.goddess.archive.bo.PerBO;
-import com.bjike.goddess.archive.bo.StaffNameBO;
-import com.bjike.goddess.archive.bo.StaffRecords1BO;
-import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.bo.*;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords;
 import com.bjike.goddess.archive.entity.StaffRecords1Excel;
@@ -24,7 +21,6 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -450,6 +446,34 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         List<StaffRecords> list = super.findByCis(dto);
         if (!list.isEmpty()) {
             return BeanTransform.copyProperties(list.get(0), StaffRecordsBO.class);
+        }
+        return null;
+    }
+
+    @Override
+    public CurrentMessageBO findCurrentMessage() throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        userBO.getEmployeeNumber();
+        StaffRecordsDTO staffRecordsDTO = new StaffRecordsDTO();
+        staffRecordsDTO.getConditions().add(Restrict.eq("serialNumber",userBO.getEmployeeNumber()));
+        List<StaffRecords> staffRecordses = super.findByCis(staffRecordsDTO);
+        if(null != staffRecordses && staffRecordses.size() > 0){
+            StaffRecords entity = staffRecordses.get(0);
+            CurrentMessageBO currentMessageBO = new CurrentMessageBO();
+            currentMessageBO.setHeadAdrees(userBO.getHeadSculpture());
+            currentMessageBO.setUsername(userBO.getUsername());
+            currentMessageBO.setSerialNumber(userBO.getEmployeeNumber());
+            currentMessageBO.setDimissionTime(DateUtil.dateToString(entity.getDimissionTime()));
+            currentMessageBO.setEntryTime(DateUtil.dateToString(entity.getEntryTime()));
+            currentMessageBO.setBirth(DateUtil.dateToString(entity.getBirth()));
+            currentMessageBO.setEmail(entity.getEmail());
+            //如果离职时间不存在,证明还在职
+            if(null == entity.getDimissionTime()){
+                currentMessageBO.setIncumbency(true);
+            }else{
+                currentMessageBO.setIncumbency(false);
+            }
+            return currentMessageBO;
         }
         return null;
     }

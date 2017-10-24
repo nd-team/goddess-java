@@ -69,6 +69,7 @@ public interface DimissionInfoAPI {
     default DimissionInfoBO presume(FromInfoTO to) throws SerException {
         return null;
     }
+
     /**
      * 编辑自离信息
      *
@@ -292,9 +293,10 @@ public interface DimissionInfoAPI {
     /**
      * 获取全部用户名
      */
-    default List<String> getAllName() throws SerException{
+    default List<String> getAllName() throws SerException {
         return null;
     }
+
     /**
      * 获取最早时间
      * lijuntao
@@ -318,11 +320,24 @@ public interface DimissionInfoAPI {
     }
 
     /**
+     * <<<<<<< Updated upstream
      * chenjunhao
      * 获取某员工的离职时间
+     *
      * @param name
      * @return
      * @throws SerException
      */
     String getTime(String name) throws SerException;
+
+    /**
+     * 获取自离信息总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getSelfTotal() throws SerException {
+        return null;
+    }
+
 }

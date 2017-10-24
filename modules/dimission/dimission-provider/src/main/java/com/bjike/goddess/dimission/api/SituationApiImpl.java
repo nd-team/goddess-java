@@ -7,6 +7,7 @@ import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.service.SituationSer;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.SituationTO;
+import com.bjike.goddess.organize.bo.OptionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,5 +79,10 @@ public class SituationApiImpl implements SituationAPI  {
     @Override
     public Long getTotal() throws SerException {
         return situationSer.getTotal();
+    }
+
+    @Override
+    public OptionBO figureShowMonth(String month) throws SerException {
+        return situationSer.figureShowMonth(month);
     }
 }

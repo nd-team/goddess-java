@@ -94,29 +94,31 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 ////        bo.setPositionIds(positionId.toString());
 //        String userId = entity.getUserId();
         List<PositionUserDetailBO> detailBOS = new ArrayList<>();
-        if (null != entity.getPositionSet()) {
-            for (PositionDetail positionDetail : entity.getPositionSet()) {
-                PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
-                detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
-                detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
-                PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
-                PositionUserDetailBO detailBO = new PositionUserDetailBO();
-                if (null != detail) {
-                    detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+        if (entity != null) {
+            if (null != entity.getPositionSet()) {
+                for (PositionDetail positionDetail : entity.getPositionSet()) {
+                    PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                    detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
+                    detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
+                    PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
+                    PositionUserDetailBO detailBO = new PositionUserDetailBO();
+                    if (null != detail) {
+                        detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+                    }
+                    detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
+                    detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
+                    detailBO.setArea(positionDetail.getDepartment().getArea());
+                    detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
+                    detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
+                    detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
+                    if (null != positionDetail.getModule()) {
+                        detailBO.setModule(positionDetail.getModule().getModule());
+                    }
+                    detailBO.setPosition(positionDetail.getPosition());
+                    detailBO.setPositionId(positionDetail.getId());
+                    detailBO.setPositionNumber(positionDetail.getSerialNumber());
+                    detailBOS.add(detailBO);
                 }
-                detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
-                detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
-                detailBO.setArea(positionDetail.getDepartment().getArea());
-                detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
-                detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
-                detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
-                if (null != positionDetail.getModule()) {
-                    detailBO.setModule(positionDetail.getModule().getModule());
-                }
-                detailBO.setPosition(positionDetail.getPosition());
-                detailBO.setPositionId(positionDetail.getId());
-                detailBO.setPositionNumber(positionDetail.getSerialNumber());
-                detailBOS.add(detailBO);
             }
         }
         bo.setDetailS(detailBOS);
@@ -523,6 +525,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             for (PositionDetailBO positionDetailBO : list) {
                 DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
                 positionDetailBO.setDepartmentName(department.getDepartment());
+                positionDetailBO.setArea(department.getArea());
                 Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
                 positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
                 Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());

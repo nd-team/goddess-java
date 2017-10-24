@@ -1,9 +1,6 @@
 package com.bjike.goddess.archive.api;
 
-import com.bjike.goddess.archive.bo.PerBO;
-import com.bjike.goddess.archive.bo.StaffNameBO;
-import com.bjike.goddess.archive.bo.StaffRecords1BO;
-import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.bo.*;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
@@ -170,4 +167,11 @@ public interface StaffRecordsAPI {
      * @throws SerException
      */
     StaffRecordsBO getByName(String name) throws SerException;
+
+    /**
+     * 获取当前员工的信息(在职状态为true,在职,反之,离职)
+     */
+    default CurrentMessageBO findCurrentMessage() throws SerException{
+        return null;
+    }
 }

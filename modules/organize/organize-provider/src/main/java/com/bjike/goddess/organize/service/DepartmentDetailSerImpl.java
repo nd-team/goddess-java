@@ -87,6 +87,38 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     }
 
     @Override
+    public List<String> getAreas(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"areas"};
+        StringBuilder sql = new StringBuilder("select area as areas from organize_department_detail ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<String> areas = managerBOs.stream().map(ManagerBO::getAreas).distinct().collect(Collectors.toList());
+            return areas;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getDepartments(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"departments"};
+        StringBuilder sql = new StringBuilder("select department as departments from organize_department_detail ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<String> departments = managerBOs.stream().map(ManagerBO::getDepartments).distinct().collect(Collectors.toList());
+            return departments;
+        }
+        return null;
+    }
+
+    @Override
     public Integer getDepartmentNum(String startTime, String endTime) throws SerException {
         String fields[] = new String[]{"department"};
         StringBuilder sql = new StringBuilder("select count(department) from organize_department_detail ");

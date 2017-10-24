@@ -116,6 +116,38 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     }
 
     @Override
+    public Long getPositionNum(String startTime, String endTime, String project) throws SerException {
+        String fields[] = new String[]{"value"};
+        StringBuilder sql = new StringBuilder("select department_id as value from organize_position_detail ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<OpinionBO> opinionBOs = super.findBySql(sql.toString(), OpinionBO.class, fields);
+        Long num = 0l;
+        List<DepartmentDetail> departmentDetails = new ArrayList<>();
+        if (null != opinionBOs && opinionBOs.size() > 0) {
+            for (OpinionBO opinionBO : opinionBOs) {
+                DepartmentDetail departmentDetail = departmentDetailSer.findById(opinionBO.getValue());
+                departmentDetails.add(departmentDetail);
+            }
+            if (null != departmentDetails && departmentDetails.size() > 0) {
+                for (DepartmentDetail departmentDetail : departmentDetails) {
+                    if (project.equals(departmentDetail.getDepartment())) {
+                        num += 1;
+                    }
+                }
+            }
+        }
+//        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+//        if (null != managerBOs && managerBOs.size() > 0) {
+//            List<Long> areas = managerBOs.stream().map(ManagerBO::getPositionNum).distinct().collect(Collectors.toList());
+//            return areas.get(0);
+//        }
+        return num;
+    }
+
+    @Override
     public List<PositionDetailBO> transformationToBOList(Collection<PositionDetail> list) throws SerException {
         List<PositionDetailBO> bos = new ArrayList<>(list.size());
         for (PositionDetail entity : list)
