@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+
+
+	<dubbo:reference  validation="true" id="changeEquityTypeApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ChangeEquityTypeAPI" />
+	<dubbo:reference  validation="true" id="equityCoalescApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.EquityCoalescAPI" />
+	<dubbo:reference  validation="true" id="equityGiftApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.EquityGiftAPI" />
+	<dubbo:reference  validation="true" id="equityInheritanceApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.EquityInheritanceAPI" />
+	<dubbo:reference  validation="true" id="equityTransactRecordApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.EquityTransactRecordAPI" />
+	<dubbo:reference  validation="true" id="equityTransactRecordDetailApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.EquityTransactRecordDetailAPI" />
+	<dubbo:reference  validation="true" id="equityTransferApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.EquityTransferAPI" />
+	<dubbo:reference  validation="true" id="freezeEquityApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.FreezeEquityAPI" />
+	<dubbo:reference  validation="true" id="logoutEquityApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.LogoutEquityAPI" />
+	<dubbo:reference  validation="true" id="logoutShareApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.LogoutShareAPI" />
+	<dubbo:reference  validation="true" id="newEquityApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.NewEquityAPI" />
+	<dubbo:reference  validation="true" id="pledgeEquityApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.PledgeEquityAPI" />
+	<dubbo:reference  validation="true" id="shareChangeApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareChangeAPI" />
+	<dubbo:reference  validation="true" id="shareOpenAccountApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOpenAccountAPI" />
+	<dubbo:reference  validation="true" id="shareOutBonusDetailApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOutBonusDetailAPI" />
+	<dubbo:reference  validation="true" id="shareOutBonusManageApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.ShareOutBonusManageAPI" />
+	<dubbo:reference  validation="true" id="fairChangeApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.FairChangeAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.shareholdersmanage.api.CusPermissionOperateAPI" />
+
+
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+
+
+
+</beans>

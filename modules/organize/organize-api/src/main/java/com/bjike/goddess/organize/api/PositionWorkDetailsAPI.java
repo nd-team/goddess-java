@@ -2,10 +2,12 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.ManagerBO;
+import com.bjike.goddess.organize.bo.OptionBO;
 import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -105,5 +107,70 @@ public interface PositionWorkDetailsAPI {
      */
     default List<ManagerBO> totalCollect() throws SerException {
         return null;
+    }
+
+    /**
+     * 组织结构管理周汇总柱状图
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 组织结构管理月汇总柱状图
+     *
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(String month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 组织结构管理累计汇总柱状图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowAll() throws SerException {
+        return null;
+    }
+
+    /**
+     * 组织结构管理日汇总柱状图
+     *
+     * @param day
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowDay(String day) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出岗位工作明细信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入Excel
+     *
+     * @param is
+     * @throws SerException
+     */
+    default void importExcel(InputStream is) throws SerException {
+        return;
     }
 }

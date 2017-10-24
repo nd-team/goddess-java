@@ -1,21 +1,18 @@
 package com.bjike.goddess.bidding.api;
 
-import com.bjike.goddess.bidding.bo.BiddingCollectBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
+import com.bjike.goddess.bidding.bo.*;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.service.BiddingInfoSer;
 import com.bjike.goddess.bidding.to.BiddingCollectTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
-import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -31,6 +28,7 @@ import java.util.List;
 public class BiddingInfoApiImpl implements BiddingInfoAPI {
     @Autowired
     private BiddingInfoSer biddingInfoSer;
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return biddingInfoSer.sonPermission();
@@ -38,8 +36,9 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return biddingInfoSer.guidePermission( guidePermissionTO );
+        return biddingInfoSer.guidePermission(guidePermissionTO);
     }
+
     @Override
     public Long countBiddingInfo(BiddingInfoDTO biddingInfoDTO) throws SerException {
         return biddingInfoSer.countBiddingInfo(biddingInfoDTO);
@@ -83,18 +82,22 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     public List<String> getBiddingInfoCities() throws SerException {
         return biddingInfoSer.getBiddingInfoCities();
     }
+
     @Override
     public List<String> getProjectName() throws SerException {
         return biddingInfoSer.getProjectName();
     }
+
     @Override
     public List<String> getTenderNumber() throws SerException {
         return biddingInfoSer.getTenderNumber();
     }
+
     @Override
-    public byte[] exportExcel(BiddingInfoDTO dto) throws SerException{
+    public byte[] exportExcel(BiddingInfoDTO dto) throws SerException {
         return biddingInfoSer.exportExcel(dto);
     }
+
     @Override
     public List<BiddingCollectBO> dayCollect(BiddingCollectTO to) throws SerException {
         return biddingInfoSer.dayCollect(to);
@@ -114,28 +117,77 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     public List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
         return biddingInfoSer.totalCollect(to);
     }
-
     @Override
-    public List<String> info(SearchTO to) throws SerException {
-        return biddingInfoSer.info(to);
-    }
-    @Override
-    public List<String> txzbInfo(SearchTO to) throws SerException {
-        return biddingInfoSer.txzbInfo(to);
+    public OptionBO dayFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.dayFigureCollect(to);
     }
 
     @Override
-    public List<String> zycgInfo(SearchTO to) throws SerException {
-        return biddingInfoSer.zycgInfo(to);
+    public OptionBO weekFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.weekFigureCollect(to);
     }
 
     @Override
-    public List<String> toobiaoInfo(SearchTO to) throws SerException {
-        return biddingInfoSer.toobiaoInfo(to);
+    public OptionBO monthFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.monthFigureCollect(to);
     }
 
     @Override
-    public List<String> schoolbidInfo(SearchTO to) throws SerException {
-        return biddingInfoSer.schoolbidInfo(to);
+    public OptionBO totalFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.totalFigureCollect(to);
     }
+
+    @Override
+    public Long infoTotal() throws SerException {
+        return biddingInfoSer.infoTotal();
+    }
+
+    @Override
+    public List<InfoBO> info(SearchDTO dto) throws SerException {
+        return biddingInfoSer.info(dto);
+    }
+
+    @Override
+    public Long txzbTotal() throws SerException {
+        return biddingInfoSer.txzbTotal();
+    }
+
+    @Override
+    public List<InfoBO> txzbInfo(SearchDTO dto) throws SerException {
+        return biddingInfoSer.txzbInfo(dto);
+    }
+
+    @Override
+    public List<InfoBO> zycgInfo(SearchDTO dto) throws SerException {
+        return biddingInfoSer.zycgInfo(dto);
+    }
+
+    @Override
+    public Long zycyTotal() throws SerException {
+        return biddingInfoSer.zycyTotal();
+    }
+
+    @Override
+    public List<InfoBO> caigouInfo(SearchDTO dto) throws SerException {
+        return biddingInfoSer.caigouInfo(dto);
+    }
+
+    @Override
+    public Long caigouTotal() throws SerException {
+        return biddingInfoSer.caigouTotal();
+    }
+
+    @Override
+    public List<InfoBO> toobiaoInfo(SearchDTO dto) throws SerException {
+        return biddingInfoSer.toobiaoInfo(dto);
+    }
+    @Override
+    public Long toobiaoTotal() throws SerException{
+        return biddingInfoSer.toobiaoTotal();
+    }
+
+//    @Override
+//    public List<InfoBO> schoolbidInfo(SearchDTO dto) throws SerException {
+//        return biddingInfoSer.schoolbidInfo(dto);
+//    }
 }

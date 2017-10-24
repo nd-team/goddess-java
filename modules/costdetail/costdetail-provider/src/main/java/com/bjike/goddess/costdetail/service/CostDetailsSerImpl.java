@@ -1284,7 +1284,7 @@ public class CostDetailsSerImpl extends ServiceImpl<CostDetails, CostDetailsDTO>
         }
         List<CostDetailsYeCollBO> costDetailsYeCollBOList = new CopyOnWriteArrayList<>();
         String start = years + "-01-01";
-        String end = years + "-12-12";
+        String end = years + "-12-31";
 
         //主营业务收入
         StringBuffer busSql = new StringBuffer();

@@ -1,7 +1,5 @@
 package com.bjike.goddess.organize.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 /**
  * @Author: [dengjunren]
  * @Date: [2017-09-13 11:21]
@@ -22,9 +20,20 @@ public class ManagerVO {
     private int area;
 
     /**
+     * 地区
+     */
+    private String areas;
+
+    /**
      * 项目组/部门
      */
     private int department;
+
+    /**
+     * 项目组/部门
+     */
+    private String departments;
+
 
     /**
      * 内部项目数
@@ -204,5 +213,21 @@ public class ManagerVO {
 
     public void setWaitDimissionNum(Long waitDimissionNum) {
         this.waitDimissionNum = waitDimissionNum;
+    }
+
+    public String getAreas() {
+        return areas;
+    }
+
+    public void setAreas(String areas) {
+        this.areas = areas;
+    }
+
+    public String getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(String departments) {
+        this.departments = departments;
     }
 }

@@ -52,6 +52,41 @@ public class ProblemTypeAct {
     }
 
     /**
+     * 通过id查找
+     *
+     * @param id id
+     * @return class ProblemTypeBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/problem/type/{id}")
+    public Result list(@PathVariable String id) throws ActException {
+        try {
+            ProblemTypeBO bos = problemTypeAPI.findByID(id);
+            return ActResult.initialize(bos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 总条数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ProblemTypeDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(problemTypeAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加
      *
      * @param to 问题类型

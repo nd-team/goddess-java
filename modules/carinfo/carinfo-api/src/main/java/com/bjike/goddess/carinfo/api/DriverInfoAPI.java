@@ -91,4 +91,9 @@ public interface DriverInfoAPI {
      * @param driver 司机
      */
     DriverInfoBO findByDriver(String driver) throws SerException;
+
+    /**
+     * 拷贝旧服务器上的数据到本地
+     */
+    void copyDriver() throws SerException;
 }

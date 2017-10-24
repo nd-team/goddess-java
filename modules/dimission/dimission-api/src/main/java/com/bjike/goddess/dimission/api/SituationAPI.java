@@ -6,6 +6,7 @@ import com.bjike.goddess.dimission.bo.SituationBO;
 import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.SituationTO;
+import com.bjike.goddess.organize.bo.OptionBO;
 
 import java.util.List;
 
@@ -116,6 +117,27 @@ public interface SituationAPI {
      * @throws SerException
      */
     default List<DimissionCollectBO> collect(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 离职管理月汇总图形化
+     *
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(String month) throws SerException {
         return null;
     }
 }

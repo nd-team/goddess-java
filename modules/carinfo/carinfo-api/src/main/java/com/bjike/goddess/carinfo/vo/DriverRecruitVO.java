@@ -15,20 +15,30 @@ public class DriverRecruitVO {
      * id
      */
     private String id;
-    /**
-     * 账务模块审核意见
-     */
-    private String suggest;
-
-    /**
-     * 审核结果
-     */
-    private boolean audit;
+//    /**
+//     * 账务模块审核意见
+//     */
+//    private String suggest;
+//
+//    /**
+//     * 审核结果
+//     */
+//    private boolean audit;
 
     /**
      * 地区
      */
     private String area;
+
+    /**
+     * 项目组
+     */
+    private String department;
+
+    /**
+     * 信息收集时间
+     */
+    private String informationCollectionTime;
 
     /**
      * 司机名称
@@ -49,6 +59,11 @@ public class DriverRecruitVO {
      * 是否可备用
      */
     private Boolean backup;
+
+    /**
+     * 是否确定签订协议
+     */
+    private Boolean enSureAgreement;
 
     /**
      * 身份证号
@@ -124,31 +139,6 @@ public class DriverRecruitVO {
      * 备注
      */
     private String remark;
-
-
-    public boolean isAudit() {
-        return audit;
-    }
-
-    public void setAudit(boolean audit) {
-        this.audit = audit;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSuggest() {
-        return suggest;
-    }
-
-    public void setSuggest(String suggest) {
-        this.suggest = suggest;
-    }
 
     public String getArea() {
         return area;
@@ -308,5 +298,37 @@ public class DriverRecruitVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getInformationCollectionTime() {
+        return informationCollectionTime;
+    }
+
+    public void setInformationCollectionTime(String informationCollectionTime) {
+        this.informationCollectionTime = informationCollectionTime;
+    }
+
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
+    }
+
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+        this.enSureAgreement = enSureAgreement;
     }
 }

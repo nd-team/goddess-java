@@ -1,14 +1,7 @@
 package com.bjike.goddess.financeinit.excel;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
 
 /**

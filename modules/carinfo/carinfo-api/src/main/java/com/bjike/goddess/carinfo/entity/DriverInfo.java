@@ -21,23 +21,29 @@ import java.time.LocalDate;
 @Table(name = "carinfo_driverinfo")
 public class DriverInfo extends BaseEntity {
 
-    /**
-     * 账务模块审核意见
-     */
-    @Column(name = "suggest", columnDefinition = "VARCHAR(255)   COMMENT '账务模块审核意见'")
-    private String suggest;
-
-    /**
-     * 审核结果
-     */
-    @Column(name = "is_audit", columnDefinition = "TINYINT(1)  COMMENT '审核结果'")
-    private Boolean audit;
+//    /**
+//     * 账务模块审核意见
+//     */
+//    @Column(name = "suggest", columnDefinition = "VARCHAR(255)   COMMENT '账务模块审核意见'")
+//    private String suggest;
+//
+//    /**
+//     * 审核结果
+//     */
+//    @Column(name = "is_audit", columnDefinition = "TINYINT(1)  COMMENT '审核结果'")
+//    private Boolean audit;
 
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
+
+    /**
+     * 项目组（部门)
+     */
+    @Column(name = "department",  columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
+    private String department;
 
     /**
      * 结算方式
@@ -48,67 +54,67 @@ public class DriverInfo extends BaseEntity {
     /**
      * 司机名称
      */
-    @Column(name = "driver", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '司机名称'")
+    @Column(name = "driver",columnDefinition = "VARCHAR(255)   COMMENT '司机名称'")
     private String driver;
 
     /**
      * 联系电话
      */
-    @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
+    @Column(name = "phone", columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
     private String phone;
 
     /**
      * 身份证号
      */
-    @Column(name = "idCard", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '身份证号'")
+    @Column(name = "idCard",  columnDefinition = "VARCHAR(255)   COMMENT '身份证号'")
     private String idCard;
 
     /**
      * 地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地址'")
+    @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '地址'")
     private String address;
 
     /**
      * 车辆型号
      */
-    @Column(name = "carModel", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '车辆型号'")
+    @Column(name = "carModel",  columnDefinition = "VARCHAR(255)   COMMENT '车辆型号'")
     private String carModel;
 
     /**
      * 车牌号码
      */
-    @Column(name = "carNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '车牌号码'")
+    @Column(name = "carNum", columnDefinition = "VARCHAR(255)   COMMENT '车牌号码'")
     private String carNum;
 
     /**
      * 发动机号
      */
-    @Column(name = "engineNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发动机号'")
+    @Column(name = "engineNum", columnDefinition = "VARCHAR(255)   COMMENT '发动机号'")
     private String engineNum;
 
     /**
      * 汽车购买时间
      */
-    @Column(name = "buyDate", nullable = false, columnDefinition = "DATE   COMMENT '汽车购买时间'")
+    @Column(name = "buyDate",  columnDefinition = "DATE   COMMENT '汽车购买时间'")
     private LocalDate buyDate;
 
     /**
      * 汽车使用时长
      */
-    @Column(name = "useTime", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '汽车使用时长'")
+    @Column(name = "useTime", columnDefinition = "DECIMAL(10,2)   COMMENT '汽车使用时长'")
     private Double useTime;
 
     /**
      * 汽车排量
      */
-    @Column(name = "emissions", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '汽车排量'")
+    @Column(name = "emissions", columnDefinition = "DECIMAL(10,2)   COMMENT '汽车排量'")
     private Double emissions;
 
     /**
      * 本车耗油
      */
-    @Column(name = "carFuel", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '本车耗油'")
+    @Column(name = "carFuel", columnDefinition = "DECIMAL(10,2)   COMMENT '本车耗油'")
     private Double carFuel;
 
     /**
@@ -144,31 +150,31 @@ public class DriverInfo extends BaseEntity {
     /**
      * 是否提供行驶证照片
      */
-    @Column(name = "is_travel", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否提供行驶证照片'")
+    @Column(name = "is_travel",columnDefinition = "TINYINT(1)  COMMENT '是否提供行驶证照片'")
     private Boolean travel;
 
     /**
      * 行驶证所有者
      */
-    @Column(name = "travelName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '行驶证所有者'")
+    @Column(name = "travelName", columnDefinition = "VARCHAR(255)   COMMENT '行驶证所有者'")
     private String travelName;
 
     /**
      * 是否提供驾驶证照片
      */
-    @Column(name = "is_driverLicense", nullable = false, columnDefinition = "TINYINT(1) COMMENT '是否提供驾驶证照片'")
+    @Column(name = "is_driverLicense", columnDefinition = "TINYINT(1) COMMENT '是否提供驾驶证照片'")
     private Boolean driverLicense;
 
     /**
      * 驾驶证所有者
      */
-    @Column(name = "licenseName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '驾驶证所有者'")
+    @Column(name = "licenseName", columnDefinition = "VARCHAR(255)   COMMENT '驾驶证所有者'")
     private String licenseName;
 
     /**
      * 是否提供本车辆保险
      */
-    @Column(name = "is_carInsurance", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否提供本车辆保险'")
+    @Column(name = "is_carInsurance", columnDefinition = "TINYINT(1)  COMMENT '是否提供本车辆保险'")
     private Boolean carInsurance;
 
     /**
@@ -201,22 +207,6 @@ public class DriverInfo extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
-
-    public String getSuggest() {
-        return suggest;
-    }
-
-    public void setSuggest(String suggest) {
-        this.suggest = suggest;
-    }
-
-    public Boolean getAudit() {
-        return audit;
-    }
-
-    public void setAudit(Boolean audit) {
-        this.audit = audit;
-    }
 
     public String getArea() {
         return area;
@@ -440,5 +430,13 @@ public class DriverInfo extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

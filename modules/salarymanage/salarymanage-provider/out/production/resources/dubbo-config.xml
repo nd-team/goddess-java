@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties"/>
+
+    <dubbo:application name="${dubbo.application.name}"/>
+    <dubbo:provider timeout="${dubbo.provider.timeout}" filter="userFilter"/>
+    <dubbo:consumer check="false" timeout="15000"/>
+    <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}"/>
+    <dubbo:registry address="${dubbo.registry.address}"/>
+
+    <!--发布接口,供其他模块调用-->
+
+
+
+    <!-- 基本信息设置 -->
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryBasicAPI" ref="salaryBasicApiImpl"/>
+
+    <!--薪资资料-->
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryInformationAPI" ref="salaryInformationApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryCalculateDetailAPI" ref="salaryCalculateDetailApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryCalculateResultAPI" ref="salaryCalculateResultApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryConfirmRecordAPI" ref="salaryConfirmRecordApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryManageCollectAPI" ref="salaryManageCollectApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.salarymanage.api.SalaryTestCollectAPI" ref="salaryTestCollectApiImpl"/>
+
+    <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
+
+    <!-- userAPI -->
+    <dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
+
+    <!-- 组织结构APi -->
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levslShowApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.TemperatureSubsidiesAPI" id="temperatureSubsidiesApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.SenioritySubsidiesAPI" id="senioritySubsidiesApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.assistance.api.ComputerSubsidiesAPI" id="computerSubsidiesApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.storage.api.StorageUserAPI" id="storageUser"/>
+    <dubbo:reference interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.archive.api.StaffRecordsAPI" id="staffRecordsApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI" id="salaryconfirmApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.secure.api.AttachedAPI" id="attachedApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.rentutilitiespay.api.RentPayAPI" id="rentPayApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" id="disciplineRecordApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.regularization.api.RegularizationAPI" id="regularizationApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.managepromotion.api.OverviewSkillLevelAPI" id="overviewSkillLevelApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.recruit.api.InterviewInforAPI" id="interviewInforApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>
+
+    <dubbo:reference interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+
+    <dubbo:service ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.salarymanage.api.CusPermissionOperateAPI" />
+
+    <dubbo:service ref="cusPermissionApiImpl" interface="com.bjike.goddess.salarymanage.api.CusPermissionAPI" />
+
+
+
+
+</beans>

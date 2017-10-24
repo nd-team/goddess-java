@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aliyun:aliyun-java-sdk-core:3.2.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aliyun/aliyun-java-sdk-core/3.2.6/c5612a1795250979bb691c3ae98a7e916532b8db/aliyun-java-sdk-core-3.2.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aliyun/aliyun-java-sdk-core/3.2.6/f8deb1513beffa01499c4b1c8964e45ef63fcee9/aliyun-java-sdk-core-3.2.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

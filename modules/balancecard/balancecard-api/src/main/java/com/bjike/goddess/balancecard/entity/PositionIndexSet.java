@@ -53,14 +53,14 @@ public class PositionIndexSet extends BaseEntity {
     /**
      * 年份
      */
-    @Column(name = "year", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '年份'")
-    private String year;
+    @Column(name = "year", nullable = false, columnDefinition = "INT   COMMENT '年份'")
+    private Integer year;
 
     /**
      * 月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '月份'")
-    private String month;
+    @Column(name = "month", nullable = false, columnDefinition = "INT  COMMENT '月份'")
+    private Integer month;
 
     /**
      * 指标类型
@@ -227,19 +227,19 @@ public class PositionIndexSet extends BaseEntity {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public String getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 

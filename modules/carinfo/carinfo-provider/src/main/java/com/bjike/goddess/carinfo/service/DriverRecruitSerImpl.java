@@ -224,29 +224,29 @@ public class DriverRecruitSerImpl extends ServiceImpl<DriverRecruit, DriverRecru
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(String id, String suggest, Boolean audit) throws SerException {
-        checkAddIdentity();
-        DriverRecruit model = super.findById(id);
-        if (model != null) {
-
-            //TODO 未明确组织结构信息及账务模块审核对象
-
-            Boolean auditTemp = model.getAudit();
-            if (auditTemp == null || !auditTemp) {
-                model.setSuggest(suggest);
-                model.setAudit(audit);
-                super.update(model);
-                //未审核通过且本次审核通过则,如果
-                if (audit) {
-                    DriverInfo driverInfo = new DriverInfo();
-                    BeanUtils.copyProperties(model,driverInfo);
-                    driverInfoSer.save(driverInfo);
-                }
-            } else {
-                throw new SerException("该司机招聘信息已审核!");
-            }
-        } else {
-            throw new SerException("非法Id,司机信息对象不能为空!");
-        }
+//        checkAddIdentity();
+//        DriverRecruit model = super.findById(id);
+//        if (model != null) {
+//
+//            //TODO 未明确组织结构信息及账务模块审核对象
+//
+////            Boolean auditTemp = model.getAudit();
+//            if (auditTemp == null || !auditTemp) {
+////                model.setSuggest(suggest);
+////                model.setAudit(audit);
+//                super.update(model);
+//                //未审核通过且本次审核通过则,如果
+//                if (audit) {
+//                    DriverInfo driverInfo = new DriverInfo();
+//                    BeanUtils.copyProperties(model,driverInfo);
+//                    driverInfoSer.save(driverInfo);
+//                }
+//            } else {
+//                throw new SerException("该司机招聘信息已审核!");
+//            }
+//        } else {
+//            throw new SerException("非法Id,司机信息对象不能为空!");
+//        }
     }
 
 }

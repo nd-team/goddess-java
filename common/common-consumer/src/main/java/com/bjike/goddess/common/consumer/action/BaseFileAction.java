@@ -129,6 +129,19 @@ public abstract class BaseFileAction {
         os.close();
     }
 
+    public OutputStream writeOutFile1(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+        fileName = fileName.replaceAll(" ", "");
+        response.reset();
+        response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"), "ISO8859-1"));
+        response.addHeader("Content-Length", "" + bytes.length);
+        OutputStream os = new BufferedOutputStream(response.getOutputStream());
+        response.setContentType("application/octet-stream");
+        os.write(bytes);// 输出文件
+        os.flush();
+        os.close();
+        return os;
+    }
+
     /**
      * 上传文件调用该方法获得文件流
      * 需要单独处理path

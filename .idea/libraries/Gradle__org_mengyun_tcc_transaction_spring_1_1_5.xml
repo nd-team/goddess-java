@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.mengyun:tcc-transaction-spring:1.1.5">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mengyun/tcc-transaction-spring/1.1.5/tcc-transaction-spring-1.1.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mengyun/tcc-transaction-spring/1.1.5/tcc-transaction-spring-1.1.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

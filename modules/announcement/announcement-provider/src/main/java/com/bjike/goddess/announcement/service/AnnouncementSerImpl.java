@@ -6,6 +6,7 @@ import com.bjike.goddess.announcement.entity.Announcement;
 import com.bjike.goddess.announcement.entity.AnnouncementUser;
 import com.bjike.goddess.announcement.enums.GuideAddrStatus;
 import com.bjike.goddess.announcement.enums.Status;
+import com.bjike.goddess.announcement.push.Push;
 import com.bjike.goddess.announcement.to.AnnouncementTO;
 import com.bjike.goddess.announcement.to.GuidePermissionTO;
 import com.bjike.goddess.announcement.utils.ChineseCharToEn;
@@ -20,6 +21,7 @@ import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.push.api.PushUserInfoAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 公告业务实现
@@ -56,6 +59,8 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private ClassSer classSer;
+    @Autowired
+    private PushUserInfoAPI pushUserInfoAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -245,11 +250,30 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
         String[] recipients = to.getRecipients();
         String[] mails = to.getMails();
         if (recipients != null) {
+            String ticker = "公告消息推送";
+            String title = to.getTitle();
+            String text = null;
+            if (to.getRequired()) {
+                text = "您有一条标题为" + title + "的必读公告，请注意查收";
+            } else {
+                text = "您有一条标题为" + title + "的公告，请注意查收";
+            }
             for (int i = 0; i < recipients.length; i++) {
+                String name = userAPI.findNameById(recipients[i]);
+                String deviceToken = pushUserInfoAPI.getToken(name);
+                try {
+                    if (44 == deviceToken.length()) {
+                        Push.androidUnicast(deviceToken, ticker, title, text);   //安卓消息推送
+                    }else if (64==deviceToken.length()){
+                        Push.iosUnicast(deviceToken,text);   //ios消息推送
+                    }
+                } catch (Exception e) {
+                    throw new SerException(e.getMessage());
+                }
                 if (i != recipients.length - 1) {
-                    sb.append(userAPI.findNameById(recipients[i]) + "、");
+                    sb.append(name + "、");
                 } else {
-                    sb.append(userAPI.findNameById(recipients[i]));
+                    sb.append(name);
                 }
             }
         }
@@ -413,7 +437,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     }
 
     @Transactional(rollbackFor = SerException.class)
-    private void checkAnnouncement(String[] users, Announcement announcement) throws SerException {
+    public void checkAnnouncement(String[] users, Announcement announcement) throws SerException {
         for (String s : users) {
             String userId = userAPI.findByUsername(s).getId();
             AnnouncementUser a = announcementUserSer.find(announcement.getId(), userId);
@@ -759,5 +783,17 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
             }
         }
         return list;
+    }
+
+
+    @Override
+    public List<AnnouncementBO> phoneList() throws SerException {
+        String name = userAPI.currentUser().getUsername();
+        AnnouncementDTO dto = new AnnouncementDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.NORMAL));
+        dto.getSorts().add("publishDate=desc");
+        List<Announcement> list = super.findByCis(dto);
+        List<Announcement> list1 = list.stream().filter(announcement -> announcement.getRecipient().contains(name)).collect(Collectors.toList());
+        return BeanTransform.copyProperties(list1, AnnouncementBO.class);
     }
 }

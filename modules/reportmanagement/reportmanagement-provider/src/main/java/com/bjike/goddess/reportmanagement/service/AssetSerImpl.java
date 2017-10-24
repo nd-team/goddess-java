@@ -336,20 +336,144 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         super.remove(id);
     }
 
-//    @Override
-//    public AssetBO find(String id, String startTime, String endTime) throws SerException {
-//        Asset entity = super.findById(id);
-//        if (entity == null) {
-//            throw new SerException("该对象不存在");
-//        }
-//        AssetBO bo = BeanTransform.copyProperties(entity, AssetBO.class);
-//        bo.setStartTime(startTime);
-//        bo.setEndTime(endTime);
-//        return bo;
-//    }
-
     @Override
     public List<AssetBO> list(AssetDTO dto) throws SerException {
+        checkSeeIdentity();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
+        dto.getSorts().add("assetType=ASC");
+        List<Asset> list = super.findAll();
+        List<AssetBO> boList = new ArrayList<AssetBO>();
+        boolean b1 = true;
+        boolean b2 = true;
+        boolean b3 = true;
+        boolean b4 = true;
+        boolean b5 = true;
+        double beginSum = 0;
+        double currentSum = 0;
+        double endSum = 0;
+        double countBegin = 0;
+        double countCurrent = 0;
+        double countEnd = 0;       //总资产
+        int num = 1;
+        for (Asset asset : list) {
+            List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
+            if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
+                if (AssetType.AFLOW.equals(asset.getAssetType()) && b1) {
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("流动资产：");
+                    boList.add(assetBO);
+                    b1 = false;
+                } else if (AssetType.BLONG.equals(asset.getAssetType()) && b2) {
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("流动资产合计");
+                    sumBO.setBeginAsset(beginSum);
+                    sumBO.setCurrent(currentSum);
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
+                    currentSum = 0;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("长期资产：");
+                    boList.add(assetBO);
+                    b2 = false;
+                } else if (AssetType.CFIX.equals(asset.getAssetType()) && b3) {
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("长期资产合计");
+                    sumBO.setBeginAsset(beginSum);
+                    sumBO.setCurrent(currentSum);
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
+                    currentSum = 0;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("固定资产：");
+                    boList.add(assetBO);
+                    b3 = false;
+                } else if (AssetType.DINVISIBLE.equals(asset.getAssetType()) && b4) {
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("固定资产合计");
+                    sumBO.setBeginAsset(beginSum);
+                    sumBO.setCurrent(currentSum);
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
+                    currentSum = 0;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("无形资产及其他资产：");
+                    boList.add(assetBO);
+                    b4 = false;
+                } else if (AssetType.ETAX.equals(asset.getAssetType()) && b5) {
+                    AssetBO sumBO = new AssetBO();
+                    sumBO.setAsset("无形资产及其他资产合计");
+                    sumBO.setBeginAsset(beginSum);
+                    sumBO.setCurrent(currentSum);
+                    sumBO.setEndAsset(endSum);
+                    sumBO.setAssetNum(num);
+                    num++;
+                    boList.add(sumBO);
+                    beginSum = 0;
+                    currentSum = 0;
+                    endSum = 0;    //置为0
+                    AssetBO assetBO = new AssetBO();
+                    assetBO.setAsset("递延税款：");
+                    boList.add(assetBO);
+                    b5 = false;
+                }
+                FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
+                AssetBO bo = BeanTransform.copyProperties(asset, AssetBO.class);
+                bo.setBeginAsset(formulaBO.getBegin());
+                bo.setCurrent(formulaBO.getCurrent());
+                bo.setEndAsset(formulaBO.getEnd());
+                if (Type.ADD.equals(asset.getType())) {
+                    beginSum += bo.getBeginAsset();
+                    currentSum += bo.getCurrent();
+                    endSum += bo.getEndAsset();
+                    countBegin += bo.getBeginAsset();
+                    countCurrent += bo.getCurrent();
+                    countEnd += bo.getEndAsset();
+                } else if (Type.REMOVE.equals(asset.getType())) {
+                    bo.setAsset("减：" + asset.getAsset());
+                    beginSum = beginSum - bo.getBeginAsset();
+                    currentSum -= bo.getCurrent();
+                    endSum = endSum - bo.getEndAsset();
+                    countBegin = countBegin - bo.getBeginAsset();
+                    countCurrent -= bo.getCurrent();
+                    countEnd = countEnd - bo.getEndAsset();
+                }
+                bo.setAssetNum(num);
+                num++;
+                boList.add(bo);
+            } else {
+                AssetBO bo = BeanTransform.copyProperties(asset, AssetBO.class);
+                bo.setAssetNum(num);
+                num++;
+                boList.add(bo);
+            }
+        }
+        AssetBO lastBO = new AssetBO();
+        lastBO.setAsset("资产总计");
+        lastBO.setBeginAsset(countBegin);
+        lastBO.setCurrent(countCurrent);
+        lastBO.setEndAsset(countEnd);
+        lastBO.setAssetNum(num);
+        num++;
+        Static.setNum(num);
+        boList.add(lastBO);
+        return boList;
+    }
+
+//    @Override
+    public List<AssetBO> listtest1(AssetDTO dto) throws SerException {
         checkSeeIdentity();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);

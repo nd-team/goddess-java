@@ -242,4 +242,22 @@ public interface PositionDetailSer extends Ser<PositionDetail, PositionDetailDTO
     default Long getPositionNum(String startTime, String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * <<<<<<< Updated upstream
+     * chenjunhao
+     * 查找所有正常状态的岗位名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> positionNames() throws SerException;
+
+    /*
+    * 根据时间,地区,项目组获取岗位名称数量
+    */
+    default Long getPositionNum(String startTime, String endTime, String project) throws SerException {
+        return null;
+    }
+
 }

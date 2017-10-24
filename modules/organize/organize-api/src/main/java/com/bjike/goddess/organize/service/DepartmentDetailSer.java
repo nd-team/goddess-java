@@ -185,7 +185,7 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
      * @return
      * @throws SerException
      */
-    default List<String> findPnameByAreaAndDepart(String area,String depart) throws SerException {
+    default List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
         return null;
     }
 
@@ -246,9 +246,23 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     }
 
     /**
+     * 根据时间获取地区
+     */
+    default List<String> getAreas(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据时间获取项目组/部门个数
      */
     default Integer getDepartmentNum(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据时间获取地区
+     */
+    default List<String> getDepartments(String startTime, String endTime) throws SerException {
         return null;
     }
 
@@ -261,4 +275,14 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
      * @throws SerException
      */
     Set<String> departPersons(String departId) throws SerException;
+
+    /**
+     * chenjunhao
+     * 通过部门名称查找部门信息
+     *
+     * @param departs 部门数组
+     * @return
+     * @throws SerException
+     */
+    List<DepartmentDetailBO> departByName(String[] departs) throws SerException;
 }

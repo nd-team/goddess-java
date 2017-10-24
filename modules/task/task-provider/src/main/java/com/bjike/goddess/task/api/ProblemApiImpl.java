@@ -57,4 +57,9 @@ public class ProblemApiImpl implements ProblemAPI {
         problemSer.accept(to);
 
     }
+
+    @Override
+    public ProblemBO findByID(String id) throws SerException {
+        return problemSer.findByID(id);
+    }
 }

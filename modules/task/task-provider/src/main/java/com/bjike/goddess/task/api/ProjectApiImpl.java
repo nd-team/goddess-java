@@ -23,7 +23,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("projectApiImpl")
+@Service("projectApiImpl1")
 public class ProjectApiImpl implements ProjectAPI {
     @Autowired
     private ProjectSer projectSer;

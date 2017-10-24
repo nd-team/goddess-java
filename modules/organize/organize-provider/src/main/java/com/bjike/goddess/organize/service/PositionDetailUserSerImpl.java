@@ -94,29 +94,31 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 ////        bo.setPositionIds(positionId.toString());
 //        String userId = entity.getUserId();
         List<PositionUserDetailBO> detailBOS = new ArrayList<>();
-        if (null != entity.getPositionSet()) {
-            for (PositionDetail positionDetail : entity.getPositionSet()) {
-                PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
-                detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
-                detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
-                PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
-                PositionUserDetailBO detailBO = new PositionUserDetailBO();
-                if (null != detail) {
-                    detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+        if (entity != null) {
+            if (null != entity.getPositionSet()) {
+                for (PositionDetail positionDetail : entity.getPositionSet()) {
+                    PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                    detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
+                    detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
+                    PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
+                    PositionUserDetailBO detailBO = new PositionUserDetailBO();
+                    if (null != detail) {
+                        detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+                    }
+                    detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
+                    detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
+                    detailBO.setArea(positionDetail.getDepartment().getArea());
+                    detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
+                    detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
+                    detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
+                    if (null != positionDetail.getModule()) {
+                        detailBO.setModule(positionDetail.getModule().getModule());
+                    }
+                    detailBO.setPosition(positionDetail.getPosition());
+                    detailBO.setPositionId(positionDetail.getId());
+                    detailBO.setPositionNumber(positionDetail.getSerialNumber());
+                    detailBOS.add(detailBO);
                 }
-                detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
-                detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
-                detailBO.setArea(positionDetail.getDepartment().getArea());
-                detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
-                detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
-                detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
-                if (null != positionDetail.getModule()) {
-                    detailBO.setModule(positionDetail.getModule().getModule());
-                }
-                detailBO.setPosition(positionDetail.getPosition());
-                detailBO.setPositionId(positionDetail.getId());
-                detailBO.setPositionNumber(positionDetail.getSerialNumber());
-                detailBOS.add(detailBO);
             }
         }
         bo.setDetailS(detailBOS);
@@ -287,10 +289,28 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
 
+//    @Override
+//    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+//        logger.info("开始给");
+//    }
+
+    public Boolean checkAsUserPosition(String name, String[] position_ids) throws SerException {
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.getConditions().add(Restrict.eq(ID, name));
+//        UserBO userBO = userAPI.findOne(userDTO);
+//        if (userBO != null) {
+//            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+//            if (null != entity && null != entity.getPositionSet() && null != position_ids)
+//                for (PositionDetail detail : entity.getPositionSet())
+//                    for (String id : position_ids)
+//                        if (detail.getId().equals(id))
+//                            return true;
+//        }
+        return false;
+    }
 
     @Override
     public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
-        logger.info("开始给");
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, name));
         UserBO userBO = userAPI.findOne(userDTO);
@@ -298,14 +318,18 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
             logger.info("开始给uposit");
-            if (null != entity && null != entity.getPositionSet() && null != position_ids)
-                for (PositionDetail detail : entity.getPositionSet())
+            PositionDetailUserDTO dto = new PositionDetailUserDTO();
+            dto.getConditions().add(Restrict.eq("name", name));
+            PositionDetailUser entity1 = super.findOne(dto);
+            if (null != entity1 && null != entity1.getPositionSet() && null != position_ids)
+                for (PositionDetail detail : entity1.getPositionSet())
                     for (String id : position_ids)
                         if (detail.getId().equals(id))
                             return true;
         }
         return false;
     }
+
     @Override
     public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
         UserDTO userDTO = new UserDTO();
@@ -497,15 +521,18 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         sql.append(" AND b.name= '" + name + "'");
         List<PositionDetailBO> positionDetails = positionDetailSer.findBySql(sql.toString(), PositionDetailBO.class, fields);
         List<PositionDetailBO> list = BeanTransform.copyProperties(positionDetails, PositionDetailBO.class);
-        for (PositionDetailBO positionDetailBO : list) {
-            DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
-            positionDetailBO.setDepartmentName(department.getDepartment());
-            Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
-            positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
-            Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());
-            positionDetailBO.setArrangementName(arrangement.getArrangement());
-            ModuleType modules = moduleTypeSer.findById(positionDetailBO.getModuleId());
-            positionDetailBO.setModuleName(modules.getModule());
+        if (null != list && list.size() > 0) {
+            for (PositionDetailBO positionDetailBO : list) {
+                DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
+                positionDetailBO.setDepartmentName(department.getDepartment());
+                positionDetailBO.setArea(department.getArea());
+                Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
+                positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
+                Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());
+                positionDetailBO.setArrangementName(arrangement.getArrangement());
+                ModuleType modules = moduleTypeSer.findById(positionDetailBO.getModuleId());
+                positionDetailBO.setModuleName(modules.getModule());
+            }
         }
         return list;
     }
@@ -616,7 +643,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                         "WHERE id =" +
                         "      (SELECT department_id " +
                         "       FROM organize_position_detail " +
-                        "       WHERE id = " + pId + ")";
+                        "       WHERE id = '" + pId + "')";
                 String[] fileds = new String[]{"area", "department"};
                 List<DepartmentDetailBO> areas = super.findBySql(sql1, DepartmentDetailBO.class, fileds);
                 if (null != areas && !areas.isEmpty()) {
@@ -723,8 +750,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     public List<String> names() throws SerException {
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://staffentry.issp.bjike.com:8080/entryregister/v1/names");//线上
-//        HttpGet httpGet = new HttpGet("http://localhost:51310/commonality/v1/getEmails");//线下测试
+//        HttpGet httpGet = new HttpGet("https://staffentry.issp.bjike.com:8080/entryregister/v1/names");//线上
+        HttpGet httpGet = new HttpGet("http://localhost:51218/entryregister/v1/names");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
 
         ActResultOrgan resultOrgan = new ActResultOrgan();

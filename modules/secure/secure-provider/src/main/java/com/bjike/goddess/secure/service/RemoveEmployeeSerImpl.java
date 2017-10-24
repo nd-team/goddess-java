@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 减员名单业务实现
@@ -335,12 +336,14 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "运营商务部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            List<DepartmentDetailBO> d = list.stream().filter(departmentDetailBO -> "运营商务部".equals(departmentDetailBO.getDepartment())).collect(Collectors.toList());
             if (moduleAPI.isCheck("contacts")) {
                 RpcTransmit.transmitUserToken(token);
-                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
-                if (commonality != null && commonality.getEmail() != null) {
-                    set.add(commonality.getEmail());
+                if (!d.isEmpty()) {
+                    CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
+                    if (commonality != null && commonality.getEmail() != null) {
+                        set.add(commonality.getEmail());
+                    }
                 }
             }
         }
@@ -438,7 +441,7 @@ public class RemoveEmployeeSerImpl extends ServiceImpl<RemoveEmployee, RemoveEmp
     public Set<String> allName() throws SerException {
         Set<String> set = new HashSet<>();
         List<RemoveEmployee> list = super.findAll();
-        for(RemoveEmployee entity:list){
+        for (RemoveEmployee entity : list) {
             set.add(entity.getRemoveName());
         }
         return set;

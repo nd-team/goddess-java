@@ -632,7 +632,8 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         entryRegisterDTO.getConditions().add(Restrict.eq("username", username));
         List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
         if (null != entryRegisters && entryRegisters.size() > 0) {
-            return DateUtil.dateToString(entryRegisters.stream().map(EntryRegister::getInductionDate).distinct().collect(Collectors.toList()).get(0));
+            LocalDate time = entryRegisters.stream().map(EntryRegister::getInductionDate).distinct().collect(Collectors.toList()).get(0);
+            return DateUtil.dateToString(time);
         }
         return null;
     }

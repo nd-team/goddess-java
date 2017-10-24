@@ -3,7 +3,6 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.CategoryBO;
 import com.bjike.goddess.financeinit.dto.CategoryDTO;
-import com.bjike.goddess.financeinit.excel.SonPermissionObject;
 import com.bjike.goddess.financeinit.service.CategorySer;
 import com.bjike.goddess.financeinit.to.CategoryTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
@@ -101,5 +100,10 @@ public class CategoryApiImpl implements CategoryAPI {
     @Override
     public List<String> findByFirstName(String firstName) throws SerException {
         return categorySer.findByFirstName(firstName);
+    }
+
+    @Override
+    public Boolean isAssets(String firstSubject) throws SerException {
+        return categorySer.isAssets(firstSubject);
     }
 }

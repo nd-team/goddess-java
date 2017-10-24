@@ -1,4 +1,4 @@
-apply from: '../../../config.gradle' 
+apply from: '../../../config.gradle'
 
 jar {
     String buildDir = project.buildDir
@@ -30,7 +30,5 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:businessproject:businessproject-api")
     compile project(":common:common-utils")
-
-    compile group: 'com.belerweb', name: 'pinyin4j', version: '2.5.1'
 }
 

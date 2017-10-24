@@ -84,7 +84,6 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     default Boolean checkAsUserPosition(String name, String[] position_ids) throws SerException {
         return null;
     }
-
     /**
      * 检测用户是否在指定职位中
      *
@@ -96,6 +95,17 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     default Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
         return null;
     }
+//    /**
+//     * 检测用户是否在指定职位中
+//     *
+//     * @param name      name
+//     * @param position_ids 职位id数组
+//     * @return
+//     * @throws SerException
+//     */
+//    default Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+//        return null;
+//    }
 
     /**
      * 检测用户是否在指定层级中

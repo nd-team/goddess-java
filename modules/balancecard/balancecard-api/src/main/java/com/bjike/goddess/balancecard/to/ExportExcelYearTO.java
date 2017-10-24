@@ -31,7 +31,7 @@ public class ExportExcelYearTO extends BaseTO {
     /**
      * 年份
      */
-    private String year;
+    private Integer year;
 
     /**
      * 开始时间
@@ -67,11 +67,11 @@ public class ExportExcelYearTO extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

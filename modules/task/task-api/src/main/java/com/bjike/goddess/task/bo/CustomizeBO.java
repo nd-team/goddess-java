@@ -1,5 +1,6 @@
 package com.bjike.goddess.task.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.task.enums.DateType;
 import com.bjike.goddess.task.enums.NoticeType;
 import com.bjike.goddess.task.enums.SummaryType;
@@ -14,11 +15,11 @@ import com.bjike.goddess.task.enums.TimeType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CustomizeBO {
+public class CustomizeBO extends BaseBO{
     /**
      * 汇总名
      */
-    private String name;
+    private String collectName;
     /**
      * 项目id
      */
@@ -96,12 +97,12 @@ public class CustomizeBO {
      */
     private String lastTime;
 
-    public String getName() {
-        return name;
+    public String getCollectName() {
+        return collectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCollectName(String collectName) {
+        this.collectName = collectName;
     }
 
     public String getProject() {

@@ -20,8 +20,8 @@ public class DepartMonSerperateTO implements Serializable {
     /**
      * 月份
      */
-    @NotBlank(message = "月份不能为空")
-    private String monthValue;
+    @NotNull(message = "月份不能为空")
+    private Integer monthValue;
     /**
      * 目标值
      */
@@ -33,11 +33,11 @@ public class DepartMonSerperateTO implements Serializable {
     @NotNull(message = "分解目标值不能为空")
     private Double serparateTarget;
 
-    public String getMonthValue() {
+    public Integer getMonthValue() {
         return monthValue;
     }
 
-    public void setMonthValue(String monthValue) {
+    public void setMonthValue(Integer monthValue) {
         this.monthValue = monthValue;
     }
 

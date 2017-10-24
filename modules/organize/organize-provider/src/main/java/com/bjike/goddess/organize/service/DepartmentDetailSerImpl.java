@@ -10,7 +10,6 @@ import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
-import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +84,38 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
             return areas.get(0);
         }
         return 0;
+    }
+
+    @Override
+    public List<String> getAreas(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"areas"};
+        StringBuilder sql = new StringBuilder("select area as areas from organize_department_detail ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<String> areas = managerBOs.stream().map(ManagerBO::getAreas).distinct().collect(Collectors.toList());
+            return areas;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getDepartments(String startTime, String endTime) throws SerException {
+        String fields[] = new String[]{"departments"};
+        StringBuilder sql = new StringBuilder("select department as departments from organize_department_detail ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" where createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<ManagerBO> managerBOs = super.findBySql(sql.toString(), ManagerBO.class, fields);
+        if (null != managerBOs && managerBOs.size() > 0) {
+            List<String> departments = managerBOs.stream().map(ManagerBO::getDepartments).distinct().collect(Collectors.toList());
+            return departments;
+        }
+        return null;
     }
 
     @Override
@@ -284,10 +315,10 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     public List<String> findDepartByArea(String area) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.eq("area", area));
-        List<DepartmentDetail> list = super.findByCis( dto );
+        List<DepartmentDetail> list = super.findByCis(dto);
         List<String> opinionBOList = new ArrayList<>();
-        if( list!=  null && list.size()>0 ){
-            opinionBOList = list.stream().filter( str -> StringUtils.isNotBlank(str.getDepartment())).map(DepartmentDetail::getDepartment).collect(Collectors.toList());
+        if (list != null && list.size() > 0) {
+            opinionBOList = list.stream().filter(str -> StringUtils.isNotBlank(str.getDepartment())).map(DepartmentDetail::getDepartment).collect(Collectors.toList());
         }
         return opinionBOList;
     }
@@ -297,10 +328,10 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.eq("area", area));
         dto.getConditions().add(Restrict.eq("department", depart));
-        List<DepartmentDetail> list = super.findByCis( dto );
+        List<DepartmentDetail> list = super.findByCis(dto);
         List<String> opinionBOList = new ArrayList<>();
-        if( list!=  null && list.size()>0 ){
-            opinionBOList = list.stream().filter( str -> StringUtils.isNotBlank(str.getInnerProject())).map(DepartmentDetail::getInnerProject).collect(Collectors.toList());
+        if (list != null && list.size() > 0) {
+            opinionBOList = list.stream().filter(str -> StringUtils.isNotBlank(str.getInnerProject())).map(DepartmentDetail::getInnerProject).collect(Collectors.toList());
         }
         return opinionBOList;
     }
@@ -354,15 +385,29 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     @Override
     //chenjunhao
     public Set<String> departPersons(String departId) throws SerException {
-        String sql = "SELECT user_id id FROM organize_position_detail_user " +
+        String sql = "SELECT name FROM organize_position_detail_user " +
                 "WHERE id IN (SELECT user_id FROM organize_position_detail_user_table " +
                 "WHERE position_id IN (SELECT id FROM organize_position_detail " +
                 "where department_id='" + departId + "'))";
-        String[] fileds = new String[]{"id"};
-        List<UserBO> userBOS = super.findBySql(sql, UserBO.class, fileds);
-        if (null != userBOS) {
-            return userBOS.stream().map(userBO -> userBO.getId()).collect(Collectors.toSet());
+        String[] fileds = new String[]{"name"};
+        List<PositionDetailUserBO> bos = super.findBySql(sql, PositionDetailUserBO.class, fileds);
+        if (null != bos) {
+            return bos.stream().map(positionDetailUserBO -> positionDetailUserBO.getName()).collect(Collectors.toSet());
         }
         return null;
+    }
+
+    @Override
+    public List<DepartmentDetailBO> departByName(String[] departs) throws SerException {
+        String[] departsTemp = new String[departs.length];
+        for (int i = 0; i < departs.length; i++) {
+            departsTemp[i] = "'" + departs[i] + "'";
+        }
+        String departStr = StringUtils.join(departsTemp, ",");
+        String sql = "select id,area,department from organize_department_detail where " +
+                "department in (" + departStr + ") and status=0";
+        String[] fileds = new String[]{"id", "area", "department"};
+        List<DepartmentDetailBO> list = super.findBySql(sql, DepartmentDetailBO.class, fileds);
+        return list;
     }
 }

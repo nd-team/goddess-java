@@ -1,0 +1,51 @@
+Manifest-Version: 1.0
+Class-Path: lib/version-api-1.0.jar lib/spring-boot-starter-logging-1.
+ 5.2.RELEASE.jar lib/commons-io-2.5.jar lib/spring-boot-test-autoconfi
+ gure-1.5.2.RELEASE.jar lib/spring-cloud-context-1.2.0.RELEASE.jar lib
+ /snakeyaml-1.17.jar lib/jline-0.9.94.jar lib/accessors-smart-1.1.jar 
+ lib/validation-api-1.1.0.Final.jar lib/jackson-annotations-2.8.0.jar 
+ lib/fastjson-1.2.23.jar lib/commons-lang3-3.5.jar lib/organize-api-1.
+ 0.jar lib/spring-test-4.3.7.RELEASE.jar lib/spring-boot-autoconfigure
+ -1.5.2.RELEASE.jar lib/hibernate-commons-annotations-5.0.1.Final.jar 
+ lib/tcc-transaction-api-1.1.5.jar lib/hystrix-javanica-1.5.10.jar lib
+ /spring-cloud-starter-archaius-1.3.0.RELEASE.jar lib/spring-beans-4.3
+ .7.RELEASE.jar lib/user-api-1.0.jar lib/classmate-1.3.3.jar lib/hamcr
+ est-core-1.3.jar lib/httpmime-4.5.3.jar lib/common-consumer-1.0.jar l
+ ib/spring-web-4.3.7.RELEASE.jar lib/hystrix-serialization-1.5.10.jar 
+ lib/stax-api-1.0.1.jar lib/aspectjweaver-1.8.9.jar lib/tomcat-embed-c
+ ore-8.5.11.jar lib/logback-classic-1.1.11.jar lib/storage-api-1.0.jar
+  lib/common-utils-1.0.jar lib/xmlbeans-2.6.0.jar lib/common-api-1.0.j
+ ar lib/poi-3.16.jar lib/spring-boot-starter-web-1.5.2.RELEASE.jar lib
+ /commons-collections4-4.1.jar lib/json-smart-2.2.1.jar lib/httpcore-4
+ .4.6.jar lib/mockito-core-1.10.19.jar lib/spring-boot-starter-tomcat-
+ 1.5.2.RELEASE.jar lib/spring-boot-1.5.2.RELEASE.jar lib/spring-cloud-
+ netflix-core-1.3.0.RELEASE.jar lib/objenesis-2.1.jar lib/guava-21.0.j
+ ar lib/hibernate-core-5.0.12.Final.jar lib/spring-expression-4.3.7.RE
+ LEASE.jar lib/jsonassert-1.4.0.jar lib/spring-security-rsa-1.0.3.RELE
+ ASE.jar lib/httpclient-4.5.3.jar lib/tomcat-embed-el-8.5.11.jar lib/H
+ drHistogram-2.1.9.jar lib/spring-boot-starter-test-1.5.2.RELEASE.jar 
+ lib/hystrix-core-1.5.10.jar lib/spring-context-4.3.7.RELEASE.jar lib/
+ netty-3.7.0.Final.jar lib/tomcat-embed-websocket-8.5.11.jar lib/hystr
+ ix-metrics-event-stream-1.5.10.jar lib/geronimo-jta_1.1_spec-1.1.1.ja
+ r lib/hibernate-entitymanager-5.0.12.Final.jar lib/antlr-2.7.7.jar li
+ b/logback-core-1.1.11.jar lib/dubbo-2.5.4-SNAPSHOT.jar lib/hamcrest-l
+ ibrary-1.3.jar lib/hessian-4.0.33.jar lib/spring-aop-4.3.7.RELEASE.ja
+ r lib/spring-security-crypto-4.2.2.RELEASE.jar lib/spring-webmvc-4.3.
+ 7.RELEASE.jar lib/spring-cloud-commons-1.2.0.RELEASE.jar lib/javax.se
+ rvlet-api-3.1.0.jar lib/jul-to-slf4j-1.7.24.jar lib/jackson-core-2.8.
+ 7.jar lib/dom4j-1.6.1.jar lib/spring-boot-starter-1.5.2.RELEASE.jar l
+ ib/assertj-core-2.6.0.jar lib/hibernate-validator-5.3.4.Final.jar lib
+ /json-path-2.2.0.jar lib/curvesapi-1.04.jar lib/android-json-0.0.2013
+ 1108.vaadin1.jar lib/log4j-over-slf4j-1.7.24.jar lib/hibernate-jpa-2.
+ 1-api-1.0.0.Final.jar lib/commons-logging-1.2.jar lib/jackson-databin
+ d-2.8.7.jar lib/spring-boot-test-1.5.2.RELEASE.jar lib/asm-5.0.4.jar 
+ lib/junit-4.12.jar lib/commons-configuration-1.8.jar lib/slf4j-api-1.
+ 7.24.jar lib/spring-core-4.3.7.RELEASE.jar lib/bcpkix-jdk15on-1.55.ja
+ r lib/jboss-logging-3.3.0.Final.jar lib/jcl-over-slf4j-1.7.24.jar lib
+ /javassist-3.21.0-GA.jar lib/poi-ooxml-schemas-3.16.jar lib/jandex-2.
+ 0.0.Final.jar lib/spring-cloud-starter-hystrix-1.3.0.RELEASE.jar lib/
+ poi-ooxml-3.16.jar lib/commons-codec-1.10.jar lib/zkclient-0.10.jar l
+ ib/zookeeper-3.4.8.jar lib/spring-cloud-starter-1.2.0.RELEASE.jar lib
+ /rxjava-1.2.0.jar lib/aspectjrt-1.8.9.jar
+Main-Class: com.bjike.goddess.version.Application
+

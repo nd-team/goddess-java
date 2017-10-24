@@ -33,9 +33,20 @@ sourceSets {
      }
      }
 dependencies {
-compile(project(":common:common-consumer")){
-    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-}
+//<<<<<<< Updated upstream
+//compile(project(":common:common-consumer")){
+//    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+//=======
+    compile(project(":common:common-consumer")){
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
+    compile project(":modules:oilcardmanage:oilcardmanage-api")
+//    compile project(":modules:dispatchcar:dispatchcar-api")
+    compile project(":common:common-utils")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile("org.springframework.boot:spring-boot-starter-web")
+//>>>>>>> Stashed changes
+//}
 
 compile project(":modules:oilcardmanage:oilcardmanage-api")
 

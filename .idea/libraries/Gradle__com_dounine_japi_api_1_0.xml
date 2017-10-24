@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: com.dounine.japi:api:1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/dounine/japi/api/1.0/api-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

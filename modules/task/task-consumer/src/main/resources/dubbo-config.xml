@@ -18,8 +18,8 @@
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
 
-    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProjectAPI" id="projectApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.TableAPI" id="tableApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProjectAPI" id="projectApiImpl1"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.TableAPI" id="tableApiImpl1"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.FieldAPI" id="fieldApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.RowAPI" id="rowApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.GridAPI" id="gridApiImpl"/>
@@ -30,7 +30,13 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProblemAPI" id="problemApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.ProblemTypeAPI" id="problemTypeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeAPI" id="customizeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.InnerTemplateAPI" id="innerTemplateApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.RecordAPI" id="recordApiImpl"/>
 
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.ProjectAPI" id="projectApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"
