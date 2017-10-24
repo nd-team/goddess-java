@@ -587,7 +587,7 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 获取总条数
+     * 获取离职信息总条数
      *
      * @version v1
      */
@@ -595,6 +595,20 @@ public class DimissionInfoAct extends BaseFileAction {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(dimissionInfoAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取自离信息总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getSelfTotal")
+    public Result getSelfTotal() throws ActException {
+        try {
+            return ActResult.initialize(dimissionInfoAPI.getSelfTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

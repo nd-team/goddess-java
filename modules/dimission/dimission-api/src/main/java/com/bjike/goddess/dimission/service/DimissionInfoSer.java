@@ -59,6 +59,7 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     default DimissionInfoBO applyUpdate(DimissionInfoAddEditTO to) throws SerException {
         return null;
     }
+
     /**
      * 自离信息添加
      *
@@ -295,6 +296,7 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     default List<String> getAllName() throws SerException {
         return null;
     }
+
     /**
      * 根据时间获取离职人数
      * lijuntao
@@ -302,6 +304,7 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     default Integer getDimissionNum(String[] date) throws SerException {
         return null;
     }
+
     /**
      * 获取最早时间
      * lijuntao
@@ -318,9 +321,21 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     /**
      * chenjunhao
      * 获取某员工的离职时间
+     *
      * @param name
      * @return
      * @throws SerException
      */
     String getTime(String name) throws SerException;
+
+    /**
+     * 获取自离信息总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getSelfTotal() throws SerException {
+        return null;
+    }
+
 }

@@ -8,6 +8,7 @@ import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.entity.Situation;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.SituationTO;
+import com.bjike.goddess.organize.bo.OptionBO;
 
 import java.util.List;
 
@@ -128,6 +129,17 @@ public interface SituationSer extends Ser<Situation, SituationDTO> {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 离职管理月汇总图形化
+     *
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(String month) throws SerException {
         return null;
     }
 }

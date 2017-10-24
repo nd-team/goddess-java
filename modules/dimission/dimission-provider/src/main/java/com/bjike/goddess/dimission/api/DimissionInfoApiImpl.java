@@ -37,7 +37,7 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return dimissionInfoSer.guidePermission( guidePermissionTO );
+        return dimissionInfoSer.guidePermission(guidePermissionTO);
     }
 
     @Override
@@ -176,7 +176,13 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     }
 
     @Override
+
     public String getTime(String name) throws SerException {
         return dimissionInfoSer.getTime(name);
+    }
+
+    @Override
+    public Long getSelfTotal() throws SerException {
+        return dimissionInfoSer.getSelfTotal();
     }
 }

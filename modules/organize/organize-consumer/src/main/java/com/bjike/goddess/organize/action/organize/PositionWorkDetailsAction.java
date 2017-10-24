@@ -7,18 +7,17 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
-import com.bjike.goddess.organize.bo.AngleBO;
-import com.bjike.goddess.organize.bo.DimensionBO;
-import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
-import com.bjike.goddess.organize.bo.InstructionClassifyBO;
-import com.bjike.goddess.organize.bo.ManagerBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.organize.vo.ManagerVO;
+import com.bjike.goddess.organize.vo.OptionVO;
 import com.bjike.goddess.organize.vo.PositionWorkDetailsVO;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("positionworkdetails")
-public class PositionWorkDetailsAction {
+public class PositionWorkDetailsAction extends BaseFileAction {
     @Autowired
     private PositionWorkDetailsAPI positionWorkDetailsAPI;
     @Autowired
@@ -398,4 +398,159 @@ public class PositionWorkDetailsAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 组织结构管理日汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String day, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowDay(day);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 组织结构管理周汇总柱状图
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 组织结构管理月汇总柱状图
+     *
+     * @param month 月份
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/month")
+    public Result figureShowMonth(String month, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowMonth(month);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 组织结构管理累计汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/all")
+    public Result figureShowAll() throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowAll();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @des 导出岗位工作明细信息
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "岗位工作明细信息.xlsx";
+            super.writeOutFile(response, positionWorkDetailsAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+//    /**
+//     * 导入Excel
+//     *
+//     * @param request 注入HttpServletRequest对象
+//     * @version v1
+//     */
+////    @LoginAuth
+//    @PostMapping("v1/importExcel")
+//    public Result importExcel(HttpServletRequest request) throws ActException {
+//        try {
+//            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+//            List<InputStream> inputStreams = super.getInputStreams(request);
+//            InputStream is = inputStreams.get(1);
+//            Excel excel = new Excel(0, 1);
+//            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
+//            List<PositionWorkDetailsImport> tocs = new ArrayList<>();
+//            Set<Integer> seqNum = new HashSet<>();
+//            for (PositionWorkDetailsImport positionWorkDetailsImport:tos){
+//                seqNum.add(positionWorkDetailsImport.getSeqNum());
+//            }
+//            for (Integer seq : seqNum){
+//                List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
+//                List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
+//                List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
+//                List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
+//                List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
+//                List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
+//                for(FirmIntroExcel str : tos){
+//                    if(str.getSeqNum().equals(seq)){
+//                        firmIntroExcels.add(str);
+//                        HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str,HonorAndQualityTO.class);
+//                        MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str,MainBusinessIntroTO.class);
+//                        SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str,SuccessStoriesTO.class);
+//                        CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str,CustomerAndPartnerTO.class);
+//                        CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str,CommunicationPathTO.class);
+//                        if(isCheckNull(honorAndQualityTO)){honorAndQualityTOS.add(honorAndQualityTO);}
+//                        if(isCheckNull(mainBusinessIntroTO)){mainBusinessIntroTOS.add(mainBusinessIntroTO);}
+//                        if(isCheckNull(successStoriesTO)){successStoriesTOS.add(successStoriesTO);}
+//                        if(isCheckNull(customerAndPartnerTO)){customerAndPartnerTOS.add(customerAndPartnerTO);}
+//                        if(isCheckNull(communicationPathTO)){communicationPathTOS.add(communicationPathTO);}
+//                    }
+//                }
+////                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
+////                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
+////                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
+////                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
+////                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
+////                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
+////                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
+////                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+////                firmIntroAPI.save(firmIntroTO);
+////            }
+//
+//
+//            positionWorkDetailsAPI.importExcel(is);
+//            return new ActResult("导入成功");
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
 }

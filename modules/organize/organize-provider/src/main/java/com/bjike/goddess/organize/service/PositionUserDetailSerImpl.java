@@ -46,10 +46,13 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
         if (null != positionUserDetails && positionUserDetails.size() > 0) {
             List<String> list = positionUserDetails.stream().map(PositionUserDetail::getUserId).distinct().collect(Collectors.toList());
             for (String id : list) {
+                System.out.println(id);
                 PositionDetailUserBO positionDetailUserBO = positionDetailUserSer.getById(id);
 //                String name = userAPI.findNameById(id);
+                System.out.println(id);
                 if (null != positionDetailUserBO) {
                     listName.add(positionDetailUserBO.getName());
+                    System.out.println(listName);
                 }
             }
         }

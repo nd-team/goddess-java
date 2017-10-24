@@ -246,9 +246,23 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     }
 
     /**
+     * 根据时间获取地区
+     */
+    default List<String> getAreas(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据时间获取项目组/部门个数
      */
     default Integer getDepartmentNum(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据时间获取地区
+     */
+    default List<String> getDepartments(String startTime, String endTime) throws SerException {
         return null;
     }
 

@@ -1,11 +1,8 @@
 package com.bjike.goddess.organize.excel;
 
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
-import com.bjike.goddess.organize.vo.IndicatorVO;
-import com.bjike.goddess.organize.vo.ModulesVO;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 岗位工作明细表
@@ -18,6 +15,11 @@ import java.util.List;
  */
 public class PositionWorkDetailsExport implements Serializable {
 
+    /**
+     * 排序
+     */
+    @ExcelHeader(name = "序号", notNull = true)
+    private Integer seqNum; 
 
     /**
      * 公司目标
@@ -32,188 +34,140 @@ public class PositionWorkDetailsExport implements Serializable {
     private String company;
 
     /**
-     * 部门目标
+     * -------------33---------
      */
-    @ExcelHeader(name = "部门目标", notNull = true)
-    private String departmentalGoals;
+    /**
+     * （对接）规划模块名
+     */
+    @ExcelHeader(name = "（对接）规划模块id", notNull = true)
+    private String id1;
+    /**
+     * （对接）规划模块名
+     */
+    @ExcelHeader(name = "（对接）规划模块名", notNull = true)
+    private String name1;
+    /**
+     * （对接）规划模块
+     */
+    @ExcelHeader(name = "（对接）规划模块", notNull = true)
+    private Boolean hasConnet1;
 
     /**
-     * 项目组/部门
+     * 指标序号
      */
-    @ExcelHeader(name = "项目组/部门", notNull = true)
-    private String department;
+    @ExcelHeader(name = "规划指标序号", notNull = true)
+    private String number1;
+
+    //-----------------------（对接）福利模块---------19---52-----
 
     /**
-     * 岗位目标
+     * （对接）福利模块名
      */
-    @ExcelHeader(name = "岗位目标", notNull = true)
-    private String positionGoals;
+    @ExcelHeader(name = "（对接）福利模块id", notNull = true)
+    private String id2;
+    /**
+     * （对接）福利模块
+     */
+    @ExcelHeader(name = "（对接）福利模块名", notNull = true)
+    private String name2;
+    /**
+     * （对接）福利模块
+     */
+    @ExcelHeader(name = "（对接）福利模块", notNull = true)
+    private Boolean hasConnet2;
 
     /**
-     * 岗位
+     * 指标序号
      */
-    @ExcelHeader(name = "岗位", notNull = true)
-    private String position;
+    @ExcelHeader(name = "福利指标序号", notNull = true)
+    private String number2;
 
-    /**
-     * 序号
-     */
-    @ExcelHeader(name = "序号", notNull = true)
-    private Long serialNumber;
 
-    /**
-     * 角度
-     */
-    @ExcelHeader(name = "角度", notNull = true)
-    private String angle;
+    public Integer getSeqNum() {
+        return seqNum;
+    }
 
-    /**
-     * 维度
-     */
-    @ExcelHeader(name = "维度", notNull = true)
-    private String dimension;
+    public void setSeqNum(Integer seqNum) {
+        this.seqNum = seqNum;
+    }
 
-    /**
-     * 分类
-     */
-    @ExcelHeader(name = "分类", notNull = true)
-    private String classification;
+    public String getGoals() {
+        return goals;
+    }
 
-    /**
-     * 项目阶段
-     */
-    @ExcelHeader(name = "项目阶段", notNull = true)
-    private String projectStage;
+    public void setGoals(String goals) {
+        this.goals = goals;
+    }
 
-    /**
-     * 项目阶段编号
-     */
-    @ExcelHeader(name = "项目阶段编号", notNull = true)
-    private String projectStageNum;
+    public String getCompany() {
+        return company;
+    }
 
-    /**
-     * 功能（流程）
-     */
-    @ExcelHeader(name = "功能（流程）", notNull = true)
-    private String function;
+    public void setCompany(String company) {
+        this.company = company;
+    }
 
-    /**
-     * 功能（流程）目的
-     */
-    @ExcelHeader(name = "功能（流程）目的", notNull = true)
-    private String purpose;
+    public String getName1() {
+        return name1;
+    }
 
-    /**
-     * 功能版本
-     */
-    @ExcelHeader(name = "功能版本", notNull = true)
-    private String version;
+    public void setName1(String name1) {
+        this.name1 = name1;
+    }
 
-    /**
-     * 工作频率
-     */
-    @ExcelHeader(name = "工作频率", notNull = true)
-    private String frequency;
+    public Boolean getHasConnet1() {
+        return hasConnet1;
+    }
 
-    /**
-     * 工作时间节点
-     */
-    @ExcelHeader(name = "工作时间节点", notNull = true)
-    private String timeNode;
+    public void setHasConnet1(Boolean hasConnet1) {
+        this.hasConnet1 = hasConnet1;
+    }
 
-    /**
-     * 操作类型
-     */
-    @ExcelHeader(name = "操作类型", notNull = true)
-    private String operationType;
+    public String getNumber1() {
+        return number1;
+    }
 
-    /**
-     * 工作内容
-     */
-    @ExcelHeader(name = "工作内容", notNull = true)
-    private String workContent;
+    public void setNumber1(String number1) {
+        this.number1 = number1;
+    }
 
-    /**
-     * 包含的附件（名称）
-     */
-    @ExcelHeader(name = "包含的附件（名称）", notNull = true)
-    private String accessories;
+    public String getName2() {
+        return name2;
+    }
 
-    /**
-     * 是否有模板
-     */
-    @ExcelHeader(name = "是否有模板", notNull = true)
-    private Boolean hasMould;
+    public void setName2(String name2) {
+        this.name2 = name2;
+    }
 
-    /**
-     * 模板储存位置
-     */
-    @ExcelHeader(name = "模板储存位置", notNull = true)
-    private String mouldStorage;
+    public Boolean getHasConnet2() {
+        return hasConnet2;
+    }
 
-    /**
-     * 工作数据存储位置
-     */
-    @ExcelHeader(name = "工作数据存储位置", notNull = true)
-    private String paperStorage;
+    public void setHasConnet2(Boolean hasConnet2) {
+        this.hasConnet2 = hasConnet2;
+    }
 
-    /**
-     * 经验总结
-     */
-    @ExcelHeader(name = "经验总结", notNull = true)
-    private String summarize;
+    public String getNumber2() {
+        return number2;
+    }
 
-    /**
-     * 通报时间节点
-     */
-    @ExcelHeader(name = "通报时间节点", notNull = true)
-    private String informTimeNode;
+    public void setNumber2(String number2) {
+        this.number2 = number2;
+    }
 
-    /**
-     * 通报形式
-     */
-    @ExcelHeader(name = "通报形式", notNull = true)
-    private String notificationForm;
+    public String getId1() {
+        return id1;
+    }
 
-    /**
-     * 通报内容
-     */
-    @ExcelHeader(name = "通报内容", notNull = true)
-    private String notificationContent;
+    public void setId1(String id1) {
+        this.id1 = id1;
+    }
 
-    /**
-     * 通报对象
-     */
-    @ExcelHeader(name = "通报对象", notNull = true)
-    private String notificationObj;
+    public String getId2() {
+        return id2;
+    }
 
-    /**
-     * 姓名（在岗人员）
-     */
-    @ExcelHeader(name = "姓名（在岗人员）", notNull = true)
-    private String name;
-
-    /**
-     * 代理人
-     */
-    @ExcelHeader(name = "代理人", notNull = true)
-    private String agent;
-
-    /**
-     * 是否完成
-     */
-    @ExcelHeader(name = "是否完成", notNull = true)
-    private Boolean isComplete;
-
-    /**
-     * 完成岗位
-     */
-    @ExcelHeader(name = "完成岗位", notNull = true)
-    private String completeOpition;
-
-    /**
-     * 模块
-     */
-    private List<ModulesVO> modulesVOList;
-
+    public void setId2(String id2) {
+        this.id2 = id2;
+    }
 }
