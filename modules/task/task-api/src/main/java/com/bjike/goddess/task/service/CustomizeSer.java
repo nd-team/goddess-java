@@ -35,6 +35,8 @@ public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
 
     }
 
+    void edit(CustomizeTO to) throws SerException;
+
     /**
      * 启用或者关闭定时任务
      * @param id

@@ -15,7 +15,7 @@ public enum FinishStatus {
      */
     FINISH(0),
     /**
-     * 为完成
+     * 未完成
      */
     UNFINISHED(1);
 

@@ -2,9 +2,12 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.service.TaskNodeSer;
+import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,16 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
+    public Boolean sonPermission() throws SerException {
+        return taskNodeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return taskNodeSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
     public TaskNodeBO findByID(String id) throws SerException {
         return taskNodeSer.findByID(id);
     }
@@ -72,15 +85,14 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
-    public void finish(String id) throws SerException {
-        taskNodeSer.finish(id);
+    public void finish(TaskNodeTO to) throws SerException {
+        taskNodeSer.finish(to);
     }
 
     @Override
-    public void unFinish(String id) throws SerException {
-        taskNodeSer.unFinish(id);
+    public void unFinish(TaskNodeTO to) throws SerException {
+        taskNodeSer.unFinish(to);
     }
-
 
     @Override
     public void allotment(TaskNodeTO to) throws SerException {
@@ -133,8 +145,8 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
-    public Long myInitiateNum() throws SerException {
-        return taskNodeSer.myInitiateNum();
+    public Long myInitiateNum(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.myInitiateNum(dto);
     }
 
     @Override
@@ -153,8 +165,8 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
-    public Long myChargeNum() throws SerException {
-        return taskNodeSer.myChargeNum();
+    public Long myChargeNum(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.myChargeNum(dto);
     }
 
     @Override
@@ -163,8 +175,8 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
-    public Long myExecuteNum() throws SerException {
-        return taskNodeSer.myExecuteNum();
+    public Long myExecuteNum(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.myExecuteNum(dto);
     }
 
     @Override
@@ -180,5 +192,20 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     @Override
     public List<DayBO> dayReport(String time, String[] names) throws SerException {
         return taskNodeSer.dayReport(time, names);
+    }
+
+    @Override
+    public DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException {
+        return taskNodeSer.dayCount(startTime, endTime, departIds);
+    }
+
+    @Override
+    public Double finishDay(String date,String name) throws SerException {
+        return taskNodeSer.finishDay(date,name);
+    }
+
+    @Override
+    public List<ObjectBO> taskSituation(String[] names, String date) throws SerException {
+        return taskNodeSer.taskSituation(names, date);
     }
 }

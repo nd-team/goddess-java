@@ -1,6 +1,7 @@
 package com.bjike.goddess.task.action.collect;
 
 import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -51,6 +52,24 @@ public class CustomizeAct {
     }
 
     /**
+     * 通过id查找
+     *
+     * @param id id
+     * @return class CustomizeBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/customize/{id}")
+    public Result customize(@PathVariable String id) throws ActException {
+        try {
+            CustomizeBO customizeBOS = customizeAPI.findByID(id);
+            return ActResult.initialize(customizeBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 数据量
      *
      * @return {name:'data',type:'int',defaultValue:'',description:'数据量.'}
@@ -75,6 +94,23 @@ public class CustomizeAct {
     public Result count(@Validated({ADD.class}) CustomizeTO to, BindingResult rs) throws ActException {
         try {
             customizeAPI.add(to);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/edit")
+    public Result edit(@Validated({EDIT.class}) CustomizeTO to, BindingResult rs) throws ActException {
+        try {
+            customizeAPI.edit(to);
             return ActResult.initialize(true);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

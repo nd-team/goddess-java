@@ -18,6 +18,7 @@ import java.io.IOException;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.bjike.goddess.taskallotment.action","com.bjike.goddess.taskallotment.config","com.bjike.goddess.common.consumer"})
+@PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource("classpath:app.xml")
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
 public class Application {

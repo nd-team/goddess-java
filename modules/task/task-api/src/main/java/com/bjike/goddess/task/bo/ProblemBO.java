@@ -1,7 +1,6 @@
 package com.bjike.goddess.task.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.task.entity.ProblemType;
 import com.bjike.goddess.task.enums.ProblemStatus;
 
 /**
@@ -53,6 +52,10 @@ public class ProblemBO extends BaseBO {
      * 问题类型
      */
     private String type;
+    /**
+     * 问题类型id
+     */
+    private String typeId;
     /**
      * 是否上报
      */
@@ -120,6 +123,14 @@ public class ProblemBO extends BaseBO {
      */
 
     private String giveResult;
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
 
     public String getRecorder() {
         return recorder;

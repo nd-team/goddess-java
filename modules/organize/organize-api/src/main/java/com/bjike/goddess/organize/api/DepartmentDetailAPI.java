@@ -260,4 +260,15 @@ public interface DepartmentDetailAPI {
      * @throws SerException
      */
     Set<String> departPersons(String departId) throws SerException;
+
+    /**
+     * chenjunhao
+     * 通过部门名称查找部门信息
+     *
+     * @param departs 部门数组
+     * @return
+     * @throws SerException
+     */
+    List<DepartmentDetailBO> departByName(String[] departs) throws SerException;
+
 }

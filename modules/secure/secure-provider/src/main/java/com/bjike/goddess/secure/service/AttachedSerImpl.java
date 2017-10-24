@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 挂靠业务实现
@@ -228,12 +229,14 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            List<DepartmentDetailBO> d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).collect(Collectors.toList());
             if (moduleAPI.isCheck("contacts")) {
                 RpcTransmit.transmitUserToken(token);
-                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
-                if (commonality != null && commonality.getEmail() != null) {
-                    set.add(commonality.getEmail());
+                if (!d.isEmpty()) {
+                    CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
+                    if (commonality != null && commonality.getEmail() != null) {
+                        set.add(commonality.getEmail());
+                    }
                 }
             }
         }
@@ -248,12 +251,14 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            List<DepartmentDetailBO> d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).collect(Collectors.toList());
             if (moduleAPI.isCheck("contacts")) {
                 RpcTransmit.transmitUserToken(token);
-                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
-                if (commonality != null && commonality.getEmail() != null) {
-                    set.add(commonality.getEmail());
+                if (!d.isEmpty()) {
+                    CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
+                    if (commonality != null && commonality.getEmail() != null) {
+                        set.add(commonality.getEmail());
+                    }
                 }
             }
         }
@@ -269,15 +274,17 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            PositionDetailBO p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).findFirst().get();
+            List<PositionDetailBO> p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).collect(Collectors.toList());
             RpcTransmit.transmitUserToken(token);
-            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
-            for (UserBO userBO : users) {
-                if (moduleAPI.isCheck("contacts")) {
-                    RpcTransmit.transmitUserToken(token);
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+            if (!p.isEmpty()) {
+                List<UserBO> users = positionDetailUserAPI.findByPosition(p.get(0).getId());
+                for (UserBO userBO : users) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        RpcTransmit.transmitUserToken(token);
+                        String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                        if (mail != null) {
+                            set.add(mail);
+                        }
                     }
                 }
             }
@@ -297,7 +304,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         MessageTO messageTO = new MessageTO();
         messageTO.setTitle("社保挂靠信息");
         messageTO.setContent(html(attachedBO));
-        String[] strings=mEmails();
+        String[] strings = mEmails();
         if (strings != null && strings.length > 0) {
             messageTO.setReceivers(strings);
             messageAPI.send(messageTO);
@@ -461,12 +468,12 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         MessageTO messageTO = new MessageTO();
         messageTO.setContent(html(attachedBO));
         messageTO.setTitle("以下是社保挂靠基本信息，请给予意见");
-        String[] strings=yyEmails();
+        String[] strings = yyEmails();
         if (strings != null && strings.length > 0) {
             messageTO.setReceivers(strings);
             messageAPI.send(messageTO);
         }
-        String[] strings1=mEmails();
+        String[] strings1 = mEmails();
         if (strings1 != null && strings1.length > 0) {
             messageTO.setReceivers(strings1);
             messageAPI.send(messageTO);
@@ -548,13 +555,13 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
 
     @Override
     public List<AttachedBO> byName(NameTO to) throws SerException {
-        List<Attached> attacheds  = new ArrayList<>();
-        if(to.getNames()!=null){
+        List<Attached> attacheds = new ArrayList<>();
+        if (to.getNames() != null) {
             AttachedDTO dto = new AttachedDTO();
-            dto.getConditions().add(Restrict.eq("attachedName",to.getNames()));
+            dto.getConditions().add(Restrict.eq("attachedName", to.getNames()));
             attacheds = super.findByCis(dto);
         }
-        List<AttachedBO> boList = BeanTransform.copyProperties(attacheds,AttachedBO.class);
+        List<AttachedBO> boList = BeanTransform.copyProperties(attacheds, AttachedBO.class);
         return boList;
     }
 
@@ -562,7 +569,7 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
     public Set<String> allName() throws SerException {
         Set<String> set = new HashSet<>();
         List<Attached> list = super.findAll();
-        for (Attached attached:list){
+        for (Attached attached : list) {
             set.add(attached.getAttachedName());
         }
         return set;

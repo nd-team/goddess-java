@@ -3,13 +3,17 @@ package com.bjike.goddess.taskallotment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.taskallotment.bo.*;
+import com.bjike.goddess.taskallotment.bo.DayReport.*;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.QuestionDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
@@ -17,9 +21,12 @@ import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.entity.*;
 import com.bjike.goddess.taskallotment.enums.*;
 import com.bjike.goddess.taskallotment.to.CustomTitleTO;
+import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.QuestionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -31,6 +38,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 任务节点业务实现
@@ -60,6 +68,73 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     private QuestionSer questionSer;
     @Autowired
     private PositionUserDetailAPI positionUserDetailAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
+    /**
+     * 再次分发权限（层级级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+            if (!flag) {
+                throw new SerException("您不是管理层人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 再次分发权限（层级级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        Boolean flagAdd = guideAddIdentity();
+        if (flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case AGAIN:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -162,22 +237,28 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<ProjectBO> list(ProjectDTO dto) throws SerException {
-        List<ProjectBO> list = projectSer.list(dto);
+        List<ProjectBO> list = projectSer.list1(dto);
         for (ProjectBO projectBO : list) {
             List<TableBO> tableBOS = projectBO.getTables();
-            for (TableBO t : tableBOS) {
-                TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
-                taskNodeDTO.getConditions().add(Restrict.eq("table.id", t.getId()));
-                List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
-                List<NodeBO> nodeBOS = BeanTransform.copyProperties(taskNodes, NodeBO.class);
-                t.setNodeS(nodeBOS);
+            if (null != tableBOS) {
+                for (TableBO t : tableBOS) {
+                    TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                    taskNodeDTO.getConditions().add(Restrict.eq("table.id", t.getId()));
+                    List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
+                    List<NodeBO> nodeBOS = BeanTransform.copyProperties(taskNodes, NodeBO.class);
+                    t.setNodeS(nodeBOS);
+                }
             }
         }
         return list;
     }
 
     private TaskNodeBO tranBO(TaskNode entity) throws SerException {
-        TaskNodeBO bo = BeanTransform.copyProperties(entity, TaskNodeBO.class, "customTitles", "questions", "needTime", "executeTime", "actualTime", "undoneTime", "delayTime");
+        TaskNodeBO bo = BeanTransform.copyProperties(entity, TaskNodeBO.class, "customTitles", "questions", "needTime", "executeTime", "actualTime", "undoneTime", "delayTime", "table");
+        bo.setTable(entity.getTable().getName());
+        bo.setDepart(entity.getTable().getProject().getDepart());
+        bo.setProject(entity.getTable().getProject().getProject());
+        bo.setInnerProject(entity.getTable().getProject().getInnerProject());
         List<CustomTitle> customTitles = entity.getCustomTitles();
         if (null != customTitles) {
             List<CustomTitleBO> customTitleBOS = BeanTransform.copyProperties(customTitles, CustomTitleBO.class);
@@ -266,7 +347,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     public Boolean checkTime(TaskNodeTO to) throws SerException {
         String execute = to.getExecute();
         if (null == execute) {
-            throw new SerException("该任务没有执行人");
+            return false;
         }
         String time1 = to.getStartTime().substring(0, to.getStartTime().indexOf(" "));
         LocalDate date = DateUtil.parseDate(time1);
@@ -303,6 +384,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         String name = userAPI.currentUser().getUsername();
         TaskNode entity = update(to);
         entity.setInitiate(name);
+        entity.setTaskStatus(TaskStatus.DOING);
         super.update(entity);
         if (null != to.getExecute()) {
             priority(entity);  //处理优先级
@@ -455,9 +537,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public Long myInitiateNum() throws SerException {
+    public Long myInitiateNum(TaskNodeDTO dto) throws SerException {
         String name = userAPI.currentUser().getUsername();
-        TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.eq("initiate", name));
         return super.count(dto);
     }
@@ -470,11 +551,27 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void finish(String id) throws SerException {
-        TaskNode entity = super.findById(id);
+    public void finish(TaskNodeTO to) throws SerException {
+        TaskNode entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
+        entity.setContent(to.getContent());
+        entity.setActualNum(to.getActualNum());
+        entity.setTaskType(to.getTaskType());
+        entity.setTaskName(to.getTaskName());
+        entity.setExecute(to.getExecute());
+        entity.setPlanNum(to.getPlanNum());
+        entity.setNeedTime(to.getNeedTime());
+        entity.setNeedType(to.getNeedType());
+        entity.setActualTime(to.getActualTime());
+        entity.setActualType(to.getActualType());
+        entity.setUndoneTime(to.getUndoneTime());
+        entity.setUndoneType(to.getUndoneType());
+        entity.setStartTime(DateUtil.parseDateTime(to.getStartTime()));
+        entity.setEndTime(DateUtil.parseDateTime(to.getEndTime()));
+        entity.setNotice(to.getNotice());
+        entity.setReimbursement(to.getReimbursement());
         entity.setTaskStatus(TaskStatus.FINISH);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -482,11 +579,27 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void unFinish(String id) throws SerException {
-        TaskNode entity = super.findById(id);
+    public void unFinish(TaskNodeTO to) throws SerException {
+        TaskNode entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
+        entity.setContent(to.getContent());
+        entity.setActualNum(to.getActualNum());
+        entity.setTaskType(to.getTaskType());
+        entity.setTaskName(to.getTaskName());
+        entity.setExecute(to.getExecute());
+        entity.setPlanNum(to.getPlanNum());
+        entity.setNeedTime(to.getNeedTime());
+        entity.setNeedType(to.getNeedType());
+        entity.setActualTime(to.getActualTime());
+        entity.setActualType(to.getActualType());
+        entity.setUndoneTime(to.getUndoneTime());
+        entity.setUndoneType(to.getUndoneType());
+        entity.setStartTime(DateUtil.parseDateTime(to.getStartTime()));
+        entity.setEndTime(DateUtil.parseDateTime(to.getEndTime()));
+        entity.setNotice(to.getNotice());
+        entity.setReimbursement(to.getReimbursement());
         entity.setTaskStatus(TaskStatus.UNFINISHED);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -520,6 +633,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<TaskNodeBO> myCharge(TaskNodeDTO dto) throws SerException {
+        String[] depart = dto.getDepart();
+        if (null != depart) {
+            ProjectDTO projectDTO = new ProjectDTO();
+            projectDTO.getConditions().add(Restrict.in("depart", depart));
+            List<Project> projects = projectSer.findByCis(projectDTO);
+            Set<String> projectIds = projects.stream().map(project -> project.getId()).collect(Collectors.toSet());
+            TableDTO tableDTO = new TableDTO();
+            tableDTO.getConditions().add(Restrict.in("project.id", projectIds));
+            List<Table> tables = tableSer.findByCis(tableDTO);
+            Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+            dto.getConditions().add(Restrict.in("table.id", tableIds));
+        }
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.eq("charge", name));
         List<TaskNode> list = super.findByCis(dto, true);
@@ -531,9 +656,20 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public Long myChargeNum() throws SerException {
+    public Long myChargeNum(TaskNodeDTO dto) throws SerException {
+        String[] depart = dto.getDepart();
+        if (null != depart) {
+            ProjectDTO projectDTO = new ProjectDTO();
+            projectDTO.getConditions().add(Restrict.in("depart", depart));
+            List<Project> projects = projectSer.findByCis(projectDTO);
+            Set<String> projectIds = projects.stream().map(project -> project.getId()).collect(Collectors.toSet());
+            TableDTO tableDTO = new TableDTO();
+            tableDTO.getConditions().add(Restrict.in("project.id", projectIds));
+            List<Table> tables = tableSer.findByCis(tableDTO);
+            Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+            dto.getConditions().add(Restrict.in("table.id", tableIds));
+        }
         String name = userAPI.currentUser().getUsername();
-        TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.eq("charge", name));
         return super.count(dto);
     }
@@ -560,6 +696,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     public List<TaskNodeBO> myExecute(TaskNodeDTO dto) throws SerException {
+        String[] depart = dto.getDepart();
+        if (null != depart) {
+            ProjectDTO projectDTO = new ProjectDTO();
+            projectDTO.getConditions().add(Restrict.in("depart", depart));
+            List<Project> projects = projectSer.findByCis(projectDTO);
+            Set<String> projectIds = projects.stream().map(project -> project.getId()).collect(Collectors.toSet());
+            TableDTO tableDTO = new TableDTO();
+            tableDTO.getConditions().add(Restrict.in("project.id", projectIds));
+            List<Table> tables = tableSer.findByCis(tableDTO);
+            Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+            dto.getConditions().add(Restrict.in("table.id", tableIds));
+        }
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.eq("execute", name));
         List<TaskNode> list = super.findByCis(dto, true);
@@ -571,9 +719,20 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public Long myExecuteNum() throws SerException {
+    public Long myExecuteNum(TaskNodeDTO dto) throws SerException {
         String name = userAPI.currentUser().getUsername();
-        TaskNodeDTO dto = new TaskNodeDTO();
+        String[] depart = dto.getDepart();
+        if (null != depart) {
+            ProjectDTO projectDTO = new ProjectDTO();
+            projectDTO.getConditions().add(Restrict.in("depart", depart));
+            List<Project> projects = projectSer.findByCis(projectDTO);
+            Set<String> projectIds = projects.stream().map(project -> project.getId()).collect(Collectors.toSet());
+            TableDTO tableDTO = new TableDTO();
+            tableDTO.getConditions().add(Restrict.in("project.id", projectIds));
+            List<Table> tables = tableSer.findByCis(tableDTO);
+            Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+            dto.getConditions().add(Restrict.in("table.id", tableIds));
+        }
         dto.getConditions().add(Restrict.eq("execute", name));
         return super.count(dto);
     }
@@ -604,6 +763,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void initiateAgain(TaskNodeTO to) throws SerException {
+        String token = RpcTransmit.getUserToken();
+        checkAddIdentity();
+        RpcTransmit.transmitUserToken(token);
         String name = userAPI.currentUser().getUsername();
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
@@ -1603,5 +1765,194 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 break;
         }
         return time;
+    }
+
+    @Override
+    public DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException {
+        List<DayCountBO> dayCountBOS = get(startTime, endTime, departIds);
+        Set<String> areas = dayCountBOS.stream().filter(dayCountBO -> null != dayCountBO.getArea()).map(DayCountBO::getArea).collect(Collectors.toSet());
+        DayReportCountBO dayReportCountBO = new DayReportCountBO();
+        dayReportCountBO.setTime(startTime + "-" + endTime);
+        List<DayABO> abos = new ArrayList<>();
+        int sumNum = 0;   //总人数
+        double sumPlanNum = 0;   //计划任务量总合计
+        double sumActualNum = 0;   //完成任务量总合计
+        double sumTaskTime = 0;   //任务时长总合计
+        double sumActualTime = 0;   //实际时长总合计
+        double sumOutTime = 0;   //加班时长总合计
+        for (String area : areas) {
+            DayABO abo = new DayABO();
+            abo.setArea(area);
+            List<DayBBO> bbos = new ArrayList<>();
+            Set<String> departs = dayCountBOS.stream().filter(dayCountBO -> (null != dayCountBO.getDepart()) && area.equals(dayCountBO.getArea())).map(DayCountBO::getDepart).collect(Collectors.toSet());
+            for (String depart : departs) {
+                int departNum = 0;   //部门总人数
+                double departPlanNum = 0;   //计划任务量部门合计
+                double departActualNum = 0;   //完成任务量部门合计
+                double departTaskTime = 0;   //任务时长部门合计
+                double departActualTime = 0;   //实际时长部门合计
+                double departOutTime = 0;   //加班时长部门合计
+                DayBBO bbo = new DayBBO();
+                bbo.setDepart(depart);
+                List<DayCBO> cbos = new ArrayList<>();
+                Set<String> positions = dayCountBOS.stream().filter(dayCountBO -> (null != dayCountBO.getPosition()) && depart.equals(dayCountBO.getDepart())).map(DayCountBO::getPosition).collect(Collectors.toSet());
+                for (String position : positions) {
+                    DayCBO cbo = new DayCBO();
+                    cbo.setPosition(position);
+                    List<DayDBO> dbos = new ArrayList<>();
+                    Set<String> names = dayCountBOS.stream().filter(dayCountBO -> (null != dayCountBO.getName()) && position.equals(dayCountBO.getPosition())).map(DayCountBO::getName).collect(Collectors.toSet());
+                    for (String name : names) {
+                        List<DayCountBO> list = dayCountBOS.stream().filter(dayCountBO -> name.equals(dayCountBO.getName())).collect(Collectors.toList());
+                        if (!list.isEmpty()) {
+                            DayDBO dbo = BeanTransform.copyProperties(list.get(0), DayDBO.class);
+                            sumNum++;
+                            departNum++;
+                            departPlanNum += dbo.getPlanNum();
+                            sumPlanNum += dbo.getPlanNum();
+                            departActualNum += dbo.getActualNum();
+                            sumActualNum += dbo.getActualNum();
+                            departTaskTime += dbo.getTaskTime();
+                            sumTaskTime += dbo.getTaskTime();
+                            departActualTime += dbo.getActualTime();
+                            sumActualTime += dbo.getActualTime();
+                            departOutTime += dbo.getOutTime();
+                            sumOutTime += dbo.getOutTime();
+                            dbos.add(dbo);
+                        }
+                    }
+                    cbo.setSons(dbos);
+                    cbos.add(cbo);
+                }
+                bbo.setSons(cbos);
+                bbos.add(bbo);
+                //部门合计
+                bbos.add(count(departNum, departPlanNum, departActualNum, departTaskTime, departActualTime, departOutTime, "合计"));
+            }
+            abo.setSons(bbos);
+            abos.add(abo);
+        }
+        DayABO count = new DayABO();
+        List<DayBBO> bbos = new ArrayList<>();
+        //总合计
+        DayBBO bbo = count(sumNum, sumPlanNum, sumActualNum, sumTaskTime, sumActualTime, sumOutTime, "总合计");
+        bbos.add(bbo);
+        count.setSons(bbos);
+        abos.add(count);
+        dayReportCountBO.setSons(abos);
+        return dayReportCountBO;
+    }
+
+    private DayBBO count(int num, double planNum, double actualNum, double taskTime, double actualTime, double outTime, String type) throws SerException {
+        DayBBO count = new DayBBO();
+        List<DayCBO> cbos = new ArrayList<>();
+        if ("总合计".equals(type)) {
+            count.setDepart("总合计");
+        } else {
+            count.setDepart("合计");
+        }
+        DayCBO cbo = new DayCBO();
+        List<DayDBO> dbos = new ArrayList<>();
+        DayDBO dbo = new DayDBO();
+        dbo.setName(num + "人");
+        dbo.setPlanNum(planNum);
+        dbo.setActualNum(actualNum);
+        dbo.setTaskTime(taskTime);
+        dbo.setActualTime(actualTime);
+        dbo.setOutTime(outTime);
+        dbos.add(dbo);
+        cbo.setSons(dbos);
+        cbos.add(cbo);
+        count.setSons(cbos);
+        return count;
+    }
+
+    private List<DayCountBO> get(String startTime, String endTime, String[] departIds) throws SerException {
+        TaskNodeDTO dto = new TaskNodeDTO();
+        LocalDate start = DateUtil.parseDate(startTime);
+        LocalDate end = DateUtil.parseDate(endTime);
+        dto.getConditions().add(Restrict.between("startExecute", new LocalDate[]{start, start}));
+        dto.getConditions().add(Restrict.between("endExecute", new LocalDate[]{end, end}));
+        if (null != departIds) {
+            Set<String> set = new HashSet<>();
+            for (String s : departIds) {
+                Set<String> names = departmentDetailAPI.departPersons(s);   //查找某个部门的所有人
+                if (null != names) {
+                    set.addAll(names);
+                }
+            }
+            dto.getConditions().add(Restrict.in("execute", set));
+        }
+        List<TaskNode> list = super.findByCis(dto);
+        Set<String> names = list.stream().map(TaskNode::getExecute).collect(Collectors.toSet());
+        List<DayCountBO> dayCountBOS = new ArrayList<>();
+        for (String name : names) {
+            Stream<TaskNode> stream = list.stream().filter(taskNode -> name.equals(taskNode.getExecute()));
+            //计划任务量
+            double planNum = stream.mapToDouble(TaskNode::getPlanNum).sum();
+            //完成任务量
+            double actualNum = list.stream().filter(taskNode -> name.equals(taskNode.getExecute()) && (null != taskNode.getActualNum())).mapToDouble(TaskNode::getActualNum).sum();
+            double needMin = list.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+            double needHour = list.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+            double needDay = list.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+            //任务时长(小时)
+            double taskTime = new BigDecimal(needMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + needDay * 8 + needHour;
+            double actualMin = list.stream().filter(taskNode -> (null != taskNode.getActualType()) && TimeType.MINUTE.equals(taskNode.getActualType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+            double actualHour = list.stream().filter(taskNode -> (null != taskNode.getActualType()) && TimeType.HOUR.equals(taskNode.getActualType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+            double actualDay = list.stream().filter(taskNode -> (null != taskNode.getActualType()) && TimeType.DAY.equals(taskNode.getActualType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+            //实际时长(小时)
+            double actualTime = new BigDecimal(actualMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + actualDay * 8 + actualHour;
+            //todo:加班时长(小时)
+            PositionDetailBO positionDetailBO = positionUserDetailAPI.getPosition(name);
+            DayCountBO dayCountBO = new DayCountBO();
+            if (null != positionDetailBO) {
+                dayCountBO.setArea(positionDetailBO.getArea());
+                dayCountBO.setDepart(positionDetailBO.getDepartmentName());
+                dayCountBO.setPosition(positionDetailBO.getPosition());
+            }
+            dayCountBO.setName(name);
+            dayCountBO.setPlanNum(planNum);
+            dayCountBO.setActualNum(actualNum);
+            dayCountBO.setTaskTime(taskTime);
+            dayCountBO.setActualTime(actualTime);
+            dayCountBOS.add(dayCountBO);
+        }
+        return dayCountBOS;
+    }
+
+    @Override
+    public Double finishDay(String date, String name) throws SerException {
+        String sql = "SELECT" +
+                "  actualTime," +
+                "  actualType " +
+                "FROM taskallotment_tasknode " +
+                "WHERE '" + date + "' BETWEEN DATE_FORMAT(startTime,'%Y-%m-%d') AND DATE_FORMAT(endTime,'%Y-%m-%d') AND finishStatus = 0 AND execute='" + name + "'";
+        String[] fileds = new String[]{"actualTime", "actualType"};
+        List<ObjectBO> list = super.findBySql(sql, ObjectBO.class, fileds);
+        double finishDay = 0;   //当天的任务完成天数
+        if (null != list) {
+            for (ObjectBO o : list) {
+                double time = o.getActualTime();
+                int timeType = o.getActualType();
+                switch (timeType) {
+                    case 0:
+                        time = new BigDecimal(time / 60 / 8).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+                        break;
+                    case 1:
+                        time = new BigDecimal(time / 8).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+                        break;
+                }
+                finishDay += time;
+            }
+        }
+        return finishDay;
+    }
+
+    @Override
+    public List<ObjectBO> taskSituation(String[] names, String date) throws SerException {
+        String sql = "SELECT actualType,actualTime,finishStatus FROM taskallotment_tasknode " +
+                "WHERE execute in ('" + StringUtils.join(names, "','") + "') AND is_confirm=1 AND '" + date + "' BETWEEN DATE_FORMAT(startTime,'%Y-%m-%d') AND DATE_FORMAT(endTime,'%Y-%m-%d')";
+        String[] fileds = new String[]{"actualType", "actualTime", "finishStatus"};
+        List<ObjectBO> list = super.findBySql(sql, ObjectBO.class, fileds);
+        return list;
     }
 }

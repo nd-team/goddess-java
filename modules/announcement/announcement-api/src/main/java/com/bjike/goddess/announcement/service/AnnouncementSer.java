@@ -206,4 +206,11 @@ public interface AnnouncementSer extends Ser<Announcement, AnnouncementDTO> {
      * @throws SerException
      */
     List<UserBO> allUsers() throws SerException;
+
+    /**
+     * 移动端公告列表
+     * @return
+     * @throws SerException
+     */
+    List<AnnouncementBO> phoneList() throws SerException;
 }

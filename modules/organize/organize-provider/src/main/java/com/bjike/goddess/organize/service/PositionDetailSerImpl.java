@@ -326,9 +326,9 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
 //                    for (PositionDetail p : list) {
 //                        arrangements.add(p.getArrangement());
 //                    }
-                    Set<String> arrangementsID=list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
+                    Set<String> arrangementsID = list.stream().map(positionDetail -> positionDetail.getArrangement().getId()).collect(Collectors.toSet());
                     List<Arrangement> arrangements1 = new ArrayList<>();
-                    for (String id:arrangementsID){
+                    for (String id : arrangementsID) {
                         arrangements1.add(arrangementSer.findById(id));
                     }
                     List<ReArrangementBO> reArrangementBOS = BeanTransform.copyProperties(arrangements1, ReArrangementBO.class);
@@ -510,5 +510,12 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             }
         }
         return stringList;
+    }
+
+    @Override
+    public List<String> positionNames() throws SerException {
+        PositionDetailDTO detailDTO = new PositionDetailDTO();
+        detailDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+        return super.findByCis(detailDTO).stream().map(PositionDetail::getPosition).collect(Collectors.toList());
     }
 }
