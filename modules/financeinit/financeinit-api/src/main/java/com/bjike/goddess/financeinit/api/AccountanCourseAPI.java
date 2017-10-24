@@ -151,4 +151,12 @@ public interface AccountanCourseAPI {
     default List<String> findThirdNameByCode(String code) throws SerException{
         return null;
     }
+    /**
+     * 获取所有的一级科目名称和对应的代码
+     * @return
+     * @throws SerException
+     */
+    default List<AccountAddDateBO> findFirstNameCode() throws SerException{
+        return null;
+    }
 }

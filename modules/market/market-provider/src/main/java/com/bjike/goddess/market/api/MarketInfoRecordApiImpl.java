@@ -87,7 +87,12 @@ public class MarketInfoRecordApiImpl implements MarketInfoRecordAPI {
 
     @Override
     public List<String> findBussType() throws SerException {
-        return null;
+        return marketInfoRecordSer.findBussType();
+    }
+
+    @Override
+    public List<String> findProjectName() throws SerException {
+        return marketInfoRecordSer.findProjectName();
     }
 
     @Override

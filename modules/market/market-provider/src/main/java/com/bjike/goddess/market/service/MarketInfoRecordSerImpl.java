@@ -442,6 +442,22 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
     }
 
     @Override
+    public List<String> findProjectName() throws SerException {
+        List<MarketInfoRecord> marketInfoRecordList = super.findAll();
+        if (CollectionUtils.isEmpty(marketInfoRecordList)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (MarketInfoRecord marketInfoRecord : marketInfoRecordList) {
+            String projectName = marketInfoRecord.getProjectName();
+            if (StringUtils.isNotBlank(marketInfoRecord.getProjectName())) {
+                set.add(projectName);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
     public List<String> findAreaByBussType(String bussType) throws SerException {
         MarketInfoRecordDTO marketInfoRecordDTO = new MarketInfoRecordDTO();
         marketInfoRecordDTO.getConditions().add(Restrict.eq("businessType", bussType));

@@ -108,4 +108,9 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     public List<String> findThirdNameByCode(String code) throws SerException {
         return accountanCourseSer.findThirdNameByCode(code);
     }
+
+    @Override
+    public List<AccountAddDateBO> findFirstNameCode() throws SerException {
+        return accountanCourseSer.findFirstNameCode();
+    }
 }

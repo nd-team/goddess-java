@@ -135,6 +135,15 @@ public interface MarketInfoRecordSer extends Ser<MarketInfoRecord, MarketInfoRec
     }
 
     /**
+     * 获取所有的项目名称
+     *
+     * @return class String
+     */
+    default List<String> findProjectName() throws SerException {
+        return null;
+    }
+
+    /**
      * 根据业务类型获取地区
      *
      * @return class String

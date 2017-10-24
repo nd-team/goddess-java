@@ -58,7 +58,7 @@ public class WithUnitApiImpl implements WithUnitAPI {
 
     @Override
     public WithUnitBO editWith(WithUnitTO withUnitTO) throws SerException {
-        return withUnitSer.addWith(withUnitTO);
+        return withUnitSer.editWith(withUnitTO);
     }
 
     @Override

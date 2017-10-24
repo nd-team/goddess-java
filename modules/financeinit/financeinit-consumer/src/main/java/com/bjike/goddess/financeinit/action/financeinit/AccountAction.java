@@ -215,6 +215,21 @@ public class AccountAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+/**
+     * 获取所有的一级科目名称和对应的代码
+     * @version v1
+     * @throws ActException
+     */
+    @GetMapping("v1/firstNameCode")
+    public Result findFirstNameCode() throws ActException {
+        try {
+            List<AccountAddDateBO> accountAddDateBOS = accountanCourseAPI.findFirstNameCode();
+            List<AccountAddDateVO> accountAddDateVOS = BeanTransform.copyProperties(accountAddDateBOS, AccountAddDateVO.class);
+            return ActResult.initialize(accountAddDateVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据一级科目代码获取二级科目名称

@@ -296,6 +296,23 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         return accountAddDateBOS;
     }
 
+    @Override
+    public List<AccountAddDateBO> findFirstNameCode() throws SerException {
+        List<AccountanCourse> accountanCourses = super.findAll();
+        List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
+        if(accountanCourses!=null&&accountanCourses.size()>0){
+            for (AccountanCourse accountanCourse : accountanCourses){
+                if(accountanCourse.getCode().length()==4){
+                    AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
+                    accountAddDateBO.setCode(accountanCourse.getCode());
+                    accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
+                    accountAddDateBOS.add(accountAddDateBO);
+                }
+            }
+        }
+        return accountAddDateBOS;
+    }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public AccountanCourseBO addCourse(AccountanCourseTO accountanCourseTO) throws SerException {
