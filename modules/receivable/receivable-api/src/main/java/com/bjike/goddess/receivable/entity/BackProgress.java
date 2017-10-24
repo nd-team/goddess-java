@@ -264,13 +264,13 @@ public class BackProgress extends BaseEntity {
     /**
      * 是否可制作申请结算
      */
-    @Column(name = "is_applyClearing",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否可制作申请结算'", insertable = false)
+    @Column(name = "is_applyClearing",  columnDefinition = "TINYINT(1)   COMMENT '是否可制作申请结算'")
     private Boolean applyClearing;
 
     /**
      * 是否影响结算
      */
-    @Column(name = "is_influenceClearing",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否影响结算'", insertable = false)
+    @Column(name = "is_influenceClearing",  columnDefinition = "TINYINT(1)    COMMENT '是否影响结算'")
     private Boolean influenceClearing;
 
     /**

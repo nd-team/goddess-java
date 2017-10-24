@@ -297,7 +297,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     bo.setNum(num);
                     num++;
                     boList.add(bo);
-                }else {
+                } else {
                     ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
                     bo.setNum(num);
                     num++;
@@ -567,30 +567,52 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         double allBegin = 0;    //期初所有者权益
         double allEnd = 0;   //期末所有者权益
         if ((profits != null) && (!profits.isEmpty())) {
-            income = profits.get(0).getCurrentMonthAmount();
-            expend = profits.get(1).getCurrentMonthAmount();
-            profit = profits.get(profits.size() - 1).getCurrentMonthAmount();
+            if (null != profits.get(0).getCurrentMonthAmount()) {
+                income = profits.get(0).getCurrentMonthAmount();
+            }
+            if (null != profits.get(1).getCurrentMonthAmount()) {
+                expend = profits.get(1).getCurrentMonthAmount();
+            }
+            if (null != profits.get(profits.size() - 1).getCurrentMonthAmount()) {
+                profit = profits.get(profits.size() - 1).getCurrentMonthAmount();
+            }
         }
         if ((assetBOs != null) && (!assetBOs.isEmpty())) {
-            assetBegin = assetBOs.get(assetBOs.size() - 1).getBeginAsset();
-            assetEnd = assetBOs.get(assetBOs.size() - 1).getEndAsset();
+            if (null != assetBOs.get(assetBOs.size() - 1).getBeginAsset()) {
+                assetBegin = assetBOs.get(assetBOs.size() - 1).getBeginAsset();
+            }
+            if (null != assetBOs.get(assetBOs.size() - 1).getEndAsset()) {
+                assetEnd = assetBOs.get(assetBOs.size() - 1).getEndAsset();
+            }
         }
         if ((debtBOs != null) && (!debtBOs.isEmpty())) {
-            allBegin = debtBOs.get(debtBOs.size() - 2).getBeginDebt();
-            allEnd = debtBOs.get(debtBOs.size() - 2).getEndDebt();
+            if (null != debtBOs.get(debtBOs.size() - 2).getBeginDebt()) {
+                allBegin = debtBOs.get(debtBOs.size() - 2).getBeginDebt();
+            }
+            if (null != debtBOs.get(debtBOs.size() - 2).getEndDebt()) {
+                allEnd = debtBOs.get(debtBOs.size() - 2).getEndDebt();
+            }
         }
         ProfitAnalyzeIndicatorBO maoProfit = new ProfitAnalyzeIndicatorBO();
         maoProfit.setIndicator("销售毛利率");
-        String mao = String.format("%.2f", ((income - expend) / income) * 100);
-        maoProfit.setIndicatorValue(mao + "%");
+        String mao="0";
+        String jing="0";
+        String asset="0";
+        String rd="0";
+        if (income != 0) {
+            mao = String.format("%.2f", ((income - expend) / income) * 100);
+            maoProfit.setIndicatorValue(mao + "%");
+        }
         maoProfit.setState("表明一元销售收入扣除销售" +
                 "成本后,有多少可用于抵减" +
                 "各项费用而形成利润");
         boList.add(maoProfit);
         ProfitAnalyzeIndicatorBO jingProfit = new ProfitAnalyzeIndicatorBO();
         jingProfit.setIndicator("销售净利率");
-        String jing = String.format("%.2f", (profit / income) * 100);
-        jingProfit.setIndicatorValue(jing + "%");
+        if (income != 0) {
+            jing = String.format("%.2f", (profit / income) * 100);
+            jingProfit.setIndicatorValue(jing + "%");
+        }
         jingProfit.setState("反映每一元的销售收入实" +
                 "现的净利润是多少,反映" +
                 "企业一段时间经营的最终" +
@@ -601,8 +623,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         ProfitAnalyzeIndicatorBO assetProfit = new ProfitAnalyzeIndicatorBO();
         assetProfit.setIndicator("资产净利润率");
         double avgAsset = (assetBegin + assetEnd) / 2;
-        String asset = String.format("%.2f", (profit / avgAsset) * 100);
-        assetProfit.setIndicatorValue(asset + "%");
+        if (avgAsset != 0) {
+            asset = String.format("%.2f", (profit / avgAsset) * 100);
+            assetProfit.setIndicatorValue(asset + "%");
+        }
         assetProfit.setState("反映企业资产利用" +
                 "效果的好坏及其获" +
                 "利能力的高低");
@@ -610,13 +634,16 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         ProfitAnalyzeIndicatorBO reward = new ProfitAnalyzeIndicatorBO();
         reward.setIndicator("净值报酬率");
         double avgAll = (allBegin + allEnd) / 2;
-        String rd = String.format("%.2f", (profit / avgAll) * 100);
-        reward.setIndicatorValue(rd + "%");
+        if (avgAll != 0) {
+            rd = String.format("%.2f", (profit / avgAll) * 100);
+            reward.setIndicatorValue(rd + "%");
+        }
         reward.setState("反映投资人投入资本获得的" +
                 "报酬的高低,投资者可通过" +
                 "计算该指标了解自己投入资" +
                 "本的保险程度和获利水平");
         boList.add(reward);
+        RpcTransmit.transmitUserToken(userToken);
         String advice = analyzeIndicatorAdvice(mao, jing, asset, rd);
         ProfitAnalyzeIndicatorBO adviceBO = new ProfitAnalyzeIndicatorBO();
         adviceBO.setIndicator("分析结果及建议");
@@ -635,6 +662,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
      * @return
      * @throws SerException
      */
+
     private String analyzeIndicatorAdvice(String mao, String jing, String asset, String rd) throws SerException {
         List<ProfitIndicatorAdviceBO> advices = profitIndicatorAdviceSer.list(new ProfitIndicatorAdviceDTO());
         String advice = null;

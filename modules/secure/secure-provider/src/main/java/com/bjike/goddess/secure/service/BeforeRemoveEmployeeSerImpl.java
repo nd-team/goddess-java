@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 减员前业务实现
@@ -217,15 +218,17 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            PositionDetailBO p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).findFirst().get();
+            List<PositionDetailBO> p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).collect(Collectors.toList());
             RpcTransmit.transmitUserToken(token);
-            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
-            for (UserBO userBO : users) {
-                if (moduleAPI.isCheck("contacts")) {
-                    RpcTransmit.transmitUserToken(token);
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+            if (!p.isEmpty()) {
+                List<UserBO> users = positionDetailUserAPI.findByPosition(p.get(0).getId());
+                for (UserBO userBO : users) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        RpcTransmit.transmitUserToken(token);
+                        String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                        if (mail != null) {
+                            set.add(mail);
+                        }
                     }
                 }
             }
@@ -241,12 +244,14 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
-            DepartmentDetailBO d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).findFirst().get();
+            List<DepartmentDetailBO> d = list.stream().filter(departmentDetailBO -> "综合资源部".equals(departmentDetailBO.getDepartment())).collect(Collectors.toList());
             if (moduleAPI.isCheck("contacts")) {
                 RpcTransmit.transmitUserToken(token);
-                CommonalityBO commonality = commonalityAPI.findByDepartment(d.getId());
-                if (commonality != null && commonality.getEmail() != null) {
-                    set.add(commonality.getEmail());
+                if (!d.isEmpty()) {
+                    CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
+                    if (commonality != null && commonality.getEmail() != null) {
+                        set.add(commonality.getEmail());
+                    }
                 }
             }
         }
@@ -261,15 +266,17 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            PositionDetailBO p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).findFirst().get();
+            List<PositionDetailBO> p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).collect(Collectors.toList());
             RpcTransmit.transmitUserToken(token);
-            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
-            for (UserBO userBO : users) {
-                if (moduleAPI.isCheck("contacts")) {
-                    RpcTransmit.transmitUserToken(token);
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+            if (!p.isEmpty()) {
+                List<UserBO> users = positionDetailUserAPI.findByPosition(p.get(0).getId());
+                for (UserBO userBO : users) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        RpcTransmit.transmitUserToken(token);
+                        String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                        if (mail != null) {
+                            set.add(mail);
+                        }
                     }
                 }
             }
@@ -289,7 +296,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
         MessageTO messageTO = new MessageTO();
         messageTO.setTitle("社保减员前参考信息,请审阅");
         messageTO.setContent(html(beforeRemoveEmployeeBO));
-        String[] strings=mEmails();
+        String[] strings = mEmails();
         if (strings != null && strings.length > 0) {
             messageTO.setReceivers(strings);
             messageAPI.send(messageTO);

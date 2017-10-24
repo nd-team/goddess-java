@@ -1,9 +1,6 @@
 package com.bjike.goddess.bidding.api;
 
-import com.bjike.goddess.bidding.bo.BiddingCollectBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
-import com.bjike.goddess.bidding.bo.InfoBO;
+import com.bjike.goddess.bidding.bo.*;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
@@ -119,6 +116,25 @@ public class BiddingInfoApiImpl implements BiddingInfoAPI {
     @Override
     public List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
         return biddingInfoSer.totalCollect(to);
+    }
+    @Override
+    public OptionBO dayFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.dayFigureCollect(to);
+    }
+
+    @Override
+    public OptionBO weekFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.weekFigureCollect(to);
+    }
+
+    @Override
+    public OptionBO monthFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.monthFigureCollect(to);
+    }
+
+    @Override
+    public OptionBO totalFigureCollect(BiddingCollectTO to) throws SerException {
+        return biddingInfoSer.totalFigureCollect(to);
     }
 
     @Override

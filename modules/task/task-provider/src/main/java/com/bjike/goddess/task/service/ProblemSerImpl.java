@@ -51,8 +51,10 @@ public class ProblemSerImpl extends ServiceImpl<Problem, ProblemDTO> implements 
         }
         List<Problem> problems = super.findByCis(dto, true);
         List<ProblemBO> bos = BeanTransform.copyProperties(problems, ProblemBO.class, "type");
-        for (int i = 0; i < bos.size(); i++) {
-            bos.get(i).setType(problems.get(i).getType().getName());
+        if (null != bos) {
+            for (int i = 0; i < bos.size(); i++) {
+                bos.get(i).setType(problems.get(i).getType().getName());
+            }
         }
         return bos;
     }
@@ -72,7 +74,7 @@ public class ProblemSerImpl extends ServiceImpl<Problem, ProblemDTO> implements 
     public void edit(ProblemEditTO to) throws SerException {
         Problem problem = super.findById(to.getId());
         if (null != problem) {
-            BeanTransform.copyProperties(to, problem, "id");
+            BeanTransform.copyProperties(to, problem, true,"id");
             problem.setType(problemTypeSer.findById(to.getTypeId()));
             super.update(problem);
         } else {
@@ -89,10 +91,11 @@ public class ProblemSerImpl extends ServiceImpl<Problem, ProblemDTO> implements 
 
     @Override
     public void add(ProblemTO to) throws SerException {
-        String recorder = userAPI.currentUser().getId(); //录入人
-        if (null == userAPI.findNameById(to.getClaimer())) {
-            throw new SerException("无效问题提出人");
-        }
+//        String recorder = userAPI.currentUser().getId(); //录入人
+        String recorder = userAPI.currentUser().getUsername();
+//        if (null == userAPI.findNameById(to.getClaimer())) {
+//            throw new SerException("无效问题提出人");
+//        }
         Problem problem = BeanTransform.copyProperties(to, Problem.class, true);
         String number = SeqUtil.genProblemNum(getMaxNum());
         problem.setRecorder(recorder);
@@ -107,7 +110,8 @@ public class ProblemSerImpl extends ServiceImpl<Problem, ProblemDTO> implements 
 
     @Override
     public void accept(AcceptTO to) throws SerException {
-        String accepter = userAPI.currentUser().getId(); //审核人
+//        String accepter = userAPI.currentUser().getId(); //审核人
+        String accepter = userAPI.currentUser().getUsername(); //审核人
         String acceptNumber = SeqUtil.genAcceptNum(getMaxAcceptNum());
         Problem problem = super.findById(to.getProblemId());
         if (null != problem) {
@@ -136,5 +140,14 @@ public class ProblemSerImpl extends ServiceImpl<Problem, ProblemDTO> implements 
             return String.valueOf(objects.get(0));
         }
         return null;
+    }
+
+    @Override
+    public ProblemBO findByID(String id) throws SerException {
+        Problem problem = super.findById(id);
+        ProblemBO bo=BeanTransform.copyProperties(problem, ProblemBO.class,"type");
+        bo.setType(problemTypeSer.findById(problem.getType().getId()).getName());
+        bo.setTypeId(problem.getType().getId());
+        return bo;
     }
 }

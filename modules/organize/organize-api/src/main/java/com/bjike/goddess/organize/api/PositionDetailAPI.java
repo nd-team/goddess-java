@@ -237,8 +237,18 @@ public interface PositionDetailAPI {
 
     /**
      * 总条数
+     *
      * @return
      * @throws SerException
      */
     Long getTotal() throws SerException;
+
+    /**
+     * chenjunhao
+     * 查找所有正常状态的岗位名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> positionNames() throws SerException;
 }

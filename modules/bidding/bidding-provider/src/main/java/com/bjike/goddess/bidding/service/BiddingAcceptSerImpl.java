@@ -217,13 +217,13 @@ public class BiddingAcceptSerImpl extends ServiceImpl<BiddingAccept, BiddingAcce
         BiddingAccept biddingAccept = BeanTransform.copyProperties(to, BiddingAccept.class, true);
         biddingAccept.setCreateTime(LocalDateTime.now());
         biddingAccept.setInputUser(userBO.getUsername());
-//        String name = to.getProblemExhibitor();
-//        List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.getPositionDetail(name);
-//
-//        for (PositionDetailBO positionDetailBO : positionDetailBOS) {
-//            biddingAccept.setArea(positionDetailBO.getArea());
-//            biddingAccept.setDepartment(positionDetailBO.getDepartmentName());
-//        }
+        String name = to.getProblemExhibitor();
+        List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.getPositionDetail(name);
+
+        for (PositionDetailBO positionDetailBO : positionDetailBOS) {
+            biddingAccept.setArea(positionDetailBO.getArea());
+            biddingAccept.setDepartment(positionDetailBO.getDepartmentName());
+        }
         super.save(biddingAccept);
         BiddingAcceptBO bo = BeanTransform.copyProperties(biddingAccept, BiddingAcceptBO.class);
         return bo;

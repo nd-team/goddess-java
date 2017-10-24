@@ -1,12 +1,15 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.organize.service.PositionUserDetailSer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author: [dengjunren]
@@ -44,5 +47,30 @@ public class PositionUserDetailApiImpl implements PositionUserDetailAPI {
     @Override
     public Map<String, String> departPosition(String userId) throws SerException {
         return positionUserDetailSer.departPosition(userId);
+    }
+
+    @Override
+    public Set<String> findMains(String name) throws SerException {
+        return positionUserDetailSer.findMains(name);
+    }
+
+    @Override
+    public Set<String> findCarbons(String name) throws SerException {
+        return positionUserDetailSer.findCarbons(name);
+    }
+
+    @Override
+    public List<PositionDetailUserBO> findManager() throws SerException {
+        return positionUserDetailSer.findManager();
+    }
+
+    @Override
+    public List<String> arrangementAndDepartId(String name) throws SerException {
+        return positionUserDetailSer.arrangementAndDepartId(name);
+    }
+
+    @Override
+    public PositionDetailBO getPosition(String name) throws SerException {
+        return positionUserDetailSer.getPosition(name);
     }
 }

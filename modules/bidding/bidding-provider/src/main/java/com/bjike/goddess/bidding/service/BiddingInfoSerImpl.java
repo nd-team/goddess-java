@@ -1,9 +1,6 @@
 package com.bjike.goddess.bidding.service;
 
-import com.bjike.goddess.bidding.bo.BiddingCollectBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
-import com.bjike.goddess.bidding.bo.InfoBO;
+import com.bjike.goddess.bidding.bo.*;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.entity.BiddingInfo;
@@ -472,7 +469,7 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             //业务类型
             String sql1 = " SELECT cities AS cities,count(*) as count,businessType AS businessType" +
                     " FROM bidding_biddinginfo" +
-                    " WHERE businessType IN (" + StringUtils.substringBeforeLast(businessTypeStr + "", ",") + ") AND cities = '"+citieStr+"' GROUP BY businessType,cities ORDER BY businessType asc ";
+                    " WHERE businessType IN (" + StringUtils.substringBeforeLast(businessTypeStr + "", ",") + ") AND cities = '" + citieStr + "' GROUP BY businessType,cities ORDER BY businessType asc ";
             List<Map<String, String>> businessMap = new ArrayList<>();
             collectBOS = super.findBySql(sql1, BiddingInfoCollectBO.class, fields);
             businessMap = sqlQueryString(businessTypes, collectBOS, businessMap);
@@ -483,12 +480,13 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             bo.setBusinessMap(businessMap);
             boList.add(bo);
         }
-        boList = calculate(citie,biddingTypes,businessTypes,boList);
+        boList = calculate(citie, biddingTypes, businessTypes, boList);
         return boList;
 
     }
-    private List<BiddingInfoCollectBO> calculate(List<String> cities,List<String> biddingTypes,
-                                                 List<String> businessTypes,List<BiddingInfoCollectBO> boList)throws SerException{
+
+    private List<BiddingInfoCollectBO> calculate(List<String> cities, List<String> biddingTypes,
+                                                 List<String> businessTypes, List<BiddingInfoCollectBO> boList) throws SerException {
         StringBuffer citiesStr = new StringBuffer("");
         for (String citie : cities) {
             citiesStr.append("'" + citie + "',");
@@ -789,7 +787,201 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
         return boList;
     }
 
-//    @Override
+    @Override
+    public OptionBO dayFigureCollect(BiddingCollectTO to) throws SerException {
+        LocalDate time = null;
+        if (to.getTime() != null) {
+            time = DateUtil.parseDate(to.getTime());
+        } else {
+            time = LocalDate.now();
+        }
+        String startDate = DateUtil.dateToString(time);
+        String endDate = DateUtil.dateToString(time);
+        String text_1 = "招投标管理日汇总" + "(" + startDate + "-" + endDate + ")";
+        return figureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO weekFigureCollect(BiddingCollectTO to) throws SerException {
+        LocalDate[] time = null;
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (year != null && month != null && week != null) {
+            time = DateUtil.getWeekTimes(year, month, week);
+        } else {
+            String dateString = DateUtil.dateToString(LocalDate.now());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            time = DateUtil.getWeekTimes(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), weekOfMonth);
+        }
+        String startDate = String.valueOf(time[0]);
+        String endDate = String.valueOf(time[1]);
+        String text_1 = "招投标管理周汇总" + "(" + startDate + "-" + endDate + ")";
+        return figureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO monthFigureCollect(BiddingCollectTO to) throws SerException {
+        Integer year = 0;
+        Integer month = 0;
+        if (to.getYear() != null && to.getMonth() != null) {
+            year = to.getYear();
+            month = to.getMonth();
+        } else {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "招投标管理月汇总" + "(" + startDate + "-" + endDate + ")";
+        return figureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO totalFigureCollect(BiddingCollectTO to) throws SerException {
+        String startDate = " ";
+        String endDate = to.getTime();
+        String sql = "select updateTime as updateTime from  " + getTableName(BiddingInfo.class) + " where updateTime<= '" + endDate + "' ";
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+            endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        }
+        String text_1 = "招投标管理累计汇总" + "(累计)";
+        return figureCollect(startDate, endDate, text_1);
+    }
+
+    private OptionBO figureCollect(String startDate, String endDate, String text_1) throws SerException {
+        List<BiddingFigureBO> boList = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        String[] fields = new String[]{"businessType", "biddinginfoNum", "projectEstimatesNum", "scaleNum",
+                "biddingProjectNum", "contendNum", "bidNum", "winNum"};
+        sb.append(" SELECT a.businessType as businessType, ");
+        sb.append(" count(a.businessType) as biddinginfoNum,count(a.is_projectEstimates) as projectEstimatesNum, ");
+        sb.append(" a.scale AS scaleNum,count(a.is_passProjectEstimates) AS biddingProjectNum, ");
+        sb.append(" count(b.competitive) as contendNum, count(b.is_finish) AS bidNum, ");
+        sb.append(" count(b.is_passProjectEstimates) AS winNum ");
+        sb.append(" FROM bidding_biddinginfo a,bidding_bidopeninginfo b ");
+        sb.append(" WHERE a.businessType=b.businessType AND a.is_projectEstimates=1 ");
+        sb.append(" AND a.is_passProjectEstimates=1 AND b.is_finish=1 AND b.is_passProjectEstimates=1 ");
+        sb.append(" AND a.updateTime = b.updateTime AND a.updateTime between'" + startDate + "' and '" + endDate + "'");
+        sb.append(" GROUP BY a.businessType,b.businessType,a.scale, b.competitive ");
+        boList = super.findBySql(sb.toString(), BiddingFigureBO.class, fields);
+//        List<Object> objects = super.findBySql(sb.toString());
+//        Object[] object = (Object[]) objects.get(0);
+//        String businessType = String.valueOf(object[0]);
+//        Integer biddinginfoNum = Integer.parseInt(String.valueOf(object[1]));//招标的信息数量
+//        Integer projectEstimatesNum = Integer.parseInt(String.valueOf(object[2]));//可项目测算数量
+//        Integer scaleNum = Integer.parseInt(String.valueOf(object[3]));//可投标规模数量
+//        Integer biddingProjectNum = Integer.parseInt(String.valueOf(object[4]));//可投标项目数量
+//        Integer contendNum = Integer.parseInt(String.valueOf(object[5]));//竞争对手
+//        Integer bidNum = Integer.parseInt(String.valueOf(object[6]));//标书制作数
+//        Integer winNum = Integer.parseInt(String.valueOf(object[7]));//中标数量
+//        BiddingFigureBO bo = new BiddingFigureBO();
+//        bo.setBusinessType(businessType);
+//        bo.setBiddinginfoNum(biddinginfoNum);
+//        bo.setProjectEstimatesNum(projectEstimatesNum);
+//        bo.setScaleNum(scaleNum);
+//        bo.setBiddingProjectNum(biddingProjectNum);
+//        bo.setContendNum(contendNum);
+//        bo.setBidNum(bidNum);
+//        bo.setWinNum(winNum);
+//        boList.add(bo);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"招标的信息数量", "可项目测算数量",
+                "可投标规模数量", "可投标项目数量", "竞争对手",
+                "标书制作数", "中标数量"};
+
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();
+//        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (boList != null && boList.size() > 0) {
+            List<Integer> biddinginfoNums = new ArrayList<>();
+            List<Integer> projectEstimatesNums = new ArrayList<>();
+            List<Integer> scaleNums = new ArrayList<>();
+            List<Integer> biddingProjectNums = new ArrayList<>();
+            List<Integer> contendNums = new ArrayList<>();
+            List<Integer> bidNums = new ArrayList<>();
+            List<Integer> winNums = new ArrayList<>();
+            for (BiddingFigureBO figureBO : boList) {
+                text_list_3.add(figureBO.getBusinessType());
+
+                //柱状图数据
+                biddinginfoNums.add(figureBO.getBiddinginfoNum());
+                projectEstimatesNums.add(figureBO.getProjectEstimatesNum());
+                scaleNums.add(figureBO.getScaleNum());
+                biddingProjectNums.add(figureBO.getBiddingProjectNum());
+                contendNums.add(figureBO.getContendNum());
+                bidNums.add(figureBO.getBidNum());
+                winNums.add(figureBO.getWinNum());
+            }
+            List<List<Integer>> nums = new ArrayList<>();
+            nums.add(biddinginfoNums);
+            nums.add(projectEstimatesNums);
+            nums.add(scaleNums);
+            nums.add(biddingProjectNums);
+            nums.add(contendNums);
+            nums.add(bidNums);
+            nums.add(winNums);
+            String[] ziduan = new String[]{"招标的信息数量", "可项目测算数量",
+                    "可投标规模数量", "可投标项目数量", "竞争对手",
+                    "标书制作数", "中标数量"};
+//            List<SeriesBO> seriesBOList = new ArrayList<>();
+            for (int i = 0; i < 7; i++) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(ziduan[i]);
+                seriesBO.setType("bar");
+                Integer[] text_int_4 = new Integer[nums.get(0).size()];
+                text_int_4 = nums.get(0).toArray(text_int_4);
+                seriesBO.setData(text_int_4);
+                seriesBOList.add(seriesBO);
+            }
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+    //    @Override
 //    public List<String> info(SearchDTO to) throws SerException {
 //        try {
 

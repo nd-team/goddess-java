@@ -214,7 +214,7 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
 
     @Override
     public BackProgressBO importExcel(List<BackProgressTO> backProgressTOS) throws SerException {
-        List<BackProgress> backProgressList = BeanTransform.copyProperties(backProgressTOS, BackProgress.class);
+        List<BackProgress> backProgressList = new ArrayList<>(backProgressTOS.size());
         for (BackProgressTO to : backProgressTOS) {
             BackProgress backProgress = BeanTransform.copyProperties(to, BackProgress.class, true);
             backProgressList.add(backProgress);
@@ -228,31 +228,31 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
     public byte[] templateExport() throws SerException {
         List<BackProgressTemplateExcel> templateExcels = new ArrayList<>();
         BackProgressTemplateExcel templateExcel = new BackProgressTemplateExcel();
-        templateExcel.setOperatorName("test");
-        templateExcel.setArea("test");
-        templateExcel.setContractor("test");
-        templateExcel.setType("test");
-        templateExcel.setMajor("test");
-        templateExcel.setTaskName("test");
-        templateExcel.setFactory("test");
-        templateExcel.setSalesContractNum("test");
-        templateExcel.setOutsourceContractNum("test");
-        templateExcel.setTaskCase("test");
+        templateExcel.setOperatorName("运营商名称");
+        templateExcel.setArea("地区");
+        templateExcel.setContractor("外包单位");
+        templateExcel.setType("类型");
+        templateExcel.setMajor("专业");
+        templateExcel.setTaskName("派工名称");
+        templateExcel.setFactory("厂家");
+        templateExcel.setSalesContractNum("销售合同号");
+        templateExcel.setOutsourceContractNum("外包合同号");
+        templateExcel.setTaskCase("派工情况");
         templateExcel.setTaskMoney(0.0);
-        templateExcel.setCompleteStatus("test");
+        templateExcel.setCompleteStatus("实际完工状态");
         templateExcel.setCompleteTime(LocalDate.now());
         templateExcel.setClearingMoney(0.0);
         templateExcel.setAccountMoney(0.0);
         templateExcel.setClearingData(LocalDate.now());
         templateExcel.setSoftCoreReport(LocalDate.now());
         templateExcel.setSignature(LocalDate.now());
-        templateExcel.setProgressB("test");
+        templateExcel.setProgressB("结算进度:B");
         templateExcel.setDataUploadSystem(LocalDate.now());
         templateExcel.setManagerAudit(LocalDate.now());
         templateExcel.setAcceptApply(LocalDate.now());
         templateExcel.setOutsourceAudit(LocalDate.now());
         templateExcel.setOfficeAudit(LocalDate.now());
-        templateExcel.setProgressC("test");
+        templateExcel.setProgressC("结算进度:C");
         templateExcel.setSystemInvoice(LocalDate.now());
         templateExcel.setElectronicInvoice(LocalDate.now());
         templateExcel.setPhysicalInvoice(LocalDate.now());
@@ -261,19 +261,19 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         templateExcel.setPayTime(LocalDate.now());
         templateExcel.setInvoice(LocalDate.now());
         templateExcel.setAdvanceAccountTime(LocalDate.now());
-        templateExcel.setProgress("test");
+        templateExcel.setProgress(LocalDate.now());
         templateExcel.setArrivalTime(LocalDate.now());
-        templateExcel.setKpi("test");
-        templateExcel.setActualSituation("test");
-        templateExcel.setUnitType("test");
-        templateExcel.setTaskCaseRemark("test");
+        templateExcel.setKpi("kpi");
+        templateExcel.setActualSituation("现场实际情况");
+        templateExcel.setUnitType("设备型号");
+        templateExcel.setTaskCaseRemark("大概描述项目派工的情况备注");
         templateExcel.setScaleNum(0.0);
-        templateExcel.setApplyClearing(Boolean.FALSE);
-        templateExcel.setInfluenceClearing(Boolean.FALSE);
-        templateExcel.setClearingPlan("test");
-        templateExcel.setPerformProject("test");
-        templateExcel.setAscription("test");
-        templateExcel.setRemark("test");
+        templateExcel.setApplyClearing("是");
+        templateExcel.setInfluenceClearing("是");
+        templateExcel.setClearingPlan("结算计划");
+        templateExcel.setPerformProject("正在执行项目");
+        templateExcel.setAscription("归属");
+        templateExcel.setRemark("备注");
 
         templateExcels.add(templateExcel);
 
@@ -291,6 +291,7 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
             backProgress = BeanTransform.copyProperties(to, BackProgress.class, true);
             backProgress.setCreateTime(createTime);
             backProgress.setModifyTime(LocalDateTime.now());
+            super.update(backProgress);
             BackProgressBO backProgressBO = BeanTransform.copyProperties(backProgress, BackProgressBO.class);
             return backProgressBO;
         } else {
@@ -452,10 +453,6 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
             set.add(backProgress.getCompleteStatus());
         }
         return set;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(LocalDate.now().getYear());
     }
 
     @Override
@@ -1592,24 +1589,25 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         detailBO.setTotal(total);
         collectDetailBOS.add(detailBO);
     }
+
     //审批完成金额
-    private void aduitMoney(List<CollectDetailBO> collectDetailBOS) throws Exception{
+    private void aduitMoney(List<CollectDetailBO> collectDetailBOS) throws Exception {
         CollectDetailBO detailBO = new CollectDetailBO();
         detailBO.setSubject("审批完成金额");
         Double total = 0.0;
         String[] collectFields = new String[]{"january", "february", "march", "april", "may", "june",
                 "july", "august", "september", "october", "november", "december"};
-        for(String f:collectFields){
-            for(CollectDetailBO bo:collectDetailBOS){
-                if(bo.getSubject().equals("资料上传ERP系统") || bo.getSubject().equals("群主（项目经理）审核")
-                        ||bo.getSubject().equals("预接收申请") || bo.getSubject().equals("外包经理审核")
-                        ||bo.getSubject().equals("办事处副总审批")){
+        for (String f : collectFields) {
+            for (CollectDetailBO bo : collectDetailBOS) {
+                if (bo.getSubject().equals("资料上传ERP系统") || bo.getSubject().equals("群主（项目经理）审核")
+                        || bo.getSubject().equals("预接收申请") || bo.getSubject().equals("外包经理审核")
+                        || bo.getSubject().equals("办事处副总审批")) {
                     List<Field> fields = ClazzUtils.getFields(bo.getClass());
-                    for(Field field:fields){
-                        if(f.equals(field.getName())){
+                    for (Field field : fields) {
+                        if (f.equals(field.getName())) {
                             field.setAccessible(true);
                             Object val = field.get(bo);
-                            setVal(detailBO,f,val);
+                            setVal(detailBO, f, val);
                             break;
                         }
                     }
@@ -1622,23 +1620,24 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         detailBO.setTotal(total);
         collectDetailBOS.add(detailBO);
     }
+
     //结算资料完成金额
-    private void dataMoney(List<CollectDetailBO> collectDetailBOS) throws Exception{
+    private void dataMoney(List<CollectDetailBO> collectDetailBOS) throws Exception {
         CollectDetailBO detailBO = new CollectDetailBO();
         detailBO.setSubject("结算资料完成金额");
         Double total = 0.0;
         String[] collectFields = new String[]{"january", "february", "march", "april", "may", "june",
                 "july", "august", "september", "october", "november", "december"};
-        for(String f:collectFields){
-            for(CollectDetailBO bo:collectDetailBOS){
-                if(bo.getSubject().equals("制作结算资料") || bo.getSubject().equals("软调报告")
-                        ||bo.getSubject().equals("签字")){
+        for (String f : collectFields) {
+            for (CollectDetailBO bo : collectDetailBOS) {
+                if (bo.getSubject().equals("制作结算资料") || bo.getSubject().equals("软调报告")
+                        || bo.getSubject().equals("签字")) {
                     List<Field> fields = ClazzUtils.getFields(bo.getClass());
-                    for(Field field:fields){
-                        if(f.equals(field.getName())){
+                    for (Field field : fields) {
+                        if (f.equals(field.getName())) {
                             field.setAccessible(true);
                             Object val = field.get(bo);
-                            setVal(detailBO,f,val);
+                            setVal(detailBO, f, val);
                             break;
                         }
                     }
@@ -1651,6 +1650,7 @@ public class BackProgressSerImpl extends ServiceImpl<BackProgress, BackProgressD
         detailBO.setTotal(total);
         collectDetailBOS.add(detailBO);
     }
+
     private void setVal(CollectDetailBO detailBO, String fieldName, Object val) throws Exception {
         List<Field> fields = ClazzUtils.getFields(detailBO.getClass());
         for (Field field : fields) {

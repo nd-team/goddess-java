@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.vo;
 
+import com.bjike.goddess.reportmanagement.enums.ProfitType;
+import com.bjike.goddess.reportmanagement.enums.Type;
+
 /**
  * 利润表表现层对象
  *
@@ -34,8 +37,32 @@ public class ProfitVO {
      * 本年累计数
      */
     private Double currentYearAmount;
+    /**
+     * 利润类型
+     */
+    private ProfitType profitType;
 
-//    /**
+    /**
+     * 运算类型
+     */
+    private Type type;
+
+    public ProfitType getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(ProfitType profitType) {
+        this.profitType = profitType;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+    //    /**
 //     * 1季度
 //     */
 //    private Double firstSeason;

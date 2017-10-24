@@ -217,7 +217,7 @@ public class BackProgressTemplateExcel {
      * 进度
      */
     @ExcelHeader(name = "进度")
-    private String progress;
+    private LocalDate progress;
 
     /**
      * 到货时间
@@ -259,13 +259,13 @@ public class BackProgressTemplateExcel {
      * 是否可制作申请结算
      */
     @ExcelHeader(name = "是否可制作申请结算")
-    private Boolean applyClearing;
+    private String applyClearing;
 
     /**
      * 是否影响结算
      */
     @ExcelHeader(name = "是否影响结算")
-    private Boolean influenceClearing;
+    private String influenceClearing;
 
     /**
      * 结算计划
@@ -556,11 +556,11 @@ public class BackProgressTemplateExcel {
         this.advanceAccountTime = advanceAccountTime;
     }
 
-    public String getProgress() {
+    public LocalDate getProgress() {
         return progress;
     }
 
-    public void setProgress(String progress) {
+    public void setProgress(LocalDate progress) {
         this.progress = progress;
     }
 
@@ -612,19 +612,19 @@ public class BackProgressTemplateExcel {
         this.scaleNum = scaleNum;
     }
 
-    public Boolean getApplyClearing() {
+    public String getApplyClearing() {
         return applyClearing;
     }
 
-    public void setApplyClearing(Boolean applyClearing) {
+    public void setApplyClearing(String applyClearing) {
         this.applyClearing = applyClearing;
     }
 
-    public Boolean getInfluenceClearing() {
+    public String getInfluenceClearing() {
         return influenceClearing;
     }
 
-    public void setInfluenceClearing(Boolean influenceClearing) {
+    public void setInfluenceClearing(String influenceClearing) {
         this.influenceClearing = influenceClearing;
     }
 

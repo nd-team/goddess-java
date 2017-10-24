@@ -1,7 +1,5 @@
 package com.bjike.goddess.bidding.vo;
 
-import org.dom4j.io.STAXEventReader;
-
 import java.util.List;
 import java.util.Map;
 
@@ -10,20 +8,14 @@ import java.util.Map;
  */
 public class BiddingInfoCollectVO {
 
-//    /**
-//     * 地市
-//     */
-//    private List<String> cities;
-//    private Map<String, Integer> biddingMap;
-//    private Map<String,Integer> businessMap;
     /**
      * 招投标类型汇总集合
      */
-    private List<Map<String, String>> biddingMap;
+    private List<Map<String,String>> biddingMap;
     /**
      * 业务类型汇总集合
      */
-    private List<Map<String, String>> businessMap;
+    private List<Map<String,String>> businessMap;
     /**
      * 个数
      */

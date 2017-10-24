@@ -199,7 +199,7 @@ public class MainIncomeSerImpl extends ServiceImpl<MainIncome, MainIncomeDTO> im
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MainIncomeBO add(MainIncomeTO to) throws SerException {
-        MainIncome mainIncome = BeanTransform.copyProperties(to, MainIncome.class);
+        MainIncome mainIncome = BeanTransform.copyProperties(to, MainIncome.class,true);
         mainIncome.setCreateTime(LocalDateTime.now());
         super.save(mainIncome);
         MainIncomeBO mainIncomeBO = BeanTransform.copyProperties(mainIncome, MainIncomeBO.class);
@@ -217,6 +217,7 @@ public class MainIncomeSerImpl extends ServiceImpl<MainIncome, MainIncomeDTO> im
             mainIncome = BeanTransform.copyProperties(to,MainIncome.class,true);
             mainIncome.setCreateTime(createTime);
             mainIncome.setModifyTime(LocalDateTime.now());
+            super.update(mainIncome);
             MainIncomeBO mainIncomeBO = BeanTransform.copyProperties(mainIncome,MainIncomeBO.class);
             return mainIncomeBO;
         }else {

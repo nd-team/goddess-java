@@ -132,7 +132,7 @@ public class BackProgressAction extends BaseFileAction {
      * @param to
      * @param bindingResult
      * @return class BackProgressVO
-     * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/edit")
     public Result edit(@Validated(BackProgressTO.TestEdit.class) BackProgressTO to, BindingResult bindingResult) throws ActException {
@@ -150,7 +150,7 @@ public class BackProgressAction extends BaseFileAction {
      * @param id
      * @version v1
      */
-    @DeleteMapping("v1/delete")
+    @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
             backProgressAPI.delete(id);

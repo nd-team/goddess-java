@@ -1,9 +1,6 @@
 package com.bjike.goddess.bidding.api;
 
-import com.bjike.goddess.bidding.bo.BiddingCollectBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoBO;
-import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
-import com.bjike.goddess.bidding.bo.InfoBO;
+import com.bjike.goddess.bidding.bo.*;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
 import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
@@ -196,6 +193,49 @@ public interface BiddingInfoAPI {
      * @throws SerException
      */
     default List<BiddingCollectBO> totalCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 招投标流程进度管理图形日汇总
+     *
+     * @param to to
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO dayFigureCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 招投标流程进度管理图形周汇总
+     *
+     * @param to to
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO weekFigureCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 招投标流程进度管理图形月汇总
+     *
+     * @param to to
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO monthFigureCollect(BiddingCollectTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 招投标流程进度管理图形累计汇总
+     *
+     * @param to to
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO totalFigureCollect(BiddingCollectTO to) throws SerException {
         return null;
     }
     /**

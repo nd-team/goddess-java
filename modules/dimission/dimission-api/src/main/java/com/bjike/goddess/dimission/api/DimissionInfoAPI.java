@@ -316,4 +316,13 @@ public interface DimissionInfoAPI {
     default Integer getDimissionNum(String[] date) throws SerException {
         return null;
     }
+
+    /**
+     * chenjunhao
+     * 获取某员工的离职时间
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    String getTime(String name) throws SerException;
 }

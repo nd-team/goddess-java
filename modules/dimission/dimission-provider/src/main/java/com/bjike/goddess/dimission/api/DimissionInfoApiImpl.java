@@ -174,4 +174,9 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     public Integer getDimissionNum(String[] date) throws SerException {
         return dimissionInfoSer.getDimissionNum(date);
     }
+
+    @Override
+    public String getTime(String name) throws SerException {
+        return dimissionInfoSer.getTime(name);
+    }
 }

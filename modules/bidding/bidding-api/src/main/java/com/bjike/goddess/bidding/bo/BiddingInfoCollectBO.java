@@ -2,14 +2,13 @@ package com.bjike.goddess.bidding.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by ike on 17-5-5.
  */
-public class BiddingInfoCollectBO extends BaseBO{
+public class BiddingInfoCollectBO extends BaseBO {
 
     /**
      * 招投标类型汇总集合

@@ -25,7 +25,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-@Service("tableApiImpl")
+@Service("tableApiImpl1")
 public class TableApiImpl implements TableAPI {
     @Autowired
     private TableSer tableSer;
