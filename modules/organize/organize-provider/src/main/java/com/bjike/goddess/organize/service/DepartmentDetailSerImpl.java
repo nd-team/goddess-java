@@ -410,4 +410,14 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         List<DepartmentDetailBO> list = super.findBySql(sql, DepartmentDetailBO.class, fileds);
         return list;
     }
+
+    @Override
+    public List<String> findAllDepartment() throws SerException {
+        DepartmentDetailDTO dto = new DepartmentDetailDTO();
+        List<DepartmentDetail> departmentDetails = super.findByCis(dto);
+        if (null != departmentDetails && departmentDetails.size() > 0) {
+            return departmentDetails.stream().map(DepartmentDetail::getDepartment).distinct().collect(Collectors.toList());
+        }
+        return null;
+    }
 }

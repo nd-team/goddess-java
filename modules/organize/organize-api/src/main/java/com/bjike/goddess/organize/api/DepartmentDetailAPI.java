@@ -183,7 +183,7 @@ public interface DepartmentDetailAPI {
      * @return
      * @throws SerException
      */
-    default List<String> findPnameByAreaAndDepart(String area,String depart) throws SerException {
+    default List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
         return null;
     }
 
@@ -271,4 +271,13 @@ public interface DepartmentDetailAPI {
      */
     List<DepartmentDetailBO> departByName(String[] departs) throws SerException;
 
+    /**
+     * 查询所部的部门
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllDepartment() throws SerException {
+        return null;
+    }
 }

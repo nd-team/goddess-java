@@ -37,6 +37,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -1112,224 +1113,242 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         return os.toByteArray();
     }
 
-//    @Override
-//    public void importExcel(InputStream is) throws SerException {
-//        try {
-//            Excel excel = new Excel(0, 1);
-//            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
-//
-//            Set<Integer> seqNum = new HashSet<>();
-//            if (null != tos && tos.size() > 0) {
-//                List<PositionWorkDetailsImport> tocs = new ArrayList<>();
-//                List<PositionWorkDetails> positionWorkDetailses = new ArrayList<>(0);
-//                for (PositionWorkDetailsImport positionWorkDetailsImport : tos) {
-//                    seqNum.add(positionWorkDetailsImport.getSeqNum());
-//                }
-//
-//                for (Integer seq : seqNum) {
-//                    tocs = tos.stream().filter(str -> seq.equals(str.getSeqNum())).collect(Collectors.toList());
-//                    if (null != tocs && tocs.size() > 0) {
-//                        PositionWorkDetails entity = BeanTransform.copyProperties(tocs.get(0), PositionWorkDetails.class, true);
-//                        entity = super.save(entity);
-//                        if (tocs.size() >= 2) {
-//                            int total = tocs.size();
-//                            //得到的模块进行判断,是否是相同的数据
-//                            for (int i = 0; i < total; i++) {
-//                                PositionWorkDetailsImport temp1 = tocs.get(i);
-//                                PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
-//                                if (i + 1 < total) {
-//                                    temp2 = tocs.get(i + 1);
-//                                }
-//                                if (null != temp1 && null != temp2) {
-//                                    isRepeat(temp1, temp2);
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//
-//                    List<PositionWorkDetails> positionWorkDetailses = tos.get(seq);
-//
-//
-//                    List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
-//                    List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
-//                    List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
-//                    List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
-//                    List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
-//                    List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
-//                    for (FirmIntroExcel str : tos) {
-//                        if (str.getSeqNum().equals(seq)) {
-//                            firmIntroExcels.add(str);
-//                            HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str, HonorAndQualityTO.class);
-//                            MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str, MainBusinessIntroTO.class);
-//                            SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str, SuccessStoriesTO.class);
-//                            CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str, CustomerAndPartnerTO.class);
-//                            CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str, CommunicationPathTO.class);
-//                            if (isCheckNull(honorAndQualityTO)) {
-//                                honorAndQualityTOS.add(honorAndQualityTO);
-//                            }
-//                            if (isCheckNull(mainBusinessIntroTO)) {
-//                                mainBusinessIntroTOS.add(mainBusinessIntroTO);
-//                            }
-//                            if (isCheckNull(successStoriesTO)) {
-//                                successStoriesTOS.add(successStoriesTO);
-//                            }
-//                            if (isCheckNull(customerAndPartnerTO)) {
-//                                customerAndPartnerTOS.add(customerAndPartnerTO);
-//                            }
-//                            if (isCheckNull(communicationPathTO)) {
-//                                communicationPathTOS.add(communicationPathTO);
-//                            }
-//                        }
-//                    }
-////                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
-////                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
-////                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
-////                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
-////                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
-////                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
-////                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
-////                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-////                firmIntroAPI.save(firmIntroTO);
-////            }
-//
-//
-//                    positionWorkDetailsAPI.importExcel(is);
-//                }
+    @Override
+    public void importExcel(InputStream is) throws SerException {
+        try {
+            Excel excel = new Excel(0, 1);
+            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
+
+            Set<Integer> seqNum = new HashSet<>();
+            if (null != tos && tos.size() > 0) {
+                List<PositionWorkDetailsImport> tocs = new ArrayList<>();
+                List<PositionWorkDetails> positionWorkDetailses = new ArrayList<>(0);
+                for (PositionWorkDetailsImport positionWorkDetailsImport : tos) {
+                    seqNum.add(positionWorkDetailsImport.getSeqNum());
+                }
+
+                for (Integer seq : seqNum) {
+                    tocs = tos.stream().filter(str -> seq.equals(str.getSeqNum())).collect(Collectors.toList());
+                    if (null != tocs && tocs.size() > 0) {
+                        PositionWorkDetails entity = BeanTransform.copyProperties(tocs.get(0), PositionWorkDetails.class, true);
+                        entity = super.save(entity);
+                        if (tocs.size() >= 2) {
+                            int total = tocs.size();
+                            //得到的模块进行判断,是否是相同的数据
+                            for (int i = 0; i < total; i++) {
+                                PositionWorkDetailsImport temp1 = tocs.get(i);
+                                PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
+                                if (i + 1 < total) {
+                                    temp2 = tocs.get(i + 1);
+                                }
+                                if (null != temp1 && null != temp2) {
+                                    isRepeat(temp1, temp2);
+                                }
+                            }
+                        }
+                    }
+
+
+                    List<PositionWorkDetails> positionWorkDetailses = tos.get(seq);
+
+
+                    List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
+                    List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
+                    List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
+                    List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
+                    List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
+                    List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
+                    for (FirmIntroExcel str : tos) {
+                        if (str.getSeqNum().equals(seq)) {
+                            firmIntroExcels.add(str);
+                            HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str, HonorAndQualityTO.class);
+                            MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str, MainBusinessIntroTO.class);
+                            SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str, SuccessStoriesTO.class);
+                            CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str, CustomerAndPartnerTO.class);
+                            CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str, CommunicationPathTO.class);
+                            if (isCheckNull(honorAndQualityTO)) {
+                                honorAndQualityTOS.add(honorAndQualityTO);
+                            }
+                            if (isCheckNull(mainBusinessIntroTO)) {
+                                mainBusinessIntroTOS.add(mainBusinessIntroTO);
+                            }
+                            if (isCheckNull(successStoriesTO)) {
+                                successStoriesTOS.add(successStoriesTO);
+                            }
+                            if (isCheckNull(customerAndPartnerTO)) {
+                                customerAndPartnerTOS.add(customerAndPartnerTO);
+                            }
+                            if (isCheckNull(communicationPathTO)) {
+                                communicationPathTOS.add(communicationPathTO);
+                            }
+                        }
+                    }
+//                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
+//                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
+//                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
+//                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
+//                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
+//                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
+//                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
+//                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+//                firmIntroAPI.save(firmIntroTO);
 //            }
-//        } catch (Exception e) {
-//            throw new SerException(e.getMessage());
-//        }
-//    }
+
+
+                    positionWorkDetailsAPI.importExcel(is);
+                }
+            }
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 
     //判断两个对象中的属性是否都一致
-//    private Boolean isRepeat(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2) throws SerException {
-//        List<ModulesBO> modulesBOList = new ArrayList<>(0);
-//        Field[] fields1 = temp1.getClass().getDeclaredFields();
-//        Field[] fields2 = temp2.getClass().getDeclaredFields();
-//        List<String> nameList1 = new ArrayList<>(0);
-//        List<String> nameList2 = new ArrayList<>(0);
-//        List<Class> typeList1 = new ArrayList<>(0);
-//        List<Class> typeList2 = new ArrayList<>(0);
-//        List<Object> valList1 = new ArrayList<>(0);
-//        List<Object> valList2 = new ArrayList<>(0);
-//        try {
-//            for (int j = 0; j < 10; j++) {
-//                for (Field fi : fields1) {
-//                    nameList1.add(fi.getName());
-//                    typeList1.add(fi.getType());
-//                    fi.setAccessible(true); // 设置些属性是可以访问的
-//                    Object val = fi.get(temp1);
-//                    valList1.add(val);
-//                }
-//                for (Field fi : fields2) {
-//                    nameList2.add(fi.getName());
-//                    typeList2.add(fi.getType());
-//                    fi.setAccessible(true); // 设置些属性是可以访问的
-//                    Object val = fi.get(temp2);
-//                    valList2.add(val);
-//                }
-//
-//                ModulesImportTempBO modulesImportTempBO1 = new ModulesImportTempBO();
-////                ModulesImportTempBO modulesImportTempBO2 = new ModulesImportTempBO();
-//
-//                Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
-////                Field[] fields4 = modulesImportTempBO2.getClass().getDeclaredFields();
-//
-////                int z = 0;
-////                for (Field fi : fields3) {
-////                    z = 33 + (j - 1) * 19;
-////                    if(z < 33 + j * 19) {
-////                        fi.setAccessible(true); // 设置些属性是可以访问的
-////                        fi.set(modulesImportTempBO1, valList1.get(z));
-////                    }
-////                }
-////                for (Field fi : fields4) {
-////                    z = 33 + (j - 1) * 19;
-////                    if(z < 33 + j * 19) {
-////                        fi.setAccessible(true); // 设置些属性是可以访问的
-////                        fi.set(modulesImportTempBO2, valList2.get(z));
-////                    }
-////                }
-//
-//                int z = 33 + (j - 1) * 19;
-//                //是否相同
-//                Boolean tar = true;
-//                for (; z < 33 + j * 19; z++) {
-//                    Object object1 = valList1.get(z);
-//                    Object object2 = valList2.get(z);
-//                    if (tar && null != object1 && null != object2 && !object1.equals(object2)) {
-//                        tar = false;
-//                    }
-//
-//                    if (null == object1 || null == object2) {
-//                        tar = false;
-//                    }
-//                    //如果属性值相同,则该条数据的该模块与下一条数据的该模块相同
-//                    if (tar) {
-//                        ModulesBO modulesBO = new ModulesBO();
-//                        //把模块的数据跟模块子表的数据存放到ModulesBO里面
-//                        for (Field fi : fields3) {
-////                            z = 33 + (j - 1) * 19;//到下一个模块的长度
-//                            z = 33 + (j - 1) * 19;//到模块子表的长度
-//                            if (z < 33 + (j - 1) * 19 + 8) {
-//                                fi.setAccessible(true); // 设置些属性是可以访问的
-//                                fi.set(modulesImportTempBO1, valList1.get(z));
-//                            }
-//                        }
-//                        BeanUtils.copyProperties(modulesImportTempBO1, modulesBO);
-//                        IndicatorImportTempBO indicatorImportTempBO1 = new IndicatorImportTempBO();
-//                        Field[] fields5 = indicatorImportTempBO1.getClass().getDeclaredFields();
-//
-//                        //把模块的子表的数据存放到ModulesBO里面
-//                        for (Field fi : fields5) {
-////                            z = 33 + (j - 1) * 19;//到下一个模块的长度
-//                            z = 33 + (j - 1) * 19 + 8;//到模块子表的长度
-//                            if (z < 33 + (j - 1) * 19 + 11) {
-//                                fi.setAccessible(true); // 设置些属性是可以访问的
-//                                fi.set(indicatorImportTempBO1, valList1.get(z));
-//                            }
-//                        }
-//                        IndicatorBO indicatorBO = new IndicatorBO();
-//                        BeanUtils.copyProperties(indicatorImportTempBO1, indicatorBO);
-//
-//                        modulesBO.getIndicatorBOList().add(indicatorBO);
-//                        modulesBOList.add(modulesBO);
-//                    } else {
-//
-//                    }
-//
-//                }
-//
-//
-//            }
-//
-//
-//            for (int i = 33; i <) {
-//            }
-//
-//            Field[] fields1 = excel.getClass().getDeclaredFields();
-//            int i = 3 + (j - 1) * 4;
-//            int z = 0;
-//            for (Field fi : fields1) {
-//                if (z < 4) {
-//                    if (fi.getName().equals(fields1[i].getName())) {
-//                        if (null != valList.get(z)) {
-//                            fi.setAccessible(true); // 设置些属性是可以访问的
-//                            fi.set(excel, valList.get(z));
-//                        }
-//                        z += 1;
-//                        i += 1;
+    private Boolean isRepeat(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2) throws SerException {
+        List<ModulesBO> modulesBOList = new ArrayList<>(0);
+        Field[] fields1 = temp1.getClass().getDeclaredFields();
+        Field[] fields2 = temp2.getClass().getDeclaredFields();
+        List<String> nameList1 = new ArrayList<>(0);
+        List<String> nameList2 = new ArrayList<>(0);
+        List<Class> typeList1 = new ArrayList<>(0);
+        List<Class> typeList2 = new ArrayList<>(0);
+        List<Object> valList1 = new ArrayList<>(0);
+        List<Object> valList2 = new ArrayList<>(0);
+        try {
+            for (int j = 0; j < 10; j++) {
+                for (Field fi : fields1) {
+                    nameList1.add(fi.getName());
+                    typeList1.add(fi.getType());
+                    fi.setAccessible(true); // 设置些属性是可以访问的
+                    Object val = fi.get(temp1);
+                    valList1.add(val);
+                }
+                for (Field fi : fields2) {
+                    nameList2.add(fi.getName());
+                    typeList2.add(fi.getType());
+                    fi.setAccessible(true); // 设置些属性是可以访问的
+                    Object val = fi.get(temp2);
+                    valList2.add(val);
+                }
+
+                ModulesImportTempBO modulesImportTempBO1 = new ModulesImportTempBO();
+//                ModulesImportTempBO modulesImportTempBO2 = new ModulesImportTempBO();
+
+                Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
+//                Field[] fields4 = modulesImportTempBO2.getClass().getDeclaredFields();
+
+//                int z = 0;
+//                for (Field fi : fields3) {
+//                    z = 33 + (j - 1) * 19;
+//                    if(z < 33 + j * 19) {
+//                        fi.setAccessible(true); // 设置些属性是可以访问的
+//                        fi.set(modulesImportTempBO1, valList1.get(z));
 //                    }
 //                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return excel;
-//
-//        return null;
-//    }
+//                for (Field fi : fields4) {
+//                    z = 33 + (j - 1) * 19;
+//                    if(z < 33 + j * 19) {
+//                        fi.setAccessible(true); // 设置些属性是可以访问的
+//                        fi.set(modulesImportTempBO2, valList2.get(z));
+//                    }
+//                }
+
+                int z = 33 + (j - 1) * 19;
+                //是否相同
+                Boolean tar = true;
+                for (; z < 33 + j * 19; z++) {
+                    Object object1 = valList1.get(z);
+                    Object object2 = valList2.get(z);
+                    if (tar && null != object1 && null != object2 && !object1.equals(object2)) {
+                        tar = false;
+                    }
+
+                    if (null == object1 || null == object2) {
+                        tar = false;
+                    }
+                    //如果属性值相同,则该条数据的该模块与下一条数据的该模块相同
+                    if (tar) {
+                        modulesBOList.add(transToModuleBO(fields3, z, j, modulesImportTempBO1, valList1));
+                    } else {
+
+
+
+                        modulesBOList.add(transToModuleBO(fields3, z, j, modulesImportTempBO1, valList1));
+                    }
+
+                }
+
+
+            }
+
+
+            for (int i = 33; i <) {
+            }
+
+            Field[] fields1 = excel.getClass().getDeclaredFields();
+            int i = 3 + (j - 1) * 4;
+            int z = 0;
+            for (Field fi : fields1) {
+                if (z < 4) {
+                    if (fi.getName().equals(fields1[i].getName())) {
+                        if (null != valList.get(z)) {
+                            fi.setAccessible(true); // 设置些属性是可以访问的
+                            fi.set(excel, valList.get(z));
+                        }
+                        z += 1;
+                        i += 1;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return excel;
+
+        return null;
+    }
+
+    //
+    private ModulesBO transToModuleBO(Field[] fields3, int z, int j, ModulesImportTempBO modulesImportTempBO1, List<Object> valList1) throws SerException {
+        try {
+            ModulesBO modulesBO = new ModulesBO();
+            //把模块的数据跟模块子表的数据存放到ModulesBO里面
+            for (Field fi : fields3) {
+//          z = 33 + (j - 1) * 19;//到下一个模块的长度
+                z = 33 + (j - 1) * 19;//到模块子表的长度
+                if (z < 33 + (j - 1) * 19 + 8) {
+                    fi.setAccessible(true); // 设置些属性是可以访问的
+                    fi.set(modulesImportTempBO1, valList1.get(z));
+                }
+            }
+            if (isCheckNull(modulesImportTempBO1)) {
+                BeanUtils.copyProperties(modulesImportTempBO1, modulesBO);
+                IndicatorImportTempBO indicatorImportTempBO1 = new IndicatorImportTempBO();
+                Field[] fields5 = indicatorImportTempBO1.getClass().getDeclaredFields();
+
+                //把模块的子表的数据存放到ModulesBO里面
+                for (Field fi : fields5) {
+//                            z = 33 + (j - 1) * 19;//到下一个模块的长度
+                    z = 33 + (j - 1) * 19 + 8;//到模块子表的长度
+                    if (z < 33 + (j - 1) * 19 + 11) {
+                        fi.setAccessible(true); // 设置些属性是可以访问的
+                        fi.set(indicatorImportTempBO1, valList1.get(z));
+                    }
+                }
+                IndicatorBO indicatorBO = new IndicatorBO();
+                if (isCheckNull(indicatorImportTempBO1)) {
+                    BeanUtils.copyProperties(indicatorImportTempBO1, indicatorBO);
+
+                    modulesBO.getIndicatorBOList().add(indicatorBO);
+
+                    return modulesBO;
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 
     //判断某个类的所有属性是否都为空
     private Boolean isCheckNull(Object obj) {

@@ -180,4 +180,9 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public List<String> names() throws SerException {
         return positionDetailUserSer.names();
     }
+
+    @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        return positionDetailUserSer.getByName(name);
+    }
 }

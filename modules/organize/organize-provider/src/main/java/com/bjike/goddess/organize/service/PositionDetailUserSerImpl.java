@@ -772,4 +772,20 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         return result;
     }
+
+    @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select area, number, department, position ");
+        sql.append(" from organize_department_detail a, organize_position_detail b, organize_position_detail_user c, organize_position_detail_user_table d");
+        sql.append(" where c.name = '" + name + "' ");
+        sql.append(" and c.id = d.user_id ");
+        sql.append(" and d.position_id = b.id ");
+        sql.append(" and b.department_id = a.id ");
+        String[] fildes = new String[]{"area", "number", "department", "position"};
+        List<InternalContactsConditionBO> internalContactsConditionBOs = super.findBySql(sql.toString(), InternalContactsConditionBO.class, fildes);
+        if (null != internalContactsConditionBOs && internalContactsConditionBOs.size() > 0) {
+            return internalContactsConditionBOs.get(0);
+        }
+        return null;
+    }
 }
