@@ -99,10 +99,8 @@ public class DimissionInfoAct extends BaseFileAction {
     @GetMapping("v1/sonPermission")
     public Result sonPermission() throws ActException {
         try {
-
             List<SonPermissionObject> hasPermissionList = dimissionInfoAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
-
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -338,6 +336,7 @@ public class DimissionInfoAct extends BaseFileAction {
     @GetMapping("v1/presumeList")
     public Result presumeList(DimissionInfoDTO dto) throws ActException {
         try {
+            dimissionInfoAPI.presumeList(dto);
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.presumeList(dto), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

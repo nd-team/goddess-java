@@ -138,4 +138,14 @@ public interface InterviewAPI {
     default Boolean detainment(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
 }

@@ -10,8 +10,6 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.event.api.EventAPI;
-import com.bjike.goddess.event.enums.Permissions;
-import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.managementpromotion.api.LevelDesignAPI;
 import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
@@ -30,8 +28,6 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
-//import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -41,11 +37,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+//import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+
+//import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 
 /**
  * 管理等级晋升申请业务实现
@@ -65,7 +64,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     private LevelShowAPI levelShowAPI;
     @Autowired
     private MessageAPI messageAPI;
-//    @Autowired
+    //    @Autowired
 //    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private UserAPI userAPI;
@@ -501,59 +500,58 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         return set;
     }
 
-    @Override
-    @Transactional(rollbackFor = {SerException.class})
-    public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
-        checkAddIdentity();
-        PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
-        String token = RpcTransmit.getUserToken();
-        if (moduleAPI.isCheck("staffentry")) {
-            RpcTransmit.transmitUserToken(token);
+//    @Override
+//    @Transactional(rollbackFor = {SerException.class})
+//    public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
+//        checkAddIdentity();
+//        PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
+//        String token = RpcTransmit.getUserToken();
+//        if (moduleAPI.isCheck("staffentry")) {
+//            RpcTransmit.transmitUserToken(token);
 //            List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
-            List<EntryBasicInfoBO> list = null;
-            if ((list != null) && (list.size() != 0)) {
-                LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
-                int entryYear = time.getYear();
-                int entryMonth = time.getMonthValue();
-                int year = LocalDate.now().getYear();
-                int month = LocalDate.now().getMonthValue();
-                if (month - entryMonth >= 0) {
-                    if (year - entryYear > 0) {
-                        double d = (year - entryYear) * 12 + (month - entryMonth);
-                        entity.setWorkAge(d);
-                    } else {
-                        entity.setWorkAge((double) (month - entryMonth));
-                    }
-                } else {
-                    double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
-                    entity.setWorkAge(d);
-                }
-            }
-        }
-        if (moduleAPI.isCheck("regularization")) {
-            RpcTransmit.transmitUserToken(token);
-            String time = regularizationAPI.time(to.getEmployeeId());
-            if (null != time) {
-                LocalDate date = DateUtil.parseDate(time);
-                entity.setPositiveDate(date);
-            }
-        }
-        super.save(entity);
-        if (moduleAPI.isCheck("event")) {
-            for (String s : events(entity.getName())) {
-                EventTO eventTO = new EventTO();
-                eventTO.setProject("管理等级晋升");
-                eventTO.setContent("管理等级晋升申请审核");
-                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
-                eventTO.setName(s);
-                eventTO.setPermissions(Permissions.ADUIT);
-                eventTO.setEventId(entity.getId());
-                RpcTransmit.transmitUserToken(token);
-                eventAPI.save(eventTO);
-            }
-        }
-        return BeanTransform.copyProperties(entity, PromotionApplyBO.class);
-    }
+//            if ((list != null) && (list.size() != 0)) {
+//                LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
+//                int entryYear = time.getYear();
+//                int entryMonth = time.getMonthValue();
+//                int year = LocalDate.now().getYear();
+//                int month = LocalDate.now().getMonthValue();
+//                if (month - entryMonth >= 0) {
+//                    if (year - entryYear > 0) {
+//                        double d = (year - entryYear) * 12 + (month - entryMonth);
+//                        entity.setWorkAge(d);
+//                    } else {
+//                        entity.setWorkAge((double) (month - entryMonth));
+//                    }
+//                } else {
+//                    double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
+//                    entity.setWorkAge(d);
+//                }
+//            }
+//        }
+//        if (moduleAPI.isCheck("regularization")) {
+//            RpcTransmit.transmitUserToken(token);
+//            String time = regularizationAPI.time(to.getEmployeeId());
+//            if (null != time) {
+//                LocalDate date = DateUtil.parseDate(time);
+//                entity.setPositiveDate(date);
+//            }
+//        }
+//        super.save(entity);
+//        if (moduleAPI.isCheck("event")) {
+//            for (String s : events(entity.getName())) {
+//                EventTO eventTO = new EventTO();
+//                eventTO.setProject("管理等级晋升");
+//                eventTO.setContent("管理等级晋升申请审核");
+//                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
+//                eventTO.setName(s);
+//                eventTO.setPermissions(Permissions.ADUIT);
+//                eventTO.setEventId(entity.getId());
+//                RpcTransmit.transmitUserToken(token);
+//                eventAPI.save(eventTO);
+//            }
+//        }
+//        return BeanTransform.copyProperties(entity, PromotionApplyBO.class);
+//    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -576,62 +574,61 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         }
     }
 
-    @Override
-    @Transactional(rollbackFor = {SerException.class})
-    public void edit(PromotionApplyTO to) throws SerException {
-        checkAddIdentity();
-        PromotionApply entity = super.findById(to.getId());
-        if (entity == null) {
-            throw new SerException("对象不存在!");
-        }
-        LocalDateTime a = entity.getCreateTime();
-        boolean b1 = entity.getIsConform() == null;
-        boolean b2 = entity.getProjectManagerOpinion() == null;
-        boolean b3 = entity.getResourceDepartmentOpinion() == null;
-        boolean b4 = entity.getCommerceDepartmentOpinion() == null;
-        boolean b5 = entity.getModulerOpinion() == null;
-        boolean b6 = entity.getManagerOpinion() == null;
-        if (b1 && b2 && b3 && b4 && b5 && b6) {
-            entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
-            String token = RpcTransmit.getUserToken();
-            if (moduleAPI.isCheck("staffentry")) {
-                RpcTransmit.transmitUserToken(token);
+//    @Override
+//    @Transactional(rollbackFor = {SerException.class})
+//    public void edit(PromotionApplyTO to) throws SerException {
+//        checkAddIdentity();
+//        PromotionApply entity = super.findById(to.getId());
+//        if (entity == null) {
+//            throw new SerException("对象不存在!");
+//        }
+//        LocalDateTime a = entity.getCreateTime();
+//        boolean b1 = entity.getIsConform() == null;
+//        boolean b2 = entity.getProjectManagerOpinion() == null;
+//        boolean b3 = entity.getResourceDepartmentOpinion() == null;
+//        boolean b4 = entity.getCommerceDepartmentOpinion() == null;
+//        boolean b5 = entity.getModulerOpinion() == null;
+//        boolean b6 = entity.getManagerOpinion() == null;
+//        if (b1 && b2 && b3 && b4 && b5 && b6) {
+//            entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
+//            String token = RpcTransmit.getUserToken();
+//            if (moduleAPI.isCheck("staffentry")) {
+//                RpcTransmit.transmitUserToken(token);
 //                List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
-                List<EntryBasicInfoBO> list = null;
-                if ((list != null) && (list.size() != 0)) {
-                    LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
-                    int entryYear = time.getYear();
-                    int entryMonth = time.getMonthValue();
-                    int year = LocalDate.now().getYear();
-                    int month = LocalDate.now().getMonthValue();
-                    if (month - entryMonth >= 0) {
-                        if (year - entryYear > 0) {
-                            double d = (year - entryYear) * 12 + (month - entryMonth);
-                            entity.setWorkAge(d);
-                        } else {
-                            entity.setWorkAge((double) (month - entryMonth));
-                        }
-                    } else {
-                        double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
-                        entity.setWorkAge(d);
-                    }
-                }
-            }
-            if (moduleAPI.isCheck("regularization")) {
-                RpcTransmit.transmitUserToken(token);
-                String time = regularizationAPI.time(to.getEmployeeId());
-                if (null != time) {
-                    LocalDate date = DateUtil.parseDate(time);
-                    entity.setPositiveDate(date);
-                }
-            }
-            entity.setCreateTime(a);
-            entity.setModifyTime(LocalDateTime.now());
-            super.update(entity);
-        } else {
-            throw new SerException("已审核，不能编辑");
-        }
-    }
+//                if ((list != null) && (list.size() != 0)) {
+//                    LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
+//                    int entryYear = time.getYear();
+//                    int entryMonth = time.getMonthValue();
+//                    int year = LocalDate.now().getYear();
+//                    int month = LocalDate.now().getMonthValue();
+//                    if (month - entryMonth >= 0) {
+//                        if (year - entryYear > 0) {
+//                            double d = (year - entryYear) * 12 + (month - entryMonth);
+//                            entity.setWorkAge(d);
+//                        } else {
+//                            entity.setWorkAge((double) (month - entryMonth));
+//                        }
+//                    } else {
+//                        double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
+//                        entity.setWorkAge(d);
+//                    }
+//                }
+//            }
+//            if (moduleAPI.isCheck("regularization")) {
+//                RpcTransmit.transmitUserToken(token);
+//                String time = regularizationAPI.time(to.getEmployeeId());
+//                if (null != time) {
+//                    LocalDate date = DateUtil.parseDate(time);
+//                    entity.setPositiveDate(date);
+//                }
+//            }
+//            entity.setCreateTime(a);
+//            entity.setModifyTime(LocalDateTime.now());
+//            super.update(entity);
+//        } else {
+//            throw new SerException("已审核，不能编辑");
+//        }
+//    }
 
     @Override
     public List<PromotionApplyBO> find(PromotionApplyDTO dto) throws SerException {

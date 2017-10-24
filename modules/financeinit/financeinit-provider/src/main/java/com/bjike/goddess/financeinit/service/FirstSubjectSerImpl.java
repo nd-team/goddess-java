@@ -21,13 +21,11 @@ import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -389,16 +387,16 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
     @Override
     public FirstSubjectBO importExcel(List<FirstSubjectTO> firstSubjectTO) throws SerException {
         List<FirstSubject> list = new ArrayList<>();
-        if( firstSubjectTO!= null && firstSubjectTO.size()>0 ){
+        if (firstSubjectTO != null && firstSubjectTO.size() > 0) {
             String code = getCodeGenerate(firstSubjectTO.get(0).getCategory());
-            for(FirstSubjectTO str : firstSubjectTO ){
+            for (FirstSubjectTO str : firstSubjectTO) {
 
                 FirstSubjectDTO dto = new FirstSubjectDTO();
                 dto.getConditions().add(Restrict.eq("name", str.getName()));
                 dto.getConditions().add(Restrict.eq("category", str.getCategory()));
                 Long count = super.count(dto);
                 if (count > 0) {
-                    throw new SerException("该级别所属类别'"+str.getCategory()+"'下的一级类别名'"+str.getName()+"'已经存在，不可以再填,请检查导入数据");
+                    throw new SerException("该级别所属类别'" + str.getCategory() + "'下的一级类别名'" + str.getName() + "'已经存在，不可以再填,请检查导入数据");
                 }
 
 //                String code = getCodeGenerate(str.getCategory());
@@ -406,15 +404,15 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
                 FirstSubject firstSubject = BeanTransform.copyProperties(str, FirstSubject.class, true);
                 firstSubject.setCode(code);
                 firstSubject.setCreateTime(LocalDateTime.now());
-                list.add( firstSubject );
+                list.add(firstSubject);
 
                 //
                 int num = Integer.parseInt(code.trim()) + 1;
                 code = String.valueOf(num);
             }
         }
-        if( list != null && list.size() >0 ){
-                super.save( list );
+        if (list != null && list.size() > 0) {
+            super.save(list);
         }
         return new FirstSubjectBO();
     }
@@ -440,42 +438,57 @@ public class FirstSubjectSerImpl extends ServiceImpl<FirstSubject, FirstSubjectD
 //        case "资产类":"负债类":"共同类": "权益类":"成本类":"损益类":
         FirstSubjectTemplateExport excel = new FirstSubjectTemplateExport();
         excel.setCategory("资产类");
-        excel.setName( "test1" );
+        excel.setName("test1");
         excel.setRemark("资产类的描述");
-        template.add( excel );
+        template.add(excel);
 
         FirstSubjectTemplateExport excel2 = new FirstSubjectTemplateExport();
-        excel2.setCategory("负债类" );
-        excel2.setName( "test2");
+        excel2.setCategory("负债类");
+        excel2.setName("test2");
         excel2.setRemark("负债类的描述");
         template.add(excel2);
 
         FirstSubjectTemplateExport excel3 = new FirstSubjectTemplateExport();
-        excel3.setCategory("共同类" );
-        excel3.setName( "test3");
+        excel3.setCategory("共同类");
+        excel3.setName("test3");
         excel3.setRemark("共同类的描述");
         template.add(excel3);
 
         FirstSubjectTemplateExport excel4 = new FirstSubjectTemplateExport();
-        excel4.setCategory("权益类" );
-        excel4.setName( "test4");
+        excel4.setCategory("权益类");
+        excel4.setName("test4");
         excel4.setRemark("权益类的描述");
         template.add(excel4);
 
         FirstSubjectTemplateExport excel5 = new FirstSubjectTemplateExport();
-        excel5.setCategory("成本类" );
-        excel5.setName( "test5");
+        excel5.setCategory("成本类");
+        excel5.setName("test5");
         excel5.setRemark("成本类的描述");
         template.add(excel5);
 
         FirstSubjectTemplateExport excel6 = new FirstSubjectTemplateExport();
-        excel6.setCategory("损益类" );
-        excel6.setName( "test6");
+        excel6.setCategory("损益类");
+        excel6.setName("test6");
         excel6.setRemark("损益类的描述");
         template.add(excel6);
 
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(template, exce);
         return bytes;
+    }
+
+    @Override
+    public List<String> listAllFirstAndCode() throws SerException {
+        String[] field = new String[]{"name", "code"};
+        String sql = " select name,code  from financeinit_firstsubject group by name ";
+        List<FirstSubject> list = super.findBySql(sql, FirstSubject.class, field);
+        List<String> stringList = new ArrayList<>(0);
+        list.stream().forEach(obj -> {
+            String code = obj.getCode();
+            String name = obj.getName();
+            String codeAndName = code + ":" + name;
+            stringList.add(codeAndName);
+        });
+        return stringList;
     }
 }

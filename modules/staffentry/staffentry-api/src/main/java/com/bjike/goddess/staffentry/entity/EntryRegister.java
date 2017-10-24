@@ -180,7 +180,7 @@ public class EntryRegister extends BaseEntity {
     /**
      * 入职日期 
      */
-    @Column(nullable = false, columnDefinition = "DATE COMMENT '入职日期'")
+    @Column(name = "inductionDate",nullable = false, columnDefinition = "DATE COMMENT '入职日期'")
     private LocalDate inductionDate;
 
 

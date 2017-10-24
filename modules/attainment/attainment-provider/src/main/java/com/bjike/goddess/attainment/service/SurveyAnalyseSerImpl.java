@@ -50,6 +50,7 @@ public class SurveyAnalyseSerImpl extends ServiceImpl<SurveyAnalyse, SurveyAnaly
 
         bo.setPlanId(entity.getPlan().getId());
         BeanTransform.copyProperties(entity, bo, true);
+        bo.setRemark(entity.getRemark());
         return bo;
     }
 

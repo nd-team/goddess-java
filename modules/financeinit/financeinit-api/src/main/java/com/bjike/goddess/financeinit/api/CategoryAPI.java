@@ -151,4 +151,12 @@ public interface CategoryAPI {
         return null;
     }
 
+    /**
+     * 根据一级科目判断是否属于资产类
+     * zhuangkaiqin
+     */
+    default Boolean isAssets(String firstSubject) throws SerException {
+        return null;
+    }
+
 }

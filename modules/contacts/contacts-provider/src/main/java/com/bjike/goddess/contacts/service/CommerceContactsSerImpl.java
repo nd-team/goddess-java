@@ -343,7 +343,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Override
     public List<MobileCommerceContactsBO> mobileList(CommerceContactsDTO dto) throws SerException {
         searchMobileCondition(dto);
-        List<CommerceContacts> list = super.findByPage(dto);
+        List<CommerceContacts> list = super.findByCis(dto);
         List<CommerceContactsBO> commerceContactsBOs = BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
         if (!CollectionUtils.isEmpty(commerceContactsBOs)) {
             List<MobileCommerceContactsBO> bos = BeanTransform.copyProperties(commerceContactsBOs, MobileCommerceContactsBO.class, "headSculpture");

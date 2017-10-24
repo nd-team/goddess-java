@@ -36,6 +36,7 @@
     <dubbo:service interface="com.bjike.goddess.organize.api.ReflectAPI" ref="reflectApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.WorkRangeAPI" ref="workRangeApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.ModuleTypeAPI" ref="moduleTypeApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.organize.api.ModulesAPI" ref="modulesApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" ref="positionDetailUserApiImpl"/>
 
 

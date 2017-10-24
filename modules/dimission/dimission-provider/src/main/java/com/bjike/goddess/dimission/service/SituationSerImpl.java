@@ -210,7 +210,7 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
     @Override
     public SituationBO update(SituationTO to) throws SerException {
         Situation entity = super.findById(to.getId());
-        if (null != entity) {
+        if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
         BeanUtils.copyProperties(to, entity);
@@ -224,7 +224,7 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
     @Override
     public SituationBO delete(String id) throws SerException {
         Situation entity = super.findById(id);
-        if (null != entity) {
+        if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
         SituationBO situationBO = BeanTransform.copyProperties(entity, SituationBO.class, false);
@@ -243,7 +243,7 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
     @Override
     public SituationBO getById(String id) throws SerException {
         Situation entity = super.findById(id);
-        if (null != entity) {
+        if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
         SituationBO situationbo = BeanTransform.copyProperties(entity, SituationBO.class, false);
@@ -296,6 +296,12 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
             dimissionCollectBOs.add(getDimissionCollectBO(distinctCollectConditionBO, startTime, endTime));
         }
         return dimissionCollectBOs;
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        SituationDTO situationDTO = new SituationDTO();
+        return super.count(situationDTO);
     }
 
 
@@ -444,6 +450,9 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
 
     private Integer getData(CollectConditionBO collectConditionBO) throws SerException {
         String value1 = collectConditionBO.getValue().substring(collectConditionBO.getValue().indexOf("_") + 1, collectConditionBO.getValue().length());
+        if("left".equals(value1)){
+            value1 = "left1";
+        }
         StringBuilder sql = new StringBuilder(" SELECT count(" + collectConditionBO.getValue() + ") as " + value1 + " ");
         sql.append(" FROM " + collectConditionBO.getTable() + " ");
         sql.append(" WHERE " + collectConditionBO.getValue() + " = 1 ");
