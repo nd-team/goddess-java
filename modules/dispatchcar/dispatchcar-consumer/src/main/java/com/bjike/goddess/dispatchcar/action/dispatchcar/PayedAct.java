@@ -9,19 +9,25 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.CollectDispatchcarBO;
 import com.bjike.goddess.dispatchcar.bo.PayedCollectBO;
+import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.DispatchcarDeleteFileTO;
 import com.bjike.goddess.dispatchcar.to.ExportDispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
+import com.bjike.goddess.dispatchcar.vo.CollectDispatchcarVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import com.bjike.goddess.dispatchcar.vo.PayedCollectVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +54,29 @@ public class PayedAct extends BaseFileAction{
 
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = dispatchCarInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表分页查询
@@ -199,6 +228,24 @@ public class PayedAct extends BaseFileAction{
             List<PayedCollectBO> boList = dispatchCarInfoAPI.collectPayed(startTime,endTime);
             List<PayedCollectVO> voList = BeanTransform.copyProperties(boList,PayedCollectVO.class);
             return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 出车汇总
+     * @param dispatchcarDTO
+     * @return class CollectDispatchcarVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count/car")
+    public Result countCar(CollectDispatchcarDTO dispatchcarDTO) throws ActException{
+        try {
+            List<CollectDispatchcarBO> collectDispatchcarBOS = dispatchCarInfoAPI.countCar(dispatchcarDTO);
+            List<CollectDispatchcarVO> collectDispatchcarVOS = BeanTransform.copyProperties(collectDispatchcarBOS,CollectDispatchcarVO.class);
+            return ActResult.initialize(collectDispatchcarBOS);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

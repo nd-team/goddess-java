@@ -23,4 +23,12 @@ public interface TableAPI {
      * @throws SerException
      */
     Set<String> tables(TableDTO dto) throws SerException;
+
+    /**
+     * 通过id数组查找表名称
+     * @param ids
+     * @return
+     * @throws SerException
+     */
+    String[] names(String[] ids) throws SerException;
 }

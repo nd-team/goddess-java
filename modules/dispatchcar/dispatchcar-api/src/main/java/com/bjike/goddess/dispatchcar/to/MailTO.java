@@ -1,6 +1,11 @@
 package com.bjike.goddess.dispatchcar.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: [jiangzaixuan]
@@ -13,32 +18,38 @@ public class MailTO extends BaseTO{
     /**
      * 寄件日期
      */
+    @NotBlank(message = "寄件日期不能为空", groups = {ADD.class, EDIT.class})
     private String sendDate;
 
     /**
      * 存档联是否寄件
      */
+    @NotNull(message = "存档联是否寄件不能为空", groups = {ADD.class, EDIT.class})
     private Boolean ifSendArchiveAl;
 
     /**
      * 报销联是否寄件
      */
+    @NotNull(message = "报销联是否寄件不能为空", groups = {ADD.class, EDIT.class})
     private Boolean ifSendReimbursementAl;
 
     /**
      * 过路停车费总额
      */
+    @NotNull(message = "过路停车费总额不能为空", groups = {ADD.class, EDIT.class})
     private Double totalParking;
 
 
     /**
      * 过路停车费小票总数
      */
+    @NotNull(message = "过路停车费小票总数不能为空", groups = {ADD.class, EDIT.class})
     private Integer tatalReceipts;
 
     /**
      * 加油小票是否寄件
      */
+    @NotNull(message = "加油小票是否寄件不能为空", groups = {ADD.class, EDIT.class})
     private Boolean ifSendAddOilReceipts;
 
 

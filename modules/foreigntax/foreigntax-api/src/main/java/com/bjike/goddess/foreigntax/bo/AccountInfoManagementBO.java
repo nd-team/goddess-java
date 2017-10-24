@@ -19,28 +19,22 @@ public class AccountInfoManagementBO extends BaseBO {
     private String company;
 
     /**
-     * 所属月份
+     * 时间
      */
-    private String month;
-
+    private String time;
     /**
      * 资料名称
      */
     private String dataName;
+    /**
+     * 办税员
+     */
+    private String taxAgent;
 
     /**
      * 跟进人
      */
     private String followUpPeople;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 修改时间
-     */
-    private String modifyTime;
 
 
     public String getCompany() {
@@ -51,12 +45,12 @@ public class AccountInfoManagementBO extends BaseBO {
         this.company = company;
     }
 
-    public String getMonth() {
-        return month;
+    public String getTime() {
+        return time;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getDataName() {
@@ -67,27 +61,19 @@ public class AccountInfoManagementBO extends BaseBO {
         this.dataName = dataName;
     }
 
+    public String getTaxAgent() {
+        return taxAgent;
+    }
+
+    public void setTaxAgent(String taxAgent) {
+        this.taxAgent = taxAgent;
+    }
+
     public String getFollowUpPeople() {
         return followUpPeople;
     }
 
     public void setFollowUpPeople(String followUpPeople) {
         this.followUpPeople = followUpPeople;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

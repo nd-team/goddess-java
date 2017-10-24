@@ -24,7 +24,7 @@ public class BiddingAccept extends BaseEntity {
     /**
      * 录入人
      */
-    @Column(name = "inputUser", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '录入人'")
+    @Column(name = "inputUser",  columnDefinition = "VARCHAR(255)   COMMENT '录入人'")
     private String inputUser;
 
     /**
@@ -36,61 +36,61 @@ public class BiddingAccept extends BaseEntity {
     /**
      * 所属地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属地区'")
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '所属地区'")
     private String area;
 
     /**
      * 所属项目组/部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '所属项目组/部门'")
+    @Column(name = "department",  columnDefinition = "VARCHAR(255)   COMMENT '所属项目组/部门'")
     private String department;
 
     /**
      * 问题提出人
      */
-    @Column(name = "problemExhibitor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题提出人'")
+    @Column(name = "problemExhibitor",  columnDefinition = "VARCHAR(255)   COMMENT '问题提出人'")
     private String problemExhibitor;
 
     /**
      * 问题类型
      */
-    @Column(name = "problemType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题类型'")
+    @Column(name = "problemType",  columnDefinition = "VARCHAR(255)   COMMENT '问题类型'")
     private String problemType;
 
     /**
      * 问题发现形式
      */
-    @Column(name = "problemDiscoveryForm", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题发现形式'")
+    @Column(name = "problemDiscoveryForm",  columnDefinition = "VARCHAR(255)   COMMENT '问题发现形式'")
     private String problemDiscoveryForm;
 
     /**
      * 时间(背景)描述
      */
-    @Column(name = "eventDescription", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '时间(背景)描述'")
+    @Column(name = "eventDescription",  columnDefinition = "VARCHAR(255)   COMMENT '时间(背景)描述'")
     private String eventDescription;
 
     /**
      * 问题描述
      */
-    @Column(name = "problemDescription", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '问题描述'")
+    @Column(name = "problemDescription",  columnDefinition = "VARCHAR(255)   COMMENT '问题描述'")
     private String problemDescription;
 
     /**
      * 是否通报
      */
-    @Column(name = "is_notification", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否通报'")
+    @Column(name = "is_notification",  columnDefinition = "TINYINT(1)  COMMENT '是否通报'")
     private Boolean notification;
 
     /**
      * 获取时间(问题提出时间)
      */
-    @Column(name = "getTime", nullable = false, columnDefinition = "DATE   COMMENT '获取时间(问题提出时间)'")
+    @Column(name = "getTime",  columnDefinition = "DATE   COMMENT '获取时间(问题提出时间)'")
     private LocalDate getTime;
 
     /**
      * 期望处理时间
      */
-    @Column(name = "expectDealTime", nullable = false, columnDefinition = "DATE   COMMENT '期望处理时间'")
+    @Column(name = "expectDealTime",  columnDefinition = "DATE   COMMENT '期望处理时间'")
     private LocalDate expectDealTime;
 
     /**
@@ -102,19 +102,19 @@ public class BiddingAccept extends BaseEntity {
     /**
      * 处理协商时间
      */
-    @Column(name = "processTime", nullable = false, columnDefinition = "DATE   COMMENT '处理协商时间'")
+    @Column(name = "processTime",  columnDefinition = "DATE   COMMENT '处理协商时间'")
     private LocalDate processTime;
 
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "status",  columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private String status;
 
     /**
      * 是否闭环
      */
-    @Column(name = "is_closedLoop", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否闭环'")
+    @Column(name = "is_closedLoop",  columnDefinition = "TINYINT(1)   COMMENT '是否闭环'")
     private Boolean closedLoop;
 
 

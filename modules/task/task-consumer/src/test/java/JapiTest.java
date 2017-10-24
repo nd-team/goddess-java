@@ -15,7 +15,7 @@ import java.io.IOException;
 public class JapiTest {
 	public static void main(String[] args) throws IOException {
 		JapiClient.setClassLoader(JapiTest.class);
-		JapiClient.setPrefixPath("/home/lgq/github/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/task/task-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/task/action");//主项目action位置
@@ -24,6 +24,8 @@ public class JapiTest {
 				"modules/user/user-api",
 				"modules/storage/storage-api",
 				"modules/message/message-api",
+				"modules/organize/organize-api",
+				"modules/taskallotment/taskallotment-api",
 				"common/common-api"
 		});
 		JapiClient.setFlushServer(true);

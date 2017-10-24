@@ -23,7 +23,7 @@ public class CheckChangeCarBO extends BaseBO {
     /**
      * 出车日期
      */
-    private LocalDate dispatchDate;
+    private String dispatchDate;
 
     /**
      * 出车单号
@@ -33,7 +33,7 @@ public class CheckChangeCarBO extends BaseBO {
     /**
      * 修改日期
      */
-    private LocalDate  modifyDate;
+    private String  modifyDate;
 
     /**
      * 修改人
@@ -68,7 +68,7 @@ public class CheckChangeCarBO extends BaseBO {
     /**
      * 解决时间
      */
-    private LocalDateTime solutionTime;
+    private String solutionTime;
 
 
     public String getCarUser() {
@@ -79,13 +79,7 @@ public class CheckChangeCarBO extends BaseBO {
         this.carUser = carUser;
     }
 
-    public LocalDate getDispatchDate() {
-        return dispatchDate;
-    }
 
-    public void setDispatchDate(LocalDate dispatchDate) {
-        this.dispatchDate = dispatchDate;
-    }
 
     public String getNumber() {
         return number;
@@ -95,13 +89,7 @@ public class CheckChangeCarBO extends BaseBO {
         this.number = number;
     }
 
-    public LocalDate getModifyDate() {
-        return modifyDate;
-    }
 
-    public void setModifyDate(LocalDate modifyDate) {
-        this.modifyDate = modifyDate;
-    }
 
     public String getModifier() {
         return modifier;
@@ -151,11 +139,27 @@ public class CheckChangeCarBO extends BaseBO {
         this.solution = solution;
     }
 
-    public LocalDateTime getSolutionTime() {
+    public String getDispatchDate() {
+        return dispatchDate;
+    }
+
+    public void setDispatchDate(String dispatchDate) {
+        this.dispatchDate = dispatchDate;
+    }
+
+    public String getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(String modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
+    public String getSolutionTime() {
         return solutionTime;
     }
 
-    public void setSolutionTime(LocalDateTime solutionTime) {
+    public void setSolutionTime(String solutionTime) {
         this.solutionTime = solutionTime;
     }
 }

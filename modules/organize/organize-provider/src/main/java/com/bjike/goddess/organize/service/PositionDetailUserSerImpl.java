@@ -640,7 +640,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
                         "WHERE id =" +
                         "      (SELECT department_id " +
                         "       FROM organize_position_detail " +
-                        "       WHERE id = " + pId + ")";
+                        "       WHERE id = '" + pId + "')";
                 String[] fileds = new String[]{"area", "department"};
                 List<DepartmentDetailBO> areas = super.findBySql(sql1, DepartmentDetailBO.class, fileds);
                 if (null != areas && !areas.isEmpty()) {
@@ -747,8 +747,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     public List<String> names() throws SerException {
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://staffentry.issp.bjike.com:8080/entryregister/v1/names");//线上
-//        HttpGet httpGet = new HttpGet("http://localhost:51310/commonality/v1/getEmails");//线下测试
+//        HttpGet httpGet = new HttpGet("https://staffentry.issp.bjike.com:8080/entryregister/v1/names");//线上
+        HttpGet httpGet = new HttpGet("http://localhost:51218/entryregister/v1/names");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
 
         ActResultOrgan resultOrgan = new ActResultOrgan();

@@ -1,6 +1,10 @@
 package com.bjike.goddess.taskallotment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.taskallotment.enums.ForObject;
+import com.bjike.goddess.taskallotment.enums.Spacing;
+import com.bjike.goddess.taskallotment.enums.StandardType;
+import com.bjike.goddess.taskallotment.enums.Status;
 
 /**
  * 标准工时设置业务传输对象
@@ -22,16 +26,31 @@ public class TimeSetBO extends BaseBO {
      * 项目组/部门
      */
     private String depart;
+    /**
+     * 用于对象
+     */
+    private ForObject forObject;
 
+    /**
+     * 标准类型
+     */
+    private StandardType standardType;
     /**
      * 标准工时
      */
     private Double hour;
-
+    /**
+     * 是否提醒本部门所有人
+     */
+    private Boolean sendAll;
     /**
      * 提醒频率
      */
     private Integer remind;
+    /**
+     * 提醒间隔
+     */
+    private Spacing spacing;
 
     /**
      * 开始提醒时间
@@ -57,7 +76,50 @@ public class TimeSetBO extends BaseBO {
      * 制定日期
      */
     private String time;
+    /**
+     * 状态
+     */
+    private Status status;
 
+    public ForObject getForObject() {
+        return forObject;
+    }
+
+    public void setForObject(ForObject forObject) {
+        this.forObject = forObject;
+    }
+
+    public StandardType getStandardType() {
+        return standardType;
+    }
+
+    public void setStandardType(StandardType standardType) {
+        this.standardType = standardType;
+    }
+
+    public Boolean getSendAll() {
+        return sendAll;
+    }
+
+    public void setSendAll(Boolean sendAll) {
+        this.sendAll = sendAll;
+    }
+
+    public Spacing getSpacing() {
+        return spacing;
+    }
+
+    public void setSpacing(Spacing spacing) {
+        this.spacing = spacing;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getArea() {
         return area;

@@ -10,7 +10,10 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.ModulesAPI;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.bo.collect.Custom;
 import com.bjike.goddess.task.bo.collect.TaskCollect;
@@ -21,9 +24,7 @@ import com.bjike.goddess.task.entity.Customize;
 import com.bjike.goddess.task.enums.*;
 import com.bjike.goddess.task.util.HtmlBuild;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,21 +50,30 @@ public class ScheduleSerImpl implements ScheduleSer {
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private UserDetailAPI userDetailAPI;
+    private PositionUserDetailAPI positionUserDetailAPI;
     @Autowired
     private TableSer tableSer;
     @Autowired
     private MessageAPI messageAPI;
     @Autowired
     private ModulesAPI modulesAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     @Override
     public Collect collect(CollectDTO dto) throws SerException {
         UserBO user = userAPI.currentUser();
-        String userId = user.getId();
-        UserDetailBO detail = userDetailAPI.findByUserId(userId);
-        String departmentId = detail.getDepartmentId();
-        List<UserBO> users = userAPI.findByDept(departmentId); //查询自己所在部门的所有用户
+        Map<String, String> map = positionUserDetailAPI.departPosition(user.getUsername());
+        Set<String> names = null;
+        if (null != map) {
+            Set<String> set = map.keySet();
+            for (String s : set) {
+                List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(new String[]{s});
+                if (null != detailBOS && !detailBOS.isEmpty()) {
+                    names = departmentDetailAPI.departPersons(detailBOS.get(0).getId());
+                }
+            }
+        }
         Collect collect = new Collect();
         if (dto.isNeedFixed()) {
             String sql = getSql(dto);
@@ -84,14 +94,18 @@ public class ScheduleSerImpl implements ScheduleSer {
         //今天任务
         String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
         String end = DateUtil.dateToString(LocalDate.now().atTime(23, 59, 59));
-        collect.setTodayCollects(initDateTask(users, start, end));
+        if (null != initDateTask(names, start, end)) {
+            collect.setTodayCollects(initDateTask(names, start, end));
+        }
         //可添加汇总   collectToday(collects);
         //可添加明天汇总 collectTomorrow(collects);
         //明天任务
         start = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(00, 00, 01));
         end = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(23, 59, 59));
-        List<TaskCollect> taskCollects = initDateTask(users, start, end);
-        collect.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        List<TaskCollect> taskCollects = initDateTask(names, start, end);
+        if (null != taskCollects) {
+            collect.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        }
         return collect;
     }
 
@@ -104,67 +118,72 @@ public class ScheduleSerImpl implements ScheduleSer {
      * @return
      * @throws SerException
      */
-    private List<TaskCollect> initDateTask(List<UserBO> users, String startTime, String endTime) throws SerException {
-        String[] username = new String[users.size()];
-        for (int i = 0; i < users.size(); i++) {
-            username[i] = users.get(i).getNickname();
-        }
-        String names = "'" + StringUtils.join(username, "','") + "'";
-        String sql;
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT username, outProject, ");
-        sb.append("  innerProject, ");
-        sb.append("  taskType, ");
-        sb.append(" content, ");
-        sb.append(" remark, ");
-        sb.append(" planNum, ");
-        sb.append(" factNum,differNum, ");
-        sb.append("  planDuration, factDuration, ");
-        sb.append("  factDuration-planDuration AS differDuration ");
-        sb.append(" FROM( ");
-        sb.append(" SELECT tn.execute AS username,p.project AS outProject,p.innerProject  , ");
-        sb.append(" tn.content,tn.remark,planNum,actualNum AS factNum,(actualNum-planNum ) AS differNum, ");
-        sb.append(" CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
-        sb.append(" CASE needType   WHEN '1' THEN 60*needTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
-        sb.append(" CASE actualType   WHEN '1' THEN 60*actualTime   WHEN '2' THEN 24*60*actualTime  ELSE actualTime END  AS factDuration ");
-        sb.append(" FROM taskallotment_tasknode tn ,taskallotment_table t,");
-        sb.append(" taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
-        sb.append(" AND ( ");
-        sb.append(" tn.startTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
-        sb.append(" OR tn.endTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
-        sb.append(" OR tn.startTime < '" + startTime + "' ");
-        sb.append(" OR tn.endTime > '" + endTime + "' ");
-        sb.append(" ) AND execute IN (" + names + ")  ");
-        sb.append(" ) a ");
-        sb.append(" ORDER BY username");
-        sql = sb.toString();
-        String[] fields = new String[]{"username", "outProject", "innerProject", "taskType",
-                "content", "remark", "planNum", "factNum", "differNum", "planDuration", "factDuration", "differDuration"};
-        List<TaskCollect> taskCollects = tableSer.findBySql(sql, TaskCollect.class, fields); //查询指定多人的任务
-        for (String user : username) {
-            boolean exist = false;
-            Map<String, String> map = modulesAPI.findModuleAndPost(user);
-            for (TaskCollect collect : taskCollects) {
-                if (user.equals(collect.getUsername())) {
-                    exist = true;
-                    if (null != map) { //设置模块及职位
-                        collect.setModule(map.get("module"));
-                        collect.setPost(map.get("position"));
+    private List<TaskCollect> initDateTask(Set<String> users, String startTime, String endTime) throws SerException {
+        if (null != users) {
+            String[] username = new String[users.size()];
+            int i = 0;
+            for (String s : users) {
+                username[i] = s;
+                i++;
+            }
+            String names = "'" + StringUtils.join(username, "','") + "'";
+            String sql;
+            StringBuilder sb = new StringBuilder();
+            sb.append(" SELECT username, outProject, ");
+            sb.append("  innerProject, ");
+            sb.append("  taskType, ");
+            sb.append(" content, ");
+            sb.append(" remark, ");
+            sb.append(" planNum, ");
+            sb.append(" factNum,differNum, ");
+            sb.append("  planDuration, factDuration, ");
+            sb.append("  factDuration-planDuration AS differDuration ");
+            sb.append(" FROM( ");
+            sb.append(" SELECT tn.execute AS username,p.project AS outProject,p.innerProject  , ");
+            sb.append(" tn.content,tn.remark,planNum,actualNum AS factNum,(actualNum-planNum ) AS differNum, ");
+            sb.append(" CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
+            sb.append(" CASE needType   WHEN '1' THEN 60*needTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
+            sb.append(" CASE actualType   WHEN '1' THEN 60*actualTime   WHEN '2' THEN 24*60*actualTime  ELSE actualTime END  AS factDuration ");
+            sb.append(" FROM taskallotment_tasknode tn ,taskallotment_table t,");
+            sb.append(" taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
+            sb.append(" AND ( ");
+            sb.append(" tn.startTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
+            sb.append(" OR tn.endTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
+            sb.append(" OR tn.startTime < '" + startTime + "' ");
+            sb.append(" OR tn.endTime > '" + endTime + "' ");
+            sb.append(" ) AND execute IN (" + names + ")  ");
+            sb.append(" ) a ");
+            sb.append(" ORDER BY username");
+            sql = sb.toString();
+            String[] fields = new String[]{"username", "outProject", "innerProject", "taskType",
+                    "content", "remark", "planNum", "factNum", "differNum", "planDuration", "factDuration", "differDuration"};
+            List<TaskCollect> taskCollects = tableSer.findBySql(sql, TaskCollect.class, fields); //查询指定多人的任务
+            for (String user : username) {
+                boolean exist = false;
+                Map<String, String> map = modulesAPI.findModuleAndPost(user);
+                for (TaskCollect collect : taskCollects) {
+                    if (user.equals(collect.getUsername())) {
+                        exist = true;
+                        if (null != map) { //设置模块及职位
+                            collect.setModule(map.get("module"));
+                            collect.setPost(map.get("position"));
+                        }
+                        break;
                     }
-                    break;
+                }
+                if (!exist) { //不存在任务则添加空的对象
+                    TaskCollect taskCollect = new TaskCollect();
+                    if (null != map) { //设置模块及职位
+                        taskCollect.setModule(map.get("module"));
+                        taskCollect.setPost(map.get("position"));
+                    }
+                    taskCollect.setUsername(user);
+                    taskCollects.add(taskCollect);
                 }
             }
-            if (!exist) { //不存在任务则添加空的对象
-                TaskCollect taskCollect = new TaskCollect();
-                if (null != map) { //设置模块及职位
-                    taskCollect.setModule(map.get("module"));
-                    taskCollect.setPost(map.get("position"));
-                }
-                taskCollect.setUsername(user);
-                taskCollects.add(taskCollect);
-            }
+            return taskCollects;
         }
-        return taskCollects;
+        return null;
     }
 
     /**
@@ -394,15 +413,23 @@ public class ScheduleSerImpl implements ScheduleSer {
      * @throws SerException
      */
     private void initDeptCollect(CustomProject project, String department) throws SerException {
-        List<UserBO> users = userAPI.findByDept(department);
+        Set<String> names = null;
+        List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(new String[]{department});
+        if (null != detailBOS && !detailBOS.isEmpty()) {
+            names = departmentDetailAPI.departPersons(detailBOS.get(0).getId());
+        }
         String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
         String end = DateUtil.dateToString(LocalDate.now().atTime(23, 59, 59));
-        project.setTaskCollects(initDateTask(users, start, end));
+        if (null != initDateTask(names, start, end)) {
+            project.setTaskCollects(initDateTask(names, start, end));
+        }
         //明天任务
         start = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(00, 00, 01));
         end = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(23, 59, 59));
-        List<TaskCollect> taskCollects = initDateTask(users, start, end);
-        project.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        List<TaskCollect> taskCollects = initDateTask(names, start, end);
+        if (null != taskCollects) {
+            project.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
+        }
         project.setDepartment(department);
     }
 

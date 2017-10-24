@@ -5,5 +5,4 @@ dependencies {
     compile project(":modules:user:user-api")
     compile project(":modules:organize:organize-api")
     compile project(":modules:storage:storage-api")
-
 }

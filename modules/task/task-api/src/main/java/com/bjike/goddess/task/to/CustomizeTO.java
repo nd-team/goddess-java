@@ -25,7 +25,7 @@ public class CustomizeTO extends BaseTO {
      * 汇总名
      */
     @NotBlank(message = "汇总名不能为空", groups = {ADD.class, EDIT.class})
-    private String name;
+    private String collectName;
 
     /**
      * 项目
@@ -55,8 +55,9 @@ public class CustomizeTO extends BaseTO {
      * 定时时间间隔值
      */
     @NotBlank(message = "定时间隔值不能为空", groups = {ADD.class, EDIT.class})
-    private String timeVal;    /**
+    private String timeVal;
 
+    /**
      * 部门名
      */
     @NotBlank(message = "部门名", groups = {ADD.class, EDIT.class})
@@ -97,12 +98,12 @@ public class CustomizeTO extends BaseTO {
     @NotNull(message = "间隔值不能为空", groups = {ADD.class, EDIT.class})
     private Integer dateVal;
 
-    public String getName() {
-        return name;
+    public String getCollectName() {
+        return collectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCollectName(String collectName) {
+        this.collectName = collectName;
     }
 
     public String getProjectId() {

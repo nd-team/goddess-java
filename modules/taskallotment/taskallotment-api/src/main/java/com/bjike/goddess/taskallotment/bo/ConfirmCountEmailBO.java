@@ -18,7 +18,10 @@ public class ConfirmCountEmailBO extends BaseBO {
      * 汇总表名称
      */
     private String name;
-
+    /**
+     * 地区
+     */
+    private String area;
     /**
      * 项目组
      */
@@ -58,7 +61,15 @@ public class ConfirmCountEmailBO extends BaseBO {
      * 通报对象
      */
     private ForObject forObject;
+    /**
+     * 通报部门
+     */
+    private String forDeparts;
 
+    /**
+     * 通报个人
+     */
+    private String forPersons;
     /**
      * 汇总频率
      */
@@ -68,6 +79,10 @@ public class ConfirmCountEmailBO extends BaseBO {
      * 汇总对象
      */
     private CountType countType;
+    /**
+     * 汇总个人
+     */
+    private String countPersons;
     /**
      * 汇总开始时间
      */
@@ -91,6 +106,38 @@ public class ConfirmCountEmailBO extends BaseBO {
      * 备注
      */
     private String remark;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getForDeparts() {
+        return forDeparts;
+    }
+
+    public void setForDeparts(String forDeparts) {
+        this.forDeparts = forDeparts;
+    }
+
+    public String getForPersons() {
+        return forPersons;
+    }
+
+    public void setForPersons(String forPersons) {
+        this.forPersons = forPersons;
+    }
+
+    public String getCountPersons() {
+        return countPersons;
+    }
+
+    public void setCountPersons(String countPersons) {
+        this.countPersons = countPersons;
+    }
 
     public String getStartTime() {
         return startTime;

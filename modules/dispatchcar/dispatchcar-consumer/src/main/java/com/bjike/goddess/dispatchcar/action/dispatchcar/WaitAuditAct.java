@@ -14,6 +14,7 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -21,6 +22,7 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,29 @@ public class WaitAuditAct extends BaseFileAction {
 
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = dispatchCarInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表分页查询
@@ -154,8 +179,8 @@ public class WaitAuditAct extends BaseFileAction {
      *
      * @version v1
      */
-    @GetMapping("v1/budgetsugg")
-    public Result budgetSugg(@RequestParam DispatchCarInfoTO dispatchCarInfoTO,@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
+    @PostMapping("v1/budgetsugg")
+    public Result budgetSugg(@Validated(ADD.class) DispatchCarInfoTO dispatchCarInfoTO, @Validated(CheckChangeCarTO.TestAdd.class) CheckChangeCarTO to, BindingResult result) throws ActException {
         try {
             dispatchCarInfoAPI.budgetSugg(dispatchCarInfoTO,to);
             return new ActResult("核对成功");
@@ -187,7 +212,7 @@ public class WaitAuditAct extends BaseFileAction {
      *
      * @version v1
      */
-    @GetMapping("v1/client")
+    @PostMapping("v1/client")
     public Result clientSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
         try {
             dispatchCarInfoAPI.clientSugg(to);
@@ -203,7 +228,7 @@ public class WaitAuditAct extends BaseFileAction {
      *
      * @version v1
      */
-    @GetMapping("v1/head")
+    @PostMapping("v1/head")
     public Result headSugg(@Validated(ADD.class) CheckChangeCarTO to) throws ActException {
         try {
             dispatchCarInfoAPI.headSugg(to);

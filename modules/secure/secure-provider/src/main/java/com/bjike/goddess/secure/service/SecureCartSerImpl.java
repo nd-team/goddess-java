@@ -14,7 +14,6 @@ import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.secure.bo.SecureCartBO;
 import com.bjike.goddess.secure.dto.SecureCartDTO;
 import com.bjike.goddess.secure.entity.SecureCart;
-import com.bjike.goddess.secure.entity.SecureCase;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.SecureCartTO;
@@ -30,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 社保卡基本信息业务实现
@@ -303,15 +303,17 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<PositionDetailBO> list1 = positionDetailAPI.findStatus();
-            PositionDetailBO p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).findFirst().get();
+            List<PositionDetailBO> p = list1.stream().filter(positionDetailBO -> "综合资源部".equals(positionDetailBO.getDepartmentName()) && "福利模块".equals(positionDetailBO.getModuleName())).collect(Collectors.toList());
             RpcTransmit.transmitUserToken(token);
-            List<UserBO> users = positionDetailUserAPI.findByPosition(p.getId());
-            for (UserBO userBO : users) {
-                if (moduleAPI.isCheck("contacts")) {
-                    RpcTransmit.transmitUserToken(token);
-                    String mail = internalContactsAPI.getEmail(userBO.getUsername());
-                    if (mail != null) {
-                        set.add(mail);
+            if (!p.isEmpty()) {
+                List<UserBO> users = positionDetailUserAPI.findByPosition(p.get(0).getId());
+                for (UserBO userBO : users) {
+                    if (moduleAPI.isCheck("contacts")) {
+                        RpcTransmit.transmitUserToken(token);
+                        String mail = internalContactsAPI.getEmail(userBO.getUsername());
+                        if (mail != null) {
+                            set.add(mail);
+                        }
                     }
                 }
             }
@@ -330,7 +332,7 @@ public class SecureCartSerImpl extends ServiceImpl<SecureCart, SecureCartDTO> im
     public Set<String> allName() throws SerException {
         Set<String> set = new HashSet<>();
         List<SecureCart> list = super.findAll();
-        for(SecureCart entity:list){
+        for (SecureCart entity : list) {
             set.add(entity.getName());
         }
         return set;

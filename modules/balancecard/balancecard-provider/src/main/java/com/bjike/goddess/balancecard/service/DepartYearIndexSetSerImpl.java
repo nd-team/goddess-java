@@ -657,7 +657,7 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
         if (StringUtils.isBlank(to.getIndexName())) {
             throw new SerException("第" + row + "行的指标名称不能为空");
         }
-        if (StringUtils.isBlank(to.getYear())) {
+        if (to.getYear() != null) {
             throw new SerException("第" + row + "行的年份不能为空");
         }
         if (null == to.getDescribtion()) {
@@ -716,7 +716,7 @@ public class DepartYearIndexSetSerImpl extends ServiceImpl<DepartYearIndexSet, D
 
         DepartYearIndexSetExcel excel = new DepartYearIndexSetExcel();
         excel.setIndexName("指标名称");
-        excel.setYear( "年份" );
+        excel.setYear(2017);
         excel.setIndexType("指标类型");
         excel.setDimension("维度");
         excel.setDepartment("责任部门");

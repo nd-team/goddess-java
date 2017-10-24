@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dimission.api.InterviewAPI;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
@@ -842,5 +843,29 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         dto.getConditions().add(Restrict.eq("username", userName));
         List<DimissionInfo> list = super.findByCis(dto);
         return list;
+    }
+
+    @Override
+    public String getTime(String name) throws SerException {
+        DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+        dimissionInfoDTO.getConditions().add(Restrict.eq("username", name));
+        List<DimissionInfo> list = super.findByCis(dimissionInfoDTO);
+        if (!list.isEmpty()) {
+            DimissionInfo dimissionInfo = list.get(0);
+            if ((null != dimissionInfo.getHandle()) && ConfirmationType.AFFIRM.equals(dimissionInfo.getHandle())) {
+                if ((null != dimissionInfo.getAdvance()) && (dimissionInfo.getAdvance())) {
+                    LocalDate advanceDate = dimissionInfo.getAdvanceDate();
+                    if (null != advanceDate) {
+                        return DateUtil.dateToString(advanceDate);   //提前离职
+                    }
+                } else {
+                    LocalDate dimissionDate = dimissionInfo.getDimissionDate();
+                    if (null != dimissionDate) {
+                        return DateUtil.dateToString(dimissionDate);   //正常离职
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

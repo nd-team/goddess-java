@@ -29,6 +29,7 @@
     <!-- 租车费用基本信息API -->
     <dubbo:service interface="com.bjike.goddess.dispatchcar.api.LeaseCarCostAPI" ref="leaseCarCostApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.dispatchcar.api.CheckChangeCarAPI" ref="checkChangeCarApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.dispatchcar.api.DispatchcarRecordCollectAPI" ref="dispatchcarRecordCollectApiImpl"/>
 
     <!-- 注册接口 -->
 
@@ -58,7 +59,13 @@
     <dubbo:reference  validation="true" id="staffEntryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI" />
     <dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
     <dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
+
+    <!--<dubbo:reference  validation="true" id="driverApiImpl" interface="com.bjike.goddess.carinfo.api.DriverAPI" />-->
+
     <dubbo:reference  validation="true" id="driverApiImpl" interface="com.bjike.goddess.carinfo.api.DriverAPI" />
+    <dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
+    <!--<dubbo:reference  validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" />-->
+
 
 
 </beans>

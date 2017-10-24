@@ -3,6 +3,8 @@ package com.bjike.goddess.announcement.vo;
 
 import com.bjike.goddess.announcement.enums.Status;
 
+import java.util.List;
+
 /**
  * 公告表现层对象
  *
@@ -62,6 +64,19 @@ public class AnnouncementVO {
      * 是否已经读取
      */
     private Boolean haveRead;
+
+    /**
+     * 图片路径数组
+     */
+    private List<String> photos;
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
 
     public Boolean getHaveRead() {
         return haveRead;

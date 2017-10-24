@@ -372,14 +372,33 @@ public class DateUtil {
     /**
      * chenjunhao
      * 时间相减
+     *
      * @param a 减数
      * @param b 被减数
      * @return
      * @throws SerException
      */
-    public static Long mis(LocalDateTime a,LocalDateTime b){
+    public static Long mis(LocalDateTime a, LocalDateTime b) {
         Long mis = a.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                 - b.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         return mis;
+    }
+
+    /**
+     * chenjunhao
+     * 时间相减(算天数)
+     *
+     * @param a 减数
+     * @param b 被减数
+     * @return
+     * @throws SerException
+     */
+    public static Long misDay(LocalDate a, LocalDate b) throws SerException {
+        try {
+            long days = Math.abs(a.toEpochDay() - b.toEpochDay());
+            return days;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
     }
 }

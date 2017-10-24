@@ -3,8 +3,6 @@ package com.bjike.goddess.task.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.bo.ProblemTypeBO;
 import com.bjike.goddess.task.dto.ProblemTypeDTO;
-import com.bjike.goddess.task.entity.ProblemType;
-import com.bjike.goddess.task.to.ProblemTO;
 import com.bjike.goddess.task.to.ProblemTypeTO;
 
 import java.util.List;
@@ -28,6 +26,7 @@ public interface ProblemTypeAPI {
     default List<ProblemTypeBO> list(ProblemTypeDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 添加
      *
@@ -37,6 +36,7 @@ public interface ProblemTypeAPI {
     default void add(ProblemTypeTO to) throws SerException {
 
     }
+
     /**
      * 编辑
      *
@@ -46,6 +46,16 @@ public interface ProblemTypeAPI {
     default void edit(ProblemTypeTO to) throws SerException {
 
     }
+
+    /**
+     * 通过id查找
+     *
+     * @param id id
+     * @return
+     * @throws SerException
+     */
+    ProblemTypeBO findByID(String id) throws SerException;
+
     /**
      * 删除
      *
@@ -55,13 +65,31 @@ public interface ProblemTypeAPI {
     default void delete(String id) throws SerException {
 
     }
+
     /**
      * 开关
      *
      * @param id
      * @throws SerException
      */
-    default void enable(String id,Boolean enable) throws SerException {
+    default void enable(String id, Boolean enable) throws SerException {
 
     }
+
+    /**
+     * 获取所有可用的问题类型
+     *
+     * @return
+     * @throws SerException
+     */
+    List<ProblemTypeBO> types() throws SerException;
+
+    /**
+     * 总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(ProblemTypeDTO dto) throws SerException;
 }
