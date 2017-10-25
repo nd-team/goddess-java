@@ -35,6 +35,11 @@ public class PayDriverMoneyCollectVO {
     private Double overWorkTime;
 
     /**
+     * 加班费
+     */
+    private Double overWorkCost;
+
+    /**
      * 停车费
      */
     private Double parkCost;
@@ -54,6 +59,13 @@ public class PayDriverMoneyCollectVO {
      */
     private Double totalCost;
 
+    public Double getOverWorkCost() {
+        return overWorkCost;
+    }
+
+    public void setOverWorkCost(Double overWorkCost) {
+        this.overWorkCost = overWorkCost;
+    }
 
     public String getDriver() {
         return driver;

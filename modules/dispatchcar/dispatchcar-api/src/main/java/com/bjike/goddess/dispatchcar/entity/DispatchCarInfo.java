@@ -120,7 +120,7 @@ public class DispatchCarInfo extends BaseEntity {
     /**
      * 加班时长
      */
-    @Column(name = "overWorkTime", columnDefinition = "INT(11)   COMMENT '加班时长'")
+    @Column(name = "overWorkTime", columnDefinition = "DECIMAL(10,2)   COMMENT '加班时长'")
     private Double overWorkTime;
 
     /**
@@ -422,8 +422,8 @@ public class DispatchCarInfo extends BaseEntity {
     /**
      * 核对依据是否齐全无误
      */
-    @Column(name = "isCorrect", columnDefinition = "TINYINT(1) COMMENT '核对依据是否齐全无误'")
-    private Boolean isCorrect;
+    @Column(name = "ifCorrect", columnDefinition = "TINYINT(1) COMMENT '核对依据是否齐全无误'")
+    private Boolean ifCorrect;
 
     /**
      * 寄件人
@@ -441,8 +441,8 @@ public class DispatchCarInfo extends BaseEntity {
     /**
      * 存档联是否寄件
      */
-    @Column(name = "ifSendArchiveAl", columnDefinition = "TINYINT(1)  COMMENT '存档联是否寄件'")
-    private Boolean ifSendArchiveAl;
+    @Column(name = "ifSendArchiveAL", columnDefinition = "TINYINT(1)  COMMENT '存档联是否寄件'")
+    private Boolean ifSendArchiveAL;
 
     /**
      * 报销联是否寄件
@@ -1065,12 +1065,12 @@ public class DispatchCarInfo extends BaseEntity {
         this.accountModuleIdea = accountModuleIdea;
     }
 
-    public Boolean getCorrect() {
-        return isCorrect;
+    public Boolean getIfCorrect() {
+        return ifCorrect;
     }
 
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+    public void setIfCorrect(Boolean ifCorrect) {
+        this.ifCorrect = ifCorrect;
     }
 
     public String getSender() {
@@ -1081,12 +1081,12 @@ public class DispatchCarInfo extends BaseEntity {
         this.sender = sender;
     }
 
-    public Boolean getIfSendArchiveAl() {
-        return ifSendArchiveAl;
+    public Boolean getIfSendArchiveAL() {
+        return ifSendArchiveAL;
     }
 
-    public void setIfSendArchiveAl(Boolean ifSendArchiveAl) {
-        this.ifSendArchiveAl = ifSendArchiveAl;
+    public void setIfSendArchiveAL(Boolean ifSendArchiveAL) {
+        this.ifSendArchiveAL = ifSendArchiveAL;
     }
 
     public Boolean getIfSendReimbursementAl() {

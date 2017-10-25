@@ -179,123 +179,21 @@ public class DispatchcarRecordCollectSerImpl extends ServiceImpl<DispatchcarReco
 
     @Override
     public List<AreaCollectBO> dayCollect(String day) throws SerException {
-        LocalDate startDay = null;
-        if("".equals(day) || day == null){
-            startDay = LocalDate.now();
-        }else {
-            startDay = DateUtil.parseDate(day);
+        LocalDate[] startDay = null;
+        if (StringUtils.isNotBlank(day)){
+            LocalDate startDate = DateUtil.parseDate(day);
+            LocalDate endDate = DateUtil.parseDate(day);
+            startDay = new LocalDate[]{startDate,endDate};
+        }else{
+            LocalDate startDate = LocalDate.now();
+            LocalDate endDate = LocalDate.now();
+            startDay = new LocalDate[]{startDate,endDate};
         }
-        DispatchCarInfoDTO dispatchCarInfoDTO = new DispatchCarInfoDTO();
-        dispatchCarInfoDTO.getConditions().add(Restrict.eq("dispatchDate",startDay));
-        List<DispatchCarInfo> dispatchCarInfos = dispatchCarInfoSer.findByCis(dispatchCarInfoDTO);
-        Set<String> areaSet = dispatchCarInfos.stream().map(p -> p.getArea()).collect(Collectors.toSet());
-        List<AreaCollectBO> areaCollectBOS = new ArrayList<>();
-        for(String area :areaSet){
-            DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
-            dto.getConditions().add(Restrict.eq("dispatchDate",startDay));
-            dto.getConditions().add(Restrict.eq("area",area));
-            List<DispatchCarInfo> dispatchCarInfos1 = dispatchCarInfoSer.findByCis(dto);
-            Set<String> groupSet = dispatchCarInfos1.stream().map(p -> p.getGroup()).collect(Collectors.toSet());
-            AreaCollectBO areaCollectBO = new AreaCollectBO();
-            List<DepartmentCollectBO> departmentCollectBOS = new ArrayList<>();
-            for(String group : groupSet){
-                DepartmentCollectBO departmentCollectBO = new DepartmentCollectBO();
-                DispatchCarInfoDTO dto1 = new DispatchCarInfoDTO();
-                DispatchcarRecordCollectBO dispatchcarRecordCollectBO = new DispatchcarRecordCollectBO();
-                dto1.getConditions().add(Restrict.eq("dispatchDate",startDay));
-                dto1.getConditions().add(Restrict.eq("area",area));
-                dto1.getConditions().add(Restrict.eq("group",group));
-                List<DispatchCarInfo> dispatchCarInfos2 = dispatchCarInfoSer.findByCis(dto1);
-                //已有出车记录数
-                dispatchcarRecordCollectBO.setHasCarRecordNumber(dispatchCarInfos2.size());
-                dto1.getConditions().add(Restrict.eq("carSource", CarSource.MANUALENTRY));
-                List<DispatchCarInfo> dispatchCarInfos3 = dispatchCarInfoSer.findByCis(dto1);
-                //人工录入出车单数
-                dispatchcarRecordCollectBO.setPeopleTypeNumber(dispatchCarInfos3.size());
-                CheckChangeCarDTO dto2 = new CheckChangeCarDTO();
-                dto2.getConditions().add(Restrict.eq("dispatchDate",startDay));
-                List<CheckChangeCar> checkChangeCars = checkChangeCarSer.findByCis(dto2);
-                //有问题出车记录数
-                dispatchcarRecordCollectBO.setHasProblemNumber(checkChangeCars.size());
-                dto2.getConditions().add(Restrict.eq("ifSolve",true));
-                List<CheckChangeCar> checkChangeCars1 = checkChangeCarSer.findByCis(dto2);
-                List<DispatchCarInfo> dispatchCarInfos4 = dispatchCarInfos2.stream().filter(p -> p.getIfPass() != null).collect(Collectors.toList());
-                //已解决出车记录问题数
-                dispatchcarRecordCollectBO.setAlreadySolveNumber(checkChangeCars1.size());
-                //负责人已审核数
-                dispatchcarRecordCollectBO.setAudityNumber(dispatchCarInfos4.size());
-                //预算模块负责人核对数
-                List<DispatchCarInfo> dispatchCarInfos5 = dispatchCarInfos2.stream().filter(p -> p.getBudgetModuleIdea() != null).collect(Collectors.toList());
-                dispatchcarRecordCollectBO.setBudgetNumber(dispatchCarInfos5.size());
-                //账务模块负责人核对数
-                List<DispatchCarInfo> dispatchCarInfos6 = dispatchCarInfos2.stream().filter(p -> p.getAccountModuleIdea() != null).collect(Collectors.toList());
-                dispatchcarRecordCollectBO.setAccountNumber(dispatchCarInfos6.size());
-                //资金模块负责人核对数
-                List<DispatchCarInfo> dispatchCarInfos7 = dispatchCarInfos2.stream().filter(p -> p.getMoneyModuleIdea() != null).collect(Collectors.toList());
-                dispatchcarRecordCollectBO.setMoneyAccountNumber(dispatchCarInfos7.size());
-                //租车费
-                Double rentcarCost = dispatchCarInfos2.stream().filter(p -> p.getCarRentalCost() != null).mapToDouble(p -> p.getCarRentalCost()).sum();
-                dispatchcarRecordCollectBO.setRentcarCost(rentcarCost);
-                //停车费
-                Double parkCost = dispatchCarInfos2.stream().filter(p -> p.getParkCost() != null).mapToDouble(p -> p.getParkCost()).sum();
-                dispatchcarRecordCollectBO.setParkCost(parkCost);
-                //过路费
-                Double roadCost = dispatchCarInfos2.stream().filter(p -> p.getRoadCost() != null).mapToDouble(p -> p.getRoadCost()).sum();
-                dispatchcarRecordCollectBO.setRoadCost(roadCost);
-                //餐补费
-                Double mealCost = dispatchCarInfos2.stream().filter(p -> p.getMealCost() != null).mapToDouble(p -> p.getMealCost()).sum();
-                dispatchcarRecordCollectBO.setMealCost(mealCost);
-                //已经付款出车数
-                long payedRentcarNumber = dispatchCarInfos2.stream().filter(p -> p.getIfPayed() !=null && p.getIfPayed() ).count();
-                dispatchcarRecordCollectBO.setPayedRentcarNumber((int)payedRentcarNumber);
-                //已经付款出车费
-                Double payedRentcarCost = rentcarCost + parkCost + mealCost +rentcarCost;
-                dispatchcarRecordCollectBO.setPayedRentcarCost(payedRentcarCost);
-                departmentCollectBO.setDeparment(group);
-                departmentCollectBO.setDispatchcarRecordCollect(dispatchcarRecordCollectBO);
-                departmentCollectBOS.add(departmentCollectBO);
-            }
-            areaCollectBO.setDepartmentCollect(departmentCollectBOS);
-            areaCollectBO.setArea(area);
-            areaCollectBOS.add(areaCollectBO);
-        }
-        return areaCollectBOS;
+        return collect(startDay);
     }
 
     @Override
     public List<AreaCollectBO> weekCollect(Integer year,Integer month,Integer week) throws SerException {
-//        LocalDate endDay = null;
-//        if("".equals(day) || day == null){
-//            endDay = LocalDate.now();
-//        } else {
-//            endDay = DateUtil.parseDate(day);
-//        }
-//        Integer week = DateUtil.parseDate(day).getDayOfWeek().getValue();
-//        LocalDate startDay = null;
-//        switch (week){
-//            case 1:
-//                startDay = endDay;
-//                break;
-//            case 2:
-//                //获得前一天的日期
-//                startDay = endDay.minusDays(1);
-//                break;
-//            case 3:
-//                startDay = endDay.minusDays(2);
-//                break;
-//            case 4:
-//                startDay = endDay.minusDays(3);
-//                break;
-//            case 5:
-//                startDay = endDay.minusDays(4);
-//                break;
-//            case 6:
-//                startDay = endDay.minusDays(5);
-//                break;
-//            case 7:
-//                startDay = endDay.minusDays(6);
-//                break;
-//        }
         LocalDate[] startTime = null;
         if (year != null && month != null && week != null){
              startTime = DateUtil.getWeekTimes(year,month,week);
@@ -310,38 +208,6 @@ public class DispatchcarRecordCollectSerImpl extends ServiceImpl<DispatchcarReco
 
     @Override
     public List<AreaCollectBO> monthCollect(Integer year, Integer month) throws SerException {
-//        LocalDate startDay = null;
-//        LocalDate endDay = null;
-//        if(!"".equals(year) && year != null && !"".equals(month) && month != null){
-//            if(month.length()==1) {
-//                String startDate = year + " 0"+month + "-" + "01";
-//                startDay = DateUtil.parseDate(startDate);
-//                Integer nextMonth = Integer.valueOf(month)+1;
-//                if(nextMonth <10) {
-//                    String nextDate = year + " 0" + nextMonth + "-" + "01";
-//                    LocalDate nextDay = DateUtil.parseDate(nextDate);
-//                    endDay = nextDay.minusDays(1);
-//                }else{
-//                    String nextDate = year + " " + nextMonth + "-" + "01";
-//                    LocalDate nextDay = DateUtil.parseDate(nextDate);
-//                    endDay = nextDay.minusDays(1);
-//                }
-//            }else{
-//                String startDate = year + " "+month + "-" + "1";
-//                Integer nextMonth = Integer.valueOf(month)+1;
-//                startDay = DateUtil.parseDate(startDate);
-//                if(nextMonth >12) {
-//                    String nextDate = year + " 01"+ "-" + "01";
-//                    LocalDate nextDay = DateUtil.parseDate(nextDate);
-//                    endDay = nextDay.minusDays(1);
-//                }else{
-//                    String nextDate = year + " " + nextMonth + "-" + "01";
-//                    LocalDate nextDay = DateUtil.parseDate(nextDate);
-//                    endDay = nextDay.minusDays(1);
-//                }
-//            }
-//        }
-
        LocalDate[] startTime = null;
        if (year != null && month != null){
            LocalDate startDate = DateUtil.getStartDayOfMonth(year,month);
@@ -358,14 +224,7 @@ public class DispatchcarRecordCollectSerImpl extends ServiceImpl<DispatchcarReco
 
     @Override
     public List<AreaCollectBO> allCollect(String day) throws SerException {
-//        String startDate = "1970 01-01";
-//        LocalDate startDay = DateUtil.parseDate(startDate);
-//        LocalDate endDay = null;
-//        if(!"".equals(day) && day != null){
-//            endDay = DateUtil.parseDate(day);
-//        }else{
-//            endDay = LocalDate.now();
-//        }
+
         LocalDate[] startTime = null;
         if (StringUtils.isNotBlank(day)){
             LocalDate startDate = DateUtil.parseDate("1901-01-01");
@@ -395,6 +254,36 @@ public class DispatchcarRecordCollectSerImpl extends ServiceImpl<DispatchcarReco
             AreaCollectBO areaCollectBO = new AreaCollectBO();
             List<DepartmentCollectBO> departmentCollectBOS = new ArrayList<>();
             for(String group : groupSet){
+                //todo 项目出车数量
+                Integer dispatchcarNumber = 0;
+                //已有出车记录数
+                Integer hasCarRecordNumber = 0;
+                //人工录入出车单数
+                Integer peopleTypeNumber = 0;
+                //有问题出车数
+                Integer hasProblemNumber = 0;
+                //已解决出车记录问题数
+                Integer alreadySolveNumber = 0;
+                //审核
+                Integer audityNumber = 0;
+                Integer budgetNumber = 0;
+                //账务模块核对数
+                Integer accountNumber = 0;
+                //资金模块核对数
+                Integer moneyAccountNumber = 0;
+                //租车费
+                Double rentcarCost = 0.0;
+                //停车费
+                Double parkCost = 0.0;
+                //过路费
+                Double roadCost = 0.0;
+                //餐补费
+                Double mealCost = 0.0;
+                //已付款出车数
+                long payedRentcarNumber = 0;
+                //已付款出车费
+                Double payedRentcarCost = 0.0;
+
                 DepartmentCollectBO departmentCollectBO = new DepartmentCollectBO();
                 DispatchCarInfoDTO dto1 = new DispatchCarInfoDTO();
                 DispatchcarRecordCollectBO dispatchcarRecordCollectBO = new DispatchcarRecordCollectBO();
@@ -402,52 +291,78 @@ public class DispatchcarRecordCollectSerImpl extends ServiceImpl<DispatchcarReco
                 dto1.getConditions().add(Restrict.eq("area",area));
                 dto1.getConditions().add(Restrict.eq("group",group));
                 List<DispatchCarInfo> dispatchCarInfos2 = dispatchCarInfoSer.findByCis(dto1);
+                if (dispatchCarInfos2 != null && dispatchCarInfos2.size() > 0){
+                    hasCarRecordNumber = dispatchCarInfos2.size();
+                }
+                //项目出车数
+                dispatchcarRecordCollectBO.setDispatchcarNumber(dispatchcarNumber);
                 //已有出车记录数
-                dispatchcarRecordCollectBO.setHasCarRecordNumber(dispatchCarInfos2.size());
+                dispatchcarRecordCollectBO.setHasCarRecordNumber(hasCarRecordNumber);
+
                 dto1.getConditions().add(Restrict.eq("carSource", CarSource.MANUALENTRY));
                 List<DispatchCarInfo> dispatchCarInfos3 = dispatchCarInfoSer.findByCis(dto1);
+                if (dispatchCarInfos3 != null && dispatchCarInfos3.size() > 0){
+                    peopleTypeNumber = dispatchCarInfos3.size();
+                }
                 //人工录入出车单数
-                dispatchcarRecordCollectBO.setPeopleTypeNumber(dispatchCarInfos3.size());
+                dispatchcarRecordCollectBO.setPeopleTypeNumber(peopleTypeNumber);
+
                 CheckChangeCarDTO dto2 = new CheckChangeCarDTO();
                 dto2.getConditions().add(Restrict.between("dispatchDate",startTime));
                 List<CheckChangeCar> checkChangeCars = checkChangeCarSer.findByCis(dto2);
+                if (checkChangeCars != null && checkChangeCars.size() > 0){
+                    hasProblemNumber = checkChangeCars.size();
+                }
                 //有问题出车记录数
-                dispatchcarRecordCollectBO.setHasProblemNumber(checkChangeCars.size());
+                dispatchcarRecordCollectBO.setHasProblemNumber(hasProblemNumber);
+
                 dto2.getConditions().add(Restrict.eq("ifSolve",true));
                 List<CheckChangeCar> checkChangeCars1 = checkChangeCarSer.findByCis(dto2);
                 List<DispatchCarInfo> dispatchCarInfos4 = dispatchCarInfos2.stream().filter(p -> p.getIfPass() != null).collect(Collectors.toList());
+                if (dispatchCarInfos4 != null && dispatchCarInfos4.size() > 0){
+                    alreadySolveNumber = dispatchCarInfos4.size();
+                    audityNumber = dispatchCarInfos4.size();
+                }
                 //已解决出车记录问题数
-                dispatchcarRecordCollectBO.setAlreadySolveNumber(checkChangeCars1.size());
+                dispatchcarRecordCollectBO.setAlreadySolveNumber(alreadySolveNumber);
                 //负责人已审核数
-                dispatchcarRecordCollectBO.setAudityNumber(dispatchCarInfos4.size());
+                dispatchcarRecordCollectBO.setAudityNumber(audityNumber);
                 //预算模块负责人核对数
                 List<DispatchCarInfo> dispatchCarInfos5 = dispatchCarInfos2.stream().filter(p -> p.getBudgetModuleIdea() != null).collect(Collectors.toList());
-                dispatchcarRecordCollectBO.setBudgetNumber(dispatchCarInfos5.size());
+                if (dispatchCarInfos5 != null && dispatchCarInfos5.size() > 0){
+                    budgetNumber = dispatchCarInfos5.size();
+                }
+                dispatchcarRecordCollectBO.setBudgetNumber(budgetNumber);
                 //账务模块负责人核对数
                 List<DispatchCarInfo> dispatchCarInfos6 = dispatchCarInfos2.stream().filter(p -> p.getAccountModuleIdea() != null).collect(Collectors.toList());
-                dispatchcarRecordCollectBO.setAccountNumber(dispatchCarInfos6.size());
+                if (dispatchCarInfos6 != null && dispatchCarInfos6.size() > 0){
+                    accountNumber = dispatchCarInfos6.size();
+                }
+                dispatchcarRecordCollectBO.setAccountNumber(accountNumber);
                 //资金模块负责人核对数
                 List<DispatchCarInfo> dispatchCarInfos7 = dispatchCarInfos2.stream().filter(p -> p.getMoneyModuleIdea() != null).collect(Collectors.toList());
-                dispatchcarRecordCollectBO.setMoneyAccountNumber(dispatchCarInfos7.size());
+                if (dispatchCarInfos7 != null && dispatchCarInfos7.size() > 0){
+                    moneyAccountNumber = dispatchCarInfos7.size();
+                }
                 //租车费
-                Double rentcarCost = dispatchCarInfos2.stream().filter(p -> p.getCarRentalCost() != null).mapToDouble(p -> p.getCarRentalCost()).sum();
+                rentcarCost = dispatchCarInfos2.stream().filter(p -> p.getCarRentalCost() != null).mapToDouble(p -> p.getCarRentalCost()).sum();
                 dispatchcarRecordCollectBO.setRentcarCost(rentcarCost);
                 //停车费
-                Double parkCost = dispatchCarInfos2.stream().filter(p -> p.getParkCost() != null).mapToDouble(p -> p.getParkCost()).sum();
+                parkCost = dispatchCarInfos2.stream().filter(p -> p.getParkCost() != null).mapToDouble(p -> p.getParkCost()).sum();
                 dispatchcarRecordCollectBO.setParkCost(parkCost);
                 //过路费
-                Double roadCost = dispatchCarInfos2.stream().filter(p -> p.getRoadCost() != null).mapToDouble(p -> p.getRoadCost()).sum();
+                roadCost = dispatchCarInfos2.stream().filter(p -> p.getRoadCost() != null).mapToDouble(p -> p.getRoadCost()).sum();
                 dispatchcarRecordCollectBO.setRoadCost(roadCost);
                 //餐补费
-                Double mealCost = dispatchCarInfos2.stream().filter(p -> p.getMealCost() != null).mapToDouble(p -> p.getMealCost()).sum();
+                mealCost = dispatchCarInfos2.stream().filter(p -> p.getMealCost() != null).mapToDouble(p -> p.getMealCost()).sum();
                 dispatchcarRecordCollectBO.setMealCost(mealCost);
                 //已经付款出车数
-                long payedRentcarNumber = dispatchCarInfos2.stream().filter(p -> p.getIfPayed() !=null && p.getIfPayed() ).count();
+                payedRentcarNumber = dispatchCarInfos2.stream().filter(p -> p.getIfPayed() !=null && p.getIfPayed() ).count();
                 dispatchcarRecordCollectBO.setPayedRentcarNumber((int)payedRentcarNumber);
                 //已经付款出车费
-                Double payedRentcarCost = rentcarCost + parkCost + mealCost +rentcarCost;
+                payedRentcarCost = rentcarCost + parkCost + mealCost +rentcarCost;
                 dispatchcarRecordCollectBO.setPayedRentcarCost(payedRentcarCost);
-                departmentCollectBO.setDeparment(group);
+                departmentCollectBO.setDepartment(group);
                 departmentCollectBO.setDispatchcarRecordCollect(dispatchcarRecordCollectBO);
                 departmentCollectBOS.add(departmentCollectBO);
             }

@@ -26,14 +26,12 @@ import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import com.bjike.goddess.dispatchcar.vo.OilCardBasicCarVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
-import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
-import com.bjike.goddess.staffentry.vo.StaffEntryRegisterVO;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -67,6 +65,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+
 
     /**
      * 模块设置导航权限
@@ -350,7 +349,8 @@ public class DispatchCarInfoAct extends BaseFileAction {
     @GetMapping("v1/list")
     public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class, request);
+            List<DispatchCarInfoBO> dispatchCarInfoBOS = dispatchCarInfoAPI.pageList(dto);
+            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoBOS, DispatchCarInfoVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -376,9 +376,9 @@ public class DispatchCarInfoAct extends BaseFileAction {
     }
 
     /**
-     * 查询所有用车陪同人员和用车人员和任务下达人员和所属地区和所属项目组
+     * 查询所有用车陪同人员和用车人员和任务下达人员和所属项目组
      *
-     * @return class EntryRegisterVO
+     * @return class UserVO
      * @throws ActException
      * @version v1
      */
@@ -386,10 +386,41 @@ public class DispatchCarInfoAct extends BaseFileAction {
     @GetMapping("v1/find/entry")
     public Result findAllEntry() throws ActException {
         try {
-            List<EntryRegisterBO> boList = dispatchCarInfoAPI.findAllEntry();
-            List<EntryRegisterVO>  voList = BeanTransform.copyProperties(boList, EntryRegisterVO.class);
+            List<UserBO> boList = dispatchCarInfoAPI.findAllEntry();
+            List<UserVO>  voList = BeanTransform.copyProperties(boList, UserVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有所属地区
+     * @return class AreaBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/area")
+    public Result findAllArea() throws ActException{
+        try {
+            List<AreaBO> areas = dispatchCarInfoAPI.findArea();
+            return ActResult.initialize(areas);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询所有项目组
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/department")
+    public Result findAllDepartment() throws ActException{
+        try {
+            List<String> departments = dispatchCarInfoAPI.getAllDepartment();
+            return ActResult.initialize(departments);
+        }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }
@@ -538,5 +569,54 @@ public class DispatchCarInfoAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 根据司机姓名获取出车油耗
+     * @param driver
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/oilwear")
+    public Result findOilWear(String driver) throws ActException{
+        try {
+            Double oilWear = dispatchCarInfoAPI.findOilWear(driver);
+            return ActResult.initialize(oilWear);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据油卡编号查询油卡余额
+     * @param oilCardNumber
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/balance")
+    public Result findBalance(@RequestParam String oilCardNumber) throws ActException{
+        try {
+            Double balance = dispatchCarInfoAPI.findBalance(oilCardNumber);
+            return ActResult.initialize(balance);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据项目名称获取立项信息
+     * @param project
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/projectapproval")
+    public Result findProjectApproval(String project) throws ActException{
+        try {
+            Boolean projectAproval = dispatchCarInfoAPI.findProjectAproval(project);
+            return ActResult.initialize(projectAproval);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

@@ -174,7 +174,7 @@ public class CheckChangeCarSerImpl extends ServiceImpl<CheckChangeCar, CheckChan
         if(StringUtils.isNotBlank(dto.getNumber())){
             dto.getConditions().add(Restrict.eq("number",dto.getNumber()));
         }
-        List<CheckChangeCar> checkChangeCars = super.findByCis(dto);
+        List<CheckChangeCar> checkChangeCars = super.findByPage(dto);
         List<CheckChangeCarBO> boList = BeanTransform.copyProperties(checkChangeCars,CheckChangeCarBO.class,false);
         return boList;
     }
