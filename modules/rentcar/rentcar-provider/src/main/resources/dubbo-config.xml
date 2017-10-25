@@ -21,6 +21,8 @@
 
     <!-- 司机信息 -->
     <dubbo:service interface="com.bjike.goddess.rentcar.api.DriverInfoAPI" ref="driverInfoApiImpl1"/>
+    <dubbo:service interface="com.bjike.goddess.rentcar.api.CarSendEmailAPI" ref="carSendEmailApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.rentcar.api.CollectDriverInfoAPI" ref="collectDriverInfoApiImpl"/>
 
     <!-- 招聘信息 -->
     <dubbo:service interface="com.bjike.goddess.rentcar.api.DriverRecruitAPI" ref="driverRecruitApiImpl1"/>

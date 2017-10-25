@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.rentcar.bo.AreaBO;
 import com.bjike.goddess.rentcar.bo.CollectDriverInfoBO;
+import com.bjike.goddess.rentcar.bo.OptionBO;
 import com.bjike.goddess.rentcar.entity.CollectDriverInfo;
 import com.bjike.goddess.rentcar.dto.CollectDriverInfoDTO;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
@@ -27,7 +28,7 @@ public interface CollectDriverInfoSer extends Ser<CollectDriverInfo, CollectDriv
     /**
      * 累计租车协议管理汇总
      */
-    List<AreaBO> allCollect(Integer year) throws SerException;
+    List<AreaBO> allCollect(String endDate) throws SerException;
 
     /**
      * 下拉导航权限
@@ -41,4 +42,15 @@ public interface CollectDriverInfoSer extends Ser<CollectDriverInfo, CollectDriv
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
+    /**
+     * 图形化月租车汇总
+     */
+    OptionBO figureShowMonth(Integer year,Integer month) throws SerException;
+
+
+    /**
+     * 图形化累计租车汇总
+     */
+    OptionBO figureShowTotal(String endDate) throws SerException;
  }
