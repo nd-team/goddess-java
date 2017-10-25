@@ -19,3 +19,4 @@ settings.gradle
 **/src/main/webapp/public/js/lib/**
 **/*.xml.bak
 **/out/
+*.log
