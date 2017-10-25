@@ -45,11 +45,6 @@ public class OilCardReceiveBO extends BaseBO {
     private String returnDate;
 
     /**
-     * 地区
-     */
-    private String area;
-
-    /**
      * 领卡人
      */
     private String receiveUser;
@@ -138,13 +133,6 @@ public class OilCardReceiveBO extends BaseBO {
         this.returnDate = returnDate;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
 
     public String getReceiveUser() {
         return receiveUser;

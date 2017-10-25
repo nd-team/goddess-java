@@ -29,9 +29,9 @@ public class OilCardRecharge extends BaseEntity{
     private OilCardBasic oilCardBasic;
 
     /**
-     * 充值日期
+     * 充值完成时间
      */
-    @Column(columnDefinition = "DATETIME COMMENT '充值日期'",nullable = false)
+    @Column(columnDefinition = "DATETIME COMMENT '充值完成时间'",nullable = false)
     private LocalDateTime rechargeDate;
 
     /**
@@ -58,6 +58,53 @@ public class OilCardRecharge extends BaseEntity{
     @Column(columnDefinition = "DECIMAL(10,2) COMMENT '期初金额'",nullable = false)
     private Double cycleEarlyMoney;
 
+    /**
+     * 是否充值
+     */
+    @Column(columnDefinition = "TINY(1) COMMENT '是否充值'",nullable = false)
+    private Boolean ifRecharge;
+
+    /**
+     * 备用金
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '备用金'")
+    private Double pettyCash;
+
+    /**
+     * 充值前备用金
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '充值前备用金'")
+    private Double rechargeBeforePettyCash;
+
+    /**
+     * 是否上传截图附件
+     */
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否上传截图附件'")
+    private Boolean ifUploadScreenshot;
+
+    /**
+     * 是否充值通报
+     */
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否充值通报'")
+    private Boolean ifPrepaidNotification;
+
+    /**
+     * 是否上传充值后截图附件
+     */
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否上传充值后截图附件'")
+    private Boolean ifUploadRecharge;
+
+    /**
+     * 充值后总金额
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '充值后总金额'")
+    private Double afterRechargeTotalMoney;
+
+    /**
+     * 充值后油卡余额
+     */
+    @Column(columnDefinition = "DECIMAL(10,2) COMMENT '充值后油卡余额'")
+    private Double afterRechargeBalance;
     public OilCardBasic getOilCardBasic() {
         return oilCardBasic;
     }
@@ -104,5 +151,69 @@ public class OilCardRecharge extends BaseEntity{
 
     public void setCycleEarlyMoney(Double cycleEarlyMoney) {
         this.cycleEarlyMoney = cycleEarlyMoney;
+    }
+
+    public Boolean getIfRecharge() {
+        return ifRecharge;
+    }
+
+    public void setIfRecharge(Boolean ifRecharge) {
+        this.ifRecharge = ifRecharge;
+    }
+
+    public Double getPettyCash() {
+        return pettyCash;
+    }
+
+    public void setPettyCash(Double pettyCash) {
+        this.pettyCash = pettyCash;
+    }
+
+    public Double getRechargeBeforePettyCash() {
+        return rechargeBeforePettyCash;
+    }
+
+    public void setRechargeBeforePettyCash(Double rechargeBeforePettyCash) {
+        this.rechargeBeforePettyCash = rechargeBeforePettyCash;
+    }
+
+    public Boolean getIfUploadScreenshot() {
+        return ifUploadScreenshot;
+    }
+
+    public void setIfUploadScreenshot(Boolean ifUploadScreenshot) {
+        this.ifUploadScreenshot = ifUploadScreenshot;
+    }
+
+    public Boolean getIfPrepaidNotification() {
+        return ifPrepaidNotification;
+    }
+
+    public void setIfPrepaidNotification(Boolean ifPrepaidNotification) {
+        this.ifPrepaidNotification = ifPrepaidNotification;
+    }
+
+    public Boolean getIfUploadRecharge() {
+        return ifUploadRecharge;
+    }
+
+    public void setIfUploadRecharge(Boolean ifUploadRecharge) {
+        this.ifUploadRecharge = ifUploadRecharge;
+    }
+
+    public Double getAfterRechargeTotalMoney() {
+        return afterRechargeTotalMoney;
+    }
+
+    public void setAfterRechargeTotalMoney(Double afterRechargeTotalMoney) {
+        this.afterRechargeTotalMoney = afterRechargeTotalMoney;
+    }
+
+    public Double getAfterRechargeBalance() {
+        return afterRechargeBalance;
+    }
+
+    public void setAfterRechargeBalance(Double afterRechargeBalance) {
+        this.afterRechargeBalance = afterRechargeBalance;
     }
 }
