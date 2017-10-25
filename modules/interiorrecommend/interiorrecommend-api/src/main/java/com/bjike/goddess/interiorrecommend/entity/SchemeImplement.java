@@ -65,19 +65,19 @@ public class SchemeImplement extends BaseEntity {
     /**
      * 是否入职
      */
-    @Column(name = "is_isEntry",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否入职'"  , insertable = false  )
+    @Column(name = "is_isEntry",nullable = false,columnDefinition = "TINYINT(1)   COMMENT '是否入职'" )
     private Boolean  isEntry;
 
     /**
      * 是否转正
      */
-    @Column(name = "is_isRegular",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否转正'"  , insertable = false  )
+    @Column(name = "is_isRegular",nullable = false,columnDefinition = "TINYINT(1)  COMMENT '是否转正'"   )
     private Boolean  isRegular;
 
     /**
      * 是否获得推荐奖
      */
-    @Column(name = "is_isAcquire",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否获得推荐奖'"  , insertable = false  )
+    @Column(name = "is_isAcquire",nullable = false,columnDefinition = "TINYINT(1) COMMENT '是否获得推荐奖'"  )
     private Boolean  isAcquire;
 
     /**
