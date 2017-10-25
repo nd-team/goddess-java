@@ -111,6 +111,13 @@ public class StayUtilities extends BaseEntity {
     private Double waterStaffPay;
 
     /**
+     * 水费员工预缴
+     */
+    @Column(name = "waterStaffPrepay", columnDefinition = "DECIMAL(10,2)   COMMENT '水费员工预缴'")
+    private Double waterStaffPrepay;
+
+
+    /**
      * 当月应缴电费总额
      */
     @Column(name = "energyAmount", columnDefinition = "DECIMAL(10,2)   COMMENT '当月应缴电费总额'")
@@ -121,6 +128,12 @@ public class StayUtilities extends BaseEntity {
      */
     @Column(name = "energyCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '电费公司缴纳'")
     private Double energyCompanyPay;
+
+    /**
+     * 电费员工预缴
+     */
+    @Column(name = "energyStaffPrepay", columnDefinition = "DECIMAL(10,2)   COMMENT '电费员工预缴'")
+    private Double energyStaffPrepay;
 
     /**
      * 电费员工缴纳（(当月应缴电费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
@@ -139,6 +152,12 @@ public class StayUtilities extends BaseEntity {
      */
     @Column(name = "gasCompanyPay", columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费公司缴纳'")
     private Double gasCompanyPay;
+
+    /**
+     * 燃气费员工预缴
+     */
+    @Column(name = "gasStaffPrepay", columnDefinition = "DECIMAL(10,2)   COMMENT '燃气费员工预缴'")
+    private Double gasStaffPrepay;
 
     /**
      * 燃气费员工缴纳（(管道燃气费充值额度/同一住宿地址员工住宿天数总和)*个人员工住宿天数）

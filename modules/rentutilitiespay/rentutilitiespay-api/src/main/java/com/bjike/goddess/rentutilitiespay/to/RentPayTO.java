@@ -3,6 +3,7 @@ package com.bjike.goddess.rentutilitiespay.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.rentutilitiespay.enums.PayParty;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -137,7 +138,7 @@ public class RentPayTO extends BaseTO {
      * 房租缴费方
      */
     @NotBlank(message = "房租缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String rentPay;
+    private PayParty rentPay;
 
     /**
      * 水费初期数目
@@ -183,7 +184,7 @@ public class RentPayTO extends BaseTO {
      * 水费缴费方
      */
     @NotBlank(message = "水费缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String waterPay;
+    private PayParty waterPay;
 
     /**
      * 电费初期数目
@@ -229,7 +230,7 @@ public class RentPayTO extends BaseTO {
      * 电费缴费方
      */
     @NotBlank(message = "电费缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String energyPay;
+    private PayParty energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -253,7 +254,7 @@ public class RentPayTO extends BaseTO {
      * 燃气费缴费方
      */
     @NotBlank(message = "燃气费缴费方不能为空",groups = {ADD.class, EDIT.class})
-    private String gasPay;
+    private PayParty gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -431,13 +432,6 @@ public class RentPayTO extends BaseTO {
         this.rentEndTime = rentEndTime;
     }
 
-    public String getRentPay() {
-        return rentPay;
-    }
-
-    public void setRentPay(String rentPay) {
-        this.rentPay = rentPay;
-    }
 
     public Double getWaterBeginNum() {
         return waterBeginNum;
@@ -495,13 +489,6 @@ public class RentPayTO extends BaseTO {
         this.waterEndTime = waterEndTime;
     }
 
-    public String getWaterPay() {
-        return waterPay;
-    }
-
-    public void setWaterPay(String waterPay) {
-        this.waterPay = waterPay;
-    }
 
     public Double getEnergyBeginNum() {
         return energyBeginNum;
@@ -559,13 +546,6 @@ public class RentPayTO extends BaseTO {
         this.energyEndTime = energyEndTime;
     }
 
-    public String getEnergyPay() {
-        return energyPay;
-    }
-
-    public void setEnergyPay(String energyPay) {
-        this.energyPay = energyPay;
-    }
 
     public Double getGasRechargeLines() {
         return gasRechargeLines;
@@ -591,13 +571,6 @@ public class RentPayTO extends BaseTO {
         this.gasEndTime = gasEndTime;
     }
 
-    public String getGasPay() {
-        return gasPay;
-    }
-
-    public void setGasPay(String gasPay) {
-        this.gasPay = gasPay;
-    }
 
     public Double getPayMoneyCollect() {
         return payMoneyCollect;
@@ -630,5 +603,37 @@ public class RentPayTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public PayParty getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(PayParty rentPay) {
+        this.rentPay = rentPay;
+    }
+
+    public PayParty getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(PayParty waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public PayParty getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(PayParty energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public PayParty getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(PayParty gasPay) {
+        this.gasPay = gasPay;
     }
 }

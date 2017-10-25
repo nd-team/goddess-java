@@ -2,11 +2,9 @@ package com.bjike.goddess.rentutilitiespay.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rentutilitiespay.bo.CollectNameBO;
-import com.bjike.goddess.rentutilitiespay.bo.RentPayBO;
 import com.bjike.goddess.rentutilitiespay.bo.StayUtilitiesBO;
 import com.bjike.goddess.rentutilitiespay.dto.StayUtilitiesDTO;
 import com.bjike.goddess.rentutilitiespay.to.GuidePermissionTO;
-import com.bjike.goddess.rentutilitiespay.to.RentPayTO;
 import com.bjike.goddess.rentutilitiespay.to.StayUtilitiesTO;
 
 import java.util.List;
