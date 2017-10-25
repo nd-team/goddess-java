@@ -1113,98 +1113,151 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         return os.toByteArray();
     }
 
+    @Transactional
     @Override
-    public void importExcel(InputStream is) throws SerException {
+    public void importExcel(List<PositionWorkDetailsImport2> tos) throws SerException {
         try {
-            Excel excel = new Excel(0, 1);
-            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
+//            Excel excel = new Excel(0, 1);
+//            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
 
             Set<Integer> seqNum = new HashSet<>();
             if (null != tos && tos.size() > 0) {
                 List<PositionWorkDetailsImport> tocs = new ArrayList<>();
                 List<PositionWorkDetails> positionWorkDetailses = new ArrayList<>(0);
-                for (PositionWorkDetailsImport positionWorkDetailsImport : tos) {
-                    seqNum.add(positionWorkDetailsImport.getSeqNum());
+                for (PositionWorkDetailsImport2 positionWorkDetailsImport2 : tos) {
+                    seqNum.add(positionWorkDetailsImport2.getSeqNum());
                 }
-
                 for (Integer seq : seqNum) {
-                    tocs = tos.stream().filter(str -> seq.equals(str.getSeqNum())).collect(Collectors.toList());
+                    for (PositionWorkDetailsImport2 positionWorkDetailsImport2 : tos) {
+                        if (seq.equals(positionWorkDetailsImport2.getSeqNum())) {
+                            PositionWorkDetailsImport positionWorkDetailsImport = BeanTransform.copyProperties(positionWorkDetailsImport2, PositionWorkDetailsImport.class, "serialNumber", "gambling1", "unGambling1", "gambling2", "unGambling2", "gambling3", "unGambling3", "gambling4", "unGambling4", "gambling5", "unGambling5", "gambling6", "unGambling6", "gambling7", "unGambling7", "gambling8", "unGambling8", "gambling9", "unGambling9", "gambling0", "unGambling0");
+                            positionWorkDetailsImport.setSerialNumber(positionWorkDetailsImport2.getSerialNumber().longValue());
+                            if (null != positionWorkDetailsImport2.getGambling1()) {
+                                positionWorkDetailsImport.setGambling1(positionWorkDetailsImport2.getGambling1().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling1()) {
+                                positionWorkDetailsImport.setUnGambling1(positionWorkDetailsImport2.getUnGambling1().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling2()) {
+                                positionWorkDetailsImport.setGambling2(positionWorkDetailsImport2.getGambling2().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling2()) {
+                                positionWorkDetailsImport.setUnGambling2(positionWorkDetailsImport2.getUnGambling2().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling3()) {
+                                positionWorkDetailsImport.setGambling3(positionWorkDetailsImport2.getGambling3().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling3()) {
+                                positionWorkDetailsImport.setUnGambling3(positionWorkDetailsImport2.getUnGambling3().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling4()) {
+                                positionWorkDetailsImport.setGambling4(positionWorkDetailsImport2.getGambling4().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling4()) {
+                                positionWorkDetailsImport.setUnGambling4(positionWorkDetailsImport2.getUnGambling4().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling5()) {
+                                positionWorkDetailsImport.setGambling5(positionWorkDetailsImport2.getGambling5().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling5()) {
+                                positionWorkDetailsImport.setUnGambling5(positionWorkDetailsImport2.getUnGambling5().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling6()) {
+                                positionWorkDetailsImport.setGambling6(positionWorkDetailsImport2.getGambling6().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling6()) {
+                                positionWorkDetailsImport.setUnGambling6(positionWorkDetailsImport2.getUnGambling6().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling7()) {
+                                positionWorkDetailsImport.setGambling7(positionWorkDetailsImport2.getGambling7().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling7()) {
+                                positionWorkDetailsImport.setUnGambling7(positionWorkDetailsImport2.getUnGambling7().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling8()) {
+                                positionWorkDetailsImport.setGambling8(positionWorkDetailsImport2.getGambling8().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling8()) {
+                                positionWorkDetailsImport.setUnGambling8(positionWorkDetailsImport2.getUnGambling8().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling9()) {
+                                positionWorkDetailsImport.setGambling9(positionWorkDetailsImport2.getGambling9().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling9()) {
+                                positionWorkDetailsImport.setUnGambling9(positionWorkDetailsImport2.getUnGambling9().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getGambling0()) {
+                                positionWorkDetailsImport.setGambling0(positionWorkDetailsImport2.getGambling0().longValue());
+                            }
+                            if (null != positionWorkDetailsImport2.getUnGambling0()) {
+                                positionWorkDetailsImport.setUnGambling0(positionWorkDetailsImport2.getUnGambling0().longValue());
+                            }
+
+                            tocs.add(positionWorkDetailsImport);
+                        }
+                    }
+                }
+                List<PositionWorkDetailsImport> tocs1 = new ArrayList<>(0);
+                tocs1 = tocs;
+                for (Integer seq : seqNum) {
+                    tocs = tocs1.stream().filter(str -> seq.equals(str.getSeqNum())).collect(Collectors.toList());
+
                     if (null != tocs && tocs.size() > 0) {
+                        List<ModulesBO> modulesBOList = new ArrayList<>(0);
                         PositionWorkDetails entity = BeanTransform.copyProperties(tocs.get(0), PositionWorkDetails.class, true);
                         entity = super.save(entity);
                         if (tocs.size() >= 2) {
                             int total = tocs.size();
-                            //得到的模块进行判断,是否是相同的数据
-                            for (int i = 0; i < total; i++) {
-                                PositionWorkDetailsImport temp1 = tocs.get(i);
+                            for (int j = 1; j < 11; j++) {
+                                //得到的模块进行判断,是否是相同的数据
+                                for (int i = 0; i < total; i++) {
+                                    PositionWorkDetailsImport temp1 = tocs.get(i);
+                                    PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
+                                    if (i + 1 < total) {
+                                        temp2 = tocs.get(i + 1);
+                                    }
+                                    if (null != temp1 && null != temp2) {
+                                        Boolean tar = isRepeat(temp1, temp2, j);
+                                        if (!tar) {
+                                            List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp2, tar, j);
+                                            if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+                                                for (ModulesBO bo : modulesBOList1) {
+                                                    modulesBOList.add(bo);
+                                                }
+                                                i++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (tocs.size() == 1) {
+                            int total = tocs.size();
+                            for (int j = 1; j < 11; j++) {
+                                //得到的模块进行判断,是否是相同的数据
+                                PositionWorkDetailsImport temp1 = tocs.get(0);
                                 PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
-                                if (i + 1 < total) {
-                                    temp2 = tocs.get(i + 1);
-                                }
-                                if (null != temp1 && null != temp2) {
-                                    isRepeat(temp1, temp2);
+                                List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp2, false, j);
+                                if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+                                    for (ModulesBO bo : modulesBOList1) {
+                                        modulesBOList.add(bo);
+                                    }
                                 }
                             }
                         }
+                        modulesBOList.size();
                     }
-
-
-                    List<PositionWorkDetails> positionWorkDetailses = tos.get(seq);
-
-
-                    List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
-                    List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
-                    List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
-                    List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
-                    List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
-                    List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
-                    for (FirmIntroExcel str : tos) {
-                        if (str.getSeqNum().equals(seq)) {
-                            firmIntroExcels.add(str);
-                            HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str, HonorAndQualityTO.class);
-                            MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str, MainBusinessIntroTO.class);
-                            SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str, SuccessStoriesTO.class);
-                            CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str, CustomerAndPartnerTO.class);
-                            CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str, CommunicationPathTO.class);
-                            if (isCheckNull(honorAndQualityTO)) {
-                                honorAndQualityTOS.add(honorAndQualityTO);
-                            }
-                            if (isCheckNull(mainBusinessIntroTO)) {
-                                mainBusinessIntroTOS.add(mainBusinessIntroTO);
-                            }
-                            if (isCheckNull(successStoriesTO)) {
-                                successStoriesTOS.add(successStoriesTO);
-                            }
-                            if (isCheckNull(customerAndPartnerTO)) {
-                                customerAndPartnerTOS.add(customerAndPartnerTO);
-                            }
-                            if (isCheckNull(communicationPathTO)) {
-                                communicationPathTOS.add(communicationPathTO);
-                            }
-                        }
-                    }
-//                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
-//                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
-//                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
-//                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
-//                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
-//                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
-//                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
-//                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-//                firmIntroAPI.save(firmIntroTO);
-//            }
-
-
-                    positionWorkDetailsAPI.importExcel(is);
                 }
+
             }
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
     }
 
-    //判断两个对象中的属性是否都一致
-    private Boolean isRepeat(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2) throws SerException {
+    //判断两个对象中的第j张模块表的数据是否相同
+    private Boolean isRepeat(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2, int j) throws SerException {
+        //是否相同
+        Boolean tar = true;
         List<ModulesBO> modulesBOList = new ArrayList<>(0);
         Field[] fields1 = temp1.getClass().getDeclaredFields();
         Field[] fields2 = temp2.getClass().getDeclaredFields();
@@ -1215,140 +1268,357 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         List<Object> valList1 = new ArrayList<>(0);
         List<Object> valList2 = new ArrayList<>(0);
         try {
-            for (int j = 0; j < 10; j++) {
-                for (Field fi : fields1) {
-                    nameList1.add(fi.getName());
-                    typeList1.add(fi.getType());
+//            for (int j = 0; j < 10; j++) {
+            for (Field fi : fields1) {
+                nameList1.add(fi.getName());
+                typeList1.add(fi.getType());
+                fi.setAccessible(true); // 设置些属性是可以访问的
+                Object val = fi.get(temp1);
+                valList1.add(val);
+            }
+            for (Field fi : fields2) {
+                nameList2.add(fi.getName());
+                typeList2.add(fi.getType());
+                fi.setAccessible(true); // 设置些属性是可以访问的
+                Object val = fi.get(temp2);
+                valList2.add(val);
+            }
+            ModulesImportTempBO modulesImportTempBO1 = new ModulesImportTempBO();
+            ModulesImportTempBO modulesImportTempBO2 = new ModulesImportTempBO();
+            Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
+            Field[] fields4 = modulesImportTempBO2.getClass().getDeclaredFields();
+
+            int z = 33 + (j - 1) * 19;//到模块子表的长度
+            for (Field fi : fields3) {
+                if (z < 33 + (j - 1) * 19 + 8) {
                     fi.setAccessible(true); // 设置些属性是可以访问的
-                    Object val = fi.get(temp1);
-                    valList1.add(val);
+                    fi.set(modulesImportTempBO1, valList1.get(z));
                 }
-                for (Field fi : fields2) {
-                    nameList2.add(fi.getName());
-                    typeList2.add(fi.getType());
+                z++;
+            }
+
+            z = 33 + (j - 1) * 19;//到模块子表的长度
+            for (Field fi : fields4) {
+                if (z < 33 + (j - 1) * 19 + 8) {
                     fi.setAccessible(true); // 设置些属性是可以访问的
-                    Object val = fi.get(temp2);
-                    valList2.add(val);
+                    fi.set(modulesImportTempBO2, valList2.get(z));
                 }
+                z++;
+            }
 
-                ModulesImportTempBO modulesImportTempBO1 = new ModulesImportTempBO();
-//                ModulesImportTempBO modulesImportTempBO2 = new ModulesImportTempBO();
-
-                Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
-//                Field[] fields4 = modulesImportTempBO2.getClass().getDeclaredFields();
-
-//                int z = 0;
-//                for (Field fi : fields3) {
-//                    z = 33 + (j - 1) * 19;
-//                    if(z < 33 + j * 19) {
-//                        fi.setAccessible(true); // 设置些属性是可以访问的
-//                        fi.set(modulesImportTempBO1, valList1.get(z));
-//                    }
-//                }
-//                for (Field fi : fields4) {
-//                    z = 33 + (j - 1) * 19;
-//                    if(z < 33 + j * 19) {
-//                        fi.setAccessible(true); // 设置些属性是可以访问的
-//                        fi.set(modulesImportTempBO2, valList2.get(z));
-//                    }
-//                }
-
-                int z = 33 + (j - 1) * 19;
-                //是否相同
-                Boolean tar = true;
-                for (; z < 33 + j * 19; z++) {
+            if (isCheckNull(modulesImportTempBO1) && !isCheckNull(modulesImportTempBO2)) {
+                tar = false;
+            } else if (isCheckNull(modulesImportTempBO1) && isCheckNull(modulesImportTempBO2)) {
+                // 第j张模块表的第一个字段--->模块表最后一个字段
+                z = 33 + (j - 1) * 19;
+                for (; z < 33 + (j - 1) * 19 + 8; z++) {
                     Object object1 = valList1.get(z);
                     Object object2 = valList2.get(z);
-                    if (tar && null != object1 && null != object2 && !object1.equals(object2)) {
+                    if (tar && !object1.equals(object2)) {
                         tar = false;
-                    }
-
-                    if (null == object1 || null == object2) {
-                        tar = false;
-                    }
-                    //如果属性值相同,则该条数据的该模块与下一条数据的该模块相同
-                    if (tar) {
-                        modulesBOList.add(transToModuleBO(fields3, z, j, modulesImportTempBO1, valList1));
-                    } else {
-
-
-
-                        modulesBOList.add(transToModuleBO(fields3, z, j, modulesImportTempBO1, valList1));
-                    }
-
-                }
-
-
-            }
-
-
-            for (int i = 33; i <) {
-            }
-
-            Field[] fields1 = excel.getClass().getDeclaredFields();
-            int i = 3 + (j - 1) * 4;
-            int z = 0;
-            for (Field fi : fields1) {
-                if (z < 4) {
-                    if (fi.getName().equals(fields1[i].getName())) {
-                        if (null != valList.get(z)) {
-                            fi.setAccessible(true); // 设置些属性是可以访问的
-                            fi.set(excel, valList.get(z));
-                        }
-                        z += 1;
-                        i += 1;
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return excel;
+        return tar;
+    }
 
+    private List<ModulesBO> getModulesBOList(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2, Boolean tar, int j) throws SerException {
+        try {
+            List<ModulesBO> modulesBOList = new ArrayList<>(0);
+            Field[] fields1 = temp1.getClass().getDeclaredFields();
+            Field[] fields2 = temp2.getClass().getDeclaredFields();
+            List<String> nameList1 = new ArrayList<>(0);
+            List<String> nameList2 = new ArrayList<>(0);
+            List<Class> typeList1 = new ArrayList<>(0);
+            List<Class> typeList2 = new ArrayList<>(0);
+            List<Object> valList1 = new ArrayList<>(0);
+            List<Object> valList2 = new ArrayList<>(0);
+            for (Field fi : fields1) {
+                nameList1.add(fi.getName());
+                typeList1.add(fi.getType());
+                fi.setAccessible(true); // 设置些属性是可以访问的
+                Object val = fi.get(temp1);
+                valList1.add(val);
+            }
+            for (Field fi : fields2) {
+                nameList2.add(fi.getName());
+                typeList2.add(fi.getType());
+                fi.setAccessible(true); // 设置些属性是可以访问的
+                Object val = fi.get(temp2);
+                valList2.add(val);
+            }
+
+            //如果模块表属性值相同,则该条数据的该模块与下一条数据的该模块相同
+            if (tar) {
+                ModulesBO modulesBO = transToModuleBO(valList1, valList2, tar, j);
+                if (null != modulesBO) {
+                    modulesBOList.add(modulesBO);
+                }
+            } else {
+                ModulesBO modulesBO1 = transToModuleBO(valList1, valList2, tar, j);
+                if (null != modulesBO1) {
+                    modulesBOList.add(modulesBO1);
+                }
+                ModulesBO modulesBO2 = transToModuleBO(valList2, valList2, tar, j);
+                if (null != modulesBO2 && modulesBO2.getIndicatorBOList() != null) {
+                    modulesBOList.add(modulesBO2);
+                }
+            }
+            return modulesBOList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    //
-    private ModulesBO transToModuleBO(Field[] fields3, int z, int j, ModulesImportTempBO modulesImportTempBO1, List<Object> valList1) throws SerException {
+//    private List<ModulesBO> getModulesBOList2(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2) throws
+//            SerException {
+//        List<ModulesBO> modulesBOList = new ArrayList<>(0);
+//        Field[] fields1 = temp1.getClass().getDeclaredFields();
+//        Field[] fields2 = temp2.getClass().getDeclaredFields();
+//        List<String> nameList1 = new ArrayList<>(0);
+//        List<String> nameList2 = new ArrayList<>(0);
+//        List<Class> typeList1 = new ArrayList<>(0);
+//        List<Class> typeList2 = new ArrayList<>(0);
+//        List<Object> valList1 = new ArrayList<>(0);
+//        List<Object> valList2 = new ArrayList<>(0);
+//        try {
+//            for (int j = 0; j < 10; j++) {
+//                for (Field fi : fields1) {
+//                    nameList1.add(fi.getName());
+//                    typeList1.add(fi.getType());
+//                    fi.setAccessible(true); // 设置些属性是可以访问的
+//                    Object val = fi.get(temp1);
+//                    valList1.add(val);
+//                }
+//                for (Field fi : fields2) {
+//                    nameList2.add(fi.getName());
+//                    typeList2.add(fi.getType());
+//                    fi.setAccessible(true); // 设置些属性是可以访问的
+//                    Object val = fi.get(temp2);
+//                    valList2.add(val);
+//                }
+//
+//                ModulesImportTempBO modulesImportTempBO1 = new ModulesImportTempBO();
+//                Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
+//
+//                // 第j张模块表的第一个字段--->模块表最后一个字段
+//                int z = 33 + (j - 1) * 19;
+//                //是否相同
+//                Boolean tar = true;
+//                for (; z < 33 + (j - 1) * 19 + 8; z++) {
+//                    Object object1 = valList1.get(z);
+//                    Object object2 = valList2.get(z);
+//                    if (tar && null != object1 && !"".equals(object1)) {
+//                        tar = false;
+//                    }
+////                    if (null == object1 || null == object2 || object1.equals("") || object2.equals("")) {
+////                        tar = false;
+////                    }
+//                    //如果模块表属性值相同,则该条数据的该模块与下一条数据的该模块相同
+//                    if (tar) {
+//                        ModulesBO modulesBO = transToModuleBO(fields3, z, j, modulesImportTempBO1, valList1, valList2, tar);
+//                        if (null != modulesBO) {
+//                            modulesBOList.add(modulesBO);
+//                        }
+//                    } else {
+//                        ModulesBO modulesBO1 = transToModuleBO(fields3, z, j, modulesImportTempBO1, valList1, valList2, tar);
+//                        if (null != modulesBO1) {
+//                            modulesBOList.add(modulesBO1);
+//                        }
+//                        ModulesBO modulesBO2 = transToModuleBO(fields3, z, j, modulesImportTempBO1, valList2, valList2, tar);
+//                        if (null != modulesBO2) {
+//                            modulesBOList.add(modulesBO2);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return modulesBOList;
+//    }
+
+    //将属性值相同的模块表和两个指标表放到同一个modulesBO中
+    private ModulesBO transToModuleBO(List<Object> valList1, List<Object> valList2, Boolean tar, int j) throws SerException {
         try {
+//            if (!tar) {
+//                valList1 = valList2;
+//            }
+            List<IndicatorBO> indicatorBOs = new ArrayList<>(0);
             ModulesBO modulesBO = new ModulesBO();
+            ModulesImportTempBO modulesImportTempBO1 = new ModulesImportTempBO();
+            ModulesImportTempBO modulesImportTempBO2 = new ModulesImportTempBO();
+            Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
+            Field[] fields4 = modulesImportTempBO2.getClass().getDeclaredFields();
+
             //把模块的数据跟模块子表的数据存放到ModulesBO里面
+            int z = 33 + (j - 1) * 19;//到模块子表的长度
             for (Field fi : fields3) {
-//          z = 33 + (j - 1) * 19;//到下一个模块的长度
-                z = 33 + (j - 1) * 19;//到模块子表的长度
                 if (z < 33 + (j - 1) * 19 + 8) {
                     fi.setAccessible(true); // 设置些属性是可以访问的
                     fi.set(modulesImportTempBO1, valList1.get(z));
                 }
+                z++;
             }
             if (isCheckNull(modulesImportTempBO1)) {
                 BeanUtils.copyProperties(modulesImportTempBO1, modulesBO);
-                IndicatorImportTempBO indicatorImportTempBO1 = new IndicatorImportTempBO();
-                Field[] fields5 = indicatorImportTempBO1.getClass().getDeclaredFields();
+                switch (j) {
+                    case 1:
+                        modulesBO.setName("规划模块");
+                        break;
+                    case 2:
+                        modulesBO.setName("福利模块");
+                        break;
+                    case 3:
+                        modulesBO.setName("素养模块");
+                        break;
+                    case 4:
+                        modulesBO.setName("预算模块");
+                        break;
+                    case 5:
+                        modulesBO.setName("资金模块");
+                        break;
+                    case 6:
+                        modulesBO.setName("财务模块");
+                        break;
+                    case 7:
+                        modulesBO.setName("客户管理模块");
+                        break;
+                    case 8:
+                        modulesBO.setName("进度管理模块");
+                        break;
+                    case 9:
+                        modulesBO.setName("业务管理模块");
+                        break;
+                    case 10:
+                        modulesBO.setName("项目组模块");
+                        break;
+                    default:
+                        break;
+                }
 
-                //把模块的子表的数据存放到ModulesBO里面
-                for (Field fi : fields5) {
-//                            z = 33 + (j - 1) * 19;//到下一个模块的长度
-                    z = 33 + (j - 1) * 19 + 8;//到模块子表的长度
-                    if (z < 33 + (j - 1) * 19 + 11) {
-                        fi.setAccessible(true); // 设置些属性是可以访问的
-                        fi.set(indicatorImportTempBO1, valList1.get(z));
+                //存放第一张指标表的数据
+                IndicatorBO indicatorBO = transInditorToModulesBO(j, valList1, modulesBO);
+                if (null != indicatorBO) {
+                    indicatorBOs.add(indicatorBO);
+                    modulesBO.setIndicatorBOList(indicatorBOs);
+                }
+                //如果tar=true,表示模块表的属性值是相同的,需要存放第二张指标表的数据
+                //存放第二张指标表的数据
+                if (tar) {
+                    IndicatorBO indicatorBO1 = transInditorToModulesBO(j, valList2, modulesBO);
+                    if (null != indicatorBO1) {
+                        indicatorBOs.add(indicatorBO);
+                        modulesBO.setIndicatorBOList(indicatorBOs);
                     }
                 }
-                IndicatorBO indicatorBO = new IndicatorBO();
-                if (isCheckNull(indicatorImportTempBO1)) {
-                    BeanUtils.copyProperties(indicatorImportTempBO1, indicatorBO);
+            }
+            return modulesBO;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
 
-                    modulesBO.getIndicatorBOList().add(indicatorBO);
+    //将属性值相同的模块表和两个指标表放到同一个modulesBO中
+//    private ModulesBO transToModuleBO1(Field[] fields3, int z, int j, ModulesImportTempBO modulesImportTempBO1, List<Object> valList1, List<Object> valList2, Boolean tar) throws SerException {
+//        try {
+//            ModulesBO modulesBO = new ModulesBO();
+//            //把模块的数据跟模块子表的数据存放到ModulesBO里面
+//            for (Field fi : fields3) {
+////          z = 33 + (j - 1) * 19;//到下一个模块的长度
+//                z = 33 + (j - 1) * 19;//到模块子表的长度
+//                for (; z < 33 + (j - 1) * 19 + 8; z++) {
+//                    fi.setAccessible(true); // 设置些属性是可以访问的
+//                    fi.set(modulesImportTempBO1, valList1.get(z));
+//                }
+//            }
+//            if (isCheckNull(modulesImportTempBO1)) {
+//                BeanUtils.copyProperties(modulesImportTempBO1, modulesBO);
+//                //存放第一张指标表的数据
+//                IndicatorBO indicatorBO = transInditorToModulesBO(z, j, valList1, modulesBO);
+//                if (null != indicatorBO) {
+//                    modulesBO.getIndicatorBOList().add(indicatorBO);
+//                }
+//                //如果tar=true,表示模块表的属性值是相同的,需要存放第二张指标表的数据
+//                if (tar) {
+//                    //存放第二张指标表的数据
+//                    IndicatorBO indicatorBO1 = transInditorToModulesBO(z, j, valList2, modulesBO);
+//                    if (null != indicatorBO1) {
+//                        modulesBO.getIndicatorBOList().add(indicatorBO1);
+//                    }
+//                }
+//                return modulesBO;
+//            }
+//
+//            return null;
+//        } catch (Exception e) {
+//            throw new SerException(e.getMessage());
+//        }
+//    }
 
-                    return modulesBO;
+    /**
+     * 将两个指标表的数据放到modulesBO中
+     */
+    private IndicatorBO transInditorToModulesBO(int j, List<Object> valList1, ModulesBO modulesBO) throws SerException {
+        try {
+            //把模块表下的指标表存放到modulesBO中
+            IndicatorImportTempBO indicatorImportTempBO1 = new IndicatorImportTempBO();
+            Field[] fields5 = indicatorImportTempBO1.getClass().getDeclaredFields();
+
+            int z = 33 + (j - 1) * 19 + 8;//到模块子表的长度
+            //把模块的子表(指标表)的数据存放到ModulesBO里面
+            for (Field fi : fields5) {
+//              z = 33 + (j - 1) * 19;//到下一个模块的长度
+                if (z < 33 + (j - 1) * 19 + 19) {
+                    fi.setAccessible(true); // 设置些属性是可以访问的
+                    fi.set(indicatorImportTempBO1, valList1.get(z));
                 }
+                z++;
+            }
+            IndicatorBO indicatorBO = new IndicatorBO();
+            if (isCheckNull(indicatorImportTempBO1)) {
+                BeanUtils.copyProperties(indicatorImportTempBO1, indicatorBO);
+                return indicatorBO;
             }
             return null;
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
     }
+
+    /**
+     * 将两个指标表的数据放到modulesBO中
+     */
+    private IndicatorBO transInditorToModulesBO1(int z, int j, List<Object> valList1, ModulesBO modulesBO) throws SerException {
+        try {
+            //把模块表下的指标表存放到modulesBO中
+            IndicatorImportTempBO indicatorImportTempBO1 = new IndicatorImportTempBO();
+            Field[] fields5 = indicatorImportTempBO1.getClass().getDeclaredFields();
+
+            //把模块的子表(指标表)的数据存放到ModulesBO里面
+            for (Field fi : fields5) {
+//              z = 33 + (j - 1) * 19;//到下一个模块的长度
+                z = 33 + (j - 1) * 19 + 8;//到模块子表的长度
+                for (; z < 33 + (j - 1) * 19 + 11; z++) {
+                    fi.setAccessible(true); // 设置些属性是可以访问的
+                    fi.set(indicatorImportTempBO1, valList1.get(z));
+                }
+            }
+            IndicatorBO indicatorBO = new IndicatorBO();
+            if (isCheckNull(indicatorImportTempBO1)) {
+                BeanUtils.copyProperties(indicatorImportTempBO1, indicatorBO);
+                return indicatorBO;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
 
     //判断某个类的所有属性是否都为空
     private Boolean isCheckNull(Object obj) {

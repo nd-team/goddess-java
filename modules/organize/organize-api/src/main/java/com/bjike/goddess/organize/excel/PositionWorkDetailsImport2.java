@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class PositionWorkDetailsImport implements Serializable {
+public class PositionWorkDetailsImport2 implements Serializable {
 
     /**
      * 排序
@@ -61,7 +61,7 @@ public class PositionWorkDetailsImport implements Serializable {
      * 序号
      */
     @ExcelHeader(name = "序号", notNull = true)
-    private Long serialNumber;
+    private Integer serialNumber;
 
     /**
      * 角度
@@ -298,13 +298,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "规划达到指标对赌分")
-    private Long gambling1;
+    private Integer gambling1;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "规划未达到指标对赌分")
-    private Long unGambling1;
+    private Integer unGambling1;
 
     /**
      * 是否达到指标
@@ -413,13 +413,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "福利达到指标对赌分")
-    private Long gambling2;
+    private Integer gambling2;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "福利未达到指标对赌分")
-    private Long unGambling2;
+    private Integer unGambling2;
 
     /**
      * 是否达到指标
@@ -528,13 +528,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "素养达到指标对赌分")
-    private Long gambling3;
+    private Integer gambling3;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "素养未达到指标对赌分")
-    private Long unGambling3;
+    private Integer unGambling3;
 
     /**
      * 是否达到指标
@@ -643,13 +643,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "预算达到指标对赌分")
-    private Long gambling4;
+    private Integer gambling4;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "预算未达到指标对赌分")
-    private Long unGambling4;
+    private Integer unGambling4;
 
     /**
      * 是否达到指标
@@ -757,13 +757,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "资金达到指标对赌分")
-    private Long gambling5;
+    private Integer gambling5;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "资金未达到指标对赌分")
-    private Long unGambling5;
+    private Integer unGambling5;
 
     /**
      * 是否达到指标
@@ -871,13 +871,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "账务达到指标对赌分")
-    private Long gambling6;
+    private Integer gambling6;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "账务未达到指标对赌分")
-    private Long unGambling6;
+    private Integer unGambling6;
 
     /**
      * 是否达到指标
@@ -985,13 +985,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "客户管理达到指标对赌分")
-    private Long gambling7;
+    private Integer gambling7;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "客户管理未达到指标对赌分")
-    private Long unGambling7;
+    private Integer unGambling7;
 
     /**
      * 是否达到指标
@@ -1099,13 +1099,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "进度管理达到指标对赌分")
-    private Long gambling8;
+    private Integer gambling8;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "进度管理未达到指标对赌分")
-    private Long unGambling8;
+    private Integer unGambling8;
 
     /**
      * 是否达到指标
@@ -1213,13 +1213,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "业务管理达到指标对赌分")
-    private Long gambling9;
+    private Integer gambling9;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "业务管理未达到指标对赌分")
-    private Long unGambling9;
+    private Integer unGambling9;
 
     /**
      * 是否达到指标
@@ -1327,13 +1327,13 @@ public class PositionWorkDetailsImport implements Serializable {
      * 达到指标对赌分
      */
     @ExcelHeader(name = "项目组达到指标对赌分")
-    private Long gambling0;
+    private Integer gambling0;
 
     /**
      * 未达到指标对赌分
      */
     @ExcelHeader(name = "项目组未达到指标对赌分")
-    private Long unGambling0;
+    private Integer unGambling0;
 
     /**
      * 是否达到指标
@@ -1415,11 +1415,11 @@ public class PositionWorkDetailsImport implements Serializable {
         this.position = position;
     }
 
-    public Long getSerialNumber() {
+    public Integer getSerialNumber() {
         return serialNumber;
     }
 
-    public void setSerialNumber(Long serialNumber) {
+    public void setSerialNumber(Integer serialNumber) {
         this.serialNumber = serialNumber;
     }
 
@@ -1727,19 +1727,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect1 = reflect1;
     }
 
-    public Long getGambling1() {
+    public Integer getGambling1() {
         return gambling1;
     }
 
-    public void setGambling1(Long gambling1) {
+    public void setGambling1(Integer gambling1) {
         this.gambling1 = gambling1;
     }
 
-    public Long getUnGambling1() {
+    public Integer getUnGambling1() {
         return unGambling1;
     }
 
-    public void setUnGambling1(Long unGambling1) {
+    public void setUnGambling1(Integer unGambling1) {
         this.unGambling1 = unGambling1;
     }
 
@@ -1879,19 +1879,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect2 = reflect2;
     }
 
-    public Long getGambling2() {
+    public Integer getGambling2() {
         return gambling2;
     }
 
-    public void setGambling2(Long gambling2) {
+    public void setGambling2(Integer gambling2) {
         this.gambling2 = gambling2;
     }
 
-    public Long getUnGambling2() {
+    public Integer getUnGambling2() {
         return unGambling2;
     }
 
-    public void setUnGambling2(Long unGambling2) {
+    public void setUnGambling2(Integer unGambling2) {
         this.unGambling2 = unGambling2;
     }
 
@@ -2031,19 +2031,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect3 = reflect3;
     }
 
-    public Long getGambling3() {
+    public Integer getGambling3() {
         return gambling3;
     }
 
-    public void setGambling3(Long gambling3) {
+    public void setGambling3(Integer gambling3) {
         this.gambling3 = gambling3;
     }
 
-    public Long getUnGambling3() {
+    public Integer getUnGambling3() {
         return unGambling3;
     }
 
-    public void setUnGambling3(Long unGambling3) {
+    public void setUnGambling3(Integer unGambling3) {
         this.unGambling3 = unGambling3;
     }
 
@@ -2183,19 +2183,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect4 = reflect4;
     }
 
-    public Long getGambling4() {
+    public Integer getGambling4() {
         return gambling4;
     }
 
-    public void setGambling4(Long gambling4) {
+    public void setGambling4(Integer gambling4) {
         this.gambling4 = gambling4;
     }
 
-    public Long getUnGambling4() {
+    public Integer getUnGambling4() {
         return unGambling4;
     }
 
-    public void setUnGambling4(Long unGambling4) {
+    public void setUnGambling4(Integer unGambling4) {
         this.unGambling4 = unGambling4;
     }
 
@@ -2335,19 +2335,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect5 = reflect5;
     }
 
-    public Long getGambling5() {
+    public Integer getGambling5() {
         return gambling5;
     }
 
-    public void setGambling5(Long gambling5) {
+    public void setGambling5(Integer gambling5) {
         this.gambling5 = gambling5;
     }
 
-    public Long getUnGambling5() {
+    public Integer getUnGambling5() {
         return unGambling5;
     }
 
-    public void setUnGambling5(Long unGambling5) {
+    public void setUnGambling5(Integer unGambling5) {
         this.unGambling5 = unGambling5;
     }
 
@@ -2487,19 +2487,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect6 = reflect6;
     }
 
-    public Long getGambling6() {
+    public Integer getGambling6() {
         return gambling6;
     }
 
-    public void setGambling6(Long gambling6) {
+    public void setGambling6(Integer gambling6) {
         this.gambling6 = gambling6;
     }
 
-    public Long getUnGambling6() {
+    public Integer getUnGambling6() {
         return unGambling6;
     }
 
-    public void setUnGambling6(Long unGambling6) {
+    public void setUnGambling6(Integer unGambling6) {
         this.unGambling6 = unGambling6;
     }
 
@@ -2639,19 +2639,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect7 = reflect7;
     }
 
-    public Long getGambling7() {
+    public Integer getGambling7() {
         return gambling7;
     }
 
-    public void setGambling7(Long gambling7) {
+    public void setGambling7(Integer gambling7) {
         this.gambling7 = gambling7;
     }
 
-    public Long getUnGambling7() {
+    public Integer getUnGambling7() {
         return unGambling7;
     }
 
-    public void setUnGambling7(Long unGambling7) {
+    public void setUnGambling7(Integer unGambling7) {
         this.unGambling7 = unGambling7;
     }
 
@@ -2791,19 +2791,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect8 = reflect8;
     }
 
-    public Long getGambling8() {
+    public Integer getGambling8() {
         return gambling8;
     }
 
-    public void setGambling8(Long gambling8) {
+    public void setGambling8(Integer gambling8) {
         this.gambling8 = gambling8;
     }
 
-    public Long getUnGambling8() {
+    public Integer getUnGambling8() {
         return unGambling8;
     }
 
-    public void setUnGambling8(Long unGambling8) {
+    public void setUnGambling8(Integer unGambling8) {
         this.unGambling8 = unGambling8;
     }
 
@@ -2943,19 +2943,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect9 = reflect9;
     }
 
-    public Long getGambling9() {
+    public Integer getGambling9() {
         return gambling9;
     }
 
-    public void setGambling9(Long gambling9) {
+    public void setGambling9(Integer gambling9) {
         this.gambling9 = gambling9;
     }
 
-    public Long getUnGambling9() {
+    public Integer getUnGambling9() {
         return unGambling9;
     }
 
-    public void setUnGambling9(Long unGambling9) {
+    public void setUnGambling9(Integer unGambling9) {
         this.unGambling9 = unGambling9;
     }
 
@@ -3095,19 +3095,19 @@ public class PositionWorkDetailsImport implements Serializable {
         this.reflect0 = reflect0;
     }
 
-    public Long getGambling0() {
+    public Integer getGambling0() {
         return gambling0;
     }
 
-    public void setGambling0(Long gambling0) {
+    public void setGambling0(Integer gambling0) {
         this.gambling0 = gambling0;
     }
 
-    public Long getUnGambling0() {
+    public Integer getUnGambling0() {
         return unGambling0;
     }
 
-    public void setUnGambling0(Long unGambling0) {
+    public void setUnGambling0(Integer unGambling0) {
         this.unGambling0 = unGambling0;
     }
 

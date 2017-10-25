@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.action.organize;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -11,9 +12,12 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
+import com.bjike.goddess.organize.excel.PositionWorkDetailsImport2;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.organize.vo.ManagerVO;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -492,65 +497,32 @@ public class PositionWorkDetailsAction extends BaseFileAction {
         }
     }
 
-//    /**
-//     * 导入Excel
-//     *
-//     * @param request 注入HttpServletRequest对象
-//     * @version v1
-//     */
-////    @LoginAuth
-//    @PostMapping("v1/importExcel")
-//    public Result importExcel(HttpServletRequest request) throws ActException {
-//        try {
-//            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-//            List<InputStream> inputStreams = super.getInputStreams(request);
-//            InputStream is = inputStreams.get(1);
-//            Excel excel = new Excel(0, 1);
-//            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+//    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<PositionWorkDetailsImport2> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport2.class, excel);
 //            List<PositionWorkDetailsImport> tocs = new ArrayList<>();
 //            Set<Integer> seqNum = new HashSet<>();
 //            for (PositionWorkDetailsImport positionWorkDetailsImport:tos){
 //                seqNum.add(positionWorkDetailsImport.getSeqNum());
 //            }
-//            for (Integer seq : seqNum){
-//                List<FirmIntroExcel> firmIntroExcels = new ArrayList<>();
-//                List<HonorAndQualityTO> honorAndQualityTOS = new ArrayList<>();//荣誉与资质
-//                List<MainBusinessIntroTO> mainBusinessIntroTOS = new ArrayList<>();//主业介绍
-//                List<SuccessStoriesTO> successStoriesTOS = new ArrayList<>();//成功案例
-//                List<CustomerAndPartnerTO> customerAndPartnerTOS = new ArrayList<>();//客户及合作伙伴
-//                List<CommunicationPathTO> communicationPathTOS = new ArrayList<>(); //通讯途径
-//                for(FirmIntroExcel str : tos){
-//                    if(str.getSeqNum().equals(seq)){
-//                        firmIntroExcels.add(str);
-//                        HonorAndQualityTO honorAndQualityTO = BeanTransform.copyProperties(str,HonorAndQualityTO.class);
-//                        MainBusinessIntroTO mainBusinessIntroTO = BeanTransform.copyProperties(str,MainBusinessIntroTO.class);
-//                        SuccessStoriesTO successStoriesTO = BeanTransform.copyProperties(str,SuccessStoriesTO.class);
-//                        CustomerAndPartnerTO customerAndPartnerTO = BeanTransform.copyProperties(str,CustomerAndPartnerTO.class);
-//                        CommunicationPathTO communicationPathTO = BeanTransform.copyProperties(str,CommunicationPathTO.class);
-//                        if(isCheckNull(honorAndQualityTO)){honorAndQualityTOS.add(honorAndQualityTO);}
-//                        if(isCheckNull(mainBusinessIntroTO)){mainBusinessIntroTOS.add(mainBusinessIntroTO);}
-//                        if(isCheckNull(successStoriesTO)){successStoriesTOS.add(successStoriesTO);}
-//                        if(isCheckNull(customerAndPartnerTO)){customerAndPartnerTOS.add(customerAndPartnerTO);}
-//                        if(isCheckNull(communicationPathTO)){communicationPathTOS.add(communicationPathTO);}
-//                    }
-//                }
-////                FirmIntroTO firmIntroTO = BeanTransform.copyProperties(firmIntroExcels.get(0),FirmIntroTO.class,"registerDate","updateDate");
-////                firmIntroTO.setRegisterDate(tos.get(0).getRegisterDate().toString());
-////                firmIntroTO.setHonorAndQualityTOS(honorAndQualityTOS);
-////                firmIntroTO.setMainBusinessIntroTOS(mainBusinessIntroTOS);
-////                firmIntroTO.setSuccessStoriesTOS(successStoriesTOS);
-////                firmIntroTO.setCustomerAndPartnerTOS(customerAndPartnerTOS);
-////                firmIntroTO.setCommunicationPathTOS(communicationPathTOS);
-////                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-////                firmIntroAPI.save(firmIntroTO);
-////            }
-//
-//
-//            positionWorkDetailsAPI.importExcel(is);
-//            return new ActResult("导入成功");
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+
+            positionWorkDetailsAPI.importExcel(tos);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

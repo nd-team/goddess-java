@@ -7,9 +7,9 @@ import com.bjike.goddess.organize.bo.OptionBO;
 import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
 import com.bjike.goddess.organize.entity.PositionWorkDetails;
+import com.bjike.goddess.organize.excel.PositionWorkDetailsImport2;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -168,10 +168,9 @@ public interface PositionWorkDetailsSer extends Ser<PositionWorkDetails, Positio
     /**
      * 导入Excel
      *
-     * @param is
      * @throws SerException
      */
-    default void importExcel(InputStream is) throws SerException {
+    default void importExcel(List<PositionWorkDetailsImport2> tos) throws SerException {
         return;
     }
 }
