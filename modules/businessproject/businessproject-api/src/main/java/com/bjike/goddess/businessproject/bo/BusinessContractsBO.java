@@ -1,31 +1,18 @@
-package com.bjike.goddess.businessproject.to;
+package com.bjike.goddess.businessproject.bo;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
-import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.NotNull;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * 商务项目合同
+ * 商务项目合同业务传输对象
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-10-19 11:36 ]
- * @Description: [ 商务项目合同 ]
+ * @Description: [ 商务项目合同业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class BusinessContractTO extends BaseTO {
-    public interface ManagerIdea {
-    }
-
-    public interface PlanIdea {
-    }
-
-    public interface BudgetIdea {
-    }
-    public interface Advance{}
-    public interface Notification{}
+public class BusinessContractsBO extends BaseBO {
 
     /**
      * 测算分类
@@ -45,13 +32,11 @@ public class BusinessContractTO extends BaseTO {
     /**
      * 通报时间
      */
-    @NotBlank(message = "通报时间不能为空",groups = {BusinessContractTO.Notification.class})
     private String notificationTime;
 
     /**
      * 是否通报
      */
-    @NotNull(message = "是否通报不能为空",groups = {BusinessContractTO.Notification.class})
     private Boolean notification;
 
     /**
@@ -207,7 +192,6 @@ public class BusinessContractTO extends BaseTO {
     /**
      * 预估金额
      */
-    @NotNull(message = "预估金额不能为空",groups = {BusinessContractTO.BudgetIdea.class})
     private Double forecastMoney;
 
     /**
@@ -233,31 +217,26 @@ public class BusinessContractTO extends BaseTO {
     /**
      * 预估确认担保人审核意见
      */
-    @NotBlank(message = "预估确认担保人审核意见不能为空",groups = {BusinessContractTO.Advance.class})
     private String guarantorIdea;
 
     /**
      * 预估项目是否确认实施
      */
-    @NotNull(message = "预估项目是否确认实施不能为空",groups = {BusinessContractTO.Advance.class})
     private Boolean implement;
 
     /**
      * 项目经理意见
      */
-    @NotBlank(message = "项目经理意见不能为空", groups = {BusinessContractTO.ManagerIdea.class})
     private String managerIdea;
 
     /**
      * 规划模块分析意见
      */
-    @NotBlank(message = "规划模块分析意见不能为空", groups = {BusinessContractTO.PlanIdea.class})
     private String planIdea;
 
     /**
      * 预算模块分析意见
      */
-    @NotBlank(message = "预算模块分析意见不能为空", groups = {BusinessContractTO.BudgetIdea.class})
     private String budgetIdea;
 
     /**
@@ -409,18 +388,7 @@ public class BusinessContractTO extends BaseTO {
      * 存储位置
      */
     private String storageLocation;
-    /**
-     * 发送内容
-     */
-    private String content;
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public String getMeasureClassify() {
         return measureClassify;

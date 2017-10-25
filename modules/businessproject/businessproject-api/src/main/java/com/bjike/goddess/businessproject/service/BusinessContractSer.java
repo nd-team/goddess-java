@@ -1,8 +1,8 @@
 package com.bjike.goddess.businessproject.service;
 
-import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.entity.BusinessContract;
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -45,9 +45,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
     /**
      * 根据id获取商务项目合同
      *
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO getOneById(String id) throws SerException {
+    default BusinessContractsBO getOneById(String id) throws SerException {
         return null;
     }
 
@@ -55,9 +55,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
     /**
      * 商务项目合同列表
      *
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default List<BusinessContractBO> list(BusinessContractDTO dto) throws SerException {
+    default List<BusinessContractsBO> list(BusinessContractDTO dto) throws SerException {
         return null;
     }
 
@@ -65,9 +65,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 添加商务项目合同
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO add(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO add(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -75,9 +75,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 编辑商务项目合同
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO edit(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO edit(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -94,9 +94,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 项目经理意见分析
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO managerIdea(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO managerIdea(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -104,9 +104,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 规划模块分析意见
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO planIdea(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO planIdea(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -114,9 +114,19 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 预算模块分析意见
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO budgetIdea(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO budgetIdea(BusinessContractTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 预立项
+     *
+     * @param to 商务项目合同
+     * @return class BusinessContractsBO
+     */
+    default BusinessContractsBO hadContract(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -124,9 +134,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 预立项目
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO advance(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO advance(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -134,9 +144,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 预估项目变更
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO changes(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO changes(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -144,9 +154,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 通报
      *
      * @param to 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO notification(BusinessContractTO to) throws SerException {
+    default BusinessContractsBO notification(BusinessContractTO to) throws SerException {
         return null;
     }
 
@@ -445,10 +455,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各地区合同立项情况金额图表日汇总
      *
      * @param time
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO dayAreaMakeFigureCollect(String time) throws SerException {
+    default OptionMakeBO dayAreaMakeFigureCollect(String time) throws SerException {
         return null;
     }
 
@@ -458,10 +468,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * @param year
      * @param month
      * @param week
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    default OptionMakeBO weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return null;
     }
 
@@ -470,10 +480,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      *
      * @param year
      * @param month
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO monthAreaMakeFigureCollect(Integer year, Integer month) throws SerException {
+    default OptionMakeBO monthAreaMakeFigureCollect(Integer year, Integer month) throws SerException {
         return null;
     }
 
@@ -482,10 +492,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      *
      * @param year
      * @param quarter
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    default OptionMakeBO quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return null;
     }
 
@@ -493,10 +503,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各地区合同立项情况金额图表年汇总
      *
      * @param year
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO yearAreaMakeFigureCollect(Integer year) throws SerException {
+    default OptionMakeBO yearAreaMakeFigureCollect(Integer year) throws SerException {
         return null;
     }
 
@@ -504,10 +514,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各地区合同立项情况金额图表累计汇总
      *
      * @param time
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO totalAreaMakeFigureCollect(String time) throws SerException {
+    default OptionMakeBO totalAreaMakeFigureCollect(String time) throws SerException {
         return null;
     }
 
@@ -515,10 +525,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各所属项目组合同立项情况金额图表日汇总
      *
      * @param time
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO dayProjectGroupMakeFigureCollect(String time) throws SerException {
+    default OptionMakeBO dayProjectGroupMakeFigureCollect(String time) throws SerException {
         return null;
     }
 
@@ -528,10 +538,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * @param year
      * @param month
      * @param week
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    default OptionMakeBO weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return null;
     }
 
@@ -540,10 +550,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      *
      * @param year
      * @param month
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws SerException {
+    default OptionMakeBO monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws SerException {
         return null;
     }
 
@@ -552,10 +562,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      *
      * @param year
      * @param quarter
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    default OptionMakeBO quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return null;
     }
 
@@ -563,10 +573,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各所属项目组合同立项情况金额图表年汇总
      *
      * @param year
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO yearProjectGroupMakeFigureCollect(Integer year) throws SerException {
+    default OptionMakeBO yearProjectGroupMakeFigureCollect(Integer year) throws SerException {
         return null;
     }
 
@@ -574,10 +584,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各所属项目组合同立项情况金额图表累计汇总
      *
      * @param time
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO totalProjectGroupMakeFigureCollect(String time) throws SerException {
+    default OptionMakeBO totalProjectGroupMakeFigureCollect(String time) throws SerException {
         return null;
     }
 
@@ -585,10 +595,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各专业工期合同立项情况金额图表日汇总
      *
      * @param time
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO dayMajorMakeFigureCollect(String time) throws SerException {
+    default OptionMakeBO dayMajorMakeFigureCollect(String time) throws SerException {
         return null;
     }
 
@@ -598,10 +608,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * @param year
      * @param month
      * @param week
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    default OptionMakeBO weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return null;
     }
 
@@ -610,10 +620,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      *
      * @param year
      * @param month
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO monthMajorMakeFigureCollect(Integer year, Integer month) throws SerException {
+    default OptionMakeBO monthMajorMakeFigureCollect(Integer year, Integer month) throws SerException {
         return null;
     }
 
@@ -622,10 +632,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      *
      * @param year
      * @param quarter
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    default OptionMakeBO quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return null;
     }
 
@@ -633,10 +643,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各专业工期合同立项情况金额图表年汇总
      *
      * @param year
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO yearMajorMakeFigureCollect(Integer year) throws SerException {
+    default OptionMakeBO yearMajorMakeFigureCollect(Integer year) throws SerException {
         return null;
     }
 
@@ -644,10 +654,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 各专业工期合同立项情况金额图表累计汇总
      *
      * @param time
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO totalMajorMakeFigureCollect(String time) throws SerException {
+    default OptionMakeBO totalMajorMakeFigureCollect(String time) throws SerException {
         return null;
     }
 
@@ -876,10 +886,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 立项情况金额汇总
      *
      * @param year
-     * @return class BrokenOptionBO
+     * @return class BrokenOptionMakeBO
      * @throws SerException
      */
-    default BrokenOptionBO makeMoney(Integer year) throws SerException {
+    default BrokenOptionMakeBO makeMoney(Integer year) throws SerException {
         return null;
     }
 
@@ -906,9 +916,9 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * 导入
      *
      * @param contractTOS 商务项目合同
-     * @return class BusinessContractBO
+     * @return class BusinessContractsBO
      */
-    default BusinessContractBO importExcel(List<BusinessContractTO> contractTOS) throws SerException {
+    default BusinessContractsBO importExcel(List<BusinessContractTO> contractTOS) throws SerException {
         return null;
     }
 

@@ -1,18 +1,16 @@
 package com.bjike.goddess.businessproject.api;
 
-import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.service.BusinessContractSer;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
-import java.util.Timer;
 
 /**
  * 商务项目合同业务接口实现
@@ -27,6 +25,7 @@ import java.util.Timer;
 public class BusinessContractApiImpl implements BusinessContractAPI {
     @Autowired
     private BusinessContractSer businessContractSer;
+
     @Override
     public Boolean sonPermission() throws SerException {
         return businessContractSer.sonPermission();
@@ -41,23 +40,24 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public Long count(BusinessContractDTO dto) throws SerException {
         return businessContractSer.count(dto);
     }
+
     @Override
-    public BusinessContractBO getOneById(String id) throws SerException {
+    public BusinessContractsBO getOneById(String id) throws SerException {
         return businessContractSer.getOneById(id);
     }
 
     @Override
-    public List<BusinessContractBO> list(BusinessContractDTO dto) throws SerException {
+    public List<BusinessContractsBO> list(BusinessContractDTO dto) throws SerException {
         return businessContractSer.list(dto);
     }
 
     @Override
-    public BusinessContractBO add(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO add(BusinessContractTO to) throws SerException {
         return businessContractSer.add(to);
     }
 
     @Override
-    public BusinessContractBO edit(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO edit(BusinessContractTO to) throws SerException {
         return businessContractSer.edit(to);
     }
 
@@ -65,42 +65,52 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public void delete(String id) throws SerException {
         businessContractSer.delete(id);
     }
+
     @Override
     public Set<String> areas() throws SerException {
         return businessContractSer.areas();
     }
+
     @Override
-    public BusinessContractBO managerIdea(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO managerIdea(BusinessContractTO to) throws SerException {
         return businessContractSer.managerIdea(to);
     }
 
     @Override
-    public BusinessContractBO planIdea(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO planIdea(BusinessContractTO to) throws SerException {
         return businessContractSer.planIdea(to);
     }
 
     @Override
-    public BusinessContractBO budgetIdea(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO budgetIdea(BusinessContractTO to) throws SerException {
         return businessContractSer.budgetIdea(to);
     }
+
     @Override
-    public BusinessContractBO advance(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO hadContract(BusinessContractTO to) throws SerException {
+        return businessContractSer.hadContract(to);
+    }
+
+    @Override
+    public BusinessContractsBO advance(BusinessContractTO to) throws SerException {
         return businessContractSer.advance(to);
     }
 
     @Override
-    public BusinessContractBO changes(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO changes(BusinessContractTO to) throws SerException {
         return businessContractSer.changes(to);
     }
 
     @Override
-    public BusinessContractBO notification(BusinessContractTO to) throws SerException {
+    public BusinessContractsBO notification(BusinessContractTO to) throws SerException {
         return businessContractSer.notification(to);
     }
+
     @Override
     public List<BusinessContractADetailBO> collect(String[] areas) throws SerException {
         return businessContractSer.collect(areas);
     }
+
     @Override
     public List<BusinessContractProgressBO> dayCollect(String time) throws SerException {
         return businessContractSer.dayCollect(time);
@@ -143,7 +153,7 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
 
     @Override
     public OptionBO monthAreaScaleFigureCollect(Integer year, Integer month) throws SerException {
-        return businessContractSer.monthAreaScaleFigureCollect(year,month);
+        return businessContractSer.monthAreaScaleFigureCollect(year, month);
     }
 
     @Override
@@ -160,6 +170,7 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public OptionBO totalAreaScaleFigureCollect(String time) throws SerException {
         return businessContractSer.totalAreaScaleFigureCollect(time);
     }
+
     @Override
     public OptionBO dayProjectGroupScaleFigureCollect(String time) throws SerException {
         return businessContractSer.dayProjectGroupScaleFigureCollect(time);
@@ -219,94 +230,97 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public OptionBO totalMajorScaleFigureCollect(String time) throws SerException {
         return businessContractSer.totalMajorScaleFigureCollect(time);
     }
+
     @Override
-    public OptionBO dayAreaMakeFigureCollect(String time) throws SerException {
+    public OptionMakeBO dayAreaMakeFigureCollect(String time) throws SerException {
         return businessContractSer.dayAreaMakeFigureCollect(time);
     }
 
     @Override
-    public OptionBO weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekAreaMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return businessContractSer.weekAreaMakeFigureCollect(year, month, week);
     }
 
     @Override
-    public OptionBO monthAreaMakeFigureCollect(Integer year, Integer month) throws SerException {
+    public OptionMakeBO monthAreaMakeFigureCollect(Integer year, Integer month) throws SerException {
         return businessContractSer.monthAreaMakeFigureCollect(year, month);
     }
 
     @Override
-    public OptionBO quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    public OptionMakeBO quarterAreaMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return businessContractSer.quarterAreaMakeFigureCollect(year, quarter);
     }
 
     @Override
-    public OptionBO yearAreaMakeFigureCollect(Integer year) throws SerException {
+    public OptionMakeBO yearAreaMakeFigureCollect(Integer year) throws SerException {
         return businessContractSer.yearAreaMakeFigureCollect(year);
     }
 
     @Override
-    public OptionBO totalAreaMakeFigureCollect(String time) throws SerException {
+    public OptionMakeBO totalAreaMakeFigureCollect(String time) throws SerException {
         return businessContractSer.totalAreaMakeFigureCollect(time);
     }
+
     @Override
-    public OptionBO dayProjectGroupMakeFigureCollect(String time) throws SerException {
+    public OptionMakeBO dayProjectGroupMakeFigureCollect(String time) throws SerException {
         return businessContractSer.dayProjectGroupMakeFigureCollect(time);
     }
 
     @Override
-    public OptionBO weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekProjectGroupMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return businessContractSer.weekProjectGroupMakeFigureCollect(year, month, week);
     }
 
     @Override
-    public OptionBO monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws SerException {
+    public OptionMakeBO monthProjectGroupMakeFigureCollect(Integer year, Integer month) throws SerException {
         return businessContractSer.monthProjectGroupMakeFigureCollect(year, month);
     }
 
     @Override
-    public OptionBO quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    public OptionMakeBO quarterProjectGroupMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return businessContractSer.quarterProjectGroupMakeFigureCollect(year, quarter);
     }
 
     @Override
-    public OptionBO yearProjectGroupMakeFigureCollect(Integer year) throws SerException {
+    public OptionMakeBO yearProjectGroupMakeFigureCollect(Integer year) throws SerException {
         return businessContractSer.yearProjectGroupMakeFigureCollect(year);
     }
 
     @Override
-    public OptionBO totalProjectGroupMakeFigureCollect(String time) throws SerException {
+    public OptionMakeBO totalProjectGroupMakeFigureCollect(String time) throws SerException {
         return businessContractSer.totalProjectGroupMakeFigureCollect(time);
     }
 
     @Override
-    public OptionBO dayMajorMakeFigureCollect(String time) throws SerException {
+    public OptionMakeBO dayMajorMakeFigureCollect(String time) throws SerException {
         return businessContractSer.dayMajorMakeFigureCollect(time);
     }
 
     @Override
-    public OptionBO weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekMajorMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
         return businessContractSer.weekMajorMakeFigureCollect(year, month, week);
     }
 
     @Override
-    public OptionBO monthMajorMakeFigureCollect(Integer year, Integer month) throws SerException {
+    public OptionMakeBO monthMajorMakeFigureCollect(Integer year, Integer month) throws SerException {
         return businessContractSer.monthMajorMakeFigureCollect(year, month);
     }
 
     @Override
-    public OptionBO quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+    public OptionMakeBO quarterMajorMakeFigureCollect(Integer year, Integer quarter) throws SerException {
         return businessContractSer.quarterMajorMakeFigureCollect(year, quarter);
     }
 
     @Override
-    public OptionBO yearMajorMakeFigureCollect(Integer year) throws SerException {
+    public OptionMakeBO yearMajorMakeFigureCollect(Integer year) throws SerException {
         return businessContractSer.yearMajorMakeFigureCollect(year);
     }
 
     @Override
-    public OptionBO totalMajorMakeFigureCollect(String time) throws SerException {
+    public OptionMakeBO totalMajorMakeFigureCollect(String time) throws SerException {
         return businessContractSer.totalMajorMakeFigureCollect(time);
     }
+
     @Override
     public OptionBO dayAreaMakeCaseFigureCollect(String time) throws SerException {
         return businessContractSer.dayAreaMakeCaseFigureCollect(time);
@@ -396,13 +410,14 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public OptionBO totalMajorMakeCaseFigureCollect(String time) throws SerException {
         return businessContractSer.totalMajorMakeCaseFigureCollect(time);
     }
+
     @Override
     public BrokenOptionBO scaleNum(Integer year) throws SerException {
         return businessContractSer.scaleNum(year);
     }
 
     @Override
-    public BrokenOptionBO makeMoney(Integer year) throws SerException {
+    public BrokenOptionMakeBO makeMoney(Integer year) throws SerException {
         return businessContractSer.makeMoney(year);
     }
 
@@ -410,8 +425,9 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public BrokenOptionBO makeCase(Integer year) throws SerException {
         return businessContractSer.makeCase(year);
     }
+
     @Override
-    public BusinessContractBO importExcel(List<BusinessContractTO> contractTOS) throws SerException {
+    public BusinessContractsBO importExcel(List<BusinessContractTO> contractTOS) throws SerException {
         return businessContractSer.importExcel(contractTOS);
     }
 

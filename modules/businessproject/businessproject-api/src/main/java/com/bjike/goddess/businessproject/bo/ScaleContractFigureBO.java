@@ -29,6 +29,10 @@ public class ScaleContractFigureBO extends BaseBO {
      */
     private String major;
     /**
+     * 年月份
+     */
+    private String yearMonth;
+    /**
      * 规模数量(总规模数量)
      */
     private Integer scaleContract;
@@ -36,6 +40,14 @@ public class ScaleContractFigureBO extends BaseBO {
      * 实际完成规模数量
      */
     private Integer finishScale;
+
+    public String getYearMonth() {
+        return yearMonth;
+    }
+
+    public void setYearMonth(String yearMonth) {
+        this.yearMonth = yearMonth;
+    }
 
     public String getProjectGroup() {
         return projectGroup;

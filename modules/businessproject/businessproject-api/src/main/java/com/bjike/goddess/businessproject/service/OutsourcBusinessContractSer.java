@@ -70,6 +70,15 @@ public interface OutsourcBusinessContractSer extends Ser<OutsourcBusinessContrac
     default OutsourcBusinessContractBO add(OutsourcBusinessContractTO to) throws SerException {
         return null;
     }
+    /**
+     * 编辑供应商
+     *
+     * @param to 外包半外包项目合同管理
+     * @return class OutsourcBusinessContractBO
+     */
+    default OutsourcBusinessContractBO supplier(OutsourcBusinessContractTO to) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑外包半外包项目合同管理
