@@ -1,7 +1,6 @@
 package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
-import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.service.BusinessContractSer;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.bo.*;
@@ -28,14 +27,15 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     private BusinessContractSer businessContractSer;
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
+    public Boolean sonPermission() throws SerException {
         return businessContractSer.sonPermission();
     }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return businessContractSer.guidePermission( guidePermissionTO );
+        return businessContractSer.guidePermission(guidePermissionTO);
     }
+
     @Override
     public Long count(BusinessContractDTO dto) throws SerException {
         return businessContractSer.count(dto);

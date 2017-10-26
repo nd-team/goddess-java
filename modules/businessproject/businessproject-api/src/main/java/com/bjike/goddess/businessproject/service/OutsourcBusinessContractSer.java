@@ -70,7 +70,6 @@ public interface OutsourcBusinessContractSer extends Ser<OutsourcBusinessContrac
     default OutsourcBusinessContractBO add(OutsourcBusinessContractTO to) throws SerException {
         return null;
     }
-
     /**
      * 编辑供应商
      *

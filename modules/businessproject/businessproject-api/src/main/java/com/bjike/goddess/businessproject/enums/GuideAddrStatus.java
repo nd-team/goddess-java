@@ -78,7 +78,8 @@ public enum GuideAddrStatus {
     /**
      * 预算负责人
      */
-    BUDGET(16);
+    BUDGET(16),
+    ;
 
     private int code;
 
