@@ -15,7 +15,7 @@ import com.bjike.goddess.dimission.to.SituationTO;
 import com.bjike.goddess.dimission.vo.DimissionCollectVO;
 import com.bjike.goddess.dimission.vo.OptionVO;
 import com.bjike.goddess.dimission.vo.SituationVO;
-import com.bjike.goddess.organize.bo.OptionBO;
+import com.bjike.goddess.dimission.bo.OptionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -200,6 +200,43 @@ public class SituationAction {
     }
 
     /**
+     * 离职管理日汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String day, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowDay(day);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 离职管理周汇总柱状图
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 离职管理月汇总图形化
      *
      * @version v1
@@ -216,4 +253,20 @@ public class SituationAction {
         }
     }
 
+    /**
+     * 离职管理累计汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/all")
+    public Result figureShowAll() throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowAll();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

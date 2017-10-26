@@ -776,6 +776,22 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select area, number, department, position ");
+        sql.append(" from organize_department_detail a, organize_position_detail b, organize_position_detail_user c, organize_position_detail_user_table d");
+        sql.append(" where c.name = '" + name + "' ");
+        sql.append(" and c.id = d.user_id ");
+        sql.append(" and d.position_id = b.id ");
+        sql.append(" and b.department_id = a.id ");
+        String[] fildes = new String[]{"area", "number", "department", "position"};
+        List<InternalContactsConditionBO> internalContactsConditionBOs = super.findBySql(sql.toString(), InternalContactsConditionBO.class, fildes);
+        if (null != internalContactsConditionBOs && internalContactsConditionBOs.size() > 0) {
+            return internalContactsConditionBOs.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public String customRepPerson() throws SerException {
         String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')))";
         List<Object> objs = arrangementSer.findBySql(sql);

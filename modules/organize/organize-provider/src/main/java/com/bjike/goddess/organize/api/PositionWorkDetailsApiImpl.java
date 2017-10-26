@@ -5,13 +5,12 @@ import com.bjike.goddess.organize.bo.ManagerBO;
 import com.bjike.goddess.organize.bo.OptionBO;
 import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
+import com.bjike.goddess.organize.excel.PositionWorkDetailsImport2;
 import com.bjike.goddess.organize.service.PositionWorkDetailsSer;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -100,7 +99,12 @@ public class PositionWorkDetailsApiImpl implements PositionWorkDetailsAPI {
     }
 
     @Override
-    public void importExcel(InputStream is) throws SerException {
-        positionWorkDetailsSer.importExcel(is);
+    public void importExcel(List<PositionWorkDetailsImport2> tos) throws SerException {
+        positionWorkDetailsSer.importExcel(tos);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return positionWorkDetailsSer.templateExport();
     }
 }

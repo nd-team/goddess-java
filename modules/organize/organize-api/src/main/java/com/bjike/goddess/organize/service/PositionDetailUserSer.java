@@ -310,6 +310,12 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     List<String> names() throws SerException;
 
     /**
+     * 根据姓名获取地区,员工编号,职位,部门
+     */
+    default InternalContactsConditionBO getByName(String name) throws SerException {
+        return null;
+    }
+     /**
      * lijuntao
      * 获取客户模块负责人
      *
@@ -349,4 +355,5 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      * @throws SerException
      */
     String[] generPerson() throws SerException;
+
 }

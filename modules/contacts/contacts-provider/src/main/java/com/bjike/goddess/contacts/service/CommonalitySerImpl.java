@@ -67,23 +67,23 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         if (!Validator.isEmail(to.getEmail())) {
             throw new SerException("输入的邮箱格式不正确");
         }
-        //从组织结构中得到部门的id
-        String departmentId1 = getDepartment(to.getDepartmentId());
-        if (StringUtils.isEmpty(departmentId1)) {
-            //组织结构中没有对应的项目组/部门
-//            throw new SerException("组织结构中没有对应的项目组/部门,请先在组织结构中添加该部门");
-            departmentId1 = to.getDepartmentId();
-        }
+//        //从组织结构中得到部门的id
+//        String departmentId1 = getDepartment(to.getDepartment());
+//        if (StringUtils.isEmpty(departmentId1)) {
+//            //组织结构中没有对应的项目组/部门
+////            throw new SerException("组织结构中没有对应的项目组/部门,请先在组织结构中添加该部门");
+//            departmentId1 = to.getDepartment();
+//        }
         //查询数据库中是否有该数据
         List<Commonality> list = super.findAll();
         if (null != list && list.size() > 0) {
             for (Commonality entity : list) {
-                if (departmentId1.equals(entity.getDepartmentId())) {
+                if (to.getDepartment().equals(entity.getDepartment())) {
                     throw new SerException("该名称已存在");
                 }
             }
         }
-        to.setDepartmentId(departmentId1);
+//        to.setDepartmentId(departmentId1);
         Commonality entity = BeanTransform.copyProperties(to, Commonality.class);
         entity.setStatus(Status.THAW);
         super.save(entity);
@@ -138,18 +138,18 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
         //拼表头
         sb.append("<tr>");
-        sb.append("<td>项目组/部门ID</td>");
+        sb.append("<td>项目组/部门</td>");
         sb.append("<td>邮箱地址</td>");
         sb.append("<td>状态</td>");
         sb.append("<tr>");
 
         //拼body部分
         sb.append("<tr>");
-        String pdID = getDepartmentName(entity.getDepartmentId());
-        if (StringUtils.isEmpty(pdID)) {
-            pdID = entity.getDepartmentId();
-        }
-        sb.append("<td>" + pdID + "</td>");
+//        String pdID = getDepartmentName(entity.getDepartmentId());
+//        if (StringUtils.isEmpty(pdID)) {
+//            pdID = entity.getDepartmentId();
+//        }
+        sb.append("<td>" + entity.getDepartment() + "</td>");
         sb.append("<td>" + entity.getEmail() + "</td>");
         sb.append("<td>" + entity.getStatus() + "</td>");
         sb.append("<tr>");
@@ -169,11 +169,11 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         BeanTransform.copyProperties(to, entity, true);
         entity.setModifyTime(LocalDateTime.now());
         entity.setStatus(Status.THAW);
-        String dpID = getDepartment(to.getDepartmentId());
-        if (StringUtils.isEmpty(dpID)) {
-            dpID = to.getDepartmentId();
-        }
-        entity.setDepartmentId(dpID);
+//        String dpID = getDepartment(to.getDepartmentId());
+//        if (StringUtils.isEmpty(dpID)) {
+//            dpID = to.getDepartmentId();
+//        }
+//        entity.setDepartmentId(dpID);
         super.update(entity);
         //发送对象的邮箱地址
         String email = null;
@@ -233,11 +233,11 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
 
         //拼body部分
         sb.append("<tr>");
-        String pdID = getDepartmentName(entity.getDepartmentId());
-        if (StringUtils.isEmpty(pdID)) {
-            pdID = entity.getDepartmentId();
-        }
-        sb.append("<td>" + pdID + "</td>");
+//        String pdID = getDepartmentName(entity.getDepartmentId());
+//        if (StringUtils.isEmpty(pdID)) {
+//            pdID = entity.getDepartmentId();
+//        }
+        sb.append("<td>" + entity.getDepartment() + "</td>");
         sb.append("<td>" + entity.getEmail() + "</td>");
         sb.append("<td>" + entity.getStatus() + "</td>");
         sb.append("<tr>");
@@ -290,16 +290,16 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public List<CommonalityBO> maps(CommonalityDTO dto) throws SerException {
         List<Commonality> list = super.findByPage(dto);
-        if (null != list && list.size() > 0) {
-            for (Commonality entity : list) {
-                //将部门ｉｄ转换为部门
-                String name = getDepartmentName(entity.getDepartmentId());
-                if (StringUtils.isEmpty(name)) {
-                    name = entity.getDepartmentId();
-                }
-                entity.setDepartmentId(name);
-            }
-        }
+//        if (null != list && list.size() > 0) {
+//            for (Commonality entity : list) {
+//                //将部门ｉｄ转换为部门
+//                String name = getDepartmentName(entity.getDepartmentId());
+//                if (StringUtils.isEmpty(name)) {
+//                    name = entity.getDepartmentId();
+//                }
+//                entity.setDepartmentId(name);
+//            }
+//        }
         return BeanTransform.copyProperties(list, CommonalityBO.class);
     }
 
@@ -324,11 +324,11 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         Commonality entity = super.findById(id);
         if (null == entity)
             throw new SerException("该数据不存在");
-        String name = getDepartmentName(entity.getDepartmentId());
-        if (StringUtils.isEmpty(name)) {
-            name = entity.getDepartmentId();
-        }
-        entity.setDepartmentId(name);
+//        String name = getDepartmentName(entity.getDepartmentId());
+//        if (StringUtils.isEmpty(name)) {
+//            name = entity.getDepartmentId();
+//        }
+//        entity.setDepartmentId(name);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
     }
 
@@ -423,16 +423,16 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
                 }
 
                 CommonalityDTO dto = new CommonalityDTO();
-                String dpID = getDepartment(to.getDepartmentId());
-                if (StringUtils.isEmpty(dpID)) {
-                    dpID = to.getDepartmentId();
-                }
-                dto.getConditions().add(Restrict.eq("departmentId", dpID));
+//                String dpID = getDepartment(to.getDepartmentId());
+//                if (StringUtils.isEmpty(dpID)) {
+//                    dpID = to.getDepartmentId();
+//                }
+                dto.getConditions().add(Restrict.eq("department", to.getDepartment()));
                 List<Commonality> list = super.findByCis(dto);
                 if (null != list && list.size() > 0) {
                     throw new SerException("部门已存在");
                 }
-                to.setDepartmentId(dpID);
+//                to.setDepartmentId(dpID);
             }
         }
         List<Commonality> commonality = BeanTransform.copyProperties(commonalityTO, Commonality.class, true, "isSend", "sendObject");
@@ -449,7 +449,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         List<CommonalityTemplateExport> commerceContactsExports = new ArrayList<>();
 
         CommonalityTemplateExport excel = new CommonalityTemplateExport();
-        excel.setDepartmentId("研发部");
+        excel.setDepartment("研发部");
         excel.setEmail("110120119@qq.com");
         excel.setStatus(Status.THAW);
         commerceContactsExports.add(excel);
@@ -467,6 +467,12 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
             return list.stream().map(Commonality::getEmail).distinct().collect(Collectors.toList());
         }
         return null;
+    }
+
+    @Override
+    public List<String> findDepartment() throws SerException {
+        //从组织结构中查询所有的部门
+        return departmentDetailAPI.findAllDepartment();
     }
 
     /**
@@ -546,7 +552,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     }
 
     //得到对应部门的id号
-    private String getDepartment(String department) throws SerException {
+    private String getDepartment1(String department) throws SerException {
         //根据组织结构中的部门名称查询部门id
         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
         departmentDetailDTO.getConditions().add(Restrict.eq("department", department));

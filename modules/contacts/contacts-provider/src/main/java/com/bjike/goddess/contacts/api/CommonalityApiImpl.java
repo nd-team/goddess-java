@@ -105,4 +105,9 @@ public class CommonalityApiImpl implements CommonalityAPI {
     public List<String> getEmails() throws SerException {
         return commonalitySer.getEmails();
     }
+
+    @Override
+    public List<String> findDepartment() throws SerException {
+        return commonalitySer.findDepartment();
+    }
 }

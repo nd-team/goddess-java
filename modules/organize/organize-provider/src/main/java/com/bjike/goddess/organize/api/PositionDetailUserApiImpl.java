@@ -182,6 +182,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        return positionDetailUserSer.getByName(name);
+    }
+    @Override
     public String customRepPerson() throws SerException {
         return positionDetailUserSer.customRepPerson();
     }

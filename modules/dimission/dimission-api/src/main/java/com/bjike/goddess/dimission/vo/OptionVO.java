@@ -1,6 +1,6 @@
 package com.bjike.goddess.dimission.vo;
 
-import com.bjike.goddess.organize.bo.*;
+import com.bjike.goddess.dimission.bo.*;
 
 /**
  * 转正图形展示传数对象

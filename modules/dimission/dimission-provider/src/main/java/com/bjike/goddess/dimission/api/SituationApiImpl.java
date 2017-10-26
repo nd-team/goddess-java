@@ -2,12 +2,12 @@ package com.bjike.goddess.dimission.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dimission.bo.DimissionCollectBO;
+import com.bjike.goddess.dimission.bo.OptionBO;
 import com.bjike.goddess.dimission.bo.SituationBO;
 import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.service.SituationSer;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.SituationTO;
-import com.bjike.goddess.organize.bo.OptionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +84,20 @@ public class SituationApiImpl implements SituationAPI  {
     @Override
     public OptionBO figureShowMonth(String month) throws SerException {
         return situationSer.figureShowMonth(month);
+    }
+
+    @Override
+    public OptionBO figureShowDay(String day) throws SerException {
+        return situationSer.figureShowDay(day);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return situationSer.figureShowWeek(year,month,week);
+    }
+
+    @Override
+    public OptionBO figureShowAll() throws SerException {
+        return situationSer.figureShowAll();
     }
 }

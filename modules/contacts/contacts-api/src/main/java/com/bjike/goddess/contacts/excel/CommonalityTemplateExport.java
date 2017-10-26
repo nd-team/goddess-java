@@ -17,10 +17,10 @@ import com.bjike.goddess.contacts.enums.Status;
 public class CommonalityTemplateExport extends BaseEntity {
 
     /**
-     * 项目组/部门ID
+     * 项目组/部门
      */
-    @ExcelHeader(name = "项目组/部门ID" ,notNull = true)
-    private String departmentId;
+    @ExcelHeader(name = "项目组/部门" ,notNull = true)
+    private String department;
 
     /**
      * 邮箱地址
@@ -35,12 +35,12 @@ public class CommonalityTemplateExport extends BaseEntity {
     private Status status;
 
 
-    public String getDepartmentId() {
-        return departmentId;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getEmail() {

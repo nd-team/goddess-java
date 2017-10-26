@@ -286,4 +286,17 @@ public class CommonalityAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取部门项目组
+     *
+     * @version v1
+     */
+    public Result findDepartment() throws ActException{
+        try {
+            return ActResult.initialize(commonalityAPI.findDepartment());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 }
