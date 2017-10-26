@@ -2,6 +2,8 @@ package com.bjike.goddess.dispatchcar.excel;
 
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
+import java.io.Serializable;
+
 /**
  * @Author: [jiangzaixuan]
  * @Date: [2017-09-28 14:02]
@@ -9,7 +11,7 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DispatchcarInfoCollectSetExcel {
+public class DispatchcarInfoCollectSetExcel implements Serializable{
     /**
      * 司机
      */
