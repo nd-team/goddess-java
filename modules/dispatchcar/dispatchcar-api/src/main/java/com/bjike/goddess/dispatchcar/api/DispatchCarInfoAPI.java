@@ -10,6 +10,7 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
@@ -328,7 +329,7 @@ public interface DispatchCarInfoAPI {
      * @param toList
      * @throws SerException
      */
-    default void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+    default void leadExcel(List<DispatchCarInfoSetExcel> toList) throws SerException {
         return;
     }
 

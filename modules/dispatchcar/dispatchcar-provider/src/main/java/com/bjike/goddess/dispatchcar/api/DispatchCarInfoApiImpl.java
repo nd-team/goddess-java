@@ -12,6 +12,7 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
 import com.bjike.goddess.dispatchcar.to.*;
@@ -285,7 +286,7 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+    public void leadExcel(List<DispatchCarInfoSetExcel> toList) throws SerException {
         dispatchCarInfoSer.leadExcel(toList);
     }
 

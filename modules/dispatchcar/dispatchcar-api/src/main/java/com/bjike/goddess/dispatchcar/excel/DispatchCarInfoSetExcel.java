@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.dispatchcar.enums.*;
 
+import java.io.Serializable;
+
 /**
  * @Author: [jiangzaixuan]
  * @Date: [2017-09-26 15:42]
@@ -11,11 +13,11 @@ import com.bjike.goddess.dispatchcar.enums.*;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DispatchCarInfoSetExcel {
+public class DispatchCarInfoSetExcel implements Serializable{
     /**
      * 出车记录来源
      */
-    @ExcelHeader(name="出车记录来源",notNull = true)
+    @ExcelHeader(name="出车记录来源")
     private CarSource carSource;
 
     /**
@@ -34,7 +36,7 @@ public class DispatchCarInfoSetExcel {
      * 是否公司人员出车
      */
     @ExcelHeader(name="是否公司人员出车",notNull = true)
-    private Boolean companyDispatch;
+    private String companyDispatch;
 
     /**
      * 用车人
@@ -64,7 +66,7 @@ public class DispatchCarInfoSetExcel {
      * 是否立项
      */
     @ExcelHeader(name="是否立项",notNull = true)
-    private Boolean projectApproval;
+    private String projectApproval;
 
     /**
      * 项目名称
@@ -100,7 +102,7 @@ public class DispatchCarInfoSetExcel {
      * 是否午休
      */
     @ExcelHeader(name="是否午休",notNull = true)
-    private Boolean siesta;
+    private String siesta;
 
     /**
      * 加班时长
@@ -136,19 +138,19 @@ public class DispatchCarInfoSetExcel {
      * 是否开空调
      */
     @ExcelHeader(name="是否开空调",notNull = true)
-    private Boolean aircondition;
+    private String aircondition;
 
     /**
      * 是否市内
      */
     @ExcelHeader(name="是否市内",notNull = true)
-    private Boolean downtown;
+    private String downtown;
 
     /**
      * 当天是否加油
      */
     @ExcelHeader(name="当天是否加油",notNull = true)
-    private Boolean addOil;
+    private String addOil;
 
     /**
      * 补加油说明
@@ -193,31 +195,31 @@ public class DispatchCarInfoSetExcel {
     /**
      * 加油时间
      */
-    @ExcelHeader(name="加油时间",notNull = true)
+    @ExcelHeader(name="加油时间")
     private String addOilTime;
 
     /**
      * 应加油量
      */
-    @ExcelHeader(name="应加油量",notNull = true)
+    @ExcelHeader(name="应加油量")
     private Double shouldAmount;
 
     /**
      * 应加油费
      */
-    @ExcelHeader(name="应加油费",notNull = true)
+    @ExcelHeader(name="应加油费")
     private Double shouldAmountMoney;
 
     /**
      * 实际加油量
      */
-    @ExcelHeader(name="实际加油量",notNull = true)
+    @ExcelHeader(name="实际加油量")
     private Double addOilAmount;
 
     /**
      * 实际加油费
      */
-    @ExcelHeader(name="实际加油费",notNull = true)
+    @ExcelHeader(name="实际加油费")
     private Double addOilAmountMoney;
 
     /**
@@ -277,13 +279,13 @@ public class DispatchCarInfoSetExcel {
     /**
      * 停车费
      */
-    @ExcelHeader(name="停车费",notNull = true)
+    @ExcelHeader(name="停车费")
     private Double parkCost;
 
     /**
      * 过路费
      */
-    @ExcelHeader(name="过路费",notNull = true)
+    @ExcelHeader(name="过路费")
     private Double roadCost;
 
     /**
@@ -301,220 +303,220 @@ public class DispatchCarInfoSetExcel {
     /**
      * 小票附件
      */
-    @ExcelHeader(name="小票附件",notNull = true)
-    private Boolean receipt;
+    @ExcelHeader(name="小票附件")
+    private String receipt;
 
     /**
      * 项目模块负责人
      */
-    @ExcelHeader(name="项目模块负责人",notNull = true)
+    @ExcelHeader(name="项目模块负责人")
     private String projectCharge;
 
     /**
      * 项目模块负责人意见
      */
-    @ExcelHeader(name="项目模块负责人意见",notNull = true)
+    @ExcelHeader(name="项目模块负责人意见")
     private String projectChargeIdea;
 
 
     /**
      * 是否通过
      */
-    @ExcelHeader(name="是否通过",notNull = true)
-    private Boolean ifPass;
+    @ExcelHeader(name="是否通过")
+    private String ifPass;
 
     /**
      * 客户模块负责人
      */
-    @ExcelHeader(name="客户模块负责人",notNull = true)
+    @ExcelHeader(name="客户模块负责人")
     private String clientModule;
 
     /**
      * 客户模块负责人意见
      */
-    @ExcelHeader(name="客户模块负责人意见",notNull = true)
+    @ExcelHeader(name="客户模块负责人意见")
     private String clientModuleIdea;
 
 
     /**
      * 客户模块负责人审核时间
      */
-    @ExcelHeader(name="客户模块负责人审核时间",notNull = true)
+    @ExcelHeader(name="客户模块负责人审核时间")
     private String clientDate;
 
     /**
      * 是否冻结
      */
-    @ExcelHeader(name="是否冻结",notNull = true)
-    private Boolean ifFreeze;
+    @ExcelHeader(name="是否冻结")
+    private String ifFreeze;
 
     /**
      * 素养模块负责人
      */
-    @ExcelHeader(name="素养模块负责人",notNull = true)
+    @ExcelHeader(name="素养模块负责人")
     private String headModule;
 
     /**
      * 素养模块负责人意见
      */
-    @ExcelHeader(name="素养模块负责人意见",notNull = true)
+    @ExcelHeader(name="素养模块负责人意见")
     private String headModuleIdea;
 
 
     /**
      * 素养模块负责人审核时间
      */
-    @ExcelHeader(name="素养模块负责人审核时间",notNull = true)
+    @ExcelHeader(name="素养模块负责人审核时间")
     private String headDate;
 
     /**
      * 预算模块负责人
      */
-    @ExcelHeader(name="预算模块负责人",notNull = true)
+    @ExcelHeader(name="预算模块负责人")
     private String budgetAuditUser;
 
     /**
      * 预算模块意见
      */
-    @ExcelHeader(name="预算模块意见",notNull = true)
+    @ExcelHeader(name="预算模块意见")
     private String budgetModuleIdea;
 
     /**
      * 预算模块负责人审核时间
      */
-    @ExcelHeader(name="是否公司人员出车",notNull = true)
+    @ExcelHeader(name="预算模块负责人审核时间")
     private String budgetAuditTime;
 
     /**
      * 账务模块负责人
      */
-    @ExcelHeader(name="账务模块负责人",notNull = true)
+    @ExcelHeader(name="账务模块负责人")
     private String accountModule;
 
     /**
      * 账务模块意见
      */
-    @ExcelHeader(name="账务模块意见",notNull = true)
+    @ExcelHeader(name="账务模块意见")
     private String accountModuleIdea;
 
     /**
      * 账务模块负责人审核时间
      */
-    @ExcelHeader(name="账务模块负责人审核时间",notNull = true)
+    @ExcelHeader(name="账务模块负责人审核时间")
     private String accountDate;
 
 
     /**
      * 核对依据是否齐全无误
      */
-    @ExcelHeader(name="核对依据是否齐全无误",notNull = true)
-    private Boolean isCorrect;
+    @ExcelHeader(name="核对依据是否齐全无误")
+    private String ifCorrect;
 
     /**
      * 寄件人
      */
-    @ExcelHeader(name="寄件人",notNull = true)
+    @ExcelHeader(name="寄件人")
     private String sender;
 
     /**
      * 寄件日期
      */
-    @ExcelHeader(name="寄件日期",notNull = true)
+    @ExcelHeader(name="寄件日期")
     private String sendDate;
 
 
     /**
      * 存档联是否寄件
      */
-    @ExcelHeader(name="存档联是否寄件",notNull = true)
-    private Boolean ifSendArchiveAl;
+    @ExcelHeader(name="存档联是否寄件")
+    private String ifSendArchiveAL;
 
     /**
      * 报销联是否寄件
      */
-    @ExcelHeader(name="报销联是否寄件",notNull = true)
-    private Boolean ifSendReimbursementAl;
+    @ExcelHeader(name="报销联是否寄件")
+    private String ifSendReimbursementAl;
 
     /**
      * 过路停车费总额
      */
-    @ExcelHeader(name="过路停车费总额",notNull = true)
+    @ExcelHeader(name="过路停车费总额")
     private Double totalParking;
 
 
     /**
      * 过路停车费小票总数
      */
-    @ExcelHeader(name="过路停车费小票总数",notNull = true)
+    @ExcelHeader(name="过路停车费小票总数")
     private Integer totalReceipts;
 
 
     /**
      * 加油小票是否寄件
      */
-    @ExcelHeader(name="加油小票是否寄件",notNull = true)
-    private Boolean ifSendAddOilReceipts;
+    @ExcelHeader(name="加油小票是否寄件")
+    private String ifSendAddOilReceipts;
 
 
     /**
      * 收票人
      */
-    @ExcelHeader(name="收票人",notNull = true)
+    @ExcelHeader(name="收票人")
     private String receiver;
 
     /**
      * 收到发票日期
      */
-    @ExcelHeader(name="收到发票日期",notNull = true)
+    @ExcelHeader(name="收到发票日期")
     private String receiveDate;
 
     /**
      * 收到发票情况
      */
-    @ExcelHeader(name="收到发票情况",notNull = true)
+    @ExcelHeader(name="收到发票情况")
     private String receiveReceipts;
 
     /**
      * 资金模块负责人
      */
-    @ExcelHeader(name="资金模块负责人",notNull = true)
+    @ExcelHeader(name="资金模块负责人")
     private String moneyModule;
 
     /**
      * 资金模块意见
      */
-    @ExcelHeader(name="资金模块意见",notNull = true)
+    @ExcelHeader(name="资金模块意见")
     private String moneyModuleIdea;
 
     /**
      * 资金模块负责人审核时间
      */
-    @ExcelHeader(name="资金模块负责人审核时间",notNull = true)
+    @ExcelHeader(name="资金模块负责人审核时间")
     private String moneyDate;
 
 
     /**
      * 预计付款日期
      */
-    @ExcelHeader(name="预计付款日期",notNull = true)
+    @ExcelHeader(name="预计付款日期")
     private String expectPayDate;
 
     /**
      * 付款计划
      */
-    @ExcelHeader(name="付款计划",notNull = true)
+    @ExcelHeader(name="付款计划")
     private String paymentSchedule;
 
     /**
      * 是否付款
      */
-    @ExcelHeader(name="是否付款",notNull = true)
-    private Boolean ifPayed;
+    @ExcelHeader(name="是否付款")
+    private String ifPayed;
 
     /**
      * 任务下达人审核时间
      */
-    @ExcelHeader(name="任务下达人审核时间",notNull = true)
+    @ExcelHeader(name="任务下达人审核时间")
     private String principalAuditTime;
 
     /**
@@ -527,7 +529,7 @@ public class DispatchCarInfoSetExcel {
     /**
      * 数据状态
      */
-    @ExcelHeader(name="数据状态",notNull = true)
+    @ExcelHeader(name="数据状态")
     private DataStatus dataStatus;
 
     /**
@@ -561,11 +563,11 @@ public class DispatchCarInfoSetExcel {
         this.driver = driver;
     }
 
-    public Boolean getCompanyDispatch() {
+    public String getCompanyDispatch() {
         return companyDispatch;
     }
 
-    public void setCompanyDispatch(Boolean companyDispatch) {
+    public void setCompanyDispatch(String companyDispatch) {
         this.companyDispatch = companyDispatch;
     }
 
@@ -601,11 +603,11 @@ public class DispatchCarInfoSetExcel {
         this.group = group;
     }
 
-    public Boolean getProjectApproval() {
+    public String getProjectApproval() {
         return projectApproval;
     }
 
-    public void setProjectApproval(Boolean projectApproval) {
+    public void setProjectApproval(String projectApproval) {
         this.projectApproval = projectApproval;
     }
 
@@ -649,11 +651,11 @@ public class DispatchCarInfoSetExcel {
         this.endTime = endTime;
     }
 
-    public Boolean getSiesta() {
+    public String getSiesta() {
         return siesta;
     }
 
-    public void setSiesta(Boolean siesta) {
+    public void setSiesta(String siesta) {
         this.siesta = siesta;
     }
 
@@ -697,27 +699,27 @@ public class DispatchCarInfoSetExcel {
         this.oilCardNumber = oilCardNumber;
     }
 
-    public Boolean getAircondition() {
+    public String getAircondition() {
         return aircondition;
     }
 
-    public void setAircondition(Boolean aircondition) {
+    public void setAircondition(String aircondition) {
         this.aircondition = aircondition;
     }
 
-    public Boolean getDowntown() {
+    public String getDowntown() {
         return downtown;
     }
 
-    public void setDowntown(Boolean downtown) {
+    public void setDowntown(String downtown) {
         this.downtown = downtown;
     }
 
-    public Boolean getAddOil() {
+    public String getAddOil() {
         return addOil;
     }
 
-    public void setAddOil(Boolean addOil) {
+    public void setAddOil(String addOil) {
         this.addOil = addOil;
     }
 
@@ -913,11 +915,11 @@ public class DispatchCarInfoSetExcel {
         this.evaluatedriver = evaluatedriver;
     }
 
-    public Boolean getReceipt() {
+    public String getReceipt() {
         return receipt;
     }
 
-    public void setReceipt(Boolean receipt) {
+    public void setReceipt(String receipt) {
         this.receipt = receipt;
     }
 
@@ -937,11 +939,11 @@ public class DispatchCarInfoSetExcel {
         this.projectChargeIdea = projectChargeIdea;
     }
 
-    public Boolean getIfPass() {
+    public String getIfPass() {
         return ifPass;
     }
 
-    public void setIfPass(Boolean ifPass) {
+    public void setIfPass(String ifPass) {
         this.ifPass = ifPass;
     }
 
@@ -969,11 +971,11 @@ public class DispatchCarInfoSetExcel {
         this.clientDate = clientDate;
     }
 
-    public Boolean getIfFreeze() {
+    public String getIfFreeze() {
         return ifFreeze;
     }
 
-    public void setIfFreeze(Boolean ifFreeze) {
+    public void setIfFreeze(String ifFreeze) {
         this.ifFreeze = ifFreeze;
     }
 
@@ -1049,12 +1051,12 @@ public class DispatchCarInfoSetExcel {
         this.accountDate = accountDate;
     }
 
-    public Boolean getCorrect() {
-        return isCorrect;
+    public String getIfCorrect() {
+        return ifCorrect;
     }
 
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+    public void setIfCorrect(String ifCorrect) {
+        this.ifCorrect = ifCorrect;
     }
 
     public String getSender() {
@@ -1073,19 +1075,19 @@ public class DispatchCarInfoSetExcel {
         this.sendDate = sendDate;
     }
 
-    public Boolean getIfSendArchiveAl() {
-        return ifSendArchiveAl;
+    public String getIfSendArchiveAL() {
+        return ifSendArchiveAL;
     }
 
-    public void setIfSendArchiveAl(Boolean ifSendArchiveAl) {
-        this.ifSendArchiveAl = ifSendArchiveAl;
+    public void setIfSendArchiveAL(String ifSendArchiveAL) {
+        this.ifSendArchiveAL = ifSendArchiveAL;
     }
 
-    public Boolean getIfSendReimbursementAl() {
+    public String getIfSendReimbursementAl() {
         return ifSendReimbursementAl;
     }
 
-    public void setIfSendReimbursementAl(Boolean ifSendReimbursementAl) {
+    public void setIfSendReimbursementAl(String ifSendReimbursementAl) {
         this.ifSendReimbursementAl = ifSendReimbursementAl;
     }
 
@@ -1105,11 +1107,11 @@ public class DispatchCarInfoSetExcel {
         this.totalReceipts = totalReceipts;
     }
 
-    public Boolean getIfSendAddOilReceipts() {
+    public String getIfSendAddOilReceipts() {
         return ifSendAddOilReceipts;
     }
 
-    public void setIfSendAddOilReceipts(Boolean ifSendAddOilReceipts) {
+    public void setIfSendAddOilReceipts(String ifSendAddOilReceipts) {
         this.ifSendAddOilReceipts = ifSendAddOilReceipts;
     }
 
@@ -1177,11 +1179,11 @@ public class DispatchCarInfoSetExcel {
         this.paymentSchedule = paymentSchedule;
     }
 
-    public Boolean getIfPayed() {
+    public String getIfPayed() {
         return ifPayed;
     }
 
-    public void setIfPayed(Boolean ifPayed) {
+    public void setIfPayed(String ifPayed) {
         this.ifPayed = ifPayed;
     }
 

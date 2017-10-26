@@ -1,8 +1,9 @@
 package com.bjike.goddess.dispatchcar.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.businessproject.api.SiginManageAPI;
-import com.bjike.goddess.businessproject.bo.SiginManageBO;
+import com.bjike.goddess.businessproject.api.BusinessContractAPI;
+import com.bjike.goddess.businessproject.bo.BusinessContractsBO;
+import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
@@ -102,10 +103,12 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     private CheckChangeCarSer checkChangeCarSer;
 
     @Autowired
-    private SiginManageAPI siginManageAPI;
+    private BusinessContractAPI businessContractAPI;
 
     @Autowired
     private DispatchcarRecordCollectSer dispatchcarRecordCollectSer;
+
+
 
 
     /**
@@ -399,6 +402,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         //设置出车单号----IKE20170101-1...
 
         setNumber(model);
+        model.setCarSource(CarSource.MANUALENTRY);
 
         super.save(model);
         return BeanTransform.copyProperties(model, DispatchCarInfoBO.class);
@@ -1089,21 +1093,21 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             }
             model.setFindType(FindType.PAYED);
             model.setIfPass(true);
-            //付款后代表所有审核均通过，修改油余额
-            //TODO 这里应该考虑分布式事务，联系焕来或贵钦解决该问题。 TCC
-            OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
-            OilCardBasicBO bo = oilCardBasicAPI.find(basicBO.getId());
-            bo.setBalance(bo.getBalance() - model.getOilPrice());
-//            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class,true);
-            oilCardBasicAPI.updateOliCardBasic(bo);
-            if (bo.getBalance() < 300) {
-                String content = "运营商务部的同事，你们好，" + bo.getOilCardCode() + "号油卡余额" + bo.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
-                MessageTO to = new MessageTO("油卡余额不足300元", content);
-                to.setSendType(SendType.EMAIL);
-                //TODO 未明确发送对象
-//                to.setReceivers(sendUsers);
-                messageAPI.send(to);
-            }
+//            //付款后代表所有审核均通过，修改油余额
+//            //TODO 这里应该考虑分布式事务，联系焕来或贵钦解决该问题。 TCC
+//            OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
+//            OilCardBasicBO bo = oilCardBasicAPI.find(basicBO.getId());
+//            bo.setBalance(bo.getBalance() - model.getOilPrice());
+////            OilCardBasic oilCardBasic = BeanTransform.copyProperties(bo,OilCardBasic.class,true);
+//            oilCardBasicAPI.updateOliCardBasic(bo);
+//            if (bo.getBalance() < 300) {
+//                String content = "运营商务部的同事，你们好，" + bo.getOilCardCode() + "号油卡余额" + bo.getBalance() + "元，低于300元，请在一天内充值，请综合资源部同事跟进充值情况";
+//                MessageTO to = new MessageTO("油卡余额不足300元", content);
+//                to.setSendType(SendType.EMAIL);
+//                //TODO 未明确发送对象
+////                to.setReceivers(sendUsers);
+//                messageAPI.send(to);
+//            }
             super.update(model);
         } else {
             throw new SerException("付款对象不能为空!");
@@ -1973,8 +1977,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public List<String> findAllProject() throws SerException {
         Set<String> project = new HashSet<>();
         if (moduleAPI.isCheck("businessproject")) {
-            List<String> project1 = siginManageAPI.listInnerProject();
-            project = new HashSet<>(project1);
+            BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+            List<BusinessContractsBO> project1 = businessContractAPI.list(businessContractDTO);
+            project = project1.stream().map(p -> p.getInnerProject()).collect(Collectors.toSet());
         } else {
             throw new SerException("请去模块管理设置模块关联");
         }
@@ -2088,12 +2093,118 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+    public void leadExcel(List<DispatchCarInfoSetExcel> toList) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        List<DispatchCarInfo> list = BeanTransform.copyProperties(toList, DispatchCarInfo.class, true);
+        List<DispatchCarInfo> list = new ArrayList<>();
+        for (DispatchCarInfoSetExcel model : toList) {
+            DispatchCarInfo excel = BeanTransform.copyProperties(model, DispatchCarInfo.class, true,"companyDispatch"
+                    ,"projectApproval","siesta","aircondition","downtown","addOil","receipt","ifPass","ifFreeze","ifCorrect"
+                    ,"ifSendArchiveAL","ifSendReimbursementAl","ifSendAddOilReceipts","ifPayed");
+            if (model.getCompanyDispatch() != null) {
+                if (model.getCompanyDispatch().equals("是")) {
+                    excel.setCompanyDispatch(true);
+                } else {
+                    excel.setCompanyDispatch(false);
+                }
+            }
+            if (model.getProjectApproval() != null) {
+                if (model.getProjectApproval().equals("是")) {
+                    excel.setProjectApproval(true);
+                } else {
+                    excel.setProjectApproval(false);
+                }
+            }
+            if (model.getReceipt() != null) {
+                if (model.getReceipt().equals("是")) {
+                    excel.setReceipt(true);
+                } else {
+                    excel.setReceipt(false);
+                }
+            }
+            if (model.getSiesta() != null) {
+                if (model.getSiesta().equals("是")) {
+                    excel.setSiesta(true);
+                } else {
+                    excel.setSiesta(false);
+                }
+            }
+            if (model.getAircondition() != null) {
+                if (model.getAircondition().equals("是")) {
+                    excel.setAircondition(true);
+                } else {
+                    excel.setAircondition(false);
+                }
+            }
+            if (model.getDowntown() != null) {
+                if (model.getDowntown().equals("是")) {
+                    excel.setDowntown(true);
+                } else {
+                    excel.setDowntown(false);
+                }
+            }
+            if (model.getAddOil() != null) {
+                if (model.getAddOil().equals("是")) {
+                    excel.setAddOil(true);
+                } else {
+                    excel.setAddOil(false);
+                }
+            }
+            if (model.getIfPass() != null) {
+                if (model.getIfPass().equals("是")) {
+                    excel.setIfPass(true);
+                } else {
+                    excel.setIfPass(false);
+                }
+            }
+            if (model.getIfFreeze() != null) {
+                if (model.getIfFreeze().equals("是")) {
+                    excel.setIfFreeze(true);
+                } else {
+                    excel.setIfFreeze(false);
+                }
+            }
+            if (model.getIfCorrect() != null) {
+                if (model.getIfCorrect().equals("是")) {
+                    excel.setIfCorrect(true);
+                } else {
+                    excel.setIfCorrect(false);
+                }
+            }
+            if (model.getIfSendArchiveAL() != null) {
+                if (model.getIfSendArchiveAL().equals("是")) {
+                    excel.setIfSendArchiveAL(true);
+                } else {
+                    excel.setIfSendArchiveAL(false);
+                }
+            }
+
+            if (model.getIfSendReimbursementAl() != null) {
+                if (model.getIfSendReimbursementAl().equals("是")) {
+                    excel.setIfSendReimbursementAl(true);
+                } else {
+                    excel.setIfSendReimbursementAl(true);
+                }
+            }
+            if (model.getIfSendAddOilReceipts() != null) {
+                if (model.getIfSendAddOilReceipts().equals("是")) {
+                    excel.setIfSendAddOilReceipts(true);
+                } else {
+                    excel.setIfSendAddOilReceipts(false);
+                }
+            }
+            if (model.getIfPayed() != null) {
+                if (model.getIfPayed().equals("是")) {
+                    excel.setIfPayed(true);
+                } else {
+                    excel.setIfPayed(false);
+                }
+            }
+            list.add(excel);
+        }
         list.stream().forEach(str -> {
             str.setModifyTime(LocalDateTime.now());
             str.setCreateTime(LocalDateTime.now());
+
         });
         super.save(list);
     }
@@ -2102,8 +2213,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public byte[] exportExcel(ExportDispatchCarInfoTO to) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
         //根据地区和开始时间和结束时间来导出excel
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(to.getArea()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getStarTime()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getEndTime())) {
-            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(to.getStarTime()), DateUtil.parseDate(to.getEndTime())};
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(to.getArea()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getStartTime()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getEndTime())) {
+            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(to.getStartTime()), DateUtil.parseDate(to.getEndTime())};
             dto.getConditions().add(Restrict.eq("area", to.getArea()));
             dto.getConditions().add(Restrict.between("dispatchDate", localDates));
         }
@@ -2111,7 +2222,109 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         List<DispatchCarInfo> list = super.findByCis(dto);
         List<DispatchCarInfoSetExcel> toList = new ArrayList<DispatchCarInfoSetExcel>();
         for (DispatchCarInfo model : list) {
-            DispatchCarInfoSetExcel excel = BeanTransform.copyProperties(model, DispatchCarInfoSetExcel.class);
+            DispatchCarInfoSetExcel excel = BeanTransform.copyProperties(model, DispatchCarInfoSetExcel.class,"companyDispatch"
+                    ,"projectApproval","siesta","aircondition","downtown","addOil","receipt","ifPass","ifFreeze","ifCorrect"
+                    ,"ifSendArchiveAL","ifSendReimbursementAl","ifSendAddOilReceipts","ifPayed");
+            if (model.getIfSendArchiveAL() != null){
+                if (model.getIfSendArchiveAL() == true){
+                    excel.setIfSendArchiveAL("是");
+                }else {
+                    excel.setIfSendArchiveAL("否");
+                }
+            }
+            if (model.getCompanyDispatch() != null){
+                if (model.getCompanyDispatch() == true){
+                    excel.setCompanyDispatch("是");
+                }else {
+                    excel.setCompanyDispatch("否");
+                }
+            }
+            if (model.getProjectApproval() != null){
+                if (model.getProjectApproval() == true){
+                    excel.setProjectApproval("是");
+                }else {
+                    excel.setProjectApproval("否");
+                }
+            }
+            if (model.getReceipt() != null){
+                if (model.getReceipt() == true){
+                    excel.setReceipt("是");
+                }else {
+                    excel.setReceipt("否");
+                }
+            }
+            if (model.getSiesta() != null){
+                if (model.getSiesta() == true){
+                    excel.setSiesta("是");
+                }else {
+                    excel.setSiesta("否");
+                }
+            }
+            if (model.getAircondition() != null){
+                if (model.getAircondition() == true){
+                    excel.setAircondition("是");
+                }else {
+                    excel.setAircondition("否");
+                }
+            }
+            if (model.getDowntown() != null){
+                if (model.getDowntown() == true){
+                    excel.setDowntown("是");
+                }else {
+                    excel.setDowntown("否");
+                }
+            }
+            if (model.getAddOil() != null){
+                if (model.getAddOil() == true){
+                    excel.setAddOil("是");
+                }else {
+                    excel.setAddOil("否");
+                }
+            }
+            if (model.getIfPass() != null){
+                if (model.getIfPass() == true){
+                    excel.setIfPass("是");
+                }else {
+                    excel.setIfPass("否");
+                }
+            }
+            if (model.getIfFreeze() != null){
+                if (model.getIfFreeze() == true){
+                    excel.setIfFreeze("是");
+                }else {
+                    excel.setIfFreeze("否");
+                }
+            }
+            if (model.getIfCorrect() != null){
+                if (model.getIfCorrect() == true){
+                    excel.setIfCorrect("是");
+                }else {
+                    excel.setIfCorrect("否");
+                }
+            }
+
+            if (model.getIfSendReimbursementAl() != null){
+                if (model.getIfSendReimbursementAl() == true){
+                    excel.setIfSendReimbursementAl("是");
+                }else {
+                    excel.setIfSendReimbursementAl("否");
+                }
+            }
+            if (model.getIfSendAddOilReceipts() != null){
+                if (model.getIfSendAddOilReceipts() == true){
+                    excel.setIfSendAddOilReceipts("是");
+                }else {
+                    excel.setIfSendAddOilReceipts("否");
+                }
+            }
+            if (model.getIfPayed() != null){
+                if (model.getIfPayed() == true){
+                    excel.setIfPayed("是");
+                }else {
+                    excel.setIfPayed("否");
+                }
+            }
+
             toList.add(excel);
         }
         Excel excel = new Excel(0, 2);
@@ -2128,26 +2341,26 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         excel.setCarSource(CarSource.MANUALENTRY);
         excel.setNumber("出车单号");
         excel.setDriver("司机名称");
-        excel.setCompanyDispatch(true);
+        excel.setCompanyDispatch("是否公司人员出车");
         excel.setCarUser("用车人");
         excel.setUserNumber("员工编号");
         excel.setArea("所属地区");
         excel.setGroup("所属项目组");
-        excel.setProjectApproval(true);
+        excel.setProjectApproval("是否立项");
         excel.setProject("项目名称");
         excel.setAcctype(Acctype.MAIN);
         excel.setDispatchDate("2017-01-01");
         excel.setStartTime("2017-01-01 09:09:09");
         excel.setEndTime("2017-01-01 10:01:01");
-        excel.setSiesta(true);
+        excel.setSiesta("是否午休");
         excel.setOverWorkTime(10.0);
         excel.setDispatchReason("用车事由");
         excel.setAccompanyUser("用车随同人员");
         excel.setCarNumber("车牌号码");
         excel.setOilCardNumber("所有油卡编号");
-        excel.setAircondition(true);
-        excel.setDowntown(true);
-        excel.setAddOil(true);
+        excel.setAircondition("是否开空调");
+        excel.setDowntown("是否市内");
+        excel.setAddOil("当天是否加油");
         excel.setAddOilExplain("补充加油说明");
         excel.setSupplementFee(10.0);
         excel.setOweOilExplain("欠油说明");
@@ -2171,14 +2384,14 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         excel.setRoadCost(10.1);
         excel.setMealCost(10.1);
         excel.setEvaluatedriver(Evaluate.GOOD);
-        excel.setReceipt(true);
+        excel.setReceipt("小票附件");
         excel.setProjectCharge("项目模块负责人");
         excel.setProjectChargeIdea("项目模块负责意见");
-        excel.setIfPass(true);
+        excel.setIfPass("是否通过");
         excel.setClientModule("客户模块负责人");
         excel.setClientModuleIdea("客户模块负责人意见");
         excel.setClientDate("2017-01-01 10:10:10");
-        excel.setIfFreeze(true);
+        excel.setIfFreeze("是否冻结");
         excel.setHeadModule("素养模块负责人");
         excel.setHeadModuleIdea("素养模块负责人意见");
         excel.setHeadDate("2017-01-01 10:10:10");
@@ -2188,14 +2401,15 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         excel.setAccountModule("账务模块负责人");
         excel.setAccountModuleIdea("账务模块负责人意见");
         excel.setAccountDate("2017-01-01 10:01:01");
-        excel.setCorrect(true);
+        excel.setIfCorrect("是否核对安全无误");
         excel.setSender("寄件人");
+        excel.setSupplementOil(10.1);
         excel.setSendDate("2017-01-01");
-        excel.setIfSendArchiveAl(true);
-        excel.setIfSendReimbursementAl(true);
+        excel.setIfSendArchiveAL("存档联是否寄件");
+        excel.setIfSendReimbursementAl("报销联是否寄件");
         excel.setTotalParking(10.0);
         excel.setTotalReceipts(10);
-        excel.setIfSendAddOilReceipts(true);
+        excel.setIfSendAddOilReceipts("加油小票是否寄件");
         excel.setReceiver("收票人");
         excel.setReceiveDate("2017-01-01");
         excel.setReceiveReceipts("收到发票情况");
@@ -2204,7 +2418,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         excel.setMoneyDate("2017-01-01 10:10:10");
         excel.setExpectPayDate("2017-01-01");
         excel.setPaymentSchedule("付款计划");
-        excel.setIfPayed(true);
+        excel.setIfPayed("是否付款");
         excel.setPrincipalAuditTime("2017-01-01 10:10:10");
         excel.setCarRentalCost(10.1);
         excel.setDataStatus(DataStatus.CONGEAL);
@@ -2840,9 +3054,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     public Boolean findProjectAproval(String project) throws SerException {
         Boolean projectApproval = false;
         if (moduleAPI.isCheck("businessproject")) {
-            SiginManageBO siginManageBO = siginManageAPI.findByProject(project);
-            if (siginManageBO != null) {
-                if (siginManageBO.equals("已立项")) {
+            BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+            businessContractDTO.getConditions().add(Restrict.eq("innerProject",project));
+            List<BusinessContractsBO> businessContractsBOS = businessContractAPI.list(businessContractDTO);
+            if (businessContractsBOS.get(0).getInnerProject() != null) {
+                if (businessContractsBOS.get(0).getInnerProject().equals("已立项")) {
                     projectApproval = true;
                 }
             }
