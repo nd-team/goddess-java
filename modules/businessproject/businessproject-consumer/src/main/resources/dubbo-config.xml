@@ -18,6 +18,11 @@
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
+	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
+	<dubbo:reference  validation="true" id="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
+	<dubbo:reference  validation="true" id="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
+	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
 	<dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
 	<dubbo:reference  validation="true" id="outsourcBusinessContractApiImpl" interface="com.bjike.goddess.businessproject.api.OutsourcBusinessContractAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />

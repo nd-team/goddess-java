@@ -239,44 +239,6 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
-        List<SonPermissionObject> list = new ArrayList<>();
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
-
-        SonPermissionObject obj = new SonPermissionObject();
-
-        obj = new SonPermissionObject();
-        obj.setName("businesscontract");
-        obj.setDescribesion("商务项目合同");
-        if (flagSeeSign || flagAddSign) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = outsourcBusinessContractSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("outsourcbusinesscontract");
-        obj.setDescribesion("外包半外包项目合同管理");
-        if (flagSeeDis) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-
-        return list;
-    }
-
-    @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
