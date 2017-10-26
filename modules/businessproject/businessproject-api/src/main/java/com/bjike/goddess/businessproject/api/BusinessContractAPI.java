@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -22,17 +23,16 @@ public interface BusinessContractAPI {
     /**
      * 下拉导航权限
      */
-    default Boolean sonPermission() throws SerException {
+    default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
 
     /**
-     * 导航权限
+     * 工能导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
-
     /**
      * 商务项目合同列表总条数
      */

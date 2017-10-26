@@ -1,11 +1,7 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.DepartPositionBO;
-import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
@@ -315,4 +311,36 @@ public interface PositionDetailUserAPI {
      * @throws SerException
      */
     String customRepPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取预算模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] budgetPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取规划模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] planPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取项目经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] managerPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取总经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] generPerson() throws SerException;
 }

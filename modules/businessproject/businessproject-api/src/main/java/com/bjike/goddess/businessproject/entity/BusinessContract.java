@@ -25,181 +25,181 @@ public class BusinessContract extends BaseEntity {
     /**
      * 测算分类
      */
-    @Column(name = "measureClassify",  columnDefinition = "VARCHAR(255)   COMMENT '测算分类'")
+    @Column(name = "measureClassify", columnDefinition = "VARCHAR(255)   COMMENT '测算分类'")
     private String measureClassify;
 
     /**
      * 测算是否通过
      */
-    @Column(name = "is_measurePass",  columnDefinition = "TINYINT(1)    COMMENT '测算是否通过'")
+    @Column(name = "is_measurePass", columnDefinition = "TINYINT(1)    COMMENT '测算是否通过'")
     private Boolean measurePass;
 
     /**
      * 签订时间
      */
-    @Column(name = "signedTime",  columnDefinition = "DATE   COMMENT '签订时间'")
+    @Column(name = "signedTime", columnDefinition = "DATE   COMMENT '签订时间'")
     private LocalDate signedTime;
 
     /**
      * 通报时间
      */
-    @Column(name = "notificationTime",  columnDefinition = "DATE   COMMENT '通报时间'")
+    @Column(name = "notificationTime", columnDefinition = "DATE   COMMENT '通报时间'")
     private LocalDate notificationTime;
 
     /**
      * 是否通报
      */
-    @Column(name = "is_notification",  columnDefinition = "TINYINT(1)    COMMENT '是否通报'")
+    @Column(name = "is_notification", columnDefinition = "TINYINT(1)    COMMENT '是否通报'")
     private Boolean notification;
 
     /**
      * 地区
      */
-    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
      * 业务类型
      */
-    @Column(name = "businessType",  columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
+    @Column(name = "businessType", columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
     private String businessType;
 
     /**
      * 业务方向科目
      */
-    @Column(name = "businessSubject",  columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
+    @Column(name = "businessSubject", columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
     private String businessSubject;
 
     /**
      * 总包单位名称
      */
-    @Column(name = "majorCompany",  columnDefinition = "VARCHAR(255)   COMMENT '总包单位名称'")
+    @Column(name = "majorCompany", columnDefinition = "VARCHAR(255)   COMMENT '总包单位名称'")
     private String majorCompany;
 
     /**
      * 分包单位名称
      */
-    @Column(name = "subCompany",  columnDefinition = "VARCHAR(255)   COMMENT '分包单位名称'")
+    @Column(name = "subCompany", columnDefinition = "VARCHAR(255)   COMMENT '分包单位名称'")
     private String subCompany;
 
     /**
      * 是否有共同分包单位
      */
-    @Column(name = "is_commonSubcontractor",  columnDefinition = "TINYINT(1)    COMMENT '是否有共同分包单位'")
+    @Column(name = "is_commonSubcontractor", columnDefinition = "TINYINT(1)    COMMENT '是否有共同分包单位'")
     private Boolean commonSubcontractor;
 
     /**
      * 共同分包单位名称
      */
-    @Column(name = "commonSubcontractorName",  columnDefinition = "VARCHAR(255)   COMMENT '共同分包单位名称'")
+    @Column(name = "commonSubcontractorName", columnDefinition = "VARCHAR(255)   COMMENT '共同分包单位名称'")
     private String commonSubcontractorName;
 
     /**
      * 派工归属清理是否完成
      */
-    @Column(name = "is_taskFinish",  columnDefinition = "TINYINT(1)    COMMENT '派工归属清理是否完成'")
+    @Column(name = "is_taskFinish", columnDefinition = "TINYINT(1)    COMMENT '派工归属清理是否完成'")
     private Boolean taskFinish;
 
     /**
      * 客户名称
      */
-    @Column(name = "customerName",  columnDefinition = "VARCHAR(255)   COMMENT '客户名称'")
+    @Column(name = "customerName", columnDefinition = "VARCHAR(255)   COMMENT '客户名称'")
     private String customerName;
 
     /**
      * 所属项目组
      */
-    @Column(name = "projectGroup",  columnDefinition = "VARCHAR(255)   COMMENT '所属项目组'")
+    @Column(name = "projectGroup", columnDefinition = "VARCHAR(255)   COMMENT '所属项目组'")
     private String projectGroup;
 
     /**
      * 营运商
      */
-    @Column(name = "operator",  columnDefinition = "VARCHAR(255)   COMMENT '营运商'")
+    @Column(name = "operator", columnDefinition = "VARCHAR(255)   COMMENT '营运商'")
     private String operator;
 
     /**
      * 类型
      */
-    @Column(name = "type",  columnDefinition = "VARCHAR(255)   COMMENT '类型'")
+    @Column(name = "type", columnDefinition = "VARCHAR(255)   COMMENT '类型'")
     private String type;
 
     /**
      * 专业/工期
      */
-    @Column(name = "major",  columnDefinition = "VARCHAR(255)   COMMENT '专业/工期'")
+    @Column(name = "major", columnDefinition = "VARCHAR(255)   COMMENT '专业/工期'")
     private String major;
 
     /**
      * 是否有合同派工合同
      */
-    @Column(name = "is_taskContract",  columnDefinition = "TINYINT(1)    COMMENT '是否有合同派工合同'")
+    @Column(name = "is_taskContract", columnDefinition = "TINYINT(1)    COMMENT '是否有合同派工合同'")
     private Boolean taskContract;
 
     /**
      * 市场编号
      */
-    @Column(name = "marketNum",  columnDefinition = "VARCHAR(255)   COMMENT '市场编号'")
+    @Column(name = "marketNum", columnDefinition = "VARCHAR(255)   COMMENT '市场编号'")
     private String marketNum;
 
     /**
      * 内部项目编号
      */
-    @Column(name = "internalProjectNum",  columnDefinition = "VARCHAR(255)   COMMENT '内部项目编号'")
+    @Column(name = "internalProjectNum", columnDefinition = "VARCHAR(255)   COMMENT '内部项目编号'")
     private String internalProjectNum;
 
     /**
      * 内部合同编号
      */
-    @Column(name = "internalContractNum",  columnDefinition = "VARCHAR(255)   COMMENT '内部合同编号'")
+    @Column(name = "internalContractNum", columnDefinition = "VARCHAR(255)   COMMENT '内部合同编号'")
     private String internalContractNum;
 
     /**
      * 是否有合同立项
      */
-    @Column(name = "makeContract",  columnDefinition = "TINYINT(1)   COMMENT '是否有合同立项'")
+    @Column(name = "makeContract", columnDefinition = "TINYINT(1)   COMMENT '是否有合同立项'")
     private MakeContract makeContract;
 
     /**
      * 销售合同编号
      */
-    @Column(name = "salesContractNum",  columnDefinition = "VARCHAR(255)   COMMENT '销售合同编号'")
+    @Column(name = "salesContractNum", columnDefinition = "VARCHAR(255)   COMMENT '销售合同编号'")
     private String salesContractNum;
 
     /**
      * 单次合同编号
      */
-    @Column(name = "singleContractNum",  columnDefinition = "VARCHAR(255)   COMMENT '单次合同编号'")
+    @Column(name = "singleContractNum", columnDefinition = "VARCHAR(255)   COMMENT '单次合同编号'")
     private String singleContractNum;
 
     /**
      * 单次合同名称
      */
-    @Column(name = "singleContractName",  columnDefinition = "VARCHAR(255)   COMMENT '单次合同名称'")
+    @Column(name = "singleContractName", columnDefinition = "VARCHAR(255)   COMMENT '单次合同名称'")
     private String singleContractName;
 
     /**
      * 派工界面A
      */
-    @Column(name = "dispatchInterfaceA",  columnDefinition = "VARCHAR(255)   COMMENT '派工界面A'")
+    @Column(name = "dispatchInterfaceA", columnDefinition = "VARCHAR(255)   COMMENT '派工界面A'")
     private String dispatchInterfaceA;
 
     /**
      * 派工界面B
      */
-    @Column(name = "dispatchInterfaceB",  columnDefinition = "VARCHAR(255)   COMMENT '派工界面B'")
+    @Column(name = "dispatchInterfaceB", columnDefinition = "VARCHAR(255)   COMMENT '派工界面B'")
     private String dispatchInterfaceB;
 
     /**
      * 派工界面C
      */
-    @Column(name = "dispatchInterfaceC",  columnDefinition = "VARCHAR(255)   COMMENT '派工界面C'")
+    @Column(name = "dispatchInterfaceC", columnDefinition = "VARCHAR(255)   COMMENT '派工界面C'")
     private String dispatchInterfaceC;
 
     /**
      * 规模数量
      */
-    @Column(name = "scale",  columnDefinition = "DECIMAL(10,2)   COMMENT '规模数量'")
+    @Column(name = "scale", columnDefinition = "DECIMAL(10,2)   COMMENT '规模数量'")
     private Double scale;
 
     /**
@@ -211,265 +211,265 @@ public class BusinessContract extends BaseEntity {
     /**
      * 合同规模数是否有差异
      */
-    @Column(name = "is_scaleBalance",  columnDefinition = "TINYINT(1)    COMMENT '合同规模数是否有差异'")
+    @Column(name = "is_scaleBalance", columnDefinition = "TINYINT(1)    COMMENT '合同规模数是否有差异'")
     private Boolean scaleBalance;
 
     /**
      * 是否解决差异问题
      */
-    @Column(name = "is_solutionBalance",  columnDefinition = "TINYINT(1)    COMMENT '是否解决差异问题'")
+    @Column(name = "is_solutionBalance", columnDefinition = "TINYINT(1)    COMMENT '是否解决差异问题'")
     private Boolean solutionBalance;
 
     /**
      * 派工金额
      */
-    @Column(name = "taskMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '派工金额'")
+    @Column(name = "taskMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '派工金额'")
     private Double taskMoney;
 
     /**
      * 立项金额
      */
-    @Column(name = "makeMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '立项金额'")
+    @Column(name = "makeMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '立项金额'")
     private Double makeMoney;
 
     /**
      * 预估金额
      */
-    @Column(name = "forecastMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '预估金额'")
+    @Column(name = "forecastMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '预估金额'")
     private Double forecastMoney;
 
     /**
      * 预估转正完成金额
      */
-    @Column(name = "forecastFinishMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '预估转正完成金额'")
+    @Column(name = "forecastFinishMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '预估转正完成金额'")
     private Double forecastFinishMoney;
 
     /**
      * 预估转正进行金额
      */
-    @Column(name = "forecastMarchMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '预估转正进行金额'")
+    @Column(name = "forecastMarchMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '预估转正进行金额'")
     private Double forecastMarchMoney;
 
     /**
      * 预估市场亏损金额
      */
-    @Column(name = "estimatedMarketLosses",  columnDefinition = "DECIMAL(10,2)   COMMENT '预估市场亏损金额'")
+    @Column(name = "estimatedMarketLosses", columnDefinition = "DECIMAL(10,2)   COMMENT '预估市场亏损金额'")
     private Double estimatedMarketLosses;
 
     /**
      * 预估确认担保人
      */
-    @Column(name = "guarantor",  columnDefinition = "VARCHAR(255)   COMMENT '预估确认担保人'")
+    @Column(name = "guarantor", columnDefinition = "VARCHAR(255)   COMMENT '预估确认担保人'")
     private String guarantor;
 
     /**
      * 预估确认担保人审核意见
      */
-    @Column(name = "guarantorIdea",  columnDefinition = "VARCHAR(255)   COMMENT '预估确认担保人审核意见'")
+    @Column(name = "guarantorIdea", columnDefinition = "VARCHAR(255)   COMMENT '预估确认担保人审核意见'")
     private String guarantorIdea;
 
     /**
      * 预估项目是否确认实施
      */
-    @Column(name = "is_implement",  columnDefinition = "TINYINT(1)    COMMENT '预估项目是否确认实施'")
+    @Column(name = "is_implement", columnDefinition = "TINYINT(1)    COMMENT '预估项目是否确认实施'")
     private Boolean implement;
 
     /**
      * 项目经理意见
      */
-    @Column(name = "managerIdea",  columnDefinition = "VARCHAR(255)   COMMENT '项目经理意见'")
+    @Column(name = "managerIdea", columnDefinition = "VARCHAR(255)   COMMENT '项目经理意见'")
     private String managerIdea;
 
     /**
      * 规划模块分析意见
      */
-    @Column(name = "planIdea",  columnDefinition = "VARCHAR(255)   COMMENT '规划模块分析意见'")
+    @Column(name = "planIdea", columnDefinition = "VARCHAR(255)   COMMENT '规划模块分析意见'")
     private String planIdea;
 
     /**
      * 预算模块分析意见
      */
-    @Column(name = "budgetIdea",  columnDefinition = "VARCHAR(255)   COMMENT '预算模块分析意见'")
+    @Column(name = "budgetIdea", columnDefinition = "VARCHAR(255)   COMMENT '预算模块分析意见'")
     private String budgetIdea;
 
     /**
      * 是否分批结算
      */
-    @Column(name = "is_partial",  columnDefinition = "TINYINT(1)    COMMENT '是否分批结算'")
+    @Column(name = "is_partial", columnDefinition = "TINYINT(1)    COMMENT '是否分批结算'")
     private Boolean partial;
 
     /**
      * 分批结算金额
      */
-    @Column(name = "partialMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '分批结算金额'")
+    @Column(name = "partialMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '分批结算金额'")
     private Double partialMoney;
 
     /**
      * 合同持续时长
      */
-    @Column(name = "contractPersist",  columnDefinition = "DECIMAL(10,2)   COMMENT '合同持续时长'")
+    @Column(name = "contractPersist", columnDefinition = "DECIMAL(10,2)   COMMENT '合同持续时长'")
     private Double contractPersist;
 
     /**
      * 是否为持续
      */
-    @Column(name = "is_persist",  columnDefinition = "TINYINT(1)    COMMENT '是否为持续'")
+    @Column(name = "is_persist", columnDefinition = "TINYINT(1)    COMMENT '是否为持续'")
     private Boolean persist;
 
     /**
      * 预估开工时间
      */
-    @Column(name = "expectStartDate",  columnDefinition = "DATE   COMMENT '预估开工时间'")
+    @Column(name = "expectStartDate", columnDefinition = "DATE   COMMENT '预估开工时间'")
     private LocalDate expectStartDate;
 
     /**
      * 实际开工日期
      */
-    @Column(name = "realityStartDate",  columnDefinition = "DATE   COMMENT '实际开工日期'")
+    @Column(name = "realityStartDate", columnDefinition = "DATE   COMMENT '实际开工日期'")
     private LocalDate realityStartDate;
 
     /**
      * 实际完工日期
      */
-    @Column(name = "realityCompleteTime",  columnDefinition = "DATE   COMMENT '实际完工日期'")
+    @Column(name = "realityCompleteTime", columnDefinition = "DATE   COMMENT '实际完工日期'")
     private LocalDate realityCompleteTime;
 
     /**
      * 预计完工时间
      */
-    @Column(name = "expectCompleteTime",  columnDefinition = "DATE   COMMENT '预计完工时间'")
+    @Column(name = "expectCompleteTime", columnDefinition = "DATE   COMMENT '预计完工时间'")
     private LocalDate expectCompleteTime;
 
     /**
      * 未进场
      */
-    @Column(name = "notApproach",  columnDefinition = "VARCHAR(255)   COMMENT '未进场'")
+    @Column(name = "notApproach", columnDefinition = "VARCHAR(255)   COMMENT '未进场'")
     private String notApproach;
 
     /**
      * 进场
      */
-    @Column(name = "approach",  columnDefinition = "VARCHAR(255)   COMMENT '进场'")
+    @Column(name = "approach", columnDefinition = "VARCHAR(255)   COMMENT '进场'")
     private String approach;
 
     /**
      * 停工
      */
-    @Column(name = "shutdown",  columnDefinition = "VARCHAR(255)   COMMENT '停工'")
+    @Column(name = "shutdown", columnDefinition = "VARCHAR(255)   COMMENT '停工'")
     private String shutdown;
 
     /**
      * 进行
      */
-    @Column(name = "march",  columnDefinition = "VARCHAR(255)   COMMENT '进行'")
+    @Column(name = "march", columnDefinition = "VARCHAR(255)   COMMENT '进行'")
     private String march;
 
     /**
      * 完工
      */
-    @Column(name = "complete",  columnDefinition = "VARCHAR(255)   COMMENT '完工'")
+    @Column(name = "complete", columnDefinition = "VARCHAR(255)   COMMENT '完工'")
     private String complete;
 
     /**
      * 到货
      */
-    @Column(name = "goods",  columnDefinition = "VARCHAR(255)   COMMENT '到货'")
+    @Column(name = "goods", columnDefinition = "VARCHAR(255)   COMMENT '到货'")
     private String goods;
 
     /**
      * 初验
      */
-    @Column(name = "initialTest",  columnDefinition = "VARCHAR(255)   COMMENT '初验'")
+    @Column(name = "initialTest", columnDefinition = "VARCHAR(255)   COMMENT '初验'")
     private String initialTest;
 
     /**
      * 终验
      */
-    @Column(name = "finalTest",  columnDefinition = "VARCHAR(255)   COMMENT '终验'")
+    @Column(name = "finalTest", columnDefinition = "VARCHAR(255)   COMMENT '终验'")
     private String finalTest;
 
     /**
      * 是否正在走结算流程
      */
-    @Column(name = "is_settlementProcess",  columnDefinition = "TINYINT(1)    COMMENT '是否正在走结算流程'")
+    @Column(name = "is_settlementProcess", columnDefinition = "TINYINT(1)    COMMENT '是否正在走结算流程'")
     private Boolean settlementProcess;
 
     /**
      * 是否到账
      */
-    @Column(name = "is_account",  columnDefinition = "TINYINT(1)    COMMENT '是否到账'")
+    @Column(name = "is_account", columnDefinition = "TINYINT(1)    COMMENT '是否到账'")
     private Boolean account;
 
     /**
      * 是否闭单
      */
-    @Column(name = "is_closeSingle",  columnDefinition = "TINYINT(1)    COMMENT '是否闭单'")
+    @Column(name = "is_closeSingle", columnDefinition = "TINYINT(1)    COMMENT '是否闭单'")
     private Boolean closeSingle;
 
     /**
      * 合作方式
      */
-    @Column(name = "businessCooperate",  columnDefinition = "VARCHAR(255)   COMMENT '合作方式'")
+    @Column(name = "businessCooperate", columnDefinition = "VARCHAR(255)   COMMENT '合作方式'")
     private String businessCooperate;
 
     /**
      * 合同外部项目名称
      */
-    @Column(name = "outerProject",  columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
+    @Column(name = "outerProject", columnDefinition = "VARCHAR(255)   COMMENT '合同外部项目名称'")
     private String outerProject;
 
     /**
      * 内部项目名称
      */
-    @Column(name = "innerProject",  columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
+    @Column(name = "innerProject", columnDefinition = "VARCHAR(255)   COMMENT '内部项目名称'")
     private String innerProject;
 
     /**
      * 商务评估（项目名称）
      */
-    @Column(name = "businessAssessProject",  columnDefinition = "VARCHAR(255)   COMMENT '商务评估（项目名称）'")
+    @Column(name = "businessAssessProject", columnDefinition = "VARCHAR(255)   COMMENT '商务评估（项目名称）'")
     private String businessAssessProject;
 
     /**
      * 商务评估（当前情况）
      */
-    @Column(name = "businessAssessCase",  columnDefinition = "VARCHAR(255)   COMMENT '商务评估（当前情况）'")
+    @Column(name = "businessAssessCase", columnDefinition = "VARCHAR(255)   COMMENT '商务评估（当前情况）'")
     private String businessAssessCase;
 
     /**
      * 商务回复反馈
      */
-    @Column(name = "businessReplyFeedback",  columnDefinition = "VARCHAR(255)   COMMENT '商务回复反馈'")
+    @Column(name = "businessReplyFeedback", columnDefinition = "VARCHAR(255)   COMMENT '商务回复反馈'")
     private String businessReplyFeedback;
 
     /**
      * 项目负责人
      */
-    @Column(name = "projectCharge",  columnDefinition = "VARCHAR(255)   COMMENT '项目负责人'")
+    @Column(name = "projectCharge", columnDefinition = "VARCHAR(255)   COMMENT '项目负责人'")
     private String projectCharge;
 
     /**
      * 经手人
      */
-    @Column(name = "handlers",  columnDefinition = "VARCHAR(255)   COMMENT '经手人'")
+    @Column(name = "handlers", columnDefinition = "VARCHAR(255)   COMMENT '经手人'")
     private String handlers;
 
     /**
      * 合同是否已归档
      */
-    @Column(name = "is_archive",  columnDefinition = "TINYINT(1)    COMMENT '合同是否已归档'")
+    @Column(name = "is_archive", columnDefinition = "TINYINT(1)    COMMENT '合同是否已归档'")
     private Boolean archive;
 
     /**
      * 合同归档数量
      */
-    @Column(name = "archiveNum",  columnDefinition = "DECIMAL(10,2)   COMMENT '合同归档数量'")
+    @Column(name = "archiveNum", columnDefinition = "DECIMAL(10,2)   COMMENT '合同归档数量'")
     private Double archiveNum;
 
     /**
      * 存储位置
      */
-    @Column(name = "storageLocation",  columnDefinition = "VARCHAR(255)   COMMENT '存储位置'")
+    @Column(name = "storageLocation", columnDefinition = "VARCHAR(255)   COMMENT '存储位置'")
     private String storageLocation;
     /**
      * 状态

@@ -24,7 +24,7 @@ public class CusPermission extends BaseEntity {
     /**
      * 辅助id
      */
-    @Column(name = "idFlag", nullable = false, unique = true ,columnDefinition = "VARCHAR(255)   COMMENT '辅助id'")
+    @Column(name = "idFlag", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '辅助id'")
     private String idFlag;
     /**
      * 描述
@@ -35,7 +35,7 @@ public class CusPermission extends BaseEntity {
     /**
      * 操作对象
      */
-    @Column(name = "operator",  columnDefinition = "TEXT   COMMENT '操作对象'")
+    @Column(name = "operator", columnDefinition = "TEXT   COMMENT '操作对象'")
     private String operator;
 
     /**

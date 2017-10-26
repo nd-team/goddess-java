@@ -1,8 +1,9 @@
 package com.bjike.goddess.businessproject.service;
 
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.entity.BusinessContract;
-import com.bjike.goddess.businessproject.bo.*;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -24,12 +25,12 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
     /**
      * 下拉导航权限
      */
-    default Boolean sonPermission() throws SerException {
+    default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
 
     /**
-     * 导航权限
+     * 工能导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;

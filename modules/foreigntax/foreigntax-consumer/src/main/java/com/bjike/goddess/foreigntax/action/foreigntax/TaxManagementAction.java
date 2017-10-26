@@ -12,12 +12,15 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.foreigntax.api.TaxManagementAPI;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
+import com.bjike.goddess.foreigntax.bo.VoucherDataBO;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
 import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.to.ForeignTaxDeleteFileTO;
 import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
+import com.bjike.goddess.foreigntax.to.VoucherDataTO;
 import com.bjike.goddess.foreigntax.vo.TaxManagementVO;
+import com.bjike.goddess.foreigntax.vo.VoucherDataVO;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -301,6 +304,44 @@ public class TaxManagementAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 生成记账凭证
+     *
+     * @param ids 列表id数组
+     * @return class VoucherDataVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/vGenerate")
+    public Result vGenerate(String[] ids) throws ActException {
+        try {
+
+            VoucherDataBO voucherDataBO = taxManagementAPI.vGenerate(ids);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherDataBO, VoucherDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 提交记账凭证
+     *
+     * @param to to数据
+     * @return class VoucherDataVO
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/voucher")
+    public Result voucher(@Validated() VoucherDataTO to) throws ActException {
+        try {
+
+            VoucherDataBO voucherDataBO = taxManagementAPI.generate(to);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherDataBO, VoucherDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 上传附件

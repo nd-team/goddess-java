@@ -7,6 +7,7 @@ import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.enums.MakeContract;
 import com.bjike.goddess.businessproject.excel.BusinessContractExport;
 import com.bjike.goddess.businessproject.excel.BusinessContractTemplateExcel;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -17,11 +18,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +57,13 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     private UserAPI userAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private OutsourcBusinessContractSer outsourcBusinessContractSer;
+
 
     /**
      * 核对查看权限（部门级别）
@@ -71,6 +81,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
         }
         RpcTransmit.transmitUserToken(userToken);
+
     }
 
     /**
@@ -89,8 +100,61 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
         }
         RpcTransmit.transmitUserToken(userToken);
-    }
 
+    }
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkManageIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+            if (!flag) {
+                throw new SerException("您不是相关项目经理人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    } /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkPlanIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+            if (!flag) {
+                throw new SerException("您不是相关规划部门的负责人，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkBudgetIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+            if (!flag) {
+                throw new SerException("您不是相关预算部门的负责人，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
 
     /**
      * 导航栏核对查看权限（部门级别）
@@ -102,24 +166,11 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("1");
         } else {
             flag = true;
         }
         return flag;
-    }
-
-    @Override
-    public Boolean sonPermission() throws SerException {
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = guideSeeIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = guideAddIdentity();
-        if (flagSee || flagAdd) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -132,11 +183,97 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.busCusPermission("2");
         } else {
             flag = true;
         }
         return flag;
+    }
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideManageIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guidePlanIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("4");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideBudgetIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("businesscontract");
+        obj.setDescribesion("商务项目合同");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = outsourcBusinessContractSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("outsourcbusinesscontract");
+        obj.setDescribesion("外包半外包项目合同管理");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        return list;
     }
 
     @Override
@@ -187,14 +324,22 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             case SEEFILE:
                 flag = guideSeeIdentity();
                 break;
+            case MANAGER:
+                flag = guideManageIdentity();
+                break;
+            case PLAN:
+                flag = guidePlanIdentity();
+                break;
+            case BUDGET:
+                flag = guideBudgetIdentity();
+                break;
             default:
                 flag = true;
                 break;
         }
-
-        RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
 
     @Override
     public Long count(BusinessContractDTO dto) throws SerException {
@@ -225,6 +370,15 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         checkAddIdentity();
         BusinessContract contract = BeanTransform.copyProperties(to, BusinessContract.class, true);
         contract.setCreateTime(LocalDateTime.now());
+        String[] names = positionDetailUserAPI.planPerson();//获取规划负责人
+        String[] names1 = positionDetailUserAPI.budgetPerson();//获取预算负责人
+        String[] names2 = positionDetailUserAPI.managerPerson();//获取项目经理
+        List<String> email = null;
+        if (null != names && null != names1 && null != names2) {
+            email = internalContactsAPI.getEmails(names);
+            email.addAll(internalContactsAPI.getEmails(names1));
+            email.addAll(internalContactsAPI.getEmails(names2));
+        }
         MessageTO messageTO = new MessageTO();
         messageTO.setContent(to.getContent());
         messageTO.setTitle("提供意见");
@@ -232,7 +386,10 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         messageTO.setSendType(SendType.EMAIL);
         messageTO.setRangeType(RangeType.SPECIFIED);
 
-//        messageTO.setReceivers(emails);
+        String[] strings1 = new String[email.size()];
+        strings1 = email.toArray(strings1);
+        messageTO.setReceivers(strings1);
+//        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
         messageAPI.send(messageTO);
         super.save(contract);
 
@@ -307,6 +464,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessContractsBO managerIdea(BusinessContractTO to) throws SerException {
+       checkManageIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
@@ -322,6 +480,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessContractsBO planIdea(BusinessContractTO to) throws SerException {
+        checkPlanIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
@@ -337,6 +496,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessContractsBO budgetIdea(BusinessContractTO to) throws SerException {
+       checkBudgetIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
@@ -348,13 +508,14 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             throw new SerException("id不能为空");
         }
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessContractsBO hadContract(BusinessContractTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
-            if(to.getMakeContract().equals(MakeContract.HADMAKE)){
+            if (to.getMakeContract().equals(MakeContract.HADMAKE)) {
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent(to.getContent());
                 messageTO.setTitle("协助函");
