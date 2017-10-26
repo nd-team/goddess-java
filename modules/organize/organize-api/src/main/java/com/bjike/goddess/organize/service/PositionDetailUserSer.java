@@ -315,4 +315,45 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
     default InternalContactsConditionBO getByName(String name) throws SerException {
         return null;
     }
+     /**
+     * lijuntao
+     * 获取客户模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String customRepPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取预算模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] budgetPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取规划模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] planPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取项目经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] managerPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取总经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] generPerson() throws SerException;
+
 }

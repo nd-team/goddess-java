@@ -203,13 +203,11 @@ public class DriverInfoTO extends BaseTO {
     /**
      * 是否解约
      */
-    @NotNull(message = "是否解约不能为空",groups = {ADD.class, EDIT.class})
     private Boolean breakAgreement;
 
     /**
      * 解除时间
      */
-    @NotNull(message = "解除时间不能为空",groups = {ADD.class, EDIT.class})
     private String liftTime;
 
     /**

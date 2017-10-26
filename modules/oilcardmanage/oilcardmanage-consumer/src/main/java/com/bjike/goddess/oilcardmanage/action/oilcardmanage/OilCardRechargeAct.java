@@ -9,9 +9,13 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
+import com.bjike.goddess.oilcardmanage.excel.OilCardRechargeSetExcel;
 import com.bjike.goddess.oilcardmanage.to.CompetitorDeleteFileTO;
+import com.bjike.goddess.oilcardmanage.to.ExportOilcardRechargeTO;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
 import com.bjike.goddess.oilcardmanage.vo.OilCardRechargeVO;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -181,7 +186,7 @@ public class OilCardRechargeAct extends BaseFileAction {
     }
 
     /**
-     * 上传附件
+     * 上传截图附件
      *
      * @param id      id
      * @param request 注入HttpServletRequest对象
@@ -196,11 +201,36 @@ public class OilCardRechargeAct extends BaseFileAction {
             String path = "/oilcardmanage/recharge/" + id;
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
+            oilCardRechargeAPI.updateScreen(id);
             return new ActResult("上传成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 上传充值后截图附件
+     *
+     * @param id      id
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/uploadScreen/{id}")
+    public Result uploadScreen(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            //跟前端约定好 ，文件路径是列表id
+            // /id/....
+            String path = "/oilcardmanage/recharge/" + id;
+            List<InputStream> inputStreams = super.getInputStreams(request, path);
+            fileAPI.upload(inputStreams);
+            oilCardRechargeAPI.updatePrepaid(id);
+            return new ActResult("上传成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 文件附件列表
@@ -284,6 +314,124 @@ public class OilCardRechargeAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 导入
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/leadExcel")
+    public Result leadExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<OilCardRechargeSetExcel> tos = ExcelUtil.excelToClazz(is, OilCardRechargeSetExcel.class, excel);
+            List<OilCardRechargeTO> toList = BeanTransform.copyProperties(tos, OilCardRechargeTO.class);
+            oilCardRechargeAPI.leadExcel(toList);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+//
+    /**
+     * 导出Excel
+     *
+     * @param to 导出条件
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(ExportOilcardRechargeTO to, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "油卡充值记录.xlsx";
+            super.writeOutFile(response, oilCardRechargeAPI.exportExcel(to), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板油卡充值记录
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "油卡充值记录模板.xlsx";
+            super.writeOutFile(response, oilCardRechargeAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 更新信息
+     * @param id
+     * @param balance
+     * @param pettyCash
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/update/information")
+    public Result updateInformation(String id,Double balance,Double pettyCash) throws ActException{
+        try {
+            oilCardRechargeAPI.updateInformation(id,balance,pettyCash);
+            return new ActResult("更新信息成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+
+    }
+
+
+    /**
+     * 充值信息更新
+     * @param id
+     * @param ifRecharge
+     * @param pettyCash
+     * @param rechargeMoney
+     * @param rechargeDate
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/update/recharge")
+    public Result updateRecharge(String id,Boolean ifRecharge,Double pettyCash,Double rechargeMoney,String rechargeDate) throws ActException{
+        try {
+            oilCardRechargeAPI.updateRecharge(id,ifRecharge,pettyCash,rechargeMoney,rechargeDate);
+            return new ActResult("充值信息更新成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 通报充值
+     * @param id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/notice/recharge")
+    public Result noticeRecharge(String id) throws ActException{
+        try {
+            oilCardRechargeAPI.noticeRecharge(id);
+            return new ActResult("通报充值成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
 }

@@ -55,7 +55,10 @@ public class OutsourcBusinessContractApiImpl implements OutsourcBusinessContract
     public OutsourcBusinessContractBO add(OutsourcBusinessContractTO to) throws SerException {
         return outsourcBusinessContractSer.add(to);
     }
-
+    @Override
+    public OutsourcBusinessContractBO supplier(OutsourcBusinessContractTO to) throws SerException {
+        return outsourcBusinessContractSer.supplier(to);
+    }
     @Override
     public OutsourcBusinessContractBO edit(OutsourcBusinessContractTO to) throws SerException {
         return outsourcBusinessContractSer.edit(to);
@@ -64,7 +67,6 @@ public class OutsourcBusinessContractApiImpl implements OutsourcBusinessContract
     @Override
     public void delete(String id) throws SerException {
         outsourcBusinessContractSer.delete(id);
-
     }
 
     @Override

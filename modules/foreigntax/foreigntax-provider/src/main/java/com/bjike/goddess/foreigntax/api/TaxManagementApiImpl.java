@@ -2,11 +2,13 @@ package com.bjike.goddess.foreigntax.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
+import com.bjike.goddess.foreigntax.bo.VoucherDataBO;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
 import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.service.TaxManagementSer;
 import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
+import com.bjike.goddess.foreigntax.to.VoucherDataTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +86,14 @@ public class TaxManagementApiImpl implements TaxManagementAPI {
     @Override
     public List<String> getCompany() throws SerException {
         return taxManagementSer.getCompany();
+    }
+    @Override
+    public VoucherDataBO vGenerate(String[] ids) throws SerException {
+        return taxManagementSer.vGenerate(ids);
+    }
+    @Override
+    public VoucherDataBO generate(VoucherDataTO to) throws SerException {
+        return taxManagementSer.generate(to);
     }
 
     @Override

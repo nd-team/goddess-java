@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.financeinit.bo.WithUnitBO;
 import com.bjike.goddess.financeinit.dto.WithUnitDTO;
 import com.bjike.goddess.financeinit.entity.WithUnit;
+import com.bjike.goddess.financeinit.excel.SonPermissionObject;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.WithUnitTO;
 
 import java.util.List;
@@ -19,6 +21,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WithUnitSer extends Ser<WithUnit, WithUnitDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 往来单位列表总条数
      */

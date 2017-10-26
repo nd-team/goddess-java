@@ -1,7 +1,11 @@
 package com.bjike.goddess.financeinit.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 设置币别
@@ -17,12 +21,13 @@ public class CurrencyTO extends BaseTO {
     /**
      * 代码
      */
-    @NotBlank()
+    @NotBlank(message = "代码不能为空",groups = {ADD.class,EDIT.class})
     private String code;
 
     /**
      * 名称
      */
+    @NotBlank(message = "名称不能为空",groups = {ADD.class,EDIT.class})
     private String name;
 
     /**
@@ -33,6 +38,7 @@ public class CurrencyTO extends BaseTO {
     /**
      * 是否本位币
      */
+    @NotNull(message = "是否本位币不能为空",groups = {ADD.class,EDIT.class})
     private Boolean standardMoney;
 
 

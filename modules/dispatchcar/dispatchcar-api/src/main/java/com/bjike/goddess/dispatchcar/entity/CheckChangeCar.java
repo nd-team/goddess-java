@@ -56,13 +56,13 @@ public class CheckChangeCar extends BaseEntity {
     /**
      * 问题类型
      */
-    @Column(name = "problemType",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '问题类型'"  )
+    @Column(name = "problemType",columnDefinition = "VARCHAR(255)   COMMENT '问题类型'"  )
     private String  problemType;
 
     /**
      * 问题描述
      */
-    @Column(name = "problemDes",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '问题描述'"  )
+    @Column(name = "problemDes",columnDefinition = "VARCHAR(255)   COMMENT '问题描述'"  )
     private String  problemDes;
 
     /**

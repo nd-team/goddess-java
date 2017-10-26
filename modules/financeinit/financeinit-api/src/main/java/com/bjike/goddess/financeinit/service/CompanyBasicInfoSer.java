@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.bo.CompanyBasicInfoBO;
 import com.bjike.goddess.financeinit.dto.CompanyBasicInfoDTO;
 import com.bjike.goddess.financeinit.entity.CompanyBasicInfo;
 import com.bjike.goddess.financeinit.to.CompanyBasicInfoTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CompanyBasicInfoSer extends Ser<CompanyBasicInfo, CompanyBasicInfoDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 公司基本信息列表总条数
      */

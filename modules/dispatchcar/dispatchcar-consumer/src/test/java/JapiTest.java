@@ -27,6 +27,7 @@ public class JapiTest {
                 "modules/oilcardmanage/oilcardmanage-api",
                 "modules/storage/storage-api",
                 "modules/organize/organize-api",
+                "modules/user/user-api",
                 "common/common-api"
         });
         //        JapiClient.saveHistory(false);

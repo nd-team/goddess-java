@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -23,8 +24,8 @@ public class TaxVoucher extends BaseEntity {
     /**
      * 时间
      */
-    @Column(name = "taxTime",  columnDefinition = "VARCHAR(255)   COMMENT '时间'")
-    private String taxTime;
+    @Column(name = "voucherDate",  columnDefinition = "DATE   COMMENT '时间'")
+    private LocalDate voucherDate;
 
     /**
      * 记账凭证id
@@ -39,12 +40,12 @@ public class TaxVoucher extends BaseEntity {
     private Double totalMoney;
 
 
-    public String getTaxTime() {
-        return taxTime;
+    public LocalDate getVoucherDate() {
+        return voucherDate;
     }
 
-    public void setTaxTime(String taxTime) {
-        this.taxTime = taxTime;
+    public void setVoucherDate(LocalDate voucherDate) {
+        this.voucherDate = voucherDate;
     }
 
     public String getVoucherId() {

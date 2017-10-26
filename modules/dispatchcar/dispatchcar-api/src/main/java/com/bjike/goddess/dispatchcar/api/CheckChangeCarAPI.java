@@ -48,6 +48,11 @@ public interface CheckChangeCarAPI  {
      */
     CheckChangeCarBO findOne(String id) throws SerException;
 
+    /**
+     * 查看数据条数
+     */
+    Long count(CheckChangeCarDTO checkChangeCarDTO) throws SerException;
+
 
 
 }

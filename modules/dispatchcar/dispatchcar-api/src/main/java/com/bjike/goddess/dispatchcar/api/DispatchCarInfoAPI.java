@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.api;
 
+
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -12,8 +13,8 @@ import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -285,7 +286,7 @@ public interface DispatchCarInfoAPI {
      * 查询所有用车陪同人员,任务下达人,用车人
      * @throws SerException
      */
-    List<EntryRegisterBO> findAllEntry() throws SerException;
+    List<UserBO> findAllEntry() throws SerException;
 
 
     /**
@@ -409,5 +410,31 @@ public interface DispatchCarInfoAPI {
      */
     List<DispatchCarInfoBO> findInformation( String department, LocalDate[] day) throws SerException;
 
+
+    /**
+     * 根据司机名称获取用车油耗
+     */
+    Double findOilWear(String driver) throws SerException;
+
+    /**
+     * 根据油卡编号查询油卡余额
+     */
+    Double findBalance(String oilCardNumber) throws SerException;
+
+
+    /**
+     * 根据项目名称获取立项信息
+     */
+    Boolean findProjectAproval(String project) throws SerException;
+
+    /**
+     * 查询所有项目组
+     */
+    List<String> getAllDepartment() throws SerException;
+
+    /**
+     * 查询所有地区
+     */
+    List<AreaBO> findArea() throws SerException;
 
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.rentcar.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rentcar.bo.AreaBO;
 import com.bjike.goddess.rentcar.bo.CollectDriverInfoBO;
+import com.bjike.goddess.rentcar.bo.OptionBO;
 import com.bjike.goddess.rentcar.service.CollectDriverInfoSer;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class CollectDriverInfoApiImpl implements CollectDriverInfoAPI  {
     }
 
     @Override
-    public List<AreaBO> allCollect(Integer year) throws SerException {
-        return collectDriverInfoSer.allCollect(year);
+    public List<AreaBO> allCollect(String endDate) throws SerException {
+        return collectDriverInfoSer.allCollect(endDate);
     }
 
     @Override
@@ -40,5 +41,15 @@ public class CollectDriverInfoApiImpl implements CollectDriverInfoAPI  {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return collectDriverInfoSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        return collectDriverInfoSer.figureShowMonth(year,month);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        return collectDriverInfoSer.figureShowTotal(endDate);
     }
 }

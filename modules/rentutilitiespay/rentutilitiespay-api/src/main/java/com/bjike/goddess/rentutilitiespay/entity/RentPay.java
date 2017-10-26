@@ -1,6 +1,7 @@
 package com.bjike.goddess.rentutilitiespay.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.rentutilitiespay.enums.PayParty;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -136,8 +137,8 @@ public class RentPay extends BaseEntity {
     /**
      * 房租缴费方
      */
-    @Column(name = "rentPay", columnDefinition = "VARCHAR(255)   COMMENT '房租缴费方'")
-    private String rentPay;
+    @Column(name = "rentPay", columnDefinition = "TINYINT(2)   COMMENT '房租缴费方'")
+    private PayParty rentPay;
 
     /**
      * 水费初期数目
@@ -184,8 +185,8 @@ public class RentPay extends BaseEntity {
     /**
      * 水费缴费方
      */
-    @Column(name = "waterPay", columnDefinition = "VARCHAR(255)   COMMENT '水费缴费方'")
-    private String waterPay;
+    @Column(name = "waterPay", columnDefinition = "TINYINT(2)   COMMENT '水费缴费方'")
+    private PayParty waterPay;
 
     /**
      * 电费初期数目
@@ -194,9 +195,9 @@ public class RentPay extends BaseEntity {
     private Double energyBeginNum;
 
     /**
-     * 电费计价金额（元/吨）
+     * 电费计价金额（元/度）
      */
-    @Column(name = "energyValuationMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '电费计价金额（元/吨）'")
+    @Column(name = "energyValuationMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '电费计价金额（元/度）'")
     private Double energyValuationMoney;
 
     /**
@@ -232,8 +233,8 @@ public class RentPay extends BaseEntity {
     /**
      * 电费缴费方
      */
-    @Column(name = "energyPay", columnDefinition = "VARCHAR(255)   COMMENT '电费缴费方'")
-    private String energyPay;
+    @Column(name = "energyPay", columnDefinition = "TINYINT(2)  COMMENT '电费缴费方'")
+    private PayParty energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -256,8 +257,8 @@ public class RentPay extends BaseEntity {
     /**
      * 燃气费缴费方
      */
-    @Column(name = "gasPay", columnDefinition = "VARCHAR(255)   COMMENT '燃气费缴费方'")
-    private String gasPay;
+    @Column(name = "gasPay", columnDefinition = "TINYINT(2)   COMMENT '燃气费缴费方'")
+    private PayParty gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -436,13 +437,6 @@ public class RentPay extends BaseEntity {
         this.rentEndTime = rentEndTime;
     }
 
-    public String getRentPay() {
-        return rentPay;
-    }
-
-    public void setRentPay(String rentPay) {
-        this.rentPay = rentPay;
-    }
 
     public Double getWaterBeginNum() {
         return waterBeginNum;
@@ -500,13 +494,6 @@ public class RentPay extends BaseEntity {
         this.waterEndTime = waterEndTime;
     }
 
-    public String getWaterPay() {
-        return waterPay;
-    }
-
-    public void setWaterPay(String waterPay) {
-        this.waterPay = waterPay;
-    }
 
     public Double getEnergyBeginNum() {
         return energyBeginNum;
@@ -564,13 +551,6 @@ public class RentPay extends BaseEntity {
         this.energyEndTime = energyEndTime;
     }
 
-    public String getEnergyPay() {
-        return energyPay;
-    }
-
-    public void setEnergyPay(String energyPay) {
-        this.energyPay = energyPay;
-    }
 
     public Double getGasRechargeLines() {
         return gasRechargeLines;
@@ -596,13 +576,6 @@ public class RentPay extends BaseEntity {
         this.gasEndTime = gasEndTime;
     }
 
-    public String getGasPay() {
-        return gasPay;
-    }
-
-    public void setGasPay(String gasPay) {
-        this.gasPay = gasPay;
-    }
 
     public Double getPayMoneyCollect() {
         return payMoneyCollect;
@@ -635,5 +608,37 @@ public class RentPay extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public PayParty getRentPay() {
+        return rentPay;
+    }
+
+    public void setRentPay(PayParty rentPay) {
+        this.rentPay = rentPay;
+    }
+
+    public PayParty getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(PayParty waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public PayParty getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(PayParty energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public PayParty getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(PayParty gasPay) {
+        this.gasPay = gasPay;
     }
 }

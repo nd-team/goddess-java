@@ -8,6 +8,7 @@ import com.bjike.goddess.regularization.dto.TransferInfoDTO;
 import com.bjike.goddess.regularization.entity.TransferInfo;
 import com.bjike.goddess.regularization.service.TransferInfoSer;
 import com.bjike.goddess.regularization.to.GuidePermissionTO;
+import com.bjike.goddess.regularization.to.TransferInfoExcelTO;
 import com.bjike.goddess.regularization.to.TransferInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -146,5 +147,15 @@ public class TransferInfoApiImpl implements TransferInfoAPI {
     @Override
     public OptionBO figureShowTotal(String endDate) throws SerException {
         return transferInfoSer.figureShowTotal(endDate);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return transferInfoSer.templateExport();
+    }
+
+    @Override
+    public void importExcel(List<TransferInfoExcelTO> transferInfoExcelTOS) throws SerException {
+        transferInfoSer.importExcel(transferInfoExcelTOS);
     }
 }

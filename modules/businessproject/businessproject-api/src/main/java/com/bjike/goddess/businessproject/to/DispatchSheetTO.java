@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.to;
 
+import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.ProjectStatus;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -161,6 +163,35 @@ public class DispatchSheetTO extends BaseTO {
      */
     @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "合同归档数量不能为空,且为数字")
     private Double fileCount;
+    /**
+     * 立项情况
+     */
+    @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "立项情况不能为空" )
+    private MakeContract makeContract;
+    /**
+     * 派工单号
+     */
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "项目状态不能为空" )
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "合同规模数量不能为空,且为数字" )
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    @NotNull(groups = {DispatchSheetTO.TestAdd.class} , message = "规模数量不能为空,且为数字" )
+    private Double scale;
+    /**
+     * 专业
+     */
+    @NotBlank(groups = {DispatchSheetTO.TestAdd.class} , message = "专业不能为空" )
+    private String major;
 
     /**
      * 备注
@@ -182,6 +213,53 @@ public class DispatchSheetTO extends BaseTO {
      */
     private String modifyTime;
 
+    public MakeContract getMakeContract() {
+        return makeContract;
+    }
+
+    public void setMakeContract(MakeContract makeContract) {
+        this.makeContract = makeContract;
+    }
+
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public String getInnerProjectNum() {
         return innerProjectNum;

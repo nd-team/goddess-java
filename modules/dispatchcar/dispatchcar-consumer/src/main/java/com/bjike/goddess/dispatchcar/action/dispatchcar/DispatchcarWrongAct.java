@@ -95,15 +95,15 @@ public class DispatchcarWrongAct extends BaseFileAction{
     /**
      * 编辑出车记录
      *
-     * @param editTO 出车记录
+     * @param to 出车记录
      * @return class DispatchCarInfoVO
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO, DispatchCarInfoTO.class);
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
+            DispatchCarInfoBO bo = dispatchCarInfoAPI.editModel(to);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(bo, DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

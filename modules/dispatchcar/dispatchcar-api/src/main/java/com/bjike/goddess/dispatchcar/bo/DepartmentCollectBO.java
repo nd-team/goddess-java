@@ -14,19 +14,19 @@ public class DepartmentCollectBO implements Serializable{
     /**
      * 部门
      */
-    private String deparment;
+    private String department;
 
     /**
      * 基础子集
      */
     private DispatchcarRecordCollectBO dispatchcarRecordCollect;
 
-    public String getDeparment() {
-        return deparment;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDeparment(String deparment) {
-        this.deparment = deparment;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public DispatchcarRecordCollectBO getDispatchcarRecordCollect() {

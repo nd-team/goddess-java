@@ -7,6 +7,8 @@ import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 会计科目
  *
@@ -33,13 +35,13 @@ public class AccountanCourseTO extends BaseTO {
     /**
      * 所属类别
      */
-    @NotBlank(message = "所属类别不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "所属类别不能为空",groups = {ADD.class, EDIT.class})
     private CategoryName belongCategory;
 
     /**
      * 余额方向
      */
-    @NotBlank(message = "余额方向不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "余额方向不能为空",groups = {ADD.class, EDIT.class})
     private BalanceDirection balanceDirection;
 
 

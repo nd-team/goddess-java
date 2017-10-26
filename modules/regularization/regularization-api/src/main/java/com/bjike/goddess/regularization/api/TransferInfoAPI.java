@@ -6,6 +6,7 @@ import com.bjike.goddess.regularization.bo.SummationBO;
 import com.bjike.goddess.regularization.bo.TransferInfoBO;
 import com.bjike.goddess.regularization.dto.TransferInfoDTO;
 import com.bjike.goddess.regularization.to.GuidePermissionTO;
+import com.bjike.goddess.regularization.to.TransferInfoExcelTO;
 import com.bjike.goddess.regularization.to.TransferInfoTO;
 
 import java.util.List;
@@ -243,4 +244,15 @@ public interface TransferInfoAPI {
     default OptionBO figureShowTotal(String endDate) throws SerException{
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+    /**
+     *  导入
+     * @param transferInfoExcelTOS 转正人员信息
+     */
+    void importExcel(List<TransferInfoExcelTO> transferInfoExcelTOS) throws SerException;
 }

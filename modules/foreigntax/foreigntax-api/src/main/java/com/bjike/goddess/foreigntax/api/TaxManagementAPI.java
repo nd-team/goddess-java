@@ -2,10 +2,12 @@ package com.bjike.goddess.foreigntax.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
+import com.bjike.goddess.foreigntax.bo.VoucherDataBO;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
 import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
+import com.bjike.goddess.foreigntax.to.VoucherDataTO;
 
 import java.util.List;
 import java.util.Map;
@@ -91,6 +93,26 @@ public interface TaxManagementAPI {
      */
     default void remove(String id) throws SerException {
 
+    }
+    /**
+     * 生成记账凭证
+     *
+     * @param ids
+     * @return class VoucherDataBO
+     * @throws SerException
+     */
+    default VoucherDataBO vGenerate(String[] ids) throws SerException {
+        return null;
+    }
+    /**
+     * 提交记账凭证
+     *
+     * @param to
+     * @return class VoucherDataBO
+     * @throws SerException
+     */
+    default VoucherDataBO generate(VoucherDataTO to) throws SerException {
+        return null;
     }
     /**
      * 根据税款所属期止获得申报期限

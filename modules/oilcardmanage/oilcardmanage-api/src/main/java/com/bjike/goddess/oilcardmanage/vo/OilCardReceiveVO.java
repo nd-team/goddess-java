@@ -47,10 +47,6 @@ public class OilCardReceiveVO {
      */
     private String returnDate;
 
-    /**
-     * 地区
-     */
-    private String area;
 
     /**
      * 领卡人
@@ -148,14 +144,6 @@ public class OilCardReceiveVO {
 
     public void setReturnDate(String returnDate) {
         this.returnDate = returnDate;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
     public String getReceiveUser() {
