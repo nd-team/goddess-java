@@ -465,4 +465,36 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         List<DispatchSheet> list = super.findAll();
         return list.stream().map(dispatchSheet -> dispatchSheet.getDispatchNum()).collect(Collectors.toSet());
     }
+
+    @Override
+    public Set<String> areas() throws SerException {
+        Set<String> set = new HashSet<>();
+        List<DispatchSheet> list = super.findAll();
+        for (DispatchSheet entity : list) {
+            set.add(entity.getArea());
+        }
+        return set;
+    }
+
+    @Override
+    public List<String> getProjectGroup(String area) throws SerException {
+        String sql = " SELECT projectGroup AS projectGroup FROM businessproject_dispatchsheet WHERE area='" + area + "' ";
+        List<Object> objects = super.findBySql(sql);
+        List<String> strs = null;
+        if(objects!= null && objects.size()>0){
+            strs = (List<String>)(List)objects;
+        }
+        return strs;
+    }
+
+    @Override
+    public List<String> getInnerName(String area, String projectGroup) throws SerException {
+        String sql = " SELECT innerProject AS innerProject FROM businessproject_dispatchsheet WHERE area='"+area+"' AND projectGroup = '"+projectGroup+"' ";
+        List<Object> objects = super.findBySql(sql);
+        List<String> strs = null;
+        if(objects!= null && objects.size()>0){
+            strs = (List<String>)(List)objects;
+        }
+        return strs;
+    }
 }

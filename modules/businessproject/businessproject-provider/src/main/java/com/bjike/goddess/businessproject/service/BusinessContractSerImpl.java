@@ -332,27 +332,27 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         checkAddIdentity();
         BusinessContract contract = BeanTransform.copyProperties(to, BusinessContract.class, true);
         contract.setCreateTime(LocalDateTime.now());
-        String[] names = positionDetailUserAPI.planPerson();//获取规划负责人
-        String[] names1 = positionDetailUserAPI.budgetPerson();//获取预算负责人
-        String[] names2 = positionDetailUserAPI.managerPerson();//获取项目经理
-        List<String> email = null;
-        if (null != names && null != names1 && null != names2) {
-            email = internalContactsAPI.getEmails(names);
-            email.addAll(internalContactsAPI.getEmails(names1));
-            email.addAll(internalContactsAPI.getEmails(names2));
-        }
-        MessageTO messageTO = new MessageTO();
-        messageTO.setContent(to.getContent());
-        messageTO.setTitle("提供意见");
-        messageTO.setMsgType(MsgType.SYS);
-        messageTO.setSendType(SendType.EMAIL);
-        messageTO.setRangeType(RangeType.SPECIFIED);
-
-        String[] strings1 = new String[email.size()];
-        strings1 = email.toArray(strings1);
-        messageTO.setReceivers(strings1);
-//        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
-        messageAPI.send(messageTO);
+//        String[] names = positionDetailUserAPI.planPerson();//获取规划负责人
+//        String[] names1 = positionDetailUserAPI.budgetPerson();//获取预算负责人
+//        String[] names2 = positionDetailUserAPI.managerPerson();//获取项目经理
+//        List<String> email = null;
+//        if (null != names && null != names1 && null != names2) {
+//            email = internalContactsAPI.getEmails(names);
+//            email.addAll(internalContactsAPI.getEmails(names1));
+//            email.addAll(internalContactsAPI.getEmails(names2));
+//        }
+//        MessageTO messageTO = new MessageTO();
+//        messageTO.setContent(to.getContent());
+//        messageTO.setTitle("提供意见");
+//        messageTO.setMsgType(MsgType.SYS);
+//        messageTO.setSendType(SendType.EMAIL);
+//        messageTO.setRangeType(RangeType.SPECIFIED);
+//
+//        String[] strings1 = new String[email.size()];
+//        strings1 = email.toArray(strings1);
+//        messageTO.setReceivers(strings1);
+////        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
+//        messageAPI.send(messageTO);
         super.save(contract);
 
         BusinessContractsBO bo = BeanTransform.copyProperties(contract, BusinessContractsBO.class);

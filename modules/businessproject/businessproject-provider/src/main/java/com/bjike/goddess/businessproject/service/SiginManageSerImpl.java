@@ -3,10 +3,7 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.businessproject.excel.SiginManageExport;
 import com.bjike.goddess.businessproject.excel.SiginManageTemplateExport;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
@@ -467,10 +464,11 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
         List<SiginManageExport> siginManageExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            SiginManageExport excel = BeanTransform.copyProperties(str, SiginManageExport.class, "businessType", "businessCooperate", "contractProperty");
+            SiginManageExport excel = BeanTransform.copyProperties(str, SiginManageExport.class, "businessType", "businessCooperate", "contractProperty","projectStatus");
             excel.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
             excel.setBusinessCooperate(BusinessCooperate.exportStrConvert(str.getBusinessCooperate()));
             excel.setContractProperty(ContractProperty.exportStrConvert(str.getContractProperty()));
+            excel.setProjectStatus(ProjectStatus.exportStrConvert(str.getProjectStatus()));
             siginManageExports.add(excel);
         });
         Excel excel = new Excel(0, 2);
@@ -503,6 +501,11 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         excel.setProjectGroup("test");
         excel.setProjectCharge("test");
         excel.setRemark("");
+        excel.setProjectStatus("进场");
+        excel.setTaskNum("test");
+        excel.setContractScale(0d);
+        excel.setScale(0d);
+        excel.setMajor("test");
         siginManageExports.add(excel);
 
         SiginManageTemplateExport excel2 = new SiginManageTemplateExport();

@@ -183,4 +183,26 @@ public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
      * @throws SerException
      */
     Set<String> nums() throws SerException;
+
+    /**
+     * 获取所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    Set<String> areas() throws SerException;
+    /**
+     * 根据地区获取所属项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getProjectGroup(String area) throws SerException;
+    /**
+     * 根据地区,所属项目组获取内部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getInnerName(String area,String projectGroup) throws SerException;
 }

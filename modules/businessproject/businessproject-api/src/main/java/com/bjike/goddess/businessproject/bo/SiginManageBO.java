@@ -3,6 +3,7 @@ package com.bjike.goddess.businessproject.bo;
 import com.bjike.goddess.businessproject.enums.BusinessCooperate;
 import com.bjike.goddess.businessproject.enums.BusinessType;
 import com.bjike.goddess.businessproject.enums.ContractProperty;
+import com.bjike.goddess.businessproject.enums.ProjectStatus;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import javax.persistence.Column;
@@ -122,7 +123,66 @@ public class SiginManageBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
+    /**
+     * 派工单号
+     */
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    private Double scale;
+    /**
+     * 专业
+     */
+    private String major;
 
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public BusinessType getBusinessType() {
         return businessType;
