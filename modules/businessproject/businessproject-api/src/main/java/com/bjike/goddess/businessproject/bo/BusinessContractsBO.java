@@ -12,7 +12,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class BusinessContractBO extends BaseBO {
+public class BusinessContractsBO extends BaseBO {
 
     /**
      * 测算分类

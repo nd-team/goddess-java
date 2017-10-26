@@ -16,6 +16,27 @@ public class XAxisBO extends BaseBO{
      */
     private String[] data;
     private AxisLabelBO axisLabel;
+    /**
+     * 类型
+     */
+    private String type;
+    private Boolean boundaryGap;
+
+    public Boolean getBoundaryGap() {
+        return boundaryGap;
+    }
+
+    public void setBoundaryGap(Boolean boundaryGap) {
+        this.boundaryGap = boundaryGap;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String[] getData() {
         return data;

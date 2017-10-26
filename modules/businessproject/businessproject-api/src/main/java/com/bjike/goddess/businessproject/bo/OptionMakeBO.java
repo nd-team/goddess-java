@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BrokenOptionBO extends BaseBO {
+public class OptionMakeBO extends BaseBO {
     /**
      * 标题
      */
@@ -35,19 +35,7 @@ public class BrokenOptionBO extends BaseBO {
     /**
      * 柱状图数据
      */
-    private SeriesBO[] series;
-    /**
-     * 悬停提示
-     */
-    private TooltipBO tooltipBO;
-
-    public TooltipBO getTooltipBO() {
-        return tooltipBO;
-    }
-
-    public void setTooltipBO(TooltipBO tooltipBO) {
-        this.tooltipBO = tooltipBO;
-    }
+    private SeriesBBO[] series;
 
     public TitleBO getTitle() {
         return title;
@@ -81,11 +69,11 @@ public class BrokenOptionBO extends BaseBO {
         this.yAxis = yAxis;
     }
 
-    public SeriesBO[] getSeries() {
+    public SeriesBBO[] getSeries() {
         return series;
     }
 
-    public void setSeries(SeriesBO[] series) {
+    public void setSeries(SeriesBBO[] series) {
         this.series = series;
     }
 }

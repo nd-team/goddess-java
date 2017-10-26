@@ -1,9 +1,10 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
 import com.bjike.goddess.businessproject.api.BusinessContractAPI;
-import com.bjike.goddess.businessproject.bo.BusinessContractBO;
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.excel.BusinessContractExcel;
+import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.vo.BusinessContractADetailVO;
@@ -17,6 +18,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -45,24 +47,54 @@ public class BusinessContractAction extends BaseFileAction {
     @Autowired
     private BusinessContractAPI businessContractAPI;
 
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+
     /**
-     * 功能导航权限
+     * 模块设置导航权限
      *
-     * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
         try {
-
-            Boolean isHasPermission = businessContractAPI.guidePermission(guidePermissionTO);
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0, "没有权限", false);
+                obj.setFlag(false);
             } else {
-                return new ActResult(0, "有权限", true);
+                obj.setFlag(true);
             }
+            list.add(obj);
+
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = businessContractAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -135,9 +167,9 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated() BusinessContractTO to, BindingResult bindingResult) throws ActException {
+    public Result add( BusinessContractTO to, BindingResult bindingResult) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.add(to);
+            BusinessContractsBO bo = businessContractAPI.add(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -157,7 +189,7 @@ public class BusinessContractAction extends BaseFileAction {
     @PostMapping("v1/edit")
     public Result edit(BusinessContractTO to) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.edit(to);
+            BusinessContractsBO bo = businessContractAPI.edit(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -191,9 +223,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/managerIdea")
-    public Result managerIdea(@Validated(BusinessContractTO.ManagerIdea.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result managerIdea(@Validated(BusinessContractTO.ManagerIdea.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.managerIdea(to);
+            BusinessContractsBO bo = businessContractAPI.managerIdea(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -209,9 +241,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/planIdea")
-    public Result planIdea(@Validated(BusinessContractTO.PlanIdea.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result planIdea(@Validated(BusinessContractTO.PlanIdea.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.planIdea(to);
+            BusinessContractsBO bo = businessContractAPI.planIdea(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -227,9 +259,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/budgetIdea")
-    public Result budgetIdea(@Validated(BusinessContractTO.BudgetIdea.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result budgetIdea(@Validated(BusinessContractTO.BudgetIdea.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.budgetIdea(to);
+            BusinessContractsBO bo = businessContractAPI.budgetIdea(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -245,9 +277,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/advance")
-    public Result advance(@Validated(BusinessContractTO.Advance.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result advance(@Validated(BusinessContractTO.Advance.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.advance(to);
+            BusinessContractsBO bo = businessContractAPI.advance(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -265,7 +297,7 @@ public class BusinessContractAction extends BaseFileAction {
     @PostMapping("v1/changes")
     public Result changes(BusinessContractTO to) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.changes(to);
+            BusinessContractsBO bo = businessContractAPI.changes(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -281,9 +313,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/notification")
-    public Result notification(@Validated(BusinessContractTO.Notification.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result notification(@Validated(BusinessContractTO.Notification.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.notification(to);
+            BusinessContractsBO bo = businessContractAPI.notification(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

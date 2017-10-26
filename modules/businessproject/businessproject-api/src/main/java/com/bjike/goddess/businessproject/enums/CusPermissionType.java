@@ -23,8 +23,7 @@ public enum CusPermissionType {
     /**
      * 部门
      */
-    DEPART(3)
-    ;
+    DEPART(3);
     private int code;
 
     CusPermissionType(int code) {
