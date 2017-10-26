@@ -173,4 +173,13 @@ public interface PositionWorkDetailsAPI {
     default void importExcel(List<PositionWorkDetailsImport2> tos) throws SerException {
         return;
     }
+
+    /**
+     * excel模板下载
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExport() throws SerException{
+        return null;
+    }
 }

@@ -18,10 +18,10 @@ import javax.validation.constraints.NotNull;
 public class CommonalityTO extends BaseTO {
 
     /**
-     * 项目组/部门ID
+     * 项目组/部门
      */
-    @NotNull(message = "项目组/部门ID不能为空", groups = {ADD.class, EDIT.class})
-    private String departmentId;
+    @NotNull(message = "项目组/部门不能为空", groups = {ADD.class, EDIT.class})
+    private String department;
 
     /**
      * 邮箱地址
@@ -45,12 +45,12 @@ public class CommonalityTO extends BaseTO {
     public String sendObject;
 
 
-    public String getDepartmentId() {
-        return departmentId;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getEmail() {

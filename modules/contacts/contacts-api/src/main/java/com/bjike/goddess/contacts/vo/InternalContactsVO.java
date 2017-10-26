@@ -18,10 +18,10 @@ public class InternalContactsVO {
      */
     private String id;
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+//    /**
+//     * 用户ID
+//     */
+//    private String userId;
 
     /**
      * 用户名
@@ -97,14 +97,6 @@ public class InternalContactsVO {
      * 状态
      */
     private Status status;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;

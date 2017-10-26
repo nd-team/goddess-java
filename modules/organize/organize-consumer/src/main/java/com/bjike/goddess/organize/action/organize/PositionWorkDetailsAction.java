@@ -525,4 +525,23 @@ public class PositionWorkDetailsAction extends BaseFileAction {
         }
     }
 
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板岗位工作明细
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "岗位工作明细导入模板.xlsx";
+            super.writeOutFile(response, positionWorkDetailsAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 }

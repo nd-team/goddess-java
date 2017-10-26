@@ -102,4 +102,9 @@ public class PositionWorkDetailsApiImpl implements PositionWorkDetailsAPI {
     public void importExcel(List<PositionWorkDetailsImport2> tos) throws SerException {
         positionWorkDetailsSer.importExcel(tos);
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return positionWorkDetailsSer.templateExport();
+    }
 }

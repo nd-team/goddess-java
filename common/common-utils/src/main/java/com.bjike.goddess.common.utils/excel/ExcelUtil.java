@@ -667,6 +667,8 @@ public class ExcelUtil {
             cell.setCellValue(Double.parseDouble(val.toString()));
         } else if (fileType.equals(Integer.class.getName())) {//Integer
             cell.setCellValue(Integer.parseInt(val.toString()));
+        } else if (fileType.equals(Long.class.getName())) {//Long
+            cell.setCellValue(Long.parseLong(val.toString()));
         } else if (field.getType().isEnum()) {//枚举
             cell.setCellValue(fieldToEnum(field, val));
         } else { //字符

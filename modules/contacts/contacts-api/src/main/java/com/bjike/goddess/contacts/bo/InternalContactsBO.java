@@ -14,10 +14,10 @@ import com.bjike.goddess.contacts.enums.Status;
  */
 public class InternalContactsBO extends BaseBO {
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+//    /**
+//     * 用户ID
+//     */
+//    private String userId;
 
     /**
      * 用户名
@@ -93,14 +93,6 @@ public class InternalContactsBO extends BaseBO {
      * 状态
      */
     private Status status;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;

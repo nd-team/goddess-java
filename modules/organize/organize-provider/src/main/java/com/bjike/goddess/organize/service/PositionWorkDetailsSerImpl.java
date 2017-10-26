@@ -896,8 +896,13 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                     int mergeRowCount = mainTableLen.get(j);
                     //5
                     if (mergeRowCount != 1) {
+
                         int firstRow = index;
                         lastRow = firstRow + mergeRowCount - 1;
+                        if (firstRow == 0) {
+                            firstRow += 1;
+                            lastRow += 1;
+                        }
                         //合并主表共33列
                         for (int i = 1; i < 33; i++) {
                             //1,5
@@ -1117,6 +1122,20 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
     @Override
     public void importExcel(List<PositionWorkDetailsImport2> tos) throws SerException {
         try {
+            //删除组织结构中的数据
+            List<PositionWorkDetails> positionWorkDetailses2 = super.findAll();
+            if (null != positionWorkDetailses2 && positionWorkDetailses2.size() > 0) {
+                super.remove(positionWorkDetailses2);
+            }
+            List<Modules> modules2 = modulesSer.findAll();
+            if (null != modules2 && modules2.size() > 0) {
+                modulesSer.remove(modules2);
+            }
+            List<Indicator> indicators2 = indicatorSer.findAll();
+            if (null != indicators2 && indicators2.size() > 0) {
+                indicatorSer.remove(indicators2);
+            }
+
 //            Excel excel = new Excel(0, 1);
 //            List<PositionWorkDetailsImport> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport.class, excel);
 
@@ -1208,26 +1227,65 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                         entity = super.save(entity);
                         if (tocs.size() >= 2) {
                             int total = tocs.size();
+
+                            PositionWorkDetailsImport temp = new PositionWorkDetailsImport();
                             for (int j = 1; j < 11; j++) {
                                 //得到的模块进行判断,是否是相同的数据
                                 for (int i = 0; i < total; i++) {
+                                    //当前条
                                     PositionWorkDetailsImport temp1 = tocs.get(i);
-                                    PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
-                                    if (i + 1 < total) {
-                                        temp2 = tocs.get(i + 1);
-                                    }
-                                    if (null != temp1 && null != temp2) {
-                                        Boolean tar = isRepeat(temp1, temp2, j);
-                                        if (!tar) {
-                                            List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp2, tar, j);
-                                            if (null != modulesBOList1 && modulesBOList1.size() > 0) {
-                                                for (ModulesBO bo : modulesBOList1) {
-                                                    modulesBOList.add(bo);
-                                                }
-                                                i++;
-                                            }
+                                    if (i == 0) {
+                                        //插模快表和指标表
+//                                        List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, new PositionWorkDetailsImport(), false, j,modulesBOList);
+                                        getModulesBOList(temp1, new PositionWorkDetailsImport(), false, j, modulesBOList);
+//                                        if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+//                                            for (ModulesBO bo : modulesBOList1) {
+//                                                modulesBOList.add(bo);
+//                                            }
+//                                        }
+                                    } else {
+                                        if (isRepeat(temp1, temp, j)) {
+                                            //差指标表
+//                                            List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp, true, j,modulesBOList);
+                                            getModulesBOList(temp1, temp, true, j, modulesBOList);
+//                                            if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+//                                                for (ModulesBO bo : modulesBOList1) {
+//                                                    modulesBOList.add(bo);
+//                                                }
+//                                            }
+                                        } else {
+                                            //插模快表和指标表
+//                                            List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp, false, j,modulesBOList);
+                                            getModulesBOList(temp1, temp, false, j, modulesBOList);
+//                                            if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+//                                                for (ModulesBO bo : modulesBOList1) {
+//                                                    modulesBOList.add(bo);
+//                                                }
+//                                            }
                                         }
                                     }
+
+                                    temp = temp1;
+//
+//
+//                                    //下一条
+//                                    PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
+//                                    if (i + 1 < total) {
+//                                        temp2 = tocs.get(i + 1);
+//                                    }
+//                                    if (null != temp1 && null != temp2) {
+//                                        //判断模快表是否重复
+//                                        Boolean tar = isRepeat(temp1, temp2, j);
+//                                        if (!tar) {
+//                                            List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp2, tar, j);
+//                                            if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+//                                                for (ModulesBO bo : modulesBOList1) {
+//                                                    modulesBOList.add(bo);
+//                                                }
+//                                                i++;
+//                                            }
+//                                        }
+//                                    }
                                 }
                             }
                         } else if (tocs.size() == 1) {
@@ -1236,15 +1294,28 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                                 //得到的模块进行判断,是否是相同的数据
                                 PositionWorkDetailsImport temp1 = tocs.get(0);
                                 PositionWorkDetailsImport temp2 = new PositionWorkDetailsImport();
-                                List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp2, false, j);
-                                if (null != modulesBOList1 && modulesBOList1.size() > 0) {
-                                    for (ModulesBO bo : modulesBOList1) {
-                                        modulesBOList.add(bo);
-                                    }
+//                                List<ModulesBO> modulesBOList1 = getModulesBOList(temp1, temp2, false, j,modulesBOList);
+                                getModulesBOList(temp1, temp2, false, j, modulesBOList);
+//                                if (null != modulesBOList1 && modulesBOList1.size() > 0) {
+//                                    for (ModulesBO bo : modulesBOList1) {
+//                                        modulesBOList.add(bo);
+//                                    }
+//                                }
+                            }
+                        }
+                        for (ModulesBO bo : modulesBOList) {
+                            Modules modules = BeanTransform.copyProperties(bo, Modules.class);
+                            modules.setWorkDetailsId(entity.getId());
+                            modules = modulesSer.save(modules);
+                            if (null != bo && modules != null&& bo.getIndicatorBOList().size() > 0 && bo.getIndicatorBOList() != null) {
+                                for (IndicatorBO indicatorBO : bo.getIndicatorBOList()) {
+                                    Indicator indicator = BeanTransform.copyProperties(indicatorBO, Indicator.class);
+                                    indicator.setModulesId(modules.getId());
+                                    indicatorSer.save(indicator);
                                 }
                             }
                         }
-                        modulesBOList.size();
+
                     }
                 }
 
@@ -1252,6 +1323,16 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<PositionWorkDetailsExport1> toList = new ArrayList<PositionWorkDetailsExport1>();
+        PositionWorkDetailsExport1 baseInfoManageLeadExcel = new PositionWorkDetailsExport1();
+        toList.add(baseInfoManageLeadExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
     }
 
     //判断两个对象中的第j张模块表的数据是否相同
@@ -1325,9 +1406,10 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         return tar;
     }
 
-    private List<ModulesBO> getModulesBOList(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2, Boolean tar, int j) throws SerException {
+    private void getModulesBOList(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2, Boolean tar, int j, List<ModulesBO> modulesBOList0) throws SerException {
         try {
             List<ModulesBO> modulesBOList = new ArrayList<>(0);
+
             Field[] fields1 = temp1.getClass().getDeclaredFields();
             Field[] fields2 = temp2.getClass().getDeclaredFields();
             List<String> nameList1 = new ArrayList<>(0);
@@ -1350,28 +1432,32 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                 Object val = fi.get(temp2);
                 valList2.add(val);
             }
-
-            //如果模块表属性值相同,则该条数据的该模块与下一条数据的该模块相同
-            if (tar) {
-                ModulesBO modulesBO = transToModuleBO(valList1, valList2, tar, j);
-                if (null != modulesBO) {
-                    modulesBOList.add(modulesBO);
-                }
-            } else {
-                ModulesBO modulesBO1 = transToModuleBO(valList1, valList2, tar, j);
-                if (null != modulesBO1) {
-                    modulesBOList.add(modulesBO1);
-                }
-                ModulesBO modulesBO2 = transToModuleBO(valList2, valList2, tar, j);
-                if (null != modulesBO2 && modulesBO2.getIndicatorBOList() != null) {
-                    modulesBOList.add(modulesBO2);
-                }
+            ModulesBO modulesBO = transToModuleBO(valList1, valList2, tar, j, modulesBOList0);
+            if (null != modulesBO  && modulesBO.getIndicatorBOList() != null&& modulesBO.getIndicatorBOList().size() > 0) {
+                modulesBOList0.add(modulesBO);
             }
-            return modulesBOList;
+//
+//            //如果模块表属性值相同,则该条数据的该模块与下一条数据的该模块相同
+//            if (tar) {
+//                ModulesBO modulesBO = transToModuleBO(valList1, valList2, tar, j, modulesBOList0);
+//                if (null != modulesBO) {
+//                    modulesBOList.add(modulesBO);
+//                }
+//            } else {
+//                ModulesBO modulesBO1 = transToModuleBO(valList1, valList2, tar, j, modulesBOList0);
+//                if (null != modulesBO1) {
+//                    modulesBOList.add(modulesBO1);
+//                }
+//                ModulesBO modulesBO2 = transToModuleBO(valList2, valList2, tar, j);
+//                if (null != modulesBO2 && modulesBO2.getIndicatorBOList() != null) {
+//                    modulesBOList.add(modulesBO2);
+//                }
+//            }
+//            return modulesBOList0;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+//        return null;
     }
 
 //    private List<ModulesBO> getModulesBOList2(PositionWorkDetailsImport temp1, PositionWorkDetailsImport temp2) throws
@@ -1443,7 +1529,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
 //    }
 
     //将属性值相同的模块表和两个指标表放到同一个modulesBO中
-    private ModulesBO transToModuleBO(List<Object> valList1, List<Object> valList2, Boolean tar, int j) throws SerException {
+    private ModulesBO transToModuleBO(List<Object> valList1, List<Object> valList2, Boolean tar, int j, List<ModulesBO> modulesBOList0) throws SerException {
         try {
 //            if (!tar) {
 //                valList1 = valList2;
@@ -1454,6 +1540,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
             ModulesImportTempBO modulesImportTempBO2 = new ModulesImportTempBO();
             Field[] fields3 = modulesImportTempBO1.getClass().getDeclaredFields();
             Field[] fields4 = modulesImportTempBO2.getClass().getDeclaredFields();
+
 
             //把模块的数据跟模块子表的数据存放到ModulesBO里面
             int z = 33 + (j - 1) * 19;//到模块子表的长度
@@ -1501,21 +1588,35 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                         break;
                 }
 
-                //存放第一张指标表的数据
-                IndicatorBO indicatorBO = transInditorToModulesBO(j, valList1, modulesBO);
-                if (null != indicatorBO) {
-                    indicatorBOs.add(indicatorBO);
-                    modulesBO.setIndicatorBOList(indicatorBOs);
-                }
-                //如果tar=true,表示模块表的属性值是相同的,需要存放第二张指标表的数据
-                //存放第二张指标表的数据
+                //如果tar是true,保存指标表数据到modulesListBO0
                 if (tar) {
-                    IndicatorBO indicatorBO1 = transInditorToModulesBO(j, valList2, modulesBO);
-                    if (null != indicatorBO1) {
+                    IndicatorBO indicatorBO = transInditorToModulesBO(j, valList1, modulesBO);
+                    ModulesBO modulesBO1 = modulesBOList0.get(modulesBOList0.size() - 1);
+                    List<IndicatorBO> indicatorBOs1 = modulesBO1.getIndicatorBOList();
+                    if (null != indicatorBO) {
+                        indicatorBOs1.add(indicatorBO);
+                        modulesBO1.setIndicatorBOList(indicatorBOs1);
+                    }
+                    return null;
+                } else {
+                    //存放第一张指标表的数据
+                    IndicatorBO indicatorBO = transInditorToModulesBO(j, valList1, modulesBO);
+                    if (null != indicatorBO) {
                         indicatorBOs.add(indicatorBO);
                         modulesBO.setIndicatorBOList(indicatorBOs);
+//                        modulesBOList0.add(modulesBO);
                     }
                 }
+
+                //如果tar=true,表示模块表的属性值是相同的,需要存放第二张指标表的数据
+                //存放第二张指标表的数据
+//                if (tar) {
+//                    IndicatorBO indicatorBO1 = transInditorToModulesBO(j, valList2, modulesBO);
+//                    if (null != indicatorBO1) {
+//                        indicatorBOs.add(indicatorBO);
+//                        modulesBO.setIndicatorBOList(indicatorBOs);
+//                    }
+//                }
             }
             return modulesBO;
         } catch (Exception e) {
