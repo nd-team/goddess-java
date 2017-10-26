@@ -66,7 +66,7 @@ public class DispatchcarRecordCollectAction {
      * @version v1
      */
     @GetMapping("v1/dayCollcet")
-    public Result dayCollect(@RequestParam String day) throws ActException{
+    public Result dayCollect(String day) throws ActException{
         try {
             List<AreaCollectBO> boList = dispatchcarRecordCollectAPI.dayCollect(day);
             List<AreaCollectVO> voList = BeanTransform.copyProperties(boList,AreaCollectVO.class);
@@ -106,7 +106,7 @@ public class DispatchcarRecordCollectAction {
      * @version v1
      */
     @GetMapping("v1/monthCollect")
-    public Result monthCollect(@RequestParam Integer year,@RequestParam Integer month) throws ActException{
+    public Result monthCollect(Integer year,Integer month) throws ActException{
         try {
             List<AreaCollectBO> boList = dispatchcarRecordCollectAPI.monthCollect(year,month);
             List<AreaCollectVO> voList = BeanTransform.copyProperties(boList,AreaCollectVO.class);
@@ -125,7 +125,7 @@ public class DispatchcarRecordCollectAction {
      * @version v1
      */
     @GetMapping("v1/allCollect")
-    public Result allCollect(@RequestParam String day) throws ActException{
+    public Result allCollect(String day) throws ActException{
         try {
             List<AreaCollectBO> boList = dispatchcarRecordCollectAPI.allCollect(day);
             List<AreaCollectVO> voList = BeanTransform.copyProperties(boList,AreaCollectVO.class);

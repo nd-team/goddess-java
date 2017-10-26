@@ -49,5 +49,8 @@ public class CheckChangeCarApiImpl implements CheckChangeCarAPI  {
         return checkChangeCarSer.findOne(id);
     }
 
-
+    @Override
+    public Long count(CheckChangeCarDTO checkChangeCarDTO) throws SerException {
+        return checkChangeCarSer.count(checkChangeCarDTO);
+    }
 }

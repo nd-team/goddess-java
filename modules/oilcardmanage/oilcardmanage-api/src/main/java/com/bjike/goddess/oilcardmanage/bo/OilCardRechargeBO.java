@@ -33,7 +33,7 @@ public class OilCardRechargeBO extends BaseBO {
     private String mainOrDeputy;
 
     /**
-     * 充值日期
+     * 充值完成时间
      */
     private String rechargeDate;
 
@@ -56,6 +56,47 @@ public class OilCardRechargeBO extends BaseBO {
      * 期初金额
      */
     private Double cycleEarlyMoney;
+
+    /**
+     * 是否充值
+     */
+    private Boolean ifRecharge;
+
+    /**
+     * 备用金
+     */
+    private Double pettyCash;
+
+    /**
+     * 充值前备用金
+     */
+    private Double rechargeBeforePettyCash;
+
+    /**
+     * 是否上传截图附件
+     */
+    private Boolean ifUploadScreenshot;
+
+    /**
+     * 是否充值通报
+     */
+    private Boolean ifPrepaidNotification;
+
+    /**
+     * 是否上传充值后截图附件
+     */
+    private Boolean ifUploadRecharge;
+
+    /**
+     * 充值后总金额
+     */
+    private Double afterRechargeTotalMoney;
+
+    /**
+     * 充值后油卡余额
+     */
+    private Double afterRechargeBalance;
+
 
     /**
      * 油卡id
@@ -132,5 +173,69 @@ public class OilCardRechargeBO extends BaseBO {
 
     public void setOilCardBasicId(String oilCardBasicId) {
         this.oilCardBasicId = oilCardBasicId;
+    }
+
+    public Boolean getIfRecharge() {
+        return ifRecharge;
+    }
+
+    public void setIfRecharge(Boolean ifRecharge) {
+        this.ifRecharge = ifRecharge;
+    }
+
+    public Double getPettyCash() {
+        return pettyCash;
+    }
+
+    public void setPettyCash(Double pettyCash) {
+        this.pettyCash = pettyCash;
+    }
+
+    public Double getRechargeBeforePettyCash() {
+        return rechargeBeforePettyCash;
+    }
+
+    public void setRechargeBeforePettyCash(Double rechargeBeforePettyCash) {
+        this.rechargeBeforePettyCash = rechargeBeforePettyCash;
+    }
+
+    public Boolean getIfUploadScreenshot() {
+        return ifUploadScreenshot;
+    }
+
+    public void setIfUploadScreenshot(Boolean ifUploadScreenshot) {
+        this.ifUploadScreenshot = ifUploadScreenshot;
+    }
+
+    public Boolean getIfPrepaidNotification() {
+        return ifPrepaidNotification;
+    }
+
+    public void setIfPrepaidNotification(Boolean ifPrepaidNotification) {
+        this.ifPrepaidNotification = ifPrepaidNotification;
+    }
+
+    public Boolean getIfUploadRecharge() {
+        return ifUploadRecharge;
+    }
+
+    public void setIfUploadRecharge(Boolean ifUploadRecharge) {
+        this.ifUploadRecharge = ifUploadRecharge;
+    }
+
+    public Double getAfterRechargeTotalMoney() {
+        return afterRechargeTotalMoney;
+    }
+
+    public void setAfterRechargeTotalMoney(Double afterRechargeTotalMoney) {
+        this.afterRechargeTotalMoney = afterRechargeTotalMoney;
+    }
+
+    public Double getAfterRechargeBalance() {
+        return afterRechargeBalance;
+    }
+
+    public void setAfterRechargeBalance(Double afterRechargeBalance) {
+        this.afterRechargeBalance = afterRechargeBalance;
     }
 }

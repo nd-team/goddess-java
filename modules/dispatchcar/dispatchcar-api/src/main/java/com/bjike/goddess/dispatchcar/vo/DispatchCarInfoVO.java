@@ -345,7 +345,7 @@ public class DispatchCarInfoVO {
     /**
      * 核对依据是否齐全无误
      */
-    private Boolean isCorrect;
+    private Boolean ifCorrect;
 
     /**
      * 寄件人
@@ -950,12 +950,12 @@ public class DispatchCarInfoVO {
         this.accountModuleIdea = accountModuleIdea;
     }
 
-    public Boolean getCorrect() {
-        return isCorrect;
+    public Boolean getIfCorrect() {
+        return ifCorrect;
     }
 
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+    public void setIfCorrect(Boolean ifCorrect) {
+        this.ifCorrect = ifCorrect;
     }
 
     public String getSender() {
@@ -982,12 +982,21 @@ public class DispatchCarInfoVO {
         this.expectPayDate = expectPayDate;
     }
 
+
     public Boolean getIfSendArchiveAL() {
         return ifSendArchiveAL;
     }
 
     public void setIfSendArchiveAL(Boolean ifSendArchiveAL) {
         this.ifSendArchiveAL = ifSendArchiveAL;
+    }
+
+    public String getReceiveDate() {
+        return receiveDate;
+    }
+
+    public String getExpectPayDate() {
+        return expectPayDate;
     }
 
     public Boolean getIfSendReimbursementAl() {

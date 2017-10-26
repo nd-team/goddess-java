@@ -87,6 +87,11 @@ public class StayUtilitiesVO {
     private Double waterCompanyPay;
 
     /**
+     * 水费员工预缴
+     */
+    private Double waterStaffPrepay;
+
+    /**
      * 水费员工缴纳
      */
     private Double waterStaffPay;
@@ -102,6 +107,11 @@ public class StayUtilitiesVO {
     private Double energyCompanyPay;
 
     /**
+     * 电费员工预缴
+     */
+    private Double energyStaffPrepay;
+
+    /**
      * 电费员工缴纳
      */
     private Double energyStaffPay;
@@ -115,6 +125,11 @@ public class StayUtilitiesVO {
      * 燃气费公司缴纳
      */
     private Double gasCompanyPay;
+
+    /**
+     * 燃气费员工预缴
+     */
+    private Double gasStaffPrepay;
 
     /**
      * 燃气费员工缴纳
@@ -361,5 +376,29 @@ public class StayUtilitiesVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
     }
 }

@@ -105,6 +105,12 @@ public class StayUtilitiesTO extends BaseTO {
     private Double waterCompanyPay;
 
     /**
+     * 水费员工预缴
+     */
+    @NotNull(message = "水费员工预缴不能为空",groups = {ADD.class,EDIT.class})
+    private Double waterStaffPrepay;
+
+    /**
      * 水费员工缴纳（(当月应缴水费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double waterStaffPay;
@@ -122,6 +128,12 @@ public class StayUtilitiesTO extends BaseTO {
     private Double energyCompanyPay;
 
     /**
+     * 电费员工预缴
+     */
+    @NotNull(message = "电费员工预缴不能为空",groups = {ADD.class,EDIT.class})
+    private Double energyStaffPrepay;
+
+    /**
      * 电费员工缴纳（(当月应缴电费总额/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
      */
     private Double energyStaffPay;
@@ -137,6 +149,13 @@ public class StayUtilitiesTO extends BaseTO {
      */
     @NotNull(message = "燃气费公司缴纳不能为空",groups = {ADD.class, EDIT.class})
     private Double gasCompanyPay;
+
+    /**
+     * 燃气费员工预缴
+     */
+    @NotNull(message = "燃气费员工预缴不能为空",groups = {ADD.class, EDIT.class})
+    private Double gasStaffPrepay;
+
 
     /**
      * 燃气费员工缴纳（(管道燃气费充值额度/同一住宿地址员工住宿天数总和)*个人员工住宿天数）
@@ -377,5 +396,29 @@ public class StayUtilitiesTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
     }
 }

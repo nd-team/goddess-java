@@ -339,7 +339,7 @@ public class DispatchCarInfoBO extends BaseBO {
     /**
      * 核对依据是否齐全无误
      */
-    private Boolean isCorrect;
+    private Boolean ifCorrect;
 
     /**
      * 寄件人
@@ -358,7 +358,7 @@ public class DispatchCarInfoBO extends BaseBO {
     private Boolean ifSendArchiveAL;
 
     /**
-     * 报销联是否寄件
+     * 报销联是否寄件ｃｕｎｄ
      */
     private Boolean ifSendReimbursementAl;
 
@@ -944,12 +944,12 @@ public class DispatchCarInfoBO extends BaseBO {
         this.accountModuleIdea = accountModuleIdea;
     }
 
-    public Boolean getCorrect() {
-        return isCorrect;
+    public Boolean getIfCorrect() {
+        return ifCorrect;
     }
 
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+    public void setIfCorrect(Boolean ifCorrect) {
+        this.ifCorrect = ifCorrect;
     }
 
     public String getSender() {
@@ -974,6 +974,10 @@ public class DispatchCarInfoBO extends BaseBO {
 
     public void setIfSendArchiveAL(Boolean ifSendArchiveAL) {
         this.ifSendArchiveAL = ifSendArchiveAL;
+    }
+
+    public String getExpectPayDate() {
+        return expectPayDate;
     }
 
     public Boolean getIfSendReimbursementAl() {

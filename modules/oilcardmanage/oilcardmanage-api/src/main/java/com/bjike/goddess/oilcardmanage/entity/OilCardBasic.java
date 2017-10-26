@@ -78,13 +78,25 @@ public class OilCardBasic extends BaseEntity{
     private String area;
 
     /**
+     * 项目组/部门
+     */
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '项目组/部门'")
+    private String department;
+
+    /**
+     * 更新时间
+     */
+    @Column(columnDefinition = "DATE COMMENT '更新时间'")
+    private LocalDate updateTime;
+
+    /**
      * 项目名称
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '项目名称'")
     private String project;
 
     /**
-     * 油卡状态
+     * 领用状态
      */
     @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '油卡状态'", nullable = false, insertable = false)
     private OilCardStatus cardStatus;
@@ -102,7 +114,7 @@ public class OilCardBasic extends BaseEntity{
     private Double cycleEarlyMoney;
 
     /**
-     * 余额
+     * 油卡余额
      */
     @Column(columnDefinition = "DECIMAL(10,2) COMMENT '余额'",nullable = false)
     private Double balance;
@@ -217,5 +229,21 @@ public class OilCardBasic extends BaseEntity{
 
     public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
     }
 }

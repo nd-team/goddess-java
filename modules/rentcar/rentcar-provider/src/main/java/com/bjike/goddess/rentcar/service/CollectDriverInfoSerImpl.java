@@ -9,10 +9,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.rentcar.bo.AreaBO;
-import com.bjike.goddess.rentcar.bo.CollectDriverInfoBO;
-import com.bjike.goddess.rentcar.bo.DepartmentBO;
-import com.bjike.goddess.rentcar.bo.DriverInfoBO;
+import com.bjike.goddess.rentcar.bo.*;
 import com.bjike.goddess.rentcar.dto.CollectDriverInfoDTO;
 import com.bjike.goddess.rentcar.dto.DriverInfoDTO;
 import com.bjike.goddess.rentcar.entity.CollectDriverInfo;
@@ -22,6 +19,7 @@ import com.bjike.goddess.rentcar.enums.GuideAddrStatus;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -174,15 +172,15 @@ public class CollectDriverInfoSerImpl extends ServiceImpl<CollectDriverInfo, Col
     }
 
     @Override
-    public List<AreaBO> allCollect(Integer year) throws SerException {
+    public List<AreaBO> allCollect(String day) throws SerException {
         LocalDate[] startTime = null;
-        if (year != null){
-            LocalDate startDate = DateUtil.parseDate(year+"-01-01");
-            LocalDate endDate = DateUtil.parseDate(year+"-12-31");
+        if (StringUtils.isNotBlank(day)){
+            LocalDate startDate = DateUtil.parseDate("1901-01-01");
+            LocalDate endDate = DateUtil.parseDate(day);
             startTime = new LocalDate[]{startDate,endDate};
         }else{
-            LocalDate startDate = DateUtil.getStartYear();
-            LocalDate endDate = DateUtil.getEndYear();
+            LocalDate startDate = DateUtil.parseDate("1901-01-01");
+            LocalDate endDate = LocalDate.now();
             startTime = new LocalDate[]{startDate,endDate};
         }
         return collect(startTime);
@@ -197,15 +195,14 @@ public class CollectDriverInfoSerImpl extends ServiceImpl<CollectDriverInfo, Col
         for(String area : areas){
             AreaBO areaBO = new AreaBO();
             DriverInfoDTO driverInfoDTO1 = new DriverInfoDTO();
-            DepartmentBO departmentBO = new DepartmentBO();
             driverInfoDTO1.getConditions().add(Restrict.eq("area",area));
             List<DriverInfoBO> driverInfoBOS = driverInfoSer.pageList(driverInfoDTO1);
             Set<String> departments = driverInfoBOS.stream().map(p -> p.getDepartment()).collect(Collectors.toSet());
             List<DepartmentBO> departmentBOS = new ArrayList<>();
-            List<CollectDriverInfoBO> collectDriverInfoBOList = new ArrayList<>();
 
 
             for(String department : departments){
+                DepartmentBO departmentBO = new DepartmentBO();
                 CollectDriverInfoBO collectDriverInfoBO = new CollectDriverInfoBO();
                 Integer businessDemand = 0;
                 Integer projectDemand = 0;
@@ -258,7 +255,6 @@ public class CollectDriverInfoSerImpl extends ServiceImpl<CollectDriverInfo, Col
                 collectDriverInfoBO.setBusinessDemand(businessDemand);
                 collectDriverInfoBO.setProjectDemand(projectDemand);
 
-                collectDriverInfoBOList.add(collectDriverInfoBO);
                 departmentBO.setDepartment(department);
                 departmentBO.setCollectDriverInfo(collectDriverInfoBO);
                 departmentBOS.add(departmentBO);
@@ -269,4 +265,155 @@ public class CollectDriverInfoSerImpl extends ServiceImpl<CollectDriverInfo, Col
         }
         return areaBOList;
     }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        LocalDate[] startTime = null;
+        if (year != null && month != null){
+            LocalDate startDate = DateUtil.getStartDayOfMonth(year,month);
+            LocalDate endDate = DateUtil.getEndDaYOfMonth(year,month);
+            startTime = new LocalDate[]{startDate,endDate};
+        }else{
+            LocalDate startDate = DateUtil.getStartMonth();
+            LocalDate endDate = DateUtil.getEndMonth();
+            startTime = new LocalDate[]{startDate,endDate};
+        }
+        String text_1 = "月租车协议管理汇总" + "(" + month + "月)";
+        return totalShowMethod(startTime,text_1);
+    }
+
+
+    @Override
+    public OptionBO figureShowTotal(String day) throws SerException {
+        LocalDate[] startTime = null;
+        if (StringUtils.isNotBlank(day)){
+            LocalDate startDate = DateUtil.parseDate("1901-01-01");
+            LocalDate endDate = DateUtil.parseDate(day);
+            startTime = new LocalDate[]{startDate,endDate};
+        }else{
+            LocalDate startDate = DateUtil.parseDate("1901-01-01");
+            LocalDate endDate = LocalDate.now();
+            startTime = new LocalDate[]{startDate,endDate};
+        }
+
+        String text_1 = "累计租车协议管理汇总(累计)";
+        return totalShowMethod(startTime,text_1);
+    }
+
+    public OptionBO totalShowMethod(LocalDate[] startTime,String text_1) throws SerException{
+        List<DepartmentBO> departmentBOS = new ArrayList<>();
+        DriverInfoDTO driverInfoDTO = new DriverInfoDTO();
+        List<DriverInfoBO> driverInfos = driverInfoSer.pageList(driverInfoDTO);
+        Set<String> departments = driverInfos.stream().map(p -> p.getDepartment()).collect(Collectors.toSet());
+        for (String department : departments){
+            DepartmentBO departmentBO = new DepartmentBO();
+            CollectDriverInfoBO collectDriverInfoBO = new CollectDriverInfoBO();
+            Integer businessDemand = 0;
+            Integer projectDemand = 0;
+            Integer availalbeDriver = 0;
+            Integer waitSignDealNumber = 0;
+            Integer needDriver = 0;
+            Integer waitRelieveDealNumber = 0;
+
+
+            //todo 商务需求
+            //todo 项目需求
+            //todo 还需司机数
+            DriverRecruitDTO driverRecruitDTO = new DriverRecruitDTO();
+            driverRecruitDTO.getConditions().add(Restrict.eq("department",department));
+            driverRecruitDTO.getConditions().add(Restrict.between("informationCollectionTime",startTime));
+            driverRecruitDTO.getConditions().add(Restrict.eq("enSureAgreement",true));
+//                List<DriverRecruit> driverInfoList1 = driverRecruitAPI.findByCis(driverRecruitDTO);
+
+//                waitSignDealNumber = driverInfoList1.size();
+
+
+//                StringBuilder sql = new StringBuilder("select *");
+//                sql.append(" from rentcar_driverinfo where area ='"+area);
+//                sql.append(" and department ='"+department1);
+//                sql.append(" and startDate <='"+startTime+"'");
+//                sql.append(" and endDate >'"+startTime+"'");
+//                sql.append(" and agreementStatus = '0'");
+            String[] filed = new String[]{"area"};
+            DriverInfoDTO driverInfoDTO2 = new DriverInfoDTO();
+            driverInfoDTO2.getConditions().add(Restrict.eq("department",department));
+            driverInfoDTO2.getConditions().add(Restrict.eq("agreementStatus", AgreementStatus.INLEASE));
+            List<DriverInfo> driverInfoList = driverInfoSer.findByCis(driverInfoDTO2);
+            availalbeDriver = driverInfoList.size();
+
+            needDriver = businessDemand + projectDemand + availalbeDriver;
+
+
+            StringBuilder sql2 = new StringBuilder("select area from rentcar_driverinfo");
+            sql2.append(" where department='"+department+"'");
+            sql2.append(" and agreementStatus='3'");
+            List<DriverInfo> driverInfoList2 = driverInfoSer.findBySql(sql2.toString(),DriverInfo.class,filed);
+            waitRelieveDealNumber = driverInfoList2.size();
+            collectDriverInfoBO.setWaitRelieveDealNumber(waitRelieveDealNumber);
+            collectDriverInfoBO.setAvailalbeDriver(availalbeDriver);
+            collectDriverInfoBO.setWaitSignDealNumber(waitSignDealNumber);
+            collectDriverInfoBO.setNeedDriver(needDriver);
+            collectDriverInfoBO.setBusinessDemand(businessDemand);
+            collectDriverInfoBO.setProjectDemand(projectDemand);
+
+            departmentBO.setDepartment(department);
+            departmentBO.setCollectDriverInfo(collectDriverInfoBO);
+            departmentBOS.add(departmentBO);
+        }
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_3 = new String[]{"商务需求","项目需求","待签订协议数","可用司机","还需司机数","待解除协议数"};
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (departmentBOS != null && departmentBOS.size() > 0){
+            for (DepartmentBO departmentBO : departmentBOS){
+                text_list2.add(departmentBO.getDepartment());
+
+                //柱状图数据
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(departmentBO.getDepartment());
+                seriesBO.setType("bar");
+
+                Integer[] number = new Integer[]{departmentBO.getCollectDriverInfo().getBusinessDemand(),departmentBO.getCollectDriverInfo().getProjectDemand()
+                        ,departmentBO.getCollectDriverInfo().getWaitSignDealNumber(),departmentBO.getCollectDriverInfo().getAvailalbeDriver()
+                        ,departmentBO.getCollectDriverInfo().getNeedDriver(),departmentBO.getCollectDriverInfo().getWaitRelieveDealNumber()
+                };
+                seriesBO.setData(number);
+                seriesBOList.add(seriesBO);
+            }
+        }
+
+        String[] text_2 = new String[text_list2.size()];
+        text_2 = text_list2.toArray(text_2);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return  optionBO;
+    }
+
 }

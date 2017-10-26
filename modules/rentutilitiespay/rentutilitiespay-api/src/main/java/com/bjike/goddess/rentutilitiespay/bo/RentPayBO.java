@@ -2,6 +2,7 @@ package com.bjike.goddess.rentutilitiespay.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.rentutilitiespay.entity.RentPay;
+import com.bjike.goddess.rentutilitiespay.enums.PayParty;
 
 import java.util.List;
 import java.util.Map;
@@ -156,7 +157,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 水费缴费方
      */
-    private String waterPay;
+    private PayParty waterPay;
 
     /**
      * 电费初期数目
@@ -196,7 +197,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 电费缴费方
      */
-    private String energyPay;
+    private PayParty energyPay;
 
     /**
      * 管道燃气费充值额度
@@ -216,7 +217,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 燃气费缴费方
      */
-    private String gasPay;
+    private PayParty gasPay;
 
     /**
      * 缴纳金额汇总（房租（元/月）+管理费，卫生费+水费缴纳金额+电费缴纳金额+管道燃气费充值额度）
@@ -456,13 +457,6 @@ public class RentPayBO extends BaseBO {
         this.waterEndTime = waterEndTime;
     }
 
-    public String getWaterPay() {
-        return waterPay;
-    }
-
-    public void setWaterPay(String waterPay) {
-        this.waterPay = waterPay;
-    }
 
     public Double getEnergyBeginNum() {
         return energyBeginNum;
@@ -520,13 +514,6 @@ public class RentPayBO extends BaseBO {
         this.energyEndTime = energyEndTime;
     }
 
-    public String getEnergyPay() {
-        return energyPay;
-    }
-
-    public void setEnergyPay(String energyPay) {
-        this.energyPay = energyPay;
-    }
 
     public Double getGasRechargeLines() {
         return gasRechargeLines;
@@ -552,13 +539,6 @@ public class RentPayBO extends BaseBO {
         this.gasEndTime = gasEndTime;
     }
 
-    public String getGasPay() {
-        return gasPay;
-    }
-
-    public void setGasPay(String gasPay) {
-        this.gasPay = gasPay;
-    }
 
     public Double getPayMoneyCollect() {
         return payMoneyCollect;
@@ -593,4 +573,27 @@ public class RentPayBO extends BaseBO {
         this.remark = remark;
     }
 
+    public PayParty getWaterPay() {
+        return waterPay;
+    }
+
+    public void setWaterPay(PayParty waterPay) {
+        this.waterPay = waterPay;
+    }
+
+    public PayParty getEnergyPay() {
+        return energyPay;
+    }
+
+    public void setEnergyPay(PayParty energyPay) {
+        this.energyPay = energyPay;
+    }
+
+    public PayParty getGasPay() {
+        return gasPay;
+    }
+
+    public void setGasPay(PayParty gasPay) {
+        this.gasPay = gasPay;
+    }
 }

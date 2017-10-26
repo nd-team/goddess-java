@@ -1,5 +1,6 @@
 package com.bjike.goddess.rentcar.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -7,6 +8,8 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -28,6 +31,7 @@ import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -72,6 +76,8 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
 
     @Autowired
     private DriverInfoSer driverInfoSer;
+
+    private Logger logger = Logger.getLogger(CarSendEmailSerImpl.class);
 
     /**
      * 核对查看权限（部门级别）
@@ -216,6 +222,7 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
     // 定时器规则 "0 0 10 * * ?" 每月每日上午10:00发送邮件
     @Override
     public void sendEmailRemind() throws SerException {
+
         DriverInfoDTO driverInfoDTO = new DriverInfoDTO();
         List<DriverInfoBO> driverInfos = driverInfoSer.pageList(driverInfoDTO);
         for (DriverInfoBO driverInfoBO : driverInfos) {
@@ -225,32 +232,42 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
             List<String> receivers = new ArrayList<>();
             //合同终止日期前15天发送邮件提醒福利模块负责人
             if (interval <= 15) {
-                List<UserBO> userBOS = positionDetailUserAPI.findUserList();
-                if (moduleAPI.isCheck("organize")) {
-                    for (UserBO userBO : userBOS) {
-                        List<String> position = positionDetailUserAPI.getPosition(userBO.getUsername());
-                        if (position.get(0).equals("福利模块负责人")) {
-                            receivers.add(userBO.getEmail());
-                        }
+                logger.info("发送邮件开始");
+                Boolean b = moduleAPI.isCheck("organize");
+                if (b) {
+                    logger.info("发送邮件开始1"+b);
+                    PositionDetailBO positionDetailBO = positionDetailAPI.findByPosition("福利模块负责人");
+                    logger.info("发送邮件开始2"+ JSON.toJSONString(positionDetailBO));
+                    List<UserBO> userBOS = positionDetailUserAPI.findByPosition(positionDetailBO.getId());
+                    logger.info("发送邮件开始3"+ JSON.toJSONString(userBOS));
+                    if (userBOS != null && userBOS.size() > 0) {
+                        InternalContactsBO internalContactsBO = internalContactsAPI.findByUser(userBOS.get(0).getId());
+                        logger.info("发送邮件开始4"+ JSON.toJSONString(internalContactsBO));
+                        String email = internalContactsBO.getEmail();
+                        receivers.add(email);
                     }
                 } else {
                     throw new SerException("请去模块关联管理添加组织结构的模块关联");
                 }
+                logger.info("发送邮件开始5"+ JSON.toJSONString(receivers));
+                String[] sendUsers = (String[]) receivers.toArray(new String[receivers.size()]);
+//                String[] sendUsers = new String[]{"tangshuhua_aj@163.com"};
+                MessageTO messageTO = new MessageTO("合同终止提醒", driverInfoBO.getDriver() + "司机,合同终止日期（" + startTime.getYear() + "年" + startTime.getMonth().getValue() + "月" + startTime.getDayOfMonth() + "日）,快到期了，请跟进后续工作");
+                messageTO.setSendType(SendType.EMAIL);
+                messageTO.setMsgType(MsgType.SYS);//根据自己业务写
+                messageTO.setSendType(SendType.EMAIL);//根据自己业务写
+                messageTO.setRangeType(RangeType.SPECIFIED);//根据自己业务写
+                messageTO.setSenderId("SYSTEM");
+                messageTO.setSenderName("SYSTEM");
+                messageTO.setReceivers(sendUsers);
+                messageAPI.send(messageTO);
             }
-            String[] sendUsers = (String[]) receivers.toArray(new String[receivers.size()]);
-            MessageTO messageTO = new MessageTO("合同终止提醒", driverInfoBO.getDriver() + "司机,合同终止日期（" + startTime.getYear() + "年" + startTime.getMonth() + "月" + startTime.getDayOfMonth() + "日）,快到期了，请跟进后续工作");
-            messageTO.setSendType(SendType.EMAIL);
-            messageTO.setMsgType(MsgType.SYS);//根据自己业务写
-            messageTO.setSendType(SendType.EMAIL);//根据自己业务写
-            messageTO.setRangeType(RangeType.SPECIFIED);//根据自己业务写
-            messageTO.setSenderId("SYSTEM");
-            messageTO.setSenderName("SYSTEM");
-            messageTO.setReceivers(sendUsers);
         }
 
     }
 
     // 定时器规则 "0 0 10 15 * ?" 每月15日上午10:00发送邮件
+    //目前需求不需要 2017-10-21日
     @Override
     public void sendEmail() throws SerException {
         List<CarSendEmail> carSendEmails = super.findAll();
@@ -313,22 +330,22 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
         List<CarSendEmailBO> carSendEmailBOS = new ArrayList<>();
         if (carSendEmailList != null && !carSendEmailList.isEmpty()) {
             for (CarSendEmail carSendEmail : carSendEmailList) {
-                    CarSendEmailBO carSendEmailBO = new CarSendEmailBO();
-                    DepartmentDetailBO detailBO = departmentDetailAPI.findBOById(carSendEmail.getProjectManageId());
-                    PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(carSendEmail.getPositionNameId());
-                    if (null != detailBO) {
-                        carSendEmailBO.setProjectName(detailBO.getDepartment());
-                    }
-                    if (null != positionDetailBO) {
-                        carSendEmailBO.setPositionName(positionDetailBO.getPosition());
-                    }
-                    carSendEmailBO.setPositionNameId(carSendEmail.getPositionNameId());
-                    carSendEmailBO.setProjectManageId(carSendEmail.getProjectManageId());
-                    carSendEmailBO.setRemark(carSendEmail.getRemark());
-                    carSendEmailBO.setId(carSendEmail.getId());
-                    carSendEmailBOS.add(carSendEmailBO);
+                CarSendEmailBO carSendEmailBO = new CarSendEmailBO();
+                DepartmentDetailBO detailBO = departmentDetailAPI.findBOById(carSendEmail.getProjectManageId());
+                PositionDetailBO positionDetailBO = positionDetailAPI.findBOById(carSendEmail.getPositionNameId());
+                if (null != detailBO) {
+                    carSendEmailBO.setProjectName(detailBO.getDepartment());
                 }
+                if (null != positionDetailBO) {
+                    carSendEmailBO.setPositionName(positionDetailBO.getPosition());
+                }
+                carSendEmailBO.setPositionNameId(carSendEmail.getPositionNameId());
+                carSendEmailBO.setProjectManageId(carSendEmail.getProjectManageId());
+                carSendEmailBO.setRemark(carSendEmail.getRemark());
+                carSendEmailBO.setId(carSendEmail.getId());
+                carSendEmailBOS.add(carSendEmailBO);
             }
+        }
         return carSendEmailBOS;
     }
 

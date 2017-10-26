@@ -213,6 +213,11 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
             schemeImplement.setIsRegular(false);
             schemeImplement.setIsAcquire(false);
         }
+        RecommendSchemeDTO dto = new RecommendSchemeDTO();
+        dto.getConditions().add(Restrict.eq("recommendPosition",to.getRecommendPosition()));
+        dto.getConditions().add(Restrict.eq("type",to.getType()));
+        RecommendScheme recommendScheme = recommendSchemeSer.findOne(dto);
+        schemeImplement.setReferralBonus(recommendScheme.getAwardMoney());
         super.save(schemeImplement);
     }
 
@@ -269,7 +274,7 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
     public Integer findAward(String type, String recommendPosition) throws SerException {
         RecommendSchemeDTO dto = new RecommendSchemeDTO();
         dto.getConditions().add(Restrict.eq("type",type));
-        dto.getConditions().add(Restrict.eq("recommendPOsition",recommendPosition));
+        dto.getConditions().add(Restrict.eq("recommendPosition",recommendPosition));
         RecommendScheme recommendScheme = recommendSchemeSer.findOne(dto);
         Integer awardMoney = recommendScheme.getAwardMoney();
         return awardMoney;
