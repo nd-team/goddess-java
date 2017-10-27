@@ -124,7 +124,7 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     }
 
     @Override
-    public Set<String> areas() throws SerException {
+    public List<String> areas() throws SerException {
         return dispatchSheetSer.areas();
     }
 

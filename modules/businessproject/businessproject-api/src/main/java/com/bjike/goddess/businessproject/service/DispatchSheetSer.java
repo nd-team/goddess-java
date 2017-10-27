@@ -190,7 +190,7 @@ public interface DispatchSheetSer extends Ser<DispatchSheet, DispatchSheetDTO> {
      * @return
      * @throws SerException
      */
-    Set<String> areas() throws SerException;
+    List<String> areas() throws SerException;
     /**
      * 根据地区获取所属项目组
      *

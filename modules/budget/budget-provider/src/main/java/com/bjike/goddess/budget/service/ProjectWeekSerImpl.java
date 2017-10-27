@@ -5,6 +5,7 @@ import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.entity.ProjectWeek;
 import com.bjike.goddess.budget.enums.GuideAddrStatus;
+import com.bjike.goddess.budget.excel.ProjectWeekImportTemple;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
@@ -13,6 +14,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,6 +190,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setWorkDifferences(bo.getWorkDifferencesSum());
             projectMonthTO.setPlanIncome(bo.getPlanIncomeSum());
             projectMonthTO.setTargetIncome(bo.getTargetIncomeSum());
+            projectMonthTO.setProjectName(bo.getProjectName());
             projectMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             projectMonthSer.save(projectMonthTO);
         }
@@ -218,6 +222,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setWorkDifferences(bo.getWorkDifferencesSum());
             projectMonthTO.setPlanIncome(bo.getPlanIncomeSum());
             projectMonthTO.setTargetIncome(bo.getTargetIncomeSum());
+            projectMonthTO.setProjectName(bo.getProjectName());
             projectMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             projectMonthSer.save(projectMonthTO);
         }
@@ -486,5 +491,26 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     @Override
     public Long countNum(ProjectWeekDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ProjectWeekImportTemple> projectWeekImportTemples = new ArrayList<>();
+        ProjectWeekImportTemple excel = new ProjectWeekImportTemple();
+        excel.setArrival("广州");
+        excel.setProject("test");
+        excel.setYear(2017);
+        excel.setMonth(5);
+        excel.setWeek(3);
+        excel.setPrice(3d);
+        excel.setTargetIncome(20000d);
+        excel.setPlanIncome(2695d);
+        excel.setProjectName("test");
+        excel.setTargetWork(25);
+        excel.setActualWork(54);
+        projectWeekImportTemples.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(projectWeekImportTemples, exce);
+        return bytes;
     }
 }

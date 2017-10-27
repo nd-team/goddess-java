@@ -72,6 +72,11 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     }
 
     @Override
+    public byte[] templateExport() throws SerException {
+        return projectWeekSer.templateExport();
+    }
+
+    @Override
     public Boolean sonPermission() throws SerException {
         return projectWeekSer.sonPermission();
     }

@@ -17,6 +17,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -467,34 +465,41 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     }
 
     @Override
-    public Set<String> areas() throws SerException {
-        Set<String> set = new HashSet<>();
+    public List<String> areas() throws SerException {
+
         List<DispatchSheet> list = super.findAll();
-        for (DispatchSheet entity : list) {
-            set.add(entity.getArea());
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
         }
-        return set;
+        Set<String> set = new HashSet<>();
+        for (DispatchSheet model : list) {
+            String area = model.getArea();
+            if (StringUtils.isNotBlank(model.getArea())) {
+                set.add(area);
+            }
+        }
+        return new ArrayList<>(set);
     }
 
     @Override
     public List<String> getProjectGroup(String area) throws SerException {
         String sql = " SELECT projectGroup AS projectGroup FROM businessproject_dispatchsheet WHERE area='" + area + "' ";
         List<Object> objects = super.findBySql(sql);
-        List<String> strs = null;
+        Set<String> strs = new HashSet<>();
         if(objects!= null && objects.size()>0){
-            strs = (List<String>)(List)objects;
+            strs = (Set<String>)(Set)objects;
         }
-        return strs;
+        return new ArrayList<>(strs);
     }
 
     @Override
     public List<String> getInnerName(String area, String projectGroup) throws SerException {
         String sql = " SELECT innerProject AS innerProject FROM businessproject_dispatchsheet WHERE area='"+area+"' AND projectGroup = '"+projectGroup+"' ";
         List<Object> objects = super.findBySql(sql);
-        List<String> strs = null;
+        Set<String> strs = new HashSet<>();
         if(objects!= null && objects.size()>0){
-            strs = (List<String>)(List)objects;
+            strs = (Set<String>)(Set)objects;
         }
-        return strs;
+        return new ArrayList<>(strs);
     }
 }

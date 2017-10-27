@@ -26,4 +26,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" id="dispatchSheetApiImpl"/>
 </beans>

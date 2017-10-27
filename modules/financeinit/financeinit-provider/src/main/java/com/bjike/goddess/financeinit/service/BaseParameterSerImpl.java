@@ -195,7 +195,7 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
     @Override
     public BaseParameterBO addBasicPara(BaseParameterTO baseParameterTO) throws SerException {
        checkAddIdentity();
-        BaseParameter baseParameter = BeanTransform.copyProperties(baseParameterTO,BaseParameterBO.class,true);
+        BaseParameter baseParameter = BeanTransform.copyProperties(baseParameterTO,BaseParameter.class,true);
         baseParameter.setCreateTime(LocalDateTime.now());
         CompanyBasicInfoBO companyBasicInfoBO = companyBasicInfoSer.findByCompanyName(baseParameterTO.getCompanyName());
         baseParameter.setEin(companyBasicInfoBO.getEin());
