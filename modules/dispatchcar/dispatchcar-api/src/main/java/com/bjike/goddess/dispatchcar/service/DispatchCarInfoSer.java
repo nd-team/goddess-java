@@ -9,12 +9,12 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
 
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -264,7 +264,7 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      *
      * @throws SerException
      */
-    List<EntryRegisterBO> findAllEntry() throws SerException;
+    List<UserBO> findAllEntry() throws SerException;
 
 
     /**
@@ -301,7 +301,7 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @param toList
      * @throws SerException
      */
-    default void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+    default void leadExcel(List<DispatchCarInfoSetExcel> toList) throws SerException {
         return;
     }
 
@@ -372,6 +372,32 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @throws SerException
      */
     List<DispatchCarInfoBO> findInformation( String department, LocalDate[] day) throws SerException;
+
+    /**
+     * 根据司机名称获取用车油耗
+     */
+    Double findOilWear(String driver) throws SerException;
+
+    /**
+     * 根据油卡编号查询油卡余额
+     */
+    Double findBalance(String oilCardNumber) throws SerException;
+
+
+    /**
+     * 根据项目名称获取立项信息
+     */
+    Boolean findProjectAproval(String project) throws SerException;
+
+    /**
+     * 查询所有项目组
+     */
+    List<String> getAllDepartment() throws SerException;
+
+    /**
+     * 查询所有地区
+     */
+    List<AreaBO> findArea() throws SerException;
 
 
 }

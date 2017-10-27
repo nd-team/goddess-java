@@ -18,8 +18,8 @@
 
 	<!--发布接口,供其他模块调用-->
 
-	<dubbo:service interface="com.bjike.goddess.market.api.MarketInfoAPI" ref="marketInfoApiImpl"/>
-	<dubbo:service interface="com.bjike.goddess.market.api.CollectEmailAPI" ref="marketEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.market.api.MarketInfoRecordAPI" ref="marketInfoRecordApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.market.api.MarketInfoPreAnalysisAPI" ref="marketInfoPreAnalysisApiImpl"/>
 	<!--<dubbo:service interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" ref="customerBaseInfoApiImpl"/>
 
 	<dubbo:reference validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
@@ -43,5 +43,6 @@
 	<dubbo:reference  validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference  validation="true" id="competitorApiImpl" interface="com.bjike.goddess.competitormanage.api.CompetitorAPI" />
+	<dubbo:reference  validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
 
 </beans>

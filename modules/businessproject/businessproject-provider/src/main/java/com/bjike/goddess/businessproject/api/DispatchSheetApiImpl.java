@@ -118,4 +118,18 @@ public class DispatchSheetApiImpl implements DispatchSheetAPI {
     public Set<String> nums() throws SerException {
         return dispatchSheetSer.nums();
     }
+    @Override
+    public List<String> getProjectGroup(String area) throws SerException {
+        return dispatchSheetSer.getProjectGroup(area);
+    }
+
+    @Override
+    public List<String> areas() throws SerException {
+        return dispatchSheetSer.areas();
+    }
+
+    @Override
+    public List<String> getInnerName(String area, String projectGroup) throws SerException {
+        return dispatchSheetSer.getInnerName(area,projectGroup);
+    }
 }

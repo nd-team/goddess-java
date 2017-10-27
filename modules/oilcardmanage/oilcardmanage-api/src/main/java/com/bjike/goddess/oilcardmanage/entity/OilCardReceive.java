@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.oilcardmanage.enums.OilCardReceiveResult;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -41,21 +42,27 @@ public class OilCardReceive extends BaseEntity {
     private LocalDateTime returnDate;
 
     /**
-     * 地区
+     * 办理人
      */
-    @Column(columnDefinition = "VARCHAR(100) COMMENT '地区'",nullable = false)
-    private String area;
+    @Column(columnDefinition = "VARCHAR(18) COMMENT '办理人'",nullable = false)
+    private String transactor;
 
     /**
-     * 领卡人
+     * 办理日期
      */
-    @Column(columnDefinition = "VARCHAR(18) COMMENT '领卡人'",nullable = false)
+    @Column(columnDefinition = "DATE COMMENT '办理日期'",nullable = false)
+    private LocalDate transactDate;
+
+    /**
+     * 油卡领用人
+     */
+    @Column(columnDefinition = "VARCHAR(18) COMMENT '油卡领用人'",nullable = false)
     private String receiveUser;
 
     /**
-     * 原因
+     * 领用原因
      */
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '原因'",nullable = false)
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '领用原因'",nullable = false)
     private String receiveReason;
 
     /**
@@ -71,9 +78,9 @@ public class OilCardReceive extends BaseEntity {
     private String auditSuggestion;
 
     /**
-     * 审核结果
+     * 审核状态
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核结果'", nullable = false, insertable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '审核状态'", nullable = false, insertable = false)
     private OilCardReceiveResult auditResult;
 
     /**
@@ -104,14 +111,6 @@ public class OilCardReceive extends BaseEntity {
 
     public void setReturnDate(LocalDateTime returnDate) {
         this.returnDate = returnDate;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
     public String getReceiveUser() {
@@ -160,5 +159,21 @@ public class OilCardReceive extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTransactor() {
+        return transactor;
+    }
+
+    public void setTransactor(String transactor) {
+        this.transactor = transactor;
+    }
+
+    public LocalDate getTransactDate() {
+        return transactDate;
+    }
+
+    public void setTransactDate(LocalDate transactDate) {
+        this.transactDate = transactDate;
     }
 }

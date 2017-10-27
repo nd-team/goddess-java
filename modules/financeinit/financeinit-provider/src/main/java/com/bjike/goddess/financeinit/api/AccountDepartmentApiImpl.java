@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.dto.AccountDepartmentDTO;
 import com.bjike.goddess.financeinit.entity.AccountDepartment;
 import com.bjike.goddess.financeinit.service.AccountDepartmentSer;
 import com.bjike.goddess.financeinit.to.AccountDepartmentTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,17 @@ import java.util.List;
 public class AccountDepartmentApiImpl implements AccountDepartmentAPI {
     @Autowired
     private AccountDepartmentSer accountDepartmentSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return accountDepartmentSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return accountDepartmentSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countDepart(AccountDepartmentDTO accountDepartmentDTO) throws SerException {
         return accountDepartmentSer.countDepart(accountDepartmentDTO);

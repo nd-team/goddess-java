@@ -28,7 +28,7 @@ public class ProjectWeekTO extends BaseTO {
     private String arrival;
 
     /**
-     * 项目
+     * 所属项目
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目不能为空")
     private String project;
@@ -93,6 +93,10 @@ public class ProjectWeekTO extends BaseTO {
 
     private Double incomeDifferences;
 
+    /**
+     * 内部项目名称
+     */
+    private String projectName;
 
     public Integer getYear() {
         return year;
@@ -188,5 +192,13 @@ public class ProjectWeekTO extends BaseTO {
 
     public void setIncomeDifferences(Double incomeDifferences) {
         this.incomeDifferences = incomeDifferences;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

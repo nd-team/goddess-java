@@ -23,6 +23,9 @@
 	<dubbo:service interface="com.bjike.goddess.rentutilitiespay.api.StayUtilitiesAPI" ref="stayUtilitiesApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.rentutilitiespay.api.CusPermissionAPI" ref="cusPermissionApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.rentutilitiespay.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.rentutilitiespay.api.CollectAPI" ref="collectApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.rentutilitiespay.api.ImageCollectAPI" ref="imageCollectApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.rentutilitiespay.api.StencilAPI" ref="stencilApiImpl" />
 
 
 

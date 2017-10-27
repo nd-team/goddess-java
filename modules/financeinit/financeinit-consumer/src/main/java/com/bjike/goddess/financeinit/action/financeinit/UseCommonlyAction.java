@@ -11,6 +11,7 @@ import com.bjike.goddess.financeinit.api.UseCommonlyAPI;
 import com.bjike.goddess.financeinit.bo.UseCommonlyBO;
 import com.bjike.goddess.financeinit.dto.UseCommonlyDTO;
 import com.bjike.goddess.financeinit.entity.UseCommonly;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.UseCommonlyTO;
 import com.bjike.goddess.financeinit.vo.UseCommonlyVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,28 @@ import java.util.List;
 public class UseCommonlyAction {
     @Autowired
     private UseCommonlyAPI useCommonlyAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = useCommonlyAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 列表总条数
      *

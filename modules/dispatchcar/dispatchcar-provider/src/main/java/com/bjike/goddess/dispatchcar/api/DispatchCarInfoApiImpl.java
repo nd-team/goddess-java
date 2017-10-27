@@ -1,5 +1,6 @@
 package com.bjike.goddess.dispatchcar.api;
 
+
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -11,12 +12,12 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.service.DispatchCarInfoSer;
 import com.bjike.goddess.dispatchcar.to.*;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -214,7 +215,7 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public List<EntryRegisterBO> findAllEntry() throws SerException {
+    public List<UserBO> findAllEntry() throws SerException {
         return dispatchCarInfoSer.findAllEntry();
     }
 
@@ -285,7 +286,7 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+    public void leadExcel(List<DispatchCarInfoSetExcel> toList) throws SerException {
         dispatchCarInfoSer.leadExcel(toList);
     }
 
@@ -339,5 +340,28 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
         return dispatchCarInfoSer.findInformation(department,day);
     }
 
+    @Override
+    public Double findOilWear(String driver) throws SerException {
+        return dispatchCarInfoSer.findOilWear(driver);
+    }
 
+    @Override
+    public Double findBalance(String oilCardNumber) throws SerException {
+        return dispatchCarInfoSer.findBalance(oilCardNumber);
+    }
+
+    @Override
+    public Boolean findProjectAproval(String project) throws SerException {
+        return dispatchCarInfoSer.findProjectAproval(project);
+    }
+
+    @Override
+    public List<String> getAllDepartment() throws SerException {
+        return dispatchCarInfoSer.getAllDepartment();
+    }
+
+    @Override
+    public List<AreaBO> findArea() throws SerException {
+        return dispatchCarInfoSer.findArea();
+    }
 }

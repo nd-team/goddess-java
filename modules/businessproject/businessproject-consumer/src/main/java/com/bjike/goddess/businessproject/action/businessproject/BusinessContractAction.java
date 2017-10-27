@@ -1,7 +1,7 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
 import com.bjike.goddess.businessproject.api.BusinessContractAPI;
-import com.bjike.goddess.businessproject.bo.BusinessContractBO;
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.excel.BusinessContractExcel;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
@@ -135,9 +135,9 @@ public class BusinessContractAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated() BusinessContractTO to, BindingResult bindingResult) throws ActException {
+    public Result add( BusinessContractTO to, BindingResult bindingResult) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.add(to);
+            BusinessContractsBO bo = businessContractAPI.add(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -157,7 +157,7 @@ public class BusinessContractAction extends BaseFileAction {
     @PostMapping("v1/edit")
     public Result edit(BusinessContractTO to) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.edit(to);
+            BusinessContractsBO bo = businessContractAPI.edit(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -191,9 +191,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/managerIdea")
-    public Result managerIdea(@Validated(BusinessContractTO.ManagerIdea.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result managerIdea(@Validated(BusinessContractTO.ManagerIdea.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.managerIdea(to);
+            BusinessContractsBO bo = businessContractAPI.managerIdea(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -209,9 +209,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/planIdea")
-    public Result planIdea(@Validated(BusinessContractTO.PlanIdea.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result planIdea(@Validated(BusinessContractTO.PlanIdea.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.planIdea(to);
+            BusinessContractsBO bo = businessContractAPI.planIdea(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -227,9 +227,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/budgetIdea")
-    public Result budgetIdea(@Validated(BusinessContractTO.BudgetIdea.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result budgetIdea(@Validated(BusinessContractTO.BudgetIdea.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.budgetIdea(to);
+            BusinessContractsBO bo = businessContractAPI.budgetIdea(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -245,9 +245,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/advance")
-    public Result advance(@Validated(BusinessContractTO.Advance.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result advance(@Validated(BusinessContractTO.Advance.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.advance(to);
+            BusinessContractsBO bo = businessContractAPI.advance(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -265,7 +265,7 @@ public class BusinessContractAction extends BaseFileAction {
     @PostMapping("v1/changes")
     public Result changes(BusinessContractTO to) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.changes(to);
+            BusinessContractsBO bo = businessContractAPI.changes(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -281,9 +281,9 @@ public class BusinessContractAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/notification")
-    public Result notification(@Validated(BusinessContractTO.Notification.class) BusinessContractTO to,BindingResult result) throws ActException {
+    public Result notification(@Validated(BusinessContractTO.Notification.class) BusinessContractTO to, BindingResult result) throws ActException {
         try {
-            BusinessContractBO bo = businessContractAPI.notification(to);
+            BusinessContractsBO bo = businessContractAPI.notification(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

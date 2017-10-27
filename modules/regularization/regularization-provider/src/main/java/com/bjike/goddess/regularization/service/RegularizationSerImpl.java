@@ -1007,4 +1007,11 @@ public class RegularizationSerImpl extends ServiceImpl<Regularization, Regulariz
         return bool;
     }
 
+    @Override
+    public RegularizationBO findByEmpNo(String empNo) throws SerException {
+        RegularizationDTO regularizationDTO = new RegularizationDTO();
+        regularizationDTO.getConditions().add(Restrict.eq("empNo", empNo));
+        Regularization regularization = super.findOne(regularizationDTO);
+        return BeanTransform.copyProperties(regularization, RegularizationBO.class);
+    }
 }

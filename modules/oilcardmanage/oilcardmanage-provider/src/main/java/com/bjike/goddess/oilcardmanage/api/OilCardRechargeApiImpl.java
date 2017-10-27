@@ -1,10 +1,12 @@
 package com.bjike.goddess.oilcardmanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
 import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.service.OilCardRechargeSer;
+import com.bjike.goddess.oilcardmanage.to.ExportOilcardRechargeTO;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,4 +91,44 @@ public class OilCardRechargeApiImpl implements OilCardRechargeAPI {
 //    public List<DispatchCarInfoBO> findDispatch(String oilCardCode, String startTime, String endTime) throws SerException {
 //        return oilCardRechargeSer.findDispatch(oilCardCode,startTime,endTime);
 //    }
+
+    @Override
+    public void updateInformation(String id, Double balance,Double pettyCash) throws SerException {
+        oilCardRechargeSer.updateInformation(id,balance,pettyCash);
+    }
+
+    @Override
+    public void updateRecharge(String id, Boolean ifRecharge, Double pettyCash,Double rechargeMoney, String rechargeDate) throws SerException {
+        oilCardRechargeSer.updateRecharge(id,ifRecharge,pettyCash,rechargeMoney,rechargeDate);
+    }
+
+    @Override
+    public void noticeRecharge(String id) throws SerException {
+        oilCardRechargeSer.noticeRecharge(id);
+    }
+
+    @Override
+    public void updateScreen(String id) throws SerException {
+        oilCardRechargeSer.updateScreen(id);
+    }
+
+    @Override
+    public void updatePrepaid(String id) throws SerException {
+        oilCardRechargeSer.updatePrepaid(id);
+    }
+
+    @Override
+    public void leadExcel(List<OilCardRechargeTO> toList) throws SerException {
+
+    }
+
+    @Override
+    public byte[] exportExcel(ExportOilcardRechargeTO to) throws SerException {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return new byte[0];
+    }
 }

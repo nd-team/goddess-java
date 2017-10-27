@@ -36,6 +36,10 @@ public class OptionVO {
      * 柱状图数据
      */
     private SeriesBO[] series;
+    /**
+     * 柱状图数据
+     */
+    private TooltipBO tooltip;
 
     public TitleBO getTitle() {
         return title;
@@ -75,5 +79,13 @@ public class OptionVO {
 
     public void setSeries(SeriesBO[] series) {
         this.series = series;
+    }
+
+    public TooltipBO getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(TooltipBO tooltip) {
+        this.tooltip = tooltip;
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.entity.ArrivalWeek;
 import com.bjike.goddess.budget.enums.GuideAddrStatus;
+import com.bjike.goddess.budget.excel.ArrivalMonthImportTemple;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -14,6 +15,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -490,6 +493,25 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
         }
         List<String> l = new ArrayList<String>(set);
         return l;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<ArrivalMonthImportTemple> arrivalMonthImportTemples = new ArrayList<>();
+        ArrivalMonthImportTemple excel = new ArrivalMonthImportTemple();
+        excel.setArrival("广州");
+        excel.setYear(2017);
+        excel.setMonth(5);
+        excel.setWeek(1);
+        excel.setTargetWork(16);
+        excel.setActualWork(33);
+        excel.setPrice(20000d);
+        excel.setTargetIncome(20000d);
+        excel.setPlanIncome(2695d);
+        arrivalMonthImportTemples.add(excel);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(arrivalMonthImportTemples, exce);
+        return bytes;
     }
 
     /**

@@ -21,7 +21,7 @@ public class ProjectMonthBO extends BaseBO {
     private String arrival;
 
     /**
-     * 项目
+     * 所属项目
      */
     private String project;
     /**
@@ -76,7 +76,10 @@ public class ProjectMonthBO extends BaseBO {
      * 任务量差异
      */
     private Integer workDifferences;
-
+    /**
+     * 内部项目名称
+     */
+    private String projectName;
 
     public String getArrival() {
         return arrival;
@@ -156,5 +159,13 @@ public class ProjectMonthBO extends BaseBO {
 
     public void setWorkDifferences(Integer workDifferences) {
         this.workDifferences = workDifferences;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

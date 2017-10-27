@@ -95,15 +95,15 @@ public class DispatchcarWrongAct extends BaseFileAction{
     /**
      * 编辑出车记录
      *
-     * @param editTO 出车记录
+     * @param to 出车记录
      * @return class DispatchCarInfoVO
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO, DispatchCarInfoTO.class);
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
+            DispatchCarInfoBO bo = dispatchCarInfoAPI.editModel(to);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(bo, DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -271,8 +271,8 @@ public class DispatchcarWrongAct extends BaseFileAction{
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<DispatchCarInfoSetExcel> tos = ExcelUtil.excelToClazz(is, DispatchCarInfoSetExcel.class, excel);
-            List<DispatchCarInfoTO> toList = BeanTransform.copyProperties(tos, DispatchCarInfoTO.class);
-            dispatchCarInfoAPI.leadExcel(toList);
+//            List<DispatchCarInfoTO> toList = BeanTransform.copyProperties(tos, DispatchCarInfoTO.class);
+            dispatchCarInfoAPI.leadExcel(tos);
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

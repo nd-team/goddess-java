@@ -151,4 +151,14 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
         return entryRegisterSer.names();
 
     }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return entryRegisterSer.templateExport();
+    }
+
+    @Override
+    public List<UserNameSexBO> findSexByUserName(String[] userName) throws SerException {
+        return entryRegisterSer.findSexByUserName(userName);
+    }
 }

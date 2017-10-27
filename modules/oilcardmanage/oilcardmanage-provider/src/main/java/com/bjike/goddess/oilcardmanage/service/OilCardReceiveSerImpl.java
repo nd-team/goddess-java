@@ -389,13 +389,17 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
         List<String> list = new ArrayList<>();
         for (CusPermissionOperate operate : cusPermissionOperates) {
             PositionDetailDTO detailDTO = new PositionDetailDTO();
-            List<String> positionId = positionDetailAPI.getPositions(operate.getOperator());
-            List<UserBO> userBOList = new ArrayList<>();
-            for (String id : positionId) {
-                userBOList = positionDetailUserAPI.findByPosition(id);
-                if (userBOList != null && userBOList.size() > 0) {
-                    list.add(userBOList.get(0).getUsername());
+            if (moduleAPI.isCheck("organize")) {
+                List<String> positionId = positionDetailAPI.getPositions(operate.getOperator());
+                List<UserBO> userBOList = new ArrayList<>();
+                for (String id : positionId) {
+                    userBOList = positionDetailUserAPI.findByPosition(id);
+                    if (userBOList != null && userBOList.size() > 0) {
+                        list.add(userBOList.get(0).getUsername());
+                    }
                 }
+            }else {
+                throw new SerException("请去任务调度的模块关联设置组织结构模块关联");
             }
         }
         return list;

@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * @Copy: [com.bjike]
  */
 public class PredictPayTO extends BaseTO{
-    /**
+    /**e
      * 预计付款时间
      */
     private String expectPayDate;

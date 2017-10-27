@@ -122,4 +122,10 @@ public interface ProjectWeekSer extends Ser<ProjectWeek, ProjectWeekDTO> {
     default List<String> findAllProjects() throws SerException {
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 }

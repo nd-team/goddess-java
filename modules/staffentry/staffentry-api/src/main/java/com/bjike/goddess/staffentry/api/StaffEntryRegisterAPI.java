@@ -1,9 +1,7 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.staffentry.bo.EntrySummaryBO;
-import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
 import com.bjike.goddess.staffentry.to.StaffEntryRegisterEmailTO;
@@ -210,6 +208,54 @@ public interface StaffEntryRegisterAPI {
      * @throws SerException
      */
     default List<EntrySummaryBO> summaTotal(String endDate) throws SerException{
+        return null;
+    }
+    /**
+     * 入职管理日汇总数据展示图
+     * @param summationDate 时间
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowDay(String summationDate) throws SerException{
+        return null;
+    }
+    /**
+     * 入职管理周汇总
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowWeek(Integer year,Integer month,Integer week) throws SerException{
+        return null;
+    }
+    /**
+     * 入职管理月汇总
+     * @param year 年份
+     * @param month 月份
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(Integer year,Integer month) throws SerException{
+        return null;
+    }
+    /**
+     * 入职管理累计汇总
+     * @param endDate 截止日期
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowTotal(String endDate) throws SerException{
+        return null;
+    }
+    /**
+     * 入职管理年汇总折线图展示图
+     * @param year 年份
+     * @return class BrokenOptionBO
+     * @throws SerException
+     */
+    default BrokenOptionBO brokenShowYear(Integer year) throws SerException{
         return null;
     }
 }

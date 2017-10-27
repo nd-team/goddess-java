@@ -113,6 +113,13 @@ public interface ArrivalWeekAPI {
     }
 
     /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
      * 下拉导航权限
      */
     List<SonPermissionObject> sonPermission() throws SerException;

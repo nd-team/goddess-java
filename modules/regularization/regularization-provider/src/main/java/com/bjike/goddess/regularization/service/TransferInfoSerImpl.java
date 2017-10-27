@@ -6,11 +6,21 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.intromanage.excel.FirmIntroExport;
+import com.bjike.goddess.intromanage.excel.FirmIntroExportTemple;
+import com.bjike.goddess.intromanage.type.DemandType;
 import com.bjike.goddess.regularization.bo.*;
 import com.bjike.goddess.regularization.dto.TransferInfoDTO;
+import com.bjike.goddess.regularization.entity.Regularization;
 import com.bjike.goddess.regularization.entity.TransferInfo;
+import com.bjike.goddess.regularization.excel.TransferInfoTemple;
 import com.bjike.goddess.regularization.to.GuidePermissionTO;
+import com.bjike.goddess.regularization.to.TransferInfoExcelTO;
 import com.bjike.goddess.regularization.to.TransferInfoTO;
 import com.bjike.goddess.regularization.type.GuideAddrStatus;
 import com.bjike.goddess.regularization.type.StaffStatus;
@@ -19,11 +29,18 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,17 +59,6 @@ import java.util.*;
 @Service
 public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoDTO> implements TransferInfoSer {
 
-    public static final String option_1 = "option = {title: {text: '";
-
-    public static final String option_2 = "'},tooltip: {},legend: {data:[";
-
-
-    public static final String option_3 = "]},xAxis: {data: [";
-
-    public static final String option_4 = "]},yAxis: {},series: [";
-
-    public static final String option_5 = "]}";
-
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
@@ -60,7 +66,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
-    private SalaryConfirmRecordAPI salaryConfirmRecordAPI;
+    private RegularizationSer regularizationSer;
 
 
     /**
@@ -589,14 +595,30 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     public void welfareAssess(TransferInfoTO transferInfoTO) throws SerException {
         checkModWPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
-            transferInfo.setApplyDateAtten(transferInfoTO.getApplyDateAtten());
-            transferInfo.setRewardPunOpinion(transferInfoTO.getRewardPunOpinion());
-            transferInfo.setModifyTime(LocalDateTime.now());
-            super.update(transferInfo);
-        } else {
-            throw new SerException("该员工还没有申请转正或者已经转正了");
+        switch ( transferInfo.getStaffStatus() ){
+            case POSITIVE:
+                transferInfo.setApplyDateAtten(transferInfoTO.getApplyDateAtten());
+                transferInfo.setRewardPunOpinion(transferInfoTO.getRewardPunOpinion());
+                transferInfo.setModifyTime(LocalDateTime.now());
+                super.update(transferInfo);
+                break;
+            case BECOMEMEM:
+                throw new SerException("该员工已转正,不能进行跟进");
+            case STAYPOSITIVE:
+                throw new SerException("该员工还没有申请转正,请先申请转正");
+            case PROBATION:
+                throw new SerException("该员工还没有申请转正,请先申请转正");
+            case NOPASS:
+                throw new SerException("该员工转正不通过,请重新申请转正");
         }
+//        if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
+//            transferInfo.setApplyDateAtten(transferInfoTO.getApplyDateAtten());
+//            transferInfo.setRewardPunOpinion(transferInfoTO.getRewardPunOpinion());
+//            transferInfo.setModifyTime(LocalDateTime.now());
+//            super.update(transferInfo);
+//        } else {
+//            throw new SerException("该员工还没有申请转正或者已经转正了");
+//        }
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -604,16 +626,34 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     public void planAssess(TransferInfoTO transferInfoTO) throws SerException {
         checkModPPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
-            transferInfo.setAdditionalSkill(transferInfoTO.getAdditionalSkill());
-            transferInfo.setAdditionalSkillGrade(transferInfoTO.getAdditionalSkillGrade());
-            transferInfo.setEventsSkill(transferInfoTO.getEventsSkill());
-            transferInfo.setEventsSkillGrade(transferInfoTO.getEventsSkillGrade());
-            transferInfo.setConformStaffing(transferInfoTO.getConformStaffing());
-            super.update(transferInfo);
-        } else {
-            throw new SerException("该员工还没有申请转正或者已经转正了");
+        switch ( transferInfo.getStaffStatus() ){
+            case POSITIVE:
+                transferInfo.setAdditionalSkill(transferInfoTO.getAdditionalSkill());
+                transferInfo.setAdditionalSkillGrade(transferInfoTO.getAdditionalSkillGrade());
+                transferInfo.setEventsSkill(transferInfoTO.getEventsSkill());
+                transferInfo.setEventsSkillGrade(transferInfoTO.getEventsSkillGrade());
+                transferInfo.setConformStaffing(transferInfoTO.getConformStaffing());
+                super.update(transferInfo);
+                break;
+            case BECOMEMEM:
+                throw new SerException("该员工已转正,不能进行跟进");
+            case STAYPOSITIVE:
+                throw new SerException("该员工还没有申请转正,请先申请转正");
+            case PROBATION:
+                throw new SerException("该员工还没有申请转正,请先申请转正");
+            case NOPASS:
+                throw new SerException("该员工转正不通过,请重新申请转正");
         }
+//        if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
+//            transferInfo.setAdditionalSkill(transferInfoTO.getAdditionalSkill());
+//            transferInfo.setAdditionalSkillGrade(transferInfoTO.getAdditionalSkillGrade());
+//            transferInfo.setEventsSkill(transferInfoTO.getEventsSkill());
+//            transferInfo.setEventsSkillGrade(transferInfoTO.getEventsSkillGrade());
+//            transferInfo.setConformStaffing(transferInfoTO.getConformStaffing());
+//            super.update(transferInfo);
+//        } else {
+//            throw new SerException("该员工还没有申请转正或者已经转正了");
+//        }
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -621,12 +661,26 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
     public void budgetAssess(TransferInfoTO transferInfoTO) throws SerException {
         checkModBPermission();
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
-        if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
-            transferInfo.setIncomeCostOpinion(transferInfoTO.getIncomeCostOpinion());
-            super.update(transferInfo);
-        } else {
-            throw new SerException("该员工还没有申请转正或者已经转正了");
+        switch ( transferInfo.getStaffStatus() ){
+            case POSITIVE:
+                transferInfo.setIncomeCostOpinion(transferInfoTO.getIncomeCostOpinion());
+                super.update(transferInfo);
+                break;
+            case BECOMEMEM:
+                throw new SerException("该员工已转正,不能进行跟进");
+            case STAYPOSITIVE:
+                throw new SerException("该员工还没有申请转正,请先申请转正");
+            case PROBATION:
+                throw new SerException("该员工还没有申请转正,请先申请转正");
+            case NOPASS:
+                throw new SerException("该员工转正不通过,请重新申请转正");
         }
+//        if (transferInfo.getStaffStatus() == StaffStatus.POSITIVE) {
+//            transferInfo.setIncomeCostOpinion(transferInfoTO.getIncomeCostOpinion());
+//            super.update(transferInfo);
+//        } else {
+//            throw new SerException("该员工还没有申请转正或者已经转正了");
+//        }
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -636,7 +690,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         TransferInfo transferInfo = super.findById(transferInfoTO.getId());
         if (transferInfo.getModuleLeader() == null) {
             if (transferInfo.getApplyDateAtten() == null || transferInfo.getAdditionalSkill() == null || transferInfo.getIncomeCostOpinion() == null) {
-                throw new SerException("需要福利模块,规划模块,预算模块先填写将考察内容");
+                throw new SerException("需要福利模块,规划模块,预算模块先填写考察内容");
             } else {
                 transferInfo.setModuleLeader(transferInfoTO.getModuleLeader());
                 transferInfo.setModuleLeaderOpinion(transferInfoTO.getModuleLeaderOpinion());
@@ -679,6 +733,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
                 transferInfo.setConsentPositive(transferInfoTO.getConsentPositive());//是否同意转正
                 transferInfo.setPositiveStartDate(DateUtil.parseDate(transferInfoTO.getPositiveStartDate()));
                 transferInfo.setPositiveThrough(transferInfoTO.getConsentPositive());//转正是否通过
+
                 //如果已经通过
                 if (transferInfoTO.getConsentPositive()) {
                     LocalDate time = transferInfo.getHiredate();
@@ -690,6 +745,11 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
                     transferInfo.setStaffStatus(StaffStatus.NOPASS);
                 }
                 super.update(transferInfo);
+                RegularizationBO regularizationBO = regularizationSer.findByEmpNo(transferInfo.getEmpNo());
+                Regularization regularization = regularizationSer.findById(regularizationBO.getId());
+                regularization.setPassed(transferInfoTO.getConsentPositive());
+                regularization.setPositiveStartDate(DateUtil.parseDate(transferInfoTO.getPositiveStartDate()));
+                regularizationSer.update(regularization);
             }
         } else {
             throw new SerException("您已经审核过了");
@@ -1121,7 +1181,7 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
 //        StringBuilder text_2 = new StringBuilder();
 //        StringBuilder text_4 = new StringBuilder();
 //
-//        for (FigureShowBO figureShowBO : figureShowBOS) {
+//        for (FigureShowDateBO figureShowBO : figureShowBOS) {
 //
 //            text_2.append("'").append(figureShowBO.getDepartment()).append("',");
 //
@@ -1153,6 +1213,9 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
 
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
 
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
@@ -1195,8 +1258,86 @@ public class TransferInfoSerImpl extends ServiceImpl<TransferInfo, TransferInfoD
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<TransferInfoTemple> transferInfoTemples = new ArrayList<>();
+        TransferInfoTemple transferInfoTemple = new TransferInfoTemple();
+        transferInfoTemple.setArea("test");
+        transferInfoTemple.setDepartment("test");
+        transferInfoTemple.setJobs("test");
+        transferInfoTemple.setName("test");
+        transferInfoTemple.setEmpNo("test");
+        transferInfoTemple.setGender("男/女");
+        transferInfoTemple.setEducation("test");
+        transferInfoTemple.setProfession("test");
+        transferInfoTemple.setWorkingYear(1.5);
+        transferInfoTemple.setHiredate("test");
+        transferInfoTemple.setProbationaryPer("1个月/1-3个月/3个月");
+        transferInfoTemple.setThreeFollow("待跟进/已跟进/未跟进");
+        transferInfoTemple.setThreeFollowOpinion("test");
+        transferInfoTemple.setWeekFollow("待跟进/已跟进/未跟进");
+        transferInfoTemple.setWeekFollowOpinion("test");
+        transferInfoTemple.setMonthFollow("待跟进/已跟进/未跟进");
+        transferInfoTemple.setMonthFollowOpinion("test");
+        transferInfoTemple.setStaffStatus("试用期/转正中/转正不通过/已转正/待转正");
+        transferInfoTemple.setApplyDate("test");
+        transferInfoTemple.setAsProbationLength(3);
+        transferInfoTemple.setConfirmEvent("是/否");
+        transferInfoTemple.setConfirmPeople("test");
+        transferInfoTemple.setApplyDateAtten("test");
+        transferInfoTemple.setRewardPunOpinion("test");
+        transferInfoTemple.setAdditionalSkill("test");
+        transferInfoTemple.setAdditionalSkillGrade("test");
+        transferInfoTemple.setEventsSkill("test");
+        transferInfoTemple.setEventsSkillGrade("test");
+        transferInfoTemple.setConformStaffing("test");
+        transferInfoTemple.setIncomeCostOpinion("test");
+        transferInfoTemple.setModuleLeader("test");
+        transferInfoTemple.setModuleLeaderOpinion("test");
+        transferInfoTemple.setProManage("test");
+        transferInfoTemple.setProManageOpinion("test");
+        transferInfoTemple.setGenerManage("test");
+        transferInfoTemple.setGenerManageOpinion("test");
+        transferInfoTemple.setConsentPositive("是/否");
+        transferInfoTemple.setPositiveStartDate("test");
+        transferInfoTemple.setPositiveThrough("是/否");
+        transferInfoTemple.setPraProbationaryPer(3);
+        transferInfoTemple.setInterviewPeper("test");
+        transferInfoTemple.setInterviewContent("test");
+        transferInfoTemples.add(transferInfoTemple);
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(transferInfoTemples, exce);
+        return bytes;
+    }
+
+    @Override
+    public void importExcel(List<TransferInfoExcelTO> transferInfoExcelTOS) throws SerException {
+        List<TransferInfo> transferInfoList = BeanTransform.copyProperties(transferInfoExcelTOS, TransferInfo.class, true);
+        for (TransferInfo transferInfo : transferInfoList){
+            transferInfo.setCreateTime(LocalDateTime.now());
+            transferInfo.setModifyTime(LocalDateTime.now());
+            LocalDate probationDue = null;
+            switch (transferInfo.getProbationaryPer()) {
+                case "1个月":
+                    probationDue = transferInfo.getHiredate().plusMonths(1);
+                    break;
+                case "1-3个月":
+                    probationDue = transferInfo.getHiredate().plusMonths(3);
+                    break;
+                case "3个月":
+                    probationDue = transferInfo.getHiredate().plusMonths(3);
+                    break;
+                default:
+                    throw new SerException("请输入正确的格式,正确格式为(1个月/1-3个月/3个月)");
+            }
+            transferInfo.setProbationDue(probationDue);
+        }
+        super.save(transferInfoList);
     }
 }

@@ -54,6 +54,8 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private BusinessContractSer businessContractSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -202,8 +204,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         Long count = super.count(dto);
         return count;
     }
-    @Autowired
-    private BusinessContractSer businessContractSer;
+
 
     @Override
     public OutsourcBusinessContractBO getOneById(String id) throws SerException {
@@ -269,6 +270,23 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract,OutsourcBusinessContractBO.class);
         return bo;
     }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public OutsourcBusinessContractBO supplier(OutsourcBusinessContractTO to) throws SerException {
+        checkAddIdentity();
+        if(StringUtils.isNotBlank(to.getId())){
+            OutsourcBusinessContract contract = super.findById(to.getId());
+            LocalDateTime createTime = contract.getCreateTime();
+            contract = BeanTransform.copyProperties(to,OutsourcBusinessContract.class,true);
+            contract.setCreateTime(createTime);
+            contract.setModifyTime(LocalDateTime.now());
+            super.update(contract);
+            OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract,OutsourcBusinessContractBO.class);
+            return bo;
+        }else {
+            throw new SerException("id不能为空");
+        }
+    }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -280,6 +298,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
             contract = BeanTransform.copyProperties(to,OutsourcBusinessContract.class,true);
             contract.setCreateTime(createTime);
             contract.setModifyTime(LocalDateTime.now());
+            super.update(contract);
             OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract,OutsourcBusinessContractBO.class);
             return bo;
         }else {
@@ -359,70 +378,70 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         List<OutsourcBusinessContractExport> exports = new ArrayList<>();
         list.stream().forEach(str->{
             OutsourcBusinessContractExport export = BeanTransform.copyProperties(str,OutsourcBusinessContractExport.class,
-                            "measurePass","taskContract","makeContract","cooperation","complete",
+                    "measurePass","taskContract","makeContract","cooperation","complete",
                     "qualifiedGist","accept","acceptorPass","account","pay","closedLoop");
             //测算是否通过
-            if(export.getMeasurePass().equals(true)){
+            if(str.getMeasurePass().equals(true)){
                 export.setMeasurePass("是");
             }else {
                 export.setMeasurePass("否");
             }
             //是否有合同派工
-            if(export.getTaskContract().equals(true)){
+            if(str.getTaskContract().equals(true)){
                 export.setTaskContract("是");
             }else {
                 export.setTaskContract("否");
             }
             //是否有合同立项
-            if(export.getMakeContract().equals(true)){
+            if(str.getMakeContract().equals(true)){
                 export.setMakeContract("是");
             }else {
                 export.setMakeContract("否");
             }
             //是否确定合作
-            if(export.getCooperation().equals(true)){
+            if(str.getCooperation().equals(true)){
                 export.setCooperation("是");
             }else {
                 export.setCooperation("否");
             }
             //是否完工
-            if (export.getComplete().equals(true)) {
+            if (str.getComplete().equals(true)) {
                 export.setComplete("是");
             }else {
                 export.setComplete("否");
             }
             //是否提供完工合格依据
-            if(export.getQualifiedGist().equals(true)){
+            if(str.getQualifiedGist().equals(true)){
                 export.setQualifiedGist("是");
             }else {
                 export.setQualifiedGist("否");
             }
             //是否验收
-            if(export.getAccept().equals(true)){
+            if(str.getAccept().equals(true)){
                 export.setAccept("是");
             }else {
                 export.setAccept("否");
             }
             //验收是否通过
-            if(export.getAcceptorPass().equals(true)){
+            if(str.getAcceptorPass().equals(true)){
                 export.setAcceptorPass("是");
             }else {
                 export.setAcceptorPass("否");
             }
             //是否到账
-            if(export.getAccount().equals(true)){
+            if(str.getAccount().equals(true)){
                 export.setAccount("是");
             }else {
                 export.setAccount("否");
             }
             //是否付款成功
-            if(export.getPay().equals(true)){
+            if(str.getPay().equals(true)){
                 export.setPay("是");
             }else {
                 export.setPay("否");
             }
             //是否闭环
-            if(export.getClosedLoop().equals(true)){
+            if(str.getClosedLoop().equals(true)){
                 export.setClosedLoop("是");
             }else {
                 export.setClosedLoop("否");
@@ -438,7 +457,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
     public byte[] templateExport() throws SerException {
         List<OutsourcBusinessContractTemplateExcel> templateExcels = new ArrayList<>();
         OutsourcBusinessContractTemplateExcel templateExcel = new OutsourcBusinessContractTemplateExcel();
-        templateExcel.setMeasureClassify("test");
+        templateExcel.setMeasureClassify("内包");
         templateExcel.setMeasurePass("是");
         templateExcel.setSignedTime(LocalDate.now());
         templateExcel.setArea("test");
@@ -451,7 +470,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         templateExcel.setMarketNum("test");
         templateExcel.setType("test");
         templateExcel.setMajor("test");
-        templateExcel.setMakeContract("是");
+        templateExcel.setMakeContract("预立项");
         templateExcel.setSupplierNum("test");
         templateExcel.setSupplierArea("test");
         templateExcel.setSupplierName("test");

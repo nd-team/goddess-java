@@ -3,11 +3,13 @@ package com.bjike.goddess.foreigntax.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.foreigntax.bo.TaxManagementBO;
+import com.bjike.goddess.foreigntax.bo.VoucherDataBO;
 import com.bjike.goddess.foreigntax.dto.TaxManagementDTO;
 import com.bjike.goddess.foreigntax.entity.TaxManagement;
 import com.bjike.goddess.foreigntax.excel.SonPermissionObject;
 import com.bjike.goddess.foreigntax.to.GuidePermissionTO;
 import com.bjike.goddess.foreigntax.to.TaxManagementTO;
+import com.bjike.goddess.foreigntax.to.VoucherDataTO;
 
 import java.util.List;
 import java.util.Map;
@@ -116,7 +118,26 @@ public interface TaxManagementSer extends Ser<TaxManagement, TaxManagementDTO> {
         return null;
 
     }
-
+    /**
+     * 生成记账凭证
+     *
+     * @param ids
+     * @return class VoucherDataBO
+     * @throws SerException
+     */
+    default VoucherDataBO vGenerate(String[] ids) throws SerException {
+        return null;
+    }
+    /**
+     * 提交记账凭证
+     *
+     * @param to
+     * @return class VoucherDataBO
+     * @throws SerException
+     */
+    default VoucherDataBO generate(VoucherDataTO to) throws SerException {
+        return null;
+    }
     /**
      * 获取所有公司
      *

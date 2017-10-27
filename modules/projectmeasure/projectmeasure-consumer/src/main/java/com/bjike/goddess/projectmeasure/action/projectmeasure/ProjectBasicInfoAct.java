@@ -9,7 +9,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.market.api.MarketInfoAPI;
+import com.bjike.goddess.market.api.MarketInfoRecordAPI;
 import com.bjike.goddess.projectmeasure.api.ProjectBasicInfoAPI;
 import com.bjike.goddess.projectmeasure.bo.ProjectBasicInfoBO;
 import com.bjike.goddess.projectmeasure.dto.ProjectBasicInfoDTO;
@@ -43,7 +43,7 @@ public class ProjectBasicInfoAct {
     @Autowired
     private ProjectBasicInfoAPI projectBasicInfoAPI;
     @Autowired
-    private MarketInfoAPI marketInfoAPI;
+    private MarketInfoRecordAPI marketInfoRecordAPI;
     @Autowired
     private ModuleAPI moduleAPI;
 
@@ -192,7 +192,7 @@ public class ProjectBasicInfoAct {
         try {
             List<String> projectName = new ArrayList<>();
             if(moduleAPI.isCheck("market")){
-                projectName = marketInfoAPI.getProjectName();
+                projectName = marketInfoRecordAPI.findProjectName();
             }
             return ActResult.initialize(projectName);
         } catch (SerException e) {

@@ -6,10 +6,18 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-//import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
-//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-//import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
-//import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.oilcardmanage.bo.AnalyzeBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.oilcardmanage.bo.OilCardRechargeBO;
@@ -17,8 +25,13 @@ import com.bjike.goddess.oilcardmanage.dto.OilCardRechargeDTO;
 import com.bjike.goddess.oilcardmanage.entity.OilCardBasic;
 import com.bjike.goddess.oilcardmanage.entity.OilCardRecharge;
 import com.bjike.goddess.oilcardmanage.enums.GuideAddrStatus;
+import com.bjike.goddess.oilcardmanage.enums.OilCardStatus;
+import com.bjike.goddess.oilcardmanage.excel.OilCardRechargeSetExcel;
+import com.bjike.goddess.oilcardmanage.to.ExportOilcardRechargeTO;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.to.OilCardRechargeTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +64,8 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     @Autowired
     private OilCardBasicSer oilCardBasicSer;
-//    @Autowired
-//    private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private DispatchCarInfoAPI dispatchCarInfoAPI;
 
     @Autowired
     private UserAPI userAPI;
@@ -62,6 +75,12 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 
     @Autowired
     private ModuleAPI moduleAPI;
+
+    @Autowired
+    private MessageAPI messageAPI;
+
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（层级别）
@@ -444,4 +463,142 @@ public class OilCardRechargeSerImpl extends ServiceImpl<OilCardRecharge, OilCard
 ////        }
 //        return bos;
 //    }
+
+    @Override
+    public void updateInformation(String id,Double balance,Double peetyCash) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        OilCardRecharge oilCardRecharge = new OilCardRecharge();
+        BeanTransform.copyProperties(model,oilCardRecharge,"ifUploadScreenshot","ifPrepaidNotification","ifUploadRecharge","afterRechargeTotalMoney","afterRechargeBalance");
+        oilCardRecharge.setRechargeBeforePettyCash(peetyCash);
+        oilCardRecharge.getOilCardBasic().setBalance(balance);
+        super.save(oilCardRecharge);
+    }
+
+    @Override
+    public void updateRecharge(String id, Boolean ifRecharge, Double pettyCash,Double rechargeMoney, String rechargeDate) throws SerException {
+        if (id != null) {
+            OilCardRecharge model = super.findById(id);
+            if (model != null) {
+                model.setIfRecharge(ifRecharge);
+                model.setPettyCash(pettyCash);
+                model.setRechargeDate(DateUtil.parseDateTime(rechargeDate));
+                Double afterRechargeBalance = rechargeMoney + model.getOilCardBasic().getBalance();
+                model.setAfterRechargeBalance(afterRechargeBalance);
+                super.update(model);
+            }else {
+                throw new SerException("数据库中没有该数据");
+            }
+        }else {
+            throw new SerException("id不能为空");
+        }
+
+    }
+
+    @Override
+    public void noticeRecharge(String id) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        String oildardCode = model.getOilCardBasic().getOilCardCode();
+        List<String> receviers = new ArrayList<>();
+        if (moduleAPI.isCheck("organize")){
+            List<UserBO> userBOS = positionDetailUserAPI.findUserList();
+            for (UserBO userBO : userBOS){
+                List<String> position = positionDetailUserAPI.getPosition(userBO.getUsername());
+                if (position != null && position.size() > 0){
+                    if (position.get(0).equals("福利模块负责人")){
+                        receviers.add(userBO.getEmail());
+                    }
+                }
+            }
+        }
+        MessageTO messageTO = new MessageTO();
+        String content = oildardCode+"油卡已经充值，请悉知！";
+        messageTO.setContent(content);
+        messageTO.setTitle("定时发送商务合同签订与立项汇总");
+        messageTO.setMsgType(MsgType.SYS);//根据自己业务写
+        messageTO.setSendType( SendType.EMAIL);//根据自己业务写
+        messageTO.setRangeType( RangeType.SPECIFIED);//根据自己业务写
+
+        messageTO.setReceivers((String[]) receviers.toArray(new String[receviers.size()]) );//根据自己业务写
+        messageAPI.send(messageTO);
+        model.setIfPrepaidNotification(true);
+        super.update(model);
+    }
+
+    @Override
+    public void updateScreen(String id) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        model.setIfUploadScreenshot(true);
+        super.update(model);
+    }
+
+    @Override
+    public void updatePrepaid(String id) throws SerException {
+        OilCardRecharge model = super.findById(id);
+        model.setIfUploadRecharge(true);
+        super.update(model);
+    }
+
+    @Override
+    public void leadExcel(List<OilCardRechargeTO> toList) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        List<OilCardRecharge> list = BeanTransform.copyProperties(toList, OilCardRecharge.class, true);
+        list.stream().forEach(str -> {
+            str.setModifyTime(LocalDateTime.now());
+            str.setCreateTime(LocalDateTime.now());
+        });
+        super.save(list);
+    }
+
+    @Override
+    public byte[] exportExcel(ExportOilcardRechargeTO to) throws SerException {
+//        if (org.apache.commons.lang3.StringUtils.isNotBlank(to.getPayStartTime()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getPayEndTime())) {
+//            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getPayStartTime()), DateUtil.parseDate(dto.getPayEndTime())};
+//            dto.getConditions().add(Restrict.between("payStartTime", localDates));
+//            dto.getConditions().add(Restrict.between("payEndTime", localDates));
+//        }
+        OilCardRechargeDTO dto = new OilCardRechargeDTO();
+
+        List<OilCardRecharge> list = super.findByCis(dto);
+        List<OilCardRechargeSetExcel> toList = new ArrayList<OilCardRechargeSetExcel>();
+        for (OilCardRecharge model : list) {
+            OilCardRechargeSetExcel excel = BeanTransform.copyProperties(model, OilCardRechargeSetExcel.class);
+            toList.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<OilCardRechargeSetExcel> oilCardRechargeSetExcels = new ArrayList<>();
+
+        OilCardRechargeSetExcel excel = new OilCardRechargeSetExcel();
+
+        excel.setOilCardNumber("卡号");
+        excel.setMainOrDeputy("主卡/副卡");
+        excel.setBelongMainCard("所属主卡");
+        excel.setOilCardCode("油卡编号");
+        excel.setCardPassWord("密码");
+        excel.setArea("使用地区");
+        excel.setDepartment("部门/项目组");
+        excel.setCardStatus(OilCardStatus.FREEZE);
+        excel.setUpdateTime("更新时间");
+        excel.setBalance(200d);
+        excel.setRechargeBeforePettyCash(200d);
+        excel.setIfUploadScreenshot(false);
+        excel.setIfPrepaidNotification(false);
+        excel.setIfRecharge(true);
+        excel.setRechargeMoney(200d);
+        excel.setRechargeDate("2017-01-02 10:01:01");
+        excel.setIfUploadRecharge(false);
+        excel.setAfterRechargeTotalMoney(200d);
+        excel.setAfterRechargeBalance(300d);
+
+        oilCardRechargeSetExcels.add(excel);
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(oilCardRechargeSetExcels, exce);
+        return bytes;
+    }
 }

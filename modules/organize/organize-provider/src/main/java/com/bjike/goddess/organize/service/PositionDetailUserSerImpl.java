@@ -24,7 +24,9 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -787,5 +789,48 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             return internalContactsConditionBOs.get(0);
         }
         return null;
+    }
+
+    @Override
+    public String customRepPerson() throws SerException {
+        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')))";
+        List<Object> objs = arrangementSer.findBySql(sql);
+        if(objs!=null && objs.size()>0){
+            String name = String.valueOf(objs.get(0));
+            return name;
+        }
+        return null;
+    }
+    @Override
+    public String[] budgetPerson() throws SerException{
+        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '预算模块'))) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
+    }
+    @Override
+    public String[] planPerson() throws SerException{
+        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '规划模块'))) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
+    }
+    @Override
+    public String[] managerPerson() throws SerException{
+        String sql = " SELECT a.name AS name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c WHERE c.position like '项目经理%')) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
+    }
+    @Override
+    public String[] generPerson() throws SerException{
+        String sql = " SELECT a.name AS name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c WHERE c.position like '总经理')) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
     }
 }

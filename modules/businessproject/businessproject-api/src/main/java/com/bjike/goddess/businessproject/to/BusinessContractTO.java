@@ -409,7 +409,18 @@ public class BusinessContractTO extends BaseTO {
      * 存储位置
      */
     private String storageLocation;
+    /**
+     * 发送内容
+     */
+    private String content;
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getMeasureClassify() {
         return measureClassify;

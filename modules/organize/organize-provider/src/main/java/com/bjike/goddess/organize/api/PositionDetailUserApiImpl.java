@@ -185,4 +185,26 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public InternalContactsConditionBO getByName(String name) throws SerException {
         return positionDetailUserSer.getByName(name);
     }
+    @Override
+    public String customRepPerson() throws SerException {
+        return positionDetailUserSer.customRepPerson();
+    }
+
+    @Override
+    public String[] budgetPerson() throws SerException {
+        return positionDetailUserSer.budgetPerson();
+    }
+
+    @Override
+    public String[] planPerson() throws SerException {
+        return positionDetailUserSer.planPerson();
+    }
+    @Override
+    public String[] managerPerson() throws SerException{
+        return positionDetailUserSer.managerPerson();
+    }
+    @Override
+    public String[] generPerson() throws SerException{
+        return positionDetailUserSer.generPerson();
+    }
 }

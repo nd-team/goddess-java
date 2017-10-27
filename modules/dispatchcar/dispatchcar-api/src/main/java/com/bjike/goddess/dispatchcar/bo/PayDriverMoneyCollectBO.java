@@ -37,6 +37,11 @@ public class PayDriverMoneyCollectBO extends BaseTO{
     private Double overWorkTime;
 
     /**
+     * 加班费
+     */
+    private Double overWorkCost;
+
+    /**
      * 停车费
      */
     private Double parkCost;
@@ -56,6 +61,14 @@ public class PayDriverMoneyCollectBO extends BaseTO{
      */
     private Double totalCost;
 
+
+    public Double getOverWorkCost() {
+        return overWorkCost;
+    }
+
+    public void setOverWorkCost(Double overWorkCost) {
+        this.overWorkCost = overWorkCost;
+    }
 
     public String getDriver() {
         return driver;
@@ -130,7 +143,7 @@ public class PayDriverMoneyCollectBO extends BaseTO{
     }
 
 
-    public PayDriverMoneyCollectBO(String driver,String payDate,Double carRentalCost,Double overUnitCost,Double overWorkTime,Double parkCost,Double roadCost,Double mealCost,String id){
+    public PayDriverMoneyCollectBO(String driver,String payDate,Double carRentalCost,Double overUnitCost,Double overWorkTime,Double overWorkCost,Double parkCost,Double roadCost,Double mealCost,String id){
         this.driver = driver;
         this.payDate = payDate;
         this.carRentalCost = carRentalCost;

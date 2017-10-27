@@ -25,10 +25,19 @@ import java.util.Map;
 public class DispatchCarInfoTO extends BaseTO {
 
     /**
+     * 出车单号
+     */
+    @NotBlank(message = "出车单号不能为空",groups = {ADD.class, EDIT.class})
+    private String number;
+
+
+    /**
      * 司机名称
      */
     @NotBlank(message = "司机名称不能为空", groups = {ADD.class, EDIT.class})
     private String driver;
+
+
 
 
     /**
@@ -55,11 +64,11 @@ public class DispatchCarInfoTO extends BaseTO {
     @NotBlank(message = "所属项目组不能为空", groups = {ADD.class, EDIT.class})
     private String group;
 
-//    /**
-//     * 是否立项
-//     */
-//    @NotNull(message = "是否立项不能为空", groups = {ADD.class, EDIT.class})
-//    private Boolean projectApproval;
+    /**
+     * 是否立项
+     */
+    @NotNull(message = "是否立项不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean projectApproval;
 
     /**
      * 项目名称
@@ -148,8 +157,18 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 补加油说明
      */
-    @NotBlank(message = "补加油说明不能为空", groups = {ADD.class, EDIT.class})
     private String addOilExplain;
+
+
+    /**
+     * 补加油量
+     */
+    private Double supplementOil;
+
+    /**
+     * 补加油费
+     */
+    private Double supplementFee;
 
 
     /**
@@ -161,16 +180,42 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 欠油说明
      */
-    @NotBlank(message = "欠油说明不能为空", groups = {ADD.class, EDIT.class})
     private String oweOilExplain;
 
+    /**
+     * 欠油量
+     */
+    private Double lessOil;
 
+    /**
+     * 欠油费
+     */
+    private Double lessOilFee;
 
     /**
      * 加油时间
      */
-    @NotBlank(message = "加油时间不能为空", groups = {ADD.class, EDIT.class})
     private String addOilTime;
+
+    /**
+     * 应加油量
+     */
+    private Double shouldAmount;
+
+    /**
+     * 应加油费
+     */
+    private Double getShouldAmountMoney;
+
+
+
+    /**
+     * 实际加油费
+     */
+    private Double addOilAmountMoney;
+
+
+
 
 
     /**
@@ -232,6 +277,11 @@ public class DispatchCarInfoTO extends BaseTO {
      */
     @NotNull(message = "评价司机不能为空", groups = {ADD.class, EDIT.class})
     private Evaluate evaluatedriver;
+
+    /**
+     * 小票附件
+     */
+    private Boolean receipt;
 
     /**
      * 实际加油量
@@ -359,7 +409,18 @@ public class DispatchCarInfoTO extends BaseTO {
 //     * 异常分析
 //     */
 //    @NotBlank(message = "异常分析不能为空", groups = {ADD.class, EDIT.class})
-    private String exceptionAnalyze;
+//    private String exceptionAnalyze;
+
+    /**
+     * 金额
+     */
+    private Double cost;
+
+    /**
+     * 当天油耗
+     */
+    @NotNull(message = "当天油耗不能为空",groups = {ADD.class, EDIT.class})
+    private Double oilWear;
 
     public String getDriver() {
         return driver;
@@ -793,14 +854,6 @@ public class DispatchCarInfoTO extends BaseTO {
         this.ifPayed = ifPayed;
     }
 
-    public String getExceptionAnalyze() {
-        return exceptionAnalyze;
-    }
-
-    public void setExceptionAnalyze(String exceptionAnalyze) {
-        this.exceptionAnalyze = exceptionAnalyze;
-    }
-
     public Double getCarRentalCost() {
         return carRentalCost;
     }
@@ -819,5 +872,101 @@ public class DispatchCarInfoTO extends BaseTO {
 
     public void setSendDate(String sendDate) {
         this.sendDate = sendDate;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public Boolean getProjectApproval() {
+        return projectApproval;
+    }
+
+    public void setProjectApproval(Boolean projectApproval) {
+        this.projectApproval = projectApproval;
+    }
+
+    public Double getSupplementOil() {
+        return supplementOil;
+    }
+
+    public void setSupplementOil(Double supplementOil) {
+        this.supplementOil = supplementOil;
+    }
+
+    public Double getSupplementFee() {
+        return supplementFee;
+    }
+
+    public void setSupplementFee(Double supplementFee) {
+        this.supplementFee = supplementFee;
+    }
+
+    public Double getLessOil() {
+        return lessOil;
+    }
+
+    public void setLessOil(Double lessOil) {
+        this.lessOil = lessOil;
+    }
+
+    public Double getLessOilFee() {
+        return lessOilFee;
+    }
+
+    public void setLessOilFee(Double lessOilFee) {
+        this.lessOilFee = lessOilFee;
+    }
+
+    public Double getShouldAmount() {
+        return shouldAmount;
+    }
+
+    public void setShouldAmount(Double shouldAmount) {
+        this.shouldAmount = shouldAmount;
+    }
+
+    public Double getGetShouldAmountMoney() {
+        return getShouldAmountMoney;
+    }
+
+    public void setGetShouldAmountMoney(Double getShouldAmountMoney) {
+        this.getShouldAmountMoney = getShouldAmountMoney;
+    }
+
+    public Double getAddOilAmountMoney() {
+        return addOilAmountMoney;
+    }
+
+    public void setAddOilAmountMoney(Double addOilAmountMoney) {
+        this.addOilAmountMoney = addOilAmountMoney;
+    }
+
+    public Boolean getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(Boolean receipt) {
+        this.receipt = receipt;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public Double getOilWear() {
+        return oilWear;
+    }
+
+    public void setOilWear(Double oilWear) {
+        this.oilWear = oilWear;
     }
 }

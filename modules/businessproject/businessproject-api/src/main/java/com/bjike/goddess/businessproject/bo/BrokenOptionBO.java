@@ -36,6 +36,18 @@ public class BrokenOptionBO extends BaseBO {
      * 柱状图数据
      */
     private SeriesBO[] series;
+    /**
+     * 悬停提示
+     */
+    private TooltipBO tooltipBO;
+
+    public TooltipBO getTooltipBO() {
+        return tooltipBO;
+    }
+
+    public void setTooltipBO(TooltipBO tooltipBO) {
+        this.tooltipBO = tooltipBO;
+    }
 
     public TitleBO getTitle() {
         return title;

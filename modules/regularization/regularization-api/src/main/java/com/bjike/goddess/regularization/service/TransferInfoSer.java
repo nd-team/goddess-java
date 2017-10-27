@@ -8,6 +8,7 @@ import com.bjike.goddess.regularization.bo.TransferInfoBO;
 import com.bjike.goddess.regularization.dto.TransferInfoDTO;
 import com.bjike.goddess.regularization.entity.TransferInfo;
 import com.bjike.goddess.regularization.to.GuidePermissionTO;
+import com.bjike.goddess.regularization.to.TransferInfoExcelTO;
 import com.bjike.goddess.regularization.to.TransferInfoTO;
 import org.apache.commons.lang3.StringUtils;
 
@@ -259,5 +260,15 @@ public interface TransferInfoSer extends Ser<TransferInfo, TransferInfoDTO> {
     default OptionBO figureShowTotal(String endDate) throws SerException{
         return null;
     }
-
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+    /**
+     *  导入
+     * @param transferInfoExcelTOS 转正人员信息
+     */
+    void importExcel(List<TransferInfoExcelTO> transferInfoExcelTOS) throws SerException;
 }

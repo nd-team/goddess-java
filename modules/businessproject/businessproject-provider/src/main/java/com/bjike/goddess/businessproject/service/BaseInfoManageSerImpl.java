@@ -3,9 +3,7 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
 import com.bjike.goddess.businessproject.to.BaseInfoManageTO;
@@ -507,7 +505,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
                     for (BaseInfoManage b : list) {
                         if (s.equals(b.getInnerProject())) {
                             BaseInfoManageExcel excel = new BaseInfoManageExcel();
-                            BeanUtils.copyProperties(b, excel);
+                            BeanUtils.copyProperties(b, excel,"makeContract","projectStatus");
+                            excel.setMakeContract(MakeContract.exportStrConvert(b.getMakeContract()));
+                            excel.setProjectStatus(ProjectStatus.exportStrConvert(b.getProjectStatus()));
                             toList.add(excel);
                         }
                     }
@@ -517,7 +517,9 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             List<BaseInfoManage> list = super.findByCis(dto);
             for (BaseInfoManage b : list) {
                 BaseInfoManageExcel excel = new BaseInfoManageExcel();
-                BeanUtils.copyProperties(b, excel);
+                BeanUtils.copyProperties(b, excel,"makeContract","projectStatus");
+                excel.setMakeContract(MakeContract.exportStrConvert(b.getMakeContract()));
+                excel.setProjectStatus(ProjectStatus.exportStrConvert(b.getProjectStatus()));
                 toList.add(excel);
             }
         }

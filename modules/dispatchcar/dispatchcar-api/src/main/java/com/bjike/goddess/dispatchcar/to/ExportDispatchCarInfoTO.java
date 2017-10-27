@@ -18,7 +18,7 @@ public class ExportDispatchCarInfoTO implements Serializable{
     /**
      * 导出开始时间
      */
-    private String starTime;
+    private String startTime;
 
     /**
      * 导出结束时间
@@ -34,12 +34,12 @@ public class ExportDispatchCarInfoTO implements Serializable{
         this.area = area;
     }
 
-    public String getStarTime() {
-        return starTime;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStarTime(String starTime) {
-        this.starTime = starTime;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getEndTime() {
