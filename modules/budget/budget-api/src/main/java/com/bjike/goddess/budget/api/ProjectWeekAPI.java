@@ -112,6 +112,13 @@ public interface ProjectWeekAPI {
     }
 
     /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
      * 下拉导航权限
      */
     Boolean sonPermission() throws SerException;

@@ -15,6 +15,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -25,6 +26,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +42,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("arrivalweek")
-public class ArrivalWeekAct {
+public class ArrivalWeekAct extends BaseFileAction{
     @Autowired
     private ArrivalWeekAPI arrivalWeekAPI;
     @Autowired
@@ -277,6 +280,24 @@ public class ArrivalWeekAct {
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板地区收入周
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "地区收入周模板.xlsx";
+            super.writeOutFile(response, arrivalWeekAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 }
