@@ -183,13 +183,13 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = checkLevelIdentity("1");
+                flag = true;
                 break;
             case ADD:
-                flag = checkLevelIdentity("8");
+                flag = true;
                 break;
             case EDIT:
-                flag = checkLevelIdentity("8");
+                flag = true;
                 break;
             case DELETE:
                 flag = checkLevelIdentity("8");
@@ -215,7 +215,18 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     @Override
     public Long countStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
         seachCondi(staffEntryRegisterDTO);
-        Long count = super.count(staffEntryRegisterDTO);
+        Long count = null;
+        String token = RpcTransmit.getUserToken();
+        if (!checkMoudleIdentity("1")) {
+            RpcTransmit.transmitUserToken(token);
+            UserBO userBO = userAPI.currentUser();
+            String userId = userBO.getId();
+            staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userId));
+            RpcTransmit.transmitUserToken(token);
+            count = super.count(staffEntryRegisterDTO);
+        }else{
+            count = super.count(staffEntryRegisterDTO);
+        }
         return count;
     }
 
@@ -241,11 +252,12 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     @Override
     public List<StaffEntryRegisterBO> listStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
         String token = RpcTransmit.getUserToken();
-        RpcTransmit.transmitUserToken(token);
         if (!checkMoudleIdentity("1")) {
+            RpcTransmit.transmitUserToken(token);
             UserBO userBO = userAPI.currentUser();
             String userId = userBO.getId();
             staffEntryRegisterDTO.getConditions().add(Restrict.eq("userId", userId));
+            RpcTransmit.transmitUserToken(token);
         }
         seachCondi(staffEntryRegisterDTO);
         staffEntryRegisterDTO.getSorts().add("createTime=desc");

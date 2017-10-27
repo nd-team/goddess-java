@@ -3,6 +3,7 @@ package com.bjike.goddess.staffentry.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.UserNameSexBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.to.*;
 
@@ -279,4 +280,12 @@ public interface EntryRegisterAPI {
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+    /**
+     * 根据用户名获取对应性别
+     *
+     * @return
+     */
+    default List<UserNameSexBO> findSexByUserName(String[] userName) throws SerException {
+        return null;
+    }
 }

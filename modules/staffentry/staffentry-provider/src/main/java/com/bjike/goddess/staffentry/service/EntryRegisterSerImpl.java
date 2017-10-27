@@ -1,5 +1,6 @@
 package com.bjike.goddess.staffentry.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.assistance.api.ComputerSubsidiesAPI;
 import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
 import com.bjike.goddess.assistance.enums.SubsidiesStatus;
@@ -25,7 +26,6 @@ import com.bjike.goddess.staffentry.excel.EntryRegisterExpTemplate;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -38,7 +38,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.soap.Text;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -135,13 +134,13 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = checkDepartIdentity("2");
+                flag = true;
                 break;
             case ADD:
-                flag = checkDepartIdentity("7");
+                flag = true;
                 break;
             case EDIT:
-                flag = checkDepartIdentity("7");
+                flag = true;
                 break;
             case DELETE:
                 flag = checkDepartIdentity("7");
@@ -161,7 +160,18 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     public Long countEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
         searchCondi(entryRegisterDTO);
-        Long count = super.count(entryRegisterDTO);
+        String userToken = RpcTransmit.getUserToken();
+        Long count = null;
+        if (checkDepartIdentity("2")) {
+            RpcTransmit.transmitUserToken(userToken);
+            count = super.count(entryRegisterDTO);
+        } else {
+            RpcTransmit.transmitUserToken(userToken);
+            UserBO userBO = userAPI.currentUser();
+            String userName = userBO.getUsername();
+            entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
+            count = super.count(entryRegisterDTO);
+        }
         return count;
     }
 
@@ -176,18 +186,25 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
 
     @Override
     public List<EntryRegisterBO> listEntryRegister(EntryRegisterDTO entryRegisterDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         searchCondi(entryRegisterDTO);
+        log.info("打印日志:" + JSON.toJSONString(entryRegisterDTO));
         if (checkDepartIdentity("2")) {
+            RpcTransmit.transmitUserToken(userToken);
             entryRegisterDTO.getSorts().add("createTime=desc");
         } else {
+            log.info("打印日志2:" + JSON.toJSONString(entryRegisterDTO));
+            RpcTransmit.transmitUserToken(userToken);
             UserBO userBO = userAPI.currentUser();
             String userName = userBO.getUsername();
             entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
+            log.info("打印日志3:" + userName + " 发你的:" + JSON.toJSONString(entryRegisterDTO));
         }
         List<EntryRegister> entryRegisters = super.findByPage(entryRegisterDTO);
         List<EntryRegisterBO> entryRegisterBOS = BeanTransform.copyProperties(entryRegisters, EntryRegisterBO.class);
         if (entryRegisterBOS != null && entryRegisterBOS.size() > 0) {
             for (EntryRegisterBO entryRegisterBO : entryRegisterBOS) {
+                RpcTransmit.transmitUserToken(userToken);
                 StaffStatus staffStatus = positionDetailUserAPI.statusByName(entryRegisterBO.getUsername());//查看员工状态
                 if (staffStatus == null) {
                     entryRegisterBO.setStaffStatus("未获取到数据");
@@ -696,6 +713,25 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     }
 
     @Override
+    public List<UserNameSexBO> findSexByUserName(String[] userNames) throws SerException {
+        List<UserNameSexBO> userNameSexBOList = new ArrayList<>();
+        if (userNames != null && userNames.length > 0) {
+            for (String userName : userNames) {
+                EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+                entryRegisterDTO.getConditions().add(Restrict.eq("username", userName));
+                EntryRegister entryRegister = super.findOne(entryRegisterDTO);
+                if(entryRegister!=null){
+                    UserNameSexBO userNameSexBO = new UserNameSexBO();
+                    userNameSexBO.setUsername(entryRegister.getUsername());
+                    userNameSexBO.setGender(entryRegister.getGender());
+                    userNameSexBOList.add(userNameSexBO);
+                }
+            }
+        }
+        return userNameSexBOList;
+    }
+
+    @Override
     public Set<String> names() throws SerException {
         List<EntryRegister> list = super.findAll();
         return list.stream().map(entryRegister -> entryRegister.getUsername()).collect(Collectors.toSet());
@@ -705,7 +741,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
     @Override
     public byte[] templateExport() throws SerException {
         List<EntryRegisterExpTemplate> entryRegisterExpTemplateList = new ArrayList<>();
-        EntryRegisterExpTemplate entryRegisterExpTemplate=  new EntryRegisterExpTemplate();
+        EntryRegisterExpTemplate entryRegisterExpTemplate = new EntryRegisterExpTemplate();
         entryRegisterExpTemplate.setEmpNumber("test");
         entryRegisterExpTemplate.setUsername("test");
         entryRegisterExpTemplate.setGender(0);
@@ -751,7 +787,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         entryRegisterExpTemplate.setObtainTime("2017/12/12");
         entryRegisterExpTemplateList.add(entryRegisterExpTemplate);
 
-        EntryRegisterExpTemplate entryRegisterExpTemplate2=  new EntryRegisterExpTemplate();
+        EntryRegisterExpTemplate entryRegisterExpTemplate2 = new EntryRegisterExpTemplate();
         entryRegisterExpTemplate2.setEmpNumber("test");
         entryRegisterExpTemplate2.setUsername("test");
         entryRegisterExpTemplate2.setGender(0);
@@ -797,7 +833,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         entryRegisterExpTemplate2.setObtainTime("2017/12/12");
         entryRegisterExpTemplateList.add(entryRegisterExpTemplate2);
 
-        EntryRegisterExpTemplate entryRegisterExpTemplate3=  new EntryRegisterExpTemplate();
+        EntryRegisterExpTemplate entryRegisterExpTemplate3 = new EntryRegisterExpTemplate();
         entryRegisterExpTemplate3.setEmpNumber("test");
         entryRegisterExpTemplate3.setUsername("test");
         entryRegisterExpTemplate3.setGender(0);
@@ -843,7 +879,7 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         entryRegisterExpTemplate3.setObtainTime("2017/12/12");
         entryRegisterExpTemplateList.add(entryRegisterExpTemplate3);
 
-        EntryRegisterExpTemplate entryRegisterExpTemplate4=  new EntryRegisterExpTemplate();
+        EntryRegisterExpTemplate entryRegisterExpTemplate4 = new EntryRegisterExpTemplate();
         entryRegisterExpTemplate4.setEmpNumber("test");
         entryRegisterExpTemplate4.setUsername("test");
         entryRegisterExpTemplate4.setGender(0);
