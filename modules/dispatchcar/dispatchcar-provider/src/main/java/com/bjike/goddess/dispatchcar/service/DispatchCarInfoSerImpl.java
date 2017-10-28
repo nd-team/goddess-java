@@ -1,9 +1,6 @@
 package com.bjike.goddess.dispatchcar.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.businessproject.api.BusinessContractAPI;
-import com.bjike.goddess.businessproject.bo.BusinessContractsBO;
-import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
@@ -102,8 +99,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private CheckChangeCarSer checkChangeCarSer;
 
-    @Autowired
-    private BusinessContractAPI businessContractAPI;
+//    @Autowired
+//    private BusinessContractAPI businessContractAPI;
 
     @Autowired
     private DispatchcarRecordCollectSer dispatchcarRecordCollectSer;
@@ -489,6 +486,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 //                model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
 
                 model.setModifyTime(LocalDateTime.now());
+                model.setFindType(FindType.WAITAUDIT);
                 model.setProjectApproval(to.getProjectApproval());
 
                 super.update(model);
@@ -985,6 +983,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                                 filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
                             }
                             BeanTransform.copyProperties(to, model, "modifyTime", "createTime", "carSource", "companyDispatch", "addOilExplain", "supplementOil", "supplementFee", "oweOilExplain", "lessOil", "lessOilFee", "shouldAmount", "shouldAmountMoney", "addOilAmountMoney");
+                            model.setReceiver(dispatchCarInfoTO.getReceiver());
+                            model.setReceiveDate(DateUtil.parseDate(dispatchCarInfoTO.getReceiveDate()));
+                            model.setReceiveReceipts(dispatchCarInfoTO.getReceiveReceipts());
                             super.update(model);
                         }else {
                             throw new SerException("必须收到票据核对无误后方可审核");
@@ -1057,6 +1058,8 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 model.setPrincipalAuditTime(LocalDateTime.now());
                 if (auditResult == false) {
                     model.setFindType(FindType.WRONG);
+                }else if (auditResult == true){
+                    model.setFindType(FindType.FINANCEAUDIT);
                 }
                 super.update(model);
             } else {
@@ -1975,16 +1978,17 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     public List<String> findAllProject() throws SerException {
-        Set<String> project = new HashSet<>();
-        if (moduleAPI.isCheck("businessproject")) {
-            BusinessContractDTO businessContractDTO = new BusinessContractDTO();
-            List<BusinessContractsBO> project1 = businessContractAPI.list(businessContractDTO);
-            project = project1.stream().map(p -> p.getInnerProject()).collect(Collectors.toSet());
-        } else {
-            throw new SerException("请去模块管理设置模块关联");
-        }
-        List<String> allProject = new ArrayList<>(project);
-        return allProject;
+//        Set<String> project = new HashSet<>();
+//        if (moduleAPI.isCheck("businessproject")) {
+//            BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+//            List<BusinessContractsBO> project1 = businessContractAPI.list(businessContractDTO);
+//            project = project1.stream().map(p -> p.getInnerProject()).collect(Collectors.toSet());
+//        } else {
+//            throw new SerException("请去模块管理设置模块关联");
+//        }
+//        List<String> allProject = new ArrayList<>(project);
+//        return allProject;
+        return null;
     }
 
     @Override
@@ -2464,7 +2468,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 if (overWorkTime == 0) {
                     overUnitCost = 0.0 ;
                 }else {
-                    overUnitCost = overWorkCost / overWorkTime;
+                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                    Double overUnitCost1 = overWorkCost / overWorkTime;
+                    String overUnitCost2 = decimalFormat.format(overUnitCost1);
+                    overUnitCost = Double.valueOf(overUnitCost2);
                 }
                 PayDriverMoneyCollectBO payDriverMoneyCollectBO = new PayDriverMoneyCollectBO("", "", 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, "合计");
                 total = carRentalCost + parkRost + roadCost + mealCost + overWorkCost;
@@ -2575,9 +2582,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             proejctList = super.findBySql("select area , project_group , project ,1 from dispatchcar_basicinfo group by area , project_group , project ",
                     DispatchCarInfo.class, new String[]{"area", "group", "project"});
         } else {
-            //分组查询地区、项目组、项目
+            //分组查询地区、项目组、j项目
             proejctList = super.findBySql("select driver , project_group , project ,1 from dispatchcar_basicinfo group by driver , project_group , project ",
-                    DispatchCarInfo.class, new String[]{"area", "group", "project"});
+                    DispatchCarInfo.class, new String[]{"driver", "group", "project"});
         }
 
         List<DispatchCollectBO> returnList = new ArrayList<DispatchCollectBO>();
@@ -2589,8 +2596,11 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             bo.setArea(proejct.getArea());
             bo.setGroup(proejct.getGroup());
             bo.setProject(proejct.getProject());
-
-            findByType(proejct.getArea(), proejct.getGroup(), proejct.getProject(), bo, collectIntervalType, to);
+            if (collectType == CollectType.AREA) {
+                findByType(proejct.getArea(), proejct.getGroup(), proejct.getProject(), bo, collectIntervalType, to);
+            }else {
+                findByDriver(proejct.getDriver(), proejct.getGroup(), proejct.getProject(), bo, collectIntervalType, to);
+            }
 
             returnList.add(bo);
         }
@@ -2617,6 +2627,42 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         //查询指定汇总类型的出车情况(本日/本周/本月/本季度/本年度)
         DispatchCarInfoDTO lastDTO = new DispatchCarInfoDTO();
         lastDTO.getConditions().add(Restrict.eq("area", area));
+        lastDTO.getConditions().add(Restrict.eq("group", group));
+        lastDTO.getConditions().add(Restrict.eq("project", project));
+
+        switch (collectIntervalType) {
+            case DAY:
+                setDayCondition(currentDTO, lastDTO, bo, CollectIntervalType.DAY, to);
+                findByCondition(currentDTO, lastDTO, bo);
+                break;
+            case WEEK:
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.WEEK, to);
+                findByCondition(currentDTO, lastDTO, bo);
+                break;
+            case MONTH:
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.MONTH, to);
+                findByCondition(currentDTO, lastDTO, bo);
+                break;
+            case QUARTER:
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.QUARTER, to);
+                findByCondition(currentDTO, lastDTO, bo);
+                break;
+            case YEAR:
+                setCondition(currentDTO, lastDTO, bo, CollectIntervalType.YEAR, to);
+                findByCondition(currentDTO, lastDTO, bo);
+                break;
+        }
+    }
+
+    private void findByDriver(String driver, String group, String project, DispatchCollectBO bo, CollectIntervalType collectIntervalType, ExportCollectPayedTO to) throws SerException {
+        //查询指定汇总类型的出车情况(昨日/上周/上月/上季度/上年度)
+        DispatchCarInfoDTO currentDTO = new DispatchCarInfoDTO();
+        currentDTO.getConditions().add(Restrict.eq("driver", driver));
+        currentDTO.getConditions().add(Restrict.eq("group", group));
+        currentDTO.getConditions().add(Restrict.eq("project", project));
+        //查询指定汇总类型的出车情况(本日/本周/本月/本季度/本年度)
+        DispatchCarInfoDTO lastDTO = new DispatchCarInfoDTO();
+        lastDTO.getConditions().add(Restrict.eq("driver", driver));
         lastDTO.getConditions().add(Restrict.eq("group", group));
         lastDTO.getConditions().add(Restrict.eq("project", project));
 
@@ -3052,20 +3098,21 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Override
     public Boolean findProjectAproval(String project) throws SerException {
-        Boolean projectApproval = false;
-        if (moduleAPI.isCheck("businessproject")) {
-            BusinessContractDTO businessContractDTO = new BusinessContractDTO();
-            businessContractDTO.getConditions().add(Restrict.eq("innerProject",project));
-            List<BusinessContractsBO> businessContractsBOS = businessContractAPI.list(businessContractDTO);
-            if (businessContractsBOS.get(0).getInnerProject() != null) {
-                if (businessContractsBOS.get(0).getInnerProject().equals("已立项")) {
-                    projectApproval = true;
-                }
-            }
-        } else {
-            throw new SerException("请去模块关联设置商务合同的关联");
-        }
-        return projectApproval;
+//        Boolean projectApproval = false;
+//        if (moduleAPI.isCheck("businessproject")) {
+//            BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+//            businessContractDTO.getConditions().add(Restrict.eq("innerProject",project));
+//            List<BusinessContractsBO> businessContractsBOS = businessContractAPI.list(businessContractDTO);
+//            if (businessContractsBOS.get(0).getInnerProject() != null) {
+//                if (businessContractsBOS.get(0).getInnerProject().equals("已立项")) {
+//                    projectApproval = true;
+//                }
+//            }
+//        } else {
+//            throw new SerException("请去模块关联设置商务合同的关联");
+//        }
+//        return projectApproval;
+        return null;
     }
 
     @Override

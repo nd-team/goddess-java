@@ -1,6 +1,5 @@
 package com.bjike.goddess.dispatchcar.to;
 
-import com.bjike.goddess.message.entity.Message;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;

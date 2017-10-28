@@ -106,7 +106,7 @@ public class PayedAct extends BaseFileAction{
     @GetMapping("v1/audit/{id}")
     public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAuditResult(id), AuditResultVO.class, request);
+            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), AuditResultVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -178,21 +178,21 @@ public class PayedAct extends BaseFileAction{
 
     }
 
-    /**
-     * 删除文件或文件夹
-     *
-     * @param dispatchcarDeleteFileTO 多文件信息路径
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(DispatchcarDeleteFileTO.TestDEL.class) DispatchcarDeleteFileTO dispatchcarDeleteFileTO, HttpServletRequest request) throws SerException {
-        if (null != dispatchcarDeleteFileTO.getPaths() && dispatchcarDeleteFileTO.getPaths().length >= 0) {
-            Object storageToken = request.getAttribute("storageToken");
-            fileAPI.delFile(storageToken.toString(), dispatchcarDeleteFileTO.getPaths());
-        }
-        return new ActResult("delFile success");
-    }
+//    /**
+//     * 删除文件或文件夹
+//     *
+//     * @param dispatchcarDeleteFileTO 多文件信息路径
+//     * @version v1
+//     */
+//    @LoginAuth
+//    @PostMapping("v1/deleteFile")
+//    public Result delFile(@Validated(DispatchcarDeleteFileTO.TestDEL.class) DispatchcarDeleteFileTO dispatchcarDeleteFileTO, HttpServletRequest request) throws SerException {
+//        if (null != dispatchcarDeleteFileTO.getPaths() && dispatchcarDeleteFileTO.getPaths().length >= 0) {
+//            Object storageToken = request.getAttribute("storageToken");
+//            fileAPI.delFile(storageToken.toString(), dispatchcarDeleteFileTO.getPaths());
+//        }
+//        return new ActResult("delFile success");
+//    }
 
     /**
      * 导出Excel
