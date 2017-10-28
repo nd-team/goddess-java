@@ -99,10 +99,8 @@ public class DimissionInfoAct extends BaseFileAction {
     @GetMapping("v1/sonPermission")
     public Result sonPermission() throws ActException {
         try {
-
             List<SonPermissionObject> hasPermissionList = dimissionInfoAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
-
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -338,6 +336,7 @@ public class DimissionInfoAct extends BaseFileAction {
     @GetMapping("v1/presumeList")
     public Result presumeList(DimissionInfoDTO dto) throws ActException {
         try {
+            dimissionInfoAPI.presumeList(dto);
             return ActResult.initialize(BeanTransform.copyProperties(dimissionInfoAPI.presumeList(dto), DimissionInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -588,7 +587,7 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 获取总条数
+     * 获取离职信息总条数
      *
      * @version v1
      */
@@ -596,6 +595,20 @@ public class DimissionInfoAct extends BaseFileAction {
     public Result getTotal() throws ActException {
         try {
             return ActResult.initialize(dimissionInfoAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取自离信息总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getSelfTotal")
+    public Result getSelfTotal() throws ActException {
+        try {
+            return ActResult.initialize(dimissionInfoAPI.getSelfTotal());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

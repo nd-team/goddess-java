@@ -112,6 +112,12 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
     default List<String> findAllArrivals() throws SerException {
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
     /**
      * 下拉导航权限

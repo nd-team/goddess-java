@@ -47,8 +47,8 @@ public class DepartYearIndexSetTO extends BaseTO {
     /**
      * 年份
      */
-    @NotBlank(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年份不能为空")
-    private String year;
+    @NotNull(groups = {DepartMonIndexSetTO.TestAdd.class}, message = "年份不能为空")
+    private Integer year;
 
     /**
      * 指标类型
@@ -203,11 +203,11 @@ public class DepartYearIndexSetTO extends BaseTO {
         this.indexName = indexName;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

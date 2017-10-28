@@ -9,12 +9,14 @@ import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
+import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
 
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.user.bo.UserBO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,6 +29,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfoDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 新增出车记录
@@ -248,7 +264,7 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      *
      * @throws SerException
      */
-    List<StaffEntryRegisterBO> findAllEntry() throws SerException;
+    List<UserBO> findAllEntry() throws SerException;
 
 
     /**
@@ -285,7 +301,7 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @param toList
      * @throws SerException
      */
-    default void leadExcel(List<DispatchCarInfoTO> toList) throws SerException {
+    default void leadExcel(List<DispatchCarInfoSetExcel> toList) throws SerException {
         return;
     }
 
@@ -330,4 +346,58 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * 出车汇总
      */
     List<CollectDispatchcarBO> countCar(CollectDispatchcarDTO dispatchcarDTO) throws SerException;
+
+
+    /**
+     * 出车记录删除
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 根据油卡编号，地区，部门，汇总时间查询出车记录
+     */
+    List<DispatchCarInfoBO> findInformation(String area,String department,String day) throws SerException;
+
+    /**
+     * 根据油卡编号，地区，部门，汇总时间区间查询出车记录
+     */
+    List<DispatchCarInfoBO> findInformation(String area, String department, LocalDate[] day) throws SerException;
+
+
+
+    /**
+     * 根据油卡编号，部门，汇总时间区间查询出车记录
+     * @param department
+     * @param day
+     * @throws SerException
+     */
+    List<DispatchCarInfoBO> findInformation( String department, LocalDate[] day) throws SerException;
+
+    /**
+     * 根据司机名称获取用车油耗
+     */
+    Double findOilWear(String driver) throws SerException;
+
+    /**
+     * 根据油卡编号查询油卡余额
+     */
+    Double findBalance(String oilCardNumber) throws SerException;
+
+
+    /**
+     * 根据项目名称获取立项信息
+     */
+    Boolean findProjectAproval(String project) throws SerException;
+
+    /**
+     * 查询所有项目组
+     */
+    List<String> getAllDepartment() throws SerException;
+
+    /**
+     * 查询所有地区
+     */
+    List<AreaBO> findArea() throws SerException;
+
+
 }

@@ -65,6 +65,16 @@ public class OilCardBasicVO {
     private String area;
 
     /**
+     * 项目组/部门
+     */
+    private String department;
+
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+
+    /**
      * 项目名称
      */
     private String project;
@@ -152,14 +162,14 @@ public class OilCardBasicVO {
     public void setCardPassWord(String cardPassWord) {
         this.cardPassWord = cardPassWord;
     }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
+//
+//    public String getArea() {
+//        return area;
+//    }
+//
+//    public void setArea(String area) {
+//        this.area = area;
+//    }
 
     public String getProject() {
         return project;

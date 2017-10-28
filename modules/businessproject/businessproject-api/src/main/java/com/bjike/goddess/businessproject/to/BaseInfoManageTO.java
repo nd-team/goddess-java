@@ -210,6 +210,35 @@ public class BaseInfoManageTO extends BaseTO {
      */
     @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同归档数量不能为空,且为数字" )
     private Double fileCount;
+    /**
+     * 立项情况
+     */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "立项情况不能为空" )
+    private MakeContract makeContract;
+    /**
+     * 派工单号
+     */
+    private String taskNum;
+    /**
+     * 项目状态
+     */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "项目状态不能为空" )
+    private ProjectStatus projectStatus;
+    /**
+     * 合同规模数量
+     */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "合同规模数量不能为空,且为数字" )
+    private Double contractScale;
+    /**
+     * 规模数量
+     */
+    @NotNull(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "规模数量不能为空,且为数字" )
+    private Double scale;
+    /**
+     * 专业
+     */
+    @NotBlank(groups = {BaseInfoManageTO.TestAdd.class,BaseInfoManageTO.TestEdit.class} , message = "专业不能为空" )
+    private String major;
 
     /**
      * 备注
@@ -230,6 +259,53 @@ public class BaseInfoManageTO extends BaseTO {
      */
     private String modifyTime;
 
+    public MakeContract getMakeContract() {
+        return makeContract;
+    }
+
+    public void setMakeContract(MakeContract makeContract) {
+        this.makeContract = makeContract;
+    }
+
+    public String getTaskNum() {
+        return taskNum;
+    }
+
+    public void setTaskNum(String taskNum) {
+        this.taskNum = taskNum;
+    }
+
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
+
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
+
+    public Double getContractScale() {
+        return contractScale;
+    }
+
+    public void setContractScale(Double contractScale) {
+        this.contractScale = contractScale;
+    }
+
+    public Double getScale() {
+        return scale;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
     public String getContractNum() {
         return contractNum;

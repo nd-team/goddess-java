@@ -18,14 +18,18 @@ public class TaxManagementDTO extends BaseDTO {
     private String company;
 
     /**
-     * 所属月份
-     */
-    private String month;
-
-    /**
      * 税种
      */
     private String taxType;
+    /**
+     * 税款所属期起
+     */
+    private String taxStart;
+    /**
+     * 税款所属期止
+     */
+    private String taxEnd;
+
 
     public String getCompany() {
         return company;
@@ -35,13 +39,6 @@ public class TaxManagementDTO extends BaseDTO {
         this.company = company;
     }
 
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
 
     public String getTaxType() {
         return taxType;
@@ -49,5 +46,21 @@ public class TaxManagementDTO extends BaseDTO {
 
     public void setTaxType(String taxType) {
         this.taxType = taxType;
+    }
+
+    public String getTaxStart() {
+        return taxStart;
+    }
+
+    public void setTaxStart(String taxStart) {
+        this.taxStart = taxStart;
+    }
+
+    public String getTaxEnd() {
+        return taxEnd;
+    }
+
+    public void setTaxEnd(String taxEnd) {
+        this.taxEnd = taxEnd;
     }
 }

@@ -21,11 +21,41 @@ import javax.persistence.Table;
 @Table(name = "contacts_internal_contacts")
 public class InternalContacts extends BaseEntity {
 
+//    /**
+//     * 用户ID
+//     */
+//    @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户ID'")
+//    private String userId;
+
     /**
-     * 用户ID
+     * 地区
      */
-    @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '用户ID'")
-    private String userId;
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
+
+    /**
+     * 姓名
+     */
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '姓名'")
+    private String name;
+
+    /**
+     * 员工编号
+     */
+    @Column(name = "employeeNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+    private String employeeNum;
+
+    /**
+     * 部门/项目组
+     */
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门/项目组'")
+    private String department;
+
+    /**
+     * 职位
+     */
+    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职位'")
+    private String position;
 
     /**
      * 联系电话
@@ -88,12 +118,44 @@ public class InternalContacts extends BaseEntity {
     private Status status;
 
 
-    public String getUserId() {
-        return userId;
+    public String getArea() {
+        return area;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getPhone() {

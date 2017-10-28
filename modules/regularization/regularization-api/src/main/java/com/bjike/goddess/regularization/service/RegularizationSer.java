@@ -198,4 +198,10 @@ public interface RegularizationSer extends Ser<Regularization, RegularizationDTO
     default Boolean checkTran(String userName) throws SerException {
         return null;
     }
+    /**
+     * 根据员工编号查询信息
+     */
+    default RegularizationBO findByEmpNo(String empNo) throws SerException {
+        return null;
+    }
 }

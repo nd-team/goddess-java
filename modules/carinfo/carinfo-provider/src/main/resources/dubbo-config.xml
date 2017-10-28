@@ -24,6 +24,7 @@
 
     <!-- 招聘信息 -->
     <dubbo:service interface="com.bjike.goddess.carinfo.api.DriverRecruitAPI" ref="driverRecruitApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.carinfo.api.DriverAPI" ref="driverApiImpl"/>
 
     <dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
     <dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
@@ -44,6 +45,8 @@
     <dubbo:service  ref="carSendEmailApiImpl" interface="com.bjike.goddess.carinfo.api.CarSendEmailAPI" />
 
     <dubbo:reference interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.rentcar.api.DriverInfoAPI" id="driverInfoApiImpl1"/>
+    <dubbo:reference interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
 
 
 </beans>

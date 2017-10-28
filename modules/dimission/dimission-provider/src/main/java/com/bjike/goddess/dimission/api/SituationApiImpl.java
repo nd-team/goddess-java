@@ -2,6 +2,7 @@ package com.bjike.goddess.dimission.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dimission.bo.DimissionCollectBO;
+import com.bjike.goddess.dimission.bo.OptionBO;
 import com.bjike.goddess.dimission.bo.SituationBO;
 import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.service.SituationSer;
@@ -73,5 +74,30 @@ public class SituationApiImpl implements SituationAPI  {
     @Override
     public List<DimissionCollectBO> collect(String startTime, String endTime) throws SerException {
         return situationSer.collect(startTime, endTime);
+    }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return situationSer.getTotal();
+    }
+
+    @Override
+    public OptionBO figureShowMonth(String month) throws SerException {
+        return situationSer.figureShowMonth(month);
+    }
+
+    @Override
+    public OptionBO figureShowDay(String day) throws SerException {
+        return situationSer.figureShowDay(day);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return situationSer.figureShowWeek(year,month,week);
+    }
+
+    @Override
+    public OptionBO figureShowAll() throws SerException {
+        return situationSer.figureShowAll();
     }
 }

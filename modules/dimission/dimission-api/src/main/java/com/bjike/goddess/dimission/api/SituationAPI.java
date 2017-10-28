@@ -2,6 +2,7 @@ package com.bjike.goddess.dimission.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dimission.bo.DimissionCollectBO;
+import com.bjike.goddess.dimission.bo.OptionBO;
 import com.bjike.goddess.dimission.bo.SituationBO;
 import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
@@ -116,6 +117,61 @@ public interface SituationAPI {
      * @throws SerException
      */
     default List<DimissionCollectBO> collect(String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 离职管理月汇总图形化
+     *
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(String month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 离职管理日汇总柱状图
+     *
+     * @param day
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowDay(String day) throws SerException {
+        return null;
+    }
+
+    /**
+     * 离职管理周汇总柱状图
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 离职管理累计汇总柱状图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowAll() throws SerException {
         return null;
     }
 }

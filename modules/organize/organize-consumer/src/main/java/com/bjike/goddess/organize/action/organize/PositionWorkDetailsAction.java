@@ -2,23 +2,26 @@ package com.bjike.goddess.organize.action.organize;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.*;
-import com.bjike.goddess.organize.bo.AngleBO;
-import com.bjike.goddess.organize.bo.DimensionBO;
-import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
-import com.bjike.goddess.organize.bo.InstructionClassifyBO;
-import com.bjike.goddess.organize.bo.ManagerBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
+import com.bjike.goddess.organize.excel.PositionWorkDetailsImport2;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
 import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.organize.vo.ManagerVO;
+import com.bjike.goddess.organize.vo.OptionVO;
 import com.bjike.goddess.organize.vo.PositionWorkDetailsVO;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,7 +34,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +52,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("positionworkdetails")
-public class PositionWorkDetailsAction {
+public class PositionWorkDetailsAction extends BaseFileAction {
     @Autowired
     private PositionWorkDetailsAPI positionWorkDetailsAPI;
     @Autowired
@@ -398,4 +403,145 @@ public class PositionWorkDetailsAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 组织结构管理日汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String day, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowDay(day);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 组织结构管理周汇总柱状图
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 组织结构管理月汇总柱状图
+     *
+     * @param month 月份
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/month")
+    public Result figureShowMonth(String month, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowMonth(month);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 组织结构管理累计汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/all")
+    public Result figureShowAll() throws ActException {
+        try {
+            OptionBO optionBO = positionWorkDetailsAPI.figureShowAll();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @des 导出岗位工作明细信息
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "岗位工作明细信息.xlsx";
+            super.writeOutFile(response, positionWorkDetailsAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+//    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<PositionWorkDetailsImport2> tos = ExcelUtil.mergeExcelToClazz(is, PositionWorkDetailsImport2.class, excel);
+//            List<PositionWorkDetailsImport> tocs = new ArrayList<>();
+//            Set<Integer> seqNum = new HashSet<>();
+//            for (PositionWorkDetailsImport positionWorkDetailsImport:tos){
+//                seqNum.add(positionWorkDetailsImport.getSeqNum());
+//            }
+
+            positionWorkDetailsAPI.importExcel(tos);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板岗位工作明细
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "岗位工作明细导入模板.xlsx";
+            super.writeOutFile(response, positionWorkDetailsAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 }

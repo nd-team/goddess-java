@@ -23,6 +23,12 @@
 
 	<dubbo:service interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" ref="taxManagementApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.foreigntax.api.AccountInfoManagementAPI" ref="accountInfoManagementApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.InvoiceInfoAPI" ref="invoiceInfoApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.InvoiceReceiveAPI" ref="invoiceReceiveApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.OutputInvoiceAPI" ref="outputInvoiceApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.IncomeInvoiceAPI" ref="incomeInvoiceApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.LandTaxReportAPI" ref="landTaxReportApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.foreigntax.api.DiscountRecordAPI" ref="discountRecordApiImpl" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionOperateAPI" />
 
@@ -37,6 +43,7 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
 
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />

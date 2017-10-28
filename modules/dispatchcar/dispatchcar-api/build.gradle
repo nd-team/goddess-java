@@ -3,9 +3,13 @@ dependencies {
 compile project(":common:common-api")
 compile project(":common:common-utils")
 compile project(":modules:organize:organize-api")
+//<<<<<<< Updated upstream
+//=======
+////compile project(":modules:oilcardmanage:oilcardmanage-api")
+//>>>>>>> Stashed changes
 compile project(":modules:carinfo:carinfo-api")
 compile project(":modules:user:user-api")
 compile project(":modules:progressmanage:progressmanage-api")
-compile project(":modules:staffentry:staffentry-api")
 compile project(":modules:businessproject:businessproject-api")
+//compile project(":modules:carinfo:carinfo-api")
 }

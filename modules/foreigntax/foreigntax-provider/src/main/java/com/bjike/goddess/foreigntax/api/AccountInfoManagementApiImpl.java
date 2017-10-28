@@ -39,8 +39,8 @@ public class AccountInfoManagementApiImpl implements AccountInfoManagementAPI {
         return accountInfoManagementSer.guidePermission( guidePermissionTO );
     }
     @Override
-    public Long countAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
-        return accountInfoManagementSer.countAccountInfoManagement(accountInfoManagementDTO);
+    public Long count(AccountInfoManagementDTO dto) throws SerException {
+        return accountInfoManagementSer.count(dto);
     }
     @Override
     public AccountInfoManagementBO getOne(String id) throws SerException {
@@ -48,23 +48,23 @@ public class AccountInfoManagementApiImpl implements AccountInfoManagementAPI {
     }
 
     @Override
-    public List<AccountInfoManagementBO> findListAccountInfoManagement(AccountInfoManagementDTO accountInfoManagementDTO) throws SerException {
-        return accountInfoManagementSer.findListAccountInfoManagement(accountInfoManagementDTO);
+    public List<AccountInfoManagementBO> list(AccountInfoManagementDTO dto) throws SerException {
+        return accountInfoManagementSer.list(dto);
     }
 
     @Override
-    public AccountInfoManagementBO insertAccountInfoManagement(AccountInfoManagementTO accountInfoManagementTO) throws SerException {
-        return accountInfoManagementSer.insertAccountInfoManagement(accountInfoManagementTO);
+    public AccountInfoManagementBO insert(AccountInfoManagementTO to) throws SerException {
+        return accountInfoManagementSer.insert(to);
     }
 
     @Override
-    public AccountInfoManagementBO editAccountInfoManagement(AccountInfoManagementTO accountInfoManagementTO) throws SerException {
-        return accountInfoManagementSer.editAccountInfoManagement(accountInfoManagementTO);
+    public AccountInfoManagementBO edit(AccountInfoManagementTO to) throws SerException {
+        return accountInfoManagementSer.edit(to);
     }
 
     @Override
-    public void removeAccountInfoManagement(String id) throws SerException {
-        accountInfoManagementSer.removeAccountInfoManagement(id);
+    public void remove(String id) throws SerException {
+        accountInfoManagementSer.remove(id);
     }
 
 }

@@ -1,6 +1,10 @@
 package com.bjike.goddess.dispatchcar.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+
 /**
 * 薪资测算结果
 * @Author:			[ jiangzaixuan ]
@@ -11,18 +15,22 @@ import com.bjike.goddess.common.api.to.BaseTO;
 */
 public class CheckChangeCarTO extends BaseTO {
 
+    public interface TestAdd{}
     /**
      * 核对意见
      */
+    @NotBlank(groups = {CheckChangeCarTO.TestAdd.class},message = "核对意见不能为空")
     private String auditSugg;
     /**
      * 问题类型
      */
+    @NotBlank(groups = {CheckChangeCarTO.TestAdd.class},message = "问题类型不能为空")
     private String  problemType;
 
     /**
      * 问题描述
      */
+    @NotBlank(groups = {CheckChangeCarTO.TestAdd.class},message = "问题描述不能为空")
     private String  problemDes;
 
     /**

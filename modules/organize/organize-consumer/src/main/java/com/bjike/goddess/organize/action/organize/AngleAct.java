@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.AngleAPI;
+import com.bjike.goddess.organize.api.ModulesAPI;
 import com.bjike.goddess.organize.bo.AngleBO;
 import com.bjike.goddess.organize.dto.AngleDTO;
 import com.bjike.goddess.organize.to.AngleTO;
@@ -35,6 +36,25 @@ public class AngleAct {
 
     @Autowired
     private AngleAPI angleAPI;
+    @Autowired
+    private ModulesAPI modulesAPI;
+
+    /**
+     * 保存角度信息
+     *
+     * @param username 角度传输对象
+     * @return class AngleVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{username}")
+    public Result find(@PathVariable String username) throws ActException {
+        try {
+            modulesAPI.findModuleAndPost(username);
+            return  new ActResult("");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 保存角度信息

@@ -75,6 +75,11 @@ public class ArrivalWeekApiImpl implements ArrivalWeekAPI {
     }
 
     @Override
+    public byte[] templateExport() throws SerException {
+        return arrivalWeekSer.templateExport();
+    }
+
+    @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return arrivalWeekSer.sonPermission();
     }

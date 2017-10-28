@@ -24,7 +24,9 @@ import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -94,29 +96,31 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 ////        bo.setPositionIds(positionId.toString());
 //        String userId = entity.getUserId();
         List<PositionUserDetailBO> detailBOS = new ArrayList<>();
-        if (null != entity.getPositionSet()) {
-            for (PositionDetail positionDetail : entity.getPositionSet()) {
-                PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
-                detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
-                detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
-                PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
-                PositionUserDetailBO detailBO = new PositionUserDetailBO();
-                if (null != detail) {
-                    detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+        if (entity != null) {
+            if (null != entity.getPositionSet()) {
+                for (PositionDetail positionDetail : entity.getPositionSet()) {
+                    PositionUserDetailDTO detailDTO = new PositionUserDetailDTO();
+                    detailDTO.getConditions().add(Restrict.eq("userId", entity.getId()));
+                    detailDTO.getConditions().add(Restrict.eq("positionId", positionDetail.getId()));
+                    PositionUserDetail detail = positionUserDetailSer.findOne(detailDTO);
+                    PositionUserDetailBO detailBO = new PositionUserDetailBO();
+                    if (null != detail) {
+                        detailBO = BeanTransform.copyProperties(detail, PositionUserDetailBO.class);
+                    }
+                    detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
+                    detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
+                    detailBO.setArea(positionDetail.getDepartment().getArea());
+                    detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
+                    detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
+                    detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
+                    if (null != positionDetail.getModule()) {
+                        detailBO.setModule(positionDetail.getModule().getModule());
+                    }
+                    detailBO.setPosition(positionDetail.getPosition());
+                    detailBO.setPositionId(positionDetail.getId());
+                    detailBO.setPositionNumber(positionDetail.getSerialNumber());
+                    detailBOS.add(detailBO);
                 }
-                detailBO.setHierarchyNumber(positionDetail.getDepartment().getHierarchy().getSerialNumber());
-                detailBO.setHierarchy(positionDetail.getDepartment().getHierarchy().getHierarchy());
-                detailBO.setArea(positionDetail.getDepartment().getArea());
-                detailBO.setDepartNumber(positionDetail.getDepartment().getSerialNumber());
-                detailBO.setDepartment(positionDetail.getDepartment().getDepartment());
-                detailBO.setArrangement(positionDetail.getArrangement().getArrangement());
-                if (null != positionDetail.getModule()) {
-                    detailBO.setModule(positionDetail.getModule().getModule());
-                }
-                detailBO.setPosition(positionDetail.getPosition());
-                detailBO.setPositionId(positionDetail.getId());
-                detailBO.setPositionNumber(positionDetail.getSerialNumber());
-                detailBOS.add(detailBO);
             }
         }
         bo.setDetailS(detailBOS);
@@ -287,10 +291,28 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
 
+//    @Override
+//    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+//        logger.info("开始给");
+//    }
+
+    public Boolean checkAsUserPosition(String name, String[] position_ids) throws SerException {
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.getConditions().add(Restrict.eq(ID, name));
+//        UserBO userBO = userAPI.findOne(userDTO);
+//        if (userBO != null) {
+//            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+//            if (null != entity && null != entity.getPositionSet() && null != position_ids)
+//                for (PositionDetail detail : entity.getPositionSet())
+//                    for (String id : position_ids)
+//                        if (detail.getId().equals(id))
+//                            return true;
+//        }
+        return false;
+    }
 
     @Override
     public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
-        logger.info("开始给");
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, name));
         UserBO userBO = userAPI.findOne(userDTO);
@@ -298,14 +320,18 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         if (userBO != null) {
             PositionDetailUser entity = this.findByUser(userBO.getUsername());
             logger.info("开始给uposit");
-            if (null != entity && null != entity.getPositionSet() && null != position_ids)
-                for (PositionDetail detail : entity.getPositionSet())
+            PositionDetailUserDTO dto = new PositionDetailUserDTO();
+            dto.getConditions().add(Restrict.eq("name", name));
+            PositionDetailUser entity1 = super.findOne(dto);
+            if (null != entity1 && null != entity1.getPositionSet() && null != position_ids)
+                for (PositionDetail detail : entity1.getPositionSet())
                     for (String id : position_ids)
                         if (detail.getId().equals(id))
                             return true;
         }
         return false;
     }
+
     @Override
     public Boolean checkAsUserArrangement(String userId, String... arrangementIds) throws SerException {
         UserDTO userDTO = new UserDTO();
@@ -497,15 +523,18 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         sql.append(" AND b.name= '" + name + "'");
         List<PositionDetailBO> positionDetails = positionDetailSer.findBySql(sql.toString(), PositionDetailBO.class, fields);
         List<PositionDetailBO> list = BeanTransform.copyProperties(positionDetails, PositionDetailBO.class);
-        for (PositionDetailBO positionDetailBO : list) {
-            DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
-            positionDetailBO.setDepartmentName(department.getDepartment());
-            Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
-            positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
-            Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());
-            positionDetailBO.setArrangementName(arrangement.getArrangement());
-            ModuleType modules = moduleTypeSer.findById(positionDetailBO.getModuleId());
-            positionDetailBO.setModuleName(modules.getModule());
+        if (null != list && list.size() > 0) {
+            for (PositionDetailBO positionDetailBO : list) {
+                DepartmentDetail department = departmentDetailSer.findById(positionDetailBO.getDepartmentId());
+                positionDetailBO.setDepartmentName(department.getDepartment());
+                positionDetailBO.setArea(department.getArea());
+                Hierarchy hierarchy = hierarchySer.findById(department.getHierarchy().getId());
+                positionDetailBO.setHierarchyName(hierarchy.getHierarchy());
+                Arrangement arrangement = arrangementSer.findById(positionDetailBO.getArrangementId());
+                positionDetailBO.setArrangementName(arrangement.getArrangement());
+                ModuleType modules = moduleTypeSer.findById(positionDetailBO.getModuleId());
+                positionDetailBO.setModuleName(modules.getModule());
+            }
         }
         return list;
     }
@@ -744,5 +773,64 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
             }
         }
         return result;
+    }
+
+    @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        StringBuilder sql = new StringBuilder("select area, number, department, position ");
+        sql.append(" from organize_department_detail a, organize_position_detail b, organize_position_detail_user c, organize_position_detail_user_table d");
+        sql.append(" where c.name = '" + name + "' ");
+        sql.append(" and c.id = d.user_id ");
+        sql.append(" and d.position_id = b.id ");
+        sql.append(" and b.department_id = a.id ");
+        String[] fildes = new String[]{"area", "number", "department", "position"};
+        List<InternalContactsConditionBO> internalContactsConditionBOs = super.findBySql(sql.toString(), InternalContactsConditionBO.class, fildes);
+        if (null != internalContactsConditionBOs && internalContactsConditionBOs.size() > 0) {
+            return internalContactsConditionBOs.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public String customRepPerson() throws SerException {
+        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')))";
+        List<Object> objs = arrangementSer.findBySql(sql);
+        if(objs!=null && objs.size()>0){
+            String name = String.valueOf(objs.get(0));
+            return name;
+        }
+        return null;
+    }
+    @Override
+    public String[] budgetPerson() throws SerException{
+        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '预算模块'))) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
+    }
+    @Override
+    public String[] planPerson() throws SerException{
+        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '规划模块'))) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
+    }
+    @Override
+    public String[] managerPerson() throws SerException{
+        String sql = " SELECT a.name AS name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c WHERE c.position like '项目经理%')) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
+    }
+    @Override
+    public String[] generPerson() throws SerException{
+        String sql = " SELECT a.name AS name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c WHERE c.position like '总经理')) ";
+        List<Object> nameBOS = super.findBySql(sql);
+        String[] strings=new String[nameBOS.size()];
+        strings=nameBOS.toArray(strings);
+        return strings;
     }
 }

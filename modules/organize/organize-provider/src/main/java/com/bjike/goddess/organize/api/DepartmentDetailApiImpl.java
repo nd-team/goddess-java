@@ -150,4 +150,9 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
         return departmentDetailSer.departByName(departs);
     }
 
+    @Override
+    public List<String> findAllDepartment() throws SerException {
+        return departmentDetailSer.findAllDepartment();
+    }
+
 }

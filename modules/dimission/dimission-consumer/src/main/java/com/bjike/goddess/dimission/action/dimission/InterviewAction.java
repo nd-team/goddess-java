@@ -122,6 +122,20 @@ public class InterviewAction {
     }
 
     /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(interviewAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 根据id获取数据
      *
      * @param id id
@@ -156,7 +170,7 @@ public class InterviewAction {
      *
      * @version v1
      */
-    @GetMapping("v1/judge/principal")
+     @GetMapping("v1/judge/principal")
     public Result judgePrincipal(String name) throws ActException {
         try {
             return ActResult.initialize(interviewAPI.judgePrincipal(name));

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.CheckChangeCarBO;
 import com.bjike.goddess.dispatchcar.dto.CheckChangeCarDTO;
 import com.bjike.goddess.dispatchcar.to.CorrectMistakeTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -16,6 +17,19 @@ import java.util.List;
 * @Copy:   		[ com.bjike ]
 */
 public interface CheckChangeCarAPI  {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 查看核对修改记录
      */
@@ -25,6 +39,19 @@ public interface CheckChangeCarAPI  {
      * 问题解决
      */
     void modify(CorrectMistakeTO to) throws SerException;
+
+    /**
+     * 根据id查询单条出车核对修改记录
+     * @param id
+     * @return CheckChangeCarBO
+     * @throws SerException
+     */
+    CheckChangeCarBO findOne(String id) throws SerException;
+
+    /**
+     * 查看数据条数
+     */
+    Long count(CheckChangeCarDTO checkChangeCarDTO) throws SerException;
 
 
 

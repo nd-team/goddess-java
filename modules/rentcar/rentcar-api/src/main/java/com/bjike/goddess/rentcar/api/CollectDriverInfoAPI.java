@@ -3,6 +3,8 @@ package com.bjike.goddess.rentcar.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.rentcar.bo.AreaBO;
 import com.bjike.goddess.rentcar.bo.CollectDriverInfoBO;
+import com.bjike.goddess.rentcar.bo.DepartmentBO;
+import com.bjike.goddess.rentcar.bo.OptionBO;
 import com.bjike.goddess.rentcar.to.GuidePermissionTO;
 
 import java.util.List;
@@ -37,5 +39,16 @@ public interface CollectDriverInfoAPI  {
     /**
      * 累计租车协议管理汇总
      */
-    List<AreaBO> allCollect(Integer year) throws SerException;
+    List<AreaBO> allCollect(String endDate) throws SerException;
+
+    /**
+     * 图形化月租车汇总
+     */
+    OptionBO figureShowMonth(Integer year,Integer month) throws SerException;
+
+    /**
+     * 图形化累计租车汇总
+     */
+    OptionBO figureShowTotal(String endDate) throws SerException;
+
 }

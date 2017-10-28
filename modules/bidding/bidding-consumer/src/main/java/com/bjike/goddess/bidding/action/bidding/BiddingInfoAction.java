@@ -3,13 +3,14 @@ package com.bjike.goddess.bidding.action.bidding;
 import com.bjike.goddess.bidding.api.BiddingInfoAPI;
 import com.bjike.goddess.bidding.bo.BiddingInfoBO;
 import com.bjike.goddess.bidding.dto.BiddingInfoDTO;
+import com.bjike.goddess.bidding.dto.SearchDTO;
 import com.bjike.goddess.bidding.excel.SonPermissionObject;
 import com.bjike.goddess.bidding.to.BiddingDeleteFileTO;
 import com.bjike.goddess.bidding.to.BiddingInfoTO;
 import com.bjike.goddess.bidding.to.GuidePermissionTO;
-import com.bjike.goddess.bidding.to.SearchTO;
 import com.bjike.goddess.bidding.vo.BiddingInfoCollectVO;
 import com.bjike.goddess.bidding.vo.BiddingInfoVO;
+import com.bjike.goddess.bidding.vo.InfoVO;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -249,7 +251,7 @@ public class BiddingInfoAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(@RequestParam String[] cities) throws ActException {
+    public Result collect( String[] cities) throws ActException {
         try {
             List<BiddingInfoCollectVO> biddingInfoCollectVOS = BeanTransform.copyProperties(
                     biddingInfoAPI.collectBiddingInfo(cities), BiddingInfoCollectVO.class);
@@ -286,9 +288,9 @@ public class BiddingInfoAction extends BaseFileAction {
     @GetMapping("v1/getBiddingNum")
     public Result getBidding(String biddingNumber) throws ActException {
         try {
-            logger.info("获取招标信息开始:" + biddingNumber);
+//            logger.info("获取招标信息开始:" + biddingNumber);
             BiddingInfoBO biddingInfoBO = biddingInfoAPI.getBidding(biddingNumber);
-            logger.info("获取招标信息结果:" + biddingNumber);
+//            logger.info("获取招标信息结果:" + biddingNumber);
             return ActResult.initialize(BeanTransform.copyProperties(biddingInfoBO, BiddingInfoVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -457,16 +459,33 @@ public class BiddingInfoAction extends BaseFileAction {
     }
 
     /**
-     * 获取网址内的信息
+     * 中国移动采购与招标网总条数(每页20条)
      *
-     * @param to
-     * @throws ActException
+     * @version v1
      */
-    @GetMapping("v1/info")
-    public Result info(SearchTO to) throws ActException {
+    @PostMapping("v1/infoTotal")
+    public Result infoTotal() throws ActException {
         try {
-            return ActResult.initialize(biddingInfoAPI.info(to));
-        } catch (SerException e) {
+            Long totals = biddingInfoAPI.infoTotal();
+            return ActResult.initialize(totals);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 中国移动采购与招标网获取网址内的信息
+     *
+     * @param dto
+     * @return class InfoVO
+     * @version v1
+     */
+    @PostMapping("v1/info")
+    public Result info(SearchDTO dto) throws ActException {
+        try {
+            List<InfoVO> infoVOS = BeanTransform.copyProperties(biddingInfoAPI.info(dto), InfoVO.class);
+            return ActResult.initialize(infoVOS);
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -474,14 +493,30 @@ public class BiddingInfoAction extends BaseFileAction {
     /**
      * 工信部招标网获取信息
      *
-     * @param to
+     * @param dto
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/txzbInfo")
-    public Result txzbInfo(SearchTO to) throws ActException {
+    public Result txzbInfo(SearchDTO dto) throws ActException {
         try {
-            return ActResult.initialize(biddingInfoAPI.txzbInfo(to));
+            List<InfoVO> infoVOS = BeanTransform.copyProperties(biddingInfoAPI.txzbInfo(dto), InfoVO.class);
+            return ActResult.initialize(infoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 工信部招标网总条数(每页11条)
+     *
+     * @version v1
+     */
+    @PostMapping("v1/txzbTotal")
+    public Result txzbTotal() throws ActException {
+        try {
+            Long totals = biddingInfoAPI.txzbTotal();
+            return ActResult.initialize(totals);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -490,47 +525,118 @@ public class BiddingInfoAction extends BaseFileAction {
     /**
      * 中央政府采购网获取信息
      *
-     * @param to
+     * @param dto
+     * @return class InfoVO
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/zycgInfo")
-    public Result zycgInfo(SearchTO to) throws ActException {
+    @GetMapping("v1/zycgInfo")
+    public Result zycgInfo(SearchDTO dto) throws ActException {
         try {
-            return ActResult.initialize(biddingInfoAPI.zycgInfo(to));
+            List<InfoVO> infoVOS = BeanTransform.copyProperties(biddingInfoAPI.zycgInfo(dto), InfoVO.class);
+            return ActResult.initialize(infoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 中国电力招标网获取信息
+     * 中央政府采购网总条数(每页20条)
      *
-     * @param to
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/toobiaoInfo")
-    public Result toobiaoInfo(SearchTO to) throws ActException {
+    @GetMapping("v1/zycyTotal")
+    public Result zycyTotal() throws ActException {
         try {
-            return ActResult.initialize(biddingInfoAPI.toobiaoInfo(to));
+            Long total = biddingInfoAPI.zycyTotal();
+            return ActResult.initialize(total);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+
     /**
-     * 中国学校招标网获取信息
+     * 中国警务招标网获取信息
      *
-     * @param to
-     * @throws SerException
-     * @version
+     * @param dto
+     * @return class InfoVO
+     * @throws ActException
+     * @version v1
      */
-    @GetMapping("v1/schoolbidInfo")
-    public Result schoolbidInfo(SearchTO to) throws ActException {
+    @GetMapping("v1/caigouInfo")
+    public Result caigouInfo(SearchDTO dto) throws ActException {
         try {
-            return ActResult.initialize(biddingInfoAPI.schoolbidInfo(to));
+            List<InfoVO> infoVOS = BeanTransform.copyProperties(biddingInfoAPI.caigouInfo(dto), InfoVO.class);
+            return ActResult.initialize(infoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 中国警务招标网总条数(每页20条)
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/caigouTotal")
+    public Result caigouTotal() throws ActException {
+        try {
+            Long totals = biddingInfoAPI.caigouTotal();
+            return ActResult.initialize(totals);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 中国电力工程招标网获取信息
+     *
+     * @param dto
+     * @return class InfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/toobiaoInfo")
+    public Result toobiaoInfo(SearchDTO dto) throws ActException {
+        try {
+            List<InfoVO> infoVOS = BeanTransform.copyProperties(biddingInfoAPI.toobiaoInfo(dto), InfoVO.class);
+            return ActResult.initialize(infoVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 中国电力工程招标网总条数(每页23条)
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/toobiaoTotal")
+    public Result toobiaoTotal() throws ActException {
+        try {
+            Long totals = biddingInfoAPI.toobiaoTotal();
+            return ActResult.initialize(totals);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+//    /**
+//     * 中国学校招标网获取信息
+//     *
+//     * @param to
+//     * @throws SerException
+//     * @version v1
+//     */
+//    @GetMapping("v1/schoolbidInfo")
+//    public Result schoolbidInfo(SearchDTO dto) throws ActException {
+//        try {
+//            return ActResult.initialize(biddingInfoAPI.schoolbidInfo(dto));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 }

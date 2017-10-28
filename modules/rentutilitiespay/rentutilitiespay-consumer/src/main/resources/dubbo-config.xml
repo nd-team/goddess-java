@@ -20,6 +20,9 @@
 	<dubbo:reference  validation="true" id="stayUtilitiesApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.StayUtilitiesAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.CusPermissionOperateAPI" />
+	<dubbo:reference  validation="true" id="collectApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.CollectAPI" />
+	<dubbo:reference  validation="true" id="imageCollectApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.ImageCollectAPI" />
+	<dubbo:reference  validation="true" id="stencilApiImpl" interface="com.bjike.goddess.rentutilitiespay.api.StencilAPI" />
 
 	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />

@@ -325,8 +325,8 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
 
                 if (null != maps && maps.size() > 0) {
                     for (PositionDetailUserBO positionDetailUserBO : maps) {
-                        if (id.equals(positionDetailUserBO.getEmployeesNumber())) {
-                            detailBO.setName(positionDetailUserBO.getUsername());
+                        if (id.equals(positionDetailUserBO.getNumber())) {
+                            detailBO.setName(positionDetailUserBO.getName());
                             detailBO.setDepartment(bo.getDepartmentName());
 
                             detailBO.setPosition(bo.getArrangementName());

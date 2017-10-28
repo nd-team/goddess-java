@@ -5,6 +5,7 @@ import com.bjike.goddess.dispatchcar.bo.CheckChangeCarBO;
 import com.bjike.goddess.dispatchcar.dto.CheckChangeCarDTO;
 import com.bjike.goddess.dispatchcar.service.CheckChangeCarSer;
 import com.bjike.goddess.dispatchcar.to.CorrectMistakeTO;
+import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,16 @@ public class CheckChangeCarApiImpl implements CheckChangeCarAPI  {
     private CheckChangeCarSer checkChangeCarSer;
 
     @Override
+    public Boolean sonPermission() throws SerException {
+        return checkChangeCarSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return checkChangeCarSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
     public List<CheckChangeCarBO> list(CheckChangeCarDTO dto) throws SerException {
         return checkChangeCarSer.list(dto);
     }
@@ -33,5 +44,13 @@ public class CheckChangeCarApiImpl implements CheckChangeCarAPI  {
         checkChangeCarSer.modify(to);
     }
 
+    @Override
+    public CheckChangeCarBO findOne(String id) throws SerException {
+        return checkChangeCarSer.findOne(id);
+    }
 
+    @Override
+    public Long count(CheckChangeCarDTO checkChangeCarDTO) throws SerException {
+        return checkChangeCarSer.count(checkChangeCarDTO);
+    }
 }

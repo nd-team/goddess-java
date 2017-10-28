@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.UserNameSexBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.to.*;
@@ -174,31 +175,34 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
 
     /**
      * 根据姓名获取员工编号
+     *
      * @param name
      * @return
      * @throws SerException
      */
-    default String findEmpNum(String name) throws SerException{
-        return  null;
+    default String findEmpNum(String name) throws SerException {
+        return null;
     }
 
     /**
      * 根据员工编号获取信息
+     *
      * @param empNumer
      * @return
      */
-    default EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException{
+    default EntryOptionBO getEntryOptionByEmpNum(String empNumer) throws SerException {
 
         return null;
     }
 
     /**
      * 根据姓名获取性别
+     *
      * @param username
      * @return
      * @throws SerException
      */
-    default String getGender(String username) throws SerException{
+    default String getGender(String username) throws SerException {
         return null;
     }
 
@@ -233,42 +237,73 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default String getEntryTime(String username) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的除了离职员工的编号
+     *
      * @return
      */
-    default List<String> findWorkingEmpNum() throws SerException{
+    default List<String> findWorkingEmpNum() throws SerException {
 
         return null;
     }
+
     /**
      * 获取所有员工编号和对应的数据
+     *
      * @return
      */
-    default List<EntryOptionBO> findEmpDate() throws SerException{
+    default List<EntryOptionBO> findEmpDate() throws SerException {
         return null;
     }
+
     /**
      * 根据入职时间获取入职人数
+     *
      * @return
      */
-    default Integer findNumByEntryDate(String[] date,String area,String dep) throws SerException{
+    default Integer findNumByEntryDate(String[] date, String area, String dep) throws SerException {
         return null;
     }
+
     /**
      * 根据入职时间获取入职人数
+     *
      * @return
      */
-    default Integer findNumByEntryDate(String endDate,String area,String dep) throws SerException{
+    default Integer findNumByEntryDate(String endDate, String area, String dep) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据用户名获取对应性别
+     *
+     * @return
+     */
+    default List<UserNameSexBO> findSexByUserName(String[] userName) throws SerException {
         return null;
     }
 
     /**
      * chenjunhao
      * 获取所有入职人员的姓名
+     *
      * @return
      * @throws SerException
      */
     Set<String> names() throws SerException;
 
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param firmIntroTOS 公司简介
+     */
+//    void importExcel(List<FirmIntroTO> firmIntroTOS) throws SerException;
 }

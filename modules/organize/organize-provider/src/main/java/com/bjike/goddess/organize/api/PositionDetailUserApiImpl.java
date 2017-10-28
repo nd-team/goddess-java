@@ -1,18 +1,13 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.DepartPositionBO;
-import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
 import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
-import com.bjike.goddess.organize.vo.PhoneLoginUserInfoVO;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +50,11 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
         return positionDetailUserSer.checkAsUserPosit2(name,position_ids);
     }
+
+//    @Override
+//    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
+//        return positionDetailUserSer.checkAsUserPosit2(name,position_ids);
+//    }
 
     @Override
     public Boolean checkAsUserArrangement(String user_id, String... arrangement_id) throws SerException {
@@ -179,5 +179,32 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public List<String> names() throws SerException {
         return positionDetailUserSer.names();
+    }
+
+    @Override
+    public InternalContactsConditionBO getByName(String name) throws SerException {
+        return positionDetailUserSer.getByName(name);
+    }
+    @Override
+    public String customRepPerson() throws SerException {
+        return positionDetailUserSer.customRepPerson();
+    }
+
+    @Override
+    public String[] budgetPerson() throws SerException {
+        return positionDetailUserSer.budgetPerson();
+    }
+
+    @Override
+    public String[] planPerson() throws SerException {
+        return positionDetailUserSer.planPerson();
+    }
+    @Override
+    public String[] managerPerson() throws SerException{
+        return positionDetailUserSer.managerPerson();
+    }
+    @Override
+    public String[] generPerson() throws SerException{
+        return positionDetailUserSer.generPerson();
     }
 }

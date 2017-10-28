@@ -14,6 +14,9 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +39,8 @@ import java.util.List;
 public class BiddingAcceptAction {
     @Autowired
     private BiddingAcceptAPI biddingAcceptAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 功能导航权限
@@ -189,5 +194,21 @@ public class BiddingAcceptAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取问题提出人
+     *
+     * @return class UserVO
+     * @version v1
+     */
+    @GetMapping("v1/user")
+    public Result user(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> userBOS = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

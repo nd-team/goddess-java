@@ -1,9 +1,6 @@
 package com.bjike.goddess.archive.api;
 
-import com.bjike.goddess.archive.bo.PerBO;
-import com.bjike.goddess.archive.bo.StaffNameBO;
-import com.bjike.goddess.archive.bo.StaffRecords1BO;
-import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.bo.*;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.service.StaffRecordsSer;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
@@ -118,5 +115,10 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     @Override
     public StaffRecordsBO getByName(String name) throws SerException {
         return staffRecordsSer.getByName(name);
+    }
+
+    @Override
+    public CurrentMessageBO findCurrentMessage() throws SerException {
+        return staffRecordsSer.findCurrentMessage();
     }
 }

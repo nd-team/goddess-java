@@ -35,6 +35,12 @@ public class OilCardReceiveTO extends BaseTO {
     private String area;
 
     /**
+     * 部门
+     */
+    @NotBlank(message = "部门不能为空!", groups = {ADD.class, EDIT.class})
+    private String department;
+
+    /**
      * 原因
      */
     @NotBlank(message = "原因不能为空!", groups = {ADD.class, EDIT.class})
@@ -98,5 +104,13 @@ public class OilCardReceiveTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

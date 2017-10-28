@@ -6,6 +6,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.financeinit.enums.ScaleShape;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 公司基本信息
  *
@@ -56,7 +58,7 @@ public class CompanyBasicInfoTO extends BaseTO {
     /**
      * 公司规模形式
      */
-    @NotBlank(message = "公司规模形式不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "公司规模形式不能为空",groups = {ADD.class, EDIT.class})
     private ScaleShape scaleShape;
 
     /**

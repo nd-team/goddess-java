@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.bo.CurrencyBO;
 import com.bjike.goddess.financeinit.dto.CurrencyDTO;
 import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.to.CurrencyTO;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CurrencySer extends Ser<Currency, CurrencyDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 设置币别列表总条数
      */

@@ -5,6 +5,7 @@ import com.bjike.goddess.financeinit.bo.UseCommonlyBO;
 import com.bjike.goddess.financeinit.dto.UseCommonlyDTO;
 import com.bjike.goddess.financeinit.entity.UseCommonly;
 import com.bjike.goddess.financeinit.service.UseCommonlySer;
+import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.UseCommonlyTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,17 @@ import java.util.List;
 public class UseCommonlyApiImpl implements UseCommonlyAPI {
     @Autowired
     private UseCommonlySer useCommonlySer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return useCommonlySer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return useCommonlySer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countUse(UseCommonlyDTO useCommonlyDTO) throws SerException {
         return useCommonlySer.countUse(useCommonlyDTO);

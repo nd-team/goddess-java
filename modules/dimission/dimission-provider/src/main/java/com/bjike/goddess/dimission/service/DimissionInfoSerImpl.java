@@ -296,7 +296,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
             if (moduleAPI.isCheck("organize")) {
                 PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-//                bo.setEmployeeNumber(detailBO.getEmployeesNumber());
+                if (null != detailBO) {
+                    bo.setEmployeeNumber(detailBO.getNumber());
+                }
                 bo.setArea("");
                 bo.setPosition("");
                 bo.setArrangement("");
@@ -797,7 +799,11 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     @Override
     public Long getTotal() throws SerException {
         DimissionInfoDTO dto = new DimissionInfoDTO();
-        return super.count(dto);
+        List<DimissionInfo> dimissionInfos = super.findByCis(dto);
+        if (null != dimissionInfos && dimissionInfos.size() > 0) {
+            dimissionInfos = dimissionInfos.stream().filter(obj -> !"2".equals(obj.getType())).collect(Collectors.toList());
+        }
+        return Long.valueOf(dimissionInfos.size());
     }
 
     @Override
@@ -865,5 +871,13 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
         }
         return null;
+    }
+
+    @Override
+    public Long getSelfTotal() throws SerException {
+        DimissionInfoDTO dto = new DimissionInfoDTO();
+        dto.getConditions().add(Restrict.eq("type", 2));
+        return super.count(dto);
+
     }
 }

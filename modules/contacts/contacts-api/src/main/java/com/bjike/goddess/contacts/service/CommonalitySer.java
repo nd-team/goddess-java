@@ -167,4 +167,14 @@ public interface CommonalitySer extends Ser<Commonality, CommonalityDTO> {
     default List<String> getEmails() throws SerException {
         return null;
     }
+
+    /**
+     * 获取部门项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartment() throws SerException {
+        return null;
+    }
 }

@@ -1,9 +1,7 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.staffentry.bo.EntrySummaryBO;
-import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
-import com.bjike.goddess.staffentry.bo.StaffEntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.StaffEntryRegisterDTO;
 import com.bjike.goddess.staffentry.service.StaffEntryRegisterSer;
 import com.bjike.goddess.staffentry.to.GuidePermissionTO;
@@ -139,5 +137,30 @@ public class StaffEntryRegisterApiImpl implements StaffEntryRegisterAPI {
     @Override
     public List<EntrySummaryBO> summaTotal(String endDate) throws SerException {
         return staffEntryRegisterSer.summaTotal(endDate);
+    }
+
+    @Override
+    public OptionBO figureShowDay(String summationDate) throws SerException {
+        return staffEntryRegisterSer.figureShowDay(summationDate);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return staffEntryRegisterSer.figureShowWeek(year,month,week);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        return staffEntryRegisterSer.figureShowMonth(year,month);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        return staffEntryRegisterSer.figureShowTotal(endDate);
+    }
+
+    @Override
+    public BrokenOptionBO brokenShowYear(Integer year) throws SerException {
+        return staffEntryRegisterSer.brokenShowYear(year);
     }
 }

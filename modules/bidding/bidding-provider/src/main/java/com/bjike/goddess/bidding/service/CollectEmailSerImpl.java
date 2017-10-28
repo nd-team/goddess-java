@@ -4,6 +4,7 @@ import com.bjike.goddess.bidding.bo.BidOpeningCollectBO;
 import com.bjike.goddess.bidding.bo.BiddingInfoCollectBO;
 import com.bjike.goddess.bidding.bo.CollectEmailBO;
 import com.bjike.goddess.bidding.dto.CollectEmailDTO;
+import com.bjike.goddess.bidding.entity.BiddingInfo;
 import com.bjike.goddess.bidding.entity.CollectEmail;
 import com.bjike.goddess.bidding.enums.CollectSendUnit;
 import com.bjike.goddess.bidding.enums.GuideAddrStatus;
@@ -530,35 +531,55 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
 
     private String htmlBidding(List<BiddingInfoCollectBO> biddingBOS) throws SerException {
         StringBuffer sb = new StringBuffer("");
-        sb = new StringBuffer("<h4>招标信息汇总:</h4>");
-        sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
-        for (BiddingInfoCollectBO bo : biddingBOS) {
+        if(biddingBOS!= null && biddingBOS.size()>0){
+            sb = new StringBuffer("<h4>招标信息汇总:</h4>");
+            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            //拼表头
+            BiddingInfoCollectBO title = biddingBOS.get(biddingBOS.size()-1);
             sb.append("<tr>");
             sb.append("<td>地市</td>");
-            Map<String,Integer> biddingMap=bo.getBiddingMap();
-            Set<String> set=biddingMap.keySet();
-            for (String s:set){
-                sb.append("<td>"+s+"</td>");
+            for (Map<String,String> map : title.getBiddingMap()) {
+                sb.append("<td>"+map.get("remark")+"</td>");
             }
-            Map<String,Integer> businessMap = bo.getBusinessMap();
-            Set<String> businessSet = businessMap.keySet();
-            for(String business:businessSet){
-                sb.append("<td>"+business+"</td>");
+            for (Map<String,String> map:title.getBusinessMap()){
+                sb.append("<td>"+map.get("remark")+"</td>");
             }
-            //拼表头
-            sb.append("</tr>");
             sb.append("<tr>");
-            sb.append("<td>"+bo.getCities()+"</td>");
-            for (String s:set){
-                sb.append("<td>"+biddingMap.get(s)+"</td>");
-            }
-            for(String business:businessSet){
-                sb.append("<td>"+businessMap.get(business)+"</td>");
-            }
-            sb.append("</tr>");
         }
+//            Map<String,Integer> biddingMap=bo.getBiddingMap();
+//            Set<String> set=biddingMap.keySet();
+//            for (String s:set){
+//                sb.append("<td>"+s+"</td>");
+//            }
+//            Map<String,Integer> businessMap = bo.getBusinessMap();
+//            Set<String> businessSet = businessMap.keySet();
+//            for(String business:businessSet){
+//                sb.append("<td>"+business+"</td>");
+//            }
+//            拼表头
+//            sb.append("</tr>");
+//            sb.append("<tr>");
+//            sb.append("<td>"+bo.getCities()+"</td>");
+//            for (String s:set){
+//                sb.append("<td>"+biddingMap.get(s)+"</td>");
+//            }
+//            for(String business:businessSet){
+//                sb.append("<td>"+businessMap.get(business)+"</td>");
+//            }
+//            sb.append("</tr>");
 
         //拼body部分
+        for(BiddingInfoCollectBO bo:biddingBOS){
+            sb.append("<tr>");
+            sb.append("<td>"+bo.getCities()+"</td>");
+            for(Map<String,String> map:bo.getBiddingMap()){
+                sb.append("<td>"+map.get("counts")+"</td>");
+            }
+            for(Map<String,String> map:bo.getBusinessMap()){
+                sb.append("<td>"+map.get("counts")+"</td>");
+            }
+            sb.append("<tr>");
+        }
 //            for (BiddingInfoCollectBO bo : biddingBOS) {
 //                sb.append("<tr>");
 //                sb.append("<td>" + (StringUtils.isBlank(bo.getCities()) ? "" : bo.getCities()) + "</td>");

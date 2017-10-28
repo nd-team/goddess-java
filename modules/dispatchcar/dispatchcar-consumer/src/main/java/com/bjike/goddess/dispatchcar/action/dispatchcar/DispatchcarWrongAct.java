@@ -52,6 +52,29 @@ public class DispatchcarWrongAct extends BaseFileAction{
     private FileAPI fileAPI;
 
     /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = dispatchCarInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 出车有误记录列表
      * @param dto 查询条件
      * @return class DispatchCarInfoVO
@@ -72,15 +95,15 @@ public class DispatchcarWrongAct extends BaseFileAction{
     /**
      * 编辑出车记录
      *
-     * @param editTO 出车记录
+     * @param to 出车记录
      * @return class DispatchCarInfoVO
      * @version v1
      */
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) DispatchCarInfoEditTO editTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DispatchCarInfoTO to = BeanTransform.copyProperties(editTO, DispatchCarInfoTO.class);
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.editModel(to), DispatchCarInfoVO.class, request);
+            DispatchCarInfoBO bo = dispatchCarInfoAPI.editModel(to);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(bo, DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -248,8 +271,8 @@ public class DispatchcarWrongAct extends BaseFileAction{
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<DispatchCarInfoSetExcel> tos = ExcelUtil.excelToClazz(is, DispatchCarInfoSetExcel.class, excel);
-            List<DispatchCarInfoTO> toList = BeanTransform.copyProperties(tos, DispatchCarInfoTO.class);
-            dispatchCarInfoAPI.leadExcel(toList);
+//            List<DispatchCarInfoTO> toList = BeanTransform.copyProperties(tos, DispatchCarInfoTO.class);
+            dispatchCarInfoAPI.leadExcel(tos);
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

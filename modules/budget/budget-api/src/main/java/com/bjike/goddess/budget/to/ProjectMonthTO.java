@@ -19,7 +19,7 @@ public class ProjectMonthTO extends BaseTO {
     private String arrival;
 
     /**
-     * 项目
+     * 所属项目
      */
     private String project;
     /**
@@ -66,7 +66,10 @@ public class ProjectMonthTO extends BaseTO {
      */
     private Integer workDifferences;
 
-
+    /**
+     * 内部项目名称
+     */
+    private String projectName;
     public Integer getYear() {
         return year;
     }
@@ -153,5 +156,13 @@ public class ProjectMonthTO extends BaseTO {
 
     public void setWorkDifferences(Integer workDifferences) {
         this.workDifferences = workDifferences;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

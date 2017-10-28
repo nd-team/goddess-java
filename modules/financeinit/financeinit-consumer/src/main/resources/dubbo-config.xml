@@ -16,9 +16,7 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 	<dubbo:reference  validation="true" id="accountApiImpl" interface="com.bjike.goddess.financeinit.api.AccountAPI" />
-	<dubbo:reference  validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
 	<dubbo:reference  validation="true" id="currencyApiImpl" interface="com.bjike.goddess.financeinit.api.CurrencyAPI" />
-	<dubbo:reference  validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.financeinit.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.financeinit.api.CusPermissionOperateAPI" />
 	<dubbo:reference  validation="true" id="accountanCourseApiImpl" interface="com.bjike.goddess.financeinit.api.AccountanCourseAPI" />
@@ -29,6 +27,8 @@
 	<dubbo:reference  validation="true" id="proofWordsApiImpl" interface="com.bjike.goddess.financeinit.api.ProofWordsAPI" />
 	<dubbo:reference  validation="true" id="useCommonlyApiImpl" interface="com.bjike.goddess.financeinit.api.UseCommonlyAPI" />
 	<dubbo:reference  validation="true" id="withUnitApiImpl" interface="com.bjike.goddess.financeinit.api.WithUnitAPI" />
+	<dubbo:reference  validation="true" id="categoryApiImpl" interface="com.bjike.goddess.financeinit.api.CategoryAPI" />
+	<dubbo:reference  validation="true" id="firstSubjectApiImpl" interface="com.bjike.goddess.financeinit.api.FirstSubjectAPI" />
 
 
 

@@ -61,12 +61,22 @@ public class OilCardBasicBO extends BaseBO {
     private String area;
 
     /**
+     * 项目组/部门
+     */
+    private String department;
+
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+
+    /**
      * 项目名称
      */
     private String project;
 
     /**
-     * 油卡状态
+     * 领用状态
      */
     private OilCardStatus cardStatus;
 
@@ -81,7 +91,7 @@ public class OilCardBasicBO extends BaseBO {
     private Double cycleEarlyMoney;
 
     /**
-     * 余额
+     * 油卡余额
      */
     private Double balance;
 
@@ -141,13 +151,13 @@ public class OilCardBasicBO extends BaseBO {
         this.cardPassWord = cardPassWord;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
+//    public String getArea() {
+//        return area;
+//    }
+//
+//    public void setArea(String area) {
+//        this.area = area;
+//    }
 
     public String getProject() {
         return project;
@@ -195,5 +205,21 @@ public class OilCardBasicBO extends BaseBO {
 
     public void setUpdateStatusTime(String updateStatusTime) {
         this.updateStatusTime = updateStatusTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

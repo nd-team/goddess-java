@@ -281,17 +281,33 @@ public class PositionDetailUserAct {
     }
 
     /**
-     * 根据用户名获取体系和员工编号和性别
+     * 检测用户职位权限
      *
-     * @return class PhoneLoginUserInfoVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/checkAsUserPosition")
-    public Result checkAsUserPosition(String userid, String[] position_ids) throws ActException {
+    public Result checkAsUserPosition(String userid , String[] poids ) throws ActException {
         try {
-            Boolean userBOS = positionDetailUserAPI.checkAsUserPosition(userid, position_ids);
-            return ActResult.initialize(userBOS);
+            Boolean userBOS = positionDetailUserAPI.checkAsUserPosition(userid,poids);
+            return ActResult.initialize( userBOS );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 检测用户职位权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkAsUserPosit2")
+    public Result checkAsUserPosition2(String userid , String[] poids ) throws ActException {
+        try {
+            Boolean userBOS = positionDetailUserAPI.checkAsUserPosit2(userid,poids);
+            return ActResult.initialize( userBOS );
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

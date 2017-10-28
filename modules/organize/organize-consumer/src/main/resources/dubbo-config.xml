@@ -35,12 +35,14 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionInstructionsLogAPI"
                      id="positionInstructionsLogApiImpl"/>
     <!--<dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionWorkDetailAPI"-->
-                     <!--id="positionWorkDetailApiImpl"/>-->
+    <!--id="positionWorkDetailApiImpl"/>-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ReflectAPI" id="reflectApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.WorkRangeAPI" id="workRangeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionWorkDetailsAPI" id="positionWorkDetailsApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionWorkDetailsAPI"
+                     id="positionWorkDetailsApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionUserDetailAPI"
+                     id="positionUserDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"
                      id="positionDetailUserApiImpl"/>
 
@@ -52,4 +54,5 @@
     <dubbo:reference validation="true" id="permissionApiImpl"
                      interface="com.bjike.goddess.user.api.rbac.PermissionAPI"/>
     <dubbo:reference validation="true" id="emailApiImpl" interface="com.bjike.goddess.organize.api.EmailAPI"/>
+    <dubbo:reference validation="true" id="modulesApiImpl" interface="com.bjike.goddess.organize.api.ModulesAPI"/>
 </beans>

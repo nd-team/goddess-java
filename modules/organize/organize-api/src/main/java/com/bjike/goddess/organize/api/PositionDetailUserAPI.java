@@ -1,11 +1,7 @@
 package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.DepartPositionBO;
-import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
 import com.bjike.goddess.organize.enums.StaffStatus;
@@ -95,7 +91,7 @@ public interface PositionDetailUserAPI {
     /**
      * 检测用户是否在指定职位中
      *
-     * @param name      name
+     * @param name         name
      * @param position_ids 职位id数组
      * @return
      * @throws SerException
@@ -103,10 +99,11 @@ public interface PositionDetailUserAPI {
     default Boolean checkAsUserPosition(String name, String[] position_ids) throws SerException {
         return null;
     }
+
     /**
      * 检测用户是否在指定职位中
      *
-     * @param name      name
+     * @param name         name
      * @param position_ids 职位id数组
      * @return
      * @throws SerException
@@ -118,7 +115,7 @@ public interface PositionDetailUserAPI {
     /**
      * 检测用户是否在指定层级中
      *
-     * @param name         name
+     * @param name            name
      * @param arrangement_ids 层级id
      * @return
      * @throws SerException
@@ -130,7 +127,7 @@ public interface PositionDetailUserAPI {
     /**
      * 检测用户是否在指定部门中
      *
-     * @param name        name
+     * @param name          name
      * @param departmentIds 部门id
      * @return
      * @throws SerException
@@ -142,7 +139,7 @@ public interface PositionDetailUserAPI {
     /**
      * 检测用户是否在指定模块中
      *
-     * @param name    name
+     * @param name       name
      * @param module_ids 模块id
      * @return
      * @throws SerException
@@ -276,13 +273,14 @@ public interface PositionDetailUserAPI {
      * @throws SerException
      */
     DepartmentDetailBO areaAndDepart(String name) throws SerException;
-/*
-     * 判断是否是市场专业人员
-     *
-     * @param userId
-     * @return
-     * @throws SerException
-     */
+
+    /*
+         * 判断是否是市场专业人员
+         *
+         * @param userId
+         * @return
+         * @throws SerException
+         */
     default Boolean isMarker(String userId) throws SerException {
         return null;
     }
@@ -306,4 +304,52 @@ public interface PositionDetailUserAPI {
      * @throws SerException
      */
     List<String> names() throws SerException;
+
+    /**
+     * 根据姓名获取地区,员工编号,职位,部门
+     */
+    default InternalContactsConditionBO getByName(String name) throws SerException {
+        return null;
+    }
+    /**
+     * lijuntao
+     * 获取客户模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String customRepPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取预算模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] budgetPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取规划模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] planPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取项目经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] managerPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取总经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String[] generPerson() throws SerException;
+
 }

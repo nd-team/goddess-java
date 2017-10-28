@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:rentcar:rentcar-api")
+    compile project(":modules:contacts:contacts-api")
     compile project(":common:common-utils")
 }
 

@@ -516,12 +516,12 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
             LocalDate start  = LocalDate.parse(to.getStartTime());
             LocalDate end = LocalDate.parse(to.getEndTime());
-            String startYear = String.valueOf(start.getYear());
-            String endYear = String.valueOf(end.getYear());
-            String startMon = String.valueOf(start.getMonthValue());
-            String endMon = String.valueOf(end.getMonthValue());
-            String [] years = new String[]{startYear,endYear};
-            String [] months = new String[]{startMon,endMon};
+            Integer startYear = start.getYear();
+            Integer endYear = end.getYear();
+            Integer startMon =start.getMonthValue();
+            Integer endMon = end.getMonthValue();
+            Integer [] years = new Integer[]{startYear,endYear};
+            Integer [] months = new Integer[]{startMon,endMon};
             dto.getConditions().add(Restrict.between("year", years ));
             dto.getConditions().add(Restrict.between("month", months ));
         }
@@ -560,12 +560,12 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         if ( StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getEndTime()) ) {
             LocalDate start  = LocalDate.parse(to.getStartTime());
             LocalDate end = LocalDate.parse(to.getEndTime());
-            String startYear = String.valueOf(start.getYear());
-            String endYear = String.valueOf(end.getYear());
-            String startMon = String.valueOf(start.getMonthValue());
-            String endMon = String.valueOf(end.getMonthValue());
-            String [] years = new String[]{startYear,endYear};
-            String [] months = new String[]{startMon,endMon};
+            Integer startYear = start.getYear();
+            Integer endYear = end.getYear();
+            Integer startMon = start.getMonthValue();
+            Integer endMon = end.getMonthValue();
+            Integer [] years = new Integer[]{startYear,endYear};
+            Integer [] months = new Integer[]{startMon,endMon};
             dto.getConditions().add(Restrict.between("year", years ));
             dto.getConditions().add(Restrict.between("month", months ));
         }
@@ -693,7 +693,7 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
         if(StringUtils.isBlank( to.getIndexName() )){
             throw new SerException("第" + row + "行的指标名称不能为空" );
         }
-        if(StringUtils.isBlank( to.getYear() )){
+        if(to.getYear() != null){
             throw new SerException("第" + row + "行的年份不能为空" );
         }
         if(null== to.getDescribtion()){
@@ -728,8 +728,8 @@ public class PositionIndexSetSerImpl extends ServiceImpl<PositionIndexSet, Posit
 
         PositionIndexSetExcel excel = new PositionIndexSetExcel();
         excel.setIndexName("指标名称");
-        excel.setYear( "年份" );
-        excel.setMonth("月份");
+        excel.setYear(2017);
+        excel.setMonth(12);
         excel.setIndexType("指标类型");
         excel.setDimension("维度");
         excel.setDepartment("责任部门");

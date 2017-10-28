@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
@@ -196,5 +197,16 @@ public interface InternalContactsAPI {
 
     default void test(List<InternalContactsTO> tocs) throws SerException {
         return;
+    }
+
+    /**
+     * 根据姓名获取地区,员工编号,职位,部门
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default InternalContactsConditionBO getByName(String name) throws SerException {
+        return null;
     }
 }

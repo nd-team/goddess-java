@@ -21,6 +21,8 @@
 	<dubbo:service interface="com.bjike.goddess.receivable.api.ContractorAPI" ref="contractorApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI" ref="receivableSubsidiaryApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.receivable.api.CollectEmailAPI" ref="collectEmailApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.receivable.api.BackProgressAPI" ref="backProgressApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.receivable.api.MainIncomeAPI" ref="mainIncomeApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.receivable.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.receivable.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 

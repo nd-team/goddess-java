@@ -3,10 +3,8 @@ package com.bjike.goddess.contacts.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
 import com.bjike.goddess.contacts.enums.Status;
-
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 内部通讯录
@@ -22,8 +20,37 @@ public class InternalContactsTO extends BaseTO {
     /**
      * 用户ID
      */
-    @NotBlank(message = "用户ID不能为空", groups = {ADD.class, EDIT.class})
     private String userId;
+
+    /**
+     * 地区
+     */
+    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
+    private String area;
+
+    /**
+     * 姓名
+     */
+    @NotBlank(message = "姓名不能为空", groups = {ADD.class, EDIT.class})
+    private String name;
+
+    /**
+     * 员工编号
+     */
+    @NotBlank(message = "员工编号不能为空", groups = {ADD.class, EDIT.class})
+    private String employeeNum;
+
+    /**
+     * 部门/项目组
+     */
+    @NotBlank(message = "部门/项目组不能为空", groups = {ADD.class, EDIT.class})
+    private String department;
+
+    /**
+     * 职位
+     */
+    @NotBlank(message = "职位不能为空", groups = {ADD.class, EDIT.class})
+    private String position;
 
     /**
      * 联系电话
@@ -83,12 +110,44 @@ public class InternalContactsTO extends BaseTO {
     private boolean isSend;
 
 
-    public String getUserId() {
-        return userId;
+    public String getArea() {
+        return area;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getPhone() {
@@ -177,5 +236,13 @@ public class InternalContactsTO extends BaseTO {
 
     public void setSend(boolean send) {
         isSend = send;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

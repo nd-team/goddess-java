@@ -5,17 +5,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-//import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
-//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-//import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
-import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
-import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
 import com.bjike.goddess.oilcardmanage.api.OilCardRechargeAPI;
 import com.bjike.goddess.oilcardmanage.to.GuidePermissionTO;
 import com.bjike.goddess.oilcardmanage.vo.AnalyzeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+//import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
+
+//import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+//import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
+//import com.bjike.goddess.dispatchcar.vo.InfoForOilCardVO;
 
 /**
  * 油卡使用记录
@@ -41,8 +40,8 @@ public class OilCardUseAct {
 
     @Autowired
     private OilCardRechargeAPI oilCardRechargeAPI;
-    @Autowired
-    private DispatchCarInfoAPI dispatchCarInfoAPI;
+//    @Autowired
+//    private DispatchCarInfoAPI dispatchCarInfoAPI;
 
 
     /**
@@ -69,31 +68,31 @@ public class OilCardUseAct {
     }
 
 
-    /**
-     * 列表
-     *
-     * @param startTime   开始时间
-     * @param endTime     结束时间
-     * @param oilCardCode 油卡编号
-     * @return class InfoForOilCardVO
-     * @version v1
-     */
-    @GetMapping("v1/pageList")
-    public Result pageList(@RequestParam String oilCardCode, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
-
-        try {
-            List<DispatchCarInfoBO> infoBOList = oilCardRechargeAPI.findDispatch(oilCardCode, startTime, endTime);
-            List<InfoForOilCardVO> voList = BeanTransform.copyProperties(infoBOList, InfoForOilCardVO.class);
-            if (!CollectionUtils.isEmpty(voList)) {
-                for (InfoForOilCardVO vo : voList) {
-                    vo.setAddOilAmount(vo.getOilPrice() * vo.getAddOilAmount());
-                }
-            }
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 列表
+//     *
+//     * @param startTime   开始时间
+//     * @param endTime     结束时间
+//     * @param oilCardCode 油卡编号
+//     * @return class InfoForOilCardVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/pageList")
+//    public Result pageList(@RequestParam String oilCardCode, @RequestParam String startTime, @RequestParam String endTime) throws ActException {
+//
+//        try {
+//            List<DispatchCarInfoBO> infoBOList = oilCardRechargeAPI.findDispatch(oilCardCode, startTime, endTime);
+//            List<InfoForOilCardVO> voList = BeanTransform.copyProperties(infoBOList, InfoForOilCardVO.class);
+//            if (!CollectionUtils.isEmpty(voList)) {
+//                for (InfoForOilCardVO vo : voList) {
+//                    vo.setAddOilAmount(vo.getOilPrice() * vo.getAddOilAmount());
+//                }
+//            }
+//            return ActResult.initialize(voList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 分析

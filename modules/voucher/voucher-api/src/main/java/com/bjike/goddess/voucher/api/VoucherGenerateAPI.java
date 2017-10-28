@@ -1,13 +1,11 @@
 package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.voucher.bo.AccountInfoBO;
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.PartOptionBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
+import com.bjike.goddess.voucher.to.AnalysisTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
@@ -157,7 +155,7 @@ public interface VoucherGenerateAPI {
      * @param voucherGenerateTO 记账凭证信息voucherGenerateTO
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
+    default Long posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
         return null;
     }
 
@@ -507,6 +505,7 @@ public interface VoucherGenerateAPI {
     default List<VoucherGenerateBO> allSales() throws SerException {
         return null;
     }
+
     /**
      * 根据日期地区项目组项目名称科目汇总明细帐
      *
@@ -517,6 +516,7 @@ public interface VoucherGenerateAPI {
     default List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 明细账导出Excel
      *
@@ -524,6 +524,7 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     byte[] exportExcelAccount(VoucherGenerateDTO dto) throws SerException;
+
     /**
      * 从已过账那里获取所有地区
      *
@@ -532,6 +533,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountArea() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有项目名称
      *
@@ -540,6 +542,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountProjectName() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有项目组部门
      *
@@ -548,6 +551,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountProjectGroup() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有科目
      *
@@ -614,4 +618,46 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     VoucherGenerateBO getByIdCJh(String id) throws SerException;
+
+    /**
+     * 反结账
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherGenerateBO> antiCheckAccount(String[] id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 查看月度,季度,年度的结账记录
+     *
+     * @param month
+     * @param quart
+     * @param year
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherGenerateBO> findCkRecordByTime(String month, Integer quart, String year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录分析
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    default List<AnalysisBO> analysis(AnalysisTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 记账凭证记录科目汇总柱状图
+     */
+    default List<HistogramBO> ctReSubHistogram() throws SerException {
+        return null;
+    }
 }

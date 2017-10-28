@@ -1,7 +1,10 @@
 package com.bjike.goddess.carinfo.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.carinfo.api.DriverAPI;
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
+import com.bjike.goddess.carinfo.entity.Driver;
 import com.bjike.goddess.carinfo.entity.DriverInfo;
 import com.bjike.goddess.carinfo.enums.GuideAddrStatus;
 import com.bjike.goddess.carinfo.excel.SonPermissionObject;
@@ -12,6 +15,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.rentcar.api.DriverInfoAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 车辆信息管理业务实现
+ * 司机信息业务实现
  *
  * @Author: [ jason ]
  * @Date: [ 2017-07-13 07:46 ]
@@ -45,6 +50,15 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
 
     @Autowired
     private DriverRecruitSer driverRecruitSer;
+
+    @Autowired
+    private DriverSer driverSer;
+
+    @Autowired
+    private DriverInfoAPI driverInfoAPI;
+
+    @Autowired
+    private ModuleAPI moduleAPI;
 
     /**
      * 核对查看权限（层级）
@@ -153,8 +167,6 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
         list.add(obj);
 
 
-
-
         return list;
     }
 
@@ -212,6 +224,7 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
         }
         return flag;
     }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public DriverInfoBO insertModel(DriverInfoTO to) throws SerException {
@@ -219,6 +232,14 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
         DriverInfo driverInfo = findByIdCard(to.getIdCard());
         if (driverInfo == null) {
             DriverInfo model = BeanTransform.copyProperties(to, DriverInfo.class, true);
+            if (moduleAPI.isCheck("carinfo")){
+                com.bjike.goddess.rentcar.bo.DriverInfoBO driverInfoBO = driverInfoAPI.findByName(to.getDriver());
+                model.setAgreement(driverInfoBO.getAgreement());
+                model.setAttachment(driverInfoBO.getAttachment());
+                model.setTravel(driverInfoBO.getTravel());
+                model.setDriverLicense(driverInfoBO.getDriverLicense());
+                model.setCarInsurance(driverInfoBO.getCarInsurance());
+            }
             super.save(model);
             to.setId(model.getId());
             return BeanTransform.copyProperties(to, DriverInfoBO.class);
@@ -242,6 +263,14 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
             DriverInfo driverInfo = findByIdCard(to.getIdCard());
             if (driverInfo == null || (driverInfo != null && driverInfo.getId().equals(model.getId()))) {
                 BeanTransform.copyProperties(to, model, true);
+                if (moduleAPI.isCheck("carinfo")){
+                    com.bjike.goddess.rentcar.bo.DriverInfoBO driverInfoBO = driverInfoAPI.findByName(to.getDriver());
+                    model.setAgreement(driverInfoBO.getAgreement());
+                    model.setAttachment(driverInfoBO.getAttachment());
+                    model.setTravel(driverInfoBO.getTravel());
+                    model.setDriverLicense(driverInfoBO.getDriverLicense());
+                    model.setCarInsurance(driverInfoBO.getCarInsurance());
+                }
                 model.setRemark(to.getRemark());
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);
@@ -268,8 +297,8 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
         DriverInfo model = super.findById(id);
         if (model != null) {
             //TODO 未明确组织结构信息及账务模块审核对象
-            model.setSuggest(suggest);
-            model.setAudit(audit);
+//            model.setSuggest(suggest);
+//            model.setAudit(audit);
             super.update(model);
         } else {
             throw new SerException("非法Id,司机信息对象不能为空!");
@@ -281,6 +310,69 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
         DriverInfoDTO dto = new DriverInfoDTO();
         dto.getConditions().add(Restrict.eq("driver", driver));
         List<DriverInfo> list = super.findByCis(dto);
-        return BeanTransform.copyProperties(list.get(0), DriverInfoBO.class);
+        if (list != null && list.size() > 0){
+            return BeanTransform.copyProperties(list.get(0), DriverInfoBO.class);
+        }
+        return null;
+    }
+
+    @Override
+    public void copyDriver() throws SerException {
+        List<Driver> drivers = driverSer.findAll();
+        List<DriverInfo> driverInfos = new ArrayList<>(drivers.size());
+        for (Driver driver : drivers) {
+            DriverInfo driverInfo = new DriverInfo();
+//            driverInfo.setSuggest(driver.getAuditIdea());
+            driverInfo.setArea(driver.getArea());
+            driverInfo.setDriver(driver.getDriverName());
+            driverInfo.setPhone(driver.getPhoneNum());
+            if(!"".equals(driver.getIdCard()) && driver.getIdCard() != null) {
+                driverInfo.setIdCard(driver.getIdCard());
+            }else{
+                driverInfo.setIdCard("无");
+            }
+            if(!"".equals(driver.getAddress()) && driver.getAddress() != null) {
+                driverInfo.setAddress(driver.getAddress());
+            }else {
+                driverInfo.setAddress("无");
+            }
+            driverInfo.setCarModel(driver.getCarModel());
+            driverInfo.setCarNum(driver.getCarNum());
+            driverInfo.setEngineNum(driver.getEngineNUm());
+            if(!"".equals(driver.getBuyDate()) && driver.getBuyDate() != null) {
+                driverInfo.setBuyDate(DateUtil.parseDate(driver.getBuyDate()));
+            }
+//            driverInfo.setUseTime(driver.getUseDate());
+            driverInfo.setEmissions(driver.getDischarge());
+            driverInfo.setCarFuel(driver.getCarFuel());
+            driverInfo.setAgreement(driver.getDeal());
+            if(!"".equals(driver.getSignDate()) && driver.getSignDate() != null) {
+                driverInfo.setSignDate(DateUtil.parseDate(driver.getDealDate()));
+            }
+            if(!"".equals(driver.getSignDate()) && driver.getSignDate() != null) {
+                driverInfo.setStartDate(DateUtil.parseDate(driver.getSignDate()));
+            }
+            if(!"".equals(driver.getDueDate()) && driver.getDueDate() != null) {
+                driverInfo.setEndDate(DateUtil.parseDate(driver.getDueDate()));
+            }
+            if(!"".equals(driver.getTravel()) && driver.getTravel() != null ) {
+                driverInfo.setTravel(driver.getTravel());
+            }
+            driverInfo.setTravelName(driver.getTravelName());
+            if(!"".equals(driver.getDrive()) && driver.getDrive() != null) {
+                driverInfo.setDriverLicense(driver.getDrive());
+            }
+            driverInfo.setLicenseName(driver.getUseName());
+            if(!"".equals(driver.getInsure()) && driver.getInsure() != null) {
+                driverInfo.setCarInsurance(driver.getInsure());
+            }
+            driverInfo.setCardUser(driver.getUserName());
+            driverInfo.setCardNum(driver.getCarNum());
+            driverInfo.setCardBank(driver.getBankCardNum());
+            driverInfo.setBreakAgreement(driver.getBreak());
+            driverInfo.setRemark(driver.getRemark());
+            driverInfos.add(driverInfo);
+        }
+        super.save(driverInfos);
     }
 }

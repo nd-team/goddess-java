@@ -1,6 +1,7 @@
 package com.bjike.goddess.dispatchcar.vo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
 import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
@@ -17,6 +18,11 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 public class DispatchCarInfoVO {
+
+    /**
+     * 数据id
+     */
+    private String id;
 
     /**
      * 出车单号
@@ -91,7 +97,7 @@ public class DispatchCarInfoVO {
     /**
      * 加班时长
      */
-    private Integer overWorkTime;
+    private Double overWorkTime;
 
     /**
      * 用车事由
@@ -174,10 +180,17 @@ public class DispatchCarInfoVO {
      */
     private Double getShouldAmountMoney;
 
+
+
     /**
-     * 加油量
+     * 实际加油量
      */
     private Double addOilAmount;
+
+    /**
+     * 实际加油费
+     */
+    private Double addOilAmountMoney;
 
     /**
      * 油卡余额
@@ -285,7 +298,7 @@ public class DispatchCarInfoVO {
      */
     private Boolean ifFreeze;
 
-    /***
+    /**
      * 素养模块负责人
      */
     private String headModule;
@@ -332,7 +345,7 @@ public class DispatchCarInfoVO {
     /**
      * 核对依据是否齐全无误
      */
-    private Boolean isCorrect;
+    private Boolean ifCorrect;
 
     /**
      * 寄件人
@@ -342,7 +355,7 @@ public class DispatchCarInfoVO {
     /**
      * 寄件日期
      */
-    private LocalDate sendDate;
+    private String sendDate;
 
 
     /**
@@ -381,7 +394,7 @@ public class DispatchCarInfoVO {
     /**
      * 收到发票日期
      */
-    private LocalDate receiveDate;
+    private String receiveDate;
 
     /**
      * 收到发票情况
@@ -405,7 +418,7 @@ public class DispatchCarInfoVO {
     /**
      * 预计付款日期
      */
-    private LocalDate expectPayDate;
+    private String expectPayDate;
 
     /**
      * 付款计划
@@ -468,10 +481,10 @@ public class DispatchCarInfoVO {
 //     */
 //    private Boolean pay;
 //
-//    /**
-//     * 租车费用
-//     */
-//    private Double carRentalCost;
+    /**
+     * 租车费用
+     */
+    private Double carRentalCost;
 //
 //    /**
 //     * 预计付款时间
@@ -493,10 +506,10 @@ public class DispatchCarInfoVO {
 //     */
 //    private Boolean auditReceiptResult;
 //
-//    /**
-//     * 数据状态
-//     */
-//    private Status status;
+    /**
+     * 数据状态
+     */
+    private Status status;
 //
 //    /**
 //     * 资金审核时间
@@ -665,11 +678,11 @@ public class DispatchCarInfoVO {
         this.siesta = siesta;
     }
 
-    public Integer getOverWorkTime() {
+    public Double getOverWorkTime() {
         return overWorkTime;
     }
 
-    public void setOverWorkTime(Integer overWorkTime) {
+    public void setOverWorkTime(Double overWorkTime) {
         this.overWorkTime = overWorkTime;
     }
 
@@ -937,12 +950,12 @@ public class DispatchCarInfoVO {
         this.accountModuleIdea = accountModuleIdea;
     }
 
-    public Boolean getCorrect() {
-        return isCorrect;
+    public Boolean getIfCorrect() {
+        return ifCorrect;
     }
 
-    public void setCorrect(Boolean correct) {
-        isCorrect = correct;
+    public void setIfCorrect(Boolean ifCorrect) {
+        this.ifCorrect = ifCorrect;
     }
 
     public String getSender() {
@@ -953,13 +966,22 @@ public class DispatchCarInfoVO {
         this.sender = sender;
     }
 
-    public LocalDate getSendDate() {
+    public String getSendDate() {
         return sendDate;
     }
 
-    public void setSendDate(LocalDate sendDate) {
+    public void setSendDate(String sendDate) {
         this.sendDate = sendDate;
     }
+
+    public void setReceiveDate(String receiveDate) {
+        this.receiveDate = receiveDate;
+    }
+
+    public void setExpectPayDate(String expectPayDate) {
+        this.expectPayDate = expectPayDate;
+    }
+
 
     public Boolean getIfSendArchiveAL() {
         return ifSendArchiveAL;
@@ -967,6 +989,14 @@ public class DispatchCarInfoVO {
 
     public void setIfSendArchiveAL(Boolean ifSendArchiveAL) {
         this.ifSendArchiveAL = ifSendArchiveAL;
+    }
+
+    public String getReceiveDate() {
+        return receiveDate;
+    }
+
+    public String getExpectPayDate() {
+        return expectPayDate;
     }
 
     public Boolean getIfSendReimbursementAl() {
@@ -1009,13 +1039,6 @@ public class DispatchCarInfoVO {
         this.receiver = receiver;
     }
 
-    public LocalDate getReceiveDate() {
-        return receiveDate;
-    }
-
-    public void setReceiveDate(LocalDate receiveDate) {
-        this.receiveDate = receiveDate;
-    }
 
     public String getReceiveReceipts() {
         return receiveReceipts;
@@ -1033,13 +1056,6 @@ public class DispatchCarInfoVO {
         this.moneyModuleIdea = moneyModuleIdea;
     }
 
-    public LocalDate getExpectPayDate() {
-        return expectPayDate;
-    }
-
-    public void setExpectPayDate(LocalDate expectPayDate) {
-        this.expectPayDate = expectPayDate;
-    }
 
     public String getPaymentSchedule() {
         return paymentSchedule;
@@ -1215,5 +1231,37 @@ public class DispatchCarInfoVO {
 
     public void setCost(Double cost) {
         this.cost = cost;
+    }
+
+    public Double getAddOilAmountMoney() {
+        return addOilAmountMoney;
+    }
+
+    public void setAddOilAmountMoney(Double addOilAmountMoney) {
+        this.addOilAmountMoney = addOilAmountMoney;
+    }
+
+    public Double getCarRentalCost() {
+        return carRentalCost;
+    }
+
+    public void setCarRentalCost(Double carRentalCost) {
+        this.carRentalCost = carRentalCost;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

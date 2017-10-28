@@ -46,9 +46,14 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
         if (null != positionUserDetails && positionUserDetails.size() > 0) {
             List<String> list = positionUserDetails.stream().map(PositionUserDetail::getUserId).distinct().collect(Collectors.toList());
             for (String id : list) {
-//                String name = positionDetailUserSer.getById(id).getName();
-                String name = userAPI.findNameById(id);
-                listName.add(name);
+                System.out.println(id);
+                PositionDetailUserBO positionDetailUserBO = positionDetailUserSer.getById(id);
+//                String name = userAPI.findNameById(id);
+                System.out.println(id);
+                if (null != positionDetailUserBO) {
+                    listName.add(positionDetailUserBO.getName());
+                    System.out.println(listName);
+                }
             }
         }
 //        String[] arr = (String[]) listName.toArray(new String[listName.size()]);
@@ -66,9 +71,13 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
         if (null != positionUserDetails && positionUserDetails.size() > 0) {
             List<String> list = positionUserDetails.stream().map(PositionUserDetail::getUserId).distinct().collect(Collectors.toList());
             for (String id : list) {
-                String name = userAPI.findNameById(id);
+//                String name = userAPI.findNameById(id);
 //                String name = positionDetailUserSer.getById(id).getName();
-                listName.add(name);
+                PositionDetailUser positionDetailUser = positionDetailUserSer.findById(id);
+                if (null != positionDetailUser) {
+                    listName.add(positionDetailUser.getName());
+                }
+
             }
         }
 //        String[] arr = (String[]) listName.toArray(new String[listName.size()]);

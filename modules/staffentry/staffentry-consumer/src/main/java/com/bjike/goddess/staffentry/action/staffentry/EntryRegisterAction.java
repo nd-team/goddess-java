@@ -1,15 +1,21 @@
 package com.bjike.goddess.staffentry.action.staffentry;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.*;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
+import com.bjike.goddess.staffentry.excel.EntryRegisterExcel;
 import com.bjike.goddess.staffentry.to.*;
 import com.bjike.goddess.staffentry.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +24,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 入职登记
@@ -31,7 +43,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("entryregister")
-public class EntryRegisterAction {
+public class EntryRegisterAction extends BaseFileAction{
 
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
@@ -296,6 +308,113 @@ public class EntryRegisterAction {
     public Result names() throws ActException {
         try {
             return ActResult.initialize(entryRegisterAPI.names());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板入职登记
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "入职登记模板.xlsx";
+            super.writeOutFile(response, entryRegisterAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<EntryRegisterExcel> tos = ExcelUtil.mergeExcelToClazz(is, EntryRegisterExcel.class, excel);
+            List<EntryRegisterUtilTO> tocs = new ArrayList<>();
+            Set<String> empNum = new HashSet<>();
+            for (EntryRegisterExcel entryRegisterExcel:tos){
+                empNum.add(entryRegisterExcel.getEmpNumber());
+            }
+            for (String num : empNum){
+                List<EntryRegisterExcel> entryRegisterExcels = new ArrayList<>();
+                List<String> titles = new ArrayList<>();
+                List<String> names = new ArrayList<>();
+                List<Integer> ages = new ArrayList<>();
+                List<String> units = new ArrayList<>();
+                List<String> positions = new ArrayList<>();
+                List<String> phones = new ArrayList<>();
+                List<String> studyStartTimes = new ArrayList<>();
+                List<String> studyEndTimes = new ArrayList<>();
+                List<String> schools = new ArrayList<>();
+                List<String> certificates = new ArrayList<>();
+                List<String> workStartTimes = new ArrayList<>();
+                List<String> workEndTimes = new ArrayList<>();
+                List<String> firms = new ArrayList<>();
+                List<String> jobDescriptions = new ArrayList<>();
+                List<String> nameses = new ArrayList<>();
+                List<String> obtainTimes = new ArrayList<>();
+                for(EntryRegisterExcel str : tos){
+                    if(str.getEmpNumber().equals(num)){
+                        entryRegisterExcels.add(str);
+                        titles.add(str.getTitle());
+                        names.add(str.getName());
+                        ages.add(str.getAge());
+                        units.add(str.getUnit());
+                        positions.add(str.getPositionf());
+                        phones.add(str.getPhonef());
+                        studyStartTimes.add(str.getStartTime()==null?null:str.getStartTime().toString());
+                        studyEndTimes.add(str.getEndTime()==null?null:str.getEndTime().toString());
+                        schools.add(str.getSchool());
+                        certificates.add(str.getCertificate());
+                        workStartTimes.add(str.getWorkStartTime()==null?null:str.getWorkStartTime().toString());
+                        workEndTimes.add(str.getWorkEndTime()==null?null:str.getWorkEndTime().toString());
+                        firms.add(str.getFirm());
+                        jobDescriptions.add(str.getJobDescription());
+                        nameses.add(str.getName1());
+                        obtainTimes.add(str.getObtainTime()==null?null:str.getObtainTime().toString());
+                    }
+                }
+                EntryRegisterUtilTO entryRegisterUtilTO = BeanTransform.copyProperties(entryRegisterExcels.get(0),EntryRegisterUtilTO.class,"birthday","graduationDate","inductionDate");
+                entryRegisterUtilTO.setBirthday(tos.get(0).getBirthday().toString());
+                entryRegisterUtilTO.setGraduationDate(tos.get(0).getGraduationDate().toString());
+                entryRegisterUtilTO.setInductionDate(tos.get(0).getInductionDate().toString());
+                entryRegisterUtilTO.setTitles(titles);
+                entryRegisterUtilTO.setNames(names);
+                entryRegisterUtilTO.setAges(ages);
+                entryRegisterUtilTO.setUnits(units);
+                entryRegisterUtilTO.setPositions(positions);
+                entryRegisterUtilTO.setPhones(phones);
+                entryRegisterUtilTO.setStudyStartTimes(studyStartTimes);
+                entryRegisterUtilTO.setStudyEndTimes(studyEndTimes);
+                entryRegisterUtilTO.setSchools(schools);
+                entryRegisterUtilTO.setCertificates(certificates);
+                entryRegisterUtilTO.setWorkStartTimes(workStartTimes);
+                entryRegisterUtilTO.setWorkEndTimes(workEndTimes);
+                entryRegisterUtilTO.setFirms(firms);
+                entryRegisterUtilTO.setJobDescriptions(jobDescriptions);
+                entryRegisterUtilTO.setNameses(nameses);
+                entryRegisterUtilTO.setObtainTimes(obtainTimes);
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                addEntryRegister(entryRegisterUtilTO);
+            }
+
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

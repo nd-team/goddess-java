@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dimission.api.SituationAPI;
@@ -12,7 +13,9 @@ import com.bjike.goddess.dimission.dto.SituationDTO;
 import com.bjike.goddess.dimission.to.GuidePermissionTO;
 import com.bjike.goddess.dimission.to.SituationTO;
 import com.bjike.goddess.dimission.vo.DimissionCollectVO;
+import com.bjike.goddess.dimission.vo.OptionVO;
 import com.bjike.goddess.dimission.vo.SituationVO;
+import com.bjike.goddess.dimission.bo.OptionBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -139,6 +142,20 @@ public class SituationAction {
     }
 
     /**
+     * 获取总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/getTotal")
+    public Result getTotal() throws ActException {
+        try {
+            return ActResult.initialize(situationAPI.getTotal());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 离职自离表里的姓名
      *
      * @version v1
@@ -177,6 +194,77 @@ public class SituationAction {
     public Result collect(String startTime, String endTime) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(situationAPI.collect(startTime, endTime), DimissionCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 离职管理日汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String day, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowDay(day);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 离职管理周汇总柱状图
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 离职管理月汇总图形化
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/month")
+    public Result figureShowMonth(String month, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowMonth(month);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 离职管理累计汇总柱状图
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/all")
+    public Result figureShowAll() throws ActException {
+        try {
+            OptionBO optionBO = situationAPI.figureShowAll();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

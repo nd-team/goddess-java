@@ -83,4 +83,9 @@ public class InterviewApiImpl implements InterviewAPI  {
     public Boolean detainment(String name) throws SerException {
         return interviewSer.detainment(name);
     }
+
+    @Override
+    public Long getTotal() throws SerException {
+        return interviewSer.getTotal();
+    }
 }

@@ -1,6 +1,5 @@
 package com.bjike.goddess.oilcardmanage.action.oilcardmanage;
 
-//import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.bjike.goddess.dispatchcar.vo.CusPermissionOperateVO;
 
 /**
  * 油卡领用
@@ -44,9 +42,6 @@ public class OilCardReceiveAct {
 
     @Autowired
     private OilCardReceiveAPI oilCardReceiveAPI;
-
-//    @Autowired
-//    private ModuleAPI moduleAPI;
 
     /**
      * 功能导航权限
@@ -256,17 +251,13 @@ public class OilCardReceiveAct {
     /**
      * 查询所有审核人
      *
-     * @return class CusPermissionOperateVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/operate")
     public Result findOperate() throws ActException {
         try {
-            List<String> list = new ArrayList<>(0);
-//            if(moduleAPI.isCheck("organize")) {
-            list = oilCardReceiveAPI.findOperate();
-//            }
+            List<String> list = oilCardReceiveAPI.findOperate();
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

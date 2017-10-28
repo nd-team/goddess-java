@@ -603,4 +603,21 @@ public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implemen
         }
         return list;
     }
+
+    @Override
+    public Boolean isAssets(String firstSubject) throws SerException {
+        Boolean tar = false;
+        FirstSubjectDTO firstSubjectDTO = new FirstSubjectDTO();
+        firstSubjectDTO.getConditions().add(Restrict.eq("name", firstSubject));
+        FirstSubject firstSubject1 = firstSubjectSer.findOne(firstSubjectDTO);
+        if (null != firstSubject1) {
+            if ("资产类".equals(firstSubject1.getCategory())) {
+                tar = true;
+            }
+//            else if ("负债类".equals(firstSubject1.getCategory())) {
+//                return false;
+//            }
+        }
+        return tar;
+    }
 }

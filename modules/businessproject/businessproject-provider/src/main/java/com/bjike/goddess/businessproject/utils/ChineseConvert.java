@@ -1,8 +1,9 @@
 package com.bjike.goddess.businessproject.utils;
 
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+//import net.sourceforge.pinyin4j.PinyinHelper;
+//import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+//import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
 
 /**
  * @Author: [tanghaixiang]
@@ -21,20 +22,22 @@ public class ChineseConvert {
     }
 
     public static String getTargetNumber(String src, int length) {
-        String number = "";
-        try {
-            for (int i = 0; i < length; i++) {//获取指定长度的字符穿首字母大写
-                char text = src.charAt(i);
-                String[] initial = PinyinHelper.toHanyuPinyinStringArray(text, new HanyuPinyinOutputFormat());
-                if (initial != null && initial.length> 0 ) {
-                    number += initial[0].charAt(0);
-                } else {
-                    number += text;
-                }
-            }
-        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
-            badHanyuPinyinOutputFormatCombination.printStackTrace();
-        }
-        return number.toUpperCase();
+//        String number = "";
+//        try {
+//            for (int i = 0; i < length; i++) {//获取指定长度的字符穿首字母大写
+//                char text = src.charAt(i);
+//                String[] initial = PinyinHelper.toHanyuPinyinStringArray(text, new HanyuPinyinOutputFormat());
+//                if (initial != null && initial.length> 0 ) {
+//                    number += initial[0].charAt(0);
+//                } else {
+//                    number += text;
+//                }
+//            }
+//        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+//            badHanyuPinyinOutputFormatCombination.printStackTrace();
+//        }
+//        return number.toUpperCase();
+        return null;
     }
+
 }

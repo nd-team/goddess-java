@@ -7,7 +7,6 @@ import com.bjike.goddess.reportmanagement.enums.Type;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
 
 
 /**
