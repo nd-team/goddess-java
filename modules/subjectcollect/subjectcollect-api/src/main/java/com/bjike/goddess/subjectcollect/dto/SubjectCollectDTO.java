@@ -1,77 +1,25 @@
 package com.bjike.goddess.subjectcollect.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-
 /**
- * 科目汇总表数据传输对象
- *
- * @Author: [ xiazhili ]
- * @Date: [ 2017-04-07 04:02 ]
- * @Description: [ 科目汇总表数据传输对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
- */
+* 科目汇总数据传输对象
+* @Author:			[ jiangzaixuan ]
+* @Date:			[  2017-10-26 02:42 ]
+* @Description:	[ 科目汇总数据传输对象 ]
+* @Version:		[ v1.0.0 ]
+* @Copy:   		[ com.bjike ]
+*/
 public class SubjectCollectDTO extends BaseDTO {
     /**
-     * 地区
-     */
-    private String[] area;
-
-    /**
-     * 一级科目
-     */
-    private String firstSubject;
-
-    /**
-     * 项目名称
-     */
-    private String projectName;
-
-    /**
-     * 项目组/部门
-     */
-    private String projectGroup;
-
-    /**
-     * 开始时间
+     * 查询开始时间
      */
     private String startTime;
+
     /**
-     * 结束时间
+     * 查询结束时间
      */
     private String endTime;
 
-    public String[] getArea() {
-        return area;
-    }
-
-    public void setArea(String[] area) {
-        this.area = area;
-    }
-
-    public String getFirstSubject() {
-        return firstSubject;
-    }
-
-    public void setFirstSubject(String firstSubject) {
-        this.firstSubject = firstSubject;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getProjectGroup() {
-        return projectGroup;
-    }
-
-    public void setProjectGroup(String projectGroup) {
-        this.projectGroup = projectGroup;
-    }
 
     public String getStartTime() {
         return startTime;

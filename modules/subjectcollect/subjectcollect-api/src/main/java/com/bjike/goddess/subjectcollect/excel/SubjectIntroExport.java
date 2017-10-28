@@ -1,62 +1,110 @@
-package com.bjike.goddess.subjectcollect.bo;
+package com.bjike.goddess.subjectcollect.excel;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
-import javax.persistence.Column;
 /**
-* 科目汇总业务传输对象
-* @Author:			[ jiangzaixuan ]
-* @Date:			[  2017-10-26 02:42 ]
-* @Description:	[ 科目汇总业务传输对象 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
-public class SubjectCollectBO extends BaseBO {
+ * @Author: [jiangzaixuan]
+ * @Date: [2017-10-27 17:22]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
+ */
+public class SubjectIntroExport {
+    /**
+     * 会计科目
+     */
+    @ExcelHeader(name = "会计科目")
+    private String firstSubject;
+
+    /**
+     * 地区
+     */
+    @ExcelHeader(name = "地区")
+    private String area;
+
+    /**
+     * 项目组
+     */
+    @ExcelHeader(name = "项目组")
+    private String department;
 
     /**
      * 项目
      */
+    @ExcelHeader(name = "项目")
     private String project;
 
     /**
      * 起初借方余额
      */
+    @ExcelHeader(name = "起初借方余额")
     private Double beginBorrowMoney;
 
     /**
      * 起初贷方余额
      */
+    @ExcelHeader(name = "起初贷方余额")
     private Double beginLoanMoney;
 
     /**
      * 本期借方余额
      */
+    @ExcelHeader(name = "本期借方余额")
     private Double  currentBorrowMoney;
 
     /**
      * 本期贷方余额
      */
+    @ExcelHeader(name = "本期贷方余额")
     private Double  currentLoanMoney;
 
     /**
      * 期末借方发生额
      */
+    @ExcelHeader(name = "期末借方发生额")
     private Double  endBorrowMoney;
 
     /**
      * 期末贷方发生额
      */
+    @ExcelHeader(name = "期末贷方发生额")
     private Double  endLoanMoney;
 
     /**
      * 本年借方统计
      */
+    @ExcelHeader(name = "本年借方统计")
     private Double  currentYearBorrowMoney;
 
     /**
      * 本年贷方统计
      */
+    @ExcelHeader(name = "本年贷方统计")
     private Double  currentYearLoanMoney;
+
+    public String getFirstSubject() {
+        return firstSubject;
+    }
+
+    public void setFirstSubject(String firstSubject) {
+        this.firstSubject = firstSubject;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
 
     public String getProject() {
         return project;
@@ -64,6 +112,22 @@ public class SubjectCollectBO extends BaseBO {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public Double getBeginBorrowMoney() {
+        return beginBorrowMoney;
+    }
+
+    public void setBeginBorrowMoney(Double beginBorrowMoney) {
+        this.beginBorrowMoney = beginBorrowMoney;
+    }
+
+    public Double getBeginLoanMoney() {
+        return beginLoanMoney;
+    }
+
+    public void setBeginLoanMoney(Double beginLoanMoney) {
+        this.beginLoanMoney = beginLoanMoney;
     }
 
     public Double getCurrentBorrowMoney() {
@@ -112,21 +176,5 @@ public class SubjectCollectBO extends BaseBO {
 
     public void setCurrentYearLoanMoney(Double currentYearLoanMoney) {
         this.currentYearLoanMoney = currentYearLoanMoney;
-    }
-
-    public Double getBeginBorrowMoney() {
-        return beginBorrowMoney;
-    }
-
-    public void setBeginBorrowMoney(Double beginBorrowMoney) {
-        this.beginBorrowMoney = beginBorrowMoney;
-    }
-
-    public Double getBeginLoanMoney() {
-        return beginLoanMoney;
-    }
-
-    public void setBeginLoanMoney(Double beginLoanMoney) {
-        this.beginLoanMoney = beginLoanMoney;
     }
 }
