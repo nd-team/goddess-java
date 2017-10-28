@@ -70,7 +70,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
     @Override
     public Long countOverWork(OverWorkDTO overWorkDTO) throws SerException {
-        if (StringUtils.isBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
         if( null !=overWorkDTO.getAuditStatus() ){
@@ -93,7 +93,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
     @Override
     public List<OverWorkBO> listOverWork(OverWorkDTO overWorkDTO) throws SerException {
-        if (StringUtils.isBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
         if( null !=overWorkDTO.getAuditStatus() ){
@@ -206,7 +206,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     @Override
     public Long countAudit(OverWorkDTO overWorkDTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        if (StringUtils.isBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
         if( null !=overWorkDTO.getAuditStatus() ){
@@ -214,7 +214,9 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        overWorkDTO.getConditions().add(Restrict.eq("charger", userBO.getUsername()));
+        if( !"admin".equals(userBO.getUsername())){
+            overWorkDTO.getConditions().add(Restrict.eq("charger", userBO.getUsername()));
+        }
 
         Long count = super.count(overWorkDTO);
 
@@ -224,15 +226,18 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     @Override
     public List<OverWorkBO> listAudit(OverWorkDTO overWorkDTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        if (StringUtils.isBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
         if( null !=overWorkDTO.getAuditStatus() ){
             overWorkDTO.getConditions().add(Restrict.eq("auditStatus", overWorkDTO.getAuditStatus().getCode()));
         }
+
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        overWorkDTO.getConditions().add(Restrict.eq("charger", userBO.getUsername()));
+        if( !"admin".equals(userBO.getUsername())){
+            overWorkDTO.getConditions().add(Restrict.eq("charger", userBO.getUsername()));
+        }
 
         overWorkDTO.getSorts().add("createTime=desc");
         List<OverWork> list = super.findByCis( overWorkDTO ,true );
@@ -305,11 +310,11 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             Integer page = overWorkRestDayDTO.getPage();
             Integer limmit = overWorkRestDayDTO.getLimit();
             int startLine = page * limmit ;
-            int endLine = page * limmit + limmit-1;
+            int endLine = page * limmit + limmit;
             if( userList.size()-1 >= endLine ){
                 subUserList = userList.subList(startLine, endLine);
             }else if( userList.size()-1< endLine ){
-                subUserList = userList.subList(startLine, userList.size()-1);
+                subUserList = userList.subList(startLine, userList.size());
             }
             if( subUserList != null && subUserList.size()>0 ) {
                 for (String userName : subUserList) {
@@ -324,7 +329,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
                     LocalDateTime thirdAgoMonth = LocalDateTime.of( thirdMonthAgo.getYear(),thirdMonthAgo.getMonthValue(),20,00,00,01);
 
                     OverWorkDTO dto = new OverWorkDTO();
-                    dto.getConditions().add(Restrict.eq("overStartTime",new LocalDateTime[]{thirdAgoMonth,nowDate}));
+                    dto.getConditions().add(Restrict.between("overStartTime",new LocalDateTime[]{thirdAgoMonth,nowDate}));
                     dto.getConditions().add(Restrict.eq("overWorker", userName));
                     List<OverWork> listOver = super.findByCis(dto );
                     //计算所有加班天数

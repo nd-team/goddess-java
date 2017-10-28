@@ -87,11 +87,21 @@ public class ExtralOverWorkSerImpl extends ServiceImpl<ExtralOverWork, ExtralOve
             throw new SerException("id不能为空");
         }
         ExtralOverWork temp = super.findById(extralOverWorkTO.getId());
-        BeanTransform.copyProperties( extralOverWorkTO , temp,"createTime","creator","id");
+        if( null == temp ){
+            throw new SerException("不存在该对象");
+        }
+        BeanTransform.copyProperties( extralOverWorkTO , temp,"createTime","creator","id","overStartTime","overEndTime");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime overStartTime = LocalDateTime.parse(extralOverWorkTO.getOverStartTime(), formatter );
+        LocalDateTime overEndTime = LocalDateTime.parse(extralOverWorkTO.getOverEndTime(), formatter );
         temp.setModifyTime( LocalDateTime.now());
+        temp.setOverStartTime( overStartTime );
+        temp.setOverEndTime( overEndTime );
         super.update( temp );
         return BeanTransform.copyProperties(temp, ExtralOverWorkBO.class);
     }
+
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override

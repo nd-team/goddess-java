@@ -159,7 +159,7 @@ public class ExtralOverWorkAction {
      * @return class ExtralOverWorkDayVO
      */
     @GetMapping("v1/caculateTime")
-    public Result caculateTime(@Validated(ExtralOverWorkDayDTO.TestAdd.class) ExtralOverWorkDayDTO extralOverWorkDayDTO ) throws ActException {
+    public Result caculateTime(@Validated(ExtralOverWorkDayDTO.TestAdd.class) ExtralOverWorkDayDTO extralOverWorkDayDTO,BindingResult bindingResult ) throws ActException {
         try {
             ExtralOverWorkDayVO list = extralOverWorkAPI.caculateTime( extralOverWorkDayDTO );
             return ActResult.initialize(list);

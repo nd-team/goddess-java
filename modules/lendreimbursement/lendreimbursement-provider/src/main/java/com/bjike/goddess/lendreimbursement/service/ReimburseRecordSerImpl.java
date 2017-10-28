@@ -1485,6 +1485,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
 
         ReimburseRecordDTO dto = reimburseRecordDTO;
+        //不等于
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
 //        dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
         //帐务核对通过
@@ -1515,6 +1516,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     public List<ReimburseRecordBO> listWaitPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 
         ReimburseRecordDTO dto = reimburseRecordDTO;
+        //不等于
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
 //        dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
         //帐务核对通过
