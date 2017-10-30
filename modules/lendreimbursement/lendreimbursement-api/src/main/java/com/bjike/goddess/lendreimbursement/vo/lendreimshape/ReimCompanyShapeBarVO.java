@@ -28,6 +28,10 @@ public class ReimCompanyShapeBarVO implements Serializable{
      * tooltip
      */
     private ReimShapeBarToolTipVO toolTipVO;
+    /**
+     * legend
+     */
+    private ReimShapeLegendVO legendVO;
 
     /**
      * grid
@@ -78,6 +82,14 @@ public class ReimCompanyShapeBarVO implements Serializable{
 
     public void setBarGridVO(ReimShapeBarGridVO barGridVO) {
         this.barGridVO = barGridVO;
+    }
+
+    public ReimShapeLegendVO getLegendVO() {
+        return legendVO;
+    }
+
+    public void setLegendVO(ReimShapeLegendVO legendVO) {
+        this.legendVO = legendVO;
     }
 
     public ReimShapeXaxisVO getXaxisVO() {

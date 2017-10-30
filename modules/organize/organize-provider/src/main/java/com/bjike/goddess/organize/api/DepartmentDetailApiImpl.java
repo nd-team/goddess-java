@@ -111,6 +111,11 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     }
 
     @Override
+    public List<String> findAllProject() throws SerException {
+        return departmentDetailSer.findAllProject();
+    }
+
+    @Override
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         return departmentDetailSer.findByIds(ids);
     }

@@ -26,7 +26,11 @@ public enum ReimburseShapeStatus {
     /**
      * 日
      */
-    DAY(3);
+    DAY(3),
+    /**
+     * 季度
+     */
+    QUART(4);
 
     private int code;
 
