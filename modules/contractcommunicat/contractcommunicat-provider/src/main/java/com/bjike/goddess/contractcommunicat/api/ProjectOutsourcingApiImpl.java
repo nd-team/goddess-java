@@ -12,7 +12,7 @@ import com.bjike.goddess.contractcommunicat.service.ProjectOutsourcingSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,7 +109,7 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
     }
 
     @Override
-    public List<MarketInfoBO> findProject() throws SerException {
+    public List<MarketInfoRecordBO> findProject() throws SerException {
         return projectOutsourcingSer.findProject();
     }
 }

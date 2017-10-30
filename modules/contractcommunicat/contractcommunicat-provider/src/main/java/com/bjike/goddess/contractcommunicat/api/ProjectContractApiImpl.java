@@ -11,7 +11,7 @@ import com.bjike.goddess.contractcommunicat.service.ProjectContractSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,7 +104,7 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
     }
 
     @Override
-    public List<MarketInfoBO> findProject() throws SerException {
+    public List<MarketInfoRecordBO> findProject() throws SerException {
         return projectContractSer.findProject();
     }
 
