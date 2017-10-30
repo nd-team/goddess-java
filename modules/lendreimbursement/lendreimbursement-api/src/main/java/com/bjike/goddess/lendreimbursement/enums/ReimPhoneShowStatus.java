@@ -38,7 +38,11 @@ public enum ReimPhoneShowStatus {
     /**
      * 其他
      */
-    NONE(6);
+    NONE(6),
+    /**
+     * 冻结审核
+     */
+    CONGELAUDIT(7);
 
     private int code;
 

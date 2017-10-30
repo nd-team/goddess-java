@@ -476,7 +476,7 @@ public class CheckIncomeSerImpl extends ServiceImpl<CheckIncome, CheckIncomeDTO>
                 bo.setWarnRate("提醒");
             }
             if (checkIndex.getCompleteRate() < bo.getCompleteRate()) {
-                bo.setWarnRate("提醒");
+                bo.setWarnComRate("提醒");
             }
             collectList.add(bo);
         }else{

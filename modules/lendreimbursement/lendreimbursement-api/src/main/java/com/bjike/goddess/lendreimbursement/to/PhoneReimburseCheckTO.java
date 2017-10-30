@@ -23,10 +23,7 @@ public class PhoneReimburseCheckTO extends BaseTO {
     private String receiveTicketCon;
 
 
-    /**
-     * 帐务核对是否通过（是/否）
-     */
-    private String accountCheckPassOr;
+
 
     public String getReceiveTicketCon() {
         return receiveTicketCon;
@@ -36,11 +33,5 @@ public class PhoneReimburseCheckTO extends BaseTO {
         this.receiveTicketCon = receiveTicketCon;
     }
 
-    public String getAccountCheckPassOr() {
-        return accountCheckPassOr;
-    }
 
-    public void setAccountCheckPassOr(String accountCheckPassOr) {
-        this.accountCheckPassOr = accountCheckPassOr;
-    }
 }

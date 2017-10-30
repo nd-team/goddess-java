@@ -296,6 +296,7 @@ public class BeanTransform {
                             }
                         }
                     } else {
+                        //true则处理成date格式
                         Type t_type = t_field.getType();
                         if (t_type.equals(LocalDate.class)) {
                             s_val = DateUtil.parseDate(String.valueOf(s_val));

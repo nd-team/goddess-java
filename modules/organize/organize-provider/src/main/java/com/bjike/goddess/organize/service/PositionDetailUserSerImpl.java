@@ -290,7 +290,6 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         return super.findOne(dto);
     }
 
-
 //    @Override
 //    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
 //        logger.info("开始给");

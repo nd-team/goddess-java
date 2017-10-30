@@ -8,7 +8,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
-import com.bjike.goddess.taskallotment.bo.DayBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
 import com.bjike.goddess.user.api.UserAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;

@@ -1,6 +1,8 @@
 package com.bjike.goddess.attendance.vo.overtime;
 
 
+import java.io.Serializable;
+
 /**
  * 加班表现层对象
  *
@@ -10,7 +12,7 @@ package com.bjike.goddess.attendance.vo.overtime;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class PositionAndDepartVO {
+public class PositionAndDepartVO implements Serializable{
 
 
     /**

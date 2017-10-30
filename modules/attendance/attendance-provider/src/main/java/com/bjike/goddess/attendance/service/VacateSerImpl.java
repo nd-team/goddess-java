@@ -185,7 +185,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         LocalDateTime end = LocalDateTime.parse(vacateConDTO.getEndTime());
 
         VacateDTO dto = new VacateDTO();
-        BeanTransform.copyProperties( vacateConDTO , dto);
+        BeanTransform.copyProperties( vacateConDTO , dto,"serialVersionUID");
         dto.getConditions().add(Restrict.eq("name",vacateConDTO.getEmpName()));
         dto.getConditions().add(Restrict.between("startTime",new LocalDateTime[]{start,end}));
 
