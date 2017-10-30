@@ -24,9 +24,9 @@ import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
-import com.bjike.goddess.market.api.MarketInfoAPI;
-import com.bjike.goddess.market.bo.MarketInfoBO;
-import com.bjike.goddess.market.dto.MarketInfoDTO;
+import com.bjike.goddess.market.api.MarketInfoRecordAPI;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
+import com.bjike.goddess.market.dto.MarketInfoRecordDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -66,7 +66,7 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     private BaseInfoManageAPI baseInfoManageAPI;
 
     @Autowired
-    private MarketInfoAPI marketInfoAPI;
+    private MarketInfoRecordAPI marketInfoRecordAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -491,11 +491,11 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     }
 
     @Override
-    public List<MarketInfoBO> findProject() throws SerException {
-        List<MarketInfoBO> list = new ArrayList<>(0);
+    public List<MarketInfoRecordBO> findProject() throws SerException {
+        List<MarketInfoRecordBO> list = new ArrayList<>(0);
         if(moduleAPI.isCheck("market")){
-            MarketInfoDTO dto = new MarketInfoDTO();
-            list = marketInfoAPI.findListMarketInfo(dto);
+            MarketInfoRecordDTO dto = new MarketInfoRecordDTO();
+            list = marketInfoRecordAPI.findListRecord(dto);
         }
         return list;
     }

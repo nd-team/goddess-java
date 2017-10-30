@@ -19,9 +19,9 @@ import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
-import com.bjike.goddess.market.api.MarketInfoAPI;
-import com.bjike.goddess.market.bo.MarketInfoBO;
-import com.bjike.goddess.market.dto.MarketInfoDTO;
+import com.bjike.goddess.market.api.MarketInfoRecordAPI;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
+import com.bjike.goddess.market.dto.MarketInfoRecordDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -56,7 +56,7 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     private CompetitorCollectSer competitorCollectSer;
 
     @Autowired
-    private MarketInfoAPI marketInfoAPI;
+    private MarketInfoRecordAPI marketInfoAPI;
 
     @Autowired
     private ModuleAPI moduleAPI;
@@ -425,14 +425,14 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     }
 
     @Override
-    public List<MarketInfoBO> findProject() throws SerException {
-        List<MarketInfoBO> marketInfoBOList = new ArrayList<>(0);
-//        if(moduleAPI.isCheck("market")) {
-            MarketInfoDTO dto = new MarketInfoDTO();
+    public List<MarketInfoRecordBO> findProject() throws SerException {
+        List<MarketInfoRecordBO> marketInfoBOList = new ArrayList<>(0);
+        if(moduleAPI.isCheck("market")) {
+            MarketInfoRecordDTO dto = new MarketInfoRecordDTO();
             String userToken =  RpcTransmit.getUserToken();
             RpcTransmit.transmitUserToken(userToken);
-            marketInfoBOList = marketInfoAPI.findListMarketInfo(dto);
-//        }
+            marketInfoBOList = marketInfoAPI.findListRecord(dto);
+        }
         return marketInfoBOList;
     }
 }

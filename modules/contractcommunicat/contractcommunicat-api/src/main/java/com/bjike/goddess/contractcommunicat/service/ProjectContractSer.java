@@ -12,7 +12,7 @@ import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 
 import java.util.List;
 
@@ -103,7 +103,7 @@ public interface ProjectContractSer extends Ser<ProjectContract, ProjectContract
      * 查询内部项目名称
      * @throws SerException
      */
-    List<MarketInfoBO> findProject() throws SerException;
+    List<MarketInfoRecordBO> findProject() throws SerException;
 
     /**
      * 查询所有的责任人
