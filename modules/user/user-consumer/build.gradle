@@ -49,6 +49,9 @@ dependencies {
         exclude group: 'com.fasterxml.jackson.core'
     }
 
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile project(":modules:storage:storage-api")
+
 }
 
 

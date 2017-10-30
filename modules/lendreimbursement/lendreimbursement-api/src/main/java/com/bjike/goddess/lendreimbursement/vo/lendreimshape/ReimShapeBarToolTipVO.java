@@ -39,4 +39,11 @@ public class ReimShapeBarToolTipVO implements Serializable {
     public void setAxisPointerBarVO(AxisPointerBarVO axisPointerBarVO) {
         this.axisPointerBarVO = axisPointerBarVO;
     }
+
+    public ReimShapeBarToolTipVO(String trigger) {
+        this.trigger = trigger;
+    }
+
+    public ReimShapeBarToolTipVO() {
+    }
 }

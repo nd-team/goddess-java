@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -482,6 +483,7 @@ public class ReimburseShapeSerImpl implements ReimburseRecordSer {
     @Override
     public ReimCompanyShapeBarVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
         ReimCompanyShapeBarVO reimCompanyShapeBarVO = new ReimCompanyShapeBarVO();
+        List<ReimShapeBarSeriesVO> seriesDataList = new ArrayList<>();
 
         ReimburseShapeConDTO reimburseShapeConDTO = BeanTransform.copyProperties(reimCompanyShapeDTO, ReimburseShapeConDTO.class);
         reimburseShapeConDTO.setReimburseShapeStatus(reimCompanyShapeDTO.getShapeStatus());
@@ -506,7 +508,7 @@ public class ReimburseShapeSerImpl implements ReimburseRecordSer {
                 reimburseShapeConDTO.setEndTime(DateUtil.getEndDaYOfMonth(reimCompanyShapeDTO.getYear(), reimCompanyShapeDTO.getMonth()));
                 break;
             case WEEK:
-                if (StringUtils.isBlank("" + reimCompanyShapeDTO.getYear()) || StringUtils.isBlank("" + reimCompanyShapeDTO.getMonth()) || StringUtils.isBlank("" + reimburseShapeDTO.getWeek())) {
+                if (StringUtils.isBlank("" + reimCompanyShapeDTO.getYear()) || StringUtils.isBlank("" + reimCompanyShapeDTO.getMonth()) || StringUtils.isBlank("" + reimCompanyShapeDTO.getWeek())) {
                     throw new SerException("年份或月份或周数不能为空");
                 }
                 LocalDate[] dateDuring = DateUtil.getWeekTimes(reimCompanyShapeDTO.getYear(), reimCompanyShapeDTO.getMonth(), reimCompanyShapeDTO.getWeek());
@@ -520,18 +522,79 @@ public class ReimburseShapeSerImpl implements ReimburseRecordSer {
             return null;
         }
 
+        LocalDateTime startTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getStartTime()) + " 00:00:00");
+        LocalDateTime endTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getEndTime()) + " 23:59:59");
+
+
         //查询公司所有的项目组
         List<String> groupList = positionDetailUserAPI.getAllDepartment();
         //查询所有项目组的申报报销记录
+        String[] fields = new String[]{"reimMoney", "projectGroup"};
+        String sql = "select sum(reimMoney) as reimMoney , projectGroup from lendreimbursement_reimburserecord where createTime between '" + startTime + "' and '" + endTime + "' ";
+        String sqlGroup = "  group by projectGroup ";
+        String sqlQuery = sql + sqlGroup;
+        ReimShapeBarSeriesVO listAll = transFormSeriesVO("申报报销记录", fields , sqlQuery , groupList );
+        seriesDataList.add( listAll );
         //查询所有项目组的待审核
+        sqlQuery = sql + " and reimStatus in (5,1,0) and analisisIsAll = 0 " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitAudit = transFormSeriesVO("待审核", fields , sqlQuery , groupList );
+        seriesDataList.add( listWaitAudit );
+
         //查询所有项目组的待支付
+        sqlQuery = sql + " and reimStatus = 1 and analisisIsAll = 1 and payConditon = '是' and accountCheckPassOr is null " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitPay = transFormSeriesVO("待支付", fields , sqlQuery , groupList );
+        seriesDataList.add( listWaitPay );
+
         //查询所有项目组的已支付
+        sqlQuery = sql + " and payConditon = '是' " + sqlGroup;
+        ReimShapeBarSeriesVO listHasPay = transFormSeriesVO("已支付", fields , sqlQuery , groupList );
+        seriesDataList.add( listHasPay );
 
-
-        //查询他们在申报报销记录和待审核和待支付和已支付里面的钱
-
-//        reimCompanyShapeBarVO = caculate(reimburseShapeConDTO);
+        //TODO 还未写完
+        reimCompanyShapeBarVO.setYaxisVO(new ReimShapeYaxisVO("value","金额(元)"));
+        reimCompanyShapeBarVO.setSeriesVOList( seriesDataList );
 
         return reimCompanyShapeBarVO;
+    }
+
+    private ReimShapeBarSeriesVO transFormSeriesVO (String xzhouName , String fields[] , String sqlQuery ,List<String> groupList  ) throws SerException{
+        List<String> groupNameList = new ArrayList<>();
+        List<ReimburseRecord> listResult = new ArrayList<>();
+
+        List<ReimburseRecord> list = reimburseRecordSer.findBySql(sqlQuery, ReimburseRecord.class, fields);
+        if (list != null && list.size() > 0) {
+            listResult.addAll(list);
+            //把没有申请报销的项目组的金额设置为0
+            groupNameList = list.stream().map(ReimburseRecord::getProjectGroup).collect(Collectors.toList());
+            List<String> finalGroupNameList = groupNameList;
+            if (groupNameList != null && groupNameList.size() > 0) {
+                groupList.stream().filter(str -> finalGroupNameList.contains(str)).forEach(str -> {
+                    ReimburseRecord temp = new ReimburseRecord();
+                    temp.setReimMoney(0d);
+                    temp.setReimer(str);
+                    listResult.add(temp);
+                });
+            }
+        } else {
+            groupList.stream().forEach(str -> {
+                ReimburseRecord temp = new ReimburseRecord();
+                temp.setReimMoney(0d);
+                temp.setReimer(str);
+                listResult.add(temp);
+            });
+        }
+        listResult.stream().sorted(new Comparator<ReimburseRecord>() {
+            @Override
+            public int compare(ReimburseRecord o1, ReimburseRecord o2) {
+                return o1.getProjectGroup().compareTo(o2.getProjectGroup());
+            }
+        });
+        List<Double> moneyDataList = listResult.stream().map(ReimburseRecord::getReimMoney).collect(Collectors.toList());
+        ReimShapeBarSeriesVO seriesVO = new ReimShapeBarSeriesVO();
+        seriesVO.setName( xzhouName );
+        seriesVO.setType("bar");
+        seriesVO.setSeriesDataVOList( moneyDataList );
+
+        return  seriesVO;
     }
 }

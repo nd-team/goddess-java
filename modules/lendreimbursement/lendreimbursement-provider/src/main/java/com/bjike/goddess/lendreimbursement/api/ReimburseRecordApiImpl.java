@@ -318,4 +318,16 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     public ReimCompanyShapeBarVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
         return reimburseRecordSer.collectGroupBar( reimCompanyShapeDTO );
     }
+
+    @Override
+    public ReimCompanyShapeBarVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return reimburseRecordSer.collectProjectBar( reimCompanyShapeDTO );
+    }
+
+    @Override
+    public ReimCompanyShapeBarVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return reimburseRecordSer.collectAreaBar( reimCompanyShapeDTO);
+    }
+
+
 }

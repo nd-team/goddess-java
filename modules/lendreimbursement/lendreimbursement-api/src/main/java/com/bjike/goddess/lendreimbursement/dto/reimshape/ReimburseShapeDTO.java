@@ -22,9 +22,10 @@ public class ReimburseShapeDTO extends BaseDTO {
     public interface TESTMONCON{}
     public interface TESTWEEKCON{}
     public interface TESTDAYCON{}
+    public interface TESTQUARTCON{}
 
     /**
-     * 汇总状态
+     * 汇总状态(日周月年)
      */
     @NotNull(groups = {ReimburseShapeDTO.TESTWEEKCON.class,ReimburseShapeDTO.TESTMONCON.class,ReimburseShapeDTO.TESTYEARCON.class,ReimburseShapeDTO.TESTDAYCON.class} , message = "汇总状态不能为空")
     private ReimburseShapeStatus reimburseShapeStatus;
@@ -45,6 +46,11 @@ public class ReimburseShapeDTO extends BaseDTO {
      */
     @NotNull(groups = {ReimburseShapeDTO.TESTWEEKCON.class} , message = "周不能为空")
     private int week;
+    /**
+     * 季度
+     */
+    @NotNull(groups = {ReimburseShapeDTO.TESTQUARTCON.class} , message = "季度不能为空")
+    private int quart;
 
     /**
      * 用户名
@@ -80,6 +86,14 @@ public class ReimburseShapeDTO extends BaseDTO {
 
     public void setMonth(int month) {
         this.month = month;
+    }
+
+    public int getQuart() {
+        return quart;
+    }
+
+    public void setQuart(int quart) {
+        this.quart = quart;
     }
 
     public int getWeek() {

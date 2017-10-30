@@ -531,5 +531,23 @@ public interface ReimburseRecordAPI {
     default ReimCompanyShapeBarVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
 
 
+    /**
+     * 汇总公司项目时间段内的特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyShapeBarVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司地区时间段内的特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyShapeBarVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
 
 }

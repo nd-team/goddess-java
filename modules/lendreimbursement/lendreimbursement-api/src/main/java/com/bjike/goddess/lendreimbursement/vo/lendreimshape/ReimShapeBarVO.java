@@ -23,6 +23,10 @@ public class ReimShapeBarVO implements Serializable{
      * color
      */
     private List<String> colorList;
+    /**
+     * legend
+     */
+    private ReimShapeLegendVO rlegendVO;
 
     /**
      * tooltip
@@ -54,6 +58,14 @@ public class ReimShapeBarVO implements Serializable{
 
     public void setReimShapeTitleVO(ReimShapeTitleVO reimShapeTitleVO) {
         this.reimShapeTitleVO = reimShapeTitleVO;
+    }
+
+    public ReimShapeLegendVO getRlegendVO() {
+        return rlegendVO;
+    }
+
+    public void setRlegendVO(ReimShapeLegendVO rlegendVO) {
+        this.rlegendVO = rlegendVO;
     }
 
     public List<String> getColorList() {

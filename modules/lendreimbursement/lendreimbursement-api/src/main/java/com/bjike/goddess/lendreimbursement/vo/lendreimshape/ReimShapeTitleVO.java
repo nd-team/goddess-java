@@ -76,4 +76,9 @@ public class ReimShapeTitleVO implements Serializable{
         this.x = x;
         this.y = y;
     }
+
+    public ReimShapeTitleVO(String text, String subtext) {
+        this.text = text;
+        this.subtext = subtext;
+    }
 }
