@@ -10,7 +10,7 @@ import com.bjike.goddess.competitormanage.service.CompetitorSer;
 import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,7 +115,7 @@ public class CompetitorApiImpl implements CompetitorAPI {
     }
 
     @Override
-    public List<MarketInfoBO> findProject() throws SerException {
+    public List<MarketInfoRecordBO> findProject() throws SerException {
         return competitorSer.findProject();
     }
 }

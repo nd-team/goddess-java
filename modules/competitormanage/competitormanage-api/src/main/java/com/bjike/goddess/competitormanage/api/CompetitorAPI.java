@@ -8,7 +8,7 @@ import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
+import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 
 import java.util.List;
 
@@ -120,6 +120,6 @@ public interface CompetitorAPI {
     /**
      * 获取项目名称
      */
-    List<MarketInfoBO> findProject() throws SerException;
+    List<MarketInfoRecordBO> findProject() throws SerException;
 
 }
