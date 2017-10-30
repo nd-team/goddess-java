@@ -85,5 +85,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" id="finishCountEmailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" id="taskRemindApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" id="timeSetApiImpl"/>
+    <!-- 租车协议-->
+    <dubbo:reference validation="true" interface="com.bjike.goddess.rentcar.api.CarSendEmailAPI" id="carSendEmailApiImpl"/>
 
 </beans>

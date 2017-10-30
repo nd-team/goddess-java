@@ -98,7 +98,6 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
 
-
     @Autowired
     private CheckChangeCarSer checkChangeCarSer;
 

@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.intromanage.api.FirmIntroAPI;
+//import com.bjike.goddess.intromanage.api.FirmIntroAPI;
 import com.bjike.goddess.secure.api.BeforeAddAPI;
 import com.bjike.goddess.secure.bo.BeforeAddBO;
 import com.bjike.goddess.secure.dto.AddEmployeeDTO;
@@ -43,8 +43,8 @@ import java.util.Set;
 public class BeforeAddAct {
     @Autowired
     private BeforeAddAPI beforeAddAPI;
-    @Autowired
-    private FirmIntroAPI firmIntroAPI;
+//    @Autowired
+//    private FirmIntroAPI firmIntroAPI;
     @Autowired
     private ModuleAPI moduleAPI;
 
@@ -248,7 +248,7 @@ public class BeforeAddAct {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             if (moduleAPI.isCheck("intromanage")) {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                set = firmIntroAPI.firmNames();
+//                set = firmIntroAPI.firmNames();
             }
             return ActResult.initialize(set);
         } catch (SerException e) {

@@ -101,7 +101,7 @@ public class ReimburseRecord extends BaseEntity {
     /**
      * 报销总金额
      */
-    @Column(name = "reimMoney",  columnDefinition = "DECIMAL(10,2)   COMMENT '报销总金额'")
+    @Column(name = "reimMoney",  columnDefinition = "DECIMAL(65,2)   COMMENT '报销总金额'")
     private Double reimMoney;
 
     /**
@@ -146,7 +146,7 @@ public class ReimburseRecord extends BaseEntity {
     @Column(name = "receiveTicketCheck",  columnDefinition = "VARCHAR(255)   COMMENT '是否已收到单据(是/否)'")
     private String receiveTicketCheck;
     /**
-     * 帐务核对是否通过（是/否）
+     * 帐务核对是否通过（null/是/否）
      */
     @Column(name = "accountCheckPassOr",  columnDefinition = "VARCHAR(255)   COMMENT '帐务核对是否通过(是/否)'")
     private String accountCheckPassOr;
@@ -196,7 +196,7 @@ public class ReimburseRecord extends BaseEntity {
     /**
      * 是否全部分析完
      */
-    @Column(name = "is_analisisAll",  columnDefinition = "int(1) default '0'  COMMENT '是否全部分析完' " ,insertable = false)
+    @Column(name = "analisisIsAll",  columnDefinition = "int(1) default '0'  COMMENT '是否全部分析完' " ,insertable = false)
     private Boolean analisisIsAll;
 
     /**

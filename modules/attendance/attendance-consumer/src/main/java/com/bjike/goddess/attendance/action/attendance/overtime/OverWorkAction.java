@@ -41,7 +41,7 @@ public class OverWorkAction {
     private OverWorkAPI overWorkAPI;
 
     /**
-     *列表总条数
+     * 列表总条数
      *
      * @param overWorkDTO 加班信息dto
      * @des 获取所有加班信息总条数
@@ -172,7 +172,7 @@ public class OverWorkAction {
      * @param overWorker 加班人
      * @des 根据加班人员获取部门和职位
      * @version v1
-     * @return PositionAndDepartVO
+     * @return class PositionAndDepartVO
      */
     @GetMapping("v1/positAndDepart/{overWorker}")
     public Result getPositAndDepart(@PathVariable String overWorker ) throws ActException {
@@ -190,10 +190,10 @@ public class OverWorkAction {
      * @param overLongAndRelaxdayDTO 时长和可休天数数据
      * @des 根据加班开始时间和加班结束时间和是否午休计算加班时长和可休天数
      * @version v1
-     * @return OverLongAndRelaxDayVO
+     * @return class OverLongAndRelaxDayVO
      */
-    @GetMapping("v1/caculateTime")
-    public Result caculateTime(@Validated(OverLongAndRelaxdayDTO.TestAdd.class) OverLongAndRelaxdayDTO overLongAndRelaxdayDTO ) throws ActException {
+    @PostMapping("v1/caculateTime")
+    public Result caculateTime(@Validated(OverLongAndRelaxdayDTO.TestAdd.class) OverLongAndRelaxdayDTO overLongAndRelaxdayDTO,BindingResult bindingResult ) throws ActException {
         try {
             OverLongAndRelaxDayVO list = overWorkAPI.caculateTime( overLongAndRelaxdayDTO );
             return ActResult.initialize(list);

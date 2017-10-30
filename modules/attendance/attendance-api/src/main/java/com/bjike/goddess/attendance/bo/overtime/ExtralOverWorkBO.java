@@ -41,6 +41,16 @@ public class ExtralOverWorkBO extends BaseBO {
      */
     private String creator;
 
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 修改时间
+     */
+    private String modifyTime;
+
 
     public String getOverType() {
         return overType;
@@ -82,4 +92,19 @@ public class ExtralOverWorkBO extends BaseBO {
         this.creator = creator;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 }
