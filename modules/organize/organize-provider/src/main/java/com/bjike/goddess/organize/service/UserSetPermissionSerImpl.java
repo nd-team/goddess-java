@@ -409,4 +409,57 @@ public class UserSetPermissionSerImpl extends ServiceImpl<UserSetPermission, Use
 
         return flag;
     }
+    @Override
+    public Boolean checkSetPermission22( ) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flag = false;
+
+        UserBO userBO = userAPI.currentUser( );
+        RpcTransmit.transmitUserToken( userToken );
+        String userName = userBO.getUsername();
+        if( "admin".equals( userName.toLowerCase())){
+            flag = true;
+
+        }else {
+
+            //但前用户
+            String userId = userBO.getId();
+
+            UserSetPermissionDTO dto = new UserSetPermissionDTO();
+            dto.getConditions().add(Restrict.eq("idFlag", "1"));
+            UserSetPermission cusPermission = super.findOne(dto);
+
+            //先查询获操作对象
+            List<String> idList = new ArrayList<>();
+            UserSetPermissionOperateDTO cpoDTO = new UserSetPermissionOperateDTO();
+            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+            List<UserSetPermissionOperate> operateList = userSetPermissionOperateSer.findByCis(cpoDTO);
+            if (operateList != null && operateList.size() > 0) {
+                operateList.stream().forEach(op -> {
+                    idList.add(op.getOperator());
+                });
+            }
+
+
+            String[] operateIds = null;
+            if (null != idList && idList.size() > 0) {
+                operateIds = new String[idList.size()];
+                for (int i = 0; i < idList.size(); i++) {
+                    operateIds[i] = idList.get(i);
+                }
+
+            }
+            Boolean positionFlag = positionDetailUserSer.checkAsUserPosit2(userId, operateIds);
+
+
+            //TODO 岗位
+            if (positionFlag) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+        }
+
+        return flag;
+    }
 }
