@@ -6,9 +6,8 @@ import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
-import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
-import com.bjike.goddess.attendance.dto.overtime.OverWorkRestDayDTO;
-import com.bjike.goddess.attendance.entity.Vacate;
+import com.bjike.goddess.attendance.dto.overtime.*;
+import com.bjike.goddess.attendance.entity.overtime.OverWork;
 import com.bjike.goddess.attendance.enums.AuditStatus;
 import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
@@ -17,15 +16,12 @@ import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
-import com.bjike.goddess.attendance.entity.overtime.OverWork;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -112,14 +108,16 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     @Override
     public OverWorkBO addOverWork(OverWorkTO overWorkTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         OverWork overWork = new OverWork();
         BeanTransform.copyProperties(overWorkTO,overWork,"overStartTime","overEndTime");
         overWork.setOverStartTime( DateUtil.parseDateTime(overWorkTO.getOverStartTime()) );
         overWork.setOverEndTime( DateUtil.parseDateTime(overWorkTO.getOverEndTime()) );
         overWork.setAuditStatus(AuditStatus.NONE);
+        overWork.setEntryer( userBO.getUsername() );
         super.save( overWork );
         //如果是项目经理下发的任务，则不用审核，将审核状态改为已通过
-        UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
@@ -265,6 +263,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         if( null != overWork  ){
             overWork.setAuditAdvice( auditTO.getAuditAdvice() );
             overWork.setAuditStatus( auditTO.getAuditStatus() );
+            overWork.setAuditTime( LocalDateTime.now() );
             overWork.setModifyTime( LocalDateTime.now() );
             super.update( overWork );
         }
@@ -363,6 +362,111 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
         return returnList;
     }
+
+    @Override
+    public List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
+        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyOverWorkDTO , OverWorkDTO.class,"serialVersionUID" );
+        dto.getConditions().add(Restrict.eq("overWorker",phoneMyOverWorkDTO.getOverWorker()));
+
+        dto.getSorts().add("createTime=desc");
+        List<OverWork> list = super.findByCis( dto ,true );
+        return BeanTransform.copyProperties( list , OverWorkBO.class);
+    }
+
+    @Override
+    public List<OverWorkBO> myEntryList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+
+        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyEntryOverWorkDTO , OverWorkDTO.class,"serialVersionUID" );
+        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean isManage = false;
+        if(null != positMap) {
+            String position = "";
+            for (Map.Entry str : positMap.entrySet()) {
+                position = (String) str.getValue();
+            }
+            if (position.contains("项目经理") || position.contains("模块负责人")) {
+                isManage = true;
+            }
+        }
+        if(! isManage ){
+            //说明是不是项目经理或模块负责人。就显示录入人
+            dto.getConditions().add(Restrict.eq("entryer",phoneMyEntryOverWorkDTO.getEntryer()));
+        }
+        //是项目经理就查所有，不传条件
+        dto.getSorts().add("createTime=desc");
+        List<OverWork> list = super.findByCis( dto ,true );
+        return BeanTransform.copyProperties( list , OverWorkBO.class);
+    }
+
+    @Override
+    public List<OverWorkBO> myAuditList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyEntryOverWorkDTO , OverWorkDTO.class,"serialVersionUID" );
+
+        RpcTransmit.transmitUserToken(userToken);
+        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean isManage = false;
+        if(null != positMap) {
+            String position = "";
+            for (Map.Entry str : positMap.entrySet()) {
+                position = (String) str.getValue();
+            }
+            if (position.contains("项目经理")) {
+                isManage = true;
+            }
+        }
+
+        if(! isManage ){
+            //说明是不是项目经理
+            dto.getConditions().add(Restrict.eq("charger",phoneMyEntryOverWorkDTO.getEntryer()));
+        }
+        //是项目经理就查所有，不传条件
+
+        dto.getConditions().add(Restrict.eq("auditStatus",AuditStatus.NONE));
+        dto.getSorts().add("createTime=desc");
+        List<OverWork> list = super.findByCis( dto ,true );
+        return BeanTransform.copyProperties( list , OverWorkBO.class);
+    }
+
+    @Override
+    public OverWorkBO getPhoneOneById(String id) throws SerException {
+        if(StringUtils.isBlank( id )){
+            throw new SerException("id不能为空");
+        }
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+
+        RpcTransmit.transmitUserToken(userToken);
+        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean isManage = false;
+        if(null != positMap) {
+            String position = "";
+            for (Map.Entry str : positMap.entrySet()) {
+                position = (String) str.getValue();
+            }
+            if (position.contains("项目经理")) {
+                isManage = true;
+            }
+        }
+
+        OverWork overWork = super.findById( id );
+        OverWorkBO bo = BeanTransform.copyProperties( overWork , OverWorkBO.class);
+        if( isManage && AuditStatus.NONE.equals(overWork.getAuditStatus()) ){
+            bo.setHasAuditIs( true );
+        }else{
+            bo.setHasAuditIs( false );
+        }
+
+        return bo;
+    }
+
 
 
 
