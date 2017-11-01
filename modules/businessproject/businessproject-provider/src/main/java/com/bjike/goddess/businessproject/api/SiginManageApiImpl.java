@@ -1,17 +1,16 @@
 package com.bjike.goddess.businessproject.api;
 
+import com.bjike.goddess.businessproject.bo.OptionBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.service.SiginManageSer;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
-import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +37,7 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return siginManageSer.guidePermission( guidePermissionTO );
+        return siginManageSer.guidePermission(guidePermissionTO);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public SiginManageBO auditSiginManage(SiginManageTO siginManageTO) throws SerException {
-        return siginManageSer.auditSiginManage( siginManageTO);
+        return siginManageSer.auditSiginManage(siginManageTO);
     }
 
     @Override
@@ -88,16 +87,17 @@ public class SiginManageApiImpl implements SiginManageAPI {
 
     @Override
     public SiginManageBO importExcel(List<SiginManageTO> siginManageTO) throws SerException {
-        return siginManageSer.importExcel( siginManageTO );
+        return siginManageSer.importExcel(siginManageTO);
     }
 
     @Override
     public byte[] exportExcel(SiginManageDTO dto) throws SerException {
-        return siginManageSer.exportExcel( dto );
+        return siginManageSer.exportExcel(dto);
     }
+
     @Override
-    public byte[] templateExport( ) throws SerException {
-        return siginManageSer.templateExport(   );
+    public byte[] templateExport() throws SerException {
+        return siginManageSer.templateExport();
     }
 
     @Override
@@ -118,5 +118,25 @@ public class SiginManageApiImpl implements SiginManageAPI {
     @Override
     public Set<String> makeProjects() throws SerException {
         return siginManageSer.makeProjects();
+    }
+
+    @Override
+    public OptionBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+        return siginManageSer.weekCollectFigure(year, month, week);
+    }
+
+    @Override
+    public OptionBO monthCollectFigure(Integer year, Integer month) throws SerException {
+        return siginManageSer.monthCollectFigure(year, month);
+    }
+
+    @Override
+    public OptionBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+        return siginManageSer.quarterCollectFigure(year, quarter);
+    }
+
+    @Override
+    public OptionBO yearCollectFigure(Integer year) throws SerException {
+        return siginManageSer.yearCollectFigure(year);
     }
 }

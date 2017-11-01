@@ -1,7 +1,6 @@
 package com.bjike.goddess.recruit.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -353,10 +352,11 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
      */
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void yyOpinion(String id, String yyOpinion) throws SerException {
+    public void yyOpinion(String id, String yyOpinion, Boolean moneyReady) throws SerException {
         checkSwIdentity();
         RecruitPro model = super.findById(id);
         model.setYyOpinion(yyOpinion);
+        model.setMoneyReady(moneyReady);
         super.update(model);
     }
 

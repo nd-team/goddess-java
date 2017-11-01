@@ -344,7 +344,7 @@ public class BaseInfoManageAction extends BaseFileAction {
      *
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @PostMapping("v1/leadExcel")
     public Result leadExcel(HttpServletRequest request) throws ActException {
         try {
@@ -374,7 +374,7 @@ public class BaseInfoManageAction extends BaseFileAction {
      * @param dto 商务项目合同基本信息管理信息
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/exportExcel")
     public Result exportExcel(BaseInfoManageDTO dto, HttpServletResponse response) throws ActException {
         try {

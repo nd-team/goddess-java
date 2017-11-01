@@ -275,7 +275,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
      * 各专业工期合同规模数图表日汇总
      *
      * @param time
-     * @des 各所属项目组合同规模数图表日汇总
+     * @des 各专业工期合同规模数图表日汇总
      * @version v1
      */
     @GetMapping("v1/dayMajorScaleFigureCollect")
@@ -294,7 +294,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
      * @param year
      * @param month
      * @param week
-     * @des 各所属项目组合同规模数图表周汇总
+     * @des 各专业工期合同规模数图表周汇总
      * @version v1
      */
     @GetMapping("v1/weekMajorScaleFigureCollect")
@@ -312,7 +312,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
      *
      * @param year
      * @param month
-     * @des 各所属项目组合同规模数图表月汇总
+     * @des 各专业工期合同规模数图表月汇总
      * @version v1
      */
     @GetMapping("v1/monthMajorScaleFigureCollect")
@@ -330,7 +330,7 @@ public class BusinessContractFigureAction extends BaseFileAction {
      *
      * @param year
      * @param quarter
-     * @des 各所属项目组合同规模数图表季度汇总
+     * @des 各专业工期合同规模数图表季度汇总
      * @version v1
      */
     @GetMapping("v1/quarterMajorScaleFigureCollect")
@@ -371,6 +371,111 @@ public class BusinessContractFigureAction extends BaseFileAction {
     public Result totalMajorScaleFigureCollect(String time) throws ActException {
         try {
             OptionBO bo = businessContractAPI.totalMajorScaleFigureCollect(time);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各总包单位合同规模数图表日汇总
+     *
+     * @param time
+     * @des 各总包单位合同规模数图表日汇总
+     * @version v1
+     */
+    @GetMapping("v1/dayCompanyScaleFigureCollect")
+    public Result dayCompanyScaleFigureCollect(String time) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.dayCompanyScaleFigureCollect(time);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同规模数图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @des 各总包单位合同规模数图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/weekCompanyScaleFigureCollect")
+    public Result weekCompanyScaleFigureCollect(Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.weekCompanyScaleFigureCollect(year, month, week);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同规模数图表月汇总
+     *
+     * @param year
+     * @param month
+     * @des 各总包单位合同规模数图表月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthCompanyScaleFigureCollect")
+    public Result monthCompanyScaleFigureCollect(Integer year, Integer month) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.monthCompanyScaleFigureCollect(year, month);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同规模数图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @des 各总包单位合同规模数图表季度汇总
+     * @version v1
+     */
+    @GetMapping("v1/quarterCompanyScaleFigureCollect")
+    public Result quarterCompanyScaleFigureCollect(Integer year, Integer quarter) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.quarterCompanyScaleFigureCollect(year, quarter);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同规模数图表年汇总
+     *
+     * @param year
+     * @des 各总包单位合同规模数图表年汇总
+     * @version v1
+     */
+    @GetMapping("v1/yearCompanyScaleFigureCollect")
+    public Result yearCompanyScaleFigureCollect(Integer year) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.yearCompanyScaleFigureCollect(year);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同规模数图表累计汇总
+     *
+     * @param time
+     * @des 各总包单位合同规模数图表累计汇总
+     * @version v1
+     */
+    @GetMapping("v1/totalCompanyScaleFigureCollect")
+    public Result totalCompanyScaleFigureCollect(String time) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.totalCompanyScaleFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -589,7 +694,6 @@ public class BusinessContractFigureAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 各专业工期合同立项情况金额图表日汇总
      *
@@ -690,6 +794,111 @@ public class BusinessContractFigureAction extends BaseFileAction {
     public Result totalMajorMakeFigureCollect(String time) throws ActException {
         try {
             OptionMakeBO bo = businessContractAPI.totalMajorMakeFigureCollect(time);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各总包单位合同立项情况金额图表日汇总
+     *
+     * @param time
+     * @des 各总包单位合同立项情况金额图表日汇总
+     * @version v1
+     */
+    @GetMapping("v1/dayCompanyMakeFigureCollect")
+    public Result dayCompanyMakeFigureCollect(String time) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.dayCompanyMakeFigureCollect(time);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位同立项情况金额图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @des 各总包单位合同立项情况金额图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/weekCompanyMakeFigureCollect")
+    public Result weekCompanyMakeFigureCollect(Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.weekCompanyMakeFigureCollect(year, month, week);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表月汇总
+     *
+     * @param year
+     * @param month
+     * @des 各总包单位合同立项情况金额图表月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthCompanyMakeFigureCollect")
+    public Result monthCompanyMakeFigureCollect(Integer year, Integer month) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.monthCompanyMakeFigureCollect(year, month);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @des 各总包单位合同立项情况金额图表季度汇总
+     * @version v1
+     */
+    @GetMapping("v1/quarterCompanyMakeFigureCollect")
+    public Result quarterCompanyMakeFigureCollect(Integer year, Integer quarter) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.quarterCompanyMakeFigureCollect(year, quarter);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表年汇总
+     *
+     * @param year
+     * @des 各总包单位合同立项情况金额图表年汇总
+     * @version v1
+     */
+    @GetMapping("v1/yearCompanyMakeFigureCollect")
+    public Result yearCompanyMakeFigureCollect(Integer year) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.yearCompanyMakeFigureCollect(year);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表累计汇总
+     *
+     * @param time
+     * @des 各总包单位合同立项情况金额图表累计汇总
+     * @version v1
+     */
+    @GetMapping("v1/totalCompanyMakeFigureCollect")
+    public Result totalCompanyMakeFigureCollect(String time) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.totalCompanyMakeFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -1009,6 +1218,112 @@ public class BusinessContractFigureAction extends BaseFileAction {
     public Result totalMajorMakeCaseFigureCollect(String time) throws ActException {
         try {
             OptionBO bo = businessContractAPI.totalMajorMakeCaseFigureCollect(time);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 各总包单位合同立项情况图表日汇总
+     *
+     * @param time
+     * @des 各总包单位合同立项情况图表日汇总
+     * @version v1
+     */
+    @GetMapping("v1/dayCompanyMakeCaseFigureCollect")
+    public Result dayCompanyMakeCaseFigureCollect(String time) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.dayCompanyMakeCaseFigureCollect(time);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @des 各总包单位合同立项情况图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/weekCompanyMakeCaseFigureCollect")
+    public Result weekCompanyMakeCaseFigureCollect(Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.weekCompanyMakeCaseFigureCollect(year, month, week);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况图表月汇总
+     *
+     * @param year
+     * @param month
+     * @des 各总包单位合同立项情况图表月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthCompanyMakeCaseFigureCollect")
+    public Result monthCompanyMakeCaseFigureCollect(Integer year, Integer month) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.monthCompanyMakeCaseFigureCollect(year, month);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @des 各总包单位合同立项情况图表季度汇总
+     * @version v1
+     */
+    @GetMapping("v1/quarterCompanyMakeCaseFigureCollect")
+    public Result quarterCompanyMakeCaseFigureCollect(Integer year, Integer quarter) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.quarterCompanyMakeCaseFigureCollect(year, quarter);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况图表年汇总
+     *
+     * @param year
+     * @des 各总包单位合同立项情况图表年汇总
+     * @version v1
+     */
+    @GetMapping("v1/yearCompanyMakeCaseFigureCollect")
+    public Result yearCompanyMakeCaseFigureCollect(Integer year) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.yearCompanyMakeCaseFigureCollect(year);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各总包单位合同立项情况图表累计汇总
+     *
+     * @param time
+     * @return class OptionBO
+     * @des 各总包单位合同立项情况图表累计汇总
+     * @version v1
+     */
+    @GetMapping("v1/totalCompanyMakeCaseFigureCollect")
+    public Result totalCompanyMakeCaseFigureCollect(String time) throws ActException {
+        try {
+            OptionBO bo = businessContractAPI.totalCompanyMakeCaseFigureCollect(time);
             return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

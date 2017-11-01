@@ -843,9 +843,9 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
             if ((i.getWhetherFirstTestPass() != null) && i.getWhetherFirstTestPass()) {
                 actualSuccess++;
             }
-            if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
-                employ++;
-            }
+//            if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
+//                employ++;
+//            }
             if ((i.getWhetherEntry() != null) && i.getWhetherEntry()) {
                 entry++;
             }
@@ -1031,9 +1031,9 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
             if ((i.getWhetherFirstTestPass() != null) && i.getWhetherFirstTestPass()) {
                 actualSuccess++;
             }
-            if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
-                employ++;
-            }
+//            if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
+//                employ++;
+//            }
             if ((i.getWhetherEntry() != null) && i.getWhetherEntry()) {
                 entry++;
             }
@@ -1157,9 +1157,9 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
             if ((i.getWhetherFirstTestPass() != null) && i.getWhetherFirstTestPass()) {
                 actualSuccess++;
             }
-            if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
-                employ++;
-            }
+//            if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
+//                employ++;
+//            }
             if ((i.getWhetherEntry() != null) && i.getWhetherEntry()) {
                 entry++;
             }
@@ -1274,9 +1274,9 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
                 if ((i.getWhetherFirstTestPass() != null) && i.getWhetherFirstTestPass()) {
                     actualSuccess++;
                 }
-                if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
-                    employ++;
-                }
+//                if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
+//                    employ++;
+//                }
                 if ((i.getWhetherEntry() != null) && i.getWhetherEntry()) {
                     entry++;
                 }
@@ -1378,9 +1378,9 @@ public class RecruitPlanSerImpl extends ServiceImpl<RecruitPlan, RecruitPlanDTO>
                 if ((i.getWhetherFirstTestPass() != null) && i.getWhetherFirstTestPass()) {
                     actualSuccess++;
                 }
-                if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
-                    employ++;
-                }
+//                if ((i.getWhetherPassBoss() != null) && i.getWhetherPassBoss()) {
+//                    employ++;
+//                }
                 if ((i.getWhetherEntry() != null) && i.getWhetherEntry()) {
                     entry++;
                 }

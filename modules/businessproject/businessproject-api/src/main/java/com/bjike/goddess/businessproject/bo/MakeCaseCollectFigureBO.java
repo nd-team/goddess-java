@@ -27,6 +27,10 @@ public class MakeCaseCollectFigureBO extends BaseBO {
      */
     private String major;
     /**
+     * 总包单位名称
+     */
+    private String majorCompany;
+    /**
      * 年月份
      */
     private String yearMonth;
@@ -54,6 +58,14 @@ public class MakeCaseCollectFigureBO extends BaseBO {
      * 进行
      */
     private Integer march;
+
+    public String getMajorCompany() {
+        return majorCompany;
+    }
+
+    public void setMajorCompany(String majorCompany) {
+        this.majorCompany = majorCompany;
+    }
 
     public String getYearMonth() {
         return yearMonth;

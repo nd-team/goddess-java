@@ -16,7 +16,9 @@ import com.bjike.goddess.recruit.api.FirstPhoneRecordAPI;
 import com.bjike.goddess.recruit.api.InterviewInforAPI;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
+import com.bjike.goddess.recruit.entity.InterviewInfor;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 import com.bjike.goddess.recruit.vo.InterviewInforVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,6 +185,92 @@ public class InterviewInforAct {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 初试面试意见
+     *
+     * @param to 面试信息to信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/firstIdea")
+    public Result firstIdea(@Validated(value = {IdeaTO.FirstIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+        try {
+            interviewInforAPI.firstIdea(to);
+            return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 复试面试意见
+     *
+     * @param to 面试信息to信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/reexamineIdea")
+    public Result reexamineIdea(@Validated(value = {IdeaTO.SecondIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+        try {
+            interviewInforAPI.reexamineIdea(to);
+            return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 薪资面谈意见
+     *
+     * @param to 面试信息to信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/wagesIdea")
+    public Result wagesIdea(@Validated(value = {IdeaTO.WagesIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+        try {
+            interviewInforAPI.wagesIdea(to);
+            return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 总经办审核录取
+     *
+     * @param to 面试信息to信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/zjbAudit")
+    public Result zjbAudit(@Validated(value = {IdeaTO.BossIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+        try {
+            interviewInforAPI.zjbAudit(to);
+            return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 入职信息填写
+     *
+     * @param to 面试信息to信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/staffEntryInfo")
+    public Result staffEntryInfo(@Validated(value = {IdeaTO.StaffEntry.class}) IdeaTO to, BindingResult result) throws ActException {
+        try {
+            interviewInforAPI.staffEntryInfo(to);
+            return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 
     /**

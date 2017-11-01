@@ -68,6 +68,12 @@ public class TaxManagementApiImpl implements TaxManagementAPI {
     public void remove(String id) throws SerException {
         taxManagementSer.remove(id);
     }
+
+    @Override
+    public void getTime() throws SerException {
+        taxManagementSer.getTime();
+    }
+
     @Override
     public Map<String,String> getDead(String taxEnd)throws SerException{
         return taxManagementSer.getDead(taxEnd);

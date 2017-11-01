@@ -36,6 +36,18 @@ public class OptionBO extends BaseBO {
      * 柱状图数据
      */
     private SeriesBO[] series;
+    /**
+     * 悬停提示属性
+     */
+    private TooltipBO tooltip;
+
+    public TooltipBO getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(TooltipBO tooltip) {
+        this.tooltip = tooltip;
+    }
 
     public TitleBO getTitle() {
         return title;

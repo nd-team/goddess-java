@@ -1,10 +1,12 @@
 package com.bjike.goddess.recruit.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 /**
  * 招聘渠道
@@ -90,6 +92,84 @@ public class RecruitWay extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '备注' ")
     private String remarks;
+    /**
+     * 渠道开发时间
+     */
+    @Column(name = "channelTime", columnDefinition = "DATE   COMMENT '渠道开发时间'")
+    private LocalDate channelTime;
+    /**
+     * 收费情况
+     */
+    @Column(name = "chargeCase",columnDefinition = "TEXT COMMENT '收费情况' ")
+    private String chargeCase;
+    /**
+     * 剩余职位发布数
+     */
+    @Column(name = "postNum",columnDefinition = "INT(10) COMMENT '剩余职位发布数' ")
+    private Integer postNum;
+    /**
+     * 剩余简历下载数
+     */
+    @Column(name = "resumeNum",columnDefinition = "INT(10) COMMENT '剩余简历下载数' ")
+    private Integer resumeNum;
+    /**
+     * 适用招聘岗位
+     */
+    @Column(name = "suitPosition",columnDefinition = "VARCHAR(255) COMMENT '适用招聘岗位' ")
+    private String suitPosition;
+    /**
+     * 状态
+     */
+    @Column(name = "status",columnDefinition = "VARCHAR(255) COMMENT '状态' ")
+    private Status status;
+
+    public LocalDate getChannelTime() {
+        return channelTime;
+    }
+
+    public void setChannelTime(LocalDate channelTime) {
+        this.channelTime = channelTime;
+    }
+
+    public String getChargeCase() {
+        return chargeCase;
+    }
+
+    public void setChargeCase(String chargeCase) {
+        this.chargeCase = chargeCase;
+    }
+
+    public Integer getPostNum() {
+        return postNum;
+    }
+
+    public void setPostNum(Integer postNum) {
+        this.postNum = postNum;
+    }
+
+    public Integer getResumeNum() {
+        return resumeNum;
+    }
+
+    public void setResumeNum(Integer resumeNum) {
+        this.resumeNum = resumeNum;
+    }
+
+    public String getSuitPosition() {
+        return suitPosition;
+    }
+
+    public void setSuitPosition(String suitPosition) {
+        this.suitPosition = suitPosition;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getRecruitName() {
         return recruitName;

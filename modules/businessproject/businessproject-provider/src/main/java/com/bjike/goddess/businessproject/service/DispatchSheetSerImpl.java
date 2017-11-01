@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.DispatchSheetDTO;
 import com.bjike.goddess.businessproject.entity.DispatchSheet;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.DispatchSheetExcel;
+import com.bjike.goddess.businessproject.excel.DispatchSheetExport;
 import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -395,14 +396,14 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
     @Override
     public byte[] exportExcel(DispatchSheetDTO dto) throws SerException {
         String[] innerProjects = dto.getInnerProjects();
-        List<DispatchSheetExcel> toList = new ArrayList<DispatchSheetExcel>();
+        List<DispatchSheetExport> toList = new ArrayList<DispatchSheetExport>();
         if ((innerProjects != null) && (innerProjects.length > 0)) {
             List<DispatchSheet> list = super.findByCis(dto);
             for (String s : innerProjects) {
                 if (StringUtils.isNotBlank(s)) {
                     for (DispatchSheet b : list) {
                         if (s.equals(b.getInnerProject())) {
-                            DispatchSheetExcel excel = new DispatchSheetExcel();
+                            DispatchSheetExport excel = new DispatchSheetExport();
                             BeanUtils.copyProperties(b, excel);
                             toList.add(excel);
                         }
@@ -412,7 +413,7 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
         } else {
             List<DispatchSheet> list = super.findByCis(dto);
             for (DispatchSheet b : list) {
-                DispatchSheetExcel excel = new DispatchSheetExcel();
+                DispatchSheetExport excel = new DispatchSheetExport();
                 BeanUtils.copyProperties(b, excel);
                 toList.add(excel);
             }
@@ -466,7 +467,6 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
 
     @Override
     public List<String> areas() throws SerException {
-
         List<DispatchSheet> list = super.findAll();
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
@@ -483,23 +483,38 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
 
     @Override
     public List<String> getProjectGroup(String area) throws SerException {
-        String sql = " SELECT projectGroup AS projectGroup FROM businessproject_dispatchsheet WHERE area='" + area + "' ";
-        List<Object> objects = super.findBySql(sql);
-        Set<String> strs = new HashSet<>();
-        if(objects!= null && objects.size()>0){
-            strs = (Set<String>)(Set)objects;
+        DispatchSheetDTO dispatchSheetDTO = new DispatchSheetDTO();
+        dispatchSheetDTO.getConditions().add(Restrict.eq("area",area));
+        List<DispatchSheet> list = super.findByCis(dispatchSheetDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
         }
-        return new ArrayList<>(strs);
+        Set<String> set = new HashSet<>();
+        for (DispatchSheet model : list) {
+            String projectGroup = model.getProjectGroup();
+            if (StringUtils.isNotBlank(model.getProjectCharge())) {
+                set.add(projectGroup);
+            }
+        }
+        return new ArrayList<>(set);
     }
 
     @Override
     public List<String> getInnerName(String area, String projectGroup) throws SerException {
-        String sql = " SELECT innerProject AS innerProject FROM businessproject_dispatchsheet WHERE area='"+area+"' AND projectGroup = '"+projectGroup+"' ";
-        List<Object> objects = super.findBySql(sql);
-        Set<String> strs = new HashSet<>();
-        if(objects!= null && objects.size()>0){
-            strs = (Set<String>)(Set)objects;
+        DispatchSheetDTO dispatchSheetDTO = new DispatchSheetDTO();
+        dispatchSheetDTO.getConditions().add(Restrict.eq("area",area));
+        dispatchSheetDTO.getConditions().add(Restrict.eq("projectGroup",projectGroup));
+        List<DispatchSheet> list = super.findByCis(dispatchSheetDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
         }
-        return new ArrayList<>(strs);
+        Set<String> set = new HashSet<>();
+        for (DispatchSheet model : list) {
+            String innerProject = model.getInnerProject();
+            if (StringUtils.isNotBlank(model.getInnerProject())) {
+                set.add(innerProject);
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

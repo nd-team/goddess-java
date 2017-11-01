@@ -1,9 +1,6 @@
 package com.bjike.goddess.businessproject.to;
 
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.businessproject.enums.ProjectStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -97,8 +94,8 @@ public class SiginManageTO extends BaseTO {
     /**
      * 立项情况 xx
      */
-    @NotBlank(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
-    private String makeProject;
+    @NotNull(groups = {SiginManageTO.TestAdd.class} , message = "立项情况不能为空")
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -304,11 +301,11 @@ public class SiginManageTO extends BaseTO {
         this.contractProperty = contractProperty;
     }
 
-    public String getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(String makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

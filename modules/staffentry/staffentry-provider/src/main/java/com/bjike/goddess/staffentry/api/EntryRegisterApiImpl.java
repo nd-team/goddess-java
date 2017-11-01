@@ -151,6 +151,10 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
         return entryRegisterSer.names();
 
     }
+    @Override
+    public Integer findNumByEntryDate(String dep) throws SerException {
+        return entryRegisterSer.findNumByEntryDate(dep);
+    }
 
     @Override
     public byte[] templateExport() throws SerException {

@@ -203,9 +203,9 @@ public class RecruitProAct {
      */
     @LoginAuth
     @PutMapping("v1/yyOpinion/{id}")
-    public Result yyOpinion(@PathVariable String id, @RequestParam(value = "yyOpinion") String yyOpinion) throws ActException {
+    public Result yyOpinion(@PathVariable String id, @RequestParam(value = "yyOpinion") String yyOpinion,@RequestParam(value = "moneyReady")Boolean moneyReady) throws ActException {
         try {
-            recruitProAPI.yyOpinion(id, yyOpinion);
+            recruitProAPI.yyOpinion(id, yyOpinion,moneyReady);
             return new ActResult("yyOpinion success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
