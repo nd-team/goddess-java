@@ -1,131 +1,123 @@
-package com.bjike.goddess.attendance.entity.overtime;
+package com.bjike.goddess.attendance.vo.overtime;
 
 import com.bjike.goddess.attendance.enums.AuditStatus;
-import com.bjike.goddess.common.api.entity.BaseEntity;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-
 
 /**
- * 加班
+ * 加班表现层对象
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-10-10 10:32 ]
- * @Description: [ 加班 ]
+ * @Description: [ 加班表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "attendance_overwork")
-public class OverWork extends BaseEntity {
+public class PhoneOverWorkVO {
 
+    /**
+     * id
+     */
+    private String id;
     /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
-
     /**
      * 加班录入人
      */
-    @Column(name = "entryer", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '加班录入人'")
     private String entryer;
     /**
      * 任务下达人
      */
-    @Column(name = "tasker", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务下达人'")
     private String tasker;
 
     /**
      * 加班人员
      */
-    @Column(name = "overWorker", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '加班人员'")
     private String overWorker;
 
     /**
      * 加班类型
      */
-    @Column(name = "overType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '加班类型'")
     private String overType;
 
     /**
      * 部门
      */
-    @Column(name = "depart", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String depart;
 
     /**
      * 职位
      */
-    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职位'")
     private String position;
 
     /**
      * 开始时间
      */
-    @Column(name = "overStartTime", nullable = false, columnDefinition = "DATETIME   COMMENT '开始时间'")
-    private LocalDateTime overStartTime;
+    private String overStartTime;
 
     /**
      * 结束时间
      */
-    @Column(name = "overEndTime", nullable = false, columnDefinition = "DATETIME   COMMENT '结束时间'")
-    private LocalDateTime overEndTime;
+    private String overEndTime;
 
     /**
      * 加班时长
      */
-    @Column(name = "overLong", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '加班时长'")
     private Double overLong;
 
     /**
      * 是否午休
      */
-    @Column(name = "is_noonBreakOr", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否午休'", insertable = false)
     private Boolean noonBreakOr;
 
     /**
      * 工作内容
      */
-    @Column(name = "workContent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '工作内容'")
     private String workContent;
 
     /**
      * 完成情况
      */
-    @Column(name = "completeCon", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '完成情况'")
     private String completeCon;
 
     /**
      * 可休天数
      */
-    @Column(name = "relaxDay", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '可休天数'")
     private Double relaxDay;
 
     /**
      * 负责人(审批人)
      */
-    @Column(name = "charger", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '负责人(审批人)'")
     private String charger;
 
     /**
      * 审核意见
      */
-    @Column(name = "auditAdvice",  columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
     private String auditAdvice;
+
     /**
      * 审核时间
      */
-    @Column(name = "auditTime",  columnDefinition = "DATETIME   COMMENT '审核时间'")
-    private LocalDateTime auditTime;
+    private String auditTime;
 
     /**
      * 审核状态
      */
-    @Column(name = "auditStatus", nullable = false, columnDefinition = "INT(2)   COMMENT '审核状态' ")
     private AuditStatus auditStatus;
 
+    /**
+     * 手机版是否有权限审核
+     */
+    private Boolean hasAuditIs;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getArea() {
         return area;
@@ -183,19 +175,19 @@ public class OverWork extends BaseEntity {
         this.position = position;
     }
 
-    public LocalDateTime getOverStartTime() {
+    public String getOverStartTime() {
         return overStartTime;
     }
 
-    public void setOverStartTime(LocalDateTime overStartTime) {
+    public void setOverStartTime(String overStartTime) {
         this.overStartTime = overStartTime;
     }
 
-    public LocalDateTime getOverEndTime() {
+    public String getOverEndTime() {
         return overEndTime;
     }
 
-    public void setOverEndTime(LocalDateTime overEndTime) {
+    public void setOverEndTime(String overEndTime) {
         this.overEndTime = overEndTime;
     }
 
@@ -263,11 +255,19 @@ public class OverWork extends BaseEntity {
         this.auditStatus = auditStatus;
     }
 
-    public LocalDateTime getAuditTime() {
+    public String getAuditTime() {
         return auditTime;
     }
 
-    public void setAuditTime(LocalDateTime auditTime) {
+    public void setAuditTime(String auditTime) {
         this.auditTime = auditTime;
+    }
+
+    public Boolean getHasAuditIs() {
+        return hasAuditIs;
+    }
+
+    public void setHasAuditIs(Boolean hasAuditIs) {
+        this.hasAuditIs = hasAuditIs;
     }
 }
