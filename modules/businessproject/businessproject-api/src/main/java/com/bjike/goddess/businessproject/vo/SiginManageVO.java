@@ -1,9 +1,6 @@
 package com.bjike.goddess.businessproject.vo;
 
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.businessproject.enums.ProjectStatus;
+import com.bjike.goddess.businessproject.enums.*;
 
 /**
  * 商务项目合同签订与立项管理表现层对象
@@ -83,7 +80,7 @@ public class SiginManageVO {
     /**
      * 立项情况
      */
-    private String makeProject;
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -290,11 +287,11 @@ public class SiginManageVO {
         this.contractProperty = contractProperty;
     }
 
-    public String getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(String makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

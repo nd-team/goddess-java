@@ -72,7 +72,7 @@ public interface RecruitProSer extends Ser<RecruitPro, RecruitProDTO> {
     /**
      * 综合资源部意见
      *
-     * @param id 招聘方案唯一标识
+     * @param id        招聘方案唯一标识
      * @param zhOpinion 综合资源部意见
      * @throws SerException
      */
@@ -81,18 +81,19 @@ public interface RecruitProSer extends Ser<RecruitPro, RecruitProDTO> {
     /**
      * 运营商务部审核
      *
-     * @param id 招聘方案唯一标识
-     * @param yyOpinion 运营商务部意见
+     * @param id         招聘方案唯一标识
+     * @param yyOpinion  运营商务部意见
+     * @param moneyReady 是否有资金准备
      * @throws SerException
      */
-    void yyOpinion(String id, String yyOpinion) throws SerException;
+    void yyOpinion(String id, String yyOpinion, Boolean moneyReady) throws SerException;
 
     /**
      * 总经办意见
      *
-     * @param id 招聘方案唯一标识
+     * @param id         招聘方案唯一标识
      * @param zjbOpinion 总经办意见
-     * @param auditType 审核类型
+     * @param auditType  审核类型
      * @throws SerException
      */
     void zjbOpinion(String id, String zjbOpinion, AuditType auditType) throws SerException;

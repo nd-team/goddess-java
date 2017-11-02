@@ -5,22 +5,22 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import javax.validation.constraints.NotNull;
 
 /**
- * 删除附件路径
+ * 招投标信息管理
  *
- * @Author: [chenjunhao]
- * @Date: [2017-07-15 17:07]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * @Author: [ xiazhili ]
+ * @Date: [ 2017-03-20T20:13:56.348 ]
+ * @Description: [ 招投标信息管理 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 public class DeleteFileTO extends BaseTO {
-    public interface TestDEL {
-    }
+
+    public interface TestDEL{}
 
     /**
      * 删除路径
      */
-    @NotNull(groups = {DeleteFileTO.TestDEL.class}, message = "删除路径不能为空")
+    @NotNull(groups = {DeleteFileTO.TestDEL.class},message = "删除路径不能为空")
     private String[] paths;
 
     public String[] getPaths() {

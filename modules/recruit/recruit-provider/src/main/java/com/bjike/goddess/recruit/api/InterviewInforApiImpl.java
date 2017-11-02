@@ -7,6 +7,7 @@ import com.bjike.goddess.recruit.dto.InterviewInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
 import com.bjike.goddess.recruit.service.InterviewInforSer;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,17 +99,28 @@ public class InterviewInforApiImpl implements InterviewInforAPI {
         interviewInforSer.update(interviewInforTO);
     }
 
-    /**
-     * 总经办审核是否录取
-     *
-     * @param id 面试信息唯一标识
-     * @param whetherPassBoss 总经办审核是否录取
-     * @param bossAdvice 总经办审批意见
-     * @throws SerException
-     */
     @Override
-    public void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException {
-        interviewInforSer.zjbAudit(id, whetherPassBoss, bossAdvice);
+    public void firstIdea(IdeaTO to) throws SerException {
+        interviewInforSer.firstIdea(to);
+    }
+
+    @Override
+    public void reexamineIdea(IdeaTO to) throws SerException {
+        interviewInforSer.reexamineIdea(to);
+    }
+
+    @Override
+    public void wagesIdea(IdeaTO to) throws SerException {
+        interviewInforSer.wagesIdea(to);
+    }
+
+    @Override
+    public void zjbAudit(IdeaTO to) throws SerException {
+        interviewInforSer.zjbAudit(to);
+    }
+    @Override
+    public void staffEntryInfo(IdeaTO to) throws SerException{
+        interviewInforSer.staffEntryInfo(to);
     }
 
     @Override

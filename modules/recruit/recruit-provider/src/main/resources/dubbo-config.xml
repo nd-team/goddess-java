@@ -29,7 +29,9 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitWayAPI" ref="recruitWayApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitWayAPI" ref="recruitWayApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" ref="reportAddressInforApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.PositionDutyAPI" ref="positionDutyApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.TemplateManageAPI" ref="templateManageApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitDemandPlanAPI" ref="recruitDemandPlanApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
 
@@ -40,7 +42,11 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" id="businessCourseApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" id="businessTypeApiImpl"/>
+	<dubbo:reference validation="true" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>
 
 </beans>

@@ -96,11 +96,12 @@ public interface RecruitProAPI {
     /**
      * 运营商务部审核
      *
-     * @param id 招聘方案唯一标识
-     * @param yyOpinion 运营商务部意见
+     * @param id         招聘方案唯一标识
+     * @param yyOpinion  运营商务部意见
+     * @param moneyReady 是否有资金准备
      * @throws SerException
      */
-    void yyOpinion(String id, String yyOpinion) throws SerException;
+    void yyOpinion(String id, String yyOpinion, Boolean moneyReady) throws SerException;
 
     /**
      * 总经办意见

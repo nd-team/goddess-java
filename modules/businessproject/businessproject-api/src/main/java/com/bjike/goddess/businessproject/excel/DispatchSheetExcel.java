@@ -175,7 +175,7 @@ public class DispatchSheetExcel extends BaseTO {
      * 立项情况
      */
     @ExcelHeader(name = "立项情况",notNull = true)
-    private String makeContract;
+    private MakeContract makeContract;
     /**
      * 派工单号
      */
@@ -185,7 +185,7 @@ public class DispatchSheetExcel extends BaseTO {
      * 项目状态
      */
     @ExcelHeader(name = "项目状态",notNull = true)
-    private String projectStatus;
+    private ProjectStatus projectStatus;
     /**
      * 合同规模数量
      */
@@ -202,11 +202,11 @@ public class DispatchSheetExcel extends BaseTO {
     @ExcelHeader(name = "专业",notNull = true)
     private String major;
 
-    public String getMakeContract() {
+    public MakeContract getMakeContract() {
         return makeContract;
     }
 
-    public void setMakeContract(String makeContract) {
+    public void setMakeContract(MakeContract makeContract) {
         this.makeContract = makeContract;
     }
 
@@ -218,11 +218,11 @@ public class DispatchSheetExcel extends BaseTO {
         this.taskNum = taskNum;
     }
 
-    public String getProjectStatus() {
+    public ProjectStatus getProjectStatus() {
         return projectStatus;
     }
 
-    public void setProjectStatus(String projectStatus) {
+    public void setProjectStatus(ProjectStatus projectStatus) {
         this.projectStatus = projectStatus;
     }
 

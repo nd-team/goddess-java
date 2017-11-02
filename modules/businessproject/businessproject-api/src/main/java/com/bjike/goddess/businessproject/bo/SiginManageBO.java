@@ -1,9 +1,6 @@
 package com.bjike.goddess.businessproject.bo;
 
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.businessproject.enums.ProjectStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import javax.persistence.Column;
@@ -82,7 +79,7 @@ public class SiginManageBO extends BaseBO {
     /**
      * 立项情况
      */
-    private String makeProject;
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -280,11 +277,11 @@ public class SiginManageBO extends BaseBO {
         this.contractProperty = contractProperty;
     }
 
-    public String getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(String makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

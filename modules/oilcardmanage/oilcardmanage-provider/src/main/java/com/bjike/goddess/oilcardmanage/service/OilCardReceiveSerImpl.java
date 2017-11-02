@@ -6,7 +6,6 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
@@ -66,8 +65,8 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
     private UserAPI userAPI;
     @Autowired
     private MessageAPI messageAPI;
-    @Autowired
-    private InternalContactsAPI internalContactsAPI;
+//    @Autowired
+//    private InternalContactsAPI internalContactsAPI;
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
@@ -248,9 +247,9 @@ public class OilCardReceiveSerImpl extends ServiceImpl<OilCardReceive, OilCardRe
                 String content = username + "申请油卡领用，请在3天内审批，请在三天内审批，否则油卡领用无效";
                 MessageTO messageTO = new MessageTO(username + "申请油卡领用，请批准", "");
                 messageTO.setSendType(SendType.EMAIL);
-                String[] users = new String[]{internalContactsAPI.findByUser(userid).getEmail()};
-                messageTO.setContent(content);
-                messageTO.setReceivers(users);
+//                String[] users = new String[]{internalContactsAPI.findByUser(userid).getEmail()};
+//                messageTO.setContent(content);
+//                messageTO.setReceivers(users);
                 messageAPI.send(messageTO);
 
                 return BeanTransform.copyProperties(model, OilCardReceiveBO.class);

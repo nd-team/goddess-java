@@ -2301,12 +2301,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 "firstSubject", "secondSubject", "thirdSubject", "borrowMoney", "loanMoney"};
         List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
-            //todo 从财务初始化根据财务会计科目拿取方向，新的财务初始化会有这个字段，暂时用remark来代替
-            String sql = " SELECT remark AS direction FROM financeinit_firstsubject WHERE name='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction"};
+            //财务初始化中根据会计科目名称获取方向
+            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
+            String[] field = new String[]{"direction","balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
+                accountInfoBO.setBalance(boList1.get(0).getBalance());
             }
             boList.add(accountInfoBO);
         }
@@ -2345,11 +2346,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = super.findByCis(dto);
         List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
-            String sql = " SELECT remark AS direction FROM financeinit_firstsubject WHERE name='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction"};
+            //财务初始化中根据会计科目名称获取方向
+            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
+            String[] field = new String[]{"direction","balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
+                accountInfoBO.setBalance(boList1.get(0).getBalance());
             }
             boList.add(accountInfoBO);
         }

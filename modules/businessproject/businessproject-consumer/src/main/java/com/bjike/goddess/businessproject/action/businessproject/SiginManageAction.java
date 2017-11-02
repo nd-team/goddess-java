@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
+import com.bjike.goddess.businessproject.bo.OptionBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.enums.MakeProjectStatus;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -384,7 +386,7 @@ public class SiginManageAction extends BaseFileAction {
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
@@ -395,11 +397,10 @@ public class SiginManageAction extends BaseFileAction {
             List<SiginManageTO> tocs = new ArrayList<>();
             for (SiginManageExcel str : tos) {
                 SiginManageTO siginManageTO = BeanTransform.copyProperties(str, SiginManageTO.class, "startProjectTime", "endProjectTime",
-                        "siginStatus", "makeProject", "manager", "auditAdvice");
+                        "siginStatus", "manager", "auditAdvice");
                 siginManageTO.setStartProjectTime(String.valueOf(str.getStartProjectTime()));
                 siginManageTO.setEndProjectTime(String.valueOf(str.getEndProjectTime()));
                 siginManageTO.setSiginStatus(convertSiginStatus(str.getSiginStatus()));
-                siginManageTO.setMakeProject(convertMakeProject(str.getMakeProject()));
                 siginManageTO.setManager("");
                 siginManageTO.setAuditAdvice("");
                 tocs.add(siginManageTO);
@@ -456,7 +457,7 @@ public class SiginManageAction extends BaseFileAction {
      * @des 导出项目签订与立项
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(SiginManageDTO dto, HttpServletResponse response) throws ActException {
         try {
@@ -505,6 +506,102 @@ public class SiginManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 各地区立项情况周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/weekCollectFigure")
+    public Result weekCollectFigure(Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionBO optionBO = siginManageAPI.weekCollectFigure(year, month, week);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各地区立项情况月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/monthCollectFigure")
+    public Result monthCollectFigure(Integer year, Integer month) throws ActException {
+        try {
+            OptionBO optionBO = siginManageAPI.monthCollectFigure(year, month);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各地区立项情况季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/quarterCollectFigure")
+    public Result quarterCollectFigure(Integer year, Integer quarter) throws ActException {
+        try {
+            OptionBO optionBO = siginManageAPI.quarterCollectFigure(year, quarter);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 各地区立项情况年汇总
+     *
+     * @param year
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/yearCollectFigure")
+    public Result yearCollectFigure(Integer year) throws ActException {
+        try {
+            OptionBO optionBO = siginManageAPI.yearCollectFigure(year);
+            return ActResult.initialize(optionBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取当前月有几周
+     *
+     * @param year  年份
+     * @param month 月份
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findWeek")
+    public Result findWeek(@RequestParam Integer year, @RequestParam Integer month) throws ActException {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);
+            int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= weekNum; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

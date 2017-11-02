@@ -97,7 +97,7 @@ public class SiginManageExcel extends BaseTO {
      * 立项情况
      */
     @ExcelHeader(name = "立项情况",notNull = true)
-    private MakeProjectStatus makeProject;
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -284,11 +284,11 @@ public class SiginManageExcel extends BaseTO {
         this.contractProperty = contractProperty;
     }
 
-    public MakeProjectStatus getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(MakeProjectStatus makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

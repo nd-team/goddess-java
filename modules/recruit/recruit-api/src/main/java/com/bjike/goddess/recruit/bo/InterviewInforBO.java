@@ -13,11 +13,28 @@ import com.bjike.goddess.recruit.type.Gender;
  * @Copy: [com.bjike]
  */
 public class InterviewInforBO extends BaseBO {
-
     /**
-     * 电访日期
+     * 日期
      */
     private String date;
+
+    /**
+     * 简历来源
+     */
+    private String resumeResource;
+    /**
+     * 岗位
+     */
+    private String position;
+    /**
+     * 应聘地区
+     */
+    private String area;
+
+    /**
+     * 应聘部门/项目组
+     */
+    private String department;
 
     /**
      * 姓名
@@ -25,40 +42,28 @@ public class InterviewInforBO extends BaseBO {
     private String name;
 
     /**
-     * 简历来源
-     */
-    private String resumeResource;
-
-    /**
-     * 应聘岗位
-     */
-    private String position;
-
-    /**
-     * 应聘部门
-     */
-    private String department;
-
-    /**
-     * 应聘地区
-     */
-    private String area;
-
-    /**
      * 性别
      */
     private Gender gender;
 
     /**
-     * 联系电话
+     * 联系方式
      */
     private String phone;
+    /**
+     * 简历筛选是否通过
+     */
+    private Boolean whetherPass;
 
     /**
      * 电子邮箱
      */
     private String email;
 
+    /**
+     * 是否有相关工作经验
+     */
+    private Boolean workingExperience;
     /**
      * 第一次电访了解到的情况
      */
@@ -70,24 +75,29 @@ public class InterviewInforBO extends BaseBO {
     private Boolean whetherFirstQuestionCorrect;
 
     /**
-     * 初试时间
+     * 邀约初试时间
      */
     private String firstTestTime;
-
-    /**
-     * 初试是否是面试
-     */
-    private Boolean whetherFaceTest;
-
     /**
      * 初试负责人
      */
     private String firstTestPrincipal;
-
+    /**
+     * 初试地点
+     */
+    private String firstPlace;
     /**
      * 初试意见
      */
     private String firstTestAdvice;
+    /**
+     * 是否初试
+     */
+    private Boolean whetherFaceTest;
+    /**
+     * 未应约初试原因
+     */
+    private String notFirstCase;
 
     /**
      * 初试是否通过
@@ -128,46 +138,41 @@ public class InterviewInforBO extends BaseBO {
      * 薪资面谈负责人
      */
     private String salaryFacePrincipal;
-
     /**
-     * 是否已进行薪资面谈
+     * 面谈意见
      */
-    private Boolean whetherSalaryFace;
-
+    private String faceAdvice;
     /**
-     * 薪资面谈情况
+     * 总经办
      */
-    private String salaryFaceSituation;
+    private String boss;
 
     /**
-     * 总经办审核是否录取
-     */
-    private Boolean whetherPassBoss;
-
-    /**
-     * 总经办审批意见
+     * 总经办意见
      */
     private String bossAdvice;
+    /**
+     * 是否同意录用
+     */
+    private Boolean agreedEmployed;
+
+    /**
+     * 审批时间
+     */
+    private String auditTime;
 
     /**
      * 是否接受录取
      */
     private Boolean whetherAcceptAdmit;
-
-    /**
-     * 联络人
-     */
-    private String contactPerson;
-
-    /**
-     * 入职报道地址
-     */
-    private String entryAddress;
-
     /**
      * 未接受录取原因
      */
     private String denyAdmitReason;
+    /**
+     * 入职时间
+     */
+    private String entryTime;
 
     /**
      * 是否住宿
@@ -177,8 +182,12 @@ public class InterviewInforBO extends BaseBO {
     /**
      * 是否使用公司电脑
      */
+     
     private Boolean whetherUseFirmPC;
-
+    /**
+     * 入职地址
+     */
+    private String entryAddress;
     /**
      * 是否入职
      */
@@ -188,21 +197,10 @@ public class InterviewInforBO extends BaseBO {
      * 未入职原因
      */
     private String denyEntryReason;
-
-    /**
-     * 入职时间
-     */
-    private String entryTime;
-
     /**
      * 备注
      */
     private String comment;
-
-    /**
-     * 是否服从调动安排
-     */
-    private Boolean whetherObeyTransfer;
 
     public String getDate() {
         return date;
@@ -210,14 +208,6 @@ public class InterviewInforBO extends BaseBO {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getResumeResource() {
@@ -236,6 +226,14 @@ public class InterviewInforBO extends BaseBO {
         this.position = position;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getDepartment() {
         return department;
     }
@@ -244,12 +242,12 @@ public class InterviewInforBO extends BaseBO {
         this.department = department;
     }
 
-    public String getArea() {
-        return area;
+    public String getName() {
+        return name;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Gender getGender() {
@@ -268,12 +266,28 @@ public class InterviewInforBO extends BaseBO {
         this.phone = phone;
     }
 
+    public Boolean getWhetherPass() {
+        return whetherPass;
+    }
+
+    public void setWhetherPass(Boolean whetherPass) {
+        this.whetherPass = whetherPass;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getWorkingExperience() {
+        return workingExperience;
+    }
+
+    public void setWorkingExperience(Boolean workingExperience) {
+        this.workingExperience = workingExperience;
     }
 
     public String getFirstPhoneSituation() {
@@ -300,14 +314,6 @@ public class InterviewInforBO extends BaseBO {
         this.firstTestTime = firstTestTime;
     }
 
-    public Boolean getWhetherFaceTest() {
-        return whetherFaceTest;
-    }
-
-    public void setWhetherFaceTest(Boolean whetherFaceTest) {
-        this.whetherFaceTest = whetherFaceTest;
-    }
-
     public String getFirstTestPrincipal() {
         return firstTestPrincipal;
     }
@@ -316,12 +322,36 @@ public class InterviewInforBO extends BaseBO {
         this.firstTestPrincipal = firstTestPrincipal;
     }
 
+    public String getFirstPlace() {
+        return firstPlace;
+    }
+
+    public void setFirstPlace(String firstPlace) {
+        this.firstPlace = firstPlace;
+    }
+
     public String getFirstTestAdvice() {
         return firstTestAdvice;
     }
 
     public void setFirstTestAdvice(String firstTestAdvice) {
         this.firstTestAdvice = firstTestAdvice;
+    }
+
+    public Boolean getWhetherFaceTest() {
+        return whetherFaceTest;
+    }
+
+    public void setWhetherFaceTest(Boolean whetherFaceTest) {
+        this.whetherFaceTest = whetherFaceTest;
+    }
+
+    public String getNotFirstCase() {
+        return notFirstCase;
+    }
+
+    public void setNotFirstCase(String notFirstCase) {
+        this.notFirstCase = notFirstCase;
     }
 
     public Boolean getWhetherFirstTestPass() {
@@ -388,28 +418,20 @@ public class InterviewInforBO extends BaseBO {
         this.salaryFacePrincipal = salaryFacePrincipal;
     }
 
-    public Boolean getWhetherSalaryFace() {
-        return whetherSalaryFace;
+    public String getFaceAdvice() {
+        return faceAdvice;
     }
 
-    public void setWhetherSalaryFace(Boolean whetherSalaryFace) {
-        this.whetherSalaryFace = whetherSalaryFace;
+    public void setFaceAdvice(String faceAdvice) {
+        this.faceAdvice = faceAdvice;
     }
 
-    public String getSalaryFaceSituation() {
-        return salaryFaceSituation;
+    public String getBoss() {
+        return boss;
     }
 
-    public void setSalaryFaceSituation(String salaryFaceSituation) {
-        this.salaryFaceSituation = salaryFaceSituation;
-    }
-
-    public Boolean getWhetherPassBoss() {
-        return whetherPassBoss;
-    }
-
-    public void setWhetherPassBoss(Boolean whetherPassBoss) {
-        this.whetherPassBoss = whetherPassBoss;
+    public void setBoss(String boss) {
+        this.boss = boss;
     }
 
     public String getBossAdvice() {
@@ -420,6 +442,22 @@ public class InterviewInforBO extends BaseBO {
         this.bossAdvice = bossAdvice;
     }
 
+    public Boolean getAgreedEmployed() {
+        return agreedEmployed;
+    }
+
+    public void setAgreedEmployed(Boolean agreedEmployed) {
+        this.agreedEmployed = agreedEmployed;
+    }
+
+    public String getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(String auditTime) {
+        this.auditTime = auditTime;
+    }
+
     public Boolean getWhetherAcceptAdmit() {
         return whetherAcceptAdmit;
     }
@@ -428,28 +466,20 @@ public class InterviewInforBO extends BaseBO {
         this.whetherAcceptAdmit = whetherAcceptAdmit;
     }
 
-    public String getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
-
-    public String getEntryAddress() {
-        return entryAddress;
-    }
-
-    public void setEntryAddress(String entryAddress) {
-        this.entryAddress = entryAddress;
-    }
-
     public String getDenyAdmitReason() {
         return denyAdmitReason;
     }
 
     public void setDenyAdmitReason(String denyAdmitReason) {
         this.denyAdmitReason = denyAdmitReason;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
     }
 
     public Boolean getWhetherAccommodation() {
@@ -468,6 +498,14 @@ public class InterviewInforBO extends BaseBO {
         this.whetherUseFirmPC = whetherUseFirmPC;
     }
 
+    public String getEntryAddress() {
+        return entryAddress;
+    }
+
+    public void setEntryAddress(String entryAddress) {
+        this.entryAddress = entryAddress;
+    }
+
     public Boolean getWhetherEntry() {
         return whetherEntry;
     }
@@ -484,27 +522,11 @@ public class InterviewInforBO extends BaseBO {
         this.denyEntryReason = denyEntryReason;
     }
 
-    public String getEntryTime() {
-        return entryTime;
-    }
-
-    public void setEntryTime(String entryTime) {
-        this.entryTime = entryTime;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public Boolean getWhetherObeyTransfer() {
-        return whetherObeyTransfer;
-    }
-
-    public void setWhetherObeyTransfer(Boolean whetherObeyTransfer) {
-        this.whetherObeyTransfer = whetherObeyTransfer;
     }
 }

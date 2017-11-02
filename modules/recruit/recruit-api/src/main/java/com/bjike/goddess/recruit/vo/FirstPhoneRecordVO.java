@@ -1,6 +1,5 @@
 package com.bjike.goddess.recruit.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.recruit.type.Gender;
 
 /**
@@ -13,12 +12,6 @@ import com.bjike.goddess.recruit.type.Gender;
  * @Copy: [com.bjike]
  */
 public class FirstPhoneRecordVO {
-
-    /**
-     * id
-     */
-    private String id;
-
     /**
      * 日期
      */
@@ -33,6 +26,14 @@ public class FirstPhoneRecordVO {
      * 岗位
      */
     private String position;
+    /**
+     * 应聘地区
+     */
+    private String area;
+    /**
+     * 应聘部门/项目组
+     */
+    private String projectGroup;
 
     /**
      * 姓名
@@ -100,6 +101,10 @@ public class FirstPhoneRecordVO {
     private String firstInterviewPrincipal;
 
     /**
+     * 初试地点
+     */
+    private String firstPlace;
+    /**
      * 是否初试
      */
     private Boolean whetherFirstInterview;
@@ -114,22 +119,76 @@ public class FirstPhoneRecordVO {
      */
     private String denyFirViewReason;
 
+
+    /**
+     * 是否需要复试
+     */
+    private Boolean retrial;
+    /**
+     * 复试时间
+     */
+    private String retrialTime;
+    /**
+     * 复试负责人
+     */
+    private String retrialOfficer;
     /**
      * 其他
      */
     private String other;
-//
+
 //    /**
 //     * 附件地址
 //     */
 //    private String attachmentAddr;
 
-    public String getId() {
-        return id;
+
+    public String getArea() {
+        return area;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getFirstPlace() {
+        return firstPlace;
+    }
+
+    public void setFirstPlace(String firstPlace) {
+        this.firstPlace = firstPlace;
+    }
+
+    public Boolean getRetrial() {
+        return retrial;
+    }
+
+    public void setRetrial(Boolean retrial) {
+        this.retrial = retrial;
+    }
+
+    public String getRetrialTime() {
+        return retrialTime;
+    }
+
+    public void setRetrialTime(String retrialTime) {
+        this.retrialTime = retrialTime;
+    }
+
+    public String getRetrialOfficer() {
+        return retrialOfficer;
+    }
+
+    public void setRetrialOfficer(String retrialOfficer) {
+        this.retrialOfficer = retrialOfficer;
     }
 
     public String getDate() {

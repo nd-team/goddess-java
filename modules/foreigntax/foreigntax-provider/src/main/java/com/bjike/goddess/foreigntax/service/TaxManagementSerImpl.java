@@ -249,9 +249,21 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
         checkAddIdentity();
         TaxManagement taxManagement = BeanTransform.copyProperties(to, TaxManagement.class, true);
         taxManagement.setCreateTime(LocalDateTime.now());
-
         super.save(taxManagement);
-        return BeanTransform.copyProperties(taxManagement, TaxManagementBO.class);
+        TaxManagementBO bo = BeanTransform.copyProperties(taxManagement, TaxManagementBO.class);
+        return bo;
+    }
+
+    @Override
+    public void getTime() throws SerException {
+        Integer year = LocalDate.now().getYear();
+        Integer month = LocalDate.now().getMonthValue();
+        LocalDate taxStart = LocalDate.of(year,month,1);
+        LocalDate taxEnd = LocalDate.of(year,month,DateUtil.getDayByDate(year,month));
+        TaxManagement taxManagement = new TaxManagement();
+        taxManagement.setTaxStart(taxStart);
+        taxManagement.setTaxStart(taxEnd);
+        super.update(taxManagement);
     }
     @Override
     public Map<String,String> getDead(String taxEnd)throws SerException{

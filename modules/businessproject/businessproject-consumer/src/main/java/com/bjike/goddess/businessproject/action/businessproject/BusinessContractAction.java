@@ -1,5 +1,7 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.BusinessContractAPI;
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
@@ -8,6 +10,7 @@ import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.vo.BusinessContractADetailVO;
 import com.bjike.goddess.businessproject.vo.BusinessContractVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -17,6 +20,11 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +52,10 @@ import java.util.Set;
 public class BusinessContractAction extends BaseFileAction {
     @Autowired
     private BusinessContractAPI businessContractAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -181,6 +193,22 @@ public class BusinessContractAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取发送邮件模板
+     *
+     * @param id 商务项目合同数据bo
+     * @des 获取发送邮件模板
+     * @version v1
+     */
+    @PostMapping("v1/findNotisDate")
+    public Result findNotisDate(String id) throws ActException {
+        try {
+            String content = businessContractAPI.findNotisDate(id);
+            return ActResult.initialize(content);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 项目经理意见分析
@@ -235,7 +263,23 @@ public class BusinessContractAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
+    /**
+     * 发邮件预立项目
+     *
+     * @param to 商务项目合同数据bo
+     * @return class BusinessContractVO
+     * @des 发邮件预立项目
+     * @version v1
+     */
+    @PostMapping("v1/hadContract")
+    public Result hadContract(BusinessContractTO to, BindingResult result) throws ActException {
+        try {
+            BusinessContractsBO bo = businessContractAPI.hadContract(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, BusinessContractVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 预立项目
      *
@@ -308,6 +352,47 @@ public class BusinessContractAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 查询地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<AreaBO> list = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询未冻结部门项目组详细信息
+     *
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result department(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 获取所有地区
@@ -330,7 +415,7 @@ public class BusinessContractAction extends BaseFileAction {
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
@@ -342,88 +427,88 @@ public class BusinessContractAction extends BaseFileAction {
             for (BusinessContractExcel str : tos) {
                 BusinessContractTO contractTO = BeanTransform.copyProperties(str, BusinessContractTO.class,
                         "measurePass", "notification", "commonSubcontractor", "taskFinish", "taskContract",
-                        "makeContract", "scaleBalance", "solutionBalance", "implement", "partial",
+                         "scaleBalance", "solutionBalance", "implement", "partial",
                         "persist", "settlementProcess", "account", "closeSingle", "archive");
                 //测算是否通过
-                if (contractTO.getMeasurePass().equals("是")) {
+                if (str.getMeasurePass().equals("是")) {
                     contractTO.setMeasurePass(true);
                 } else {
                     contractTO.setMeasurePass(false);
                 }
                 //是否通报
-                if (contractTO.getNotification().equals("是")) {
+                if (str.getNotification().equals("是")) {
                     contractTO.setNotification(true);
                 } else {
                     contractTO.setNotification(false);
                 }
                 //是否有共同分包单位
-                if (contractTO.getCommonSubcontractor().equals("是")) {
+                if (str.getCommonSubcontractor().equals("是")) {
                     contractTO.setCommonSubcontractor(true);
                 } else {
                     contractTO.setCommonSubcontractor(false);
                 }
                 //派工归属清理是否完成
-                if (contractTO.getTaskFinish().equals("是")) {
+                if (str.getTaskFinish().equals("是")) {
                     contractTO.setTaskFinish(true);
                 } else {
                     contractTO.setTaskFinish(false);
                 }
                 //是否有合同派工合同
-                if (contractTO.getTaskContract().equals("是")) {
+                if (str.getTaskContract().equals("是")) {
                     contractTO.setTaskContract(true);
                 } else {
                     contractTO.setTaskContract(false);
                 }
                 //合同规模数是否有差异
-                if (contractTO.getScaleBalance().equals("是")) {
+                if (str.getScaleBalance().equals("是")) {
                     contractTO.setScaleBalance(true);
                 } else {
                     contractTO.setScaleBalance(false);
                 }
                 //是否解决差异问题
-                if (contractTO.getSolutionBalance().equals("是")) {
+                if (str.getSolutionBalance().equals("是")) {
                     contractTO.setSolutionBalance(true);
                 } else {
                     contractTO.setSolutionBalance(false);
                 }
                 //预估项目是否确认实施
-                if (contractTO.getImplement().equals("是")) {
+                if (str.getImplement().equals("是")) {
                     contractTO.setImplement(true);
                 } else {
                     contractTO.setImplement(false);
                 }
                 //是否分批结算
-                if (contractTO.getPartial().equals("是")) {
+                if (str.getPartial().equals("是")) {
                     contractTO.setPartial(true);
                 } else {
                     contractTO.setPartial(false);
                 }
                 //是否为持续
-                if (contractTO.getPersist().equals("是")) {
+                if (str.getPersist().equals("是")) {
                     contractTO.setPersist(true);
                 } else {
                     contractTO.setPersist(false);
                 }
                 //是否正在走结算流程
-                if (contractTO.getSettlementProcess().equals("是")) {
+                if (str.getSettlementProcess().equals("是")) {
                     contractTO.setSettlementProcess(true);
                 } else {
                     contractTO.setSettlementProcess(false);
                 }
                 //是否到账
-                if (contractTO.getAccount().equals("是")) {
+                if (str.getAccount().equals("是")) {
                     contractTO.setAccount(true);
                 } else {
                     contractTO.setAccount(false);
                 }
                 //是否闭单
-                if (contractTO.getCloseSingle().equals("是")) {
+                if (str.getCloseSingle().equals("是")) {
                     contractTO.setCloseSingle(true);
                 } else {
                     contractTO.setCloseSingle(false);
                 }
                 //合同是否已归档
-                if (contractTO.getArchive().equals("是")) {
+                if (str.getArchive().equals("是")) {
                     contractTO.setArchive(true);
                 } else {
                     contractTO.setArchive(false);
@@ -446,7 +531,7 @@ public class BusinessContractAction extends BaseFileAction {
      * @des 导出商务项目合同
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(@Validated() BusinessContractDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
         try {

@@ -6,6 +6,7 @@ import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 
 import java.util.List;
@@ -67,16 +68,42 @@ public interface InterviewInforSer extends Ser<InterviewInfor, InterviewInforDTO
      * @throws SerException
      */
     void update(InterviewInforTO interviewInforTO) throws SerException;
-
+    /**
+     * 初试面试意见
+     *
+     * @param to
+     * @throws SerException
+     */
+    void firstIdea(IdeaTO to) throws SerException;
+    /**
+     * 复试面试意见
+     *
+     * @param to
+     * @throws SerException
+     */
+    void reexamineIdea(IdeaTO to) throws SerException;
+    /**
+     * 薪资面谈意见
+     *
+     * @param to
+     * @throws SerException
+     */
+    void wagesIdea(IdeaTO to) throws SerException;
     /**
      * 总经办审核录取
      *
-     * @param id 面试信息唯一标识
-     * @param whetherPassBoss 总经办审核是否录取
-     * @param bossAdvice 总经办审批意见
+     * @param to
      * @throws SerException
      */
-    void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException;
+    void zjbAudit(IdeaTO to) throws SerException;
+    /**
+     * 入职信息获取
+     *
+     * @param to
+     * @throws SerException
+     */
+    void staffEntryInfo(IdeaTO to) throws SerException;
+
 
     /**
      * 查询所有面试信息

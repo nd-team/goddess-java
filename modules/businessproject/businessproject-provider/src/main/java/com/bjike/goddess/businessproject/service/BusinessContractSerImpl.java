@@ -7,7 +7,6 @@ import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.enums.MakeContract;
 import com.bjike.goddess.businessproject.excel.BusinessContractExport;
 import com.bjike.goddess.businessproject.excel.BusinessContractTemplateExcel;
-import com.bjike.goddess.businessproject.excel.SonPermissionObject;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -102,6 +101,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
@@ -119,7 +119,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         RpcTransmit.transmitUserToken(userToken);
 
-    } /**
+    }
+
+    /**
      * 核对添加修改删除审核权限（岗位级别）
      */
     private void checkPlanIdentity() throws SerException {
@@ -137,6 +139,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 核对添加修改删除审核权限（岗位级别）
      */
@@ -189,6 +192,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         return flag;
     }
+
     /**
      * 导航栏核对添加修改删除审核权限（岗位级别）
      */
@@ -205,6 +209,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         return flag;
     }
+
     /**
      * 导航栏核对添加修改删除审核权限（岗位级别）
      */
@@ -221,6 +226,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         return flag;
     }
+
     /**
      * 导航栏核对添加修改删除审核权限（岗位级别）
      */
@@ -236,6 +242,19 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             flag = true;
         }
         return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -423,10 +442,34 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
     }
 
+
+    @Override
+    public String findNotisDate(String id) throws SerException {
+        StringBuffer sb = new StringBuffer();
+        BusinessContract businessContract = super.findById(id);
+
+        sb.append("  xxx 总经理");
+        sb.append(" 因商务发展部业务模块商务合同管理预估项目的工作需要协助， ");
+        sb.append(" 问题描述如下：'" + businessContract.getInnerProject() + "'项目（内部项目名称）目前为预立项项目，预估金额为'" + businessContract.getForecastMoney() + "'，");
+        sb.append(" 以下为项目经理、规划模块、预算模块意见，就以上情况，请总经理确认此预估项目是否实施，");
+        sb.append(" 并提供确认意见，请在2017年10月20日18点前邮件回复是否确认实施以及确认意见《任务完成情况通报函》。");
+        sb.append(" 如因时间问题未能在规定时间内完成需要推后处理，请在2017年10月17日18点前发送《协助工作推后完成反馈函》, ");
+        sb.append(" 如协助内容不在模块职责范围内或其它原因无法在规定时间内完成请在2017年10月17日18点前发送《协助工作不受理函》 ");
+        sb.append(" 项目经理意见 '" + businessContract.getManagerIdea() + "'");
+        sb.append(" 规划模块意见 '" + businessContract.getPlanIdea() + "'");
+        sb.append(" 预算模块意见 '" + businessContract.getBudgetIdea() + "'");
+        sb.append(" 未完成协助造成的影响：1.业务模块无法及时确认此项目是否实施，可能造成项目组浪费人工或者延后实施项目使客户对我司的形象。 ");
+        sb.append(" 特此说明：如未在规定时间内回复以上相关邮件，则视为默认承担考核指标中的处罚条例，请综合资源部跟进协助考核奖罚。 ");
+//            sb.append((userBO.getUsername() != null ? userBO.getUsername() : " ") + " " + (staffEntryRegister.getContactNum() != null ? staffEntryRegister.getContactNum() : " ") + " " + (staffEntryRegister.getEntryDate() != null ? staffEntryRegister.getEntryDate() : " ") + " " + checkBool(staffEntryRegister.getLodge()) + "住宿 ");
+//            sb.append(checkBool(staffEntryRegister.getUseCompanyComputer()) + "使用公司电脑 " + (staffEntryRegister.getEntryAddress() != null ? staffEntryRegister.getEntryAddress() : " ") + " " + (staffEntryRegister.getDepartment() != null ? staffEntryRegister.getDepartment() : " ") + " ");
+//            sb.append((userBO.getEmployeeNumber() != null ? userBO.getEmployeeNumber() : " ") + " " + (staffEntryRegister.getPosition() != null ? staffEntryRegister.getPosition() : " ") + " " + (staffEntryRegister.getWorkEmail() != null ? staffEntryRegister.getWorkEmail() : " ") + ";  ");
+        return sb.toString();
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessContractsBO managerIdea(BusinessContractTO to) throws SerException {
-       checkManageIdentity();
+        checkManageIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
@@ -458,7 +501,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessContractsBO budgetIdea(BusinessContractTO to) throws SerException {
-       checkBudgetIdentity();
+        checkBudgetIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
@@ -477,6 +520,11 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             BeanTransform.copyProperties(to, contract, true);
+            String[] names = positionDetailUserAPI.generPerson();//获取项目经理
+            List<String> email = null;
+            if (null != names) {
+                email = internalContactsAPI.getEmails(names);
+            }
             if (to.getMakeContract().equals(MakeContract.HADMAKE)) {
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent(to.getContent());
@@ -485,7 +533,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 messageTO.setSendType(SendType.EMAIL);
                 messageTO.setRangeType(RangeType.SPECIFIED);
 
-//        messageTO.setReceivers(emails);
+                String[] strings1 = new String[email.size()];
+                strings1 = email.toArray(strings1);
+                messageTO.setReceivers(strings1);
                 messageAPI.send(messageTO);
             }
             contract.setModifyTime(LocalDateTime.now());
@@ -837,7 +887,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各地区合同规模数周汇总" + startDate + "-" + endDate;
+        String text_1 = "各地区合同规模数季度汇总" + startDate + "-" + endDate;
         return areaScaleFigureCollect(startDate, endDate, text_1);
     }
 
@@ -913,7 +963,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各所属项目组合同规模数周汇总" + startDate + "-" + endDate;
+        String text_1 = "各所属项目组合同规模数季度汇总" + startDate + "-" + endDate;
         return projectGroupScaleFigureCollect(startDate, endDate, text_1);
     }
 
@@ -989,7 +1039,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各专业/工期合同规模数周汇总" + startDate + "-" + endDate;
+        String text_1 = "各专业/工期合同规模数季度汇总" + startDate + "-" + endDate;
         return majorScaleFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1016,6 +1066,82 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         String text_1 = "各专业/工期合同规模数累计汇总" + "(累计)";
         return majorScaleFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO dayCompanyScaleFigureCollect(String time) throws SerException {
+        if (StringUtils.isBlank(time)) {
+            time = DateUtil.dateToString(LocalDate.now());
+        }
+        String startDate = time;
+        String endDate = time;
+        String text_1 = "各总包单位合同规模数日汇总" + startDate + '-' + endDate;
+        return companyScaleFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO weekCompanyScaleFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+        String startDate = String.valueOf(date[0]);
+        String endDate = String.valueOf(date[1]);
+        String text_1 = "各总包单位合同规模数周汇总" + startDate + "-" + endDate;
+        return companyScaleFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO monthCompanyScaleFigureCollect(Integer year, Integer month) throws SerException {
+        if (year == null && month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "各总包单位合同规模数月汇总" + startDate + "-" + endDate;
+        return companyScaleFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO quarterCompanyScaleFigureCollect(Integer year, Integer quarter) throws SerException {
+        if (year == null && quarter == null) {
+            year = LocalDate.now().getYear();
+            quarter = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quarter);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "各总包单位合同规模数季度汇总" + startDate + "-" + endDate;
+        return companyScaleFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO yearCompanyScaleFigureCollect(Integer year) throws SerException {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        String text_1 = "各总包单位合同规模数年汇总" + startDate + "-" + endDate;
+        return companyScaleFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO totalCompanyScaleFigureCollect(String time) throws SerException {
+        String startDate = " ";
+        String endDate = time;
+        String sql = "select signedTime as signedTime from  " + getTableName(BusinessContract.class) + " where signedTime<= '" + endDate + "'";
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+            endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        }
+        String text_1 = "各总包单位合同规模数累计汇总" + "(累计)";
+        return companyScaleFigureCollect(startDate, endDate, text_1);
     }
 
     @Override
@@ -1065,7 +1191,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各地区合同立项情况金额周汇总" + startDate + "-" + endDate;
+        String text_1 = "各地区合同立项情况金额季度汇总" + startDate + "-" + endDate;
         return areaMakeFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1141,7 +1267,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各所属项目组合同立项情况金额周汇总" + startDate + "-" + endDate;
+        String text_1 = "各所属项目组合同立项情况金额季度汇总" + startDate + "-" + endDate;
         return projectGroupMakeFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1217,7 +1343,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各专业/工期合同立项情况金额周汇总" + startDate + "-" + endDate;
+        String text_1 = "各专业/工期合同立项情况金额季度汇总" + startDate + "-" + endDate;
         return majorMakeFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1244,6 +1370,82 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         String text_1 = "各专业/工期合同立项情况金额图表累计汇总" + "(累计)";
         return majorMakeFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO dayCompanyMakeFigureCollect(String time) throws SerException {
+        if (StringUtils.isBlank(time)) {
+            time = DateUtil.dateToString(LocalDate.now());
+        }
+        String startDate = time;
+        String endDate = time;
+        String text_1 = "各总包单位合同立项情况金额图表日汇总" + startDate + "-" + endDate;
+        return companyMakeFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO weekCompanyMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+        String startDate = String.valueOf(date[0]);
+        String endDate = String.valueOf(date[1]);
+        String text_1 = "各总包单位合同立项情况金额图表周汇总" + startDate + "-" + endDate;
+        return companyMakeFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO monthCompanyMakeFigureCollect(Integer year, Integer month) throws SerException {
+        if (year == null && month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "各总包单位合同立项情况金额图表月汇总" + startDate + "-" + endDate;
+        return companyMakeFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO quarterCompanyMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+        if (year == null && quarter == null) {
+            year = LocalDate.now().getYear();
+            quarter = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quarter);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "各总包单位合同立项情况金额季度汇总" + startDate + "-" + endDate;
+        return companyMakeFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO yearCompanyMakeFigureCollect(Integer year) throws SerException {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        String text_1 = "各总包单位合同立项情况金额图表年汇总" + startDate + "-" + endDate;
+        return companyMakeFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO totalCompanyMakeFigureCollect(String time) throws SerException {
+        String startDate = " ";
+        String endDate = time;
+        String sql = "select signedTime as signedTime from  " + getTableName(BusinessContract.class) + " where signedTime<= '" + endDate + "'";
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+            endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        }
+        String text_1 = "各总包单位合同立项情况金额图表累计汇总" + "(累计)";
+        return companyMakeFigureCollect(startDate, endDate, text_1);
     }
 
     @Override
@@ -1293,7 +1495,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各地区合同立项情况图表周汇总" + startDate + "-" + endDate;
+        String text_1 = "各地区合同立项情况图表季度汇总" + startDate + "-" + endDate;
         return areaMakeCaseFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1369,7 +1571,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各所属项目组合同立项情况图表周汇总" + startDate + "-" + endDate;
+        String text_1 = "各所属项目组合同立项情况图表季度汇总" + startDate + "-" + endDate;
         return projectGroupMakeCaseFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1445,7 +1647,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各专业/工期合同立项情况图表周汇总" + startDate + "-" + endDate;
+        String text_1 = "各专业/工期合同立项情况图表季度汇总" + startDate + "-" + endDate;
         return majorMakeCaseFigureCollect(startDate, endDate, text_1);
     }
 
@@ -1472,6 +1674,82 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         String text_1 = "各专业/工期合同立项情况图表累计汇总" + "(累计)";
         return majorMakeCaseFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO dayCompanyMakeCaseFigureCollect(String time) throws SerException {
+        if (StringUtils.isBlank(time)) {
+            time = DateUtil.dateToString(LocalDate.now());
+        }
+        String startDate = time;
+        String endDate = time;
+        String text_1 = "各总包单位合同立项情况图表日汇总" + startDate + "-" + endDate;
+        return companyMakeCaseFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO weekCompanyMakeCaseFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+        String startDate = String.valueOf(date[0]);
+        String endDate = String.valueOf(date[1]);
+        String text_1 = "各总包单位合同立项情况图表周汇总" + startDate + "-" + endDate;
+        return companyMakeCaseFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO monthCompanyMakeCaseFigureCollect(Integer year, Integer month) throws SerException {
+        if (year == null && month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "各总包单位合同立项情况图表月汇总" + startDate + "-" + endDate;
+        return companyMakeCaseFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO quarterCompanyMakeCaseFigureCollect(Integer year, Integer quarter) throws SerException {
+        if (year == null && quarter == null) {
+            year = LocalDate.now().getYear();
+            quarter = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quarter);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "各总包单位合同立项情况图表季度汇总" + startDate + "-" + endDate;
+        return companyMakeCaseFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO yearCompanyMakeCaseFigureCollect(Integer year) throws SerException {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        String text_1 = "各总包单位合同立项情况图表年汇总" + startDate + "-" + endDate;
+        return companyMakeCaseFigureCollect(startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionBO totalCompanyMakeCaseFigureCollect(String time) throws SerException {
+        String startDate = " ";
+        String endDate = time;
+        String sql = "select signedTime as signedTime from  " + getTableName(BusinessContract.class) + " where signedTime<= '" + endDate + "'";
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects && objects.size() > 0) {
+            startDate = String.valueOf(objects.get(0));
+            endDate = StringUtils.isNotBlank(endDate) ? endDate : LocalDate.now().toString();
+        }
+        String text_1 = "各总包单位合同立项情况图表累计汇总" + "(累计)";
+        return companyMakeCaseFigureCollect(startDate, endDate, text_1);
     }
 
     @Override
@@ -2112,6 +2390,129 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
         return new String[]{startDate, endDate};
     }
+    private OptionBO companyMakeCaseFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+        List<MakeCaseCollectFigureBO> figureBOS = new ArrayList<>();
+        List<MakeCaseCollectFigureBO> caseCollectFigureBOS = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        String[] fields = new String[]{"majorCompany", "innerNameNum", "hadNum", "noNum", "notNum"};
+        sb.append(" SELECT a.majorCompany AS majorCompany,a.innerNameNum AS innerNameNum, ");
+        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
+        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
+        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" FROM ");
+        sb.append(" (SELECT count(*) AS count,makeContract as makeContract,majorCompany AS majorCompany,count(innerProject) AS innerNameNum ");
+        sb.append(" FROM businessproject_businesscontract ");
+        sb.append(" WHERE signedTime BETWEEN '" + startDate + "' AND '" + endDate + "' ");
+        sb.append(" GROUP BY makeContract,majorCompany)a GROUP BY a.majorCompany,a.innerNameNum ");
+        List<MakeCaseCollectFigureBO> collectFigureBOS = super.findBySql(sb.toString(), MakeCaseCollectFigureBO.class, fields);
+        for (MakeCaseCollectFigureBO bo : collectFigureBOS) {
+            //已完工单数数量
+            String[] completeField = new String[]{"majorCompany", "complete"};
+            String sql = "SELECT majorCompany AS majorCompany,count(complete) AS complete FROM " +
+                    " businessproject_businesscontract WHERE complete = '是' AND majorCompany = '" + bo.getMajorCompany() + "' " +
+                    " GROUP BY majorCompany";
+            caseCollectFigureBOS = super.findBySql(sql, MakeCaseCollectFigureBO.class, completeField);
+            for (MakeCaseCollectFigureBO bo1 : caseCollectFigureBOS) {
+                bo.setCompleteNum(bo1.getCompleteNum());
+            }
+            //进行
+            String[] marchField = new String[]{"majorCompany", "march"};
+            String marchSql = "SELECT majorCompany AS majorCompany,count(march) AS march FROM " +
+                    " businessproject_businesscontract WHERE march = '是' AND majorCompany = '" + bo.getMajorCompany() + "' " +
+                    " GROUP BY majorCompany";
+            caseCollectFigureBOS = super.findBySql(marchSql, MakeCaseCollectFigureBO.class, marchField);
+            for (MakeCaseCollectFigureBO bo1 : caseCollectFigureBOS) {
+                bo.setMarch(bo1.getMarch());
+            }
+            figureBOS.add(bo);
+
+        }
+        Integer innerNameNums = figureBOS.stream().filter(p -> p.getInnerNameNum() != null).mapToInt(p -> p.getInnerNameNum()).sum();
+        Integer hadNums = figureBOS.stream().filter(p -> p.getHadNum() != null).mapToInt(p -> p.getHadNum()).sum();
+        Integer noNums = figureBOS.stream().filter(p -> p.getNoNum() != null).mapToInt(p -> p.getNoNum()).sum();
+        Integer notNums = figureBOS.stream().filter(p -> p.getNotNum() != null).mapToInt(p -> p.getNotNum()).sum();
+        Integer completeNums = figureBOS.stream().filter(p -> p.getCompleteNum() != null).mapToInt(p -> p.getCompleteNum()).sum();
+        Integer marchs = figureBOS.stream().filter(p -> p.getMarch() != null).mapToInt(p -> p.getMarch()).sum();
+        MakeCaseCollectFigureBO makeCaseCollectFigureBO = new MakeCaseCollectFigureBO();
+        makeCaseCollectFigureBO.setMajorCompany("合计");
+        makeCaseCollectFigureBO.setInnerNameNum(innerNameNums);
+        makeCaseCollectFigureBO.setHadNum(hadNums);
+        makeCaseCollectFigureBO.setNoNum(noNums);
+        makeCaseCollectFigureBO.setNotNum(notNums);
+        makeCaseCollectFigureBO.setCompleteNum(completeNums);
+        makeCaseCollectFigureBO.setMarch(marchs);
+        figureBOS.add(makeCaseCollectFigureBO);
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"内部项目名称数量", "已立项合同单数数量", "未立项合同单数数量", "不立项合同单数数量", "已完工单数数量", "进行"};
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+        List<SeriesBO> seriesBOS = new ArrayList<>();
+        if (figureBOS != null && figureBOS.size() > 0) {
+            List<Integer> innerNameNum = new ArrayList<>();
+            List<Integer> hadNum = new ArrayList<>();
+            List<Integer> noNum = new ArrayList<>();
+            List<Integer> notNum = new ArrayList<>();
+            List<Integer> completeNum = new ArrayList<>();
+            List<Integer> march = new ArrayList<>();
+            for (MakeCaseCollectFigureBO figureBO : figureBOS) {
+                text_list_3.add(figureBO.getMajorCompany());
+
+                //柱状图数据
+                innerNameNum.add(figureBO.getInnerNameNum());
+                hadNum.add(figureBO.getHadNum());
+                noNum.add(figureBO.getNoNum());
+                notNum.add(figureBO.getNotNum());
+                completeNum.add(figureBO.getCompleteNum());
+                march.add(figureBO.getMarch());
+            }
+            List<List<Integer>> nums = new ArrayList<>();
+            nums.add(innerNameNum);
+            nums.add(hadNum);
+            nums.add(noNum);
+            nums.add(notNum);
+            nums.add(completeNum);
+            nums.add(march);
+            String[] ziduan = new String[]{"内部项目名称数量", "已立项合同单数数量", "未立项合同单数数量", "不立项合同单数数量", "已完工单数数量", "进行"};
+            for (int i = 0; i < 6; i++) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(ziduan[i]);
+                seriesBO.setType("bar");
+                Integer[] text_int_4 = new Integer[nums.get(0).size()];
+                text_int_4 = nums.get(0).toArray(text_int_4);
+                seriesBO.setData(text_int_4);
+                seriesBOS.add(seriesBO);
+            }
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOS.size()];
+        text_4 = seriesBOS.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
 
     private OptionBO majorMakeCaseFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<MakeCaseCollectFigureBO> figureBOS = new ArrayList<>();
@@ -2173,6 +2574,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"内部项目名称数量", "已立项合同单数数量", "未立项合同单数数量", "不立项合同单数数量", "已完工单数数量", "进行"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2229,6 +2632,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -2294,6 +2698,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"内部项目名称数量", "已立项合同单数数量", "未立项合同单数数量", "不立项合同单数数量", "已完工单数数量", "进行"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2350,6 +2756,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -2415,6 +2822,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"内部项目名称数量", "已立项合同单数数量", "未立项合同单数数量", "不立项合同单数数量", "已完工单数数量", "进行"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2471,11 +2880,94 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
     }
+    private OptionMakeBO companyMakeFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+        List<MakeCaseFigureBO> figureBOS = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT majorCompany AS majorCompany,sum(taskMoney) AS taskMoney, ");
+        sb.append(" sum(makeMoney) AS makeMoney,sum(forecastMoney) AS forecastMoney ");
+        sb.append(" FROM businessproject_businesscontract ");
+        sb.append(" WHERE signedTime BETWEEN '" + startDate + "' AND '" + endDate + "' ");
+        sb.append(" GROUP BY majorCompany ");
+        String[] fields = new String[]{"majorCompany", "taskMoney", "makeMoney", "forecastMoney"};
+        figureBOS = super.findBySql(sb.toString(), MakeCaseFigureBO.class, fields);
+        Double taskMoneys = figureBOS.stream().filter(p -> p.getTaskMoney() != null).mapToDouble(p -> p.getTaskMoney()).sum();
+        Double makeMoneys = figureBOS.stream().filter(p -> p.getMakeMoney() != null).mapToDouble(p -> p.getMakeMoney()).sum();
+        Double forecastMoneys = figureBOS.stream().filter(p -> p.getForecastMoney() != null).mapToDouble(p -> p.getForecastMoney()).sum();
+        MakeCaseFigureBO bo = new MakeCaseFigureBO();
+        bo.setMajorCompany("合计");
+        bo.setTaskMoney(taskMoneys);
+        bo.setMakeMoney(makeMoneys);
+        bo.setForecastMoney(forecastMoneys);
+        figureBOS.add(bo);
 
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"已派工金额", "立项总金额", "预估总金额"};
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+        List<SeriesBBO> seriesBOS = new ArrayList<>();
+        if (figureBOS != null && figureBOS.size() > 0) {
+            List<Double> taskMoney = new ArrayList<>();
+            List<Double> makeMoney = new ArrayList<>();
+            List<Double> forecastMoney = new ArrayList<>();
+            for (MakeCaseFigureBO figureBO : figureBOS) {
+                text_list_3.add(figureBO.getMajorCompany());
+
+                //柱状图数据
+                taskMoney.add(figureBO.getTaskMoney());
+                makeMoney.add(figureBO.getMakeMoney());
+                forecastMoney.add(figureBO.getForecastMoney());
+            }
+            List<List<Double>> nums = new ArrayList<>();
+            nums.add(taskMoney);
+            nums.add(makeMoney);
+            nums.add(forecastMoney);
+            String[] ziduan = new String[]{"已派工金额", "立项总金额", "预估总金额"};
+            for (int i = 0; i < 3; i++) {
+                SeriesBBO seriesBO = new SeriesBBO();
+                seriesBO.setName(ziduan[i]);
+                seriesBO.setType("bar");
+                Double[] text_int_4 = new Double[nums.get(0).size()];
+                text_int_4 = nums.get(0).toArray(text_int_4);
+                seriesBO.setData(text_int_4);
+                seriesBOS.add(seriesBO);
+            }
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBBO[] text_4 = new SeriesBBO[seriesBOS.size()];
+        text_4 = seriesBOS.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionMakeBO optionBO = new OptionMakeBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltipBO(tooltipBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+
+    }
 
     private OptionMakeBO majorMakeFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<MakeCaseFigureBO> figureBOS = new ArrayList<>();
@@ -2505,6 +2997,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"已派工金额", "立项总金额", "预估总金额"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2552,6 +3046,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltipBO(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -2585,6 +3080,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"已派工金额", "立项总金额", "预估总金额"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2632,6 +3129,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltipBO(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -2665,6 +3163,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"已派工金额", "立项总金额", "预估总金额"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2711,6 +3211,81 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setTitle(titleBO);
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
+        optionBO.setTooltipBO(tooltipBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+    private OptionBO companyScaleFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+        List<ScaleContractFigureBO> figureBOS = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        String[] fields = new String[]{"majorCompany", "scaleContract"};
+        sb.append(" SELECT majorCompany AS majorCompany, sum(scaleContract) AS scaleContract FROM businessproject_businesscontract");
+        sb.append(" WHERE signedTime between '" + startDate + "' and '" + endDate + "' GROUP BY majorCompany ");
+        figureBOS = super.findBySql(sb.toString(), ScaleContractFigureBO.class, fields);
+        ScaleContractFigureBO bo = new ScaleContractFigureBO();
+        Integer scaleContracts = figureBOS.stream().filter(p -> p.getScaleContract() != null).mapToInt(p -> p.getScaleContract()).sum();
+        bo.setMajorCompany("合计");
+        bo.setScaleContract(scaleContracts);
+        figureBOS.add(bo);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"规模数量(总规模数量)", "实际规模数量"};
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+        List<SeriesBO> seriesBOS = new ArrayList<>();
+        if (figureBOS != null && figureBOS.size() > 0) {
+            List<Integer> scaleContract = new ArrayList<>();
+            //todo 实际规模数量需求方也不知道从哪拿
+//            List<Integer> finishScale = new ArrayList<>();
+            for (ScaleContractFigureBO figureBO : figureBOS) {
+                text_list_3.add(figureBO.getMajorCompany());
+
+                //柱状图数据
+                scaleContract.add(figureBO.getScaleContract());
+//                finishScale.add(figureBO.getFinishScale());
+            }
+            List<List<Integer>> nums = new ArrayList<>();
+            nums.add(scaleContract);
+//            nums.add(finishScale);
+            String[] ziduan = new String[]{"规模数量(总规模数量)", "实际规模数量"};
+//            List<SeriesBO> seriesBOList = new ArrayList<>();
+            for (int i = 0; i < 1; i++) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(ziduan[i]);
+                seriesBO.setType("bar");
+                Integer[] text_int_4 = new Integer[nums.get(0).size()];
+                text_int_4 = nums.get(i).toArray(text_int_4);
+                seriesBO.setData(text_int_4);
+                seriesBOS.add(seriesBO);
+            }
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOS.size()];
+        text_4 = seriesBOS.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
 
         optionBO.setSeries(text_4);
@@ -2738,6 +3313,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"规模数量(总规模数量)", "实际规模数量"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2766,7 +3343,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -2782,6 +3359,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         OptionBO optionBO = new OptionBO();
         optionBO.setTitle(titleBO);
         optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
 
@@ -2810,6 +3388,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"规模数量(总规模数量)", "实际规模数量"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2838,11 +3418,12 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
         }
+
 
         String[] text_3 = new String[text_list_3.size()];
         text_3 = text_list_3.toArray(text_3);
@@ -2856,7 +3437,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
-
+        optionBO.setTooltip(tooltipBO);
         optionBO.setSeries(text_4);
         return optionBO;
     }
@@ -2883,6 +3464,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String[] text_2 = new String[]{"规模数量(总规模数量)", "实际规模数量"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         List<String> text_list_3 = new ArrayList<>();
@@ -2910,7 +3493,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -2926,6 +3509,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         OptionBO optionBO = new OptionBO();
         optionBO.setTitle(titleBO);
         optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
 

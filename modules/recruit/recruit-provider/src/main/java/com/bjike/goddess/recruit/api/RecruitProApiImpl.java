@@ -116,11 +116,12 @@ public class RecruitProApiImpl implements RecruitProAPI {
      *
      * @param id 招聘方案唯一标识
      * @param yyOpinion 运营商务部意见
+     * @param moneyReady 是否有资金准备
      * @throws SerException
      */
     @Override
-    public void yyOpinion(String id, String yyOpinion) throws SerException {
-        recruitProSer.yyOpinion(id, yyOpinion);
+    public void yyOpinion(String id, String yyOpinion,Boolean moneyReady) throws SerException {
+        recruitProSer.yyOpinion(id, yyOpinion,moneyReady);
     }
 
     /**

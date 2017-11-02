@@ -1,16 +1,23 @@
 package com.bjike.goddess.recruit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.recruit.bo.FirstPhoneRecordBO;
 import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
+import com.bjike.goddess.recruit.excel.FirstPhoneRecordExcel;
+import com.bjike.goddess.recruit.excel.FirstPhoneRecordExport;
+import com.bjike.goddess.recruit.excel.FirstPhoneRecordTemplateExcel;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.type.Gender;
 import com.bjike.goddess.recruit.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -19,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -281,5 +290,115 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
             set.add(f.getName());
         }
         return set;
+    }
+
+    @Override
+    public FirstPhoneRecordBO importExcel(List<FirstPhoneRecordTO> firstPhoneRecordTOS) throws SerException {
+        List<FirstPhoneRecord>firstPhoneRecords = new ArrayList<>(firstPhoneRecordTOS.size());
+        for(FirstPhoneRecordTO to:firstPhoneRecordTOS){
+            FirstPhoneRecord firstPhoneRecord = BeanTransform.copyProperties(to,FirstPhoneRecord.class,true);
+            firstPhoneRecords.add(firstPhoneRecord);
+        }
+        super.save(firstPhoneRecords);
+        FirstPhoneRecordBO bo = BeanTransform.copyProperties(new FirstPhoneRecord(),FirstPhoneRecordBO.class);
+        return bo;
+    }
+
+    @Override
+    public byte[] exportExcel(FirstPhoneRecordDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getStartDate()) && StringUtils.isNotBlank(dto.getEndDate())){
+            dto.getConditions().add(Restrict.between("date",new String[]{dto.getStartDate(),dto.getEndDate()}));
+        }
+        List<FirstPhoneRecord> list = super.findByCis(dto);
+        List<FirstPhoneRecordExport> exports = new ArrayList<>();
+        list.stream().forEach(str->{
+            FirstPhoneRecordExport export = BeanTransform.copyProperties(str,FirstPhoneRecordExport.class,
+                    "whetherPass","whetherPhoneSuccess","whetherWorkExperience",
+                    "whetherFirstInviteSuccess","whetherFirstInterview","whetherFaceTest",
+                    "retrial");
+            //简历筛选是否通过
+            if(str.getWhetherPass().equals(0)){
+                export.setWhetherPass("是");
+            }else {
+                export.setWhetherPass("否");
+            }
+            //通话是否成功
+            if(str.getWhetherPhoneSuccess().equals(0)){
+                export.setWhetherPhoneSuccess("是");
+            }else {
+                export.setWhetherPhoneSuccess("否");
+            }
+            //是否有相关工作经验
+            if(str.getWhetherWorkExperience().equals(0)){
+                export.setWhetherWorkExperience("是");
+            }else {
+                export.setWhetherWorkExperience("否");
+            }
+            //是否成功邀约初试
+            if(str.getWhetherFirstInviteSuccess().equals(0)){
+                export.setWhetherFirstInviteSuccess("是");
+            }else {
+                export.setWhetherFirstInviteSuccess("否");
+            }
+            //是否初试
+            if(str.getWhetherFirstInterview().equals(0)){
+                export.setWhetherFirstInterview("是");
+            }else {
+                export.setWhetherFirstInterview("否");
+            }
+            //初试是否为面试
+            if(str.getWhetherFaceTest().equals(0)){
+                export.setWhetherFaceTest("是");
+            }else {
+                export.setWhetherFaceTest("否");
+            }
+            //是否需要复试
+            if(str.getRetrial().equals(0)){
+                export.setRetrial("是");
+            }else {
+                export.setRetrial("否");
+            }
+            export.setGender(Gender.exportStrConvert(str.getGender()));
+            exports.add(export);
+        });
+        Excel excel = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<FirstPhoneRecordTemplateExcel> templateExcels = new ArrayList<>();
+        FirstPhoneRecordTemplateExcel templateExcel = new FirstPhoneRecordTemplateExcel();
+        templateExcel.setDate(LocalDate.now());
+        templateExcel.setResumeResource("智联招聘");
+        templateExcel.setPosition("test");
+        templateExcel.setArea("test");
+        templateExcel.setProjectGroup("test");
+        templateExcel.setName("test");
+        templateExcel.setTelephone("3454534544");
+        templateExcel.setWhetherPass("是");
+        templateExcel.setEmail("test");
+        templateExcel.setWhetherPhoneSuccess("是");
+        templateExcel.setPhoneFailReason("test");
+        templateExcel.setWhetherWorkExperience("是");
+        templateExcel.setFirstSituation("test");
+        templateExcel.setWhetherFirstInviteSuccess("是");
+        templateExcel.setFailureInviteReason("test");
+        templateExcel.setFirstInterviewTime(LocalDate.now());
+        templateExcel.setFirstInterviewPrincipal("test");
+        templateExcel.setFirstPlace("test");
+        templateExcel.setWhetherFirstInterview("是");
+        templateExcel.setWhetherFaceTest("是");
+        templateExcel.setDenyFirViewReason("test");
+        templateExcel.setRetrial("是");
+        templateExcel.setRetrialTime(LocalDate.now());
+        templateExcel.setRetrialOfficer("test");
+        templateExcel.setOther("test");
+
+        templateExcels.add(templateExcel);
+        Excel excel = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,excel);
+        return bytes;
     }
 }

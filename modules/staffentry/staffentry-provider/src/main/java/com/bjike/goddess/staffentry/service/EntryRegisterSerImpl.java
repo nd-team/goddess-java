@@ -711,6 +711,17 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         return num;
     }
+    @Override
+    public Integer findNumByEntryDate(String dep) throws SerException {
+        Integer num = 0;
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.eq("department", dep));
+        List<EntryRegister> entryRegisters = super.findByCis(entryRegisterDTO);
+        if (entryRegisters != null && entryRegisters.size() > 0) {
+            num = entryRegisters.size();
+        }
+        return num;
+    }
 
     @Override
     public List<UserNameSexBO> findSexByUserName(String[] userNames) throws SerException {

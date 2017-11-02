@@ -2,6 +2,7 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,6 +78,78 @@ public class RecruitWayBO extends BaseBO {
      * 备注
      */
     private String remarks;
+    /**
+     * 渠道开发时间
+     */
+    private String channelTime;
+    /**
+     * 收费情况
+     */
+    private String chargeCase;
+    /**
+     * 剩余职位发布数
+     */
+    private Integer postNum;
+    /**
+     * 剩余简历下载数
+     */
+    private Integer resumeNum;
+    /**
+     * 适用招聘岗位
+     */
+    private String suitPosition;
+    /**
+     * 状态
+     */
+    private Status status;
+
+    public String getChannelTime() {
+        return channelTime;
+    }
+
+    public void setChannelTime(String channelTime) {
+        this.channelTime = channelTime;
+    }
+
+    public String getChargeCase() {
+        return chargeCase;
+    }
+
+    public void setChargeCase(String chargeCase) {
+        this.chargeCase = chargeCase;
+    }
+
+    public Integer getPostNum() {
+        return postNum;
+    }
+
+    public void setPostNum(Integer postNum) {
+        this.postNum = postNum;
+    }
+
+    public Integer getResumeNum() {
+        return resumeNum;
+    }
+
+    public void setResumeNum(Integer resumeNum) {
+        this.resumeNum = resumeNum;
+    }
+
+    public String getSuitPosition() {
+        return suitPosition;
+    }
+
+    public void setSuitPosition(String suitPosition) {
+        this.suitPosition = suitPosition;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getRecruitName() {
         return recruitName;
