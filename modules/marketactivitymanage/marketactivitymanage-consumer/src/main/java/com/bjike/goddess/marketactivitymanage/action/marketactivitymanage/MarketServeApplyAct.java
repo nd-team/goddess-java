@@ -12,7 +12,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.market.api.MarketInfoAPI;
+//import com.bjike.goddess.market.api.MarketInfoAPI;
 import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
@@ -60,8 +60,8 @@ public class MarketServeApplyAct extends BaseFileAction {
 
     @Autowired
     private CustomerInfoAPI customerInfoAPI;
-    @Autowired
-    private MarketInfoAPI marketInfoAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
@@ -534,7 +534,7 @@ public class MarketServeApplyAct extends BaseFileAction {
         try {
             List<String> projectName = new ArrayList<>();
             if(moduleAPI.isCheck("market")){
-                projectName = marketInfoAPI.getProjectName();
+//                projectName = marketInfoAPI.getProjectName();
             }
             return ActResult.initialize(projectName);
         } catch (SerException e) {

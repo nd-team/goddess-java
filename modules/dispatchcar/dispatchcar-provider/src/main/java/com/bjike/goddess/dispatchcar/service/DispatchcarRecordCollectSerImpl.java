@@ -344,6 +344,7 @@ public class DispatchcarRecordCollectSerImpl extends ServiceImpl<DispatchcarReco
                 if (dispatchCarInfos7 != null && dispatchCarInfos7.size() > 0){
                     moneyAccountNumber = dispatchCarInfos7.size();
                 }
+                dispatchcarRecordCollectBO.setMoneyAccountNumber(moneyAccountNumber);
                 //租车费
                 rentcarCost = dispatchCarInfos2.stream().filter(p -> p.getCarRentalCost() != null).mapToDouble(p -> p.getCarRentalCost()).sum();
                 dispatchcarRecordCollectBO.setRentcarCost(rentcarCost);

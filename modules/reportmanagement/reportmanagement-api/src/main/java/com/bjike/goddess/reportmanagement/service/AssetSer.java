@@ -137,4 +137,15 @@ public interface AssetSer extends Ser<Asset, AssetDTO> {
      * @throws SerException
      */
     List<AssetBO> list1(AssetDTO dto) throws SerException;
+
+    /**
+     * 导出资产负债表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(AssetDTO dto) throws SerException {
+        return null;
+    }
 }

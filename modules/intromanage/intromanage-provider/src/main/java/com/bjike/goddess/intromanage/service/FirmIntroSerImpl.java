@@ -932,6 +932,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
                     }
                     index =lastRow+1;
                 }
+                index++;
             }
 
             os = new ByteArrayOutputStream();

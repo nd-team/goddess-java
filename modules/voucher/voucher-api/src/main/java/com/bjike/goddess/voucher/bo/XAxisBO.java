@@ -1,4 +1,4 @@
-package com.bjike.goddess.dimission.bo;
+package com.bjike.goddess.voucher.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 

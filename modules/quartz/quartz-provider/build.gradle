@@ -50,6 +50,7 @@ dependencies {
     compile project(":modules:event:event-api")
     compile project(":modules:outcarfare:outcarfare-api")
     compile project(":modules:taskallotment:taskallotment-api")
+    compile project(":modules:rentcar:rentcar-api")
 
 }
 

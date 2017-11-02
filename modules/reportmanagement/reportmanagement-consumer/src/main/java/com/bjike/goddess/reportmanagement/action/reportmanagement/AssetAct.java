@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -30,6 +31,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +47,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("asset")
-public class AssetAct {
+public class AssetAct extends BaseFileAction{
     @Autowired
     private AssetAPI assetAPI;
     @Autowired
@@ -406,6 +409,27 @@ public class AssetAct {
             return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto 资产负债表
+     * @des 导出资产负债表
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(AssetDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "资产负债表.xlsx";
+            super.writeOutFile(response, assetAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 }

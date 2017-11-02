@@ -20,6 +20,16 @@ public class DebtVO {
     private String debtId;
 
     /**
+     * 开始时间
+     */
+    private String startTiem;
+
+    /**
+     * 结束时间
+     */
+    private String endTime;
+
+    /**
      * 负债和所有者权益(或股东权益)
      */
     private String debt;
@@ -114,5 +124,21 @@ public class DebtVO {
 
     public void setEndDebt(Double endDebt) {
         this.endDebt = endDebt;
+    }
+
+    public String getStartTiem() {
+        return startTiem;
+    }
+
+    public void setStartTiem(String startTiem) {
+        this.startTiem = startTiem;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

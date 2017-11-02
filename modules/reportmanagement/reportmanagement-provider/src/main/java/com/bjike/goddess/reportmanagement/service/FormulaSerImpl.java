@@ -414,7 +414,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
     public FormulaBO add(FormulaTO to) throws SerException {
         checkAddIdentity();
         Formula entity = BeanTransform.copyProperties(to, Formula.class, true);
-        entity.setType1("1");
+//        entity.setType1("1");
         super.save(entity);
         return BeanTransform.copyProperties(entity, FormulaBO.class);
     }

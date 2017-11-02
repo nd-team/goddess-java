@@ -28,6 +28,7 @@
 	<dubbo:reference  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
+	<dubbo:reference  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference  interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" id="taskNodeApiImpl"/>
 
 </beans>

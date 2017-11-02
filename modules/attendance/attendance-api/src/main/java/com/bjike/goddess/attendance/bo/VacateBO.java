@@ -4,6 +4,8 @@ import com.bjike.goddess.attendance.enums.AduitStatus;
 import com.bjike.goddess.attendance.enums.VacateType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.io.Serializable;
+
 /**
  * 请假管理业务传输对象
  *
@@ -13,8 +15,12 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class VacateBO extends BaseBO {
+public class VacateBO implements Serializable {
 
+    /**
+     * id
+     */
+    private String id;
     /**
      * 员工编号
      */

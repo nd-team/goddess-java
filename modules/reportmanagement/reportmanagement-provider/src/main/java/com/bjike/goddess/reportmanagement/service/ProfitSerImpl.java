@@ -1,21 +1,29 @@
 package com.bjike.goddess.reportmanagement.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.organize.api.ModuleTypeAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Profit;
+import com.bjike.goddess.reportmanagement.entity.ProfitFormula;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.ProfitType;
 import com.bjike.goddess.reportmanagement.enums.Type;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.utils.Utils;
+import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -51,6 +59,15 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ModuleTypeAPI moduleTypeAPI;
+    @Autowired
+    private ProfitFormulaSer profitFormulaSer;
+    @Autowired
+    private SubjectCollectAPI subjectCollectAPI;
+
 
     /**
      * 核对查看权限（部门级别）
@@ -183,14 +200,21 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     public ProfitBO save(ProfitTO to) throws SerException {
         checkAddIdentity();
+        if (!isAccountingModule()) {
+            throw new SerException("当前用户不是账务模块");
+        }
         Profit entity = BeanTransform.copyProperties(to, Profit.class, true);
         super.save(entity);
         return BeanTransform.copyProperties(entity, ProfitBO.class);
     }
 
-    @Override
-    public List<ProfitBO> list(ProfitDTO dto) throws SerException {
+    //    @Override
+    public List<ProfitBO> list1(ProfitDTO dto) throws SerException {
         checkSeeIdentity();
+        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+            dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
+            dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
+        }
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();
@@ -198,6 +222,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         LocalDate a = Utils.tranTime(endTime);
         String startYear = a.getYear() + "-01" + "-01";
         dto.getSorts().add("profitType=ASC");
+        dto.getSorts().add("createTime=ASC");
         List<Profit> list = super.findByCis(dto);
         List<ProfitBO> boList = new ArrayList<ProfitBO>();
         boolean b = true;
@@ -208,6 +233,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         boolean b5 = true;
         boolean b6 = true;
         boolean b7 = true;
+        boolean b8 = true;
         double incomeMonth = 0;
         double incomeYear = 0;
         int num = 1;
@@ -221,6 +247,12 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                     List<FormulaBO> startYearBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
                     if ((startYearBOs != null) && (!startYearBOs.isEmpty())) {
                         bo.setCurrentYearAmount(startYearBOs.get(startYearBOs.size() - 1).getCurrent());
+                    }
+                    if (ProfitType.AINCOME.equals(profit.getProfitType()) && b8) {
+                        ProfitBO bo1 = new ProfitBO();
+                        bo1.setProject("一、营业收入");
+                        num++;
+                        b8 = false;
                     }
                     if (ProfitType.AINCOME.equals(profit.getProfitType())) {
                         if (Type.ADD.equals(profit.getType())) {
@@ -238,9 +270,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                                 b1 = false;
                             }
                         }
-                        if (profit == list.get(0)) {
-                            bo.setProject("一、" + profit.getProject());
-                        }
+//                        if (profit == list.get(0)) {
+//                            bo.setProject("一、" + profit.getProject());
+//                        }
                     } else if (ProfitType.BPROFIT.equals(profit.getProfitType())) {
                         if (b2) {
                             ProfitBO twoBO = new ProfitBO();
@@ -316,8 +348,216 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     }
 
     @Override
+    public List<ProfitBO> list(ProfitDTO dto) throws SerException {
+        checkSeeIdentity();
+        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+            dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
+            dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
+        }
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        FormulaDTO formulaDTO = new FormulaDTO();
+        BeanUtils.copyProperties(dto, formulaDTO);
+        LocalDate a = Utils.tranTime(endTime);
+        String startYear = a.getYear() + "-01" + "-01";
+        dto.getSorts().add("profitType=ASC");
+        dto.getSorts().add("createTime=ASC");
+        List<Profit> list = super.findByCis(dto);
+        List<ProfitBO> boList = new ArrayList<ProfitBO>();
+        boolean b = true;
+        boolean b1 = true;
+        boolean b2 = true;
+        boolean b3 = true;
+        boolean b4 = true;
+        boolean b5 = true;
+        boolean b6 = true;
+        boolean b7 = true;
+        boolean b8 = true;
+        double incomeMonth = 0;
+        double incomeYear = 0;
+        int num = 1;
+        if ((list != null) && (!list.isEmpty())) {
+            for (Profit profit : list) {
+                List<FormulaBO> formulaBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
+                if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
+                    FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
+                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
+                    bo.setCurrentMonthAmount(formulaBO.getCurrent());
+                    List<FormulaBO> startYearBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
+                    if ((startYearBOs != null) && (!startYearBOs.isEmpty())) {
+                        bo.setCurrentYearAmount(startYearBOs.get(startYearBOs.size() - 1).getCurrent());
+                    }
+                    if (ProfitType.AINCOME.equals(profit.getProfitType()) && b8) {
+                        ProfitBO bo1 = new ProfitBO();
+                        bo1.setProject("一、营业收入");
+                        bo1.setNum(num);
+                        num++;
+                        boList.add(bo1);
+                        b8 = false;
+                    }
+                    if (ProfitType.AINCOME.equals(profit.getProfitType())) {
+                        if (Type.ADD.equals(profit.getType())) {
+                            incomeMonth += bo.getCurrentMonthAmount();
+                            incomeYear += bo.getCurrentYearAmount();
+                            if (b) {
+                                bo.setProject("加：" + profit.getProject());
+                                b = false;
+                            }
+                        } else if (Type.REMOVE.equals(profit.getType())) {
+                            incomeMonth -= bo.getCurrentMonthAmount();
+                            incomeYear -= bo.getCurrentYearAmount();
+                            if (b1) {
+                                bo.setProject("减：" + profit.getProject());
+                                b1 = false;
+                            }
+                        }
+                    } else if (ProfitType.BPROFIT.equals(profit.getProfitType())) {
+                        if (b2) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("二、营业利润");
+                            twoBO.setCurrentMonthAmount(incomeMonth);
+                            twoBO.setCurrentYearAmount(incomeYear);
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b2 = false;
+                        }
+                        if (Type.ADD.equals(profit.getType())) {
+                            incomeMonth += bo.getCurrentMonthAmount();
+                            incomeYear += bo.getCurrentYearAmount();
+                            if (b3) {
+                                bo.setProject("加：" + profit.getProject());
+                                b3 = false;
+                            }
+                        } else if (Type.REMOVE.equals(profit.getType())) {
+                            incomeMonth -= bo.getCurrentMonthAmount();
+                            incomeYear -= bo.getCurrentYearAmount();
+                            if (b4) {
+                                bo.setProject("减：" + profit.getProject());
+                                b4 = false;
+                            }
+                        }
+                    } else if (ProfitType.CSUM.equals(profit.getProfitType())) {
+                        if (b5) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("三、利润总额");
+                            twoBO.setCurrentMonthAmount(incomeMonth);
+                            twoBO.setCurrentYearAmount(incomeYear);
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b5 = false;
+                        }
+                        if (Type.ADD.equals(profit.getType())) {
+                            incomeMonth += bo.getCurrentMonthAmount();
+                            incomeYear += bo.getCurrentYearAmount();
+                            if (b6) {
+                                bo.setProject("加：" + profit.getProject());
+                                b6 = false;
+                            }
+                        } else if (Type.REMOVE.equals(profit.getType())) {
+                            incomeMonth -= bo.getCurrentMonthAmount();
+                            incomeYear -= bo.getCurrentYearAmount();
+                            if (b7) {
+                                bo.setProject("减：" + profit.getProject());
+                                b7 = false;
+                            }
+                        }
+                    }
+                    bo.setNum(num);
+                    num++;
+                    boList.add(bo);
+                } else {
+                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
+
+                    if (ProfitType.AINCOME.equals(profit.getProfitType()) && b8) {
+                        ProfitBO bo1 = new ProfitBO();
+                        bo1.setProject("一、营业收入");
+                        bo1.setNum(num);
+                        boList.add(bo1);
+                        num++;
+                        b8 = false;
+                    }
+                    if (ProfitType.AINCOME.equals(profit.getProfitType())) {
+                        if (Type.ADD.equals(profit.getType())) {
+                            if (b) {
+                                bo.setProject("加：" + profit.getProject());
+                                b = false;
+                            }
+                        } else if (Type.REMOVE.equals(profit.getType())) {
+                            if (b1) {
+                                bo.setProject("减：" + profit.getProject());
+                                b1 = false;
+                            }
+                        }
+                    } else if (ProfitType.BPROFIT.equals(profit.getProfitType())) {
+                        if (b2) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("二、营业利润");
+                            twoBO.setCurrentMonthAmount(incomeMonth);
+                            twoBO.setCurrentYearAmount(incomeYear);
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b2 = false;
+                        }
+                        if (Type.ADD.equals(profit.getType())) {
+                            if (b3) {
+                                bo.setProject("加：" + profit.getProject());
+                                b3 = false;
+                            }
+                        } else if (Type.REMOVE.equals(profit.getType())) {
+                            if (b4) {
+                                bo.setProject("减：" + profit.getProject());
+                                b4 = false;
+                            }
+                        }
+                    } else if (ProfitType.CSUM.equals(profit.getProfitType())) {
+                        if (b5) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("三、利润总额");
+                            twoBO.setCurrentMonthAmount(incomeMonth);
+                            twoBO.setCurrentYearAmount(incomeYear);
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b5 = false;
+                        }
+                        if (Type.ADD.equals(profit.getType())) {
+                            if (b6) {
+                                bo.setProject("加：" + profit.getProject());
+                                b6 = false;
+                            }
+                        } else if (Type.REMOVE.equals(profit.getType())) {
+                            if (b7) {
+                                bo.setProject("减：" + profit.getProject());
+                                b7 = false;
+                            }
+                        }
+                    }
+                    bo.setNum(num);
+                    num++;
+                    boList.add(bo);
+                }
+            }
+            ProfitBO lastBO = new ProfitBO();
+            lastBO.setProject("四、净利润");
+            lastBO.setCurrentMonthAmount(incomeMonth);
+            lastBO.setCurrentYearAmount(incomeYear);
+            lastBO.setNum(num);
+            num++;
+            boList.add(lastBO);
+        }
+        return boList;
+    }
+
+    @Override
     public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
         checkSeeIdentity();
+        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
+            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+        }
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
 //        String[] projectNames = dto.getProjectNames();
@@ -471,11 +711,19 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             }
             boList.add(lastBO);
         }
+        boList.stream().forEach(obj -> {
+            obj.setStartTime(dto.getStartTime());
+            obj.setEndTime(dto.getEndTime());
+        });
         return boList;
     }
 
     @Override
     public List<ProfitVerticalBO> verticalAnalyze(ProfitDTO dto) throws SerException {
+        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
+            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+        }
         List<ProfitLevelBO> levelBOs = levelAnalyze(dto);
         double incomeStart = 0;
         double incomeEnd = 0;
@@ -543,6 +791,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 }
             }
         }
+        boList.stream().forEach(obj -> {
+            obj.setStartTime(dto.getStartTime());
+            obj.setEndTime(dto.getEndTime());
+        });
         return boList;
     }
 
@@ -595,10 +847,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         }
         ProfitAnalyzeIndicatorBO maoProfit = new ProfitAnalyzeIndicatorBO();
         maoProfit.setIndicator("销售毛利率");
-        String mao="0";
-        String jing="0";
-        String asset="0";
-        String rd="0";
+        String mao = "0";
+        String jing = "0";
+        String asset = "0";
+        String rd = "0";
         if (income != 0) {
             mao = String.format("%.2f", ((income - expend) / income) * 100);
             maoProfit.setIndicatorValue(mao + "%");
@@ -742,6 +994,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Transactional(rollbackFor = SerException.class)
     public void edit(ProfitTO to) throws SerException {
         checkAddIdentity();
+        if (!isAccountingModule()) {
+            throw new SerException("当前用户不是账务模块");
+        }
         Profit entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -757,6 +1012,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Transactional(rollbackFor = SerException.class)
     public void delete(String id) throws SerException {
         checkAddIdentity();
+        if (!isAccountingModule()) {
+            throw new SerException("当前用户不是账务模块");
+        }
         Profit entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -767,5 +1025,135 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     public Long count(ProfitDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    //zhuangkaiqin
+    @Override
+    public void addFormula(ProfitFormulaTO to) throws SerException {
+        ProfitFormula profitFormula = new ProfitFormula();
+        BeanUtils.copyProperties(to, profitFormula);
+        //0代表是利润增减率分析中的,1代表是变动分析中的
+        profitFormula.setType(0);
+        profitFormulaSer.save(profitFormula);
+    }
+
+    @Override
+    public void editFormula(ProfitFormulaTO to) throws SerException {
+        ProfitFormula profitFormula = profitFormulaSer.findById(to.getId());
+        if (null == profitFormula) {
+            throw new SerException("目标数据不存在");
+        }
+
+        BeanUtils.copyProperties(to, profitFormula, "id", "createTime");
+        //0代表是利润增减率分析中的,1代表是变动分析中的
+        profitFormula.setType(0);
+        profitFormula.setModifyTime(LocalDateTime.now());
+        profitFormulaSer.update(profitFormula);
+    }
+
+    @Override
+    public void deleteFormula(String id) throws SerException {
+        ProfitFormula profitFormula = profitFormulaSer.findById(id);
+        if (null == profitFormula) {
+            throw new SerException("目标数据不存在");
+        }
+        profitFormulaSer.remove(profitFormula);
+    }
+
+    @Override
+    public ProfitFormulaBO findFormulaByID(String id) throws SerException {
+        ProfitFormula profitFormula = profitFormulaSer.findById(id);
+        if (null == profitFormula) {
+            throw new SerException("目标数据对象不存在");
+        }
+        ProfitFormulaBO profitFormulaBO = BeanTransform.copyProperties(profitFormula, ProfitFormulaBO.class);
+        return profitFormulaBO;
+    }
+
+    @Override
+    public List<ProfitFormulaBO> decreaseRatioList(ProfitFormulaDTO profitFormulaDTO) throws SerException {
+        profitFormulaDTO.getConditions().add(Restrict.eq("type", 0));
+        profitFormulaDTO.getSorts().add("createTime=asc");
+        List<ProfitFormula> profitFormulas = profitFormulaSer.findByCis(profitFormulaDTO);
+        List<ProfitFormulaBO> profitFormulaBOs = BeanTransform.copyProperties(profitFormulas, ProfitFormulaBO.class);
+        return profitFormulaBOs;
+    }
+
+    @Override
+    public List<String> analysisChanges(ProfitDTO dto) throws SerException {
+        // TODO: 17-10-30 以后会完善,目前只提供个接口
+        List<String> list = new ArrayList<>(0);
+        list.add("分析结果及建议");
+        return list;
+    }
+
+    @Override
+    public Long getFormulaTotal(ProfitFormulaDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("type", 0));
+        return profitFormulaSer.count(dto);
+    }
+
+    @Override
+    public List<ProfitFormulaBO> analysisChangesList(ProfitFormulaDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("type", 1));
+        dto.getSorts().add("createTime=asc");
+        List<ProfitFormula> profitFormulas = profitFormulaSer.findByCis(dto);
+        List<ProfitFormulaBO> profitFormulaBOs = BeanTransform.copyProperties(profitFormulas, ProfitFormulaBO.class);
+        return profitFormulaBOs;
+    }
+
+    @Override
+    public void analysisChangesAdd(ProfitFormulaTO to) throws SerException {
+        ProfitFormula profitFormula = new ProfitFormula();
+        BeanUtils.copyProperties(to, profitFormula);
+        profitFormula.setType(1);
+        profitFormulaSer.save(profitFormula);
+    }
+
+    @Override
+    public Long analysisChangesTotal(ProfitFormulaDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.eq("type", 1));
+        return profitFormulaSer.count(dto);
+    }
+
+    private String calculate(String[] operators, List<Double> eachSubject, Boolean percent) throws SerException {
+        Double total = 0d;
+        int i = operators.length;
+        for (int j = 0; j < i; j++) {
+            if (j != 0) {
+                if ("+".equals(operators[j])) {
+                    total = total + eachSubject.get(j);
+                }
+                if ("-".equals(operators[j])) {
+                    total = total - eachSubject.get(j);
+                }
+                if ("*".equals(operators[j])) {
+                    total = total * eachSubject.get(j);
+                }
+                if ("/".equals(operators[j])) {
+                    total = total / eachSubject.get(j);
+                }
+            } else {
+                total = eachSubject.get(0);
+            }
+        }
+        if (percent) {
+            if (total != 0d) {
+                return (Double.valueOf(String.format("%.2f", total)) * 100) + "%";
+            } else {
+                return "0%";
+            }
+        } else {
+            return String.valueOf(total);
+        }
+    }
+
+    //判断是否是账务模块
+    private Boolean isAccountingModule() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String moduleId = moduleTypeAPI.findModuleId("账务模块");
+        return positionDetailUserAPI.checkAsUserModule(userBO.getUsername(), moduleId);
     }
 }

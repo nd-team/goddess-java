@@ -74,23 +74,23 @@ public class FormulaAct {
         }
     }
 
-    /**
-     * 加公式科目
-     *
-     * @param to        对应的公式传输对象
-     * @return class FormulaVO
-     * @throws ActException
-     * @version v1
-     */
-    @PostMapping("v1/addProject")
-    public Result addProject(@Validated(FormulaTO.A.class) FormulaTO to, BindingResult result, HttpServletRequest request) throws ActException {
-        try {
-            FormulaBO bo = formulaAPI.add(to);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, FormulaVO.class, request));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 加公式科目
+//     *
+//     * @param to        对应的公式传输对象
+//     * @return class FormulaVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @PostMapping("v1/addProject")
+//    public Result addProject(@Validated(FormulaTO.A.class) FormulaTO to, BindingResult result, HttpServletRequest request) throws ActException {
+//        try {
+//            FormulaBO bo = formulaAPI.add(to);
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, FormulaVO.class, request));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 减公式科目
@@ -104,6 +104,24 @@ public class FormulaAct {
     public Result removeProject(@Validated(FormulaTO.A.class) FormulaTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             FormulaBO bo = formulaAPI.remove(to);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, FormulaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑公式科目
+     *
+     * @param to        对应的公式传输对象
+     * @return class FormulaVO
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/addProject")
+    public Result addProject(@Validated(FormulaTO.A.class) FormulaTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            FormulaBO bo = formulaAPI.add(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -126,5 +144,7 @@ public class FormulaAct {
             throw new ActException(e.getMessage());
         }
     }
+
+
 
 }

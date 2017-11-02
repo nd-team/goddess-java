@@ -190,6 +190,17 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     }
 
     /**
+     * 获取所有内部项目名称
+     * tanghaixiang
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllProject( ) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据id查询部门项目组详细数据
      *
      * @param ids 部门项目组详细数据id数组

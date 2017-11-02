@@ -1,6 +1,6 @@
-package com.bjike.goddess.dimission.vo;
+package com.bjike.goddess.voucher.vo;
 
-import com.bjike.goddess.dimission.bo.*;
+import com.bjike.goddess.voucher.bo.*;
 
 /**
  * 转正图形展示传数对象

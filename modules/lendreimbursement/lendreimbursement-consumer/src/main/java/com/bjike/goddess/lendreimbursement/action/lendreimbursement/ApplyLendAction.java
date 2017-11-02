@@ -28,8 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -1147,7 +1146,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取借款人汇总
+     * 获取汇总的借款人条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取借款人集合
@@ -1164,7 +1163,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取地区汇总
+     * 获取汇总的地区条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取地区集合
@@ -1181,7 +1180,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目组汇总
+     * 获取汇总的项目组条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目组集合
@@ -1198,7 +1197,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 获取项目名汇总
+     * 获取汇总的项目名称条件
      *
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目名集合
@@ -1284,6 +1283,7 @@ public class ApplyLendAction extends BaseFileAction {
     public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
             //该文件的路径
+
             FileInfo fileInfo = new FileInfo();
             Object storageToken = request.getAttribute("storageToken");
             fileInfo.setStorageToken(storageToken.toString());
@@ -1306,7 +1306,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
+    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO,BindingResult bindingResult, HttpServletRequest request) throws SerException {
         if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());

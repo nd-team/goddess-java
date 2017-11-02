@@ -260,7 +260,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Override
     public Long countApplyLend(ApplyLendDTO applyLendDTO) throws SerException {
         applyLendDTO.getConditions().add(Restrict.eq("payCondition", "否"));
-        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6, 8, 9}));
+        applyLendDTO.getConditions().add(Restrict.notIn("lendStatus", new Integer[]{2, 6,7, 8, 9}));
 
         if (StringUtils.isNotBlank(applyLendDTO.getLendDate())) {
             applyLendDTO.getConditions().add(Restrict.eq("lendDate", LocalDate.parse(applyLendDTO.getLendDate(), formatter)));
@@ -1923,7 +1923,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         List<ApplyLend> list = super.findBySql(
                 "select lender  from lendreimbursement_applylend group by lender ", ApplyLend.class, fields);
 
-        List<String> lenderList = list.stream().map(ApplyLend::getLender)
+        List<String> lenderList = list.stream().filter(applyLend -> (StringUtils.isNotBlank(applyLend.getLender() )))
+                .map(ApplyLend::getLender)
                 .filter(str -> (str != null || !"".equals(str.trim()))).distinct().collect(Collectors.toList());
 
         return lenderList;
@@ -1935,7 +1936,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         List<ApplyLend> list = super.findBySql(
                 "select area  from lendreimbursement_applylend group by area ", ApplyLend.class, fields);
 
-        List<String> areaList = list.stream().map(ApplyLend::getArea)
+        List<String> areaList = list.stream().filter(applyLend -> (StringUtils.isNotBlank(applyLend.getArea() )))
+                .map(ApplyLend::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
         return areaList;
@@ -1959,7 +1961,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         List<ApplyLend> list = super.findBySql(
                 "select projectGroup  from lendreimbursement_applylend group by projectGroup ", ApplyLend.class, fields);
 
-        List<String> areaList = list.stream().map(ApplyLend::getProjectGroup)
+        List<String> areaList = list.stream().filter(applyLend -> (StringUtils.isNotBlank(applyLend.getProjectGroup() )))
+                .map(ApplyLend::getProjectGroup)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
 
         return areaList;
@@ -1988,8 +1991,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         List<ApplyLend> list = super.findBySql(
                 "select projectName  from lendreimbursement_applylend group by projectName ", ApplyLend.class, fields);
 
-        List<String> areaList = list.stream().map(ApplyLend::getProjectName)
-                .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
+        List<String> areaList = list.stream().filter(applyLend -> (StringUtils.isNotBlank(applyLend.getProjectName() )))
+                .map(ApplyLend::getProjectName)
+                .distinct().collect(Collectors.toList());
 
         return areaList;
 

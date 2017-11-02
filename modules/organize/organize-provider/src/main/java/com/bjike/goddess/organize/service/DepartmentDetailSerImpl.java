@@ -337,6 +337,16 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
     }
 
     @Override
+    public List<String> findAllProject() throws SerException {
+        List<String> listProject = new ArrayList<>();
+        List<DepartmentDetail> list = super.findAll();
+        if (list != null && list.size() > 0) {
+            listProject = list.stream().filter(str -> StringUtils.isNotBlank(str.getInnerProject())).map(DepartmentDetail::getInnerProject).collect(Collectors.toList());
+        }
+        return listProject;
+    }
+
+    @Override
     public List<OpinionBO> findByIds(String... ids) throws SerException {
         DepartmentDetailDTO dto = new DepartmentDetailDTO();
         dto.getConditions().add(Restrict.in(ID, ids));

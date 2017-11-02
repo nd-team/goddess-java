@@ -22,6 +22,7 @@ import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.AnalysisBO;
+import com.bjike.goddess.voucher.bo.OptionBO;
 import com.bjike.goddess.voucher.bo.PartBO;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
@@ -35,7 +36,7 @@ import com.bjike.goddess.voucher.to.VoucherFileTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import com.bjike.goddess.voucher.vo.AccountInfoVO;
 import com.bjike.goddess.voucher.vo.AnalysisVO;
-import com.bjike.goddess.voucher.vo.HistogramVO;
+import com.bjike.goddess.voucher.vo.OptionVO;
 import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -307,7 +308,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/audit/{id}")
+    @PutMapping("v1/audit/{id}")
     public Result audit(@PathVariable String id) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.audit(id);
@@ -382,7 +383,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/posting")
+    @PutMapping("v1/posting")
     public Result posting(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
 //            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.posting(voucherGenerateTO);
@@ -401,7 +402,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/antiAudit/{id}")
+    @PutMapping("v1/antiAudit/{id}")
     public Result antiAudit(@PathVariable String id) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiAudit(id);
@@ -533,7 +534,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/antiPosting/{id}")
+    @PutMapping("v1/antiPosting/{id}")
     public Result antiPosting(@PathVariable String id) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiPosting(id);
@@ -552,7 +553,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/checkAccount")
+    @PutMapping("v1/checkAccount")
     public Result checkAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.checkAccount(voucherGenerateTO);
@@ -685,7 +686,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PatchMapping("v1/antiCheckAccount/{id}")
+    @PutMapping("v1/antiCheckAccount/{id}")
     public Result antiCheckAccount(@PathVariable String[] ids) throws ActException {
         try {
             List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.antiCheckAccount(ids);
@@ -696,7 +697,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     }
 
     /**
-     * 查看月度,季度,年度的结账记录
+     * 查看月度季度年度的结账记录
      *
      * @return class VoucherGenerateVO
      * @version v1
@@ -853,16 +854,16 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 记账凭证记录柱状图
      *
-     * @return class HistogramVO
+     * @return class OptionVO
      * @des 根据月份汇总借方金额和贷方金额
      * @version v1
      */
     @GetMapping("v1/ctReSubHistogram")
     public Result ctReSubHistogram() throws ActException {
         try {
-            List<HistogramVO> histogramVOs = BeanTransform.copyProperties(
-                    voucherGenerateAPI.ctReSubHistogram(), HistogramVO.class, true);
-            return ActResult.initialize(histogramVOs);
+            OptionBO optionBO = voucherGenerateAPI.ctReSubHistogram();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -966,7 +967,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listSubByFirst")
-    public Result listSubByFirst(@RequestParam String firstSub) throws ActException {
+    public Result listSubByFirst(@RequestParam String firstSub,BindingResult bindingResult) throws ActException {
         try {
             List<String> userList = voucherGenerateAPI.listSubByFirst(firstSub);
             return ActResult.initialize(userList);
@@ -982,7 +983,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listTubByFirst")
-    public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub) throws ActException {
+    public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub,BindingResult bindingResult) throws ActException {
         try {
             List<String> userList = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
             return ActResult.initialize(userList);

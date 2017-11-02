@@ -3,6 +3,8 @@ package com.bjike.goddess.attendance.dto.overtime;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 加班数据传输对象
  *
@@ -30,7 +32,7 @@ public class OverLongAndRelaxdayDTO extends BaseDTO {
     /**
      * 是否午休
      */
-    @NotBlank(groups = {OverLongAndRelaxdayDTO.TestAdd.class} , message = "是否午休不能为空")
+    @NotNull(groups = {OverLongAndRelaxdayDTO.TestAdd.class} , message = "是否午休不能为空")
     private Boolean noonBreakOr;
 
     public String getStartTime() {

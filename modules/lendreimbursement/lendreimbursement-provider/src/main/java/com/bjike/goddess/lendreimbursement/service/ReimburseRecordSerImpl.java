@@ -14,6 +14,10 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.*;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimCompanyShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeConDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseTrendShapeDTO;
 import com.bjike.goddess.lendreimbursement.entity.*;
 import com.bjike.goddess.lendreimbursement.enums.*;
 import com.bjike.goddess.lendreimbursement.excel.ReimburseRecordExcel;
@@ -21,8 +25,12 @@ import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.organize.entity.DepartmentDetail;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
@@ -34,6 +42,7 @@ import com.bjike.goddess.user.bo.PositionBO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -41,7 +50,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,12 +89,14 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     @Autowired
     private ApplyLendSer applyLendSer;
 
+    private Logger logger = Logger.getLogger(ReimburseRecordSerImpl.class);
+
     /**
      * 检查权限
      *
      * @throws SerException
      */
-    private Boolean checkPermission( String idFlag ) throws SerException {
+    private Boolean checkPermission(String idFlag) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -90,22 +104,19 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         String userName = userBO.getUsername();
         //岗位权限
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission( idFlag );
+            flag = cusPermissionSer.getCusPermission(idFlag);
         } else {
             flag = true;
         }
-        if (!flag) {
-            throw new SerException("您不是财务模块人员,没有该操作权限");
-        }
         RpcTransmit.transmitUserToken(userToken);
-        return flag ;
+        return flag;
 
     }
 
     /**
      * 核对查看权限（部门级别）
      */
-    private Boolean guideIdentity(String idFlag ) throws SerException {
+    private Boolean guideIdentity(String idFlag) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -324,6 +335,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         Boolean listpermission = cusPermissionSer.getCusPermission("reim-ListAll");
         RpcTransmit.transmitUserToken(userToken);
         String userName = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         if (!listpermission && !"admin".equals(userName.toLowerCase())) {
             //没有查看所有数据的权限，则只能查看自己的数据
             if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -364,29 +376,22 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (!listpermission && !"admin".equals(userName.toLowerCase())) {
             //没有查看所有数据的权限，则只能查看自己的数据
             if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
                 sql.append(" and r2.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
             } else {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", userName));
                 sql.append(" and r2.reimer = '" + userName + "' ");
             }
             if (StringUtils.isNotBlank(reimburseRecordDTO.getCharger())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("charger", reimburseRecordDTO.getCharger()));
                 sql.append(" and r2.charger = '" + reimburseRecordDTO.getCharger() + "' ");
             } else {
-//                reimburseRecordDTO.getConditions().add(Restrict.or("charger", userName));
                 sql.append(" or r2.charger = '" + userName + "' ");
             }
-//            reimburseRecordDTO.getConditions().add(Restrict.or("filler", userName));
             sql.append(" or r2.filler = '" + userName + "' ");
             RpcTransmit.transmitUserToken(userToken);
         } else {
             if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
                 sql.append(" and r2.reimer = '" + reimburseRecordDTO.getReimer() + "' ");
             }
             if (StringUtils.isNotBlank(reimburseRecordDTO.getCharger())) {
-//                reimburseRecordDTO.getConditions().add(Restrict.eq("charger", reimburseRecordDTO.getCharger()));
                 sql.append(" and r2.charger = '" + reimburseRecordDTO.getCharger() + "' ");
             }
         }
@@ -486,7 +491,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         applyLendDTO.getConditions().add(Restrict.lt("lendDate", todayDate.minusDays(15)));
 //        applyLendDTO.getConditions().add(Restrict.eq("lendMoney", 0d));
         //还款状态为非通过的
-        applyLendDTO.getConditions().add(Restrict.ne("LendRetunStatus", 2));
+        applyLendDTO.getConditions().add(Restrict.ne("lendRetunStatus", 2));
         List<ApplyLend> applyLendList = applyLendSer.findByCis(applyLendDTO);
         if (applyLendList != null && applyLendList.size() > 0) {
             throw new SerException("报销人有超过15天的借款未还，请先还款，再来报销");
@@ -509,12 +514,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecord.setPayCondition("否");
         reimburseRecord.setReimStatus(ReimStatus.NONE);
 
-
         //冻结该报销单，说明已经被使用了
         FinoddinforDTO finoddinforDTO = new FinoddinforDTO();
         finoddinforDTO.getConditions().add(Restrict.eq("runNum", runNum));
-//        List<Finoddinfor> finoddinforList=  finoddinforSer.findByCis(finoddinforDTO);
-//        finoddinforSer.congealFinoddinfor(finoddinforSer.findOne(finoddinforDTO).getId());
         Finoddinfor finoddinfor = finoddinforSer.findOne(finoddinforDTO);
         finoddinfor.setStatus(Status.CONGEAL);
         finoddinfor.setModifyTime(LocalDateTime.now());
@@ -822,7 +824,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimburseRecordDTO.getConditions().add(Restrict.isNull("chargerAuditStatus"));
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
-        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
+//        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
 
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -847,7 +849,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        reimburseRecordDTO.getConditions().add(Restrict.or("chargerAuditStatus", null));
 
         reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
-        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
+//        reimburseRecordDTO.getConditions().add(Restrict.or("ticketCondition", "否"));
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
             reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
@@ -861,6 +863,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         reimburseRecordDTO = addCondition(reimburseRecordDTO);
 
+        reimburseRecordDTO.getSorts().add("createTime=desc");
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
@@ -869,6 +872,8 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -892,7 +897,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             throw new SerException("id不能为空");
         }
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
-        if (!userName.equals(temp.getCharger()) || !userName.equals("admin")) {
+        if (!userName.equals(temp.getCharger()) && !userName.equals("admin")) {
             throw new SerException("您不是负责人，不能审核");
         }
 
@@ -916,6 +921,14 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             temp.setReimStatus(ReimStatus.CHARGEPASS);
         } else if ("不通过".equals(reimburseRecordTO.getChargerAuditStatus())) {
             temp.setReimStatus(ReimStatus.CHARGENOTPASS);
+
+            //把寄件信息清空
+            temp.setSendDate(null);
+            temp.setSendRecevier("");
+            temp.setReceiveArea("");
+            temp.setReceiveAddr("");
+            temp.setSendCondition("");
+            temp.setSender("");
         }
         temp.setModifyTime(LocalDateTime.now());
 
@@ -1033,7 +1046,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecord.setSendRecevier(reimburseRecordTO.getSendRecevier());
         reimburseRecord.setReceiveArea(reimburseRecordTO.getReceiveArea());
         reimburseRecord.setReceiveAddr(reimburseRecordTO.getReceiveAddr());
+        reimburseRecord.setSendCondition(reimburseRecordTO.getSendCondition());
         reimburseRecord.setSender(userName);
+        reimburseRecord.setModifyTime(LocalDateTime.now());
 
         super.update(reimburseRecord);
 
@@ -1046,7 +1061,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("reimStatus", 1));
         dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-        dto.getConditions().add(Restrict.eq("is_analisisAll", false));
+        dto.getConditions().add(Restrict.eq("analisisIsAll", false));
         dto.getSorts().add("createTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
@@ -1074,7 +1089,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         ReimburseRecordDTO dto = reimburseRecordDTO;
         dto.getConditions().add(Restrict.eq("reimStatus", 1));
         dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-        dto.getConditions().add(Restrict.eq("is_analisisAll", false));
+        dto.getConditions().add(Restrict.eq("analisisIsAll", false));
         dto.getSorts().add("createTime=desc");
 
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -1090,10 +1105,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             dto.getConditions().add(Restrict.between("occureDate", new String[]{reimburseRecordDTO.getStartTime(), reimburseRecordDTO.getEndTime()}));
         }
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
-            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
+            dto.getConditions().add(Restrict.eq("reimer", reimburseRecordDTO.getReimer()));
         }
 
         dto = addCondition(dto);
+        dto.getSorts().add("createTime=desc");
 
         List<ReimburseRecord> recordBOList = super.findByCis(dto, true);
         List<ReimburseRecordBO> recordBOList1 = BeanTransform.copyProperties(recordBOList, ReimburseRecordBO.class);
@@ -1118,6 +1134,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         UserBO userBO = userAPI.currentUser();
 
+
         //审核日志表
         ReimburseAuditLogDTO reimburseAuditLogDTO = new ReimburseAuditLogDTO();
         reimburseAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
@@ -1125,49 +1142,54 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
 
         if (listReimAuditLog != null && listReimAuditLog.size() > 0) {
-//            if (StringUtils.isNotBlank(listReimAuditLog.get(0).getAuditStatus())
-//                    && !"未处理".equals(listReimAuditLog.get(0).getAuditStatus())) {
-//                throw new SerException("您已经分析过，不可以继续分析");
-//            } else {
-                if (StringUtils.isBlank(reimburseRecordTO.getChargerAuditStatus()) ||
-                        (reimburseRecordTO.getChargerAuditStatus().equals("不通过") && reimburseRecordTO.getChargerAuditStatus().equals("通过"))) {
-                    throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
-                }
-                listReimAuditLog.stream().forEach(str -> {
-                    str.setContent("分析意见:" + reimburseRecordTO.getAuditAdvice());
-                    str.setAuditTime(LocalDate.now());
-                    str.setModifyTime(LocalDateTime.now());
-                    if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
-                        str.setAuditStatus("分析通过");
-                    } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
-                        str.setAuditStatus("分析不通过");
-                    }
-                });
-                reimburseAuditLogSer.update(listReimAuditLog);
-//            }
-        }else if(listReimAuditLog==null && "admin".equals(userBO.getUsername().toLowerCase())){
-            List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser( userBO.getId() );
-            ReimburseAuditLog logs = new ReimburseAuditLog();
-            logs.setCreateTime(LocalDateTime.now());
-            logs.setAuditTime(LocalDate.now());
-            logs.setEmpNum(userBO.getEmployeeNumber());
-            logs.setUserName(userBO.getUsername() );
-            logs.setPosition( positionDetailBOS != null && positionDetailBOS.size()>0 ? positionDetailBOS.get(0).getPosition():"");
-            logs.setReimrecordId( temp.getId());
-            if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
-                logs.setAuditStatus("分析通过");
-            } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
-                logs.setAuditStatus("分析不通过");
+            if (StringUtils.isBlank(reimburseRecordTO.getChargerAuditStatus()) ||
+                    (reimburseRecordTO.getChargerAuditStatus().equals("不通过") && reimburseRecordTO.getChargerAuditStatus().equals("通过"))) {
+                throw new SerException("分析人员只能选择通过或不通过二个状态,reimStatus");
             }
-            reimburseAuditLogSer.save( logs );
+            listReimAuditLog.stream().forEach(str -> {
+                str.setContent("分析意见:" + reimburseRecordTO.getAuditAdvice());
+                str.setAuditTime(LocalDate.now());
+                str.setModifyTime(LocalDateTime.now());
+                if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
+                    str.setAuditStatus("分析通过");
+                } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
+                    str.setAuditStatus("分析不通过");
+                }
+            });
+            reimburseAuditLogSer.update(listReimAuditLog);
+//            }
+        } else if (listReimAuditLog == null || listReimAuditLog.size() <= 0) {
+//            List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser( userBO.getId() );
+//            ReimburseAuditLog logs = new ReimburseAuditLog();
+//            logs.setCreateTime(LocalDateTime.now());
+//            logs.setAuditTime(LocalDate.now());
+//            logs.setEmpNum(userBO.getEmployeeNumber());
+//            logs.setUserName(userBO.getUsername() );
+//            logs.setPosition( positionDetailBOS != null && positionDetailBOS.size()>0 ? positionDetailBOS.get(0).getPosition():"");
+//            logs.setReimrecordId( temp.getId());
+//            if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("通过")) {
+//                logs.setAuditStatus("分析通过");
+//            } else if (StringUtils.isNotBlank(reimburseRecordTO.getChargerAuditStatus()) && reimburseRecordTO.getChargerAuditStatus().equals("不通过")) {
+//                logs.setAuditStatus("分析不通过");
+//            }
+//            reimburseAuditLogSer.save( logs );
+
+            //先去报销分析人员里面看一下是不是有设置分析人员
+            ReimburseAnalisisorDTO analisisorDTO = new ReimburseAnalisisorDTO();
+            List<ReimburseAnalisisor> listReimAuditor = reimburseAnalisisorSer.findByCis(analisisorDTO);
+            if (listReimAuditor == null || listReimAuditor.size() < 0) {
+                throw new SerException("还没有可以分析的分析人员，请去'报销分析人员设置'里面去设置可以分析的人员,再重新添加报销数据");
+            } else {
+                throw new SerException("您不是该条记录的分析人员，不可以分析");
+            }
         }
 
         //查看一下规定的分析人员是否全部分析完了，若分析完了，就把报销表里面的“isAnalisisAll”改为true
         ReimburseAuditLogDTO checkAuditLogDTO = new ReimburseAuditLogDTO();
         checkAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
         checkAuditLogDTO.getConditions().add(Restrict.eq("auditStatus", "未处理"));
-        List<ReimburseAuditLog> listAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
-        if (listAuditLog == null) {
+        List<ReimburseAuditLog> listAuditLog = reimburseAuditLogSer.findByCis(checkAuditLogDTO);
+        if (listAuditLog == null || listAuditLog.size() <= 0) {
             temp.setAnalisisIsAll(true);
             super.update(temp);
         }
@@ -1189,29 +1211,50 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         UserBO userBO = userAPI.currentUser();
         String userName = userBO.getUsername();
-        UserDetailBO udetailBO = userDetailAPI.findByUserId(userBO.getId());
-        PositionBO positionBO = null;
-        if (udetailBO != null) {
-            positionBO = positionAPI.findById(udetailBO.getPositionId());
-        }
+
 
         //审核日志记录
-        ReimburseAuditLog reimburseAuditLog = new ReimburseAuditLog();
-        reimburseAuditLog.setUserName(userName);
-        reimburseAuditLog.setEmpNum(userBO.getEmployeeNumber());
-        reimburseAuditLog.setAuditTime(LocalDate.now());
-        reimburseAuditLog.setPosition(positionBO != null ? positionBO.getName() : "");
-        reimburseAuditLog.setReimrecordId(reimburseRecordTO.getId());
-        reimburseAuditLog.setAuditStatus("申请冻结");
-        reimburseAuditLog.setContent("");
-        reimburseAuditLog.setCreateTime(LocalDateTime.now());
-        reimburseAuditLog.setModifyTime(LocalDateTime.now());
+        //审核日志表
+        ReimburseAuditLogDTO reimburseAuditLogDTO = new ReimburseAuditLogDTO();
+        reimburseAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
+        reimburseAuditLogDTO.getConditions().add(Restrict.eq("userName", userName));
+        List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
+        if (listReimAuditLog == null || listReimAuditLog.size() <= 0) {
+            //先去报销分析人员里面看一下是不是有设置分析人员
+            ReimburseAnalisisorDTO analisisorDTO = new ReimburseAnalisisorDTO();
+            List<ReimburseAnalisisor> listReimAuditor = reimburseAnalisisorSer.findByCis(analisisorDTO);
+            if (listReimAuditor == null || listReimAuditor.size() < 0) {
+                throw new SerException("还没有可以分析的分析人员，请去'报销分析人员设置'里面去设置可以分析的人员,再重新添加报销数据");
+            } else {
+                throw new SerException("您不是该条记录的分析人员，不可以分析");
+            }
+        }
 
-        reimburseAuditLogSer.save(reimburseAuditLog);
+        for (ReimburseAuditLog log : listReimAuditLog) {
+            if (userName.equals(log.getUserName())) {
+                log.setUserName(userName);
+                log.setEmpNum(userBO.getEmployeeNumber());
+                log.setAuditTime(LocalDate.now());
+                log.setReimrecordId(reimburseRecordTO.getId());
+                log.setAuditStatus("申请冻结");
+                log.setContent(reimburseRecordTO.getAuditAdvice());
+                log.setModifyTime(LocalDateTime.now());
+                reimburseAuditLogSer.update(log);
+            }
+        }
 
         ReimburseRecord temp = super.findById(reimburseRecordTO.getId());
         temp.setReimStatus(ReimStatus.CONGEL);
         temp.setModifyTime(LocalDateTime.now());
+
+        //查看一下规定的分析人员是否全部分析完了，若分析完了，就把报销表里面的“isAnalisisAll”改为true
+        ReimburseAuditLogDTO checkAuditLogDTO = new ReimburseAuditLogDTO();
+        checkAuditLogDTO.getConditions().add(Restrict.eq("reimrecordId", reimburseRecordTO.getId()));
+        checkAuditLogDTO.getConditions().add(Restrict.eq("auditStatus", "未处理"));
+        List<ReimburseAuditLog> listAuditLog = reimburseAuditLogSer.findByCis(checkAuditLogDTO);
+        if (listAuditLog == null || listAuditLog.size() <= 0) {
+            temp.setAnalisisIsAll(true);
+        }
 
         super.update(temp);
         return BeanTransform.copyProperties(temp, ReimburseRecordBO.class);
@@ -1225,22 +1268,23 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        //查询分析人员表
-        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
-        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
-        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
-        if (analisisorList == null || analisisorList.size() <= 0) {
-            return 0L;
-        }
-        //查询审核分析表,如果已分析了的，就不会有
+//        //查询分析人员表
+//        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
+//        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
+//        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
+//        if (analisisorList == null || analisisorList.size() <= 0) {
+//            return 0L;
+//        }
+        //查询审核分析表,如果已分析了的，就有
         String[] fields = new String[]{"count"};
         StringBuffer sql = new StringBuffer("");
         sql.append(" SELECT count(*) as count ")
                 .append(" from lendreimbursement_reimburserecord  ")
-                .append(" where id NOT IN ( ")
+                .append(" where id  IN ( ")
                 .append(" SELECT record.id FROM lendreimbursement_reimburserecord record ")
                 .append(" INNER JOIN lendreimbursement_reimburseauditlog log ")
-                .append(" ON record.id = log.reimrecordId AND log.auditStatus = '未处理' ")
+                .append("  ON record.id = log.reimrecordId AND log.auditStatus in( '申请冻结','分析通过','分析不通过') ")
+                .append(" and log.userName = '" + userBO.getUsername() + "' ")
                 .append(" ) and reimStatus = 1 AND ticketCondition = '是' ");
         //and reimer = '' and reimNumber = '' and occureDate BETWEEN '' and ''
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -1258,6 +1302,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
             sql.append(" and reimer = '" + reimburseRecordDTO.getReimer() + "' ");
         }
+        logger.info("总条数" + sql);
 
         List<ReimburseRecordBO> count = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
         return count != null ? count.size() : 0L;
@@ -1271,13 +1316,13 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        //查询分析人员表
-        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
-        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
-        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
-        if (analisisorList == null || analisisorList.size() <= 0) {
-            return null;
-        }
+//        //查询分析人员表
+//        ReimburseAnalisisorDTO reimAnalisisDTO = new ReimburseAnalisisorDTO();
+//        reimAnalisisDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
+//        List<ReimburseAnalisisor> analisisorList = reimburseAnalisisorSer.findByCis(reimAnalisisDTO);
+//        if (analisisorList == null || analisisorList.size() <= 0) {
+//            return null;
+//        }
         //查询审核分析表,如果已分析了的，就会有
         String[] fields = new String[]{"id", "AccountFlag", "addContent", "area", "attender", "auditAdvice",
                 "budgetPayTime", "charger", "chargerAuditStatus", "chargerAuditTime", "commitDate",
@@ -1294,10 +1339,11 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                 .append(" receiveTicketTime, receiveTicketer , reimMoney , reimNumber , reimStatus , reimer , reimerRemark , ")
                 .append(" secondSubject , summary , thirdSubject , ticketCondition ,ticketNumber , ticketQuantity ,receiveTicketCheck ")
                 .append(" from lendreimbursement_reimburserecord  ")
-                .append(" where id NOT IN ( ")
+                .append(" where id IN ( ")
                 .append(" SELECT record.id FROM lendreimbursement_reimburserecord record ")
                 .append(" INNER JOIN lendreimbursement_reimburseauditlog log ")
-                .append(" ON record.id = log.reimrecordId AND log.auditStatus = '未处理' ")
+                .append("  ON record.id = log.reimrecordId AND log.auditStatus in( '申请冻结','分析通过','分析不通过') ")
+                .append(" and log.userName = '" + userBO.getUsername() + "' ")
                 .append(" ) and reimStatus = 1 AND ticketCondition = '是' ");
         //and reimer = '' and reimNumber = '' and occureDate BETWEEN '' and ''
         if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
@@ -1317,7 +1363,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         }
         sql.append(" order by modifyTime desc ");
         sql.append(" limit " + (reimburseRecordDTO.getPage()) + "," + reimburseRecordDTO.getLimit() + " ");
-
+        logger.info("分析列表" + sql);
         List<ReimburseRecordBO> list = super.findBySql(sql.toString(), ReimburseRecordBO.class, fields);
         return list;
 
@@ -1350,6 +1396,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimburseRecordDTO.getConditions().add(Restrict.isNull("accountCheckPassOr"));
         reimburseRecordDTO.getConditions().add(Restrict.or("accountCheckPassOr", "否"));
 
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
+        reimburseRecordDTO.getSorts().add("createTime=desc");
         List<ReimburseRecord> list = super.findByCis(reimburseRecordDTO, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(list, ReimburseRecordBO.class);
         return boList;
@@ -1376,7 +1425,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 //        List<ReimburseAnalisisorBO> reimburseRecordBOList = reimburseAnalisisorSer.findBySql(sql.toString(), ReimburseAnalisisorBO.class, fields);
         sql.append("select count(*) as count ")
                 .append(" from  lendreimbursement_reimburseauditlog ")
-                .append("  WHERE reimrecordId = '" + reimburseRecordTO.getId() + " and auditStatus ='未处理' ') ");
+                .append("  WHERE reimrecordId = '" + reimburseRecordTO.getId() + "' and auditStatus ='未处理' ");
 
         List<ReimburseAuditLogBO> audirLogBOList = reimburseAuditLogSer.findBySql(sql.toString(), ReimburseAuditLogBO.class, fields);
 
@@ -1449,6 +1498,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
 
         ReimburseRecordDTO dto = reimburseRecordDTO;
+        //不等于
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
 //        dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
         //帐务核对通过
@@ -1479,6 +1529,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     public List<ReimburseRecordBO> listWaitPay(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 
         ReimburseRecordDTO dto = reimburseRecordDTO;
+        //不等于
         dto.getConditions().add(Restrict.ne("payCondition", "是"));
 //        dto.getConditions().add(Restrict.eq("receiveTicketCheck", "是"));
         //帐务核对通过
@@ -1513,12 +1564,9 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             throw new SerException("报销单号不能为空，至少要有一个");
         }
         String[] reimNumbers = reimburseRecordTO.getReimNumbers();
-        StringBuffer sb = new StringBuffer(" ");
-        for (String str : reimNumbers) {
-            sb.append("'" + str + "' , ");
-        }
+
         ReimburseRecordDTO dto = new ReimburseRecordDTO();
-        dto.getConditions().add(Restrict.in("reimNumber", StringUtils.substringBeforeLast(sb.toString(), ",")));
+        dto.getConditions().add(Restrict.in("reimNumber", reimNumbers));
         List<ReimburseRecord> recordList = super.findByCis(dto);
 
         recordList.stream().forEach(str -> {
@@ -1654,6 +1702,7 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         dto = addCondition(dto);
 
+        dto.getSorts().add("createTime=desc");
         List<ReimburseRecord> recordList = super.findByCis(dto, true);
         List<ReimburseRecordBO> boList = BeanTransform.copyProperties(recordList, ReimburseRecordBO.class);
         return boList;
@@ -2224,22 +2273,23 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             case WAITAUDIT:
                 //待审核（负责人未审核或分析人申请冻结后负责人还未确认冻结的情况）
                 dto.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 0}));
-                dto.getConditions().add(Restrict.or("ticketCondition", "否"));
+//                dto.getConditions().add(Restrict.or("ticketCondition", "否"));
 
                 break;
             case WAITANALISIS:
                 //待分析(负责人审核通过)
                 dto.getConditions().add(Restrict.eq("reimStatus", 1));
                 dto.getConditions().add(Restrict.eq("ticketCondition", "是"));
-                dto.getConditions().add(Restrict.eq("is_analisisAll", false));
+                dto.getConditions().add(Restrict.eq("analisisIsAll", false));
 
                 break;
             case WAITCHECK:
                 //待核对(帐务核对和付款未通过或还未付款的)
-                //负责人通过，且分析的人全部分析完，且还未付款
+                //负责人通过，且分析的人全部分析完，且还未付款,且帐务核对为null
                 dto.getConditions().add(Restrict.eq("reimStatus", 1));
-                dto.getConditions().add(Restrict.eq("is_analisisAll", true));
+                dto.getConditions().add(Restrict.eq("analisisIsAll", true));
                 dto.getConditions().add(Restrict.ne("payCondition", "是"));
+                dto.getConditions().add(Restrict.isNull("accountCheckPassOr"));
 
                 break;
             case HASREIM:
@@ -2278,15 +2328,26 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                         if (ReimStatus.CHARGEPASS.equals(reimStatus) && "是".equals(ticketCondition)) {
                             str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITANALISIS);
                         }
+                        //   待解冻（负责人未通过）
+                        if ("不通过".equals(chargeAuditStatus) || ReimStatus.CHARGECONGEL.equals(reimStatus)) {
+                            //  待解冻 (负责人审核不通过/确认冻结/帐务核对不通过)
+                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+                        }
                     } else if (analisisIsAll) {
                         //待核对(帐务核对和付款未通过或还未付款的)
-                        if (ReimStatus.CHARGEPASS.equals(reimStatus)) {
+                        if (ReimStatus.CHARGEPASS.equals(reimStatus) && StringUtils.isBlank(accountCheckPassOr)) {
                             str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITCHECK);
+                        } else if (ReimStatus.CHARGEPASS.equals(reimStatus) && "否".equals(accountCheckPassOr)) {
+                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+                        } else if (ReimStatus.CONGEL.equals(reimStatus)) {
+                            //已经分析完，但是是申请冻结状态
+                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITAUDIT);
                         }
-                    } else if ("不通过".equals(chargeAuditStatus) || ReimStatus.CHARGECONGEL.equals(reimStatus)
-                            || "否".equals(accountCheckPassOr)) {
-                        //待解冻 (负责人审核不通过/确认冻结/帐务核对不通过)
-                        str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+//                        if ("不通过".equals(chargeAuditStatus) || ReimStatus.CHARGECONGEL.equals(reimStatus)
+//                                || "否".equals(accountCheckPassOr)) {
+//                            //待解冻 (负责人审核不通过/确认冻结/帐务核对不通过)
+//                            str.setReimPhoneSelectStatus(ReimPhoneSelectStatus.WAITTHAW);
+//                        }
                     }
 
                 } else if ("是".equals(payCondition)) {
@@ -2321,16 +2382,27 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
             case WAITAUDIT:
                 //待审核（负责人未审核或分析人申请冻结后负责人还未确认冻结的情况）
                 if (null == record.getSendDate()) {
-                    //说明没有寄件
-                    showStatus = ReimPhoneShowStatus.GOSEND;
+                    //说明没有寄件,而且是报销人身份
+                    if (userName.toLowerCase().equals(record.getReimer())) {
+                        showStatus = ReimPhoneShowStatus.GOSEND;
+                    } else {
+                        showStatus = ReimPhoneShowStatus.NONE;
+                    }
                 } else {
                     //已填寄件，则看是审核人还是非审核人
                     if ("admin".equals(userName.toLowerCase()) || userName.toLowerCase().equals(charger)) {
-                        showStatus = ReimPhoneShowStatus.GOAUDIT;
+                        if (!reimStatus.equals(ReimStatus.CONGEL)) {
+                            //负责人第一次审核
+                            showStatus = ReimPhoneShowStatus.GOAUDIT;
+                        } else if (reimStatus.equals(ReimStatus.CONGEL)) {
+                            //负责人第二次审核，即是否确认冻结
+                            showStatus = ReimPhoneShowStatus.CONGELAUDIT;
+                        }
                     } else {
                         showStatus = ReimPhoneShowStatus.SENDDETAIL;
                     }
                 }
+
                 break;
             case WAITANALISIS:
                 //待分析(负责人审核通过)
@@ -2341,43 +2413,44 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
                 reimburseAuditLogDTO.getConditions().add(Restrict.eq("empNum", userBO.getEmployeeNumber()));
                 List<ReimburseAuditLog> listReimAuditLog = reimburseAuditLogSer.findByCis(reimburseAuditLogDTO);
 
-                if ((listReimAuditLog != null && listReimAuditLog.size() > 0) || "admin".equals(userName.toLowerCase()) ) {
-                    if( ReimStatus.CHARGEPASS.equals(reimStatus) && !analisisIsAll ){
+                //不给admin来分析
+                if ((listReimAuditLog != null && listReimAuditLog.size() > 0) && !"admin".equals(userName.toLowerCase())) {
+                    if (ReimStatus.CHARGEPASS.equals(reimStatus) && !analisisIsAll) {
                         showStatus = ReimPhoneShowStatus.GOANALISIS;
                     }
-                }else{
+                } else {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
             case WAITCHECK:
                 //待核对(帐务核对和付款还未付款的或付款未通过（这个未通过的放到待解冻里面去了）)
-                //负责人通过，且分析的人全部分析完，且还未付款
+                //负责人通过，且分析的人全部分析完，且还未付款,且帐务核对为null
                 //有权限和admin
                 Boolean flag = checkPermission("reim-accountCheckAndPay");
-                if( flag ) {
-                    if (ReimStatus.CHARGEPASS.equals(reimStatus) && analisisIsAll && "否".equals(payCondition)) {
+                if (flag) {
+                    if (ReimStatus.CHARGEPASS.equals(reimStatus) && analisisIsAll && "否".equals(payCondition) && StringUtils.isBlank(accountCheckPassOr)) {
                         showStatus = ReimPhoneShowStatus.GOCHECK;
                     }
-                }else{
+                } else {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
             case HASREIM:
                 //已报销
-                if( "是".equals(payCondition)  ){
+                if ("是".equals(payCondition)) {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
             case WAITTHAW:
                 //待解冻(负责人审核不通过/负责人确认冻结/付款核对不通过（accountCheckPassOr='否'这个是不可以给重新编辑，因为已经不给报销了）/分析人申请冻结（已经转入待审核里面）)
-                if( "admin".equals(userName.toLowerCase()) || userName.equals(record.getReimer()) ){
-                    if( ReimStatus.CHARGENOTPASS.equals( reimStatus )  ){
+                if ("admin".equals(userName.toLowerCase()) || userName.equals(record.getReimer())) {
+                    if (ReimStatus.CHARGENOTPASS.equals(reimStatus)) {
                         showStatus = ReimPhoneShowStatus.WAITTHAWEDIT;
                     }
-                    if(  "否".equals(accountCheckPassOr) ){
+                    if ("否".equals(accountCheckPassOr)) {
                         showStatus = ReimPhoneShowStatus.NONE;
                     }
-                }else{
+                } else {
                     showStatus = ReimPhoneShowStatus.NONE;
                 }
                 break;
@@ -2385,4 +2458,702 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
 
         return showStatus;
     }
+
+
+    /**
+     * 下面的是图形化
+     */
+    /**
+     * 处理dto添加用户名和时间范围
+     *
+     * @param reimburseRecordDTO
+     * @param userName
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    private ReimburseRecordDTO addQueryCon(ReimburseRecordDTO reimburseRecordDTO, String userName, LocalDateTime startTime, LocalDateTime endTime) {
+        reimburseRecordDTO = new ReimburseRecordDTO();
+        reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", userName));
+        reimburseRecordDTO.getConditions().add(Restrict.between("createTime", new LocalDateTime[]{startTime, endTime}));
+        return reimburseRecordDTO;
+    }
+
+    /**
+     * 处理dto添加待审核报销记录
+     *
+     * @param reimburseRecordDTO
+     * @return
+     */
+    private ReimburseRecordDTO addWaitAuditQueryCon(ReimburseRecordDTO reimburseRecordDTO) {
+        reimburseRecordDTO.getConditions().add(Restrict.in("reimStatus", new Integer[]{5, 1, 0}));
+        reimburseRecordDTO.getConditions().add(Restrict.eq("analisisIsAll", false));
+        return reimburseRecordDTO;
+    }
+
+    /**
+     * 处理dto添加待支付报销记录
+     *
+     * @param reimburseRecordDTO
+     * @return
+     */
+    private ReimburseRecordDTO addWaitPayQueryCon(ReimburseRecordDTO reimburseRecordDTO) {
+        reimburseRecordDTO.getConditions().add(Restrict.eq("reimStatus", 1));
+        reimburseRecordDTO.getConditions().add(Restrict.eq("analisisIsAll", true));
+        reimburseRecordDTO.getConditions().add(Restrict.ne("payCondition", "是"));
+        reimburseRecordDTO.getConditions().add(Restrict.isNull("accountCheckPassOr"));
+        return reimburseRecordDTO;
+    }
+
+    /**
+     * 处理dto添加已支付报销记录
+     *
+     * @param reimburseRecordDTO
+     * @return
+     */
+    private ReimburseRecordDTO addHasPayQueryCon(ReimburseRecordDTO reimburseRecordDTO) {
+        reimburseRecordDTO.getConditions().add(Restrict.eq("payCondition", "是"));
+        return reimburseRecordDTO;
+    }
+
+    /**
+     * 饼型图制作
+     *
+     * @param seriesDataVOList
+     * @return
+     */
+    private ReimShapeVO echartPieObject(List<ReimShapeSeriesDataVO> seriesDataVOList, ReimShapeTitleVO titleVO) {
+        ReimShapeVO reimShapeVO = new ReimShapeVO();
+        //echart饼状图形数据封装
+        //title
+        ReimShapeTitleVO reimShapeTitleVO = titleVO;
+        titleVO.setX("center");
+        reimShapeVO.setTitleVO(reimShapeTitleVO);
+        //tootltip
+        ReimShapeToolTipVO toolTipVO = new ReimShapeToolTipVO();
+        toolTipVO.setTrigger("item");
+        toolTipVO.setFormatter("{a} <br/>{b} : {c} ({d}%)");
+        reimShapeVO.setToolTipVO(toolTipVO);
+        //legend
+        ReimShapeLegendVO legendVO = new ReimShapeLegendVO();
+        legendVO.setOrient("vertical");
+        legendVO.setLeft("left");
+        legendVO.setData(Arrays.asList("申报报销记录", "待审核", "待支付", "已支付"));
+        reimShapeVO.setRlegendVO(legendVO);
+        //series
+        ReimShapeSeriesVO seriesVO = new ReimShapeSeriesVO();
+        seriesVO.setName("无");
+        seriesVO.setType("pie");
+        seriesVO.setRadius("20%");
+        seriesVO.setSeriesDataVOList(seriesDataVOList);
+        reimShapeVO.setSeriesVO(seriesVO);
+
+        return reimShapeVO;
+    }
+
+    /**
+     * 柱状图制作
+     *
+     * @param userName
+     * @param start
+     * @param end
+     * @param seriesDataVOList
+     * @return
+     */
+    private ReimShapeBarVO echartBarObject(String userName, LocalDateTime start, LocalDateTime end, List<Double> seriesDataVOList) {
+        ReimShapeBarVO shapeBarVO = new ReimShapeBarVO();
+        //echart饼状图形数据封装
+        //title
+        ReimShapeTitleVO titleVO = new ReimShapeTitleVO();
+        titleVO.setText(userName + "报销指标金额统计");
+        titleVO.setSubtext("时间: " + start + "至" + end);
+        //color
+        shapeBarVO.setColorList(Arrays.asList("#3398DB"));
+        //tootltip
+        ReimShapeBarToolTipVO toolTipVO = new ReimShapeBarToolTipVO();
+        toolTipVO.setTrigger("axis");
+        toolTipVO.setAxisPointerBarVO(new AxisPointerBarVO("shadow"));
+        shapeBarVO.setToolTipVO(toolTipVO);
+        //grid
+        ReimShapeBarGridVO gridVO = new ReimShapeBarGridVO();
+        gridVO.setLeft("30%");
+        gridVO.setRight("40%");
+        gridVO.setBottom("70%");
+        gridVO.setContainLabel(true);
+        shapeBarVO.setBarGridVO(gridVO);
+        //xAxis
+        ReimShapeXaxisVO xAxisVO = new ReimShapeXaxisVO();
+        xAxisVO.setName("状态");
+        xAxisVO.setType("category");
+        xAxisVO.setData(Arrays.asList("申报报销记录", "待审核", "待支付", "已支付"));
+        xAxisVO.setAxisTickBarVO(new AxisTickBarVO(true));
+        shapeBarVO.setXaxisVO(xAxisVO);
+        //yAxis
+        ReimShapeYaxisVO yAxisVO = new ReimShapeYaxisVO();
+        yAxisVO.setName("金额");
+        yAxisVO.setType("value");
+        shapeBarVO.setXaxisVO(xAxisVO);
+        //series
+        ReimShapeBarSeriesVO seriesVO = new ReimShapeBarSeriesVO();
+        seriesVO.setName("金额");
+        seriesVO.setType("bar");
+        seriesVO.setBarWidth("60%");
+        seriesVO.setSeriesDataVOList(seriesDataVOList);
+        shapeBarVO.setSeriesVO(seriesVO);
+
+        shapeBarVO.setRlegendVO( new ReimShapeLegendVO(Arrays.asList("金额")));
+
+        return shapeBarVO;
+    }
+
+    private ReimShapeAllVO caculate(ReimburseShapeConDTO reimburseShapeConDTO) throws SerException {
+        ReimShapeAllVO allVO = new ReimShapeAllVO();
+        //用来存饼型累计的数据
+        ReimShapeVO reimShapeVO = new ReimShapeVO();
+        List<ReimShapeSeriesDataVO> seriesDataVOList = new ArrayList<>();
+        //用来存饼型金额的数据
+        ReimShapeVO reimShape2VO = new ReimShapeVO();
+        List<ReimShapeSeriesDataVO> seriesDataVO2List = new ArrayList<>();
+        //用来存条形金额的数据
+        ReimShapeBarVO reimShapeBarVO = new ReimShapeBarVO();
+        List<Double> seriesDataVOBarList = new ArrayList<>();
+
+        LocalDateTime startTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getStartTime()) + " 00:00:00");
+        LocalDateTime endTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getEndTime()) + " 23:59:59");
+        String userName = reimburseShapeConDTO.getUserName();
+
+        //计算某用户在这个时间段内的申报报销记录个数
+        ReimShapeSeriesDataVO seriesDataVO = new ReimShapeSeriesDataVO();
+        ReimShapeSeriesDataVO seriesData2VO = new ReimShapeSeriesDataVO();
+        ReimburseRecordDTO reimburseRecordDTO = new ReimburseRecordDTO();
+        reimburseRecordDTO = addQueryCon(reimburseRecordDTO, userName, startTime, endTime);
+        List<ReimburseRecord> listReim = super.findByCis(reimburseRecordDTO);
+        seriesDataVO.setName("申报报销记录");
+        seriesData2VO.setName("申报报销记录");
+        Double tempReimMoney = 0d;
+        if (listReim != null && listReim.size() > 0) {
+            seriesDataVO.setValue(String.valueOf(listReim.size()));
+            tempReimMoney = listReim.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+            seriesData2VO.setValue(String.valueOf(tempReimMoney));
+            seriesDataVOBarList.add(tempReimMoney == null || tempReimMoney.equals(0d) ? 0d : tempReimMoney);
+
+        } else {
+            seriesDataVO.setValue(String.valueOf(0));
+            seriesData2VO.setValue(String.valueOf(0));
+            seriesDataVOBarList.add(0d);
+        }
+        seriesDataVOList.add(seriesDataVO);
+        seriesDataVO2List.add(seriesData2VO);
+        //计算某用户在这个时间段内的待审核报销记录个数(包括负责人未审核/申请冻结/分析人员未分析完)
+        reimburseRecordDTO = addQueryCon(reimburseRecordDTO, userName, startTime, endTime);
+        reimburseRecordDTO = addWaitAuditQueryCon(reimburseRecordDTO);
+        listReim = super.findByCis(reimburseRecordDTO);
+        seriesDataVO = new ReimShapeSeriesDataVO();
+        seriesData2VO = new ReimShapeSeriesDataVO();
+        seriesDataVO.setName("待审核");
+        seriesData2VO.setName("待审核");
+        if (listReim != null && listReim.size() > 0) {
+            seriesDataVO.setValue(String.valueOf(listReim.size()));
+            Double reimMoneySum = listReim.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+            seriesData2VO.setValue(String.valueOf(reimMoneySum));
+            seriesDataVOBarList.add(reimMoneySum == null || reimMoneySum.equals(0d) ? 0d : reimMoneySum);
+        } else {
+            seriesDataVO.setValue(String.valueOf(0));
+            seriesData2VO.setValue(String.valueOf(0));
+            seriesDataVOBarList.add(0d);
+        }
+        seriesDataVOList.add(seriesDataVO);
+        seriesDataVO2List.add(seriesData2VO);
+
+
+        //计算某用户在这个时间段内的待支付报销记录个数
+        reimburseRecordDTO = addQueryCon(reimburseRecordDTO, userName, startTime, endTime);
+        reimburseRecordDTO = addWaitPayQueryCon(reimburseRecordDTO);
+        listReim = super.findByCis(reimburseRecordDTO);
+        seriesDataVO = new ReimShapeSeriesDataVO();
+        seriesData2VO = new ReimShapeSeriesDataVO();
+        seriesDataVO.setName("待支付");
+        seriesData2VO.setName("待支付");
+        if (listReim != null && listReim.size() > 0) {
+            seriesDataVO.setValue(String.valueOf(listReim.size()));
+            Double reimMoneySum = listReim.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+            seriesData2VO.setValue(String.valueOf(reimMoneySum));
+            seriesDataVOBarList.add(reimMoneySum == null || reimMoneySum.equals(0d) ? 0d : reimMoneySum);
+        } else {
+            seriesDataVO.setValue(String.valueOf(0));
+            seriesData2VO.setValue(String.valueOf(0));
+            seriesDataVOBarList.add(0d);
+        }
+        seriesDataVOList.add(seriesDataVO);
+        seriesDataVO2List.add(seriesData2VO);
+        //计算某用户在这个时间段内的已支付报销记录个数
+        reimburseRecordDTO = addQueryCon(reimburseRecordDTO, userName, startTime, endTime);
+        reimburseRecordDTO = addHasPayQueryCon(reimburseRecordDTO);
+        listReim = super.findByCis(reimburseRecordDTO);
+        seriesDataVO = new ReimShapeSeriesDataVO();
+        seriesData2VO = new ReimShapeSeriesDataVO();
+        seriesDataVO.setName("已支付");
+        seriesData2VO.setName("已支付");
+        if (listReim != null && listReim.size() > 0) {
+            seriesDataVO.setValue(String.valueOf(listReim.size()));
+            Double reimMoneySum = listReim.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+            seriesData2VO.setValue(String.valueOf(reimMoneySum));
+            seriesDataVOBarList.add(reimMoneySum == null || reimMoneySum.equals(0d) ? 0d : reimMoneySum);
+        } else {
+            seriesDataVO.setValue(String.valueOf(0));
+            seriesData2VO.setValue(String.valueOf(0));
+            seriesDataVOBarList.add(0d);
+        }
+        seriesDataVOList.add(seriesDataVO);
+        seriesDataVO2List.add(seriesData2VO);
+
+        //echart饼状图形数据封装
+        ReimShapeTitleVO titlePieVO = new ReimShapeTitleVO();
+        titlePieVO.setText(reimburseShapeConDTO.getUserName() + "报销情况统计");
+        titlePieVO.setSubtext("时间: " + startTime + "至" + endTime + "累计记录");
+        reimShapeVO = echartPieObject(seriesDataVOList, titlePieVO);
+        //echart饼状图形数据封装
+        ReimShapeTitleVO titlePie2VO = new ReimShapeTitleVO();
+        titlePieVO.setText(reimburseShapeConDTO.getUserName() + "报销金额指标统计");
+        titlePieVO.setSubtext("时间: " + startTime + "至" + endTime + "报销金额");
+        reimShapeVO = echartPieObject(seriesDataVO2List, titlePie2VO);
+        //echart柱状图形数据封装
+        reimShapeBarVO = echartBarObject(reimburseShapeConDTO.getUserName(), startTime, endTime, seriesDataVOBarList);
+
+        allVO.setReimConIndexPercent(reimShapeVO);
+        allVO.setReimMoneyIndexPercent(reimShape2VO);
+        allVO.setReimShapeBarVO(reimShapeBarVO);
+        return allVO;
+    }
+
+
+    @Override
+    public ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException {
+        ReimShapeAllVO reimShapeAllVO = new ReimShapeAllVO();
+
+        ReimburseShapeConDTO reimburseShapeConDTO = BeanTransform.copyProperties(reimburseShapeDTO, ReimburseShapeConDTO.class, "serialVersionUID");
+        if (null == reimburseShapeDTO.getReimburseShapeStatus()) {
+            throw new SerException("汇总状态类型不能为空");
+        }
+        //根据选择的日周月年和用户名
+        if (StringUtils.isBlank(reimburseShapeDTO.getUserName())) {
+            throw new SerException("用户名不能为空");
+        }
+        switch (reimburseShapeDTO.getReimburseShapeStatus()) {
+            case YEAR:
+                if (StringUtils.isBlank("" + reimburseShapeDTO.getYear()) || reimburseShapeDTO.getYear() < 1900) {
+                    throw new SerException("年份(year)不能为空且大于1900");
+                }
+                reimburseShapeConDTO.setStartTime(DateUtil.parseDate(reimburseShapeDTO.getYear() + "-01-01"));
+                reimburseShapeConDTO.setEndTime(DateUtil.parseDate(reimburseShapeDTO.getYear() + "-12-31"));
+
+                break;
+            case QUART:
+                if (StringUtils.isBlank("" + reimburseShapeDTO.getYear()) || reimburseShapeDTO.getQuart() > 4 || reimburseShapeDTO.getQuart() < 1) {
+                    throw new SerException("年份(year)或季度（quart）不能为空,且year大于1900,quart在1～4之间");
+                }
+                LocalDate timeBegan = LocalDate.now();
+                LocalDate timeEnd = LocalDate.now();
+                switch (reimburseShapeDTO.getQuart()) {
+                    case 1:
+                        timeBegan = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-01-01");
+                        timeEnd = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-03-31");
+                        break;
+                    case 2:
+                        timeBegan = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-04-01");
+                        timeEnd = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-06-30");
+                        break;
+                    case 3:
+                        timeBegan = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-07-01");
+                        timeEnd = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-09-31");
+                        break;
+                    case 4:
+                        timeBegan = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-10-01");
+                        timeEnd = DateUtil.parseDate(reimburseShapeDTO.getYear() + "-12-31");
+                        break;
+                    default:
+                        break;
+                }
+                reimburseShapeConDTO.setStartTime( timeBegan );
+                reimburseShapeConDTO.setEndTime(timeEnd );
+
+                break;
+            case MONTH:
+                if (StringUtils.isBlank("" + reimburseShapeDTO.getYear()) || StringUtils.isBlank("" + reimburseShapeDTO.getMonth()) || reimburseShapeDTO.getYear() < 1900 || reimburseShapeDTO.getMonth() < 1 || reimburseShapeDTO.getMonth() > 12) {
+                    throw new SerException("年份(year)或月份(month)不能为空,年大于1900,月份在1-12之间");
+                }
+                reimburseShapeConDTO.setStartTime(DateUtil.getStartDayOfMonth(reimburseShapeDTO.getYear(), reimburseShapeDTO.getMonth()));
+                reimburseShapeConDTO.setEndTime(DateUtil.getEndDaYOfMonth(reimburseShapeDTO.getYear(), reimburseShapeDTO.getMonth()));
+                break;
+            case WEEK:
+                if (StringUtils.isBlank("" + reimburseShapeDTO.getYear()) || StringUtils.isBlank("" + reimburseShapeDTO.getMonth()) || StringUtils.isBlank("" + reimburseShapeDTO.getWeek())) {
+                    throw new SerException("年份或月份或周数不能为空");
+                }
+                LocalDate[] dateDuring = DateUtil.getWeekTimes(reimburseShapeDTO.getYear(), reimburseShapeDTO.getMonth(), reimburseShapeDTO.getWeek());
+                reimburseShapeConDTO.setStartTime(dateDuring[0]);
+                reimburseShapeConDTO.setEndTime(dateDuring[1]);
+                break;
+            case DAY:
+                if (StringUtils.isBlank(reimburseShapeDTO.getTime())) {
+                    throw new SerException("日期不能为空");
+                }
+                reimburseShapeConDTO.setStartTime(DateUtil.parseDate(reimburseShapeDTO.getTime()));
+                reimburseShapeConDTO.setEndTime(DateUtil.parseDate(reimburseShapeDTO.getTime()));
+                break;
+            default:
+                return null;
+        }
+        if (null == reimburseShapeConDTO.getStartTime() || null == reimburseShapeConDTO.getEndTime()) {
+            reimShapeAllVO = null;
+        } else {
+            reimShapeAllVO = caculate(reimburseShapeConDTO);
+        }
+
+        return reimShapeAllVO;
+    }
+
+
+    @Override
+    public ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException {
+        ReimShapeMixVO reimShapeMixVO = new ReimShapeMixVO();
+        List<ReimShapeMixSeriesVO> mixSeriesVOList = new ArrayList<>(1);
+
+
+        if (StringUtils.isBlank(reimburseTrendShapeDTO.getUserName())) {
+            throw new SerException("用户名不能为空");
+        }
+        if (StringUtils.isBlank(reimburseTrendShapeDTO.getStartTime())) {
+            throw new SerException("开始时间不能为空,格式为2017-09");
+        }
+        if (StringUtils.isBlank(reimburseTrendShapeDTO.getEndTime())) {
+            throw new SerException("结束时间不能为空,格式为2017-09");
+        }
+
+        //用户
+        String userName = reimburseTrendShapeDTO.getUserName();
+        //处理第一个时间
+        LocalDateTime startMonStart = DateUtil.parseDateTime(reimburseTrendShapeDTO.getStartTime() + "-01 00:00:00");
+        LocalDateTime startMonEnd = startMonStart.with(TemporalAdjusters.lastDayOfMonth());
+        //处理第二个时间
+        LocalDateTime endMonStart = DateUtil.parseDateTime(reimburseTrendShapeDTO.getStartTime() + "-01 00:00:00");
+        LocalDateTime endMonEnd = endMonStart.with(TemporalAdjusters.lastDayOfMonth());
+        Double reimMoney = 0d;
+        ReimShapeMixSeriesVO mixSeriesVO = new ReimShapeMixSeriesVO();
+        List<Double> seriesDataList = new ArrayList<>();
+
+        ReimburseRecordDTO dto = new ReimburseRecordDTO();
+        //查询第一个时间所有申报报销记录
+        dto = addQueryCon(dto, userName, startMonStart, startMonEnd);
+        List<ReimburseRecord> list = super.findByCis(dto);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //查询第一个时间所有待审核报销记录
+        dto = addQueryCon(dto, userName, startMonStart, startMonEnd);
+        dto = addWaitAuditQueryCon(dto);
+        list = super.findByCis(dto);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //查询第一个时间所有待支付报销记录
+        dto = addQueryCon(dto, userName, startMonStart, startMonEnd);
+        dto = addWaitPayQueryCon(dto);
+        list = super.findByCis(dto);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+
+        //查询第一个时间所有已支付报销记录
+        dto = addQueryCon(dto, userName, startMonStart, startMonEnd);
+        dto = addHasPayQueryCon(dto);
+        list = super.findByCis(dto);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //封装返回数据
+        mixSeriesVO.setName(reimburseTrendShapeDTO.getStartTime());
+        mixSeriesVO.setType("bar");
+        mixSeriesVO.setBarWidth("40%");
+        mixSeriesVO.setSeriesDataVOList(seriesDataList);
+        mixSeriesVOList.add(mixSeriesVO);
+
+        //处理第二个数据
+        seriesDataList = new ArrayList<>();
+        ReimburseRecordDTO dto2 = new ReimburseRecordDTO();
+        //查询第二个时间所有申报报销记录
+        dto2 = addQueryCon(dto2, userName, startMonStart, startMonEnd);
+        List<ReimburseRecord> list2 = super.findByCis(dto2);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //查询第二个时间所有待审核报销记录
+        dto2 = addQueryCon(dto2, userName, startMonStart, startMonEnd);
+        dto2 = addWaitAuditQueryCon(dto2);
+        list2 = super.findByCis(dto2);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //查询第二个时间所有待支付报销记录
+        dto2 = addQueryCon(dto2, userName, startMonStart, startMonEnd);
+        dto2 = addWaitPayQueryCon(dto2);
+        list2 = super.findByCis(dto2);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //查询第二个时间所有已支付报销记录
+        dto2 = addQueryCon(dto2, userName, startMonStart, startMonEnd);
+        dto2 = addHasPayQueryCon(dto2);
+        list2 = super.findByCis(dto2);
+        reimMoney = list.stream().mapToDouble(ReimburseRecord::getReimMoney).sum();
+        seriesDataList.add(reimMoney);
+        //封装返回数据
+        mixSeriesVO.setName(reimburseTrendShapeDTO.getEndTime());
+        mixSeriesVO.setType("line");
+        mixSeriesVO.setSeriesDataVOList(seriesDataList);
+        mixSeriesVOList.add(mixSeriesVO);
+
+        ReimShapeXaxisVO xaxisVO = new ReimShapeXaxisVO();
+        xaxisVO.setName("状态");
+        xaxisVO.setType("category");
+        xaxisVO.setData(Arrays.asList("申报报销记录", "待审核", "待支付", "已支付"));
+        xaxisVO.setAxisTickBarVO(new AxisTickBarVO(true));
+        xaxisVO.setAxisPointerBarVO(new AxisPointerBarVO("shadow"));
+        reimShapeMixVO.setXaxisVO(xaxisVO);
+        reimShapeMixVO.setTitleVO(new ReimShapeTitleVO(userName + "的报销情况变化趋势图", reimburseTrendShapeDTO.getStartTime() + "至" + reimburseTrendShapeDTO.getEndTime(), "center", "45%"));
+        reimShapeMixVO.setToolTipVO(new ReimShapeMixToolTipVO("axis", new AxisPointerBarVO("cross")));
+        reimShapeMixVO.setGridVO(new ReimShapeBarGridVO("20%", "30%", "60%", true));
+        reimShapeMixVO.setRlegendVO(new ReimShapeLegendVO("x", "center", Arrays.asList(reimburseTrendShapeDTO.getStartTime(), reimburseTrendShapeDTO.getEndTime())));
+        reimShapeMixVO.setYaxisVO(new ReimShapeYaxisVO("value", "金额(元)", 50, new AxisLabelVO("{value}")));
+        reimShapeMixVO.setSeriesVO(mixSeriesVOList);
+        return reimShapeMixVO;
+    }
+
+
+    @Override
+    public ReimCompanyShapeBarVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        ReimCompanyShapeBarVO reimCompanyShapeBarVO = new ReimCompanyShapeBarVO();
+        List<ReimShapeBarSeriesVO> seriesDataList = new ArrayList<>();
+
+        ReimburseShapeConDTO reimburseShapeConDTO = BeanTransform.copyProperties(reimCompanyShapeDTO, ReimburseShapeConDTO.class);
+        reimburseShapeConDTO.setReimburseShapeStatus(reimCompanyShapeDTO.getShapeStatus());
+        if (null == reimCompanyShapeDTO.getShapeStatus()) {
+            throw new SerException("汇总类型不能为空");
+        }
+        //根据选择的日周月年枚举转成时间
+        reimburseShapeConDTO = enumTOTime(reimCompanyShapeDTO, reimburseShapeConDTO);
+
+        LocalDateTime startTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getStartTime()) + " 00:00:00");
+        LocalDateTime endTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getEndTime()) + " 23:59:59");
+
+
+        //查询公司所有的项目组
+        List<String> groupList = positionDetailUserAPI.getAllDepartment();
+        //查询所有项目组的申报报销记录
+        String[] fields = new String[]{"reimMoney", "projectGroup"};
+        String sql = "select sum(reimMoney) as reimMoney , projectGroup from lendreimbursement_reimburserecord where createTime between '" + startTime + "' and '" + endTime + "' ";
+        String sqlGroup = "  group by projectGroup ";
+        String sqlQuery = sql + sqlGroup;
+        ReimShapeBarSeriesVO listAll = transFormSeriesVO("申报报销记录", fields, sqlQuery, groupList);
+        seriesDataList.add(listAll);
+        //查询所有项目组的待审核
+        sqlQuery = sql + " and reimStatus in (5,1,0) and analisisIsAll = 0 " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitAudit = transFormSeriesVO("待审核", fields, sqlQuery, groupList);
+        seriesDataList.add(listWaitAudit);
+
+        //查询所有项目组的待支付
+        sqlQuery = sql + " and reimStatus = 1 and analisisIsAll = 1 and payConditon = '是' and accountCheckPassOr is null " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitPay = transFormSeriesVO("待支付", fields, sqlQuery, groupList);
+        seriesDataList.add(listWaitPay);
+
+        //查询所有项目组的已支付
+        sqlQuery = sql + " and payConditon = '是' " + sqlGroup;
+        ReimShapeBarSeriesVO listHasPay = transFormSeriesVO("已支付", fields, sqlQuery, groupList);
+        seriesDataList.add(listHasPay);
+
+
+        //TODO 还未写完
+        reimCompanyShapeBarVO.setReimShapeTitleVO(new ReimShapeTitleVO("公司内部项目组特定指标统计表", reimburseShapeConDTO.getStartTime() + "至" + reimburseShapeConDTO.getEndTime()));
+        reimCompanyShapeBarVO.setToolTipVO(new ReimShapeBarToolTipVO("axis"));
+        reimCompanyShapeBarVO.setLegendVO(new ReimShapeLegendVO(Arrays.asList("申报报销记录", "待审核", "待支付", "已支付")));
+        reimCompanyShapeBarVO.setBarGridVO(new ReimShapeBarGridVO("22%", "22%", "44%", true));
+        reimCompanyShapeBarVO.setXaxisVO(new ReimShapeXaxisVO("category", "状态", Arrays.asList("申报报销记录", "待审核", "待支付", "已支付")));
+        reimCompanyShapeBarVO.setYaxisVO(new ReimShapeYaxisVO("value", "金额(元)"));
+        reimCompanyShapeBarVO.setSeriesVOList(seriesDataList);
+
+        return reimCompanyShapeBarVO;
+    }
+    @Override
+    public ReimCompanyShapeBarVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        ReimCompanyShapeBarVO reimCompanyShapeBarVO = new ReimCompanyShapeBarVO();
+        List<ReimShapeBarSeriesVO> seriesDataList = new ArrayList<>();
+
+        ReimburseShapeConDTO reimburseShapeConDTO = BeanTransform.copyProperties(reimCompanyShapeDTO, ReimburseShapeConDTO.class);
+        reimburseShapeConDTO.setReimburseShapeStatus(reimCompanyShapeDTO.getShapeStatus());
+        if (null == reimCompanyShapeDTO.getShapeStatus()) {
+            throw new SerException("汇总类型不能为空");
+        }
+        //根据选择的日周月年枚举转成时间
+        reimburseShapeConDTO = enumTOTime(reimCompanyShapeDTO, reimburseShapeConDTO);
+
+        LocalDateTime startTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getStartTime()) + " 00:00:00");
+        LocalDateTime endTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getEndTime()) + " 23:59:59");
+
+        //查询公司所有的项目名称
+        List<String> groupList = departmentDetailAPI.findAllProject();
+        //查询所有项目组的申报报销记录
+        String[] fields = new String[]{"reimMoney", "projectGroup"};
+        String sql = "select sum(reimMoney) as reimMoney , project as projectGroup from lendreimbursement_reimburserecord where createTime between '" + startTime + "' and '" + endTime + "' ";
+        String sqlGroup = "  group by project ";
+        String sqlQuery = sql + sqlGroup;
+        ReimShapeBarSeriesVO listAll = transFormSeriesVO("申报报销记录", fields, sqlQuery, groupList);
+        seriesDataList.add(listAll);
+        //查询所有项目组的待审核
+        sqlQuery = sql + " and reimStatus in (5,1,0) and analisisIsAll = 0 " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitAudit = transFormSeriesVO("待审核", fields, sqlQuery, groupList);
+        seriesDataList.add(listWaitAudit);
+
+        //查询所有项目组的待支付
+        sqlQuery = sql + " and reimStatus = 1 and analisisIsAll = 1 and payConditon = '是' and accountCheckPassOr is null " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitPay = transFormSeriesVO("待支付", fields, sqlQuery, groupList);
+        seriesDataList.add(listWaitPay);
+
+        //查询所有项目组的已支付
+        sqlQuery = sql + " and payConditon = '是' " + sqlGroup;
+        ReimShapeBarSeriesVO listHasPay = transFormSeriesVO("已支付", fields, sqlQuery, groupList);
+        seriesDataList.add(listHasPay);
+
+
+        //TODO 还未写完
+        reimCompanyShapeBarVO.setReimShapeTitleVO(new ReimShapeTitleVO("公司内部项目名称特定指标统计表", reimburseShapeConDTO.getStartTime() + "至" + reimburseShapeConDTO.getEndTime()));
+        reimCompanyShapeBarVO.setToolTipVO(new ReimShapeBarToolTipVO("axis"));
+        reimCompanyShapeBarVO.setLegendVO(new ReimShapeLegendVO(Arrays.asList("申报报销记录", "待审核", "待支付", "已支付")));
+        reimCompanyShapeBarVO.setBarGridVO(new ReimShapeBarGridVO("22%", "22%", "44%", true));
+        reimCompanyShapeBarVO.setXaxisVO(new ReimShapeXaxisVO("category", "状态", Arrays.asList("申报报销记录", "待审核", "待支付", "已支付")));
+        reimCompanyShapeBarVO.setYaxisVO(new ReimShapeYaxisVO("value", "金额(元)"));
+        reimCompanyShapeBarVO.setSeriesVOList(seriesDataList);
+
+        return reimCompanyShapeBarVO;
+    }
+    @Override
+    public ReimCompanyShapeBarVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        ReimCompanyShapeBarVO reimCompanyShapeBarVO = new ReimCompanyShapeBarVO();
+        List<ReimShapeBarSeriesVO> seriesDataList = new ArrayList<>();
+
+        ReimburseShapeConDTO reimburseShapeConDTO = BeanTransform.copyProperties(reimCompanyShapeDTO, ReimburseShapeConDTO.class);
+        reimburseShapeConDTO.setReimburseShapeStatus(reimCompanyShapeDTO.getShapeStatus());
+        if (null == reimCompanyShapeDTO.getShapeStatus()) {
+            throw new SerException("汇总类型不能为空");
+        }
+        //根据选择的日周月年枚举转成时间
+        reimburseShapeConDTO = enumTOTime(reimCompanyShapeDTO, reimburseShapeConDTO);
+
+        LocalDateTime startTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getStartTime()) + " 00:00:00");
+        LocalDateTime endTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getEndTime()) + " 23:59:59");
+
+
+        //查询公司所有的项目组
+        List<AreaBO> areaBOList = departmentDetailAPI.findArea();
+        List<String> groupList = (areaBOList != null && areaBOList.size()>0)? areaBOList.stream().map(AreaBO::getArea).collect(Collectors.toList()):new ArrayList<>();
+        //查询所有项目组的申报报销记录
+        String[] fields = new String[]{"reimMoney", "projectGroup"};
+        String sql = "select sum(reimMoney) as reimMoney , area as projectGroup from lendreimbursement_reimburserecord where createTime between '" + startTime + "' and '" + endTime + "' ";
+        String sqlGroup = "  group by area ";
+        String sqlQuery = sql + sqlGroup;
+        ReimShapeBarSeriesVO listAll = transFormSeriesVO("申报报销记录", fields, sqlQuery, groupList);
+        seriesDataList.add(listAll);
+        //查询所有项目组的待审核
+        sqlQuery = sql + " and reimStatus in (5,1,0) and analisisIsAll = 0 " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitAudit = transFormSeriesVO("待审核", fields, sqlQuery, groupList);
+        seriesDataList.add(listWaitAudit);
+
+        //查询所有项目组的待支付
+        sqlQuery = sql + " and reimStatus = 1 and analisisIsAll = 1 and payConditon = '是' and accountCheckPassOr is null " + sqlGroup;
+        ReimShapeBarSeriesVO listWaitPay = transFormSeriesVO("待支付", fields, sqlQuery, groupList);
+        seriesDataList.add(listWaitPay);
+
+        //查询所有项目组的已支付
+        sqlQuery = sql + " and payConditon = '是' " + sqlGroup;
+        ReimShapeBarSeriesVO listHasPay = transFormSeriesVO("已支付", fields, sqlQuery, groupList);
+        seriesDataList.add(listHasPay);
+
+
+        //TODO 还未写完
+        reimCompanyShapeBarVO.setReimShapeTitleVO(new ReimShapeTitleVO("公司内部地区特定指标统计表", reimburseShapeConDTO.getStartTime() + "至" + reimburseShapeConDTO.getEndTime()));
+        reimCompanyShapeBarVO.setToolTipVO(new ReimShapeBarToolTipVO("axis"));
+        reimCompanyShapeBarVO.setLegendVO(new ReimShapeLegendVO(Arrays.asList("申报报销记录", "待审核", "待支付", "已支付")));
+        reimCompanyShapeBarVO.setBarGridVO(new ReimShapeBarGridVO("22%", "22%", "44%", true));
+        reimCompanyShapeBarVO.setXaxisVO(new ReimShapeXaxisVO("category", "状态", Arrays.asList("申报报销记录", "待审核", "待支付", "已支付")));
+        reimCompanyShapeBarVO.setYaxisVO(new ReimShapeYaxisVO("value", "金额(元)"));
+        reimCompanyShapeBarVO.setSeriesVOList(seriesDataList);
+
+        return reimCompanyShapeBarVO;
+    }
+
+
+    private ReimburseShapeConDTO enumTOTime(ReimCompanyShapeDTO reimCompanyShapeDTO, ReimburseShapeConDTO reimburseShapeConDTO) throws SerException {
+        switch (reimCompanyShapeDTO.getShapeStatus()) {
+            case YEAR:
+                if (StringUtils.isBlank("" + reimCompanyShapeDTO.getYear())) {
+                    throw new SerException("年份不能为空");
+                }
+                reimburseShapeConDTO.setStartTime(DateUtil.parseDate(reimCompanyShapeDTO.getYear() + "-01-01"));
+                reimburseShapeConDTO.setEndTime(DateUtil.parseDate(reimCompanyShapeDTO.getYear() + "-12-31"));
+
+                break;
+            case MONTH:
+                if (StringUtils.isBlank("" + reimCompanyShapeDTO.getYear()) || StringUtils.isBlank("" + reimCompanyShapeDTO.getMonth())) {
+                    throw new SerException("年份或月份不能为空");
+                }
+                reimburseShapeConDTO.setStartTime(DateUtil.getStartDayOfMonth(reimCompanyShapeDTO.getYear(), reimCompanyShapeDTO.getMonth()));
+                reimburseShapeConDTO.setEndTime(DateUtil.getEndDaYOfMonth(reimCompanyShapeDTO.getYear(), reimCompanyShapeDTO.getMonth()));
+                break;
+            case WEEK:
+                if (StringUtils.isBlank("" + reimCompanyShapeDTO.getYear()) || StringUtils.isBlank("" + reimCompanyShapeDTO.getMonth()) || StringUtils.isBlank("" + reimCompanyShapeDTO.getWeek())) {
+                    throw new SerException("年份或月份或周数不能为空");
+                }
+                LocalDate[] dateDuring = DateUtil.getWeekTimes(reimCompanyShapeDTO.getYear(), reimCompanyShapeDTO.getMonth(), reimCompanyShapeDTO.getWeek());
+                reimburseShapeConDTO.setStartTime(dateDuring[0]);
+                reimburseShapeConDTO.setEndTime(dateDuring[1]);
+                break;
+            default:
+                return null;
+        }
+        return reimburseShapeConDTO;
+    }
+
+    private ReimShapeBarSeriesVO transFormSeriesVO(String xzhouName, String fields[], String sqlQuery, List<String> groupList) throws SerException {
+        List<String> groupNameList = new ArrayList<>();
+        List<ReimburseRecord> listResult = new ArrayList<>();
+
+        List<ReimburseRecord> list = super.findBySql(sqlQuery, ReimburseRecord.class, fields);
+        if (list != null && list.size() > 0) {
+            listResult.addAll(list);
+            //把没有申请报销的项目组的金额设置为0
+            groupNameList = list.stream().map(ReimburseRecord::getProjectGroup).collect(Collectors.toList());
+            List<String> finalGroupNameList = groupNameList;
+            if (groupNameList != null && groupNameList.size() > 0) {
+                groupList.stream().filter(str -> finalGroupNameList.contains(str)).forEach(str -> {
+                    ReimburseRecord temp = new ReimburseRecord();
+                    temp.setReimMoney(0d);
+                    temp.setReimer(str);
+                    listResult.add(temp);
+                });
+            }
+        } else {
+            groupList.stream().forEach(str -> {
+                ReimburseRecord temp = new ReimburseRecord();
+                temp.setReimMoney(0d);
+                temp.setReimer(str);
+                listResult.add(temp);
+            });
+        }
+        listResult.stream().sorted(new Comparator<ReimburseRecord>() {
+            @Override
+            public int compare(ReimburseRecord o1, ReimburseRecord o2) {
+                return o1.getProjectGroup().compareTo(o2.getProjectGroup());
+            }
+        });
+        List<Double> moneyDataList = listResult.stream().map(ReimburseRecord::getReimMoney).collect(Collectors.toList());
+        ReimShapeBarSeriesVO seriesVO = new ReimShapeBarSeriesVO();
+        seriesVO.setName(xzhouName);
+        seriesVO.setType("bar");
+        seriesVO.setSeriesDataVOList(moneyDataList);
+
+        return seriesVO;
+    }
+
+
 }

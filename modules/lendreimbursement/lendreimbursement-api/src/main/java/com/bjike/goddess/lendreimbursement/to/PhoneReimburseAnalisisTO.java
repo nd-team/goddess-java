@@ -18,8 +18,9 @@ public class PhoneReimburseAnalisisTO extends BaseTO {
 
 
     /**
-     * 审核情况(通过/不通过)
+     *
      * 审核情况(已分析/申请冻结)
+     * 审核情况(通过/不通过)
      */
     @NotBlank(groups = {PhoneReimburseAnalisisTO.TestAnalysis.class }, message = "审核情况不能为空(已分析/申请冻结)")
     private String chargerAuditStatus;
