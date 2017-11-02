@@ -11,7 +11,6 @@ import com.bjike.goddess.contractcommunicat.service.ProjectContractSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,10 +102,10 @@ public class ProjectContractApiImpl implements ProjectContractAPI {
         return projectContractSer.listBaseInfoManage();
     }
 
-    @Override
-    public List<MarketInfoBO> findProject() throws SerException {
-        return projectContractSer.findProject();
-    }
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        return projectContractSer.findProject();
+//    }
 
     @Override
     public List<String> getCommunicateUser() throws SerException {

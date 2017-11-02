@@ -7,12 +7,9 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
 
 import java.util.List;
 
@@ -91,10 +88,10 @@ public interface ProjectOutsourcingSer extends Ser<ProjectOutsourcing, ProjectOu
     List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
 
 
-    /**
-     * 查询内部项目名称
-     * @throws SerException
-     */
-    List<MarketInfoBO> findProject() throws SerException;
+//    /**
+//     * 查询内部项目名称
+//     * @throws SerException
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
 
 }

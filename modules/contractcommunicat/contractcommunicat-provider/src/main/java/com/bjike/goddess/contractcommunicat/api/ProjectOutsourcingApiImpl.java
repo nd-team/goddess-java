@@ -6,13 +6,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.service.ProjectOutsourcingSer;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
-import com.bjike.goddess.market.bo.MarketInfoBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,8 +105,8 @@ public class ProjectOutsourcingApiImpl implements ProjectOutsourcingAPI {
         return projectOutsourcingSer.listBaseInfoManage();
     }
 
-    @Override
-    public List<MarketInfoBO> findProject() throws SerException {
-        return projectOutsourcingSer.findProject();
-    }
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        return projectOutsourcingSer.findProject();
+//    }
 }

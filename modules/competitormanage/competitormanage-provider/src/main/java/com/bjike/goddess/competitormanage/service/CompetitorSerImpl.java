@@ -19,9 +19,9 @@ import com.bjike.goddess.competitormanage.excel.SonPermissionObject;
 import com.bjike.goddess.competitormanage.to.CompetitorOrganizaeTO;
 import com.bjike.goddess.competitormanage.to.CompetitorTO;
 import com.bjike.goddess.competitormanage.to.GuidePermissionTO;
-import com.bjike.goddess.market.api.MarketInfoAPI;
-import com.bjike.goddess.market.bo.MarketInfoBO;
-import com.bjike.goddess.market.dto.MarketInfoDTO;
+//import com.bjike.goddess.market.api.MarketInfoAPI;
+//import com.bjike.goddess.market.bo.MarketInfoBO;
+//import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -55,8 +55,8 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
     @Autowired
     private CompetitorCollectSer competitorCollectSer;
 
-    @Autowired
-    private MarketInfoAPI marketInfoAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
 
     @Autowired
     private ModuleAPI moduleAPI;
@@ -424,15 +424,15 @@ public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> im
         return new ArrayList<>(set);
     }
 
-    @Override
-    public List<MarketInfoBO> findProject() throws SerException {
-        List<MarketInfoBO> marketInfoBOList = new ArrayList<>(0);
-//        if(moduleAPI.isCheck("market")) {
-            MarketInfoDTO dto = new MarketInfoDTO();
-            String userToken =  RpcTransmit.getUserToken();
-            RpcTransmit.transmitUserToken(userToken);
-            marketInfoBOList = marketInfoAPI.findListMarketInfo(dto);
-//        }
-        return marketInfoBOList;
-    }
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        List<MarketInfoBO> marketInfoBOList = new ArrayList<>(0);
+////        if(moduleAPI.isCheck("market")) {
+//            MarketInfoDTO dto = new MarketInfoDTO();
+//            String userToken =  RpcTransmit.getUserToken();
+//            RpcTransmit.transmitUserToken(userToken);
+//            marketInfoBOList = marketInfoAPI.findListMarketInfo(dto);
+////        }
+//        return marketInfoBOList;
+//    }
 }

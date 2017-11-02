@@ -22,9 +22,6 @@ import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.api.MarketInfoAPI;
-import com.bjike.goddess.market.bo.MarketInfoBO;
-import com.bjike.goddess.market.dto.MarketInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -68,8 +65,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Autowired
     private BaseInfoManageAPI baseInfoManageAPI;
 
-    @Autowired
-    private MarketInfoAPI marketInfoAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -484,15 +481,15 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         return list;
     }
 
-    @Override
-    public List<MarketInfoBO> findProject() throws SerException {
-        List<MarketInfoBO> list = new ArrayList<>(0);
-//        if(moduleAPI.isCheck("market")){
-            String userToken = RpcTransmit.getUserToken();
-            RpcTransmit.transmitUserToken(userToken);
-            MarketInfoDTO dto = new MarketInfoDTO();
-            list = marketInfoAPI.findListMarketInfo(dto);
-//        }
-        return list;
-    }
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        List<MarketInfoBO> list = new ArrayList<>(0);
+////        if(moduleAPI.isCheck("market")){
+//            String userToken = RpcTransmit.getUserToken();
+//            RpcTransmit.transmitUserToken(userToken);
+//            MarketInfoDTO dto = new MarketInfoDTO();
+//            list = marketInfoAPI.findListMarketInfo(dto);
+////        }
+//        return list;
+//    }
 }
