@@ -1,5 +1,6 @@
 package com.bjike.goddess.contacts.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -33,6 +34,7 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.UserNameSexBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
@@ -40,6 +42,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.enums.SexType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -509,29 +513,21 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         }
     }
 
+    private Logger log = Logger.getLogger(InternalContactsSerImpl.class);
+
     @Override
     public List<NameAndIdBO> getUserName() throws SerException {
         String token = RpcTransmit.getUserToken();
         EntryRegisterDTO entryBasicInfoDTO = new EntryRegisterDTO();
-        List<EntryRegisterBO> bos = entryRegisterAPI.map(entryBasicInfoDTO);
-        RpcTransmit.transmitUserToken(token);
-        List<NameAndIdBO> userNameList = new ArrayList<>();
-        if (null != bos && bos.size() > 0) {
-            for (EntryRegisterBO bo : bos) {
-                UserDTO userDTO = new UserDTO();
-                userDTO.getConditions().add(Restrict.eq("empNumber", bo.getEmpNumber()));
-                List<UserBO> userBOList = userAPI.findByCis(userDTO);
-                RpcTransmit.transmitUserToken(token);
-                if (userBOList != null && userBOList.size() > 0) {
-                    NameAndIdBO nameAndIdBO = new NameAndIdBO();
-                    nameAndIdBO.setUserId(userBOList.get(0).getId());
-                    nameAndIdBO.setName(bo.getUsername());
-                    userNameList.add(nameAndIdBO);
-                }
-            }
-        }
+        Set<String> bos = entryRegisterAPI.names();
+        List<NameAndIdBO> nameAndIdBOs = new ArrayList<>(0);
+        bos.stream().forEach(obj -> {
+            NameAndIdBO nameAndIdBO = new NameAndIdBO();
+            nameAndIdBO.setName(obj);
+            nameAndIdBOs.add(nameAndIdBO);
+        });
 
-        return userNameList;
+        return nameAndIdBOs;
     }
 
     @Override
@@ -566,26 +562,32 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         if (0 < names.length) {
             for (String name : names) {
                 try {
-                    List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
-                    if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                        for (EntryRegisterBO bo : entryBasicInfoBOs) {
-                            String number = bo.getEmpNumber();
-                            UserDTO userDTO = new UserDTO();
-                            userDTO.getConditions().add(Restrict.eq("empNumber", number));
-                            List<UserBO> userBOs = userAPI.findByCis(userDTO);
-                            if (null != userBOs && userBOs.size() > 0) {
-                                InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
-                                internalContactsDTO.getConditions().add(Restrict.in("userId", userBOs.get(0).getId()));
-
-                                List<InternalContacts> internalContactses = super.findByCis(internalContactsDTO);
-//                            List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
-                                if (null != internalContactses && internalContactses.size() > 0) {
-                                    InternalContacts internalContacts = internalContactses.get(0);
-                                    String str = internalContacts.getEmail();
-                                    strings.add(str);
-                                }
-                            }
-                        }
+//                    List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
+//                    if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+//                        for (EntryRegisterBO bo : entryBasicInfoBOs) {
+//                            String number = bo.getEmpNumber();
+//                            UserDTO userDTO = new UserDTO();
+//                            userDTO.getConditions().add(Restrict.eq("empNumber", number));
+//                            List<UserBO> userBOs = userAPI.findByCis(userDTO);
+//                            if (null != userBOs && userBOs.size() > 0) {
+//                                InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+//                                internalContactsDTO.getConditions().add(Restrict.in("userId", userBOs.get(0).getId()));
+//
+//                                List<InternalContacts> internalContactses = super.findByCis(internalContactsDTO);
+////                            List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
+//                                if (null != internalContactses && internalContactses.size() > 0) {
+//                                    InternalContacts internalContacts = internalContactses.get(0);
+//                                    String str = internalContacts.getEmail();
+//                                    strings.add(str);
+//                                }
+//                            }
+//                        }
+//                    }
+                    InternalContactsDTO dto = new InternalContactsDTO();
+                    dto.getConditions().add(Restrict.eq("name", name));
+                    List<InternalContacts> list = super.findByCis(dto);
+                    if (!list.isEmpty()) {
+                        strings.add(list.get(0).getEmail());
                     }
                 } catch (Exception e) {
                     throw new SerException(e.getMessage());
@@ -598,16 +600,22 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     @Override
     public String getEmail(String name) throws SerException {
         if (StringUtils.isNotBlank(name)) {
-            List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
-            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-                for (EntryRegisterBO bo : entryBasicInfoBOs) {
-                    InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
-                    internalContactsDTO.getConditions().add(Restrict.in("userId", bo.getId()));
-                    List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
-                    if (null != internalContactsBOs && internalContactsBOs.size() > 0) {
-                        return maps(internalContactsDTO).get(0).getEmail();
-                    }
-                }
+//            List<EntryRegisterBO> entryBasicInfoBOs = entryRegisterAPI.getEntryRegisterByName(name);
+//            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
+//                for (EntryRegisterBO bo : entryBasicInfoBOs) {
+//                    InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+//                    internalContactsDTO.getConditions().add(Restrict.in("name", bo.getUsername()));
+//                    List<InternalContactsBO> internalContactsBOs = maps(internalContactsDTO);
+//                    if (null != internalContactsBOs && internalContactsBOs.size() > 0) {
+//                        return maps(internalContactsDTO).get(0).getEmail();
+//                    }
+//                }
+//            }
+            InternalContactsDTO dto = new InternalContactsDTO();
+            dto.getConditions().add(Restrict.eq("name", name));
+            List<InternalContacts> list = super.findByCis(dto);
+            if (!list.isEmpty()) {
+                return list.get(0).getEmail();
             }
         }
         return null;
@@ -615,28 +623,71 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
     @Override
     public List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
+        log.info("查询列表开始....");
         searchMobileCondition(dto);
         List<InternalContacts> list = super.findByCis(dto);
-        List<InternalContactsBO> bos = this.transformBOList(list);
-        if (!CollectionUtils.isEmpty(bos)) {
-            List<MobileInternalContactsBO> mobileInternalContactsBOs = BeanTransform.copyProperties(bos, MobileInternalContactsBO.class, "headSculpture", "sex", "phoneNumber", "emergency", "emergencyPhone");
-            for (MobileInternalContactsBO bo : mobileInternalContactsBOs) {
-                UserDTO userDTO = new UserDTO();
-                userDTO.getConditions().add(Restrict.eq("username", bo.getUsername()));
-                UserBO userBO = userAPI.findOne(userDTO);
-                if (null != userBO) {
-                    bo.setHeadSculpture(userBO.getHeadSculpture());
-                    bo.setUsername(userBO.getUsername());
-//                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
-                    if ("男".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
-                        bo.setSex(SexType.MAN);
-                    } else if ("女".equals(entryRegisterAPI.getGender(bo.getUsername()))) {
-                        bo.setSex(SexType.WOMAN);
-                    } else {
-                        bo.setSex(SexType.NONE);
-                    }
+//        List<InternalContactsBO> bos = this.transformBOList(list);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<MobileInternalContactsBO> mobileInternalContactsBOs = new ArrayList<>();
+            log.info("查询列表开始1...." + JSON.toJSONString(mobileInternalContactsBOs));
+
+            List<String> userNames = list.stream().map(InternalContacts::getName).collect(Collectors.toList());
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.in("username", userNames));
+            List<UserBO> userBOs = userAPI.findByCis(userDTO);
+
+            //查员工入职
+            EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+            entryRegisterDTO.getConditions().add(Restrict.in("", userNames));
+            List<UserNameSexBO> userNameSexBOs = entryRegisterAPI.findSexByUserName((String[]) userNames.toArray(new String[userNames.size()]));
+
+            for (InternalContacts bo : list) {
+                MobileInternalContactsBO mobIn = new MobileInternalContactsBO();
+                if (null != userBOs && userBOs.size() > 0) {
+                    mobIn.setHeadSculpture(userBOs.get(0).getHeadSculpture());
                 }
+                mobIn.setUserId(bo.getId());
+                mobIn.setUsername(bo.getName());
+                mobIn.setNumber(bo.getEmployeeNum());
+                mobIn.setArea(bo.getArea());
+                mobIn.setBloc(bo.getBloc());
+                mobIn.setEmail(bo.getEmail());
+                mobIn.setDepartment(bo.getDepartment());
+                mobIn.setPhone(bo.getPhone());
+                mobIn.setPosition(bo.getPosition());
+                mobIn.setQq(bo.getQq());
+                mobIn.setStatus(bo.getStatus());
+                mobIn.setRemark(bo.getRemark());
+                mobIn.setWeChat(bo.getWeChat());
+                if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
+                    List<Integer> integerList = userNameSexBOs.stream().filter(str -> bo.getName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
+                    if (null != integerList && integerList.size() > 0) {
+                        if (0 == integerList.get(0)) {
+                            mobIn.setSex(SexType.MAN);
+                        } else {
+                            mobIn.setSex(SexType.WOMAN);
+                        }
+                    }
+//                UserDTO userDTO = new UserDTO();
+//                userDTO.getConditions().add(Restrict.eq("username", bo.getName()));
+//                UserBO userBO = userAPI.findOne(userDTO);
+//                if (null != userBO) {
+//                    mobIn.setHeadSculpture(userBO.getHeadSculpture());
+//                    mobIn.setUsername(userBO.getUsername());
+////                UserDetailBO userDetailBO = userDetailAPI.findByUserId(bo.getUserId());
+//                    String sex = entryRegisterAPI.getGender(bo.getName());
+//                    if ("男".equals(sex)) {
+//                        mobIn.setSex(SexType.MAN);
+//                    } else if ("女".equals(sex)) {
+//                        mobIn.setSex(SexType.WOMAN);
+//                    } else {
+//                        mobIn.setSex(SexType.NONE);
+//                    }
+//                }
+                }
+                mobileInternalContactsBOs.add(mobIn);
             }
+            log.info("查询列表结束....");
             return mobileInternalContactsBOs;
         }
         return null;
@@ -656,6 +707,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("id", id));
         InternalContacts entity = super.findOne(dto);
+        if(null == entity){
+            throw new SerException("目标数据对象不能为空");
+        }
         InternalContactsBO bo = this.transformBO(entity);
         if (null != bo) {
             MobileInternalContactsBO mobileInternalContactsBO = BeanTransform.copyProperties(bo, MobileInternalContactsBO.class, "headSculpture", "sex", "phoneNumber", "emergency", "emergencyPhone");
@@ -689,7 +743,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                     entity.setDepartment(bo.getDepartment());
                     entity.setArea(bo.getArea());
                     entity.setPosition(bo.getPosition());
-                }else{
+                } else {
                     entity.setEmployeeNum(" ");
                     entity.setDepartment(" ");
                     entity.setArea(" ");

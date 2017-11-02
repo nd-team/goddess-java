@@ -24,8 +24,6 @@ import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.vo.InProjectsVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingCollectVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingVO;
-import com.bjike.goddess.market.bo.MarketInfoRecordBO;
-import com.bjike.goddess.market.vo.MarketInfoRecordVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -380,22 +378,22 @@ public class ProjectOutsourcingAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 查询所有的内部项目名称
-     * @return class MarketInfoVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/find/project")
-    public Result findProject() throws ActException{
-        try {
-            List<MarketInfoRecordBO> boList = projectOutsourcingAPI.findProject();
-            List<MarketInfoRecordVO> voList = BeanTransform.copyProperties(boList,MarketInfoRecordVO.class);
-            return ActResult.initialize(voList);
-        }catch(SerException e){
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 查询所有的内部项目名称
+//     * @return class MarketInfoVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/project")
+//    public Result findProject() throws ActException{
+//        try {
+//            List<MarketInfoBO> boList = projectOutsourcingAPI.findProject();
+//            List<MarketInfoVO> voList = BeanTransform.copyProperties(boList,MarketInfoVO.class);
+//            return ActResult.initialize(voList);
+//        }catch(SerException e){
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 获取所有合同外部项目名称和合同项目外部编号

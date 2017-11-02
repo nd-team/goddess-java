@@ -9,10 +9,8 @@ import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 项目承包洽谈业务接口
@@ -118,11 +116,11 @@ public interface ProjectContractAPI {
     List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
 
 
-    /**
-     * 查询内部项目名称
-     * @throws SerException
-     */
-    List<MarketInfoRecordBO> findProject() throws SerException;
+//    /**
+//     * 查询内部项目名称
+//     * @throws SerException
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
 
 
     /**

@@ -17,16 +17,10 @@ import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectOutsourcing;
 import com.bjike.goddess.contractcommunicat.enums.CommunicateResult;
 import com.bjike.goddess.contractcommunicat.enums.GuideAddrStatus;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.ProjectOutsourcingExcel;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
-import com.bjike.goddess.contractcommunicat.to.ExportExcelTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
-import com.bjike.goddess.market.api.MarketInfoRecordAPI;
-import com.bjike.goddess.market.bo.MarketInfoRecordBO;
-import com.bjike.goddess.market.dto.MarketInfoRecordDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -65,8 +59,8 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
     @Autowired
     private BaseInfoManageAPI baseInfoManageAPI;
 
-    @Autowired
-    private MarketInfoRecordAPI marketInfoRecordAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -490,15 +484,15 @@ public class ProjectOutsourcingSerImpl extends ServiceImpl<ProjectOutsourcing, P
         return list;
     }
 
-    @Override
-    public List<MarketInfoRecordBO> findProject() throws SerException {
-        List<MarketInfoRecordBO> list = new ArrayList<>(0);
-        if(moduleAPI.isCheck("market")){
-            MarketInfoRecordDTO dto = new MarketInfoRecordDTO();
-            list = marketInfoRecordAPI.findListRecord(dto);
-        }
-        return list;
-    }
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        List<MarketInfoBO> list = new ArrayList<>(0);
+//        if(moduleAPI.isCheck("market")){
+//            MarketInfoDTO dto = new MarketInfoDTO();
+//            list = marketInfoAPI.findListMarketInfo(dto);
+//        }
+//        return list;
+//    }
 
 }
 

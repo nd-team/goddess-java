@@ -2,11 +2,11 @@ package com.bjike.goddess.reportmanagement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.reportmanagement.bo.*;
-import com.bjike.goddess.reportmanagement.dto.AssetDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitFormulaDTO;
 import com.bjike.goddess.reportmanagement.service.ProfitSer;
-import com.bjike.goddess.reportmanagement.to.DebtTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +75,61 @@ public class ProfitApiImpl implements ProfitAPI {
     @Override
     public Long count(ProfitDTO dto) throws SerException {
         return profitSer.count(dto);
+    }
+
+    @Override
+    public void addFormula(ProfitFormulaTO to) throws SerException {
+        profitSer.addFormula(to);
+    }
+
+    @Override
+    public void editFormula(ProfitFormulaTO to) throws SerException {
+        profitSer.editFormula(to);
+    }
+
+    @Override
+    public void deleteFormula(String id) throws SerException {
+        profitSer.deleteFormula(id);
+    }
+
+    @Override
+    public String findFormula(String id) throws SerException {
+        return profitSer.findFormula(id);
+    }
+
+    @Override
+    public ProfitFormulaBO findFormulaByID(String id) throws SerException {
+        return profitSer.findFormulaByID(id);
+    }
+
+    @Override
+    public List<ProfitFormulaBO> decreaseRatioList(ProfitFormulaDTO profitFormulaDTO) throws SerException {
+        return profitSer.decreaseRatioList(profitFormulaDTO);
+    }
+
+    @Override
+    public List<String> analysisChanges(ProfitDTO dto) throws SerException {
+        return profitSer.analysisChanges(dto);
+    }
+
+    @Override
+    public Long getFormulaTotal(ProfitFormulaDTO dto) throws SerException {
+        return profitSer.getFormulaTotal(dto);
+    }
+
+    @Override
+    public List<ProfitFormulaBO> analysisChangesList(ProfitFormulaDTO dto) throws SerException {
+        return profitSer.analysisChangesList(dto);
+    }
+
+    @Override
+    public void analysisChangesAdd(ProfitFormulaTO to) throws SerException {
+        profitSer.analysisChangesAdd(to);
+    }
+
+    @Override
+    public Long analysisChangesTotal(ProfitFormulaDTO dto) throws SerException {
+        return profitSer.analysisChangesTotal(dto);
     }
 
     @Override

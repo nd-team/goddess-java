@@ -7,12 +7,10 @@ import com.bjike.goddess.contractcommunicat.bo.ProjectContractBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectContractCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectContractDTO;
 import com.bjike.goddess.contractcommunicat.entity.ProjectContract;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
 import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 
 import java.util.List;
 
@@ -99,11 +97,11 @@ public interface ProjectContractSer extends Ser<ProjectContract, ProjectContract
     List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
 
 
-    /**
-     * 查询内部项目名称
-     * @throws SerException
-     */
-    List<MarketInfoRecordBO> findProject() throws SerException;
+//    /**
+//     * 查询内部项目名称
+//     * @throws SerException
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
 
     /**
      * 查询所有的责任人

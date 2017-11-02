@@ -88,4 +88,9 @@ public class ModuleTypeApiImpl implements ModuleTypeAPI {
     public List<OpinionBO> findAllOpinion() throws SerException {
         return moduleTypeSer.findAllOpinion();
     }
+
+    @Override
+    public String findModuleId(String moduleName) throws SerException {
+        return moduleTypeSer.findModuleId(moduleName);
+    }
 }

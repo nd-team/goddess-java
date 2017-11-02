@@ -12,7 +12,9 @@ import com.bjike.goddess.reportmanagement.api.ProfitAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
+import com.bjike.goddess.reportmanagement.dto.ProfitFormulaDTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.vo.*;
 import org.springframework.beans.BeanUtils;
@@ -258,6 +260,140 @@ public class ProfitAct {
     public Result count(ProfitDTO dto) throws ActException {
         try {
             return ActResult.initialize(profitAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 利润增减率分析列表
+     *
+     * @version v1
+     */
+    @GetMapping("v1/formula/list")
+    public Result formulaList(ProfitFormulaDTO profitFormulaDTO) throws ActException {
+        try {
+            return ActResult.initialize(profitAPI.decreaseRatioList(profitFormulaDTO));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询利润增减率分析总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/formula/total")
+    public Result getFormulaTotal(ProfitFormulaDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(profitAPI.getFormulaTotal(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 利润增减率分析添加
+     *
+     * @param to
+     * @version v1
+     */
+    @PostMapping("v1/add/formula")
+    public Result addFormula(@Validated(ADD.class) ProfitFormulaTO to, BindingResult bindingResult) throws ActException {
+        try {
+            profitAPI.addFormula(to);
+            return ActResult.initialize("ADD SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 利润增减率分析编辑
+     *
+     * @param to
+     * @version v1
+     */
+    @PutMapping("v1/edit/formula/{id}")
+    public Result editFormula(@Validated(EDIT.class) ProfitFormulaTO to, BindingResult bindingResult) throws ActException {
+        try {
+            profitAPI.editFormula(to);
+            return ActResult.initialize("EDIT SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 利润增减率分析删除
+     *
+     * @param id
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/formula/{id}")
+    public Result deleteFormula(@PathVariable String id, BindingResult bindingResult) throws ActException {
+        try {
+            profitAPI.deleteFormula(id);
+            return ActResult.initialize("DELETE SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取利润增减率分析
+     *
+     * @version v1
+     */
+    @GetMapping("v1/find/formula/{id}")
+    public Result findFormulaByID(@PathVariable String id) throws ActException {
+        try {
+            ProfitFormulaBO profitFormulaBO = profitAPI.findFormulaByID(id);
+            return ActResult.initialize(profitFormulaBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 变动情况分析列表
+     *
+     * @version v1
+     */
+    @GetMapping("v1/analysisChanges/list")
+    public Result analysisChangesList(ProfitFormulaDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(profitAPI.analysisChangesList(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 变动情况分析列表添加
+     *
+     * @version v1
+     */
+    @PostMapping("v1/analysisChanges/add")
+    public Result analysisChangesAdd(@Validated(ADD.class) ProfitFormulaTO to, BindingResult bindingResult) throws ActException {
+        try {
+            profitAPI.analysisChangesAdd(to);
+            return ActResult.initialize("ADD SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 变动情况分析列表总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/analysisChanges/total")
+    public Result analysisChangesTotal(ProfitFormulaDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(profitAPI.analysisChangesTotal(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

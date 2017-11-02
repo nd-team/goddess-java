@@ -10,13 +10,13 @@ package com.bjike.goddess.reportmanagement.utils;
  * @Copy: [com.bjike]
  */
 public class Static {
-    public static Integer num;
+    public static int num;
 
-    public static Integer getNum() {
+    public static int getNum() {
         return num;
     }
 
-    public static void setNum(Integer num) {
+    public static void setNum(int num) {
         Static.num = num;
     }
 }

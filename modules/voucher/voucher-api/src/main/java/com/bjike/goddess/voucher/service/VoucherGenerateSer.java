@@ -405,7 +405,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
     /**
-     * 根据一级科目查询二级科目
+     * 根据一级科目代码查询二级科目
      *
      * @param firstSub 一级科目
      * @return
@@ -416,10 +416,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
     /**
-     * 根据一级二级查询三级科目
+     * 根据一级科目代码查询三级科目(参数二级科目传过后台不作任何处理)
      *
      * @param firstSub  一级科目
-     * @param secondSub 二级科目
+     * @param secondSub 二级科目()
      * @return
      * @throws SerException
      */
@@ -665,7 +665,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 根据月份查询借方金额和贷方金额
      */
-    default List<HistogramBO> ctReSubHistogram() throws SerException {
+    default OptionBO ctReSubHistogram() throws SerException {
         return null;
     }
 }

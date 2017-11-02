@@ -138,4 +138,15 @@ public class ModuleTypeSerImpl extends ServiceImpl<ModuleType, ModuleTypeDTO> im
                 bos.add(new OpinionBO(entity.getId(), entity.getModule()));
         return bos;
     }
+
+    @Override
+    public String findModuleId(String moduleName) throws SerException {
+        ModuleTypeDTO dto = new ModuleTypeDTO();
+        dto.getConditions().add(Restrict.eq("module", moduleName));
+        List<ModuleType> moduleTypes = super.findByCis(dto);
+        if (null != moduleTypes && moduleTypes.size() > 0) {
+            return moduleTypes.get(0).getId();
+        }
+        return null;
+    }
 }

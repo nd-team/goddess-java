@@ -88,4 +88,9 @@ public class AssetApiImpl implements AssetAPI {
     public List<AssetBO> list1(AssetDTO dto) throws SerException {
         return assetSer.list1(dto);
     }
+
+    @Override
+    public byte[] exportExcel(AssetDTO dto) throws SerException {
+        return assetSer.exportExcel(dto);
+    }
 }

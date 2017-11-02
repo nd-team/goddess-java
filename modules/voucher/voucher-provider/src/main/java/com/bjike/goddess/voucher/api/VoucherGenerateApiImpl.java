@@ -370,7 +370,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public List<HistogramBO> ctReSubHistogram() throws SerException {
+    public OptionBO ctReSubHistogram() throws SerException {
         return voucherGenerateSer.ctReSubHistogram();
     }
 }

@@ -22,9 +22,6 @@ import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectContractTO;
-import com.bjike.goddess.market.api.MarketInfoRecordAPI;
-import com.bjike.goddess.market.bo.MarketInfoRecordBO;
-import com.bjike.goddess.market.dto.MarketInfoRecordDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -68,8 +65,8 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Autowired
     private BaseInfoManageAPI baseInfoManageAPI;
 
-    @Autowired
-    private MarketInfoRecordAPI marketInfoRecordAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
@@ -484,17 +481,15 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         return list;
     }
 
-    @Override
-    public List<MarketInfoRecordBO> findProject() throws SerException {
-        List<MarketInfoRecordBO> list = new ArrayList<>(0);
-        String userToken = RpcTransmit.getUserToken();
-        if(moduleAPI.isCheck("market")){
-            RpcTransmit.transmitUserToken(userToken);
-            MarketInfoRecordDTO dto = new MarketInfoRecordDTO();
-            list = marketInfoRecordAPI.findListRecord(dto);
-        }else {
-            throw new SerException("请去模块关联设置市场信息关联");
-        }
-        return list;
-    }
+//    @Override
+//    public List<MarketInfoBO> findProject() throws SerException {
+//        List<MarketInfoBO> list = new ArrayList<>(0);
+////        if(moduleAPI.isCheck("market")){
+//            String userToken = RpcTransmit.getUserToken();
+//            RpcTransmit.transmitUserToken(userToken);
+//            MarketInfoDTO dto = new MarketInfoDTO();
+//            list = marketInfoAPI.findListMarketInfo(dto);
+////        }
+//        return list;
+//    }
 }
