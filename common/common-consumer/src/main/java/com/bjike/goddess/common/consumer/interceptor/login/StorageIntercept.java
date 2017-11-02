@@ -74,6 +74,9 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getServletPath().equals("/v1/login")){
+            return true;
+        }
         if (autoLogin) {
 
             String userToken = request.getHeader(RpcCommon.USER_TOKEN);

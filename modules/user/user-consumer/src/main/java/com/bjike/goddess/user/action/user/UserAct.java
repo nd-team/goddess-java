@@ -130,7 +130,7 @@ public class UserAct extends BaseFileAction {
             String userToken = RpcContext.getContext().getAttachment("userToken");
             UserBO userBO = userAPI.currentUser();
             if (StringUtils.isBlank(username) || !username.equals(userBO.getUsername() )) {
-                throw new ActException("操作失败，您只能操作自己的头像");
+                throw new ActException("操作失败，您只能操作自己的头像或密码");
             }else{
                 return new ActResult("checkSuccess");
             }
@@ -216,6 +216,7 @@ public class UserAct extends BaseFileAction {
             UserTO userTO = new UserTO();
             BeanTransform.copyProperties(userBO, userTO);
             userTO.setHeadSculpture( fileBOS.get(0).getPath() );
+//            userTO.setHeadSculpture( "1" );
             userTO.setId(userBO.getId());
             userAPI.update(userTO);
 
@@ -262,5 +263,7 @@ public class UserAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
 
 }
