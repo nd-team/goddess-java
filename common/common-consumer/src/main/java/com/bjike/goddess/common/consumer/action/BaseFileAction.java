@@ -132,7 +132,7 @@ public abstract class BaseFileAction {
     public OutputStream writeOutFile1(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
         fileName = fileName.replaceAll(" ", "");
         response.reset();
-        response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"), "ISO8859-1"));
+        response.addHeader("Content-Disposition", "inline;filename=" + new String(fileName.getBytes("utf-8"), "ISO8859-1"));
         response.addHeader("Content-Length", "" + bytes.length);
         OutputStream os = new BufferedOutputStream(response.getOutputStream());
         response.setContentType("application/octet-stream");

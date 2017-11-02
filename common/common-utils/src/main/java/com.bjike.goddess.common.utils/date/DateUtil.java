@@ -6,9 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * @Author: [liguiqin]
@@ -469,5 +467,33 @@ public class DateUtil {
             throw new SerException(e.getMessage());
         }
     }
+
+
+    /**
+     * tanghaixiang
+     * 获取从1900到传入日期的所有年份
+     *
+     * @param localDate 传入的日期
+     * @return
+     * @throws SerException
+     */
+    public static List<Integer> allYearList(LocalDate localDate) throws SerException {
+        try {
+            List<Integer> all = new ArrayList<>();
+            int year = localDate.getYear();
+            if( year<1900 ){
+                return new ArrayList<>();
+            }else{
+                for( int i = 1900 ;i<=year; i++){
+                    all.add( i );
+                }
+            }
+            return all;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+
 
 }
