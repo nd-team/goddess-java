@@ -36,6 +36,18 @@
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionOperateAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
-
+	<dubbo:reference  validation="true" id="areaWeightSetApiImpl" interface="com.bjike.goddess.customer.api.AreaWeightSetAPI" />
+	<dubbo:reference  validation="true" id="bussTypeWeightSetApiImpl" interface="com.bjike.goddess.customer.api.BussTypeWeightSetAPI" />
+	<dubbo:reference  validation="true" id="closenessFoactorSetApiImpl" interface="com.bjike.goddess.customer.api.ClosenessFoactorSetAPI" />
+	<dubbo:reference  validation="true" id="closenessFoactorWeightApiImpl" interface="com.bjike.goddess.customer.api.ClosenessFoactorWeightAPI" />
+	<dubbo:reference  validation="true" id="customerContactWeightSetApiImpl" interface="com.bjike.goddess.customer.api.CustomerContactWeightSetAPI" />
+	<dubbo:reference  validation="true" id="customerWeightFirstFactorApiImpl" interface="com.bjike.goddess.customer.api.CustomerWeightFirstFactorAPI" />
+	<dubbo:reference  validation="true" id="difficultyFoactorSetApiImpl" interface="com.bjike.goddess.customer.api.DifficultyFoactorSetAPI" />
+	<dubbo:reference  validation="true" id="difficultyFoactorWeightApiImpl" interface="com.bjike.goddess.customer.api.DifficultyFoactorWeightAPI" />
+	<dubbo:reference  validation="true" id="firstFactorWeightApiImpl" interface="com.bjike.goddess.customer.api.FirstFactorWeightAPI" />
+	<dubbo:reference  validation="true" id="funPowerWeightApiImpl" interface="com.bjike.goddess.customer.api.FunPowerWeightAPI" />
+	<dubbo:reference  validation="true" id="funPowerWeightFactorApiImpl" interface="com.bjike.goddess.customer.api.FunPowerWeightFactorAPI" />
+	<dubbo:reference  validation="true" id="timelinessFactorSetApiImpl" interface="com.bjike.goddess.customer.api.TimelinessFactorSetAPI" />
+	<dubbo:reference  validation="true" id="timelinessFactorWeightApiImpl" interface="com.bjike.goddess.customer.api.TimelinessFactorWeightAPI" />
 
 </beans>

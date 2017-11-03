@@ -20,28 +20,28 @@ public enum CategoryName {
     /**
      * 负债类
      */
-    @ExcelHeader(name ="负债类")
+    @ExcelValue(name ="负债类")
     LIABILITIES(1),
     /**
      * 共同类
      */
-    @ExcelHeader(name ="共同类")
-    COMMON(3),
+    @ExcelValue(name ="共同类")
+    COMMON(2),
     /**
      * 权益类
      */
-    @ExcelHeader(name ="权益类")
-    RIGHTSINTERESTS(4),
+    @ExcelValue(name ="权益类")
+    RIGHTSINTERESTS(3),
     /**
      * 成本类
      */
-    @ExcelHeader(name ="成本类")
-    COST(5),
+    @ExcelValue(name ="成本类")
+    COST(4),
     /**
      * 损益类
      */
-    @ExcelHeader(name ="损益类")
-    PROFITLOSS(6)
+    @ExcelValue(name ="损益类")
+    PROFITLOSS(5)
     ;
 
     private int code;

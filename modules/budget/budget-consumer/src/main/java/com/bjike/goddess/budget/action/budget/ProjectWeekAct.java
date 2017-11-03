@@ -4,10 +4,12 @@ import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.budget.api.ProjectWeekAPI;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
 import com.bjike.goddess.budget.vo.ProjectWeekCountVO;
+import com.bjike.goddess.budget.vo.ProjectWeekListVO;
 import com.bjike.goddess.budget.vo.ProjectWeekVO;
 import com.bjike.goddess.businessproject.api.DispatchSheetAPI;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -19,6 +21,7 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.bo.ArrangementBO;
 import org.aspectj.lang.annotation.Around;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -149,6 +152,24 @@ public class ProjectWeekAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 项目收入周分页列表
+     *
+     * @param dto     项目收入周分页信息
+     * @param request 请求对象
+     * @return class ProjectWeekVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/listProjectWeek")
+    public Result listProjectWeek(ProjectWeekDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectWeekListBO> list = projectWeekAPI.listProject(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekListVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 通过id查找
@@ -266,10 +287,10 @@ public class ProjectWeekAct extends BaseFileAction{
     public Result findArea() throws ActException {
         try {
             List<String> areas = new ArrayList<>();
-//            if(moduleAPI.isCheck("businessproject")){
+            if(moduleAPI.isCheck("businessproject")){
 
                 areas = dispatchSheetAPI.areas();
-//            }
+            }
             return ActResult.initialize(areas);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -285,9 +306,9 @@ public class ProjectWeekAct extends BaseFileAction{
     public Result findProjectByArea(@RequestParam String area) throws ActException {
         try {
             List<String> project = new ArrayList<>(0);
-//            if(moduleAPI.isCheck("businessproject")){
+            if(moduleAPI.isCheck("businessproject")){
                 project = dispatchSheetAPI.getProjectGroup(area);
-//            }
+            }
             return ActResult.initialize(project);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -303,9 +324,9 @@ public class ProjectWeekAct extends BaseFileAction{
     public Result findNameByAreaProject(@RequestParam String area,@RequestParam String project) throws ActException {
         try {
             List<String> projectName = new ArrayList<>(0);
-//            if(moduleAPI.isCheck("businessproject")){
+            if(moduleAPI.isCheck("businessproject")){
                 projectName = dispatchSheetAPI.getInnerName(area,project);
-//            }
+            }
             return ActResult.initialize(project);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

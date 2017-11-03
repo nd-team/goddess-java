@@ -35,6 +35,10 @@ public class CustomerDetailBO extends BaseBO {
     private String workExperience;
 
     /**
+     * 毕业学校
+     */
+    private String graduatedSchool;
+    /**
      * 求学经历
      */
     private String studyExperience;
@@ -100,6 +104,14 @@ public class CustomerDetailBO extends BaseBO {
 
     public void setWorkExperience(String workExperience) {
         this.workExperience = workExperience;
+    }
+
+    public String getGraduatedSchool() {
+        return graduatedSchool;
+    }
+
+    public void setGraduatedSchool(String graduatedSchool) {
+        this.graduatedSchool = graduatedSchool;
     }
 
     public String getStudyExperience() {

@@ -41,7 +41,7 @@ public class Currency extends BaseEntity {
     /**
      * 是否本位币
      */
-    @Column(name = "is_standardMoney", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否本位币'", insertable = false)
+    @Column(name = "is_standardMoney", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否本位币'")
     private Boolean standardMoney;
 
 

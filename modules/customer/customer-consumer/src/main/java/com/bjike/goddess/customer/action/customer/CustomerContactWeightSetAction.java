@@ -1,0 +1,142 @@
+package com.bjike.goddess.customer.action.customer;
+
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.exception.ActException;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.CustomerContactWeightSetAPI;
+import com.bjike.goddess.customer.bo.BussTypeWeightSetBO;
+import com.bjike.goddess.customer.bo.CustomerContactWeightSetBO;
+import com.bjike.goddess.customer.dto.BussTypeWeightSetDTO;
+import com.bjike.goddess.customer.dto.CustomerContactWeightSetDTO;
+import com.bjike.goddess.customer.to.CustomerContactWeightSetTO;
+import com.bjike.goddess.customer.vo.CustomerContactWeightSetVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 客户接触阶段权重设置
+ *
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-11-01 10:46 ]
+ * @Description: [ 客户接触阶段权重设置 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@RestController
+@RequestMapping("customercontactweightset")
+public class CustomerContactWeightSetAction {
+    @Autowired
+    private CustomerContactWeightSetAPI customerContactWeightSetAPI;
+
+    /**
+     * 客户接触阶段权重设置列表总条数
+     *
+     * @param customerContactWeightSetDTO 业务类型权重设置dto
+     * @des 获取所有业务类型权重设置总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(CustomerContactWeightSetDTO customerContactWeightSetDTO) throws ActException {
+        try {
+            Long count = customerContactWeightSetAPI.countContactWeight(customerContactWeightSetDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 客户接触阶段权重设置列表
+     *
+     * @param customerContactWeightSetDTO 客户接触阶段权重设置dto
+     * @return class CustomerContactWeightSetVO
+     * @des 获取所有客户接触阶段权重设置
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result findList(CustomerContactWeightSetDTO customerContactWeightSetDTO) throws ActException {
+        try {
+
+            List<CustomerContactWeightSetBO> customerContactWeightSetBOS = customerContactWeightSetAPI.listContactWeight(customerContactWeightSetDTO);
+            List<CustomerContactWeightSetVO> bussTypeWeightSetVOS = BeanTransform.copyProperties(customerContactWeightSetBOS, CustomerContactWeightSetVO.class);
+            return ActResult.initialize(bussTypeWeightSetVOS);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 添加客户接触阶段权重设置
+     *
+     * @param customerContactWeightSetTO 客户接触阶段权重设置to
+     * @return class CustomerContactWeightSetVO
+     * @des 添加客户接触阶段权重设置
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/add")
+    public Result addBussWeight(@Validated(ADD.class) CustomerContactWeightSetTO customerContactWeightSetTO, BindingResult bindingResult) throws ActException {
+        try {
+
+            CustomerContactWeightSetBO customerContactWeightSetBO = customerContactWeightSetAPI.addContactWeight(customerContactWeightSetTO);
+            return ActResult.initialize(BeanTransform.copyProperties(customerContactWeightSetBO, CustomerContactWeightSetVO.class, true));
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 编辑客户接触阶段权重设置
+     *
+     * @param customerContactWeightSetTO 客户接触阶段权重设置数据bo
+     * @return class CustomerContactWeightSetVO
+     * @des 添加客户接触阶段权重设置
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/edit")
+    public Result editBussWeight(@Validated(EDIT.class) CustomerContactWeightSetTO customerContactWeightSetTO, BindingResult bindingResult) throws ActException {
+        try {
+
+            CustomerContactWeightSetBO customerContactWeightSetBO = customerContactWeightSetAPI.editContactWeight(customerContactWeightSetTO);
+            return ActResult.initialize(BeanTransform.copyProperties(customerContactWeightSetBO, CustomerContactWeightSetVO.class, true));
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id id
+     * @des 根据id删除客户接触阶段权重设置
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result deleteBussWeight(@PathVariable String id) throws ActException {
+        try {
+
+            customerContactWeightSetAPI.deleteContactWeight(id);
+            return new ActResult("delete success!");
+
+        } catch (SerException e) {
+            throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
+}

@@ -25,6 +25,19 @@
 	<dubbo:service  ref="customerLevelApiImpl" interface="com.bjike.goddess.customer.api.CustomerLevelAPI" />
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.customer.api.CusPermissionOperateAPI" />
+	<dubbo:service  ref="areaWeightSetApiImpl" interface="com.bjike.goddess.customer.api.AreaWeightSetAPI" />
+	<dubbo:service  ref="bussTypeWeightSetApiImpl" interface="com.bjike.goddess.customer.api.BussTypeWeightSetAPI" />
+	<dubbo:service  ref="closenessFoactorSetApiImpl" interface="com.bjike.goddess.customer.api.ClosenessFoactorSetAPI" />
+	<dubbo:service  ref="closenessFoactorWeightApiImpl" interface="com.bjike.goddess.customer.api.ClosenessFoactorWeightAPI" />
+	<dubbo:service  ref="customerContactWeightSetApiImpl" interface="com.bjike.goddess.customer.api.CustomerContactWeightSetAPI" />
+	<dubbo:service  ref="customerWeightFirstFactorApiImpl" interface="com.bjike.goddess.customer.api.CustomerWeightFirstFactorAPI" />
+	<dubbo:service  ref="difficultyFoactorSetApiImpl" interface="com.bjike.goddess.customer.api.DifficultyFoactorSetAPI" />
+	<dubbo:service  ref="difficultyFoactorWeightApiImpl" interface="com.bjike.goddess.customer.api.DifficultyFoactorWeightAPI" />
+	<dubbo:service  ref="firstFactorWeightApiImpl" interface="com.bjike.goddess.customer.api.FirstFactorWeightAPI" />
+	<dubbo:service  ref="funPowerWeightApiImpl" interface="com.bjike.goddess.customer.api.FunPowerWeightAPI" />
+	<dubbo:service  ref="funPowerWeightFactorApiImpl" interface="com.bjike.goddess.customer.api.FunPowerWeightFactorAPI" />
+	<dubbo:service  ref="timelinessFactorSetApiImpl" interface="com.bjike.goddess.customer.api.TimelinessFactorSetAPI" />
+	<dubbo:service  ref="timelinessFactorWeightApiImpl" interface="com.bjike.goddess.customer.api.TimelinessFactorWeightAPI" />
 
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->

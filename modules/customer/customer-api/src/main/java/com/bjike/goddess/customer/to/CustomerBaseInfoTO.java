@@ -1,10 +1,10 @@
 package com.bjike.goddess.customer.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.enums.CustomerSex;
-import com.bjike.goddess.customer.enums.CustomerStatus;
-import com.bjike.goddess.customer.enums.CustomerType;
+import com.bjike.goddess.customer.enums.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -19,29 +19,31 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class CustomerBaseInfoTO extends BaseTO {
-    public interface TESTCustomerBaseInfo{}
+    public interface TESTCustomerBaseInfo {
+    }
 
     /**
      * 客户信息编号
      */
-    @NotBlank(message = "客户信息编号不能为空")
+    @NotBlank(message = "客户信息编号不能为空", groups = {ADD.class, EDIT.class})
     private String customerNum;
 
     /**
      * 客户姓名
      */
-    @NotBlank(message = "客户信息编号不能为空,且唯一")
+    @NotBlank(message = "客户信息编号不能为空,且唯一", groups = {ADD.class, EDIT.class})
     private String customerName;
 
     /**
      * 地区
      */
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 性别
      */
-    @NotNull(message = "性别不能为空")
+    @NotNull(message = "性别不能为空", groups = {ADD.class, EDIT.class})
     private CustomerSex customerSex;
 
     /**
@@ -62,13 +64,14 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 客户级别
      */
-    @NotBlank(message = "客户级别不能为空")
+    @NotBlank(message = "客户级别不能为空", groups = {ADD.class, EDIT.class})
     private String customerLevelName;
 
     /**
      * 客户来源
      */
-    private String origin;
+    @NotNull(message = "客户来源不能为空", groups = {ADD.class, EDIT.class})
+    private Origin origin;
 
     /**
      * 介绍人
@@ -166,6 +169,102 @@ public class CustomerBaseInfoTO extends BaseTO {
     private Status status;
 
     /**
+     * 市场信息编号
+     */
+    private String marketInfoNum;
+    /**
+     * 省份
+     */
+    @NotBlank(message = "省份不能为空", groups = {ADD.class, EDIT.class})
+    private String provinces;
+    /**
+     * 接触阶段
+     */
+    @NotNull(message = "接触阶段不能为空", groups = {ADD.class, EDIT.class})
+    private ContactPhace contactPhace;
+    /**
+     * 时效性
+     */
+    @NotNull(message = "时效性不能为空", groups = {ADD.class, EDIT.class})
+    private Timeliness timeliness;
+    /**
+     * 亲密度
+     */
+    @NotNull(message = "亲密度不能为空", groups = {ADD.class, EDIT.class})
+    private Intimacy intimacy;
+    /**
+     * 难易度
+     */
+    @NotNull(message = "难易度不能为空", groups = {ADD.class, EDIT.class})
+    private DifficultyLevel difficultyLevel;
+    /**
+     * 拜访状态
+     */
+    private VisitStatus visitStatus;
+    /**
+     * 业务类型
+     */
+    @NotBlank(message = "业务类型不能为空", groups = {ADD.class, EDIT.class})
+    private String businessType;
+    /**
+     * 业务方向-科目
+     */
+    @NotBlank(message = "业务方向-科目不能为空", groups = {ADD.class, EDIT.class})
+    private String businessWay;
+    /**
+     * 关联项目
+     */
+    private String relatedProject;
+    /**
+     * 合作项目区域分布
+     */
+    private String cooProjectAreaDistri;
+    /**
+     * 以前合作过的公司
+     */
+    private String beforeCooCompanise;
+    /**
+     * 现业务有关联公司
+     */
+    private String currentBusiness;
+    /**
+     * 未来发展方向
+     */
+    private String futureDevelopment;
+    /**
+     * 对客户合作满意程度
+     */
+    private Satisfation customerSatisfation;
+    /**
+     * 客户对我司合作满意程度
+     */
+    private Satisfation satisfationWithCompany;
+    /**
+     * 扣分事项
+     */
+    private String pointsMatters;
+    /**
+     * 客户保持率
+     */
+    private Double customerReten;
+    /**
+     * 商务活动记录
+     */
+    private String businessActivityRecord;
+    /**
+     * 市场招待记录汇总
+     */
+    private String marketReceptionRecord;
+    /**
+     * 市场信息记录
+     */
+    private String marketInfoRecord;
+    /**
+     * 是否需进行市场招待
+     */
+    private Boolean proceedMarketTreat;
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -174,7 +273,6 @@ public class CustomerBaseInfoTO extends BaseTO {
      * 修改时间
      */
     private String modifyTime;
-
 
 
     public String getCustomerNum() {
@@ -241,11 +339,11 @@ public class CustomerBaseInfoTO extends BaseTO {
         this.customerLevelName = customerLevelName;
     }
 
-    public String getOrigin() {
+    public Origin getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Origin origin) {
         this.origin = origin;
     }
 
@@ -417,5 +515,179 @@ public class CustomerBaseInfoTO extends BaseTO {
         this.modifyTime = modifyTime;
     }
 
+    public String getMarketInfoNum() {
+        return marketInfoNum;
+    }
 
+    public void setMarketInfoNum(String marketInfoNum) {
+        this.marketInfoNum = marketInfoNum;
+    }
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public ContactPhace getContactPhace() {
+        return contactPhace;
+    }
+
+    public void setContactPhace(ContactPhace contactPhace) {
+        this.contactPhace = contactPhace;
+    }
+
+    public Timeliness getTimeliness() {
+        return timeliness;
+    }
+
+    public void setTimeliness(Timeliness timeliness) {
+        this.timeliness = timeliness;
+    }
+
+    public Intimacy getIntimacy() {
+        return intimacy;
+    }
+
+    public void setIntimacy(Intimacy intimacy) {
+        this.intimacy = intimacy;
+    }
+
+    public DifficultyLevel getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
+    }
+
+    public VisitStatus getVisitStatus() {
+        return visitStatus;
+    }
+
+    public void setVisitStatus(VisitStatus visitStatus) {
+        this.visitStatus = visitStatus;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getBusinessWay() {
+        return businessWay;
+    }
+
+    public void setBusinessWay(String businessWay) {
+        this.businessWay = businessWay;
+    }
+
+    public String getRelatedProject() {
+        return relatedProject;
+    }
+
+    public void setRelatedProject(String relatedProject) {
+        this.relatedProject = relatedProject;
+    }
+
+    public String getCooProjectAreaDistri() {
+        return cooProjectAreaDistri;
+    }
+
+    public void setCooProjectAreaDistri(String cooProjectAreaDistri) {
+        this.cooProjectAreaDistri = cooProjectAreaDistri;
+    }
+
+    public String getBeforeCooCompanise() {
+        return beforeCooCompanise;
+    }
+
+    public void setBeforeCooCompanise(String beforeCooCompanise) {
+        this.beforeCooCompanise = beforeCooCompanise;
+    }
+
+    public String getCurrentBusiness() {
+        return currentBusiness;
+    }
+
+    public void setCurrentBusiness(String currentBusiness) {
+        this.currentBusiness = currentBusiness;
+    }
+
+    public String getFutureDevelopment() {
+        return futureDevelopment;
+    }
+
+    public void setFutureDevelopment(String futureDevelopment) {
+        this.futureDevelopment = futureDevelopment;
+    }
+
+    public Satisfation getCustomerSatisfation() {
+        return customerSatisfation;
+    }
+
+    public void setCustomerSatisfation(Satisfation customerSatisfation) {
+        this.customerSatisfation = customerSatisfation;
+    }
+
+    public Satisfation getSatisfationWithCompany() {
+        return satisfationWithCompany;
+    }
+
+    public void setSatisfationWithCompany(Satisfation satisfationWithCompany) {
+        this.satisfationWithCompany = satisfationWithCompany;
+    }
+
+    public String getPointsMatters() {
+        return pointsMatters;
+    }
+
+    public void setPointsMatters(String pointsMatters) {
+        this.pointsMatters = pointsMatters;
+    }
+
+    public Double getCustomerReten() {
+        return customerReten;
+    }
+
+    public void setCustomerReten(Double customerReten) {
+        this.customerReten = customerReten;
+    }
+
+    public String getBusinessActivityRecord() {
+        return businessActivityRecord;
+    }
+
+    public void setBusinessActivityRecord(String businessActivityRecord) {
+        this.businessActivityRecord = businessActivityRecord;
+    }
+
+    public String getMarketReceptionRecord() {
+        return marketReceptionRecord;
+    }
+
+    public void setMarketReceptionRecord(String marketReceptionRecord) {
+        this.marketReceptionRecord = marketReceptionRecord;
+    }
+
+    public String getMarketInfoRecord() {
+        return marketInfoRecord;
+    }
+
+    public void setMarketInfoRecord(String marketInfoRecord) {
+        this.marketInfoRecord = marketInfoRecord;
+    }
+
+    public Boolean getProceedMarketTreat() {
+        return proceedMarketTreat;
+    }
+
+    public void setProceedMarketTreat(Boolean proceedMarketTreat) {
+        this.proceedMarketTreat = proceedMarketTreat;
+    }
 }

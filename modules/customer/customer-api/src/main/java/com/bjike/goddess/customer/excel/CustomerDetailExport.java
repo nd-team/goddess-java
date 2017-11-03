@@ -7,6 +7,7 @@ import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
 import com.bjike.goddess.customer.enums.CustomerType;
+import com.bjike.goddess.customer.enums.Origin;
 
 import java.util.List;
 

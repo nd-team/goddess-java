@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.api;
 
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -79,6 +80,17 @@ public interface ProjectWeekAPI {
      * @throws SerException
      */
     default List<ProjectWeekCountBO> count() throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目收入周列表
+     *
+     * @param dto 项目收入周列表
+     * @return class ProjectWeekBO
+     * @throws SerException
+     */
+    default List<ProjectWeekListBO> listProject(ProjectWeekDTO dto) throws SerException {
         return null;
     }
 

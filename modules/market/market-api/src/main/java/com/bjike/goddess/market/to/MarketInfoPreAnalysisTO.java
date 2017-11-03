@@ -28,31 +28,31 @@ public class MarketInfoPreAnalysisTO extends BaseTO {
     /**
      * 是否为有效信息
      */
-    @NotNull(message = "是否为有效日期不能为空", groups = {testAnalysis.class})
+    @NotNull(message = "是否为有效日期不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private Boolean effctiveInfo;
 
     /**
      * 初步分析时间
      */
-    @NotBlank(message = "初步分析时间不能为空", groups = {testAnalysis.class})
+    @NotBlank(message = "初步分析时间不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private String preliminaryAnalyDate;
 
     /**
      * 是否有资金运营
      */
-    @NotNull(message = "是否有资金运营不能为空", groups = {budgetAnalysis.class})
+    @NotNull(message = "是否有资金运营不能为空", groups = {MarketInfoPreAnalysisTO.budgetAnalysis.class})
     private Boolean fundOperation;
 
     /**
      * 技术人员是否能够提供
      */
-    @NotNull(message = "技术人员是否能够提供不能为空", groups = {planAnalysis.class})
+    @NotNull(message = "技术人员是否能够提供不能为空", groups = {MarketInfoPreAnalysisTO.planAnalysis.class})
     private Boolean ableProvide;
 
     /**
      * 合作方是否有合作风险
      */
-    @NotNull(message = "合作方是否有合作风险不能为空", groups = {testAnalysis.class})
+    @NotNull(message = "合作方是否有合作风险不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private Boolean partnerRisk;
 
     /**
@@ -63,25 +63,25 @@ public class MarketInfoPreAnalysisTO extends BaseTO {
     /**
      * 是否进行初步分析
      */
-    @NotNull(message = "是否进行初步分析不能为空", groups = {testAnalysis.class})
+    @NotNull(message = "是否进行初步分析不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private Boolean preliminaryAnaly;
 
     /**
      * 是否转换商机
      */
-    @NotNull(message = "是否转换商机不能为空", groups = {testAnalysis.class})
+    @NotNull(message = "是否转换商机不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private Boolean conversionBuissOpp;
 
     /**
      * 是否转换为市场招待
      */
-    @NotNull(message = "是否转换为市场招待不能为空", groups = {testAnalysis.class})
+    @NotNull(message = "是否转换为市场招待不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private Boolean conversionMarketFor;
 
     /**
      * 是否转换为商务洽谈
      */
-    @NotNull(message = "是否转换为商务洽谈不能为空", groups = {testAnalysis.class})
+    @NotNull(message = "是否转换为商务洽谈不能为空", groups = {MarketInfoPreAnalysisTO.testAnalysis.class})
     private Boolean conversionBussNegotia;
 
     /**

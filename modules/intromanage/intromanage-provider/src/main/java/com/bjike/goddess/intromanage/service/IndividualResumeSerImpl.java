@@ -1180,6 +1180,12 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
                 integers.add(c);
                 maxs = integers.stream().max(Comparator.comparing(u -> u)).get();//每一个主表对应的子表的最大集合长度
                 maxList.add(maxs);
+                if(maxs==0){
+                    IndividualResumeExport excel = new IndividualResumeExport();
+                    BeanTransform.copyProperties(individualResume, excel);
+                    excel.setSeqNum(seqNum);
+                    individualResumeExports.add(excel);
+                }
                 for (int i = 0; i < maxs; i++) {
                     IndividualResumeExport excel = new IndividualResumeExport();
                     StaffReward staffReward = s > i ? staffRewards.get(i) : new StaffReward();
@@ -1222,7 +1228,7 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
             int index = 1;
             for (int j = 0; j < rowSize; j++) {
                 int mergeRowCount = maxList.get(j);
-                if (mergeRowCount != 1) {
+                if (mergeRowCount > 1) {
                     int firstRow = index;
                     int lastRow = 0;
                     lastRow = firstRow + mergeRowCount - 1;
@@ -1230,6 +1236,8 @@ public class IndividualResumeSerImpl extends ServiceImpl<IndividualResume, Indiv
                         sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
                     }
                     index = lastRow + 1;
+                }else{
+                    index ++;
                 }
             }
 

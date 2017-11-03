@@ -38,6 +38,10 @@ public class CustomerDetailVO {
     private String workExperience;
 
     /**
+     * 毕业学校
+     */
+    private String graduatedSchool;
+    /**
      * 求学经历
      */
     private String studyExperience;
@@ -110,6 +114,14 @@ public class CustomerDetailVO {
 
     public void setWorkExperience(String workExperience) {
         this.workExperience = workExperience;
+    }
+
+    public String getGraduatedSchool() {
+        return graduatedSchool;
+    }
+
+    public void setGraduatedSchool(String graduatedSchool) {
+        this.graduatedSchool = graduatedSchool;
     }
 
     public String getStudyExperience() {

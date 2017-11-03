@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.api;
 
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
+import com.bjike.goddess.budget.bo.ProjectWeekListBO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.service.ProjectWeekSer;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -54,6 +55,11 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     @Override
     public List<ProjectWeekCountBO> count() throws SerException {
         return projectWeekSer.count();
+    }
+
+    @Override
+    public List<ProjectWeekListBO> listProject(ProjectWeekDTO dto) throws SerException {
+        return projectWeekSer.listProject(dto);
     }
 
     @Override
