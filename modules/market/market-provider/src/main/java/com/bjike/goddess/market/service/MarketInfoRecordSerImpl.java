@@ -109,6 +109,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
         RpcTransmit.transmitUserToken(userToken);
 
     }
+
     /**
      * 核对规划模块分析权限（模块级别）
      */
@@ -161,6 +162,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
         }
         return flag;
     }
+
     /**
      * 导航栏核对规划模块分析权限（模块级别)
      */
@@ -254,7 +256,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
     @Override
     public Long countRecord(MarketInfoRecordDTO marketInfoRecordDTO) throws SerException {
         Long count = super.count(marketInfoRecordDTO);
-        return null;
+        return count;
     }
 
     @Override
@@ -310,9 +312,10 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
     @Transactional(rollbackFor = SerException.class)
     @Override
     public MarketInfoRecordBO editRecord(MarketInfoRecordTO marketInfoRecordTO) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         MarketInfoRecord marketInfoRecord = super.findById(marketInfoRecordTO.getId());
         LocalDate initiateDate = marketInfoRecord.getInitiateDate();
+        LocalDateTime dateTime = marketInfoRecord.getCreateTime();
         Boolean effctiveInfo = marketInfoRecord.getEffctiveInfo();//是否为有效信息
         Boolean preliminaryAnaly = marketInfoRecord.getPreliminaryAnaly();//是否进行初步分析
         Boolean conversionBuissOpp = marketInfoRecord.getConversionBuissOpp();//是否转换商机
@@ -338,7 +341,9 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
                 }
             }
         }
-        marketInfoRecord = BeanTransform.copyProperties(marketInfoRecordTO, MarketInfoRecord.class, true);
+        marketInfoRecord = BeanTransform.copyProperties(marketInfoRecordTO, MarketInfoRecord.class, true,"majors","infoFillPerson");
+        marketInfoRecord.setCreateTime(dateTime);
+        marketInfoRecord.setModifyTime(LocalDateTime.now());
         marketInfoRecord.setEffctiveInfo(effctiveInfo);
         marketInfoRecord.setPreliminaryAnaly(preliminaryAnaly);
         marketInfoRecord.setConversionBuissOpp(conversionBuissOpp);
@@ -387,7 +392,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeRecord(String id) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         super.remove(id);
     }
 
@@ -519,7 +524,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public List<SummationAreaBO> summaDayByArea(String summDate) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (StringUtils.isBlank(summDate)) {
             summDate = LocalDate.now().toString();
         }
@@ -530,7 +535,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public List<SummationBO> summaWeek(Integer year, Integer month, Integer week) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null || month == null || week == null) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
@@ -545,7 +550,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public List<SummationAreaBO> summaWeekByArea(Integer year, Integer month, Integer week) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null || month == null || week == null) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
@@ -617,7 +622,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public List<SummationAreaBO> summaYearByArea(Integer year) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null) {
             year = LocalDate.now().getYear();
         }
@@ -628,7 +633,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public List<SummationBO> summaTotal(String endDate) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (StringUtils.isBlank(endDate)) {
             endDate = LocalDate.now().toString();
         }
@@ -702,7 +707,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public List<SummationAreaBO> summaTotalByArea(String endDate) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (StringUtils.isBlank(endDate)) {
             endDate = LocalDate.now().toString();
         }
@@ -955,7 +960,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public OptionBO figureShowDay(String summDate) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (StringUtils.isBlank(summDate)) {
             summDate = LocalDate.now().toString();
         }
@@ -967,7 +972,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null || month == null || week == null) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
@@ -983,7 +988,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null || month == null) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
@@ -996,7 +1001,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public OptionBO figureShowQuarter(Integer year, Integer quarter) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null || quarter == null) {
             year = LocalDate.now().getYear();
             quarter = (LocalDate.now().getMonthValue() + 2) / 3;
@@ -1008,7 +1013,7 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public OptionBO figureShowYear(Integer year) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         if (year == null) {
             year = LocalDate.now().getYear();
         }
@@ -1020,7 +1025,10 @@ public class MarketInfoRecordSerImpl extends ServiceImpl<MarketInfoRecord, Marke
 
     @Override
     public OptionBO figureShowTotal(String endDate) throws SerException {
-      checkSeeIdentity();
+        checkSeeIdentity();
+        if (StringUtils.isBlank(endDate)) {
+            endDate = LocalDate.now().toString();
+        }
         List<FigureShowDataBO> figureShowDataBOS = new ArrayList<>();
         List<String> bussTypeList = findBussType();
         if (bussTypeList != null && bussTypeList.size() > 0) {

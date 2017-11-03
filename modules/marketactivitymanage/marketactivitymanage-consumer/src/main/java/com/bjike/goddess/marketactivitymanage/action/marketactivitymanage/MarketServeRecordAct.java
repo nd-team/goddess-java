@@ -58,14 +58,17 @@ public class MarketServeRecordAct extends BaseFileAction {
     private MarketServeApplyAPI marketServeApplyAPI;
 //    @Autowired
 //    private MarketInfoAPI marketInfoAPI;
+
     @Autowired
     private CustomerInfoAPI customerInfoAPI;
     @Autowired
     private FileAPI fileAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -75,11 +78,11 @@ public class MarketServeRecordAct extends BaseFileAction {
         try {
 
             Boolean isHasPermission = marketServeRecordAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -200,7 +203,7 @@ public class MarketServeRecordAct extends BaseFileAction {
     /**
      * 运营商务部资金模块意见
      *
-     * @param id 市场招待记录唯一标识
+     * @param id                市场招待记录唯一标识
      * @param fundModuleOpinion 运营商务部资金模块意见
      * @throws ActException
      * @version v1
@@ -219,7 +222,7 @@ public class MarketServeRecordAct extends BaseFileAction {
     /**
      * 决策层意见
      *
-     * @param id 市场招待记录唯一标识
+     * @param id                    市场招待记录唯一标识
      * @param executiveAuditOpinion 决策层审核意见
      * @throws ActException
      * @version v1
@@ -397,9 +400,9 @@ public class MarketServeRecordAct extends BaseFileAction {
     /**
      * 导出Excel
      *
-     * @param areas 地区
+     * @param areas     地区
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @version v1
      */
     @LoginAuth
@@ -536,6 +539,7 @@ public class MarketServeRecordAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加编辑中所有的项目性质
      *
@@ -546,11 +550,11 @@ public class MarketServeRecordAct extends BaseFileAction {
     public Result findMarketPNature() throws ActException {
         try {
             List<String> projectNature = new ArrayList<>();
-            if(moduleAPI.isCheck("market")){
-//                projectNature = marketInfoAPI.getProjectNature();
-            }
+//            if(moduleAPI.isCheck("market")){
+//                projectNature = marketInfoRecordAPI.find();
+//            }
             return ActResult.initialize(projectNature);
-        } catch (SerException e) {
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

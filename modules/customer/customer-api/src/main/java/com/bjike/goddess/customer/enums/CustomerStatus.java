@@ -1,5 +1,7 @@
 package com.bjike.goddess.customer.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 客户状态枚举
  * @Author: [tanghaixiang]
@@ -12,16 +14,28 @@ public enum CustomerStatus {
     /**
      * 已完成项目客户
      */
+    @ExcelValue(name = "已完成项目客户")
     COMPLETEPROJECT(0),
     /**
      * 现项目客户
      */
+    @ExcelValue(name = "现项目客户")
     PROJECTING(1),
     /**
      * 潜在客户
      */
-    POTENTIAL(2)
-    ;
+    @ExcelValue(name = "潜在客户")
+    POTENTIAL(2),
+    /**
+     * 失败客户
+     */
+    @ExcelValue(name = "失败客户")
+    FAILURECUSTOMER(3),
+    /**
+     * 已流失客户
+     */
+    @ExcelValue(name = "已流失客户")
+    LOSTCUSTOMER(4);
 
     private int code;
 

@@ -177,7 +177,7 @@ public class MarketInfoRecordApiImpl implements MarketInfoRecordAPI {
 
     @Override
     public OptionBO figureShowQuarter(Integer year, Integer quarter) throws SerException {
-        return figureShowQuarter(year,quarter);
+        return marketInfoRecordSer.figureShowQuarter(year,quarter);
     }
 
     @Override

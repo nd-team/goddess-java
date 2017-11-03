@@ -138,7 +138,7 @@ public class MarketInfoRecordAction {
      * 一个市场信息记录
      *
      * @param id
-     * @return class MarketInfoVO
+     * @return class MarketInfoRecordVO
      * @des 获取一个市场信息记录
      * @version v1
      */
@@ -156,7 +156,7 @@ public class MarketInfoRecordAction {
      * 市场信息列表
      *
      * @param marketInfoRecordDTO 市场信息dto
-     * @return class MarketInfoVO
+     * @return class MarketInfoRecordVO
      * @des 获取所有市场信息
      * @version v1
      */
@@ -400,7 +400,7 @@ public class MarketInfoRecordAction {
         }
     }
     /**
-     * 市场信息周汇总
+     * 市场信息周汇总加一个地区
      *
      * @param year  年份
      * @param month 月份

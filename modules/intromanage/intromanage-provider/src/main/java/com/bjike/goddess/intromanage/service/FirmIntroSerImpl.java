@@ -889,6 +889,12 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
                 integers.add(co);
                 maxs = integers.stream().max(Comparator.comparing(u -> u)).get();//每一个主表对应的子表的最大集合长度
                 maxList.add(maxs);
+                if(maxs==0){
+                    FirmIntroExport excel = new FirmIntroExport();
+                    BeanTransform.copyProperties(firmIntro, excel);
+                    excel.setSeqNum(seqNum);
+                    firmIntroExports.add(excel);
+                }
                 for (int i = 0; i < maxs; i++) {
                     FirmIntroExport excel = new FirmIntroExport();
                     HonorAndQuality honorAndQuality = h > i ? honorAndQualities.get(i) : new HonorAndQuality();
@@ -923,7 +929,7 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
             int index =1;
             for (int j = 0; j < rowSize; j++) {
                 int mergeRowCount = maxList.get(j);
-                if(mergeRowCount!=1){
+                if(mergeRowCount>1){
                     int firstRow = index;
                     int lastRow =0;
                     lastRow = firstRow+mergeRowCount-1;
@@ -931,6 +937,8 @@ public class FirmIntroSerImpl extends ServiceImpl<FirmIntro, FirmIntroDTO> imple
                         sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
                     }
                     index =lastRow+1;
+                }else {
+                    index ++;
                 }
                 index++;
             }

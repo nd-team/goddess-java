@@ -1,5 +1,8 @@
 package com.bjike.goddess.customer.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 客户性别别枚举
  * @Author: [tanghaixiang]
@@ -12,14 +15,17 @@ public enum CustomerSex {
     /**
      * 无
      */
+    @ExcelValue(name = "无")
     NONE(0),
     /**
      * 男
      */
+    @ExcelValue(name = "男")
     MAN(1),
     /**
      * 女
      */
+    @ExcelValue(name = "女")
     WOMAN(2),
     ;
 

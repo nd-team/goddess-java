@@ -2,9 +2,6 @@ package com.bjike.goddess.market.excel;
 
 
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
-//import com.bjike.goddess.market.enums.MarketProjectNature;
-//import com.bjike.goddess.market.enums.MarketWorkType;
-//import com.bjike.goddess.market.enums.Scale;
 
 /**
  * 市场信息管理表现层对象
@@ -20,157 +17,157 @@ public class MarketInfoExport {
     /**
      * 审核人
      */
-    @ExcelHeader(name = "审核人",notNull = true)
+    @ExcelHeader(name = "审核人", notNull = true)
     private String auditor;
 
     /**
      * 审核意见
      */
-    @ExcelHeader(name = "审核意见",notNull = true)
+    @ExcelHeader(name = "审核意见", notNull = true)
     private String auditOpinion;
 
     /**
      * 市场信息编号
      */
-    @ExcelHeader(name = "市场信息编号",notNull = true)
+    @ExcelHeader(name = "市场信息编号", notNull = true)
     private String marketInfoId;
 
     /**
      * 市场收集日期
      */
-    @ExcelHeader(name = "市场收集日期",notNull = true)
+    @ExcelHeader(name = "市场收集日期", notNull = true)
     private String infoCollectionDate;
 
     /**
      * 行业
      */
-    @ExcelHeader(name = "行业",notNull = true)
+    @ExcelHeader(name = "行业", notNull = true)
     private String workType;
 
     /**
      * 技术类别
      */
-    @ExcelHeader(name = "技术类别",notNull = true)
+    @ExcelHeader(name = "技术类别", notNull = true)
     private String technologyCategory;
 
     /**
      * 地区
      */
-    @ExcelHeader(name = "地区",notNull = true)
+    @ExcelHeader(name = "地区", notNull = true)
     private String area;
 
     /**
      * 项目名称
      */
-    @ExcelHeader(name = "项目名称",notNull = true)
+    @ExcelHeader(name = "项目名称", notNull = true)
     private String projectName;
 
     /**
      * 规模
      */
-    @ExcelHeader(name = "规模",notNull = true)
+    @ExcelHeader(name = "规模", notNull = true)
     private String scale;
 
     /**
      * 发起时间
      */
-    @ExcelHeader(name = "发起时间",notNull = true)
+    @ExcelHeader(name = "发起时间", notNull = true)
     private String startTime;
 
     /**
      * 重要时间点
      */
-    @ExcelHeader(name = "重要时间点",notNull = true)
+    @ExcelHeader(name = "重要时间点", notNull = true)
     private String importantPoint;
 
     /**
      * 结束时间
      */
-    @ExcelHeader(name = "结束时间",notNull = true)
+    @ExcelHeader(name = "结束时间", notNull = true)
     private String endTime;
 
     /**
      * 信息来源
      */
-    @ExcelHeader(name = "信息来源",notNull = true)
+    @ExcelHeader(name = "信息来源", notNull = true)
     private String infoSource;
 
     /**
      * 市场信息收集人
      */
-    @ExcelHeader(name = "市场信息收集人",notNull = true)
+    @ExcelHeader(name = "市场信息收集人", notNull = true)
     private String marketInfoCollecting;
 
     /**
      * 是否为有效信息
      */
-    @ExcelHeader(name = "是否为有效信息",notNull = true)
+    @ExcelHeader(name = "是否为有效信息", notNull = true)
     private String effective;
 
     /**
      * 项目性质
      */
-    @ExcelHeader(name = "项目性质",notNull = true)
+    @ExcelHeader(name = "项目性质", notNull = true)
     private String projectNature;
 
     /**
      * 市场分析人员
      */
-    @ExcelHeader(name = "市场分析人员",notNull = true)
+    @ExcelHeader(name = "市场分析人员", notNull = true)
     private String marketAnalysts;
 
     /**
      * 配置要求
      */
-    @ExcelHeader(name = "配置要求",notNull = true)
+    @ExcelHeader(name = "配置要求", notNull = true)
     private String configurationRequirement;
 
     /**
      * 技术要求
      */
-    @ExcelHeader(name = "技术要求",notNull = true)
+    @ExcelHeader(name = "技术要求", notNull = true)
     private String technicalRequirement;
 
     /**
      * 资质要求
      */
-    @ExcelHeader(name = "资质要求",notNull = true)
+    @ExcelHeader(name = "资质要求", notNull = true)
     private String qualificationRequirement;
 
     /**
      * 客户信息编号
      */
-    @ExcelHeader(name = "客户信息编号",notNull = true)
+    @ExcelHeader(name = "客户信息编号", notNull = true)
     private String customerNum;
 
     /**
      * 客户名称
      */
-    @ExcelHeader(name = "客户名称",notNull = true)
+    @ExcelHeader(name = "客户名称", notNull = true)
     private String customerName;
 
     /**
      * 组织机构名称
      */
-    @ExcelHeader(name = "组织机构名称",notNull = true)
+    @ExcelHeader(name = "组织机构名称", notNull = true)
     private String origanizion;
 
     /**
      * 竞争对手名称
      */
-    @ExcelHeader(name = "竞争对手名称",notNull = true)
+    @ExcelHeader(name = "竞争对手名称", notNull = true)
     private String competitorsName;
 
     /**
      * 客户/竞争对手信息填写人
      */
-    @ExcelHeader(name = "客户/竞争对手信息填写人",notNull = true)
+    @ExcelHeader(name = "客户/竞争对手信息填写人", notNull = true)
     private String fillPerson;
 
     /**
      * 备注
      */
-    @ExcelHeader(name = "备注",notNull = true)
+    @ExcelHeader(name = "备注", notNull = true)
     private String remark;
 
 

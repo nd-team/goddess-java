@@ -2,9 +2,10 @@ package com.bjike.goddess.customer.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.enums.CustomerSex;
-import com.bjike.goddess.customer.enums.CustomerStatus;
-import com.bjike.goddess.customer.enums.CustomerType;
+import com.bjike.goddess.customer.enums.*;
+
+import javax.print.DocFlavor;
+import java.time.LocalDateTime;
 
 /**
  * 客户基本信息业务传输对象
@@ -60,7 +61,7 @@ public class CustomerBaseInfoBO extends BaseBO {
     /**
      * 客户来源
      */
-    private String origin;
+    private Origin origin;
 
     /**
      * 介绍人
@@ -167,6 +168,110 @@ public class CustomerBaseInfoBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
+    /**
+     * 最新更新时间
+     */
+    private String updateDate;
+    /**
+     * 市场信息编号
+     */
+    private String marketInfoNum;
+    /**
+     * 省份
+     */
+    private String provinces;
+    /**
+     * 接触阶段
+     */
+    private ContactPhace contactPhace;
+    /**
+     * 时效性
+     */
+    private Timeliness timeliness;
+    /**
+     * 亲密度
+     */
+    private Intimacy intimacy;
+    /**
+     * 难易度
+     */
+    private DifficultyLevel difficultyLevel;
+    /**
+     * 推荐的拜访时间
+     */
+    private String recommendVisitTime;
+    /**
+     * 拜访状态
+     */
+    private VisitStatus visitStatus;
+    /**
+     * 客户维护状态
+     */
+    private CustomerMainStatus customerMainStatus;
+    /**
+     * 最终权重
+     */
+    private Double finalWeight;
+    /**
+     * 业务类型
+     */
+    private String businessType;
+    /**
+     * 业务方向-科目
+     */
+    private String businessWay;
+    /**
+     * 关联项目
+     */
+    private String relatedProject;
+    /**
+     * 合作项目区域分布
+     */
+    private String cooProjectAreaDistri;
+    /**
+     * 以前合作过的公司
+     */
+    private String beforeCooCompanise;
+    /**
+     * 现业务有关联公司
+     */
+    private String currentBusiness;
+    /**
+     * 未来发展方向
+     */
+    private String futureDevelopment;
+    /**
+     * 对客户合作满意程度
+     */
+    private Satisfation customerSatisfation;
+    /**
+     * 客户对我司合作满意程度
+     */
+    private Satisfation satisfationWithCompany;
+    /**
+     * 扣分事项
+     */
+    private String pointsMatters;
+    /**
+     * 客户保持率
+     */
+    private Double customerReten;
+    /**
+     * 商务活动记录
+     */
+    private String businessActivityRecord;
+    /**
+     * 市场招待记录汇总
+     */
+    private String marketReceptionRecord;
+    /**
+     * 市场信息记录
+     */
+    private String marketInfoRecord;
+    /**
+     * 是否需进行市场招待
+     */
+    private Boolean proceedMarketTreat;
 
     /**
      * 客户详细信息
@@ -238,11 +343,11 @@ public class CustomerBaseInfoBO extends BaseBO {
         this.customerLevelBO = customerLevelBO;
     }
 
-    public String getOrigin() {
+    public Origin getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Origin origin) {
         this.origin = origin;
     }
 
@@ -412,6 +517,214 @@ public class CustomerBaseInfoBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getMarketInfoNum() {
+        return marketInfoNum;
+    }
+
+    public void setMarketInfoNum(String marketInfoNum) {
+        this.marketInfoNum = marketInfoNum;
+    }
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public ContactPhace getContactPhace() {
+        return contactPhace;
+    }
+
+    public void setContactPhace(ContactPhace contactPhace) {
+        this.contactPhace = contactPhace;
+    }
+
+    public Timeliness getTimeliness() {
+        return timeliness;
+    }
+
+    public void setTimeliness(Timeliness timeliness) {
+        this.timeliness = timeliness;
+    }
+
+    public Intimacy getIntimacy() {
+        return intimacy;
+    }
+
+    public void setIntimacy(Intimacy intimacy) {
+        this.intimacy = intimacy;
+    }
+
+    public DifficultyLevel getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
+    }
+
+    public String getRecommendVisitTime() {
+        return recommendVisitTime;
+    }
+
+    public void setRecommendVisitTime(String recommendVisitTime) {
+        this.recommendVisitTime = recommendVisitTime;
+    }
+
+    public VisitStatus getVisitStatus() {
+        return visitStatus;
+    }
+
+    public void setVisitStatus(VisitStatus visitStatus) {
+        this.visitStatus = visitStatus;
+    }
+
+    public CustomerMainStatus getCustomerMainStatus() {
+        return customerMainStatus;
+    }
+
+    public void setCustomerMainStatus(CustomerMainStatus customerMainStatus) {
+        this.customerMainStatus = customerMainStatus;
+    }
+
+    public Double getFinalWeight() {
+        return finalWeight;
+    }
+
+    public void setFinalWeight(Double finalWeight) {
+        this.finalWeight = finalWeight;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getBusinessWay() {
+        return businessWay;
+    }
+
+    public void setBusinessWay(String businessWay) {
+        this.businessWay = businessWay;
+    }
+
+    public String getRelatedProject() {
+        return relatedProject;
+    }
+
+    public void setRelatedProject(String relatedProject) {
+        this.relatedProject = relatedProject;
+    }
+
+    public String getCooProjectAreaDistri() {
+        return cooProjectAreaDistri;
+    }
+
+    public void setCooProjectAreaDistri(String cooProjectAreaDistri) {
+        this.cooProjectAreaDistri = cooProjectAreaDistri;
+    }
+
+    public String getBeforeCooCompanise() {
+        return beforeCooCompanise;
+    }
+
+    public void setBeforeCooCompanise(String beforeCooCompanise) {
+        this.beforeCooCompanise = beforeCooCompanise;
+    }
+
+    public String getCurrentBusiness() {
+        return currentBusiness;
+    }
+
+    public void setCurrentBusiness(String currentBusiness) {
+        this.currentBusiness = currentBusiness;
+    }
+
+    public String getFutureDevelopment() {
+        return futureDevelopment;
+    }
+
+    public void setFutureDevelopment(String futureDevelopment) {
+        this.futureDevelopment = futureDevelopment;
+    }
+
+    public Satisfation getCustomerSatisfation() {
+        return customerSatisfation;
+    }
+
+    public void setCustomerSatisfation(Satisfation customerSatisfation) {
+        this.customerSatisfation = customerSatisfation;
+    }
+
+    public Satisfation getSatisfationWithCompany() {
+        return satisfationWithCompany;
+    }
+
+    public void setSatisfationWithCompany(Satisfation satisfationWithCompany) {
+        this.satisfationWithCompany = satisfationWithCompany;
+    }
+
+    public String getPointsMatters() {
+        return pointsMatters;
+    }
+
+    public void setPointsMatters(String pointsMatters) {
+        this.pointsMatters = pointsMatters;
+    }
+
+    public Double getCustomerReten() {
+        return customerReten;
+    }
+
+    public void setCustomerReten(Double customerReten) {
+        this.customerReten = customerReten;
+    }
+
+    public String getBusinessActivityRecord() {
+        return businessActivityRecord;
+    }
+
+    public void setBusinessActivityRecord(String businessActivityRecord) {
+        this.businessActivityRecord = businessActivityRecord;
+    }
+
+    public String getMarketReceptionRecord() {
+        return marketReceptionRecord;
+    }
+
+    public void setMarketReceptionRecord(String marketReceptionRecord) {
+        this.marketReceptionRecord = marketReceptionRecord;
+    }
+
+    public String getMarketInfoRecord() {
+        return marketInfoRecord;
+    }
+
+    public void setMarketInfoRecord(String marketInfoRecord) {
+        this.marketInfoRecord = marketInfoRecord;
+    }
+
+    public Boolean getProceedMarketTreat() {
+        return proceedMarketTreat;
+    }
+
+    public void setProceedMarketTreat(Boolean proceedMarketTreat) {
+        this.proceedMarketTreat = proceedMarketTreat;
     }
 
     public CustomerDetailBO getCustomerDetailBO() {
