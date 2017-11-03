@@ -44,7 +44,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("internalcontacts")
-public class InternalContactsAct extends BaseFileAction {
+public class                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        InternalContactsAct extends BaseFileAction {
 
     @Autowired
     private InternalContactsAPI internalContactsAPI;

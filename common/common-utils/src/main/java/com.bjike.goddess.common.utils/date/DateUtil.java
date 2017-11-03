@@ -6,9 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * @Author: [liguiqin]
@@ -401,4 +399,101 @@ public class DateUtil {
             throw new SerException(e.getMessage());
         }
     }
+
+    /**
+     * tanghaixiang
+     * 获取当前时间是当前年份和当前月份的第几周
+     *
+     * @param localDate 传入的日期
+     * @return
+     * @throws SerException
+     */
+    public static int todayWeek(LocalDate localDate) throws SerException {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(DateUtil.dateToString( localDate));
+
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+            return weekOfMonth;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    /**
+     * tanghaixiang
+     * 获取当前时间是当前年份的第几季度
+     *
+     * @param localDate 传入的日期
+     * @return
+     * @throws SerException
+     */
+    public static int todayQuart(LocalDate localDate) throws SerException {
+        try {
+            int quartOfYear = 1;
+            switch ( localDate.getMonthValue() ){
+                case 1:
+                    quartOfYear = 1;
+                case 2:
+                    quartOfYear = 1;
+                case 3:
+                    quartOfYear = 1;
+                case 4:
+                    quartOfYear = 2;
+                case 5:
+                    quartOfYear = 2;
+                case 6:
+                    quartOfYear = 2;
+                case 7:
+                    quartOfYear = 3;
+                case 8:
+                    quartOfYear = 3;
+                case 9:
+                    quartOfYear = 3;
+                case 10:
+                    quartOfYear = 4;
+                case 11:
+                    quartOfYear = 4;
+                case 12:
+                    quartOfYear = 4;
+            }
+
+
+            return quartOfYear;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * tanghaixiang
+     * 获取从1900到传入日期的所有年份
+     *
+     * @param localDate 传入的日期
+     * @return
+     * @throws SerException
+     */
+    public static List<Integer> allYearList(LocalDate localDate) throws SerException {
+        try {
+            List<Integer> all = new ArrayList<>();
+            int year = localDate.getYear();
+            if( year<1900 ){
+                return new ArrayList<>();
+            }else{
+                for( int i = 1900 ;i<=year; i++){
+                    all.add( i );
+                }
+            }
+            return all;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+
+
 }

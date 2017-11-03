@@ -78,6 +78,15 @@ public interface BusinessContractAPI {
     default BusinessContractsBO edit(BusinessContractTO to) throws SerException {
         return null;
     }
+    /**
+     * 获取通过内容
+     * @param id 注册id
+     * @return
+     * @throws SerException
+     */
+    default String findNotisDate(String id) throws SerException{
+        return null;
+    }
 
     /**
      * 删除商务项目合同
@@ -437,6 +446,75 @@ public interface BusinessContractAPI {
         return null;
     }
     /**
+     * 各总包单位合同规模数图表日汇总
+     *
+     * @param time
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO dayCompanyScaleFigureCollect(String time) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同规模数图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO weekCompanyScaleFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同规模数图表月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO monthCompanyScaleFigureCollect(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同规模数图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO quarterCompanyScaleFigureCollect(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同规模数图表年份汇总
+     *
+     * @param year
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO yearCompanyScaleFigureCollect(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同规模数图表累计汇总
+     *
+     * @param time
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO totalCompanyScaleFigureCollect(String time) throws SerException {
+        return null;
+    }
+    /**
      * 各地区合同立项情况金额图表日汇总
      *
      * @param time
@@ -640,6 +718,75 @@ public interface BusinessContractAPI {
      * @throws SerException
      */
     default OptionMakeBO totalMajorMakeFigureCollect(String time) throws SerException {
+        return null;
+    }
+    /**
+     * 各总包单位合同立项情况金额图表日汇总
+     *
+     * @param time
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO dayCompanyMakeFigureCollect(String time) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO weekCompanyMakeFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO monthCompanyMakeFigureCollect(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO quarterCompanyMakeFigureCollect(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表年汇总
+     *
+     * @param year
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO yearCompanyMakeFigureCollect(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况金额图表累计汇总
+     *
+     * @param time
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO totalCompanyMakeFigureCollect(String time) throws SerException {
         return null;
     }
     /**
@@ -849,6 +996,75 @@ public interface BusinessContractAPI {
      * @throws SerException
      */
     default OptionBO totalMajorMakeCaseFigureCollect(String time) throws SerException {
+        return null;
+    }
+    /**
+     * 各总包单位合同立项情况图表日汇总
+     *
+     * @param time
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO dayCompanyMakeCaseFigureCollect(String time) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO weekCompanyMakeCaseFigureCollect(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况图表月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO monthCompanyMakeCaseFigureCollect(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO quarterCompanyMakeCaseFigureCollect(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况图表年汇总
+     *
+     * @param year
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO yearCompanyMakeCaseFigureCollect(Integer year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 各总包单位合同立项情况图表累计汇总
+     *
+     * @param time
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO totalCompanyMakeCaseFigureCollect(String time) throws SerException {
         return null;
     }
     /**

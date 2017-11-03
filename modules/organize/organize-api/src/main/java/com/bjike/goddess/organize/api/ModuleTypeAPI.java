@@ -149,4 +149,14 @@ public interface ModuleTypeAPI {
     default List<OpinionBO> findAllOpinion() throws SerException {
         return null;
     }
+
+    /**
+     * 根据模块名获取模块的id
+     *
+     * @return
+     * @throws SerException
+     */
+    default String findModuleId(String moduleName) throws SerException {
+        return null;
+    }
 }

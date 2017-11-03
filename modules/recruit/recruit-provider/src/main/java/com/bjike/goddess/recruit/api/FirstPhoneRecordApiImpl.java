@@ -117,5 +117,20 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
         return firstPhoneRecordSer.allFirstName();
     }
 
+    @Override
+    public FirstPhoneRecordBO importExcel(List<FirstPhoneRecordTO> firstPhoneRecordTOS) throws SerException {
+        return firstPhoneRecordSer.importExcel(firstPhoneRecordTOS);
+    }
+
+    @Override
+    public byte[] exportExcel(FirstPhoneRecordDTO dto) throws SerException {
+        return firstPhoneRecordSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return firstPhoneRecordSer.templateExport();
+    }
+
 
 }

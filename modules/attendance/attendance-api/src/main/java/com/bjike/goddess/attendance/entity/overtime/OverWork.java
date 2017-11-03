@@ -27,6 +27,11 @@ public class OverWork extends BaseEntity {
     private String area;
 
     /**
+     * 加班录入人
+     */
+    @Column(name = "entryer", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '加班录入人'")
+    private String entryer;
+    /**
      * 任务下达人
      */
     @Column(name = "tasker", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务下达人'")
@@ -109,6 +114,11 @@ public class OverWork extends BaseEntity {
      */
     @Column(name = "auditAdvice",  columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
     private String auditAdvice;
+    /**
+     * 审核时间
+     */
+    @Column(name = "auditTime",  columnDefinition = "DATETIME   COMMENT '审核时间'")
+    private LocalDateTime auditTime;
 
     /**
      * 审核状态
@@ -131,6 +141,14 @@ public class OverWork extends BaseEntity {
 
     public void setTasker(String tasker) {
         this.tasker = tasker;
+    }
+
+    public String getEntryer() {
+        return entryer;
+    }
+
+    public void setEntryer(String entryer) {
+        this.entryer = entryer;
     }
 
     public String getOverWorker() {
@@ -243,5 +261,13 @@ public class OverWork extends BaseEntity {
 
     public void setAuditStatus(AuditStatus auditStatus) {
         this.auditStatus = auditStatus;
+    }
+
+    public LocalDateTime getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(LocalDateTime auditTime) {
+        this.auditTime = auditTime;
     }
 }

@@ -1,0 +1,141 @@
+package com.bjike.goddess.customer.action.customer;
+
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.exception.ActException;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
+import com.bjike.goddess.common.consumer.restful.ActResult;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.customer.api.DifficultyFoactorSetAPI;
+import com.bjike.goddess.customer.bo.DifficultyFoactorSetBO;
+import com.bjike.goddess.customer.bo.TimelinessFactorSetBO;
+import com.bjike.goddess.customer.dto.DifficultyFoactorSetDTO;
+import com.bjike.goddess.customer.to.DifficultyFoactorSetTO;
+import com.bjike.goddess.customer.vo.DifficultyFoactorSetVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 难易度因素层设置
+ *
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-11-01 02:18 ]
+ * @Description: [ 难易度因素层设置 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@RestController
+@RequestMapping("difficultyfoactorset")
+public class DifficultyFoactorSetAction {
+    @Autowired
+    private DifficultyFoactorSetAPI difficultyFoactorSetAPI;
+
+    /**
+     * 难易度因素层设置列表总条数
+     *
+     * @param difficultyFoactorSetDTO 难易度因素层设置dto
+     * @des 获取所有难易度因素层设置总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(DifficultyFoactorSetDTO difficultyFoactorSetDTO) throws ActException {
+        try {
+            Long count = difficultyFoactorSetAPI.countDifficulty(difficultyFoactorSetDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 难易度因素层设置列表
+     *
+     * @param difficultyFoactorSetDTO 难易度因素层设置dto
+     * @return class DifficultyFoactorSetVO
+     * @des 获取所有难易度因素层设置
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result findList(DifficultyFoactorSetDTO difficultyFoactorSetDTO) throws ActException {
+        try {
+
+            List<DifficultyFoactorSetBO> difficultyFoactorSetBOS = difficultyFoactorSetAPI.listDifficulty(difficultyFoactorSetDTO);
+            List<DifficultyFoactorSetVO> difficultyFoactorSetVOS = BeanTransform.copyProperties(difficultyFoactorSetBOS, DifficultyFoactorSetVO.class);
+            return ActResult.initialize(difficultyFoactorSetVOS);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 添加难易度因素层设置
+     *
+     * @param difficultyFoactorSetTO 难易度因素层设置to
+     * @return class DifficultyFoactorSetVO
+     * @des 添加难易度因素层设置
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/add")
+    public Result addBussWeight(@Validated(ADD.class) DifficultyFoactorSetTO difficultyFoactorSetTO, BindingResult bindingResult) throws ActException {
+        try {
+
+            DifficultyFoactorSetBO difficultyFoactorSetBO = difficultyFoactorSetAPI.addDifficulty(difficultyFoactorSetTO);
+            return ActResult.initialize(BeanTransform.copyProperties(difficultyFoactorSetBO, DifficultyFoactorSetVO.class, true));
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 编辑难易度因素层设置
+     *
+     * @param difficultyFoactorSetTO 难易度因素层设置数据bo
+     * @return class DifficultyFoactorSetVO
+     * @des 添加难易度因素层设置
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/edit")
+    public Result editBussWeight(@Validated(EDIT.class) DifficultyFoactorSetTO difficultyFoactorSetTO, BindingResult bindingResult) throws ActException {
+        try {
+
+            DifficultyFoactorSetBO difficultyFoactorSetBO = difficultyFoactorSetAPI.editDifficulty(difficultyFoactorSetTO);
+            return ActResult.initialize(BeanTransform.copyProperties(difficultyFoactorSetBO, DifficultyFoactorSetVO.class, true));
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id id
+     * @des 根据id删除难易度因素层设置
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result deleteBussWeight(@PathVariable String id) throws ActException {
+        try {
+
+            difficultyFoactorSetAPI.deleteDifficulty(id);
+            return new ActResult("delete success!");
+
+        } catch (SerException e) {
+            throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
+}

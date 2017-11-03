@@ -283,6 +283,14 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
     default List<UserNameSexBO> findSexByUserName(String[] userName) throws SerException {
         return null;
     }
+    /**
+     * 根据入职时间获取入职人数
+     * @return
+     */
+    default Integer findNumByEntryDate(String dep) throws SerException{
+        return null;
+    }
+
 
     /**
      * chenjunhao

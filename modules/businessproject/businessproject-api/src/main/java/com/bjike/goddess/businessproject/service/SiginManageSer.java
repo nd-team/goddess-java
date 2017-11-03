@@ -1,5 +1,6 @@
 package com.bjike.goddess.businessproject.service;
 
+import com.bjike.goddess.businessproject.bo.OptionBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
@@ -191,4 +192,52 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
      * @throws SerException
      */
     Set<String> makeProjects() throws SerException;
+
+    /**
+     * 合同签订与立项周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 合同签订与立项月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO monthCollectFigure(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 合同签订与立项汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 合同签订与立项年汇总
+     *
+     * @param year
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO yearCollectFigure(Integer year) throws SerException {
+        return null;
+    }
 }

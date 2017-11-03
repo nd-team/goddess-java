@@ -75,4 +75,9 @@ public class ReimShapeYaxisVO implements Serializable{
 
     public ReimShapeYaxisVO() {
     }
+
+    public ReimShapeYaxisVO(String type, String name) {
+        this.type = type;
+        this.name = name;
+    }
 }

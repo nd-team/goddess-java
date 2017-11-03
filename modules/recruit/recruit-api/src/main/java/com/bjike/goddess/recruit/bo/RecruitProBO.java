@@ -122,6 +122,18 @@ public class RecruitProBO extends BaseBO {
      * 审核状态
      */
     private AuditType auditType;
+    /**
+     * 是否有资金准备
+     */
+    private Boolean moneyReady;
+
+    public Boolean getMoneyReady() {
+        return moneyReady;
+    }
+
+    public void setMoneyReady(Boolean moneyReady) {
+        this.moneyReady = moneyReady;
+    }
 
     public AuditType getAuditType() {
         return auditType;

@@ -21,7 +21,10 @@ public class OverWorkVO {
      * 地区
      */
     private String area;
-
+    /**
+     * 加班录入人
+     */
+    private String entryer;
     /**
      * 任务下达人
      */
@@ -93,6 +96,10 @@ public class OverWorkVO {
     private String auditAdvice;
 
     /**
+     * 审核时间
+     */
+    private String auditTime;
+    /**
      * 审核状态
      */
     private AuditStatus auditStatus;
@@ -120,6 +127,14 @@ public class OverWorkVO {
 
     public void setTasker(String tasker) {
         this.tasker = tasker;
+    }
+
+    public String getEntryer() {
+        return entryer;
+    }
+
+    public void setEntryer(String entryer) {
+        this.entryer = entryer;
     }
 
     public String getOverWorker() {
@@ -224,6 +239,14 @@ public class OverWorkVO {
 
     public void setAuditAdvice(String auditAdvice) {
         this.auditAdvice = auditAdvice;
+    }
+
+    public String getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(String auditTime) {
+        this.auditTime = auditTime;
     }
 
     public AuditStatus getAuditStatus() {

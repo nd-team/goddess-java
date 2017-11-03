@@ -10,9 +10,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
-import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
-import com.bjike.goddess.financeinit.dto.CategoryDTO;
+import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.bo.*;
@@ -69,7 +69,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Autowired
     private VoucherTotalSer voucherTotalSer;
     @Autowired
-    private FirstSubjectAPI firstSubjectAPI;
+    private AccountanCourseAPI accountanCourseAPI;
     @Autowired
     private CategoryAPI categoryAPI;
     @Autowired
@@ -428,7 +428,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public List<HistogramBO> ctReSubHistogram() throws SerException {
+    public OptionBO ctReSubHistogram() throws SerException {
         String[] fields = new String[]{"borrowMoney", "loanMoney"};
         String year = String.valueOf(LocalDate.now().getYear());
 
@@ -470,7 +470,79 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 histogramBOList.add(histogramBO);
             }
         }
-        return histogramBOList;
+        String text_1 = "借方金额和贷方金额汇总";
+        return getOptionBO(text_1, histogramBOList);
+
+    }
+
+    //柱状图数据
+    private OptionBO getOptionBO(String text_1, List<HistogramBO> histogramBOList) throws SerException {
+        List<String> monthList = histogramBOList.stream().map(HistogramBO::getMonth).collect(Collectors.toList());
+        String[] text_3 = monthList.toArray(new String[monthList.size()]);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_2 = new String[]{"借方金额", "贷方金额"};
+        text_list2 = Arrays.stream(text_2).collect(Collectors.toList());
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (histogramBOList != null && histogramBOList.size() > 0) {
+            for (String str : text_list2) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(str);
+                seriesBO.setType("bar");
+                List<Double> number = new ArrayList<>(0);
+                for (HistogramBO bo : histogramBOList) {
+                    Double i = 0d;
+                    if (str.equals("借方金额")) {
+                        Double j = bo.getBorrowMoney();
+                        if (j != null) {
+                            i = j;
+                        }
+                    }
+                    if (str.equals("贷方金额")) {
+                        Double j = bo.getLoanMoney();
+                        if (j != null) {
+                            i = j;
+                        }
+                    }
+                    number.add(i);
+                }
+                //柱状图数据
+                Double[] numbers = number.toArray(new Double[number.size()]);
+                seriesBO.setData(numbers);
+                seriesBOList.add(seriesBO);
+            }
+        }
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        TooltipBO tooltipBO = new TooltipBO();
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
     }
 
     //得到偏差分析
@@ -1290,11 +1362,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1371,11 +1446,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1419,11 +1497,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1561,11 +1642,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1610,11 +1694,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
 
@@ -1660,11 +1747,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1709,11 +1799,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1816,11 +1909,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1863,11 +1959,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1911,11 +2010,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -1959,11 +2061,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -2062,11 +2167,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -2110,11 +2218,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -2158,11 +2269,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -2206,38 +2320,40 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        voucherGenerateBOs.stream().forEach(obj -> {
-            obj.setBorrowMoneyTotal(borrowMoneyTotal);
-            obj.setLoanMoneyTotal(loanMoneyTotal);
-        });
-        return voucherGenerateBOs;
+        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            voucherGenerateBOs.stream().forEach(obj -> {
+                obj.setBorrowMoneyTotal(borrowMoneyTotal);
+                obj.setLoanMoneyTotal(loanMoneyTotal);
+            });
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
     public List<String> listFirstSubject() throws SerException {
-//        List<String> list = firstSubjectAPI.listAllFirst();
-//        return list;
+        List<String> stringList = new ArrayList<>(0);
         //获取带有科目编号的一级科目
-        List<String> list = firstSubjectAPI.listAllFirstAndCode();
-        return list;
+        List<AccountAddDateBO> list = accountanCourseAPI.findFirstNameCode();
+        if (null != list && list.size() > 0) {
+            list.stream().forEach(obj -> {
+                stringList.add(obj.getCode() + ":" + obj.getAccountanName());
+            });
+        }
+        return stringList;
     }
 
     @Override
     public List<String> listSubByFirst(String firstSub) throws SerException {
-        CategoryDTO cdto = new CategoryDTO();
-        firstSub = firstSub.substring(firstSub.indexOf(":") + 1, firstSub.length());
-        cdto.setFirstSubjectName(firstSub);
-        List<String> list = categoryAPI.getSecondSubject(cdto);
+        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
+        List<String> list = accountanCourseAPI.findSendNameByCode(firstSub);
         return list;
     }
 
     @Override
     public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
-        CategoryDTO cdto = new CategoryDTO();
-        firstSub = firstSub.substring(firstSub.indexOf(":") + 1, firstSub.length());
-        cdto.setFirstSubjectName(firstSub);
-        cdto.setSecondSubject(secondSub);
-        List<String> list = categoryAPI.getThirdSubject(cdto);
+        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
+        List<String> list = accountanCourseAPI.findThirdNameByCode(firstSub);
         return list;
     }
 
@@ -2301,12 +2417,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 "firstSubject", "secondSubject", "thirdSubject", "borrowMoney", "loanMoney"};
         List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
-            //todo 从财务初始化根据财务会计科目拿取方向，新的财务初始化会有这个字段，暂时用remark来代替
-            String sql = " SELECT remark AS direction FROM financeinit_firstsubject WHERE name='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction"};
+            //财务初始化中根据会计科目名称获取方向
+            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
+            String[] field = new String[]{"direction","balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
+                accountInfoBO.setBalance(boList1.get(0).getBalance());
             }
             boList.add(accountInfoBO);
         }
@@ -2345,11 +2462,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = super.findByCis(dto);
         List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
-            String sql = " SELECT remark AS direction FROM financeinit_firstsubject WHERE name='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction"};
+            //财务初始化中根据会计科目名称获取方向
+            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
+            String[] field = new String[]{"direction","balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
+                accountInfoBO.setBalance(boList1.get(0).getBalance());
             }
             boList.add(accountInfoBO);
         }

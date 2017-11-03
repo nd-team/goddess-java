@@ -174,7 +174,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     public List<InitDateEntryBO> listInit(InitDateEntryDTO initDateEntryDTO) throws SerException {
         checkSeeIdentity();
         initDateEntryDTO.getSorts().add("code=asc");
-        List<InitDateEntry> initDateEntries = super.findByCis(initDateEntryDTO);
+        List<InitDateEntry> initDateEntries = super.findByCis(initDateEntryDTO,true);
         return BeanTransform.copyProperties(initDateEntries, InitDateEntryBO.class);
     }
 
@@ -183,9 +183,10 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         checkAddIdentity();
         InitDateEntry initDateEntry = super.findById(initDateEntryTO.getId());
         LocalDateTime date = initDateEntry.getCreateTime();
-        initDateEntry = BeanTransform.copyProperties(initDateEntry, InitDateEntry.class, true);
+        initDateEntry = BeanTransform.copyProperties(initDateEntryTO, InitDateEntry.class, true);
         initDateEntry.setCreateTime(date);
         initDateEntry.setModifyTime(LocalDateTime.now());
+        super.update(initDateEntry);
         return BeanTransform.copyProperties(initDateEntry, InitDateEntryBO.class);
     }
 
@@ -210,7 +211,8 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
                 }
             }
         }
-        String str = "本年借方累计数("+yearBorrowerNum+")"+(yearBorrowerNum==yearLenderNum?"=":"≠")+"本年贷方累计数("+yearLenderNum+")且本年借方累计数＋期初余额("+boorrowerBalance+")"+(boorrowerBalance==lendBalance?"=":"≠")+"本年贷方累计数＋期初余额("+lendBalance+")";
+        String str = "本年借方累计数("+yearBorrowerNum+")"+(yearBorrowerNum.doubleValue()==yearLenderNum.doubleValue()?"=":"≠")+"本年贷方累计数("+yearLenderNum+")且本年借方累计数＋期初余额("+boorrowerBalance+")"+(boorrowerBalance.doubleValue()==lendBalance.doubleValue()?"=":"≠")+"本年贷方累计数＋期初余额("+lendBalance+")";
         return str;
     }
+
 }

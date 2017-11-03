@@ -16,10 +16,7 @@ import com.bjike.goddess.customer.dto.CustomerDetailDTO;
 import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
-import com.bjike.goddess.customer.enums.CustomerSex;
-import com.bjike.goddess.customer.enums.CustomerStatus;
-import com.bjike.goddess.customer.enums.CustomerType;
-import com.bjike.goddess.customer.enums.GuideAddrStatus;
+import com.bjike.goddess.customer.enums.*;
 import com.bjike.goddess.customer.excel.CustomerDetailExport;
 import com.bjike.goddess.customer.to.CusFamilyMemberTO;
 import com.bjike.goddess.customer.to.CustomerDetailTO;
@@ -413,10 +410,10 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 String level = str.getCustomerLevel().getName();//客户级别
                 String customerType = covertCustomerType(str.getCustomerType());//客户类别
                 String customerStatus = covertCustomerStatus(str.getCustomerStatus());//客户状态
-                String origin = str.getOrigin();//客户来源
                 Double relation = str.getRelation();//关系程度
                 String customerName = str.getCustomerName();//客户姓名
                 String customerSex = covertCustomerSex(str.getCustomerSex());//性别
+                String origin = covertOrigin(str.getOrigin());//客户来源
 //                Integer age = str.getArea();//年龄
 //                String customerName = str.getCustomerName();//出生年月日
                 String area = str.getArea();//地区
@@ -599,6 +596,40 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             case OLD:
                 str = "老客户";
                 break;
+            case OTHER:
+                str = "其他";
+                break;
+            default:
+                str = "";
+                break;
+        }
+        return str;
+    }
+
+    private String covertOrigin(Origin origin) throws SerException {
+        String str = "";
+        switch (origin) {
+            case CUSTOMERINTROD:
+                str = "客户介绍";
+                break;
+            case MARKETFOR:
+                str = "市场招待";
+                break;
+            case BUSSNEGOTIATION:
+                str = "商务洽谈";
+                break;
+            case TENDERFOR:
+                str = "招投标";
+                break;
+            case WEBSITE:
+                str = "网站";
+                break;
+            case STAFFINTRODUCED:
+                str = "员工介绍";
+                break;
+            case OTHERSOURCES:
+                str = "其他来源";
+                break;
             default:
                 str = "";
                 break;
@@ -617,6 +648,12 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 break;
             case POTENTIAL:
                 str = "潜在客户";
+                break;
+            case FAILURECUSTOMER:
+                str = "失败客户";
+                break;
+            case LOSTCUSTOMER:
+                str = "已流失客户";
                 break;
             default:
                 str = "";

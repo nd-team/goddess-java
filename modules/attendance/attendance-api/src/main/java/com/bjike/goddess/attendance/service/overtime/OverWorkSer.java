@@ -3,8 +3,7 @@ package com.bjike.goddess.attendance.service.overtime;
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
-import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
-import com.bjike.goddess.attendance.dto.overtime.OverWorkRestDayDTO;
+import com.bjike.goddess.attendance.dto.overtime.*;
 import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
 import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
@@ -12,7 +11,6 @@ import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.attendance.entity.overtime.OverWork;
-import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
 
 import java.util.List;
 
@@ -146,6 +144,43 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
     default List<OverWorkRestDayBO> listRestDay(OverWorkRestDayDTO overWorkRestDayDTO) throws SerException {
         return null;
     }
+
+
+    /**
+     * 我的加班列表
+     *
+     * @return class OverWorkBO
+     */
+    default List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
+        return null;
+    }
+    /**
+     * 我录入的加班列表
+     *
+     * @return class OverWorkBO
+     */
+    default List<OverWorkBO> myEntryList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 待我审核的加班列表
+     *
+     * @return class OverWorkBO
+     */
+    default List<OverWorkBO> myAuditList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据id获取加班
+     *
+     * @return class OverWorkBO
+     */
+    default OverWorkBO getPhoneOneById(String id) throws SerException {
+        return null;
+    }
+
 
 
 

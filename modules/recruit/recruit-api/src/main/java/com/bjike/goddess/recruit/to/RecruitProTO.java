@@ -125,6 +125,18 @@ public class RecruitProTO extends BaseTO {
      * 备注
      */
     private String note;
+    /**
+     * 是否有资金准备
+     */
+    private Boolean moneyReady;
+
+    public Boolean getMoneyReady() {
+        return moneyReady;
+    }
+
+    public void setMoneyReady(Boolean moneyReady) {
+        this.moneyReady = moneyReady;
+    }
 
     public Status getStatus() {
         return status;

@@ -245,6 +245,12 @@ public class OutsourcBusinessContractAction extends BaseFileAction {
                 } else {
                     contractTO.setTaskContract(false);
                 }
+                //是否有合同立项
+                if (contractTO.getMakeContract().equals("是")) {
+//                    contractTO.setMakeContract(true);
+                } else {
+//                    contractTO.setMakeContract(false);
+                }
                 //是否确定合作
                 if (str.getCooperation().equals("是")) {
                     contractTO.setCooperation(true);

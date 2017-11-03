@@ -96,6 +96,13 @@ public interface TaxManagementSer extends Ser<TaxManagement, TaxManagementDTO> {
     default void remove(String id) throws SerException {
 
     }
+    /**
+     * 获取税款所属期起止时间
+     *
+     * @throws SerException
+     */
+    default void getTime() throws SerException {
+    }
 
     /**
      * 根据税款所属期止获得申报期限

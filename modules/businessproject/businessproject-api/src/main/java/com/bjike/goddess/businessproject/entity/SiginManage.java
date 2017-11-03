@@ -1,9 +1,6 @@
 package com.bjike.goddess.businessproject.entity;
 
-import com.bjike.goddess.businessproject.enums.BusinessCooperate;
-import com.bjike.goddess.businessproject.enums.BusinessType;
-import com.bjike.goddess.businessproject.enums.ContractProperty;
-import com.bjike.goddess.businessproject.enums.ProjectStatus;
+import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -98,8 +95,8 @@ public class SiginManage extends BaseEntity {
     /**
      * 立项情况
      */
-    @Column(name = "makeProject",  columnDefinition = "VARCHAR(255)   COMMENT '立项情况'")
-    private String makeProject;
+    @Column(name = "makeProject",  columnDefinition = "TINYINT(1)   COMMENT '立项情况'")
+    private MakeContract makeProject;
 
     /**
      * 内部项目名称
@@ -298,11 +295,11 @@ public class SiginManage extends BaseEntity {
         this.contractProperty = contractProperty;
     }
 
-    public String getMakeProject() {
+    public MakeContract getMakeProject() {
         return makeProject;
     }
 
-    public void setMakeProject(String makeProject) {
+    public void setMakeProject(MakeContract makeProject) {
         this.makeProject = makeProject;
     }
 

@@ -1,6 +1,5 @@
 package com.bjike.goddess.businessproject.bo;
 
-import com.bjike.goddess.businessproject.entity.BusinessContract;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import java.util.List;
@@ -21,6 +20,9 @@ public class BusinessContractADetailBO extends BaseBO {
      * 总金额
      */
     private Double totalMoney;
+    /**
+     * 商务合同汇总数据
+     */
     private List<BusinessContractBDetailBO> businessContractBDetailBOS;
 
     public Double getTotalMoney() {

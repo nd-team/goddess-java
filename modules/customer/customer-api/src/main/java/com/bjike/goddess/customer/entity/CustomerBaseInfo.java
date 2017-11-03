@@ -2,11 +2,10 @@ package com.bjike.goddess.customer.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.customer.enums.CustomerSex;
-import com.bjike.goddess.customer.enums.CustomerStatus;
-import com.bjike.goddess.customer.enums.CustomerType;
+import com.bjike.goddess.customer.enums.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -26,25 +25,25 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 第几个客户排序
      */
-    @Column(name = "customerPosition", nullable = false,unique = true , columnDefinition = "DECIMAL(10,2)   COMMENT '第几个客户排序'")
+    @Column(name = "customerPosition", nullable = false, unique = true, columnDefinition = "DECIMAL(10,2)   COMMENT '第几个客户排序'")
     private Double customerPosition;
 
     /**
      * 客户信息编号
      */
-    @Column(name = "customerNum", nullable = false,unique = true , columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
+    @Column(name = "customerNum", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
     private String customerNum;
 
     /**
      * 客户姓名
      */
-    @Column(name = "customerName", nullable = false, unique = true ,columnDefinition = "VARCHAR(255)   COMMENT '客户姓名'")
+    @Column(name = "customerName", nullable = false, unique = true, columnDefinition = "VARCHAR(255)   COMMENT '客户姓名'")
     private String customerName;
 
     /**
      * 地区
      */
-    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area",nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
@@ -56,19 +55,19 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户类别
      */
-    @Column(name = "customerType",  columnDefinition = "INT(2)   COMMENT '客户类别'")
+    @Column(name = "customerType", columnDefinition = "INT(2)   COMMENT '客户类别'")
     private CustomerType customerType;
 
     /**
      * 客户状态
      */
-    @Column(name = "customerStatus",  columnDefinition = "INT(2)   COMMENT '客户状态'")
+    @Column(name = "customerStatus", columnDefinition = "INT(2)   COMMENT '客户状态'")
     private CustomerStatus customerStatus;
 
     /**
      * 关系程度
      */
-    @Column(name = "relation",  columnDefinition = "DECIMAL(10,2)   COMMENT '关系程度'")
+    @Column(name = "relation", columnDefinition = "DECIMAL(10,2)   COMMENT '关系程度'")
     private Double relation;
 
     /**
@@ -81,91 +80,91 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 客户来源
      */
-    @Column(name = "origin",  columnDefinition = "VARCHAR(255)   COMMENT '客户来源'")
-    private String origin;
+    @Column(name = "origin",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '客户来源'")
+    private Origin origin;
 
     /**
      * 介绍人
      */
-    @Column(name = "introducer",  columnDefinition = "VARCHAR(255)   COMMENT '介绍人'")
+    @Column(name = "introducer", columnDefinition = "VARCHAR(255)   COMMENT '介绍人'")
     private String introducer;
 
     /**
      * 邮箱
      */
-    @Column(name = "cusEmail",  columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
+    @Column(name = "cusEmail", columnDefinition = "VARCHAR(255)   COMMENT '邮箱'")
     private String cusEmail;
 
     /**
      * 手机号
      */
-    @Column(name = "tel",  columnDefinition = "VARCHAR(255)   COMMENT '手机号'")
+    @Column(name = "tel", columnDefinition = "VARCHAR(255)   COMMENT '手机号'")
     private String tel;
 
     /**
      * 座机
      */
-    @Column(name = "phone",  columnDefinition = "VARCHAR(255)   COMMENT '座机'")
+    @Column(name = "phone", columnDefinition = "VARCHAR(255)   COMMENT '座机'")
     private String phone;
 
     /**
      * 微信
      */
-    @Column(name = "weChart",  columnDefinition = "VARCHAR(255)   COMMENT '微信'")
+    @Column(name = "weChart", columnDefinition = "VARCHAR(255)   COMMENT '微信'")
     private String weChart;
 
     /**
      * QQ号
      */
-    @Column(name = "qq",  columnDefinition = "VARCHAR(255)   COMMENT 'QQ号'")
+    @Column(name = "qq", columnDefinition = "VARCHAR(255)   COMMENT 'QQ号'")
     private String qq;
 
     /**
      * 行业
      */
-    @Column(name = "workProfession",  columnDefinition = "VARCHAR(255)   COMMENT '行业'")
+    @Column(name = "workProfession", columnDefinition = "VARCHAR(255)   COMMENT '行业'")
     private String workProfession;
 
     /**
      * 组织机构名称
      */
-    @Column(name = "origanizion",  columnDefinition = "VARCHAR(255)   COMMENT '组织机构名称'")
+    @Column(name = "origanizion", columnDefinition = "VARCHAR(255)   COMMENT '组织机构名称'")
     private String origanizion;
 
     /**
      * 组织机构规模
      */
-    @Column(name = "origanizationSize",  columnDefinition = "VARCHAR(255)   COMMENT '组织机构规模'")
+    @Column(name = "origanizationSize", columnDefinition = "VARCHAR(255)   COMMENT '组织机构规模'")
     private String origanizationSize;
 
     /**
      * 岗位
      */
-    @Column(name = "workPosition",  columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "workPosition", columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String workPosition;
 
     /**
      * 职级
      */
-    @Column(name = "workLevel",  columnDefinition = "VARCHAR(255)   COMMENT '职级'")
+    @Column(name = "workLevel", columnDefinition = "VARCHAR(255)   COMMENT '职级'")
     private String workLevel;
 
     /**
      * 职权
      */
-    @Column(name = "workRight",  columnDefinition = "VARCHAR(255)   COMMENT '职权'")
+    @Column(name = "workRight", columnDefinition = "VARCHAR(255)   COMMENT '职权'")
     private String workRight;
 
     /**
      * 生活地区
      */
-    @Column(name = "lifeArea",  columnDefinition = "VARCHAR(255)   COMMENT '生活地区'")
+    @Column(name = "lifeArea", columnDefinition = "VARCHAR(255)   COMMENT '生活地区'")
     private String lifeArea;
 
     /**
      * 成长地区
      */
-    @Column(name = "grouthArea",  columnDefinition = "VARCHAR(255)   COMMENT '成长地区'")
+    @Column(name = "grouthArea", columnDefinition = "VARCHAR(255)   COMMENT '成长地区'")
     private String grouthArea;
 
     /**
@@ -177,7 +176,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 最近市场接待时间
      */
-    @Column(name = "marketReceptTime",  columnDefinition = "DATETIME   COMMENT '最近市场接待时间'")
+    @Column(name = "marketReceptTime", columnDefinition = "DATETIME   COMMENT '最近市场接待时间'")
     private LocalDateTime marketReceptTime;
 
     /**
@@ -185,13 +184,6 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @Column(name = "modifyPersion", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '最近一次更新人'")
     private String modifyPersion;
-
-    /**
-     * 客户信息完成度
-     */
-    @Column(name = "infoComplet", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户信息完成度'")
-    private String infoComplet;
-
     /**
      * 客户启用状态
      */
@@ -199,9 +191,145 @@ public class CustomerBaseInfo extends BaseEntity {
     private Status status;
 
     /**
+     * 客户信息完成度
+     */
+    @Column(name = "infoComplet", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户信息完成度'")
+    private String infoComplet;
+    /**
+     * 最新更新时间
+     */
+    @Column(name = "updateDate", columnDefinition = "DATE   COMMENT '最新更新时间'")
+    private LocalDate updateDate;
+    /**
+     * 市场信息编号
+     */
+    @Column(name = "marketInfoNum", columnDefinition = "VARCHAR(255)   COMMENT '市场信息编号'")
+    private String marketInfoNum;
+    /**
+     * 省份
+     */
+    @Column(name = "provinces", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '省份'")
+    private String provinces;
+    /**
+     * 接触阶段
+     */
+    @Column(name = "contactPhace", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '接触阶段'")
+    private ContactPhace contactPhace;
+    /**
+     * 时效性
+     */
+    @Column(name = "timeliness", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '时效性'")
+    private Timeliness timeliness;
+    /**
+     * 亲密度
+     */
+    @Column(name = "intimacy", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '亲密度'")
+    private Intimacy intimacy;
+    /**
+     * 难易度
+     */
+    @Column(name = "difficultyLevel", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '难易度'")
+    private DifficultyLevel difficultyLevel;
+    /**
+     * 推荐的拜访时间
+     */
+    @Column(name = "recommendVisitTime", columnDefinition = "DATETIME   COMMENT '推荐的拜访时间'")
+    private LocalDateTime recommendVisitTime;
+    /**
+     * 拜访状态
+     */
+    @Column(name = "visitStatus", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '拜访状态'")
+    private VisitStatus visitStatus;
+    /**
+     * 客户维护状态
+     */
+    @Column(name = "customerMainStatus",  columnDefinition = "VARCHAR(255)   COMMENT '客户维护状态'")
+    private CustomerMainStatus customerMainStatus;
+    /**
+     * 最终权重
+     */
+    @Column(name = "finalWeight", columnDefinition = "DECIMAL(10,2)   COMMENT '最终权重'")
+    private Double finalWeight;
+    /**
+     * 业务类型
+     */
+    @Column(name = "businessType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
+    private String businessType;
+    /**
+     * 业务方向-科目
+     */
+    @Column(name = "businessWay", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务方向-科目'")
+    private String businessWay;
+    /**
+     * 关联项目
+     */
+    @Column(name = "relatedProject", columnDefinition = "VARCHAR(255)   COMMENT '关联项目'")
+    private String relatedProject;
+    /**
+     * 合作项目区域分布
+     */
+    @Column(name = "cooProjectAreaDistri", columnDefinition = "VARCHAR(255)   COMMENT '合作项目区域分布'")
+    private String cooProjectAreaDistri;
+    /**
+     * 以前合作过的公司
+     */
+    @Column(name = "beforeCooCompanise",  columnDefinition = "VARCHAR(255)   COMMENT '以前合作过的公司'")
+    private String beforeCooCompanise;
+    /**
+     * 现业务有关联公司
+     */
+    @Column(name = "currentBusiness",  columnDefinition = "VARCHAR(255)   COMMENT '现业务有关联公司'")
+    private String currentBusiness;
+    /**
+     * 未来发展方向
+     */
+    @Column(name = "futureDevelopment",columnDefinition = "VARCHAR(255)   COMMENT '未来发展方向'")
+    private String futureDevelopment;
+    /**
+     * 对客户合作满意程度
+     */
+    @Column(name = "customerSatisfation", columnDefinition = "VARCHAR(255)   COMMENT '对客户合作满意程度'")
+    private Satisfation customerSatisfation;
+    /**
+     * 客户对我司合作满意程度
+     */
+    @Column(name = "satisfationWithCompany",  columnDefinition = "VARCHAR(255)   COMMENT '客户对我司合作满意程度'")
+    private Satisfation satisfationWithCompany;
+    /**
+     * 扣分事项
+     */
+    @Column(name = "pointsMatters", columnDefinition = "VARCHAR(255)   COMMENT '扣分事项'")
+    private String pointsMatters;
+    /**
+     * 客户保持率
+     */
+    @Column(name = "customerReten", columnDefinition = "DECIMAL(10,2)   COMMENT '客户保持率'")
+    private Double customerReten;
+    /**
+     * 商务活动记录
+     */
+    @Column(name = "businessActivityRecord", columnDefinition = "VARCHAR(255)   COMMENT '商务活动记录'")
+    private String businessActivityRecord;
+    /**
+     * 市场招待记录汇总
+     */
+    @Column(name = "marketReceptionRecord", columnDefinition = "VARCHAR(255)   COMMENT '市场招待记录汇总'")
+    private String marketReceptionRecord;
+    /**
+     * 市场信息记录
+     */
+    @Column(name = "marketInfoRecord", columnDefinition = "VARCHAR(255)   COMMENT '市场信息记录'")
+    private String marketInfoRecord;
+    /**
+     * 是否需进行市场招待
+     */
+    @Column(name = "proceedMarketTreat", columnDefinition = "TINYINT(2)   COMMENT '是否需进行市场招待'")
+    private Boolean proceedMarketTreat;
+
+    /**
      * 客户详细信息
      */
-    @OneToOne(cascade = CascadeType.REFRESH,mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
     private CustomerDetail customerDetail;
 
     public Double getCustomerPosition() {
@@ -276,11 +404,11 @@ public class CustomerBaseInfo extends BaseEntity {
         this.customerLevel = customerLevel;
     }
 
-    public String getOrigin() {
+    public Origin getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Origin origin) {
         this.origin = origin;
     }
 
@@ -434,6 +562,214 @@ public class CustomerBaseInfo extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDate getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getMarketInfoNum() {
+        return marketInfoNum;
+    }
+
+    public void setMarketInfoNum(String marketInfoNum) {
+        this.marketInfoNum = marketInfoNum;
+    }
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public ContactPhace getContactPhace() {
+        return contactPhace;
+    }
+
+    public void setContactPhace(ContactPhace contactPhace) {
+        this.contactPhace = contactPhace;
+    }
+
+    public Timeliness getTimeliness() {
+        return timeliness;
+    }
+
+    public void setTimeliness(Timeliness timeliness) {
+        this.timeliness = timeliness;
+    }
+
+    public Intimacy getIntimacy() {
+        return intimacy;
+    }
+
+    public void setIntimacy(Intimacy intimacy) {
+        this.intimacy = intimacy;
+    }
+
+    public DifficultyLevel getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
+    }
+
+    public LocalDateTime getRecommendVisitTime() {
+        return recommendVisitTime;
+    }
+
+    public void setRecommendVisitTime(LocalDateTime recommendVisitTime) {
+        this.recommendVisitTime = recommendVisitTime;
+    }
+
+    public VisitStatus getVisitStatus() {
+        return visitStatus;
+    }
+
+    public void setVisitStatus(VisitStatus visitStatus) {
+        this.visitStatus = visitStatus;
+    }
+
+    public CustomerMainStatus getCustomerMainStatus() {
+        return customerMainStatus;
+    }
+
+    public void setCustomerMainStatus(CustomerMainStatus customerMainStatus) {
+        this.customerMainStatus = customerMainStatus;
+    }
+
+    public Double getFinalWeight() {
+        return finalWeight;
+    }
+
+    public void setFinalWeight(Double finalWeight) {
+        this.finalWeight = finalWeight;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getBusinessWay() {
+        return businessWay;
+    }
+
+    public void setBusinessWay(String businessWay) {
+        this.businessWay = businessWay;
+    }
+
+    public String getRelatedProject() {
+        return relatedProject;
+    }
+
+    public void setRelatedProject(String relatedProject) {
+        this.relatedProject = relatedProject;
+    }
+
+    public String getCooProjectAreaDistri() {
+        return cooProjectAreaDistri;
+    }
+
+    public void setCooProjectAreaDistri(String cooProjectAreaDistri) {
+        this.cooProjectAreaDistri = cooProjectAreaDistri;
+    }
+
+    public String getBeforeCooCompanise() {
+        return beforeCooCompanise;
+    }
+
+    public void setBeforeCooCompanise(String beforeCooCompanise) {
+        this.beforeCooCompanise = beforeCooCompanise;
+    }
+
+    public String getCurrentBusiness() {
+        return currentBusiness;
+    }
+
+    public void setCurrentBusiness(String currentBusiness) {
+        this.currentBusiness = currentBusiness;
+    }
+
+    public String getFutureDevelopment() {
+        return futureDevelopment;
+    }
+
+    public void setFutureDevelopment(String futureDevelopment) {
+        this.futureDevelopment = futureDevelopment;
+    }
+
+    public Satisfation getCustomerSatisfation() {
+        return customerSatisfation;
+    }
+
+    public void setCustomerSatisfation(Satisfation customerSatisfation) {
+        this.customerSatisfation = customerSatisfation;
+    }
+
+    public Satisfation getSatisfationWithCompany() {
+        return satisfationWithCompany;
+    }
+
+    public void setSatisfationWithCompany(Satisfation satisfationWithCompany) {
+        this.satisfationWithCompany = satisfationWithCompany;
+    }
+
+    public String getPointsMatters() {
+        return pointsMatters;
+    }
+
+    public void setPointsMatters(String pointsMatters) {
+        this.pointsMatters = pointsMatters;
+    }
+
+    public Double getCustomerReten() {
+        return customerReten;
+    }
+
+    public void setCustomerReten(Double customerReten) {
+        this.customerReten = customerReten;
+    }
+
+    public String getBusinessActivityRecord() {
+        return businessActivityRecord;
+    }
+
+    public void setBusinessActivityRecord(String businessActivityRecord) {
+        this.businessActivityRecord = businessActivityRecord;
+    }
+
+    public String getMarketReceptionRecord() {
+        return marketReceptionRecord;
+    }
+
+    public void setMarketReceptionRecord(String marketReceptionRecord) {
+        this.marketReceptionRecord = marketReceptionRecord;
+    }
+
+    public String getMarketInfoRecord() {
+        return marketInfoRecord;
+    }
+
+    public void setMarketInfoRecord(String marketInfoRecord) {
+        this.marketInfoRecord = marketInfoRecord;
+    }
+
+    public Boolean getProceedMarketTreat() {
+        return proceedMarketTreat;
+    }
+
+    public void setProceedMarketTreat(Boolean proceedMarketTreat) {
+        this.proceedMarketTreat = proceedMarketTreat;
     }
 
     public CustomerDetail getCustomerDetail() {

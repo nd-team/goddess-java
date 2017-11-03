@@ -12,7 +12,7 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.market.api.MarketInfoAPI;
+import com.bjike.goddess.market.api.MarketInfoRecordAPI;
 import com.bjike.goddess.marketactivitymanage.api.CustomerInfoAPI;
 import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
 import com.bjike.goddess.marketactivitymanage.bo.CustomerInfoBO;
@@ -61,7 +61,7 @@ public class MarketServeApplyAct extends BaseFileAction {
     @Autowired
     private CustomerInfoAPI customerInfoAPI;
     @Autowired
-    private MarketInfoAPI marketInfoAPI;
+    private MarketInfoRecordAPI marketInfoRecordAPI;
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
@@ -71,6 +71,7 @@ public class MarketServeApplyAct extends BaseFileAction {
 
     /**
      * 功能导航权限
+     *
      * @param guidePermissionTO 导航类型数据
      * @throws ActException
      * @version v1
@@ -80,16 +81,17 @@ public class MarketServeApplyAct extends BaseFileAction {
         try {
 
             Boolean isHasPermission = marketServeApplyAPI.guidePermission(guidePermissionTO);
-            if(! isHasPermission ){
+            if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult(0,"没有权限",false );
-            }else{
-                return new ActResult(0,"有权限",true );
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id查询市场招待申请
      *
@@ -401,9 +403,9 @@ public class MarketServeApplyAct extends BaseFileAction {
     /**
      * 导出Excel
      *
-     * @param areas 地区
+     * @param areas     地区
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @version v1
      */
     @LoginAuth
@@ -523,6 +525,7 @@ public class MarketServeApplyAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加编辑中项目名称下拉值
      *
@@ -533,14 +536,15 @@ public class MarketServeApplyAct extends BaseFileAction {
     public Result findMarketPname() throws ActException {
         try {
             List<String> projectName = new ArrayList<>();
-            if(moduleAPI.isCheck("market")){
-                projectName = marketInfoAPI.getProjectName();
+            if (moduleAPI.isCheck("market")) {
+                projectName = marketInfoRecordAPI.findProjectName();
             }
             return ActResult.initialize(projectName);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加编辑功能的预计费用下拉值
      *
@@ -551,7 +555,7 @@ public class MarketServeApplyAct extends BaseFileAction {
     public Result findProjectPcharge() throws ActException {
         try {
             List<Double> predictCharge = new ArrayList<>();
-            if(moduleAPI.isCheck("projectmarketfee")){
+            if (moduleAPI.isCheck("projectmarketfee")) {
                 predictCharge = costAnalysisAPI.allExMarketCost();
             }
             return ActResult.initialize(predictCharge);

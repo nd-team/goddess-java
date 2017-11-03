@@ -9,10 +9,13 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.recruit.api.FirstPhoneRecordAPI;
 import com.bjike.goddess.recruit.bo.FirstPhoneRecordBO;
 import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
+import com.bjike.goddess.recruit.excel.FirstPhoneRecordExcel;
 import com.bjike.goddess.recruit.to.DeleteFileTO;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
@@ -28,7 +31,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -262,6 +267,118 @@ public class FirstPhoneRecordAct extends BaseFileAction{
             return new ActResult("edit success!");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+//    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<FirstPhoneRecordExcel> tos = ExcelUtil.excelToClazz(is, FirstPhoneRecordExcel.class, excel);
+            List<FirstPhoneRecordTO> tocs = new ArrayList<>();
+            for (FirstPhoneRecordExcel str : tos) {
+                FirstPhoneRecordTO recordTO = BeanTransform.copyProperties(str, FirstPhoneRecordTO.class,
+                        "whetherPass","whetherPhoneSuccess","whetherWorkExperience",
+                        "whetherFirstInviteSuccess","whetherFirstInterview","whetherFaceTest",
+                        "retrial");
+                //简历筛选是否通过
+                if(str.getWhetherPass().equals("是")){
+                    recordTO.setWhetherPass(true);
+                }else {
+                    recordTO.setWhetherPass(false);
+                }
+                //通话是否成功
+                if(str.getWhetherPhoneSuccess().equals("是")){
+                    recordTO.setWhetherPhoneSuccess(true);
+                }else {
+                    recordTO.setWhetherPhoneSuccess(false);
+                }
+                //是否有相关工作经验
+                if(str.getWhetherWorkExperience().equals("是")){
+                    recordTO.setWhetherWorkExperience(true);
+                }else {
+                    recordTO.setWhetherWorkExperience(false);
+                }
+                //是否成功邀约初试
+                if(str.getWhetherFirstInviteSuccess().equals("是")){
+                    recordTO.setWhetherFirstInviteSuccess(true);
+                }else {
+                    recordTO.setWhetherFirstInviteSuccess(false);
+                }
+                //是否初试
+                if(str.getWhetherFirstInterview().equals("是")){
+                    recordTO.setWhetherFirstInterview(true);
+                }else {
+                    recordTO.setWhetherFirstInterview(false);
+                }
+                //初试是否为面试
+                if(str.getWhetherFaceTest().equals("是")){
+                    recordTO.setWhetherFaceTest(true);
+                }else {
+                    recordTO.setWhetherFaceTest(false);
+                }
+                //是否需要复试
+                if(str.getRetrial().equals("是")){
+                    recordTO.setRetrial(true);
+                }else {
+                    recordTO.setRetrial(false);
+                }
+                tocs.add(recordTO);
+            }
+            //注意序列化
+            firstPhoneRecordAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 导出excel
+     *
+     * @param dto 第一次电访记录
+     * @des 导出第一次电访记录
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport( FirstPhoneRecordDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
+        try {
+            String fileName = "第一次电访记录.xlsx";
+            super.writeOutFile(response, firstPhoneRecordAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板第一次电访记录
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "第一次电访记录导入模板.xlsx";
+            super.writeOutFile(response, firstPhoneRecordAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
     

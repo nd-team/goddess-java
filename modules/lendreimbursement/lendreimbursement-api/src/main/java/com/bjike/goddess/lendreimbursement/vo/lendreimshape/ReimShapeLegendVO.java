@@ -62,4 +62,8 @@ public class ReimShapeLegendVO implements Serializable{
 
     public ReimShapeLegendVO() {
     }
+
+    public ReimShapeLegendVO(List<String> data) {
+        this.data = data;
+    }
 }

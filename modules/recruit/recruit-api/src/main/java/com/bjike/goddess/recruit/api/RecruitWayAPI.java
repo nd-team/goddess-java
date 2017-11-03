@@ -83,7 +83,21 @@ public interface RecruitWayAPI {
      * @throws SerException
      */
     void update(RecruitWayTO recruitWayTO) throws SerException;
+    /**
+     * 解冻招聘渠道
+     *
+     * @param id
+     * @throws SerException
+     */
+    void thaw(String id) throws SerException;
 
+    /**
+     * 冻结招聘渠道
+     *
+     * @param id
+     * @throws SerException
+     */
+    void congeal(String id) throws SerException;
     /**
      * 查看所有招聘网站
      *

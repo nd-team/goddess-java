@@ -96,6 +96,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     }
 
 
+
     /**
      * 查看权限 检测层级
      *
@@ -130,7 +131,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = checkLevelIdentity("1");
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = checkLevelIdentity("8");
+        Boolean flagAdd = checkMoudleIdentity("8");
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAllTrue = checkAllTrue();
         RpcTransmit.transmitUserToken(userToken);
@@ -192,13 +193,13 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
                 flag = true;
                 break;
             case DELETE:
-                flag = checkLevelIdentity("8");
+                flag = checkMoudleIdentity("8");
                 break;
             case IMPORT:
-                flag = checkLevelIdentity("8");
+                flag = checkMoudleIdentity("8");
                 break;
             case EXPORT:
-                flag = checkLevelIdentity("8");
+                flag = checkMoudleIdentity("8");
                 break;
             case SEE:
                 flag = checkLevelIdentity("1");
@@ -217,7 +218,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
         seachCondi(staffEntryRegisterDTO);
         Long count = null;
         String token = RpcTransmit.getUserToken();
-        if (!checkMoudleIdentity("1")) {
+        if (!checkLevelIdentity("1")) {
             RpcTransmit.transmitUserToken(token);
             UserBO userBO = userAPI.currentUser();
             String userId = userBO.getId();
@@ -252,7 +253,7 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
     @Override
     public List<StaffEntryRegisterBO> listStaffEntryRegister(StaffEntryRegisterDTO staffEntryRegisterDTO) throws SerException {
         String token = RpcTransmit.getUserToken();
-        if (!checkMoudleIdentity("1")) {
+        if (!checkLevelIdentity("1")) {
             RpcTransmit.transmitUserToken(token);
             UserBO userBO = userAPI.currentUser();
             String userId = userBO.getId();

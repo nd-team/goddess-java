@@ -79,4 +79,13 @@ public class ReimShapeXaxisVO implements Serializable{
     public void setAxisPointerBarVO(AxisPointerBarVO axisPointerBarVO) {
         this.axisPointerBarVO = axisPointerBarVO;
     }
+
+    public ReimShapeXaxisVO() {
+    }
+
+    public ReimShapeXaxisVO(String type, String name, List<String> data) {
+        this.type = type;
+        this.data = data;
+        this.name = name;
+    }
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.recruit.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -193,9 +194,10 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Transactional(rollbackFor = {SerException.class})
     public RecruitWayBO save(RecruitWayTO to) throws SerException {
         checkAddIdentity();
-        RecruitWay failFirstInterviewReason = BeanTransform.copyProperties(to, RecruitWay.class, true);
-        failFirstInterviewReason = super.save(failFirstInterviewReason);
-        RecruitWayBO bo = BeanTransform.copyProperties(failFirstInterviewReason, RecruitWayBO.class);
+        RecruitWay recruitWay = BeanTransform.copyProperties(to, RecruitWay.class, true, "suitPosition");
+        recruitWay.setSuitPosition(StringUtils.join(to.getSuitPosition(), ","));
+        recruitWay = super.save(recruitWay);
+        RecruitWayBO bo = BeanTransform.copyProperties(recruitWay, RecruitWayBO.class);
         return bo;
     }
 
@@ -211,6 +213,7 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
         checkAddIdentity();
         if (StringUtils.isNotEmpty(to.getId())) {
             RecruitWay model = super.findById(to.getId());
+
             if (model != null) {
                 updateRecruitWay(to, model);
             } else {
@@ -230,7 +233,8 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
      * @throws SerException
      */
     private void updateRecruitWay(RecruitWayTO to, RecruitWay model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        BeanTransform.copyProperties(to, model, true, "suitPosition");
+        model.setSuitPosition(StringUtils.join(to.getSuitPosition(), ","));
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }
@@ -246,6 +250,30 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     public void remove(RecruitWay entity) throws SerException {
         checkAddIdentity();
         super.remove(entity);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void thaw(String id) throws SerException {
+        if (StringUtils.isNotBlank(id)) {
+            RecruitWay recruitWay = super.findById(id);
+            recruitWay.setStatus(Status.THAW);
+            super.update(recruitWay);
+        } else {
+            throw new SerException("id不能为空");
+        }
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void congeal(String id) throws SerException {
+        if (StringUtils.isNotBlank(id)) {
+            RecruitWay recruitWay = super.findById(id);
+            recruitWay.setStatus(Status.CONGEAL);
+            super.update(recruitWay);
+        } else {
+            throw new SerException("id不能为空");
+        }
     }
 
     @Override

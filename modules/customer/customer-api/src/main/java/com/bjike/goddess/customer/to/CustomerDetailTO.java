@@ -36,7 +36,10 @@ public class CustomerDetailTO extends BaseTO {
      * 工作经历
      */
     private String workExperience;
-
+    /**
+     * 毕业学校
+     */
+    private String graduatedSchool;
     /**
      * 求学经历
      */
@@ -108,6 +111,14 @@ public class CustomerDetailTO extends BaseTO {
 
     public void setWorkExperience(String workExperience) {
         this.workExperience = workExperience;
+    }
+
+    public String getGraduatedSchool() {
+        return graduatedSchool;
+    }
+
+    public void setGraduatedSchool(String graduatedSchool) {
+        this.graduatedSchool = graduatedSchool;
     }
 
     public String getStudyExperience() {

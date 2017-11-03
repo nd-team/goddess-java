@@ -6,9 +6,12 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
+import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
+import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
 import com.bjike.goddess.recruit.entity.InterviewInfor;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
+import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
 import com.bjike.goddess.recruit.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
@@ -36,6 +39,8 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private FirstPhoneRecordSer firstPhoneRecordSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -176,6 +181,39 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     @Transactional(rollbackFor = {SerException.class})
     public List<InterviewInforBO> list(InterviewInforDTO dto) throws SerException {
         checkSeeIdentity();
+        FirstPhoneRecordDTO firstPhoneRecordDTO = new FirstPhoneRecordDTO();
+        List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
+        InterviewInfor interviewInfor = new InterviewInfor();
+        for (FirstPhoneRecord record:firstPhoneRecords){
+            if(record.getWhetherFaceTest().equals(1) && record.getStatus()==null){
+                interviewInfor.setDate(record.getDate());//日期
+                interviewInfor.setResumeResource(record.getResumeResource());//简历来源
+                interviewInfor.setPosition(record.getPosition());//岗位
+                interviewInfor.setName(record.getName());//姓名
+                interviewInfor.setGender(record.getGender());//性别
+                interviewInfor.setPhone(record.getTelephone());//联系方式
+                interviewInfor.setWhetherPass(record.getWhetherPass());//简历筛选是否通过
+                interviewInfor.setEmail(record.getEmail());
+                interviewInfor.setWorkingExperience(record.getWhetherWorkExperience());//是否有相关工作经验
+                interviewInfor.setFirstPhoneSituation(record.getFirstSituation());//第一次电访了解到的情况
+                interviewInfor.setFirstTestTime(record.getFirstInterviewTime());//邀约初试时间
+                interviewInfor.setFirstTestPrincipal(record.getFirstInterviewPrincipal());//初试负责人
+                interviewInfor.setWhetherFaceTest(record.getWhetherFirstInterview());//是否初试
+                interviewInfor.setNotFirstCase(record.getDenyFirViewReason());//未应约初试原因
+                interviewInfor.setArea(record.getArea());//地区
+                interviewInfor.setDepartment(record.getProjectGroup());//应聘部门/项目组
+                interviewInfor.setFirstPlace(record.getFirstPlace());//初试地点
+                interviewInfor.setWhetherNeedSecondTest(record.getRetrial());//是否需要复试
+                interviewInfor.setSecondTestTime(record.getRetrialTime());//复试时间
+                interviewInfor.setSecondTestPrincipal(record.getRetrialOfficer());//复试负责人
+
+                interviewInfor.setCreateTime(LocalDateTime.now());
+                interviewInfor.setModifyTime(LocalDateTime.now());
+                record.setStatus(true);
+                firstPhoneRecordSer.update(record);
+                super.save(interviewInfor);
+            }
+        }
         List<InterviewInfor> list = super.findByPage(dto);
         List<InterviewInforBO> listBO = BeanTransform.copyProperties(list, InterviewInforBO.class);
         return listBO;
@@ -221,25 +259,66 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
 
     }
 
-    /**
-     * 总经办审核录取
-     *whetherPassBoss
-     * @param id 面试信息唯一标识
-     * @param whetherPassBoss 总经办审核是否录取
-     * @param bossAdvice 总经办审批意见
-     * @throws SerException
-     */
+    @Transactional(rollbackFor = SerException.class)
     @Override
-    @Transactional(rollbackFor = {SerException.class})
-    public void zjbAudit(String id, Boolean whetherPassBoss, String bossAdvice) throws SerException {
-        InterviewInfor model = super.findById(id);
-        if (model == null) {
-            throw new SerException("更新实体不能为空");
+    public void firstIdea(IdeaTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getId())) {
+            InterviewInfor interviewInfor = BeanTransform.copyProperties(to, InterviewInfor.class, true);
+            interviewInfor.setModifyTime(LocalDateTime.now());
+            super.update(interviewInfor);
+        } else {
+            throw new SerException("id不能为空");
         }
-        model.setWhetherPassBoss(whetherPassBoss);
-        model.setBossAdvice(bossAdvice);
-        super.update(model);
     }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void reexamineIdea(IdeaTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getId())) {
+            InterviewInfor interviewInfor = BeanTransform.copyProperties(to, InterviewInfor.class, true);
+            interviewInfor.setModifyTime(LocalDateTime.now());
+            super.update(interviewInfor);
+        } else {
+            throw new SerException("id不能为空");
+        }
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void wagesIdea(IdeaTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getId())) {
+            InterviewInfor interviewInfor = BeanTransform.copyProperties(to, InterviewInfor.class, true);
+            interviewInfor.setModifyTime(LocalDateTime.now());
+            super.update(interviewInfor);
+        } else {
+            throw new SerException("id不能为空");
+        }
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void zjbAudit(IdeaTO to) throws SerException {
+        if (StringUtils.isNotBlank(to.getId())) {
+            InterviewInfor interviewInfor = BeanTransform.copyProperties(to, InterviewInfor.class, true);
+            interviewInfor.setModifyTime(LocalDateTime.now());
+            super.update(interviewInfor);
+        } else {
+            throw new SerException("id不能为空");
+        }
+    }
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void staffEntryInfo(IdeaTO to) throws SerException{
+        if (StringUtils.isNotBlank(to.getId())) {
+            InterviewInfor interviewInfor = BeanTransform.copyProperties(to, InterviewInfor.class, true);
+            interviewInfor.setModifyTime(LocalDateTime.now());
+            super.update(interviewInfor);
+        } else {
+            throw new SerException("id不能为空");
+        }
+    }
+
+
 
     /**
      * 更新面试信息
@@ -270,16 +349,16 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     @Override
     public List<InterviewInforBO> findInterview() throws SerException {
         List<InterviewInfor> interviewInfors = super.findAll();
-        List<InterviewInforBO> boList = BeanTransform.copyProperties(interviewInfors,InterviewInforBO.class,false);
+        List<InterviewInforBO> boList = BeanTransform.copyProperties(interviewInfors, InterviewInforBO.class, false);
         return boList;
     }
 
     @Override
     public InterviewInforBO findByName(String name) throws SerException {
         InterviewInforDTO dto = new InterviewInforDTO();
-        dto.getConditions().add(Restrict.eq("name",name));
+        dto.getConditions().add(Restrict.eq("name", name));
         InterviewInfor interviewInfor = super.findOne(dto);
-        InterviewInforBO bo = BeanTransform.copyProperties(interviewInfor,InterviewInforBO.class);
+        InterviewInforBO bo = BeanTransform.copyProperties(interviewInfor, InterviewInforBO.class);
         return bo;
     }
 }

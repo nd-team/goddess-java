@@ -1,8 +1,6 @@
 package com.bjike.goddess.budget.service;
 
-import com.bjike.goddess.budget.bo.ProjectMonthBO;
-import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
-import com.bjike.goddess.budget.bo.ProjectWeekBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.entity.ProjectMonth;
 import com.bjike.goddess.budget.enums.GuideAddrStatus;
@@ -15,15 +13,14 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 项目收入月业务实现
@@ -189,6 +186,140 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
         for (ProjectMonth p : list) {
             super.remove(p.getId());
         }
+    }
+
+    @Override
+    public List<ProjectWeekListBO> listProjectMonth(ProjectMonthDTO dto) throws SerException {
+        List<String> areas = findArea();
+        List<ProjectWeekListBO> projectWeekListBOS = new ArrayList<>();
+        if (areas != null && areas.size() > 0) {
+            for (String area : areas) {
+
+                List<String> projects = findProjectByArea(area);
+                List<ProjectBO> projectBOList = new ArrayList<>();
+                if (projects != null && projects.size() > 0) {
+                    for (String project : projects) {
+                        List<String> projectNames = findNameByArPro(area, project);
+                        List<ProjectNameListBO> projectNameListBOList = new ArrayList<>();
+
+                        if (projectNames != null && projectNames.size() > 0) {
+                            for (String projectName : projectNames) {
+
+                                List<Integer> years = findYearByArProName(area, project, projectName);
+                                List<YearListBO> yearListBOList = new ArrayList<>();
+                                if (years != null && years.size() > 0) {
+                                    for (Integer year : years) {
+                                        List<MonthsListBO> monthsListBOList = findMonthByArProNaYe(area, project, projectName, year);
+                                        YearListBO yearListBO = new YearListBO();
+                                        yearListBO.setYear(year);
+                                        yearListBO.setMonthListBOList2(monthsListBOList);
+                                        yearListBOList.add(yearListBO);
+                                    }
+                                }
+                                ProjectNameListBO projectNameListBO = new ProjectNameListBO();
+                                projectNameListBO.setProjectName(projectName);
+                                projectNameListBO.setYearListBOList(yearListBOList);
+                                projectNameListBOList.add(projectNameListBO);
+                            }
+
+                        }
+                        ProjectBO projectBO = new ProjectBO();
+                        projectBO.setProject(project);
+                        projectBO.setProjectNameListBOList(projectNameListBOList);
+                        projectBOList.add(projectBO);
+                    }
+                }
+                ProjectWeekListBO projectWeekListBO = new ProjectWeekListBO();
+                projectWeekListBO.setArrival(area);
+                projectWeekListBO.setProjectBOList(projectBOList);
+                projectWeekListBOS.add(projectWeekListBO);
+            }
+        }
+        int limit = dto.getLimit();
+        int start = limit*dto.getPage();
+        return projectWeekListBOS.stream().skip(start).limit(limit).collect(Collectors.toList());
+
+    }
+
+    /**
+     * 获取地区
+     *
+     * @return
+     * @throws SerException
+     */
+    public List<String> findArea() throws SerException {
+        List<ProjectMonth> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list.stream().map(ProjectMonth::getArrival).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 根据地区获取所属项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    public List<String> findProjectByArea(String area) throws SerException {
+        ProjectMonthDTO projectMonthDTO = new ProjectMonthDTO();
+        projectMonthDTO.getConditions().add(Restrict.eq("arrival", area));
+        List<ProjectMonth> list = super.findByCis(projectMonthDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list.stream().map(ProjectMonth::getProject).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 根据地区,所属项目组获取内部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    public List<String> findNameByArPro(String area, String project) throws SerException {
+        ProjectMonthDTO projectMonthDTO = new ProjectMonthDTO();
+        projectMonthDTO.getConditions().add(Restrict.eq("arrival", area));
+        projectMonthDTO.getConditions().add(Restrict.eq("project", project));
+        List<ProjectMonth> list = super.findByCis(projectMonthDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list.stream().map(ProjectMonth::getProjectName).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 根据地区,所属项目组,内部项目名称获取年度
+     *
+     * @return
+     * @throws SerException
+     */
+    public List<Integer> findYearByArProName(String area, String project, String projectName) throws SerException {
+        ProjectMonthDTO projectMonthDTO = new ProjectMonthDTO();
+        projectMonthDTO.getConditions().add(Restrict.eq("arrival", area));
+        projectMonthDTO.getConditions().add(Restrict.eq("project", project));
+        projectMonthDTO.getConditions().add(Restrict.eq("projectName", projectName));
+        List<ProjectMonth> list = super.findByCis(projectMonthDTO);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list.stream().map(ProjectMonth::getYear).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 根据地区,所属项目组,内部项目名称,年度获取月份
+     *
+     * @return
+     * @throws SerException
+     */
+    public List<MonthsListBO> findMonthByArProNaYe(String area, String project, String projectName, Integer year) throws SerException {
+        ProjectMonthDTO projectMonthDTO = new ProjectMonthDTO();
+        projectMonthDTO.getConditions().add(Restrict.eq("arrival", area));
+        projectMonthDTO.getConditions().add(Restrict.eq("project", project));
+        projectMonthDTO.getConditions().add(Restrict.eq("projectName", projectName));
+        projectMonthDTO.getConditions().add(Restrict.eq("year", year));
+        List<ProjectMonth> list = super.findByCis(projectMonthDTO);
+        return BeanTransform.copyProperties(list, MonthsListBO.class);
     }
 
     @Override

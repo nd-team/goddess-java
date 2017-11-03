@@ -62,12 +62,29 @@ public interface RecruitWaySer extends Ser<RecruitWay, RecruitWayDTO> {
     void remove(String id) throws SerException;
 
     /**
+     * 解冻招聘渠道
+     *
+     * @param id
+     * @throws SerException
+     */
+    void thaw(String id) throws SerException;
+
+    /**
+     * 冻结招聘渠道
+     *
+     * @param id
+     * @throws SerException
+     */
+    void congeal(String id) throws SerException;
+
+    /**
      * 更新招聘渠道
      *
      * @param recruitWayTO
      * @throws SerException
      */
     void update(RecruitWayTO recruitWayTO) throws SerException;
+
 
     /**
      * 查看所有招聘网站

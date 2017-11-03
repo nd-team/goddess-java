@@ -76,4 +76,8 @@ public class UserSetPermissionApiImpl implements UserSetPermissionAPI {
     public Boolean checkSetPermission( ) throws SerException {
         return userSetPermissionSer.checkSetPermission( );
     }
+    @Override
+    public Boolean checkSetPermission22( ) throws SerException {
+        return userSetPermissionSer.checkSetPermission22( );
+    }
 }

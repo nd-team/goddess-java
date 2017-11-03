@@ -2,7 +2,6 @@ package com.bjike.goddess.user.service;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
-import com.aliyuncs.exceptions.ClientException;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -23,11 +22,8 @@ import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.constant.UserCommon;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
-import com.bjike.goddess.user.to.SmsCodeParameterTO;
-import com.bjike.goddess.user.to.SmsCodeTO;
 import com.bjike.goddess.user.to.UserTO;
 import com.bjike.goddess.user.utils.SeqUtil;
-import com.bjike.goddess.user.utils.SmsCodeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.mengyun.tcctransaction.Compensable;
 import org.mengyun.tcctransaction.api.TransactionContext;
@@ -37,7 +33,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -277,10 +272,14 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public void updatePassword(UserTO userTO) throws SerException {
-        if( StringUtils.isBlank( userTO.getId())){
-            throw new SerException("用户id不能为空");
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
+        if( null== userBO ){
+            throw new SerException("不存在该用户");
         }
-        User user = super.findById( userTO.getId() );
+        RpcTransmit.transmitUserToken(userToken);
+
+        User user = super.findById( userBO.getId() );
         if( null == user){
             throw new SerException("该用户不存在");
         }

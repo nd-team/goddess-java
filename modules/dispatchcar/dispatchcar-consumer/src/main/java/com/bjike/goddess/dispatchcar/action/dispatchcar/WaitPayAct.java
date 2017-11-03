@@ -103,6 +103,7 @@ public class WaitPayAct extends BaseFileAction{
     @GetMapping("v1/audit/{id}")
     public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
+
             AuditDetailBO dispatchCarInfo =   dispatchCarInfoAPI.findAudit(id);
             AuditDetailVO auditDetailVO = BeanTransform.copyProperties(dispatchCarInfo,AuditDetailVO.class);
             return ActResult.initialize(auditDetailVO);

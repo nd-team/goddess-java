@@ -27,7 +27,7 @@ public class BusinessContractExcel extends BaseTO {
      * 测算是否通过
      */
     @ExcelHeader(name = "测算是否通过")
-    private Boolean measurePass;
+    private String measurePass;
     /**
      * 签订时间
      */
@@ -44,7 +44,7 @@ public class BusinessContractExcel extends BaseTO {
      * 是否通报
      */
     @ExcelHeader(name = "是否通报")
-    private Boolean notification;
+    private String notification;
 
     /**
      * 地区
@@ -80,7 +80,7 @@ public class BusinessContractExcel extends BaseTO {
      * 是否有共同分包单位
      */
     @ExcelHeader(name = "是否有共同分包单位")
-    private Boolean commonSubcontractor;
+    private String commonSubcontractor;
 
     /**
      * 共同分包单位名称
@@ -92,7 +92,7 @@ public class BusinessContractExcel extends BaseTO {
      * 派工归属清理是否完成
      */
     @ExcelHeader(name = "派工归属清理是否完成")
-    private Boolean taskFinish;
+    private String taskFinish;
 
     /**
      * 客户名称
@@ -128,7 +128,7 @@ public class BusinessContractExcel extends BaseTO {
      * 是否有合同派工合同
      */
     @ExcelHeader(name = "是否有合同派工合同")
-    private Boolean taskContract;
+    private String taskContract;
 
     /**
      * 市场编号
@@ -200,19 +200,19 @@ public class BusinessContractExcel extends BaseTO {
      * 合同规模数量
      */
     @ExcelHeader(name = "合同规模数量")
-    private Double scaleContract;
+    private Integer scaleContract;
 
     /**
      * 合同规模数是否有差异
      */
     @ExcelHeader(name = "合同规模数是否有差异")
-    private Boolean scaleBalance;
+    private String scaleBalance;
 
     /**
      * 是否解决差异问题
      */
     @ExcelHeader(name = "是否解决差异问题")
-    private Boolean solutionBalance;
+    private String solutionBalance;
 
     /**
      * 派工金额
@@ -266,7 +266,7 @@ public class BusinessContractExcel extends BaseTO {
      * 预估项目是否确认实施
      */
     @ExcelHeader(name = "预估项目是否确认实施")
-    private Boolean implement;
+    private String implement;
 
     /**
      * 项目经理意见
@@ -290,7 +290,7 @@ public class BusinessContractExcel extends BaseTO {
      * 是否分批结算
      */
     @ExcelHeader(name = "是否分批结算")
-    private Boolean partial;
+    private String partial;
 
     /**
      * 分批结算金额
@@ -308,7 +308,7 @@ public class BusinessContractExcel extends BaseTO {
      * 是否为持续
      */
     @ExcelHeader(name = "是否为持续")
-    private Boolean persist;
+    private String persist;
 
     /**
      * 预估开工时间
@@ -386,19 +386,19 @@ public class BusinessContractExcel extends BaseTO {
      * 是否正在走结算流程
      */
     @ExcelHeader(name = "是否正在走结算流程")
-    private Boolean settlementProcess;
+    private String settlementProcess;
 
     /**
      * 是否到账
      */
     @ExcelHeader(name = "是否到账")
-    private Boolean account;
+    private String account;
 
     /**
      * 是否闭单
      */
     @ExcelHeader(name = "是否闭单")
-    private Boolean closeSingle;
+    private String closeSingle;
 
     /**
      * 合作方式
@@ -452,7 +452,7 @@ public class BusinessContractExcel extends BaseTO {
      * 合同是否已归档
      */
     @ExcelHeader(name = "合同是否已归档")
-    private Boolean archive;
+    private String archive;
 
     /**
      * 合同归档数量
@@ -475,20 +475,20 @@ public class BusinessContractExcel extends BaseTO {
         this.measureClassify = measureClassify;
     }
 
-    public Boolean getMeasurePass() {
+    public String getMeasurePass() {
         return measurePass;
     }
 
-    public void setMeasurePass(Boolean measurePass) {
+    public void setMeasurePass(String measurePass) {
         this.measurePass = measurePass;
     }
 
 
-    public Boolean getNotification() {
+    public String getNotification() {
         return notification;
     }
 
-    public void setNotification(Boolean notification) {
+    public void setNotification(String notification) {
         this.notification = notification;
     }
 
@@ -532,11 +532,11 @@ public class BusinessContractExcel extends BaseTO {
         this.subCompany = subCompany;
     }
 
-    public Boolean getCommonSubcontractor() {
+    public String getCommonSubcontractor() {
         return commonSubcontractor;
     }
 
-    public void setCommonSubcontractor(Boolean commonSubcontractor) {
+    public void setCommonSubcontractor(String commonSubcontractor) {
         this.commonSubcontractor = commonSubcontractor;
     }
 
@@ -548,11 +548,11 @@ public class BusinessContractExcel extends BaseTO {
         this.commonSubcontractorName = commonSubcontractorName;
     }
 
-    public Boolean getTaskFinish() {
+    public String getTaskFinish() {
         return taskFinish;
     }
 
-    public void setTaskFinish(Boolean taskFinish) {
+    public void setTaskFinish(String taskFinish) {
         this.taskFinish = taskFinish;
     }
 
@@ -596,11 +596,11 @@ public class BusinessContractExcel extends BaseTO {
         this.major = major;
     }
 
-    public Boolean getTaskContract() {
+    public String getTaskContract() {
         return taskContract;
     }
 
-    public void setTaskContract(Boolean taskContract) {
+    public void setTaskContract(String taskContract) {
         this.taskContract = taskContract;
     }
 
@@ -692,27 +692,27 @@ public class BusinessContractExcel extends BaseTO {
         this.scale = scale;
     }
 
-    public Double getScaleContract() {
+    public Integer getScaleContract() {
         return scaleContract;
     }
 
-    public void setScaleContract(Double scaleContract) {
+    public void setScaleContract(Integer scaleContract) {
         this.scaleContract = scaleContract;
     }
 
-    public Boolean getScaleBalance() {
+    public String getScaleBalance() {
         return scaleBalance;
     }
 
-    public void setScaleBalance(Boolean scaleBalance) {
+    public void setScaleBalance(String scaleBalance) {
         this.scaleBalance = scaleBalance;
     }
 
-    public Boolean getSolutionBalance() {
+    public String getSolutionBalance() {
         return solutionBalance;
     }
 
-    public void setSolutionBalance(Boolean solutionBalance) {
+    public void setSolutionBalance(String solutionBalance) {
         this.solutionBalance = solutionBalance;
     }
 
@@ -780,11 +780,11 @@ public class BusinessContractExcel extends BaseTO {
         this.guarantorIdea = guarantorIdea;
     }
 
-    public Boolean getImplement() {
+    public String getImplement() {
         return implement;
     }
 
-    public void setImplement(Boolean implement) {
+    public void setImplement(String implement) {
         this.implement = implement;
     }
 
@@ -812,11 +812,11 @@ public class BusinessContractExcel extends BaseTO {
         this.budgetIdea = budgetIdea;
     }
 
-    public Boolean getPartial() {
+    public String getPartial() {
         return partial;
     }
 
-    public void setPartial(Boolean partial) {
+    public void setPartial(String partial) {
         this.partial = partial;
     }
 
@@ -836,11 +836,11 @@ public class BusinessContractExcel extends BaseTO {
         this.contractPersist = contractPersist;
     }
 
-    public Boolean getPersist() {
+    public String getPersist() {
         return persist;
     }
 
-    public void setPersist(Boolean persist) {
+    public void setPersist(String persist) {
         this.persist = persist;
     }
 
@@ -909,27 +909,27 @@ public class BusinessContractExcel extends BaseTO {
         this.finalTest = finalTest;
     }
 
-    public Boolean getSettlementProcess() {
+    public String getSettlementProcess() {
         return settlementProcess;
     }
 
-    public void setSettlementProcess(Boolean settlementProcess) {
+    public void setSettlementProcess(String settlementProcess) {
         this.settlementProcess = settlementProcess;
     }
 
-    public Boolean getAccount() {
+    public String getAccount() {
         return account;
     }
 
-    public void setAccount(Boolean account) {
+    public void setAccount(String account) {
         this.account = account;
     }
 
-    public Boolean getCloseSingle() {
+    public String getCloseSingle() {
         return closeSingle;
     }
 
-    public void setCloseSingle(Boolean closeSingle) {
+    public void setCloseSingle(String closeSingle) {
         this.closeSingle = closeSingle;
     }
 
@@ -997,11 +997,11 @@ public class BusinessContractExcel extends BaseTO {
         this.handlers = handlers;
     }
 
-    public Boolean getArchive() {
+    public String getArchive() {
         return archive;
     }
 
-    public void setArchive(Boolean archive) {
+    public void setArchive(String archive) {
         this.archive = archive;
     }
 

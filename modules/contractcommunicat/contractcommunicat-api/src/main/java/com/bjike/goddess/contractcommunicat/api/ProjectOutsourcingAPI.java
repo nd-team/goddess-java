@@ -5,12 +5,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingBO;
 import com.bjike.goddess.contractcommunicat.bo.ProjectOutsourcingCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
-import com.bjike.goddess.contractcommunicat.enums.QuartzCycleType;
-import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.CollectConditionTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
-import com.bjike.goddess.market.bo.MarketInfoRecordBO;
 
 import java.util.List;
 
@@ -118,9 +115,9 @@ public interface ProjectOutsourcingAPI {
     List<BaseInfoManageBO> listBaseInfoManage() throws SerException;
 
 
-    /**
-     * 查询内部项目名称
-     * @throws SerException
-     */
-    List<MarketInfoRecordBO> findProject() throws SerException;
+//    /**
+//     * 查询内部项目名称
+//     * @throws SerException
+//     */
+//    List<MarketInfoBO> findProject() throws SerException;
 }

@@ -1,7 +1,5 @@
 package com.bjike.goddess.reportmanagement.vo;
 
-import com.bjike.goddess.reportmanagement.enums.ProfitType;
-
 /**
  * 利润水平分析
  *
@@ -46,6 +44,16 @@ public class ProfitLevelVO {
 //        this.profitType = profitType;
 //    }
 
+    /**
+     * 开始时间
+     */
+    private String startTime;
+
+    /**
+     * 结束时间
+     */
+    private String endTime;
+
     public String getProject() {
         return project;
     }
@@ -84,5 +92,21 @@ public class ProfitLevelVO {
 
     public void setChangeScale(String changeScale) {
         this.changeScale = changeScale;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

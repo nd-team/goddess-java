@@ -399,7 +399,7 @@ public interface VoucherGenerateAPI {
     }
 
     /**
-     * 根据一级科目查询二级科目
+     * 根据一级科目代码查询二级科目
      *
      * @param firstSub 一级科目
      * @return
@@ -410,10 +410,10 @@ public interface VoucherGenerateAPI {
     }
 
     /**
-     * 根据一级二级查询三级科目
+     * 根据一级科目代码查询三级科目(参数二级科目传过后台不作任何处理)
      *
      * @param firstSub  一级科目
-     * @param secondSub 二级科目
+     * @param secondSub 二级科目(科目汇总表数据修改后,方便前端不修改接口,参数不删除,但传过后台不做处理)
      * @return
      * @throws SerException
      */
@@ -657,7 +657,7 @@ public interface VoucherGenerateAPI {
     /**
      * 记账凭证记录科目汇总柱状图
      */
-    default List<HistogramBO> ctReSubHistogram() throws SerException {
+    default OptionBO ctReSubHistogram() throws SerException {
         return null;
     }
 }

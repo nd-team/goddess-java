@@ -87,7 +87,15 @@ public class RecruitWayApiImpl implements RecruitWayAPI {
     public void remove(String id) throws SerException {
         recruitWaySer.remove(id);
     }
+    @Override
+    public void thaw(String id) throws SerException {
+        recruitWaySer.thaw(id);
+    }
 
+    @Override
+    public void congeal(String id) throws SerException {
+        recruitWaySer.congeal(id);
+    }
     /**
      * 更新招聘渠道
      *

@@ -84,6 +84,13 @@ public interface TaxManagementAPI {
     default TaxManagementBO edit(TaxManagementTO to) throws SerException {
         return null;
     }
+    /**
+     * 获取税款所属期起止时间
+     *
+     * @throws SerException
+     */
+    default void getTime() throws SerException {
+    }
 
     /**
      * 根据id删除税金管理

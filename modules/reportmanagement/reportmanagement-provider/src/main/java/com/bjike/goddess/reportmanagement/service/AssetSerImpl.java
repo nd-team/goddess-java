@@ -4,6 +4,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
@@ -11,12 +14,14 @@ import com.bjike.goddess.reportmanagement.enums.AssetType;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.Type;
+import com.bjike.goddess.reportmanagement.excel.AssetAndDebtExportExcel;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.utils.Static;
 import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -338,11 +343,16 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 
     @Override
     public List<AssetBO> list(AssetDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
+        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
+            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+        }
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
-        List<Asset> list = super.findAll();
+        dto.getSorts().add("createTime=asc");
+        List<Asset> list = super.findByCis(dto);
         List<AssetBO> boList = new ArrayList<AssetBO>();
         boolean b1 = true;
         boolean b2 = true;
@@ -358,77 +368,77 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         int num = 1;
         for (Asset asset : list) {
             List<FormulaBO> formulaBOs = formulaSer.findByFid(asset.getId(), formulaDTO);
+            if (AssetType.AFLOW.equals(asset.getAssetType()) && b1) {
+                AssetBO assetBO = new AssetBO();
+                assetBO.setAsset("流动资产：");
+                boList.add(assetBO);
+                b1 = false;
+            } else if (AssetType.BLONG.equals(asset.getAssetType()) && b2) {
+                AssetBO sumBO = new AssetBO();
+                sumBO.setAsset("流动资产合计");
+                sumBO.setBeginAsset(beginSum);
+                sumBO.setCurrent(currentSum);
+                sumBO.setEndAsset(endSum);
+                sumBO.setAssetNum(num);
+                num++;
+                boList.add(sumBO);
+                beginSum = 0;
+                currentSum = 0;
+                endSum = 0;    //置为0
+                AssetBO assetBO = new AssetBO();
+                assetBO.setAsset("长期资产：");
+                boList.add(assetBO);
+                b2 = false;
+            } else if (AssetType.CFIX.equals(asset.getAssetType()) && b3) {
+                AssetBO sumBO = new AssetBO();
+                sumBO.setAsset("长期资产合计");
+                sumBO.setBeginAsset(beginSum);
+                sumBO.setCurrent(currentSum);
+                sumBO.setEndAsset(endSum);
+                sumBO.setAssetNum(num);
+                num++;
+                boList.add(sumBO);
+                beginSum = 0;
+                currentSum = 0;
+                endSum = 0;    //置为0
+                AssetBO assetBO = new AssetBO();
+                assetBO.setAsset("固定资产：");
+                boList.add(assetBO);
+                b3 = false;
+            } else if (AssetType.DINVISIBLE.equals(asset.getAssetType()) && b4) {
+                AssetBO sumBO = new AssetBO();
+                sumBO.setAsset("固定资产合计");
+                sumBO.setBeginAsset(beginSum);
+                sumBO.setCurrent(currentSum);
+                sumBO.setEndAsset(endSum);
+                sumBO.setAssetNum(num);
+                num++;
+                boList.add(sumBO);
+                beginSum = 0;
+                currentSum = 0;
+                endSum = 0;    //置为0
+                AssetBO assetBO = new AssetBO();
+                assetBO.setAsset("无形资产及其他资产：");
+                boList.add(assetBO);
+                b4 = false;
+            } else if (AssetType.ETAX.equals(asset.getAssetType()) && b5) {
+                AssetBO sumBO = new AssetBO();
+                sumBO.setAsset("无形资产及其他资产合计");
+                sumBO.setBeginAsset(beginSum);
+                sumBO.setCurrent(currentSum);
+                sumBO.setEndAsset(endSum);
+                sumBO.setAssetNum(num);
+                num++;
+                boList.add(sumBO);
+                beginSum = 0;
+                currentSum = 0;
+                endSum = 0;    //置为0
+                AssetBO assetBO = new AssetBO();
+                assetBO.setAsset("递延税款：");
+                boList.add(assetBO);
+                b5 = false;
+            }
             if ((formulaBOs != null) && (!formulaBOs.isEmpty())) {
-                if (AssetType.AFLOW.equals(asset.getAssetType()) && b1) {
-                    AssetBO assetBO = new AssetBO();
-                    assetBO.setAsset("流动资产：");
-                    boList.add(assetBO);
-                    b1 = false;
-                } else if (AssetType.BLONG.equals(asset.getAssetType()) && b2) {
-                    AssetBO sumBO = new AssetBO();
-                    sumBO.setAsset("流动资产合计");
-                    sumBO.setBeginAsset(beginSum);
-                    sumBO.setCurrent(currentSum);
-                    sumBO.setEndAsset(endSum);
-                    sumBO.setAssetNum(num);
-                    num++;
-                    boList.add(sumBO);
-                    beginSum = 0;
-                    currentSum = 0;
-                    endSum = 0;    //置为0
-                    AssetBO assetBO = new AssetBO();
-                    assetBO.setAsset("长期资产：");
-                    boList.add(assetBO);
-                    b2 = false;
-                } else if (AssetType.CFIX.equals(asset.getAssetType()) && b3) {
-                    AssetBO sumBO = new AssetBO();
-                    sumBO.setAsset("长期资产合计");
-                    sumBO.setBeginAsset(beginSum);
-                    sumBO.setCurrent(currentSum);
-                    sumBO.setEndAsset(endSum);
-                    sumBO.setAssetNum(num);
-                    num++;
-                    boList.add(sumBO);
-                    beginSum = 0;
-                    currentSum = 0;
-                    endSum = 0;    //置为0
-                    AssetBO assetBO = new AssetBO();
-                    assetBO.setAsset("固定资产：");
-                    boList.add(assetBO);
-                    b3 = false;
-                } else if (AssetType.DINVISIBLE.equals(asset.getAssetType()) && b4) {
-                    AssetBO sumBO = new AssetBO();
-                    sumBO.setAsset("固定资产合计");
-                    sumBO.setBeginAsset(beginSum);
-                    sumBO.setCurrent(currentSum);
-                    sumBO.setEndAsset(endSum);
-                    sumBO.setAssetNum(num);
-                    num++;
-                    boList.add(sumBO);
-                    beginSum = 0;
-                    currentSum = 0;
-                    endSum = 0;    //置为0
-                    AssetBO assetBO = new AssetBO();
-                    assetBO.setAsset("无形资产及其他资产：");
-                    boList.add(assetBO);
-                    b4 = false;
-                } else if (AssetType.ETAX.equals(asset.getAssetType()) && b5) {
-                    AssetBO sumBO = new AssetBO();
-                    sumBO.setAsset("无形资产及其他资产合计");
-                    sumBO.setBeginAsset(beginSum);
-                    sumBO.setCurrent(currentSum);
-                    sumBO.setEndAsset(endSum);
-                    sumBO.setAssetNum(num);
-                    num++;
-                    boList.add(sumBO);
-                    beginSum = 0;
-                    currentSum = 0;
-                    endSum = 0;    //置为0
-                    AssetBO assetBO = new AssetBO();
-                    assetBO.setAsset("递延税款：");
-                    boList.add(assetBO);
-                    b5 = false;
-                }
                 FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
                 AssetBO bo = BeanTransform.copyProperties(asset, AssetBO.class);
                 bo.setBeginAsset(formulaBO.getBegin());
@@ -460,6 +470,18 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 boList.add(bo);
             }
         }
+
+        DebtDTO debtDTO = new DebtDTO();
+        BeanUtils.copyProperties(dto, debtDTO, "sorts");
+        Long size = debtSer.count(debtDTO);
+
+        if (size + 10 > boList.size() + 1) {
+            for (int i = 0; i < size + 10 - (boList.size() + 1); i++) {
+                AssetBO assetBO = new AssetBO();
+                boList.add(assetBO);
+            }
+        }
+
         AssetBO lastBO = new AssetBO();
         lastBO.setAsset("资产总计");
         lastBO.setBeginAsset(countBegin);
@@ -469,15 +491,120 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         num++;
         Static.setNum(num);
         boList.add(lastBO);
+        boList.stream().forEach(obj -> {
+            obj.setStartTime(dto.getStartTime());
+            obj.setEndTime(dto.getEndTime());
+        });
         return boList;
     }
 
+    public static void main(String args[]) {
+        for (AssetType type : AssetType.values()) {
+            System.out.println(type);
+        }
+    }
+
+
+    //    zhuangkaiqin
 //    @Override
+//    public List<AssetBO> list(AssetDTO dto) throws SerException {
+//        checkSeeIdentity();
+//        List<AssetBO> assetBOs = new ArrayList<>(0);
+//        AssetDTO assetDTO = new AssetDTO();
+//        assetDTO.getSorts().add("seqNum=ASC");
+//        List<Asset> assets = super.findByCis(assetDTO);
+//        for (AssetType type : AssetType.values()) {
+//            List<Asset> typeList = assets.stream().filter(obj -> type.equals(obj.getAssetType())).collect(Collectors.toList());
+//            String string = getTypeData(type);
+//            AssetBO assetBO = new AssetBO();
+//            assetBO.setAsset(string + "：");
+//            assetBOs.add(assetBO);
+//            typeList.stream().forEach(obj -> {
+//                assetBOs.add(BeanTransform.copyProperties(obj, AssetBO.class));
+//            });
+//        }
+//        //增加资产总计
+//        AssetBO assetBO = new AssetBO();
+//        assetBO.setAsset("资产总计");
+//        assetBO.setAssetNum(assetBOs.size() - 5);
+//        assetBOs.add(assetBO);
+//
+//        FormulaDTO formulaDTO = new FormulaDTO();
+//        BeanUtils.copyProperties(dto, formulaDTO);
+//        dto.getSorts().add("assetType=ASC");
+//        double beginSum = 0;
+//        double currentSum = 0;
+//        double endSum = 0;
+//        double countBegin = 0;
+//        double countCurrent = 0;
+//        double countEnd = 0;
+//        for (AssetBO bo : assetBOs) {
+//            List<FormulaBO> formulaBOs = formulaSer.findByFid(bo.getId(), formulaDTO);
+//            if (null != formulaBOs && formulaBOs.size() > 0) {
+//                FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
+//                if (bo.getAssetType() != null) {
+//                    bo.setBeginAsset(formulaBO.getBegin());
+//                    bo.setCurrent(formulaBO.getCurrent());
+//                    bo.setEndAsset(formulaBO.getEnd());
+//                    if (Type.ADD.equals(bo.getType())) {
+//                        beginSum += bo.getBeginAsset();
+//                        currentSum += bo.getCurrent();
+//                        endSum += bo.getEndAsset();
+//                        countBegin += bo.getBeginAsset();
+//                        countCurrent += bo.getCurrent();
+//                        countEnd += bo.getEndAsset();
+//                    } else if (Type.REMOVE.equals(bo.getType())) {
+//                        bo.setAsset("减：" + bo.getAsset());
+//                        beginSum = beginSum - bo.getBeginAsset();
+//                        currentSum -= bo.getCurrent();
+//                        endSum = endSum - bo.getEndAsset();
+//                        countBegin = countBegin - bo.getBeginAsset();
+//                        countCurrent -= bo.getCurrent();
+//                        countEnd = countEnd - bo.getEndAsset();
+//                    }
+//                }
+//                if ("资产总计".equals(bo.getAsset())) {
+//                    bo.setBeginAsset(countBegin);
+//                    bo.setCurrent(countCurrent);
+//                    bo.setEndAsset(countEnd);
+//                }
+//            }
+//        }
+//        return assetBOs;
+//    }
+
+    private String getTypeData(AssetType type) throws SerException {
+        String str = "";
+        switch (type) {
+            case AFLOW:
+                str = "流动资产";
+                break;
+            case BLONG:
+                str = "长期资产";
+                break;
+            case CFIX:
+                str = "固定资产";
+                break;
+            case DINVISIBLE:
+                str = "无形资产及其他资产";
+                break;
+            case ETAX:
+                str = "递延税款";
+                break;
+            default:
+                ;
+                break;
+        }
+        return str;
+    }
+
+    //    @Override
     public List<AssetBO> listtest1(AssetDTO dto) throws SerException {
         checkSeeIdentity();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
+        dto.getSorts().add("createTime=ASC");
         List<Asset> list = super.findAll();
         List<AssetBO> boList = new ArrayList<AssetBO>();
         boolean b1 = true;
@@ -611,11 +738,17 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     public List<StructureBO> assetStructure(AssetDTO dto) throws SerException {
         checkSeeIdentity();
+        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
+            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+        }
         String userToken = RpcTransmit.getUserToken();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
         dto.getSorts().add("assetType=ASC");
-        List<Asset> list = super.findAll();
+        dto.getSorts().add("createTime=asc");
+//        List<Asset> list = super.findAll();
+        List<Asset> list = super.findByCis(dto);
         List<StructureBO> boList = new ArrayList<StructureBO>();
         boolean b = true;
         double flowSum = 0;
@@ -643,14 +776,20 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         StructureBO flowBO = new StructureBO();
         flowBO.setProject("流动资产合计");
         flowBO.setFee(flowSum);
-        String flow = String.format("%.2f", (flowSum / countCurrent) * 100);
+        String flow = "0";
+        if (0d != countCurrent) {
+            flow = String.format("%.2f", (flowSum / countCurrent) * 100);
+        }
         flowBO.setScale(flow + "%");
         boList.add(flowBO);
         double otherSum = countCurrent - flowSum;
         StructureBO otherBO = new StructureBO();
         otherBO.setProject("非流动资产合计");
         otherBO.setFee(otherSum);
-        String other = String.format("%.2f", (otherSum / countCurrent) * 100);
+        String other = "0";
+        if (0d != countCurrent) {
+            other = String.format("%.2f", (otherSum / countCurrent) * 100);
+        }
         otherBO.setScale(other + "%");
         boList.add(otherBO);
         StructureBO sumBO = new StructureBO();
@@ -730,7 +869,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         list.add(firstBO);
         RepayAnalyzeBO flowBO = new RepayAnalyzeBO();
         flowBO.setProject("流动比率");
-        String flow = String.format("%.2f", (flowAsset / flowDebt) * 100);
+        String flow = "0";
+        if(0d != flowDebt) {
+            flow = String.format("%.2f", (flowAsset / flowDebt) * 100);
+        }
         flowBO.setScale(flow + "%");
         flowBO.setBestScale("200%");
         flowBO.setExplain("流动比率越高，反映企业短期偿债能力越强，但是流动比率过高则表明企业流动资产占用较多，" +
@@ -738,7 +880,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         list.add(flowBO);
         RepayAnalyzeBO rateBO = new RepayAnalyzeBO();
         rateBO.setProject("速动比率");
-        String rate = String.format("%.2f", ((flowAsset - stock) / flowDebt) * 100);
+        String rate = "0";
+        if(0d != flowDebt) {
+            rate = String.format("%.2f", ((flowAsset - stock) / flowDebt) * 100);
+        }
         rateBO.setScale(rate + "%");
         rateBO.setBestScale("100%");
         rateBO.setExplain("速动比例较高说明公司不用动用存货，仅仅依靠速动资产就能偿还债务，偿还流动负债的能力较强，" +
@@ -746,7 +891,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         list.add(rateBO);
         RepayAnalyzeBO cashBO = new RepayAnalyzeBO();
         cashBO.setProject("现金比率");
-        String cash = String.format("%.2f", (fund / flowDebt) * 100);
+        String cash = "0";
+        if(0d != flowDebt) {
+            cash = String.format("%.2f", (fund / flowDebt) * 100);
+        }
         cashBO.setScale(cash + "%");
         cashBO.setBestScale("20%");
         cashBO.setExplain("现金比率越高，表明企业的直接偿付能力越强，信用也就越可靠。" +
@@ -757,7 +905,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         list.add(secondBO);
         RepayAnalyzeBO assetdebtBO = new RepayAnalyzeBO();
         assetdebtBO.setProject("资产负债率");
-        String assetdebt = String.format("%.2f", (debt / asset) * 100);
+        String assetdebt = "0";
+        if(0d != asset) {
+            assetdebt = String.format("%.2f", (debt / asset) * 100);
+        }
         assetdebtBO.setScale(assetdebt + "%");
         assetdebtBO.setBestScale("40%-60%");
         assetdebtBO.setExplain("对于经营风险比较高的企业，为减少财务风险应选择比较低的资产负债率；" +
@@ -765,7 +916,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         list.add(assetdebtBO);
         RepayAnalyzeBO equityBO = new RepayAnalyzeBO();
         equityBO.setProject("产权比率");
-        String equity = String.format("%.2f", (debt / all) * 100);
+        String equity = "0";
+        if(0d != all) {
+            equity = String.format("%.2f", (debt / all) * 100);
+        }
         equityBO.setScale(equity + "%");
         equityBO.setBestScale("100%");
         equityBO.setExplain("较低的产权比率表明企业采用了低风险、低报酬的资本结构，债权人的利益受保护程度较高，企业财务风险较小。" +
@@ -902,6 +1056,42 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         checkSeeIdentity();
         List<Asset> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, AssetBO.class);
+    }
+
+    @Override
+    public byte[] exportExcel(AssetDTO dto) throws SerException {
+        List<AssetAndDebtExportExcel> list = new ArrayList<>(0);
+        List<AssetBO> assetBOs = this.list(dto);
+        DebtDTO debtDTO = new DebtDTO();
+        BeanUtils.copyProperties(dto, debtDTO);
+        debtDTO.getSorts().clear();
+        List<DebtBO> debtBOs = debtSer.list(debtDTO);
+
+        if (null != assetBOs && assetBOs.size() > 0 && null != debtBOs && debtBOs.size() > 0) {
+            int assetSize = assetBOs.size();
+            int debtSize = debtBOs.size();
+            int i = 0;
+            if (assetSize > debtSize) {
+                i = assetSize;
+            } else {
+                i = debtSize;
+            }
+            for (int j = 0; j < i; j++) {
+                AssetAndDebtExportExcel assetAndDebtExportExcel = new AssetAndDebtExportExcel();
+                assetAndDebtExportExcel.setAsset(j < assetBOs.size() ? assetBOs.get(j).getAsset() : null);
+                assetAndDebtExportExcel.setAssetNum(j < assetBOs.size() ? assetBOs.get(j).getAssetNum() : null);
+                assetAndDebtExportExcel.setBeginAsset(j < assetBOs.size() ? assetBOs.get(j).getBeginAsset() : null);
+                assetAndDebtExportExcel.setEndAsset(j < assetBOs.size() ? assetBOs.get(j).getEndAsset() : null);
+                assetAndDebtExportExcel.setDebt(j < debtBOs.size() ? debtBOs.get(j).getDebt() : null);
+                assetAndDebtExportExcel.setDebtNum(j < debtBOs.size() ? debtBOs.get(j).getDebtNum() : null);
+                assetAndDebtExportExcel.setBeginDebt(j < debtBOs.size() ? debtBOs.get(j).getBeginDebt() : null);
+                assetAndDebtExportExcel.setEndDebt(j < debtBOs.size() ? debtBOs.get(j).getEndDebt() : null);
+                list.add(assetAndDebtExportExcel);
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
+        return bytes;
     }
 
     @Override

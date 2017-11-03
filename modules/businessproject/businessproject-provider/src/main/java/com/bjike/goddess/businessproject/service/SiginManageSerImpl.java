@@ -1,6 +1,6 @@
 package com.bjike.goddess.businessproject.service;
 
-import com.bjike.goddess.businessproject.bo.SiginManageBO;
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
 import com.bjike.goddess.businessproject.enums.*;
@@ -29,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -464,11 +461,12 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
         List<SiginManageExport> siginManageExports = new ArrayList<>();
         list.stream().forEach(str -> {
-            SiginManageExport excel = BeanTransform.copyProperties(str, SiginManageExport.class, "businessType", "businessCooperate", "contractProperty","projectStatus");
+            SiginManageExport excel = BeanTransform.copyProperties(str, SiginManageExport.class, "businessType", "businessCooperate", "contractProperty", "projectStatus", "makeProject");
             excel.setBusinessType(BusinessType.exportStrConvert(str.getBusinessType()));
             excel.setBusinessCooperate(BusinessCooperate.exportStrConvert(str.getBusinessCooperate()));
             excel.setContractProperty(ContractProperty.exportStrConvert(str.getContractProperty()));
             excel.setProjectStatus(ProjectStatus.exportStrConvert(str.getProjectStatus()));
+            excel.setMakeProject(MakeContract.exportStrConvert(str.getMakeProject()));
             siginManageExports.add(excel);
         });
         Excel excel = new Excel(0, 2);
@@ -496,7 +494,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         excel.setEndProjectTime(LocalDate.now());
         excel.setSiginStatus("已签订");
         excel.setContractProperty("框架合同");
-        excel.setMakeProject("已立项");
+        excel.setMakeProject("立项");
         excel.setInnerProject("test");
         excel.setProjectGroup("test");
         excel.setProjectCharge("test");
@@ -511,7 +509,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         SiginManageTemplateExport excel2 = new SiginManageTemplateExport();
         BeanUtils.copyProperties(excel, excel2);
         excel.setSiginStatus("未签订");
-        excel.setMakeProject("未立项");
+        excel.setMakeProject("预立项");
         siginManageExports.add(excel);
 
         Excel exce = new Excel(0, 2);
@@ -599,7 +597,167 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
     @Override
     public Set<String> makeProjects() throws SerException {
+        Set<String> makeProjects = new HashSet<>();
         List<SiginManage> list = super.findAll();
-        return list.stream().map(siginManage -> siginManage.getMakeProject()).collect(Collectors.toSet());
+        for (SiginManage siginManage : list) {
+            makeProjects.add(String.valueOf(siginManage.getMakeProject()));
+        }
+        return makeProjects;
     }
+
+    @Override
+    public OptionBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+        String startDate = String.valueOf(date[0]);
+        String endDate = String.valueOf(date[1]);
+        String text_1 = "各地区立项情况周汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate,endDate,text_1);
+    }
+
+    @Override
+    public OptionBO monthCollectFigure(Integer year, Integer month) throws SerException {
+        if (year == null && month == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "各地区立项情况月汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate,endDate,text_1);
+    }
+
+    @Override
+    public OptionBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+        if (year == null && quarter == null) {
+            year = LocalDate.now().getYear();
+            quarter = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quarter);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "各地区立项情况季度汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate,endDate,text_1);
+    }
+
+    @Override
+    public OptionBO yearCollectFigure(Integer year) throws SerException {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        String text_1 = "各地区立项情况年汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate,endDate,text_1);
+    }
+    private OptionBO makeContractFigure(String startDate, String endDate, String text_1) throws SerException {
+        String[] fields = new String[]{"area", "noMakeNum", "hadMakeNum", "notMakeNum"};
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.area as area, ");
+        sb.append("  ifnull(MAX( CASE WHEN makeProject=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeProject=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeProject=2 THEN count END ),0) AS notMakeNum ");
+        sb.append(" from ");
+        sb.append(" (SELECT count(*) AS count,makeProject as makeProject,area AS area ");
+        sb.append(" FROM businessproject_siginmanage WHERE startProjectTime BETWEEN '" + startDate + "' AND '" + endDate + "' ");
+        sb.append("  GROUP BY area,makeProject)a GROUP BY a.area ");
+
+        List<MakeContractFigureBO> figureBOS = super.findBySql(sb.toString(), MakeContractFigureBO.class, fields);
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"未立项合同单数数量", "立项合同单数数量", "不立项合同单数数量"};
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+        List<SeriesBO> seriesBOS = new ArrayList<>();
+        if (figureBOS != null && figureBOS.size() > 0) {
+            List<Integer> noNum = new ArrayList<>();
+            List<Integer> hadNum = new ArrayList<>();
+            List<Integer> notNum = new ArrayList<>();
+            for (MakeContractFigureBO figureBO : figureBOS) {
+                text_list_3.add(figureBO.getArea());
+
+                //柱状图数据
+                noNum.add(figureBO.getNoMakeNum());
+                hadNum.add(figureBO.getHadMakeNum());
+                notNum.add(figureBO.getNotMakeNum());
+            }
+            List<List<Integer>> nums = new ArrayList<>();
+            nums.add(noNum);
+            nums.add(hadNum);
+            nums.add(notNum);
+            String[] ziduan = new String[]{"未立项合同单数数量", "立项合同单数数量", "不立项合同单数数量"};
+            for (int i = 0; i < 3; i++) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(ziduan[i]);
+                seriesBO.setType("bar");
+                Integer[] text_int_4 = new Integer[nums.get(0).size()];
+                text_int_4 = nums.get(i).toArray(text_int_4);
+                seriesBO.setData(text_int_4);
+                seriesBOS.add(seriesBO);
+            }
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOS.size()];
+        text_4 = seriesBOS.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+    //季度
+    private String[] quarter(Integer year, Integer quarter) throws SerException {
+        String startDate = null;
+        String endDate = null;
+        switch (quarter) {
+            case 1:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 3, DateUtil.getDayByDate(year, 3)));
+                break;
+            case 2:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 4, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 6, DateUtil.getDayByDate(year, 6)));
+                break;
+            case 3:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 7, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 9, DateUtil.getDayByDate(year, 9)));
+                break;
+            case 4:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 10, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+                break;
+            default:
+                startDate = DateUtil.dateToString(LocalDate.now());
+                endDate = DateUtil.dateToString(LocalDate.now());
+                break;
+        }
+
+        return new String[]{startDate, endDate};
+    }
+
 }

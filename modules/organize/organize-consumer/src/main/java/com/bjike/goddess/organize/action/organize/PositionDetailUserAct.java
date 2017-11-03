@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
@@ -312,6 +313,7 @@ public class PositionDetailUserAct {
             throw new ActException(e.getMessage());
         }
     }
+
 
 
 }

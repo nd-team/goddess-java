@@ -46,6 +46,12 @@ public class CustomerDetail extends BaseEntity {
     private String workExperience;
 
     /**
+     * 毕业学校
+     */
+    @Column(name = "graduatedSchool", columnDefinition = "VARCHAR(255)  COMMENT '毕业学校'")
+    private String graduatedSchool;
+
+    /**
      * 求学经历
      */
     @Column(name = "studyExperience", columnDefinition = "MEDIUMTEXT  COMMENT '求学经历'")
@@ -103,6 +109,14 @@ public class CustomerDetail extends BaseEntity {
 
     public String getWorkExperience() {
         return workExperience;
+    }
+
+    public String getGraduatedSchool() {
+        return graduatedSchool;
+    }
+
+    public void setGraduatedSchool(String graduatedSchool) {
+        this.graduatedSchool = graduatedSchool;
     }
 
     public void setWorkExperience(String workExperience) {

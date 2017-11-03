@@ -353,7 +353,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
     @Override
     public byte[] exportExcel(CategoryName belongCategory) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
         accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
         List<AccountanCourse> list = super.findByCis(accountanCourseDTO);
@@ -376,6 +376,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         accountanCourseExportTemple.setAccountanName("一级科目");
         accountanCourseExportTemple.setBelongCategory("资产类");
         accountanCourseExportTemple.setBalanceDirection("借");
+        accountanCourseExportTemples.add(accountanCourseExportTemple);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(accountanCourseExportTemples, exce);
         return bytes;

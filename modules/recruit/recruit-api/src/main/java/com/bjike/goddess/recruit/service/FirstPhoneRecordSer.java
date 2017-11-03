@@ -76,4 +76,29 @@ public interface FirstPhoneRecordSer extends Ser<FirstPhoneRecord, FirstPhoneRec
      * @throws SerException
      */
     Set<String> allFirstName() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param firstPhoneRecordTOS 第一次电放记录
+     * @return class FirstPhoneRecordBO
+     */
+    default FirstPhoneRecordBO importExcel(List<FirstPhoneRecordTO> firstPhoneRecordTOS) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(FirstPhoneRecordDTO dto) throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 }

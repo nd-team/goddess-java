@@ -290,23 +290,22 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         return super.findOne(dto);
     }
 
-//    @Override
-//    public Boolean checkAsUserPosit2(String name, String[] position_ids) throws SerException {
-//        logger.info("开始给");
-//    }
 
     public Boolean checkAsUserPosition(String name, String[] position_ids) throws SerException {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.getConditions().add(Restrict.eq(ID, name));
-//        UserBO userBO = userAPI.findOne(userDTO);
-//        if (userBO != null) {
-//            PositionDetailUser entity = this.findByUser(userBO.getUsername());
-//            if (null != entity && null != entity.getPositionSet() && null != position_ids)
-//                for (PositionDetail detail : entity.getPositionSet())
-//                    for (String id : position_ids)
-//                        if (detail.getId().equals(id))
-//                            return true;
-//        }
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq(ID, name));
+        UserBO userBO = userAPI.findOne(userDTO);
+        if (userBO != null) {
+            PositionDetailUserDTO dto = new PositionDetailUserDTO();
+            dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
+            PositionDetailUser entity1 = super.findOne(dto);
+            if (null != entity1 && null != entity1.getPositionSet() && null != position_ids) {
+                for (PositionDetail detail : entity1.getPositionSet())
+                    for (String id : position_ids)
+                        if (detail.getId().equals(id))
+                            return true;
+            }
+        }
         return false;
     }
 
@@ -315,18 +314,21 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, name));
         UserBO userBO = userAPI.findOne(userDTO);
-        logger.info("开始给user");
+        logger.info("开始给user"+ JSON.toJSONString( userBO));
         if (userBO != null) {
-            PositionDetailUser entity = this.findByUser(userBO.getUsername());
-            logger.info("开始给uposit");
             PositionDetailUserDTO dto = new PositionDetailUserDTO();
-            dto.getConditions().add(Restrict.eq("name", name));
+            dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
             PositionDetailUser entity1 = super.findOne(dto);
-            if (null != entity1 && null != entity1.getPositionSet() && null != position_ids)
+            logger.info("开始给position"+JSON.toJSONString( position_ids));
+            logger.info("开始给entity"+JSON.toJSONString( entity1));
+            logger.info("开始给"+JSON.toJSONString( entity1.getPositionSet()));
+            if (null != entity1 && null != entity1.getPositionSet() && null != position_ids) {
+                logger.info("传进来的positionids"+JSON.toJSONString( entity1.getPositionSet()));
                 for (PositionDetail detail : entity1.getPositionSet())
                     for (String id : position_ids)
                         if (detail.getId().equals(id))
                             return true;
+            }
         }
         return false;
     }
@@ -702,6 +704,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         PositionDetailUserDTO dto = new PositionDetailUserDTO();
         dto.getConditions().add(Restrict.eq("name", phoneLoginUserInfoTO.getUserName()));
+        dto.getConditions().add(Restrict.or("number", phoneLoginUserInfoTO.getUserName()));
         PositionDetailUser positionDetailUser = super.findOne(dto);
         if (null != positionDetailUser) {
             //
@@ -751,8 +754,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     public List<String> names() throws SerException {
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-//        HttpGet httpGet = new HttpGet("https://staffentry.issp.bjike.com:8080/entryregister/v1/names");//线上
-        HttpGet httpGet = new HttpGet("http://localhost:51218/entryregister/v1/names");//线下测试
+        HttpGet httpGet = new HttpGet("https://staffentry.issp.bjike.com:8080/entryregister/v1/names");//线上
+//        HttpGet httpGet = new HttpGet("http://localhost:51218/entryregister/v1/names");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
 
         ActResultOrgan resultOrgan = new ActResultOrgan();

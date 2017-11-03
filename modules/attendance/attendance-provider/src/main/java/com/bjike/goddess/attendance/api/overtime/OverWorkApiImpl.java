@@ -3,9 +3,7 @@ package com.bjike.goddess.attendance.api.overtime;
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
-import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
-import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
-import com.bjike.goddess.attendance.dto.overtime.OverWorkRestDayDTO;
+import com.bjike.goddess.attendance.dto.overtime.*;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
@@ -103,5 +101,23 @@ public class OverWorkApiImpl implements OverWorkAPI {
         return overWorkSer.listRestDay(overWorkRestDayDTO);
     }
 
+    @Override
+    public List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
+        return overWorkSer.myListOverWork( phoneMyOverWorkDTO );
+    }
 
+    @Override
+    public List<OverWorkBO> myEntryList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
+        return overWorkSer.myEntryList( phoneMyEntryOverWorkDTO );
+    }
+
+    @Override
+    public List<OverWorkBO> myAuditList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
+        return overWorkSer.myAuditList( phoneMyEntryOverWorkDTO ) ;
+    }
+
+    @Override
+    public OverWorkBO getPhoneOneById(String id) throws SerException {
+        return overWorkSer.getPhoneOneById( id ) ;
+    }
 }

@@ -2,7 +2,6 @@ package com.bjike.goddess.recruit.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.recruit.type.Gender;
-import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,7 +60,7 @@ public class FirstPhoneRecord extends BaseEntity {
     /**
      * 简历筛选是否通过
      */
-    @Column(nullable = false, columnDefinition = "BIT(1) DEFAULT 0 COMMENT '简历筛选是否通过' ")
+    @Column(nullable = false, columnDefinition = "TINYINT(1) COMMENT '简历筛选是否通过' ")
     private Boolean whetherPass;
 
     /**
@@ -73,7 +72,7 @@ public class FirstPhoneRecord extends BaseEntity {
     /**
      * 通话是否成功
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '通话是否成功' ")
+    @Column(columnDefinition = "TINYINT(1) COMMENT '通话是否成功' ")
     private Boolean whetherPhoneSuccess;
 
     /**
@@ -85,7 +84,7 @@ public class FirstPhoneRecord extends BaseEntity {
     /**
      * 是否有相关工作经验
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '是否有相关工作经验' ")
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否有相关工作经验' ")
     private Boolean whetherWorkExperience;
 
     /**
@@ -97,7 +96,7 @@ public class FirstPhoneRecord extends BaseEntity {
     /**
      * 是否成功邀约初试
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '是否成功邀约初试' ")
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否成功邀约初试' ")
     private Boolean whetherFirstInviteSuccess;
 
     /**
@@ -121,13 +120,13 @@ public class FirstPhoneRecord extends BaseEntity {
     /**
      * 是否初试
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '是否初试' ")
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否初试' ")
     private Boolean whetherFirstInterview;
 
     /**
      * 初试是否为面试
      */
-    @Column(columnDefinition = "BIT(1) DEFAULT 0 COMMENT '初试是否为面试' ")
+    @Column(columnDefinition = "TINYINT(1) COMMENT '初试是否为面试' ")
     private Boolean whetherFaceTest;
 
     /**
@@ -141,12 +140,106 @@ public class FirstPhoneRecord extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '其他' ")
     private String other;
+    /**
+     * 应聘地区
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '应聘地区' ")
+    private String area;
+    /**
+     * 应聘部门/项目组
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '应聘部门/项目组' ")
+    private String projectGroup;
+    /**
+     * 初试地点
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '初试地点' ")
+    private String firstPlace;
+    /**
+     * 是否需要复试
+     */
+    @Column(name = "is_retrial", columnDefinition = "TINYINT(1) COMMENT '是否需要复试' ")
+    private Boolean retrial;
+    /**
+     * 复试时间
+     */
+    @Column(columnDefinition = "DATETIME COMMENT '复试时间' ")
+    private LocalDateTime retrialTime;
+    /**
+     * 复试负责人
+     */
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '复试负责人' ")
+    private String retrialOfficer;
+    /**
+     * 状态
+     */
+    @Column(columnDefinition = "TINYINT(1) COMMENT '状态'")
+    private Boolean status;
 
-//    /**
-//     * 附件地址
-//     */
-//    @Column(columnDefinition = "VARCHAR(255) COMMENT '附件地址' ")
-//    private String attachmentAddr;
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public LocalDateTime getFirstInterviewTime() {
+        return firstInterviewTime;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public String getFirstPlace() {
+        return firstPlace;
+    }
+
+    public void setFirstPlace(String firstPlace) {
+        this.firstPlace = firstPlace;
+    }
+
+    public Boolean getRetrial() {
+        return retrial;
+    }
+
+    public void setRetrial(Boolean retrial) {
+        this.retrial = retrial;
+    }
+
+    public void setFirstInterviewTime(LocalDateTime firstInterviewTime) {
+        this.firstInterviewTime = firstInterviewTime;
+    }
+
+    public LocalDateTime getRetrialTime() {
+        return retrialTime;
+    }
+
+    public void setRetrialTime(LocalDateTime retrialTime) {
+        this.retrialTime = retrialTime;
+    }
+
+    public String getRetrialOfficer() {
+        return retrialOfficer;
+    }
+
+    public void setRetrialOfficer(String retrialOfficer) {
+        this.retrialOfficer = retrialOfficer;
+    }
 
     public FirstPhoneRecord() {
     }
@@ -263,13 +356,6 @@ public class FirstPhoneRecord extends BaseEntity {
         this.failureInviteReason = failureInviteReason;
     }
 
-    public LocalDateTime getFirstInterviewTime() {
-        return firstInterviewTime;
-    }
-
-    public void setFirstInterviewTime(LocalDateTime firstInterviewTime) {
-        this.firstInterviewTime = firstInterviewTime;
-    }
 
     public String getFirstInterviewPrincipal() {
         return firstInterviewPrincipal;
@@ -278,6 +364,7 @@ public class FirstPhoneRecord extends BaseEntity {
     public void setFirstInterviewPrincipal(String firstInterviewPrincipal) {
         this.firstInterviewPrincipal = firstInterviewPrincipal;
     }
+
 
     public Boolean getWhetherFirstInterview() {
         return whetherFirstInterview;
