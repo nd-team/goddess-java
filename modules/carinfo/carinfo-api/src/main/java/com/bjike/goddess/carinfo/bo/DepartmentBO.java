@@ -1,5 +1,6 @@
 package com.bjike.goddess.carinfo.bo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DepartmentBO {
+public class DepartmentBO implements Serializable{
 
     /**
      * 部门

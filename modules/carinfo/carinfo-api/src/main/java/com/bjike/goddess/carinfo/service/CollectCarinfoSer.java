@@ -1,6 +1,7 @@
 package com.bjike.goddess.carinfo.service;
 
 import com.bjike.goddess.carinfo.bo.AreaBO;
+import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.bo.OptionBO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -37,7 +38,7 @@ public interface CollectCarinfoSer extends Ser<CollectCarinfo, CollectCarinfoDTO
     /**
      * 司机信息累计汇总
      */
-    List<AreaBO> allCollect(Integer year) throws SerException;
+    List<AreaBO> allCollect(String endDate) throws SerException;
 
     /**
      * 图形化司机信息日汇总
@@ -58,5 +59,7 @@ public interface CollectCarinfoSer extends Ser<CollectCarinfo, CollectCarinfoDTO
      * 图形化累计四季信息汇总
      */
     OptionBO figrureShowTotal(String day) throws SerException;
+
+
 
  }

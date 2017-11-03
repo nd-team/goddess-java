@@ -72,8 +72,8 @@ public class DriverRecruitAct {
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) DriverRecruitTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            DriverRecruitVO voList = BeanTransform.copyProperties(driverRecruitAPI.save(to), DriverRecruitVO.class, request);
-            return ActResult.initialize(voList);
+            driverRecruitAPI.save(to);
+            return new ActResult("新增成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -140,7 +140,8 @@ public class DriverRecruitAct {
     @GetMapping("v1/find/{id}")
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            DriverRecruitVO vo = BeanTransform.copyProperties(driverRecruitAPI.findById(id), DriverRecruitVO.class, request);
+            DriverRecruitBO driverRecruitBO = driverRecruitAPI.findOne(id);
+            DriverRecruitVO vo = BeanTransform.copyProperties(driverRecruitBO,DriverRecruitVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -38,7 +38,7 @@ public class DriverRecruitVO {
     /**
      * 信息收集时间
      */
-    private String informationCollectionTime;
+    private String informationCollecttionTime;
 
     /**
      * 司机名称
@@ -119,6 +119,12 @@ public class DriverRecruitVO {
      * 行驶证所有者
      */
     private String travelName;
+
+
+    /**
+     * 结算方式
+     */
+    private String meansOfPayments;
 
     /**
      * 是否提供驾驶证照片
@@ -316,13 +322,6 @@ public class DriverRecruitVO {
         this.department = department;
     }
 
-    public String getInformationCollectionTime() {
-        return informationCollectionTime;
-    }
-
-    public void setInformationCollectionTime(String informationCollectionTime) {
-        this.informationCollectionTime = informationCollectionTime;
-    }
 
     public Boolean getEnSureAgreement() {
         return enSureAgreement;
@@ -330,5 +329,21 @@ public class DriverRecruitVO {
 
     public void setEnSureAgreement(Boolean enSureAgreement) {
         this.enSureAgreement = enSureAgreement;
+    }
+
+    public String getMeansOfPayments() {
+        return meansOfPayments;
+    }
+
+    public void setMeansOfPayments(String meansOfPayments) {
+        this.meansOfPayments = meansOfPayments;
+    }
+
+    public String getInformationCollecttionTime() {
+        return informationCollecttionTime;
+    }
+
+    public void setInformationCollecttionTime(String informationCollecttionTime) {
+        this.informationCollecttionTime = informationCollecttionTime;
     }
 }

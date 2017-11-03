@@ -39,7 +39,7 @@ public interface DriverRecruitSer extends Ser<DriverRecruit, DriverRecruitDTO> {
      *
      * @param to 司机招聘信息
      */
-    DriverRecruitBO insertModel(DriverRecruitTO to) throws SerException;
+    void insertModel(DriverRecruitTO to) throws SerException;
 
     /**
      * 更新
@@ -63,4 +63,11 @@ public interface DriverRecruitSer extends Ser<DriverRecruit, DriverRecruitDTO> {
      * @param audit   结果
      */
     void audit(String id, String suggest, Boolean audit) throws SerException;
+
+
+    /**
+     * 根据Id查询
+     * @param id id
+     */
+    DriverRecruitBO findOne(String id) throws SerException;
 }

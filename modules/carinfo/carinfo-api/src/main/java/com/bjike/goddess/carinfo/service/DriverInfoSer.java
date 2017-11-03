@@ -78,4 +78,9 @@ public interface DriverInfoSer extends Ser<DriverInfo, DriverInfoDTO> {
      * 拷贝旧服务器上的数据到本地
      */
     void copyDriver() throws SerException;
+
+    /**
+     * 根据司机姓名获取是否提供行驶证照片-是否提供驾驶证照片-是否提供车辆保险－是否提供协议附件－是否签订租车协议的信息
+     */
+    DriverInfoBO findByName(String name) throws SerException;
 }

@@ -1,6 +1,7 @@
 package com.bjike.goddess.carinfo.action.carinfo;
 
 import com.bjike.goddess.carinfo.api.DriverInfoAPI;
+import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.carinfo.dto.DriverInfoDTO;
 import com.bjike.goddess.carinfo.excel.SonPermissionObject;
 import com.bjike.goddess.carinfo.to.DriverInfoTO;
@@ -244,6 +245,25 @@ public class DriverInfoAct {
         try {
             driverInfoAPI.copyDriver();
             return new ActResult("拷贝成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据司机姓名获取是否提供行驶证照片-是否提供驾驶证照片-是否提供车辆保险－是否提供协议附件－是否签订租车协议的信息
+     * @param name 司机姓名
+     * @return class DriverInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/driver")
+    public Result findDriver(String name) throws ActException{
+        try {
+            DriverInfoBO driverInfoBO = driverInfoAPI.findByName(name);
+            DriverInfoVO driverInfoVO = BeanTransform.copyProperties(driverInfoBO,DriverInfoVO.class);
+            return ActResult.initialize(driverInfoVO);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
