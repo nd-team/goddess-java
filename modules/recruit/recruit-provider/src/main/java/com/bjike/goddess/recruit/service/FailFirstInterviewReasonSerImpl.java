@@ -52,10 +52,6 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
     @Autowired
     private NotEntryReasonSer notEntryReasonSer;
     @Autowired
-    private RecruitDemandSer recruitDemandSer;
-    @Autowired
-    private RecruitPlanSer recruitPlanSer;
-    @Autowired
     private RecruitProSer recruitProSer;
     @Autowired
     private RecruitWaySer recruitWaySer;
@@ -63,6 +59,8 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
     private ReportAddressInforSer reportAddressInforSer;
     @Autowired
     private TemplateManageSer templateManageSer;
+    @Autowired
+    private RecruitDemandPlanSer recruitDemandPlanSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -270,25 +268,13 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeR = recruitDemandSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("recruitdemand");
-        obj.setDescribesion("招聘需求");
-        if (flagSeeR) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
 
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeRp = recruitPlanSer.sonPermission();
+        Boolean flagSeeRp = recruitDemandPlanSer.sonPermission();
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
-        obj.setName("recruitplan");
-        obj.setDescribesion("招聘计划");
+        obj.setName("recruitdemandplan");
+        obj.setDescribesion("招聘需求与计划");
         if (flagSeeRp) {
             obj.setFlag(true);
         } else {

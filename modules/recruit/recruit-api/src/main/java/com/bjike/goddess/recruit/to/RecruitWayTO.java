@@ -26,6 +26,10 @@ public class RecruitWayTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "招聘渠道不能为空")
     private String recruitName;
+    /**
+     * 招聘网站
+     */
+    private String recruitSite;
 
     /**
      * 会员名
@@ -101,6 +105,14 @@ public class RecruitWayTO extends BaseTO {
      * 备注
      */
     private String remarks;
+
+    public String getRecruitSite() {
+        return recruitSite;
+    }
+
+    public void setRecruitSite(String recruitSite) {
+        this.recruitSite = recruitSite;
+    }
 
     public String getChannelTime() {
         return channelTime;

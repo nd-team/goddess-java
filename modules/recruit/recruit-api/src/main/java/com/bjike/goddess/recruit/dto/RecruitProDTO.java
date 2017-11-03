@@ -12,4 +12,28 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class RecruitProDTO extends BaseDTO {
+    /**
+     * 招聘网站
+     */
+    private String recruitSite;
+    /**
+     * 是否签订合同
+     */
+    private Boolean haveContract;
+
+    public String getRecruitSite() {
+        return recruitSite;
+    }
+
+    public void setRecruitSite(String recruitSite) {
+        this.recruitSite = recruitSite;
+    }
+
+    public Boolean getHaveContract() {
+        return haveContract;
+    }
+
+    public void setHaveContract(Boolean haveContract) {
+        this.haveContract = haveContract;
+    }
 }

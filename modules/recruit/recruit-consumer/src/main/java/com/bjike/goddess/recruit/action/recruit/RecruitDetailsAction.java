@@ -5,7 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.recruit.api.RecruitDemandPlanAPI;
-import com.bjike.goddess.recruit.bo.RecruitProgressBO;
+import com.bjike.goddess.recruit.bo.RecruitDetailsBO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -18,17 +18,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 招聘管理进度汇总
+ * 招聘管理详情汇总
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-10-30 03:52 ]
  * @Description: [ 招聘管理进度汇总 ]
- * @Version: [ v1.0.0 ]
+ * @Version: [ v1.0.招聘管理详情汇总 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
-@RequestMapping("recruitprogress")
-public class RecruitProgressAction {
+@RequestMapping("recruitdetails")
+public class RecruitDetailsAction {
     @Autowired
     private RecruitDemandPlanAPI recruitDemandPlanAPI;
 
@@ -57,16 +57,16 @@ public class RecruitProgressAction {
 
 
     /**
-     * 招聘管理日汇总
+     * 招聘详情日汇总
      *
      * @param time 招聘需求与计划dto
-     * @return class RecruitProgressBO
+     * @return class RecruitDetailsBO
      * @version v1
      */
-    @GetMapping("v1/dayCollect")
-    public Result dayCollect(String time) throws ActException {
+    @GetMapping("v1/dayRecruit")
+    public Result dayRecruit(String time) throws ActException {
         try {
-            List<RecruitProgressBO> boList = recruitDemandPlanAPI.dayCollect(time);
+            List<RecruitDetailsBO> boList = recruitDemandPlanAPI.dayRecruit(time);
             return ActResult.initialize(boList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -74,18 +74,18 @@ public class RecruitProgressAction {
     }
 
     /**
-     * 招聘管理周汇总
+     * 招聘详情周汇总
      *
      * @param year
      * @param month
      * @param week
-     * @return class RecruitProgressBO
+     * @return class RecruitDetailsBO
      * @version v1
      */
-    @GetMapping("v1/weekCollect")
-    public Result weekCollect(Integer year, Integer month, Integer week) throws ActException {
+    @GetMapping("v1/weekRecruit")
+    public Result weekRecruit(Integer year, Integer month, Integer week) throws ActException {
         try {
-            List<RecruitProgressBO> boList = recruitDemandPlanAPI.weekCollect(year, month, week);
+            List<RecruitDetailsBO> boList = recruitDemandPlanAPI.weekRecruit(year, month, week);
             return ActResult.initialize(boList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -93,17 +93,17 @@ public class RecruitProgressAction {
     }
 
     /**
-     * 招聘管理月汇总
+     * 招聘详情月汇总
      *
      * @param year
      * @param month
-     * @return class RecruitProgressBO
+     * @return class RecruitDetailsBO
      * @version v1
      */
-    @GetMapping("v1/monthCollect")
-    public Result monthCollect(Integer year, Integer month) throws ActException {
+    @GetMapping("v1/monthRecruit")
+    public Result monthRecruit(Integer year, Integer month) throws ActException {
         try {
-            List<RecruitProgressBO> boList = recruitDemandPlanAPI.monthCollect(year, month);
+            List<RecruitDetailsBO> boList = recruitDemandPlanAPI.monthRecruit(year, month);
             return ActResult.initialize(boList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -111,56 +111,18 @@ public class RecruitProgressAction {
     }
 
     /**
-     * 招聘管理季度汇总
+     * 获取所有岗位
      *
-     * @param year
-     * @param quarter
-     * @return class RecruitProgressBO
      * @version v1
      */
-    @GetMapping("v1/quarterCollect")
-    public Result quarterCollect(Integer year, Integer quarter) throws ActException {
+    @GetMapping("v1/getPosition")
+    public Result getPosition() throws ActException {
         try {
-            List<RecruitProgressBO> boList = recruitDemandPlanAPI.quarterCollect(year, quarter);
-            return ActResult.initialize(boList);
+            List<String> list = recruitDemandPlanAPI.getPosition();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
-    /**
-     * 招聘管理年汇总
-     *
-     * @param year
-     * @return class RecruitProgressBO
-     * @version v1
-     */
-    @GetMapping("v1/yearCollect")
-    public Result yearCollect(Integer year) throws ActException {
-        try {
-            List<RecruitProgressBO> boList = recruitDemandPlanAPI.yearCollect(year);
-            return ActResult.initialize(boList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 招聘管理累计汇总
-     *
-     * @param time 招聘需求与计划dto
-     * @return class RecruitProgressBO
-     * @version v1
-     */
-    @GetMapping("v1/totalCollect")
-    public Result totalCollect(String time) throws ActException {
-        try {
-            List<RecruitProgressBO> boList = recruitDemandPlanAPI.totalCollect(time);
-            return ActResult.initialize(boList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
 
 }

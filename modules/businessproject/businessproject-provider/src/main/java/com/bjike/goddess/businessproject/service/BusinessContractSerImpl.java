@@ -615,9 +615,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         sb.append(" a.innerProject AS innerProject,sum(a.makeMoney) AS makeMoney,sum(a.forecastMoney) AS forecastMoney, ");
         sb.append(" sum(a.scale) AS scale,sum(a.forecastRoundMoney) AS forecastRoundMoney, ");
         sb.append(" sum(a.forecastMarchMoney) AS forecastMarchMoney,sum(a.estimatedMarketLosses) AS estimatedMarketLosses, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum, ");
         sb.append(" sum(a.scaleContract) AS scaleContract,a.projectCharge AS projectCharge, ");
         sb.append(" a.majorCompany AS majorCompany,a.subCompany AS subCompany ");
         sb.append(" FROM ");
@@ -641,10 +641,14 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         Double forecastUnit = 0.0;
         //todo 结算完成金额，预估确认时间，预估转正时间，实际完成规模数量需求方也不知道从哪拿
         for (BusinessContractDetailBO bo : detailBOS) {
-            //立项总单价(立项总金额/合同规模数量)
-            makeUnit = bo.getMakeMoney() / bo.getScaleContract();
-            //预估单价(预估总金额/预估规模)
-            forecastUnit = bo.getForecastMoney() / bo.getScale();
+            if(bo.getMakeMoney() != null && bo.getScaleContract()!= null){
+                //立项总单价(立项总金额/合同规模数量)
+                makeUnit = bo.getMakeMoney() / bo.getScaleContract();
+            }
+            if(bo.getForecastMoney()!= null && bo.getScale()!= null){
+                //预估单价(预估总金额/预估规模)
+                forecastUnit = bo.getForecastMoney() / bo.getScale();
+            }
             bo.setMakeUnit(makeUnit);
             bo.setForecastUnit(forecastUnit);
             //未进场
@@ -2390,15 +2394,16 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
         return new String[]{startDate, endDate};
     }
-    private OptionBO companyMakeCaseFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+
+    private OptionBO companyMakeCaseFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<MakeCaseCollectFigureBO> figureBOS = new ArrayList<>();
         List<MakeCaseCollectFigureBO> caseCollectFigureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"majorCompany", "innerNameNum", "hadNum", "noNum", "notNum"};
         sb.append(" SELECT a.majorCompany AS majorCompany,a.innerNameNum AS innerNameNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum ");
         sb.append(" FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract,majorCompany AS majorCompany,count(innerProject) AS innerNameNum ");
         sb.append(" FROM businessproject_businesscontract ");
@@ -2644,9 +2649,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"projectGroup", "innerNameNum", "hadNum", "noNum", "notNum"};
         sb.append(" SELECT a.projectGroup AS projectGroup,a.innerNameNum AS innerNameNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum ");
         sb.append(" FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract,projectGroup AS projectGroup,count(innerProject) AS innerNameNum ");
         sb.append(" FROM businessproject_businesscontract ");
@@ -2768,9 +2773,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"area", "innerNameNum", "hadNum", "noNum", "notNum"};
         sb.append(" SELECT a.area AS area,a.innerNameNum AS innerNameNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum ");
         sb.append(" FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract,area AS area,count(innerProject) AS innerNameNum ");
         sb.append(" FROM businessproject_businesscontract ");
@@ -2885,7 +2890,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setSeries(text_4);
         return optionBO;
     }
-    private OptionMakeBO companyMakeFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+
+    private OptionMakeBO companyMakeFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<MakeCaseFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT majorCompany AS majorCompany,sum(taskMoney) AS taskMoney, ");
@@ -3217,7 +3223,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setSeries(text_4);
         return optionBO;
     }
-    private OptionBO companyScaleFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+
+    private OptionBO companyScaleFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<ScaleContractFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"majorCompany", "scaleContract"};
@@ -3522,9 +3529,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         sb.append(" SELECT a.area AS area,a.projectGroup AS projectGroup,sum(notTaskMoney) AS notTaskMoney, ");
         sb.append(" sum(a.hadTaskMoney) AS hadTaskMoney,sum(a.makeMoney) AS makeMoney,sum(forecastMoney) AS forecastMoney, ");
         sb.append(" sum(a.scale) AS scale,sum(a.forecastRoundMoney) AS forecastRoundMoney,sum(a.estimatedMarketLosses) AS estimatedMarketLosses, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum, ");
         sb.append(" sum(a.scaleContract) AS scaleContract FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract, ");
         sb.append(" area AS area,projectGroup AS  projectGroup,sum(forecastMoney) AS notTaskMoney, ");
@@ -3544,12 +3551,18 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         //todo 结算完成金额，清理派工归属数量,不需派工单但要跟进回款单数,不需派工单但要跟进回款金额,实际完成规模数量需求方也不知道从哪拿
         if (progressBOS != null) {
             for (BusinessContractProgressBO bo : progressBOS) {
-                //预估单价(预估总金额/预估规模)
-                forecastUnit = bo.getForecastMoney() / bo.getScale();
-                //立项总单价(立项总金额/合同规模数量)
-                makeUnit = bo.getMakeMoney() / bo.getScaleContract();
-                //总金额(立项总金额+预估总金额)
-                totalMoney = bo.getMakeMoney() + bo.getForecastMoney();
+                if (bo.getForecastMoney() != null && bo.getScale() != null) {
+                    //预估单价(预估总金额/预估规模)
+                    forecastUnit = bo.getForecastMoney() / bo.getScale();
+                }
+                if (bo.getMakeMoney() != null && bo.getScaleContract() != null) {
+                    //立项总单价(立项总金额/合同规模数量)
+                    makeUnit = bo.getMakeMoney() / bo.getScaleContract();
+                }
+                if (bo.getMakeMoney() != null && bo.getForecastMoney() != null) {
+                    //总金额(立项总金额+预估总金额)
+                    totalMoney = bo.getMakeMoney() + bo.getForecastMoney();
+                }
                 bo.setTotalMoney(totalMoney);
                 bo.setForecastUnit(forecastUnit);
                 bo.setMakeUnit(makeUnit);

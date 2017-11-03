@@ -13,7 +13,7 @@ import com.bjike.goddess.recruit.type.Gender;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class InterviewInforExcel extends BaseBO {
+public class InterviewInforExport extends BaseBO {
     /**
      * 日期
      */
@@ -52,7 +52,7 @@ public class InterviewInforExcel extends BaseBO {
      * 性别
      */
     @ExcelHeader(name = "性别")
-    private Gender gender;
+    private String gender;
 
     /**
      * 联系方式
@@ -291,11 +291,11 @@ public class InterviewInforExcel extends BaseBO {
         this.name = name;
     }
 
-    public Gender getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 

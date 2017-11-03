@@ -4,6 +4,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.recruit.type.Gender;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
  * 面试信息
  *
@@ -13,12 +16,12 @@ import com.bjike.goddess.recruit.type.Gender;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class InterviewInforExcel extends BaseBO {
+public class InterviewInforTemplateExcel extends BaseBO {
     /**
      * 日期
      */
     @ExcelHeader(name = "日期")
-    private String date;
+    private LocalDate date;
 
     /**
      * 简历来源
@@ -52,7 +55,7 @@ public class InterviewInforExcel extends BaseBO {
      * 性别
      */
     @ExcelHeader(name = "性别")
-    private Gender gender;
+    private String gender;
 
     /**
      * 联系方式
@@ -92,7 +95,7 @@ public class InterviewInforExcel extends BaseBO {
      * 邀约初试时间
      */
     @ExcelHeader(name = "邀约初试时间")
-    private String firstTestTime;
+    private LocalDateTime firstTestTime;
     /**
      * 初试负责人
      */
@@ -135,7 +138,7 @@ public class InterviewInforExcel extends BaseBO {
      * 复试时间
      */
     @ExcelHeader(name = "复试时间")
-    private String secondTestTime;
+    private LocalDateTime secondTestTime;
 
     /**
      * 复试负责人
@@ -159,7 +162,7 @@ public class InterviewInforExcel extends BaseBO {
      * 薪资面谈时间
      */
     @ExcelHeader(name = "薪资面谈时间")
-    private String salaryFaceTime;
+    private LocalDateTime salaryFaceTime;
 
     /**
      * 薪资面谈负责人
@@ -192,7 +195,7 @@ public class InterviewInforExcel extends BaseBO {
      * 审批时间
      */
     @ExcelHeader(name = "审批时间")
-    private String auditTime;
+    private LocalDate auditTime;
 
     /**
      * 是否接受录取
@@ -208,7 +211,7 @@ public class InterviewInforExcel extends BaseBO {
      * 入职时间
      */
     @ExcelHeader(name = "入职时间")
-    private String entryTime;
+    private LocalDate entryTime;
 
     /**
      * 是否住宿
@@ -243,12 +246,53 @@ public class InterviewInforExcel extends BaseBO {
     @ExcelHeader(name = "备注")
     private String comment;
 
-    public String getDate() {
+    public void setSecondTestTime(LocalDateTime secondTestTime) {
+        this.secondTestTime = secondTestTime;
+    }
+
+    public void setSecondTestPrincipal(String secondTestPrincipal) {
+        this.secondTestPrincipal = secondTestPrincipal;
+    }
+
+    public LocalDate getAuditTime() {
+        return auditTime;
+    }
+
+    public LocalDate getEntryTime() {
+        return entryTime;
+    }
+
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public LocalDateTime getFirstTestTime() {
+        return firstTestTime;
+    }
+
+    public void setFirstTestTime(LocalDateTime firstTestTime) {
+        this.firstTestTime = firstTestTime;
+    }
+
+
+    public LocalDateTime getSalaryFaceTime() {
+        return salaryFaceTime;
+    }
+
+    public void setSalaryFaceTime(LocalDateTime salaryFaceTime) {
+        this.salaryFaceTime = salaryFaceTime;
+    }
+
+    public void setAuditTime(LocalDate auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public void setEntryTime(LocalDate entryTime) {
+        this.entryTime = entryTime;
     }
 
     public String getResumeResource() {
@@ -291,11 +335,11 @@ public class InterviewInforExcel extends BaseBO {
         this.name = name;
     }
 
-    public Gender getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -347,13 +391,6 @@ public class InterviewInforExcel extends BaseBO {
         this.whetherFirstQuestionCorrect = whetherFirstQuestionCorrect;
     }
 
-    public String getFirstTestTime() {
-        return firstTestTime;
-    }
-
-    public void setFirstTestTime(String firstTestTime) {
-        this.firstTestTime = firstTestTime;
-    }
 
     public String getFirstTestPrincipal() {
         return firstTestPrincipal;
@@ -411,21 +448,7 @@ public class InterviewInforExcel extends BaseBO {
         this.whetherNeedSecondTest = whetherNeedSecondTest;
     }
 
-    public String getSecondTestTime() {
-        return secondTestTime;
-    }
 
-    public void setSecondTestTime(String secondTestTime) {
-        this.secondTestTime = secondTestTime;
-    }
-
-    public String getSecondTestPrincipal() {
-        return secondTestPrincipal;
-    }
-
-    public void setSecondTestPrincipal(String secondTestPrincipal) {
-        this.secondTestPrincipal = secondTestPrincipal;
-    }
 
     public String getSecondTestAdvice() {
         return secondTestAdvice;
@@ -443,13 +466,6 @@ public class InterviewInforExcel extends BaseBO {
         this.whetherSecondTestPass = whetherSecondTestPass;
     }
 
-    public String getSalaryFaceTime() {
-        return salaryFaceTime;
-    }
-
-    public void setSalaryFaceTime(String salaryFaceTime) {
-        this.salaryFaceTime = salaryFaceTime;
-    }
 
     public String getSalaryFacePrincipal() {
         return salaryFacePrincipal;
@@ -491,13 +507,6 @@ public class InterviewInforExcel extends BaseBO {
         this.agreedEmployed = agreedEmployed;
     }
 
-    public String getAuditTime() {
-        return auditTime;
-    }
-
-    public void setAuditTime(String auditTime) {
-        this.auditTime = auditTime;
-    }
 
     public String getWhetherAcceptAdmit() {
         return whetherAcceptAdmit;
@@ -513,14 +522,6 @@ public class InterviewInforExcel extends BaseBO {
 
     public void setDenyAdmitReason(String denyAdmitReason) {
         this.denyAdmitReason = denyAdmitReason;
-    }
-
-    public String getEntryTime() {
-        return entryTime;
-    }
-
-    public void setEntryTime(String entryTime) {
-        this.entryTime = entryTime;
     }
 
     public String getWhetherAccommodation() {

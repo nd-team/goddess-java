@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.recruit.bo.RecruitProBO;
@@ -9,6 +10,7 @@ import com.bjike.goddess.recruit.service.RecruitProSer;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitProTO;
 import com.bjike.goddess.recruit.type.AuditType;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,12 @@ public class RecruitProApiImpl implements RecruitProAPI {
      */
     @Override
     public Long count(RecruitProDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getRecruitSite())){
+            dto.getConditions().add(Restrict.like("recruitSite",dto.getRecruitSite()));
+        }
+        if(null != dto.getHaveContract()){
+            dto.getConditions().add(Restrict.eq("haveContract",dto.getHaveContract()));
+        }
         return recruitProSer.count(dto);
     }
 
