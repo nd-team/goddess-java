@@ -1094,7 +1094,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 throw new SerException("无需重复付款!");
             }
             model.setFindType(FindType.PAYED);
-            model.setIfPass(true);
+            model.setIfPayed(true);
 //            //付款后代表所有审核均通过，修改油余额
 //            //TODO 这里应该考虑分布式事务，联系焕来或贵钦解决该问题。 TCC
 //            OilCardBasicBO basicBO = oilCardBasicAPI.findByCode(model.getOilCardNumber());
@@ -1132,7 +1132,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         } else {
             //分组查询地区、项目组、项目
             proejctList = super.findBySql("select driver , project_group , project ,1 from dispatchcar_basicinfo group by driver , project_group , project ",
-                    DispatchCarInfo.class, new String[]{"area", "group", "project"});
+                    DispatchCarInfo.class, new String[]{"driver", "group", "project"});
         }
 
         List<DispatchCollectBO> returnList = new ArrayList<DispatchCollectBO>();
@@ -2958,7 +2958,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                         }
                         for (String date1 : date) {
                             String[] files = new String[]{"driver", "dispatchDate", "carRentalCost", "overWorkTime", "overWorkCost", "parkCost", "roadCost", "mealCost", "addOilAmountMoney"};
-                            StringBuilder sql = new StringBuilder("SELECT dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo dispatchcar" + " WHERE dispatchDate between '" + date1 + "/01/01 00:00:00 and '" + date1 + "/12/31 23:59:59' and " + dto.getCollectDispatchcarType().toString().toLowerCase() + " = '" + collectType + "'");
+                            StringBuilder sql = new StringBuilder("SELECT driver,dispatchDate,carRentalCost,overWorkTime,overWorkCost,parkCost,roadCost,mealCost,addOilAmountMoney FROM dispatchcar_basicinfo" + " WHERE dispatchDate between '" + date1 + "/01/01 00:00:00' and '" + date1 + "/12/31 23:59:59' and " + dto.getCollectDispatchcarType().toString().toLowerCase() + "='" + collectType + "'");
                             List<DispatchCarInfo> dispatchCarInfos2 = super.findBySql(sql.toString(), DispatchCarInfo.class, files);
                             if (dispatchCarInfos2 != null && dispatchCarInfos2.size() > 0) {
                                 collectDispatch(dispatchCarInfos2, collectDispatchcarBO);

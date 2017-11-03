@@ -10,10 +10,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.bo.PayDriverMoneyCollectBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.*;
+import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
 import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
 import com.bjike.goddess.dispatchcar.vo.PayDriverMoneyCollectVO;
@@ -101,8 +103,9 @@ public class WaitPayAct extends BaseFileAction{
     @GetMapping("v1/audit/{id}")
     public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAudit(id), AuditResultVO.class, request);
-            return ActResult.initialize(voList);
+            AuditDetailBO dispatchCarInfo =   dispatchCarInfoAPI.findAudit(id);
+            AuditDetailVO auditDetailVO = BeanTransform.copyProperties(dispatchCarInfo,AuditDetailVO.class);
+            return ActResult.initialize(auditDetailVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
