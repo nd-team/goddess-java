@@ -130,11 +130,11 @@ public class ImageCollectSerImpl extends ServiceImpl<ImageCollect,ImageCollectDT
                     staffPayCollect1 = stayUtilities.stream().filter(p -> p.getStaffPayCollect() != null).mapToDouble(p -> p.getStaffPayCollect()).sum();
                 }
                 Double staffPayCollect2 = 0.0;
-                String[] fields = new String[]{"waterStaffPay","energyStaffPay","gasStaffPay","waterStaffPrepay","energyStaffPrepay","gasStaffPrepay","staffPayCollect","staffVerifySureNumber","staffVerifyWrongNumber"};
-                StringBuilder sql = new StringBuilder("SELECT waterStaffPay,energyStaffPay,gasStaffPay,waterStaffPrepay,energyStaffPrepay ,gasStaffPrepay,staffPayCollect,staffVerifySureNumber,staffVerifyWrongNumber FROM ");
+                String[] fields = new String[]{"waterStaffPay","energyStaffPay","gasStaffPay","waterStaffPrepay","energyStaffPrepay","gasStaffPrepay","staffPayCollect"};
+                StringBuilder sql = new StringBuilder("SELECT waterStaffPay,energyStaffPay,gasStaffPay,waterStaffPrepay,energyStaffPrepay ,gasStaffPrepay,staffPayCollect FROM rentutilitiespay_stayutilities ");
                 sql.append("WHERE projectGroup='"+department+"' ");
-                sql.append("address='"+address+"' ");
-                sql.append("staffEndTime < '"+startTime[0]+"'");
+                sql.append("and address='"+address+"' ");
+                sql.append("and stayEndTime < '"+startTime[0]+"'");
                 List<StayUtilities> stayUtilities1 = stayUtilitiesSer.findBySql(sql.toString(),StayUtilities.class,fields);
                 if (stayUtilities1 != null && stayUtilities1.size() > 0){
                     staffPayCollect2 = stayUtilities1.stream().filter(p -> p.getStaffPayCollect() != null).mapToDouble(p -> p.getStaffPayCollect()).sum();
@@ -142,10 +142,10 @@ public class ImageCollectSerImpl extends ServiceImpl<ImageCollect,ImageCollectDT
 
                 Double staffPayCollect3 = 0.0;
 
-                StringBuilder sql2 = new StringBuilder("SELECT waterStaffPay,energyStaffPay,gasStaffPay,waterStaffPrepay,energyStaffPrepay ,gasStaffPrepay,staffPayCollect,staffVerifySureNumber,staffVerifyWrongNumber FROM ");
+                StringBuilder sql2 = new StringBuilder("SELECT waterStaffPay,energyStaffPay,gasStaffPay,waterStaffPrepay,energyStaffPrepay ,gasStaffPrepay,staffPayCollect FROM rentutilitiespay_stayutilities ");
                 sql2.append("WHERE projectGroup='"+department+"' ");
-                sql2.append("address='"+address+"' ");
-                sql2.append("staffStartTime > '"+startTime[1]+"'");
+                sql2.append("and address='"+address+"' ");
+                sql2.append("and stayStartTime > '"+startTime[1]+"'");
                 List<StayUtilities> stayUtilities2 = stayUtilitiesSer.findBySql(sql.toString(),StayUtilities.class,fields);
                 if (stayUtilities1 != null && stayUtilities1.size() > 0){
                     staffPayCollect3 = stayUtilities2.stream().filter(p -> p.getStaffPayCollect() != null).mapToDouble(p -> p.getStaffPayCollect()).sum();

@@ -28,7 +28,7 @@ public class StencilVO {
     /**
      * 通报对象时间
      */
-    private LocalDate notificationDate;
+    private String notificationDate;
 
     /**
      * 通报内容
@@ -69,11 +69,11 @@ public class StencilVO {
         this.notificationObject = notificationObject;
     }
 
-    public LocalDate getNotificationDate() {
+    public String getNotificationDate() {
         return notificationDate;
     }
 
-    public void setNotificationDate(LocalDate notificationDate) {
+    public void setNotificationDate(String notificationDate) {
         this.notificationDate = notificationDate;
     }
 
