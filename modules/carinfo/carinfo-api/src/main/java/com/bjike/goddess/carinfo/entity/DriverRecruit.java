@@ -50,8 +50,8 @@ public class DriverRecruit extends BaseEntity {
     /**
      * 信息收集时间
      */
-    @Column(name = "informatioCollectionTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '信息收集时间'")
-    private LocalDate informatioCollectionTime;
+    @Column(name = "informationCollecttionTime", nullable = false, columnDefinition = "DATE   COMMENT '信息收集时间'")
+    private LocalDate informationCollecttionTime;
 
     /**
      * 司机名称
@@ -357,12 +357,12 @@ public class DriverRecruit extends BaseEntity {
         this.department = department;
     }
 
-    public LocalDate getInformatioCollectionTime() {
-        return informatioCollectionTime;
+    public LocalDate getInformationCollecttionTime() {
+        return informationCollecttionTime;
     }
 
-    public void setInformatioCollectionTime(LocalDate informatioCollectionTime) {
-        this.informatioCollectionTime = informatioCollectionTime;
+    public void setInformationCollecttionTime(LocalDate informationCollecttionTime) {
+        this.informationCollecttionTime = informationCollecttionTime;
     }
 
     public String getMeansOfPayments() {

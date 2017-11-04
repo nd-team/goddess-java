@@ -117,7 +117,7 @@ public class RentPayBO extends BaseBO {
     /**
      * 房租缴费方
      */
-    private String rentPay;
+    private PayParty rentPay;
 
     /**
      * 水费初期数目
@@ -393,11 +393,11 @@ public class RentPayBO extends BaseBO {
         this.rentEndTime = rentEndTime;
     }
 
-    public String getRentPay() {
+    public PayParty getRentPay() {
         return rentPay;
     }
 
-    public void setRentPay(String rentPay) {
+    public void setRentPay(PayParty rentPay) {
         this.rentPay = rentPay;
     }
 

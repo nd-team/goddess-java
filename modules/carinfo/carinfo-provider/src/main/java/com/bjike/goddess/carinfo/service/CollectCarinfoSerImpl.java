@@ -56,7 +56,7 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
         for (String area : areas ){
             AreaBO areaBO = new AreaBO();
             StringBuilder sql2 = new StringBuilder("select department ");
-            sql2.append("from carinfo_driverinfo");
+            sql2.append("from carinfo_driverinfo ");
             sql2.append("where area= '"+area+"'");
             List<DriverInfo> driverInfos = driverInfoSer.findBySql(sql2.toString(),DriverInfo.class,fields);
             Set<String> departments = driverInfos.stream().map(p -> p.getDepartment()).collect(Collectors.toSet());
@@ -75,41 +75,41 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 //todo 商务需求
                 //todo 项目需求
                 StringBuilder sql3 = new StringBuilder("select department ");
-                sql3.append("from rentcar_driverinfo");
-                sql3.append("where area= '"+area+"'");
+                sql3.append("from rentcar_driverinfo ");
+                sql3.append("where area= '"+area+"' ");
                 sql3.append("and department= '"+department+"' ");
-                sql3.append("and agreementStatus = '0'");
+                sql3.append("and agreementStatus = '1'");
                 List<DriverInfoBO> driverInfos1 = driverInfoSer.findBySql(sql3.toString(),DriverInfoBO.class,fields);
                 availalbeDriver = driverInfos1.size();
                 needDriver = availalbeDriver + businessDemand + projectDemand;
 
                 StringBuilder sql4 = new StringBuilder("select department ");
-                sql4.append("from carinfo_driverrecruit");
-                sql4.append("and area= '"+area+"'");
+                sql4.append("from carinfo_driverrecruit ");
+                sql4.append("where area='"+area+"' ");
                 sql4.append("and department= '"+department+"' ");
-                sql4.append("and enSureAgreement = '0'");
+                sql4.append("and enSureAgreement = '1'");
                 List<DriverRecruit> driverInfos2 = driverRecruitSer.findBySql(sql4.toString(),DriverRecruit.class,fields);
                 waitSignDealNumber = driverInfos2.size();
 
                 StringBuilder sql5 = new StringBuilder("select department ");
-                sql5.append("from carinfo_driverrecruit");
-                sql5.append("and area= '"+area+"'");
+                sql5.append("from carinfo_driverrecruit ");
+                sql5.append("where area='"+area+"' ");
                 sql5.append("and department= '"+department+"' ");
-                sql5.append("and informatioCollectionTime = '"+startDay+"' ");
+                sql5.append("and informationCollecttionTime = '"+startDay+"' ");
                 List<DriverRecruit> driverInfos3 = driverRecruitSer.findBySql(sql5.toString(),DriverRecruit.class,fields);
                 driverInformationCollect = driverInfos3.size();
 
-                sql5.append("and contact= '0' ");
+                sql5.append("and is_contact= '1' ");
                 List<DriverRecruit> driverInfos4 = driverRecruitSer.findBySql(sql5.toString(),DriverRecruit.class,fields);
                 driverContactNumber = driverInfos4.size();
 
 
                 StringBuilder sql6 = new StringBuilder("select department ");
-                sql6.append("from carinfo_driverrecruit");
-                sql6.append("and area= '"+area+"'");
+                sql6.append("from carinfo_driverrecruit ");
+                sql6.append("where area='"+area+"' ");
                 sql6.append("and department= '"+department+"' ");
-                sql6.append("and informatioCollectionTime = '"+startDay+"' ");
-                sql6.append("and contact= '1' ");
+                sql6.append("and informationCollecttionTime = '"+startDay+"' ");
+                sql6.append("and is_contact= '1' ");
                 List<DriverRecruit> driverInfos5 = driverRecruitSer.findBySql(sql6.toString(),DriverRecruit.class,fields);
                 waitDriverContactNumber = driverInfos5.size();
 
@@ -123,8 +123,10 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 collectCarinfoBO.setWaitDriverContactNumber(waitDriverContactNumber);
 
                 departmentBO.setCollectCarinfo(collectCarinfoBO);
+                departmentBO.setDepartment(department);
                 departmentBOS.add(departmentBO);
             }
+            areaBO.setDepartmentList(departmentBOS);
             areaBO.setArea(area);
             areaBOS.add(areaBO);
         }
@@ -160,15 +162,15 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
     }
 
     @Override
-    public List<AreaBO> allCollect(Integer year) throws SerException {
+    public List<AreaBO> allCollect(String day) throws SerException {
         LocalDate[] startYear = null;
-        if (year != null){
-            LocalDate startDate = DateUtil.parseDate(year+"-01-01");
-            LocalDate endDate = DateUtil.parseDate(year+"-12-31");
+        if (day != null){
+            LocalDate startDate = DateUtil.parseDate("1901-01-01");
+            LocalDate endDate = DateUtil.parseDate(day);
             startYear = new LocalDate[]{startDate,endDate};
         }else{
-            LocalDate startDate = DateUtil.getStartYear();
-            LocalDate endDate = DateUtil.getEndYear();
+            LocalDate startDate = DateUtil.parseDate("1901-01-01");
+            LocalDate endDate = LocalDate.now();
             startYear = new LocalDate[]{startDate,endDate};
         }
         return collect(startYear);
@@ -186,7 +188,7 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
         for (String area : areas ){
             AreaBO areaBO = new AreaBO();
             StringBuilder sql2 = new StringBuilder("select department ");
-            sql2.append("from carinfo_driverinfo");
+            sql2.append("from carinfo_driverinfo ");
             sql2.append("where area= '"+area+"'");
             List<DriverInfo> driverInfos = driverInfoSer.findBySql(sql2.toString(),DriverInfo.class,fields);
             Set<String> departments = driverInfos.stream().map(p -> p.getDepartment()).collect(Collectors.toSet());
@@ -205,24 +207,24 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 //todo 商务需求
                 //todo 项目需求
                 StringBuilder sql3 = new StringBuilder("select department ");
-                sql3.append("from rentcar_driverinfo");
-                sql3.append("where area= '"+area+"'");
+                sql3.append("from rentcar_driverinfo ");
+                sql3.append("where area='"+area+"' ");
                 sql3.append("and department= '"+department+"' ");
-                sql3.append("and agreementStatus = '0'");
+                sql3.append("and agreementStatus = '1'");
                 List<DriverInfoBO> driverInfos1 = driverInfoSer.findBySql(sql3.toString(),DriverInfoBO.class,fields);
                 availalbeDriver = driverInfos1.size();
                 needDriver = availalbeDriver + businessDemand + projectDemand;
 
                 StringBuilder sql4 = new StringBuilder("select department ");
-                sql4.append("from carinfo_driverrecruit");
-                sql4.append("and area= '"+area+"'");
+                sql4.append("from carinfo_driverrecruit ");
+                sql4.append("where area='"+area+"' ");
                 sql4.append("and department= '"+department+"' ");
-                sql4.append("and enSureAgreement = '0'");
+                sql4.append("and enSureAgreement = '1'");
                 List<DriverRecruit> driverInfos2 = driverRecruitSer.findBySql(sql4.toString(),DriverRecruit.class,fields);
                 waitSignDealNumber = driverInfos2.size();
 
                 DriverRecruitDTO driverRecruitDTO = new DriverRecruitDTO();
-                driverRecruitDTO.getConditions().add(Restrict.between("informatioCollectionTime",time));
+                driverRecruitDTO.getConditions().add(Restrict.between("informationCollecttionTime",time));
                 driverRecruitDTO.getConditions().add(Restrict.eq("area",area));
                 driverRecruitDTO.getConditions().add(Restrict.eq("department",department));
                 List<DriverRecruit> driverInfos3 = driverRecruitSer.findByCis(driverRecruitDTO);
@@ -236,7 +238,7 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 DriverRecruitDTO driverRecruitDTO1 = new DriverRecruitDTO();
                 driverRecruitDTO1.getConditions().add(Restrict.eq("area",area));
                 driverRecruitDTO1.getConditions().add(Restrict.eq("department",department));
-                driverRecruitDTO1.getConditions().add(Restrict.between("informatioCollectionTime",time));
+                driverRecruitDTO1.getConditions().add(Restrict.between("informationCollecttionTime",time));
                 driverRecruitDTO1.getConditions().add(Restrict.eq("contact",false));
                 List<DriverRecruit> driverInfos5 = driverRecruitSer.findByCis(driverRecruitDTO1);
                 waitDriverContactNumber = driverInfos5.size();
@@ -251,8 +253,10 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 collectCarinfoBO.setWaitDriverContactNumber(waitDriverContactNumber);
 
                 departmentBO.setCollectCarinfo(collectCarinfoBO);
+                departmentBO.setDepartment(department);
                 departmentBOS.add(departmentBO);
             }
+            areaBO.setDepartmentList(departmentBOS);
             areaBO.setArea(area);
             areaBOS.add(areaBO);
         }
@@ -342,22 +346,22 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 //todo 商务需求
                 //todo 项目需求
                 StringBuilder sql3 = new StringBuilder("select department ");
-                sql3.append("from rentcar_driverinfo");
-                sql3.append("and department= '"+department+"' ");
-                sql3.append("and agreementStatus = '0'");
+                sql3.append("from rentcar_driverinfo ");
+                sql3.append("where department='"+department+"' ");
+                sql3.append("and agreementStatus = '1'");
                 List<DriverInfoBO> driverInfos1 = driverInfoSer.findBySql(sql3.toString(),DriverInfoBO.class,fields);
                 availalbeDriver = driverInfos1.size();
                 needDriver = availalbeDriver + businessDemand + projectDemand;
 
                 StringBuilder sql4 = new StringBuilder("select department ");
-                sql4.append("from carinfo_driverrecruit");
-                sql4.append("and department= '"+department+"' ");
-                sql4.append("and enSureAgreement = '0'");
+                sql4.append("from carinfo_driverrecruit ");
+                sql4.append("where department= '"+department+"' ");
+                sql4.append("and enSureAgreement = '1'");
                 List<DriverRecruit> driverInfos2 = driverRecruitSer.findBySql(sql4.toString(),DriverRecruit.class,fields);
                 waitSignDealNumber = driverInfos2.size();
 
                 DriverRecruitDTO driverRecruitDTO = new DriverRecruitDTO();
-                driverRecruitDTO.getConditions().add(Restrict.between("informatioCollectionTime",startTime));
+                driverRecruitDTO.getConditions().add(Restrict.between("informationCollecttionTime",startTime));
                 driverRecruitDTO.getConditions().add(Restrict.eq("department",department));
                 List<DriverRecruit> driverInfos3 = driverRecruitSer.findByCis(driverRecruitDTO);
                 driverInformationCollect = driverInfos3.size();
@@ -369,7 +373,7 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
 
                 DriverRecruitDTO driverRecruitDTO1 = new DriverRecruitDTO();
                 driverRecruitDTO1.getConditions().add(Restrict.eq("department",department));
-                driverRecruitDTO1.getConditions().add(Restrict.between("informatioCollectionTime",startTime));
+                driverRecruitDTO1.getConditions().add(Restrict.between("informationCollecttionTime",startTime));
                 driverRecruitDTO1.getConditions().add(Restrict.eq("contact",false));
                 List<DriverRecruit> driverInfos5 = driverRecruitSer.findByCis(driverRecruitDTO1);
                 waitDriverContactNumber = driverInfos5.size();
@@ -384,6 +388,7 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
                 collectCarinfoBO.setWaitDriverContactNumber(waitDriverContactNumber);
 
                 departmentBO.setCollectCarinfo(collectCarinfoBO);
+                departmentBO.setDepartment(department);
                 departmentBOS.add(departmentBO);
             }
 

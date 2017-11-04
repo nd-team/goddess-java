@@ -39,8 +39,8 @@ public class CollectCarinfoApiImpl implements CollectCarinfoAPI  {
     }
 
     @Override
-    public List<AreaBO> allCollect(Integer year) throws SerException {
-        return collectCarinfoSer.allCollect(year);
+    public List<AreaBO> allCollect(String endDate) throws SerException {
+        return collectCarinfoSer.allCollect(endDate);
     }
 
     @Override

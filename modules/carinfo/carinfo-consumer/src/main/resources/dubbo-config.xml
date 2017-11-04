@@ -37,6 +37,7 @@
     <dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.carinfo.api.CusPermissionAPI" />
     <dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.carinfo.api.CusPermissionOperateAPI" />
     <dubbo:reference  validation="true" id="carSendEmailApiImpl" interface="com.bjike.goddess.carinfo.api.CarSendEmailAPI" />
+    <dubbo:reference  validation="true" id="collectCarinfoApiImpl" interface="com.bjike.goddess.carinfo.api.CollectCarinfoAPI" />
 
 
 

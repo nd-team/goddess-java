@@ -137,7 +137,7 @@ public class RentPayTO extends BaseTO {
     /**
      * 房租缴费方
      */
-    @NotBlank(message = "房租缴费方不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "房租缴费方不能为空",groups = {ADD.class, EDIT.class})
     private PayParty rentPay;
 
     /**
@@ -183,7 +183,7 @@ public class RentPayTO extends BaseTO {
     /**
      * 水费缴费方
      */
-    @NotBlank(message = "水费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "水费缴费方不能为空",groups = {ADD.class, EDIT.class})
     private PayParty waterPay;
 
     /**
@@ -229,7 +229,7 @@ public class RentPayTO extends BaseTO {
     /**
      * 电费缴费方
      */
-    @NotBlank(message = "电费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "电费缴费方不能为空",groups = {ADD.class, EDIT.class})
     private PayParty energyPay;
 
     /**
@@ -253,7 +253,7 @@ public class RentPayTO extends BaseTO {
     /**
      * 燃气费缴费方
      */
-    @NotBlank(message = "燃气费缴费方不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "燃气费缴费方不能为空",groups = {ADD.class, EDIT.class})
     private PayParty gasPay;
 
     /**

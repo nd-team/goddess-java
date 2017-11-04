@@ -82,4 +82,9 @@ public class DriverInfoApiImpl implements DriverInfoAPI {
     public void copyDriver() throws SerException {
         driverInfoSer.copyDriver();
     }
+
+    @Override
+    public DriverInfoBO findByName(String name) throws SerException {
+        return driverInfoSer.findByName(name);
+    }
 }

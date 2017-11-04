@@ -420,4 +420,28 @@ public class StayUtilities extends BaseEntity {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public Double getWaterStaffPrepay() {
+        return waterStaffPrepay;
+    }
+
+    public void setWaterStaffPrepay(Double waterStaffPrepay) {
+        this.waterStaffPrepay = waterStaffPrepay;
+    }
+
+    public Double getEnergyStaffPrepay() {
+        return energyStaffPrepay;
+    }
+
+    public void setEnergyStaffPrepay(Double energyStaffPrepay) {
+        this.energyStaffPrepay = energyStaffPrepay;
+    }
+
+    public Double getGasStaffPrepay() {
+        return gasStaffPrepay;
+    }
+
+    public void setGasStaffPrepay(Double gasStaffPrepay) {
+        this.gasStaffPrepay = gasStaffPrepay;
+    }
 }

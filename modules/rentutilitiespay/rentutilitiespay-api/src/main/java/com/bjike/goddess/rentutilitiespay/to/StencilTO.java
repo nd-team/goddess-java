@@ -1,7 +1,11 @@
 package com.bjike.goddess.rentutilitiespay.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -16,31 +20,37 @@ public class StencilTO extends BaseTO {
     /**
      * 通报对象
      */
+    @NotBlank(message = "通报对象不能为空",groups = {ADD.class, EDIT.class})
     private String  notificationPeople;
 
     /**
      * 通报对象邮箱
      */
+    @NotBlank(message = "通报对象邮箱不能为空",groups = {ADD.class, EDIT.class})
     private String  notificationObject;
 
     /**
      * 通报对象时间
      */
-    private LocalDate notificationDate;
+    @NotBlank(message = "通报对象时间不能为空",groups = {ADD.class, EDIT.class})
+    private String notificationDate;
 
     /**
      * 通报内容
      */
+    @NotBlank(message = "通报内容不能为空",groups = {ADD.class, EDIT.class})
     private String  content;
 
     /**
      * 通报模板
      */
+    @NotBlank(message = "通报模板不能为空",groups = {ADD.class, EDIT.class})
     private String  stencil;
 
     /**
      * 例子
      */
+    @NotBlank(message = "例子不能为空",groups = {ADD.class, EDIT.class})
     private String  example;
 
     public String getNotificationPeople() {
@@ -59,11 +69,11 @@ public class StencilTO extends BaseTO {
         this.notificationObject = notificationObject;
     }
 
-    public LocalDate getNotificationDate() {
+    public String getNotificationDate() {
         return notificationDate;
     }
 
-    public void setNotificationDate(LocalDate notificationDate) {
+    public void setNotificationDate(String notificationDate) {
         this.notificationDate = notificationDate;
     }
 
