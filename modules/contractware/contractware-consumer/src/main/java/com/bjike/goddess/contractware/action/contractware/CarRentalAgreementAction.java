@@ -46,6 +46,7 @@ public class CarRentalAgreementAction extends BaseFileAction{
     private CarRentalAgreementAPI carRentalAgreementAPI;
     @Autowired
     private FileAPI fileAPI;
+
     /**
      * 功能导航权限
      * @param guidePermissionTO 导航类型数据
