@@ -36,6 +36,18 @@ public class DriverRecruitTO extends BaseTO {
     @NotBlank(message = "信息收集时间不能为空",groups = {ADD.class, EDIT.class})
     private String informationCollecttionTime;
 
+    /**
+     * 是否确定签订协议
+     */
+    @NotNull(message = "是否确定签订协议不能为空",groups = {ADD.class,EDIT.class})
+    private Boolean enSureAgreement;
+
+    /**
+     * 结算方式
+     */
+    @NotBlank(message = "结算方式不能为空",groups = {ADD.class,EDIT.class})
+    private String meansOfPayments;
+
 
     /**
      * 司机名称
@@ -326,5 +338,21 @@ public class DriverRecruitTO extends BaseTO {
 
     public void setInformationCollecttionTime(String informationCollecttionTime) {
         this.informationCollecttionTime = informationCollecttionTime;
+    }
+
+    public Boolean getEnSureAgreement() {
+        return enSureAgreement;
+    }
+
+    public void setEnSureAgreement(Boolean enSureAgreement) {
+        this.enSureAgreement = enSureAgreement;
+    }
+
+    public String getMeansOfPayments() {
+        return meansOfPayments;
+    }
+
+    public void setMeansOfPayments(String meansOfPayments) {
+        this.meansOfPayments = meansOfPayments;
     }
 }

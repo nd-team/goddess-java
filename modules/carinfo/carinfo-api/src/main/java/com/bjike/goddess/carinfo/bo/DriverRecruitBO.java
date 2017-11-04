@@ -32,7 +32,7 @@ public class DriverRecruitBO extends BaseBO {
     /**
      * 信息收集时间
      */
-    private String informationCollectionTime;
+    private String informationCollecttionTime;
 
 //    /**
 //     * 审核结果
@@ -329,11 +329,11 @@ public class DriverRecruitBO extends BaseBO {
         this.meansOfPayments = meansOfPayments;
     }
 
-    public String getInformationCollectionTime() {
-        return informationCollectionTime;
+    public String getInformationCollecttionTime() {
+        return informationCollecttionTime;
     }
 
-    public void setInformationCollectionTime(String informationCollectionTime) {
-        this.informationCollectionTime = informationCollectionTime;
+    public void setInformationCollecttionTime(String informationCollecttionTime) {
+        this.informationCollecttionTime = informationCollecttionTime;
     }
 }

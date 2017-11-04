@@ -232,20 +232,30 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
         DriverInfo driverInfo = findByIdCard(to.getIdCard());
         if (driverInfo == null) {
             DriverInfo model = BeanTransform.copyProperties(to, DriverInfo.class, true);
-            if (moduleAPI.isCheck("carinfo")){
-                com.bjike.goddess.rentcar.bo.DriverInfoBO driverInfoBO = driverInfoAPI.findByName(to.getDriver());
-                model.setAgreement(driverInfoBO.getAgreement());
-                model.setAttachment(driverInfoBO.getAttachment());
-                model.setTravel(driverInfoBO.getTravel());
-                model.setDriverLicense(driverInfoBO.getDriverLicense());
-                model.setCarInsurance(driverInfoBO.getCarInsurance());
-            }
             super.save(model);
             to.setId(model.getId());
             return BeanTransform.copyProperties(to, DriverInfoBO.class);
         } else {
             throw new SerException("该身份证号码对应的司机已存在!");
         }
+    }
+
+    @Override
+    public DriverInfoBO findByName(String name) throws SerException {
+        DriverInfoBO model = new DriverInfoBO();
+        String userToken = RpcTransmit.getUserToken();
+        if (moduleAPI.isCheck("rentcar")){
+            RpcTransmit.transmitUserToken(userToken);
+            com.bjike.goddess.rentcar.bo.DriverInfoBO driverInfoBO = driverInfoAPI.findByName(name);
+            model.setAgreement(driverInfoBO.getAgreement());
+            model.setAttachment(driverInfoBO.getAttachment());
+            model.setTravel(driverInfoBO.getTravel());
+            model.setDriverLicense(driverInfoBO.getDriverLicense());
+            model.setCarInsurance(driverInfoBO.getCarInsurance());
+        }else {
+            throw new SerException("请去模块关联设置模块关联");
+        }
+        return model;
     }
 
     public DriverInfo findByIdCard(String idCard) throws SerException {
@@ -263,14 +273,6 @@ public class DriverInfoSerImpl extends ServiceImpl<DriverInfo, DriverInfoDTO> im
             DriverInfo driverInfo = findByIdCard(to.getIdCard());
             if (driverInfo == null || (driverInfo != null && driverInfo.getId().equals(model.getId()))) {
                 BeanTransform.copyProperties(to, model, true);
-                if (moduleAPI.isCheck("carinfo")){
-                    com.bjike.goddess.rentcar.bo.DriverInfoBO driverInfoBO = driverInfoAPI.findByName(to.getDriver());
-                    model.setAgreement(driverInfoBO.getAgreement());
-                    model.setAttachment(driverInfoBO.getAttachment());
-                    model.setTravel(driverInfoBO.getTravel());
-                    model.setDriverLicense(driverInfoBO.getDriverLicense());
-                    model.setCarInsurance(driverInfoBO.getCarInsurance());
-                }
                 model.setRemark(to.getRemark());
                 model.setModifyTime(LocalDateTime.now());
                 super.update(model);

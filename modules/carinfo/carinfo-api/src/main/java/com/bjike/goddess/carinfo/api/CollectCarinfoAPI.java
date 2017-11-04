@@ -34,7 +34,7 @@ public interface CollectCarinfoAPI  {
     /**
      * 司机信息累计汇总
      */
-    List<AreaBO> allCollect(Integer year) throws SerException;
+    List<AreaBO> allCollect(String endDate) throws SerException;
 
     /**
      * 图形化司机信息日汇总
@@ -52,7 +52,7 @@ public interface CollectCarinfoAPI  {
     OptionBO figureShowMonth(Integer year,Integer month) throws SerException;
 
     /**
-     * 图形化累计四季信息汇总
+     * 图形化累计司机信息汇总
      */
     OptionBO figrureShowTotal(String day) throws SerException;
 }

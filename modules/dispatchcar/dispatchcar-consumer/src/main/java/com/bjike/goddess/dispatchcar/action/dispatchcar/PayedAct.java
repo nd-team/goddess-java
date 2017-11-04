@@ -9,7 +9,9 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
+import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.bo.CollectDispatchcarBO;
+import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.bo.PayedCollectBO;
 import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
@@ -17,10 +19,7 @@ import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.DispatchcarDeleteFileTO;
 import com.bjike.goddess.dispatchcar.to.ExportDispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
-import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
-import com.bjike.goddess.dispatchcar.vo.CollectDispatchcarVO;
-import com.bjike.goddess.dispatchcar.vo.DispatchCarInfoVO;
-import com.bjike.goddess.dispatchcar.vo.PayedCollectVO;
+import com.bjike.goddess.dispatchcar.vo.*;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -89,7 +88,8 @@ public class PayedAct extends BaseFileAction{
     public Result pageList(DispatchCarInfoDTO dto, HttpServletRequest request) throws ActException {
         try {
             dto.getConditions().add(Restrict.eq("findType", FindType.PAYED));
-            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.pageList(dto), DispatchCarInfoVO.class);
+            List<DispatchCarInfoBO> boList = dispatchCarInfoAPI.pageList(dto);
+            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(boList, DispatchCarInfoVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -106,8 +106,10 @@ public class PayedAct extends BaseFileAction{
     @GetMapping("v1/audit/{id}")
     public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<AuditResultVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.findAuditResult(id), AuditResultVO.class, request);
-            return ActResult.initialize(voList);
+
+            AuditDetailBO dispatchCarInfo =   dispatchCarInfoAPI.findAudit(id);
+            AuditDetailVO auditDetailVO = BeanTransform.copyProperties(dispatchCarInfo,AuditDetailVO.class);
+            return ActResult.initialize(auditDetailVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -245,7 +247,7 @@ public class PayedAct extends BaseFileAction{
         try {
             List<CollectDispatchcarBO> collectDispatchcarBOS = dispatchCarInfoAPI.countCar(dispatchcarDTO);
             List<CollectDispatchcarVO> collectDispatchcarVOS = BeanTransform.copyProperties(collectDispatchcarBOS,CollectDispatchcarVO.class);
-            return ActResult.initialize(collectDispatchcarBOS);
+            return ActResult.initialize(collectDispatchcarVOS);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

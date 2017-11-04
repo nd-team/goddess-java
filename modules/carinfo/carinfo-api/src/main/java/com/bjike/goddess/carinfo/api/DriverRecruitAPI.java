@@ -38,7 +38,7 @@ public interface DriverRecruitAPI {
      * @return
      * @throws SerException
      */
-    DriverRecruitBO save(DriverRecruitTO to) throws SerException;
+    void save(DriverRecruitTO to) throws SerException;
 
     /**
      * 编辑
@@ -65,7 +65,7 @@ public interface DriverRecruitAPI {
      * 根据Id查询
      * @param id id
      */
-    DriverRecruitBO findById(String id) throws SerException;
+    DriverRecruitBO findOne(String id) throws SerException;
 
     /**
      * 列表

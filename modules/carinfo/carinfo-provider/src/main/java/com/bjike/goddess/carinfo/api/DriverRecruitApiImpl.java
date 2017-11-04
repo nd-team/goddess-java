@@ -37,8 +37,8 @@ public class DriverRecruitApiImpl implements DriverRecruitAPI {
     }
 
     @Override
-    public DriverRecruitBO save(DriverRecruitTO to) throws SerException {
-        return driverRecruitSer.insertModel(to);
+    public void save(DriverRecruitTO to) throws SerException {
+         driverRecruitSer.insertModel(to);
     }
 
     @Override
@@ -57,8 +57,8 @@ public class DriverRecruitApiImpl implements DriverRecruitAPI {
     }
 
     @Override
-    public DriverRecruitBO findById(String id) throws SerException {
-        return BeanTransform.copyProperties(driverRecruitSer.findById(id), DriverRecruitBO.class);
+    public DriverRecruitBO findOne(String id) throws SerException {
+        return driverRecruitSer.findOne(id);
     }
 
     @Override

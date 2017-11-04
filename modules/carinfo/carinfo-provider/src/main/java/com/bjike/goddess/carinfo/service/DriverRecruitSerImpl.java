@@ -188,12 +188,10 @@ public class DriverRecruitSerImpl extends ServiceImpl<DriverRecruit, DriverRecru
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public DriverRecruitBO insertModel(DriverRecruitTO to) throws SerException {
+    public void insertModel(DriverRecruitTO to) throws SerException {
         checkAddIdentity();
         DriverRecruit model = BeanTransform.copyProperties(to, DriverRecruit.class, true);
         super.save(model);
-        to.setId(model.getId());
-        return BeanTransform.copyProperties(to, DriverRecruitBO.class);
     }
 
     @Override
@@ -249,4 +247,10 @@ public class DriverRecruitSerImpl extends ServiceImpl<DriverRecruit, DriverRecru
 //        }
     }
 
+    @Override
+    public DriverRecruitBO findOne(String id) throws SerException {
+        DriverRecruit model = super.findById(id);
+        DriverRecruitBO driverRecruitBO = BeanTransform.copyProperties(model,DriverRecruitBO.class,false);
+        return driverRecruitBO;
+    }
 }
