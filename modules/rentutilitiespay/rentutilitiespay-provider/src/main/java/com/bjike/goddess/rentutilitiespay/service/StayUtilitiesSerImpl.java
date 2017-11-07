@@ -369,22 +369,25 @@ public class StayUtilitiesSerImpl extends ServiceImpl<StayUtilities, StayUtiliti
         sb.append(" SELECT * FROM ");
         sb.append(" (SELECT name,num AS num,area AS area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(waterStaffPay) AS waterStaffPay,sum(energyStaffPay) AS energyStaffPay,sum(gasStaffPay)AS gasStaffPay, ");
-        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)) AS remark ");
+        sb.append(" sum(waterStaffPrepay) AS waterStaffPrepay,sum(energyStaffPrepay) AS energyStaffPrepay,sum(gasStaffPrepay) AS gasStaffPrepay, ");
+        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)+sum(waterStaffPrepay)+sum(energyStaffPrepay)+sum(gasStaffPrepay)) AS remark ");
         sb.append(" FROM rentutilitiespay_stayutilities WHERE name IN (%s) GROUP BY name,num,area,projectGroup,projectName,address, ");
         sb.append(" name ORDER BY name)A ");
         sb.append(" UNION ");
         sb.append(" SELECT '合计' AS name,NULL as num,NULL as area,NULL as projectGroup,NULL as projectName,NULL as address, ");
         sb.append(" sum(waterStaffPay) AS waterStaffPay,sum(energyStaffPay) AS energyStaffPay,sum(gasStaffPay)AS gasStaffPay, ");
-        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)) AS remark FROM ");
+        sb.append(" sum(waterStaffPrepay) AS waterStaffPrepay,sum(energyStaffPrepay) AS energyStaffPrepay,sum(gasStaffPrepay) AS gasStaffPrepay, ");
+        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)+sum(waterStaffPrepay)+sum(energyStaffPrepay)+sum(gasStaffPrepay)) AS remark FROM ");
         sb.append(" (SELECT name,num AS num,area AS area,projectGroup AS projectGroup,projectName AS projectName,address AS address, ");
         sb.append(" sum(waterStaffPay) AS waterStaffPay,sum(energyStaffPay) AS energyStaffPay,sum(gasStaffPay)AS gasStaffPay, ");
-        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)) AS remark ");
+        sb.append(" sum(waterStaffPrepay) AS waterStaffPrepay,sum(energyStaffPrepay) AS energyStaffPrepay,sum(gasStaffPrepay) AS gasStaffPrepay, ");
+        sb.append(" ( sum(waterStaffPay)+sum(energyStaffPay)+sum(gasStaffPay)+sum(waterStaffPrepay)+sum(energyStaffPrepay)+sum(gasStaffPrepay)) AS remark ");
         sb.append(" FROM rentutilitiespay_stayutilities WHERE name IN (%s) GROUP BY name,num,area,projectGroup,projectName,address, ");
         sb.append(" name ORDER BY name)A ");
         String sql = sb.toString();
         sql = String.format(sql, namesStr, namesStr);
         String[] fields = new String[]{"name", "num", "area", "projectGroup", "projectName", "address",
-                "waterStaffPay", "energyStaffPay", "gasStaffPay", "remark"};
+                "waterStaffPay", "energyStaffPay", "gasStaffPay","waterStaffPrepay","energyStaffPrepay","gasStaffPrepay","remark"};
         List<CollectNameBO> collectNameBOS = super.findBySql(sql, CollectNameBO.class, fields);
         return collectNameBOS;
     }

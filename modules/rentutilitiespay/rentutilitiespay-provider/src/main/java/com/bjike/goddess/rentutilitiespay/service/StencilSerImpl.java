@@ -37,7 +37,7 @@ public class StencilSerImpl extends ServiceImpl<Stencil, StencilDTO> implements 
     public void edit(StencilTO stencilTO) throws SerException {
         Stencil model = super.findById(stencilTO.getId());
         if (model != null){
-            BeanTransform.copyProperties(stencilTO,model,"createTime","modifyTime");
+            BeanTransform.copyProperties(stencilTO,model,true,"createTime","modifyTime");
             model.setModifyTime(LocalDateTime.now());
             super.update(model);
         }
