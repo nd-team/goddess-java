@@ -668,6 +668,42 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         }
     }
 
+    @Override
+    public void checkSendObjectHour() throws SerException {
+        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendDate", RecommInfoUpdateFreq.EVERYHOUR));
+        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+        if (list != null && list.size() > 0) {
+            for (VisitRecommSet visitRecommSet : list) {
+                int hour = visitRecommSet.getRecommInfoUpdateTime().getHour() - LocalDateTime.now().getHour();
+                int minutes = visitRecommSet.getRecommInfoUpdateTime().getMinute() - LocalDateTime.now().getMinute();
+                int ms = visitRecommSet.getRecommInfoUpdateTime().getSecond() - LocalDateTime.now().getSecond();
+                if (hour <= 0 && minutes == 0 && ms == 0) {
+                    weekData();
+                }
+                int sendHour = visitRecommSet.getRecommendDate().getHour() - LocalDateTime.now().getHour();
+                int sendMinutes = visitRecommSet.getRecommendDate().getMinute() - LocalDateTime.now().getMinute();
+                int sendMs = visitRecommSet.getRecommendDate().getSecond() - LocalDateTime.now().getSecond();
+                if (sendHour <= 0 && sendMinutes == 0 && sendMs == 0) {
+                    sendObject(visitRecommSet.getSendObject());
+                }
+            }
+        }
+    }
+    @Override
+    public void checkSendObjectDay() throws SerException {
+        return;
+    }
+    @Override
+    public void checkSendObjectWeek() throws SerException {
+        return;
+    }
+    @Override
+    public void checkSendObjectMonth() throws SerException {
+        return;
+    }
+
     private String get(int b, int a, List<CustomerBaseInfoBO> customerBaseInfoBOList) throws SerException {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = b; i <= a; i++) {
