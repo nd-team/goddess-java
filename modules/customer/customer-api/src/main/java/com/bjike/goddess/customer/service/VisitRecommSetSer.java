@@ -159,4 +159,8 @@ public interface VisitRecommSetSer extends Ser<VisitRecommSet, VisitRecommSetDTO
     default void checkSendObjectMonth() throws SerException {
         return;
     }
+    /**
+     * 定时器检测提醒发送
+     */
+    default void remindSend() throws SerException{return;}
 }

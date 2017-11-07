@@ -643,11 +643,11 @@ public class CustomerBaseInfo extends BaseEntity {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public LocalDate getRecommendVisitTime() {
+    public LocalDateTime getRecommendVisitTime() {
         return recommendVisitTime;
     }
 
-    public void setRecommendVisitTime(LocalDate recommendVisitTime) {
+    public void setRecommendVisitTime(LocalDateTime recommendVisitTime) {
         this.recommendVisitTime = recommendVisitTime;
     }
 

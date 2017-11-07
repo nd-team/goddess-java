@@ -1,6 +1,5 @@
 package com.bjike.goddess.customer.action.customer;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
