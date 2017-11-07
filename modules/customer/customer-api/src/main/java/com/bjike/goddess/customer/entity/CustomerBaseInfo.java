@@ -238,8 +238,8 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 推荐的拜访时间
      */
-    @Column(name = "recommendVisitTime", columnDefinition = "DATE   COMMENT '推荐的拜访时间'")
-    private LocalDate recommendVisitTime;
+    @Column(name = "recommendVisitTime", columnDefinition = "DATETIME   COMMENT '推荐的拜访时间'")
+    private LocalDateTime recommendVisitTime;
     /**
      * 拜访状态
      */

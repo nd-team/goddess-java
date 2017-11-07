@@ -111,9 +111,6 @@ public interface VisitRecommSetSer extends Ser<VisitRecommSet, VisitRecommSetDTO
         return null;
     }
 
-    ;
-
-
     /**
      * 定时器检测每小时要更新的权重
      */
