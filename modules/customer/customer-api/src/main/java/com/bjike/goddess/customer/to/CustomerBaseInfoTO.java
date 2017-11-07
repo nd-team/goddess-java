@@ -119,6 +119,11 @@ public class CustomerBaseInfoTO extends BaseTO {
     private String origanizationSize;
 
     /**
+     * 部门
+     */
+    private String department;
+
+    /**
      * 岗位
      */
     private String workPosition;
@@ -131,7 +136,8 @@ public class CustomerBaseInfoTO extends BaseTO {
     /**
      * 职权
      */
-    private String workRight;
+    @NotNull(message = "职权不能为空", groups = {ADD.class, EDIT.class})
+    private WorkRight workRight;
 
     /**
      * 生活地区
@@ -263,6 +269,11 @@ public class CustomerBaseInfoTO extends BaseTO {
      * 是否需进行市场招待
      */
     private Boolean proceedMarketTreat;
+    /**
+     * 拜访周期
+     */
+    @NotNull(message = "拜访周期不能为空")
+    private Integer callcyle;
 
     /**
      * 创建时间
@@ -419,6 +430,14 @@ public class CustomerBaseInfoTO extends BaseTO {
         this.origanizationSize = origanizationSize;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public String getWorkPosition() {
         return workPosition;
     }
@@ -435,11 +454,11 @@ public class CustomerBaseInfoTO extends BaseTO {
         this.workLevel = workLevel;
     }
 
-    public String getWorkRight() {
+    public WorkRight getWorkRight() {
         return workRight;
     }
 
-    public void setWorkRight(String workRight) {
+    public void setWorkRight(WorkRight workRight) {
         this.workRight = workRight;
     }
 
@@ -681,6 +700,14 @@ public class CustomerBaseInfoTO extends BaseTO {
 
     public void setMarketInfoRecord(String marketInfoRecord) {
         this.marketInfoRecord = marketInfoRecord;
+    }
+
+    public Integer getCallcyle() {
+        return callcyle;
+    }
+
+    public void setCallcyle(Integer callcyle) {
+        this.callcyle = callcyle;
     }
 
     public Boolean getProceedMarketTreat() {

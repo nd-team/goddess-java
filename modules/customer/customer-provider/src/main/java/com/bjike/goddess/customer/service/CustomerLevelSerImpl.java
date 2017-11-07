@@ -50,6 +50,26 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
     private CustomerDetailSer customerDetailSer;
     @Autowired
     private CusEmailSer cusEmailSer;
+    @Autowired
+    private AreaWeightSetSer areaWeightSetSer;
+    @Autowired
+    private BussTypeWeightSetSer bussTypeWeightSetSer;
+    @Autowired
+    private ClosenessFoactorSetSer closenessFoactorSetSer;
+    @Autowired
+    private CustomerContactWeightSetSer customerContactWeightSetSer;
+    @Autowired
+    private DifficultyFoactorSetSer difficultyFoactorSetSer;
+    @Autowired
+    private CustomerWeightFirstFactorSer customerWeightFirstFactorSer;
+    @Autowired
+    private FunPowerWeightFactorSer funPowerWeightFactorSer;
+    @Autowired
+    private TimelinessFactorSetSer timelinessFactorSetSer;
+    @Autowired
+    private VisitRecommSetSer visitRecommSetSer;
+    @Autowired
+    private VisitScheduleSer visitScheduleSer;
 
 
 
@@ -179,6 +199,104 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
         obj.setName("cusemail");
         obj.setDescribesion("邮件发送定制");
         if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        Boolean flagSeeAreaWeight = areaWeightSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("areaweightset");
+        obj.setDescribesion("地区权重设置");
+        if (flagSeeAreaWeight) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBussTypeWeight = bussTypeWeightSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("busstypeweightset");
+        obj.setDescribesion("业务类型权重设置");
+        if (flagSeeBussTypeWeight) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCusContactWeight = customerContactWeightSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("customercontactweightset");
+        obj.setDescribesion("客户接触阶段权重设置");
+        if (flagSeeCusContactWeight) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeFirstfactor = customerWeightFirstFactorSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("customerweightfirstfactor");
+        obj.setDescribesion("客户权重一层因素层设置");
+        if (flagSeeFirstfactor) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeFunPower = funPowerWeightFactorSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("funpowerweightfactor");
+        obj.setDescribesion("职权因素层设置");
+        if (flagSeeFunPower) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        Boolean flagSeeTimeliness = timelinessFactorSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("timelinessfactorset");
+        obj.setDescribesion("时效性因素层设置");
+        if (flagSeeTimeliness) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCloseness = closenessFoactorSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("closenessfoactorset");
+        obj.setDescribesion("亲密度因素层设置");
+        if (flagSeeCloseness) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeDifficu = difficultyFoactorSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("difficultyfoactorset");
+        obj.setDescribesion("难易度因素层设置");
+        if (flagSeeDifficu) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

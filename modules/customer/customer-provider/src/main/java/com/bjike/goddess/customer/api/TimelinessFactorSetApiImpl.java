@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.TimelinessFactorSetBO;
 import com.bjike.goddess.customer.dto.TimelinessFactorSetDTO;
 import com.bjike.goddess.customer.service.TimelinessFactorSetSer;
 import com.bjike.goddess.customer.service.TimelinessFactorSetSerImpl;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.to.TimelinessFactorSetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,17 @@ import java.util.List;
 public class TimelinessFactorSetApiImpl implements TimelinessFactorSetAPI {
     @Autowired
     private TimelinessFactorSetSer timelinessFactorSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return timelinessFactorSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return timelinessFactorSetSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countTimeliness(TimelinessFactorSetDTO timelinessFactorSetDTO) throws SerException {
         return timelinessFactorSetSer.countTimeliness(timelinessFactorSetDTO);

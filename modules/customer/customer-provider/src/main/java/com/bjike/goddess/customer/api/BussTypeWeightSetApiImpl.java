@@ -3,8 +3,10 @@ package com.bjike.goddess.customer.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.BussTypeWeightSetBO;
 import com.bjike.goddess.customer.dto.BussTypeWeightSetDTO;
+import com.bjike.goddess.customer.entity.BussTypeWeightSet;
 import com.bjike.goddess.customer.service.BussTypeWeightSetSer;
 import com.bjike.goddess.customer.to.BussTypeWeightSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,16 @@ import java.util.List;
 public class BussTypeWeightSetApiImpl implements BussTypeWeightSetAPI {
     @Autowired
     private BussTypeWeightSetSer bussTypeWeightSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return bussTypeWeightSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return bussTypeWeightSetSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countBussType(BussTypeWeightSetDTO bussTypeWeightSetDTO) throws SerException {
@@ -52,5 +64,20 @@ public class BussTypeWeightSetApiImpl implements BussTypeWeightSetAPI {
     @Override
     public void deleteBussType(String id) throws SerException {
         bussTypeWeightSetSer.deleteBussType(id);
+    }
+
+    @Override
+    public BussTypeWeightSetBO findByProArea(String businessType, String businessWay) throws SerException {
+        return bussTypeWeightSetSer.findByProArea(businessType,businessWay);
+    }
+
+    @Override
+    public List<String> findBussType() throws SerException {
+        return bussTypeWeightSetSer.findBussType();
+    }
+
+    @Override
+    public List<String> findBussWayByBussType(String bussType) throws SerException {
+        return bussTypeWeightSetSer.findBussWayByBussType(bussType);
     }
 }

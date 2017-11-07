@@ -32,14 +32,24 @@ public class BaseParameterBO extends BaseBO {
     private AccountingSystem accountingSystem;
 
     /**
-     * 会计期间
+     * 会计期间界定方式
      */
-    private AccountingPeriod accountingPeriod;
+    private String defWayAccountPerod;
 
     /**
-     * 会计期间对应时间
+     * 会计年度启用时间
      */
-    private String apDate;
+    private String accountingYear;
+
+    /**
+     * 账套会计期间启用日期
+     */
+    private String dateDuringPeriod;
+
+    /**
+     * 账套会计启用日期
+     */
+    private String accountOpening;
 
     /**
      * 税号
@@ -101,20 +111,36 @@ public class BaseParameterBO extends BaseBO {
         this.accountingSystem = accountingSystem;
     }
 
-    public AccountingPeriod getAccountingPeriod() {
-        return accountingPeriod;
+    public String getDefWayAccountPerod() {
+        return defWayAccountPerod;
     }
 
-    public void setAccountingPeriod(AccountingPeriod accountingPeriod) {
-        this.accountingPeriod = accountingPeriod;
+    public void setDefWayAccountPerod(String defWayAccountPerod) {
+        this.defWayAccountPerod = defWayAccountPerod;
     }
 
-    public String getApDate() {
-        return apDate;
+    public String getAccountingYear() {
+        return accountingYear;
     }
 
-    public void setApDate(String apDate) {
-        this.apDate = apDate;
+    public void setAccountingYear(String accountingYear) {
+        this.accountingYear = accountingYear;
+    }
+
+    public String getDateDuringPeriod() {
+        return dateDuringPeriod;
+    }
+
+    public void setDateDuringPeriod(String dateDuringPeriod) {
+        this.dateDuringPeriod = dateDuringPeriod;
+    }
+
+    public String getAccountOpening() {
+        return accountOpening;
+    }
+
+    public void setAccountOpening(String accountOpening) {
+        this.accountOpening = accountOpening;
     }
 
     public String getEin() {

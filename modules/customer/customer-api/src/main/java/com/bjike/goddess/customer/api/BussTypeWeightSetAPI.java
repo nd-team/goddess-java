@@ -3,7 +3,9 @@ package com.bjike.goddess.customer.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.BussTypeWeightSetBO;
 import com.bjike.goddess.customer.dto.BussTypeWeightSetDTO;
+import com.bjike.goddess.customer.entity.BussTypeWeightSet;
 import com.bjike.goddess.customer.to.BussTypeWeightSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +19,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BussTypeWeightSetAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 业务类型权重设置列表总条数
      */
@@ -68,5 +83,29 @@ public interface BussTypeWeightSetAPI {
      */
     default void deleteBussType(String id) throws SerException {
         return;
+    }
+    /**
+     * 根据业务类型和业务方向获取对应数据
+     *
+     * @param businessType 业务类型
+     * @param businessWay 业务方向
+     */
+    default BussTypeWeightSetBO findByProArea(String businessType, String businessWay) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的业务类型
+     *
+     */
+    default List<String> findBussType() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据业务类型获取业务方向
+     *
+     */
+    default List<String> findBussWayByBussType(String bussType) throws SerException {
+        return null;
     }
 }

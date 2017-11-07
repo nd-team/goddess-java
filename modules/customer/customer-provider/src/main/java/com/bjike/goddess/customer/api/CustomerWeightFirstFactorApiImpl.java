@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.CustomerWeightFirstFactorBO;
 import com.bjike.goddess.customer.dto.CustomerWeightFirstFactorDTO;
 import com.bjike.goddess.customer.service.CustomerWeightFirstFactorSer;
 import com.bjike.goddess.customer.to.CustomerWeightFirstFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,17 @@ import java.util.List;
 public class CustomerWeightFirstFactorApiImpl implements CustomerWeightFirstFactorAPI {
     @Autowired
     private CustomerWeightFirstFactorSer customerWeightFirstFactorSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return customerWeightFirstFactorSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return customerWeightFirstFactorSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countFirstFactor(CustomerWeightFirstFactorDTO customerWeightFirstFactorDTO) throws SerException {
         return customerWeightFirstFactorSer.countFirstFactor(customerWeightFirstFactorDTO);

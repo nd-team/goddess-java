@@ -449,7 +449,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     }
 
     /**
-     * 市场信息日汇总
+     * 客户信息日汇总
      *
      * @param date 日期
      * @return class SummationVO
@@ -467,7 +467,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         }
     }
     /**
-     * 市场信息周汇总
+     * 客户信息周汇总
      *
      * @param year  年份
      * @param month 月份
@@ -488,7 +488,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     }
 
     /**
-     * 市场信息月汇总
+     * 客户信息月汇总
      *
      * @param year  年份
      * @param month 月份
@@ -508,7 +508,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     }
 
     /**
-     * 市场信息季度汇总
+     * 客户信息季度汇总
      *
      * @param year  年份
      * @param quarter 季度
@@ -527,7 +527,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         }
     }
     /**
-     * 市场信息年度汇总
+     * 客户信息年度汇总
      *
      * @param year  年份
      * @return class SummationVO
@@ -546,7 +546,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     }
 
     /**
-     * 市场信息累计汇总
+     * 客户信息累计汇总
      *
      * @param date 截止日期
      * @return class SummationVO
@@ -726,7 +726,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         }
     }
     /**
-     * 客户地区分布情况饼状图
+     * 客户类型分布情况饼状图
      * @param area 地区
      * @return class PieOptionVO
      * @version v1
@@ -773,7 +773,8 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-    } /**
+    }
+    /**
      * 客户来源分析
      * @return class OptionVO
      * @version v1

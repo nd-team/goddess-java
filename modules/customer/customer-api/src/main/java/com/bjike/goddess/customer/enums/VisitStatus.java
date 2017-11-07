@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
 
 /**
  * 拜访状态枚举
+ *
  * @Author: [lijuntao]
  * @Date: [2017-03-15 16:48]
  * @Description: [拜访状态枚举]
@@ -42,5 +43,28 @@ public enum VisitStatus {
 
     public int getCode() {
         return this.code;
+    }
+
+    public static String enumToString(VisitStatus visitStatus) {
+        String name = "";
+        switch (visitStatus) {
+            case TOVISIT:
+                name = "待拜访";
+                break;
+            case HAVEVISIT:
+                name = "已拜访";
+                break;
+            case UNSCHEDULEDVISIT:
+                name = "未安排拜访";
+                break;
+            case NOTVISIT:
+                name = "未拜访";
+                break;
+            default:
+                name = "";
+                break;
+
+        }
+        return name;
     }
 }

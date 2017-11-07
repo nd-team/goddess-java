@@ -426,7 +426,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 String origanizationSize = str.getOriganizationSize();//组织机构规模
                 String workPosition = str.getWorkPosition();//岗位
                 String workLevel = str.getWorkLevel();//职级
-                String workRight = str.getWorkRight();//职权
+                WorkRight workRight = str.getWorkRight();//职权
                 String lifeArea = str.getLifeArea();//生活地区
                 String grouthArea = str.getGrouthArea();//成长地区
                 String oldWorkPlace = str.getOldWorkPlace();//以往工作地区
@@ -483,7 +483,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                                 exportEntity.setOriganizationSize(StringUtils.isBlank(origanizationSize) ? "" : origanizationSize);
                                 exportEntity.setWorkPosition(StringUtils.isBlank(workPosition) ? "" : workPosition);
                                 exportEntity.setWorkLevel(StringUtils.isBlank(workLevel) ? "" : workLevel);
-                                exportEntity.setWorkRight(StringUtils.isBlank(workRight) ? "" : workRight);
+                                exportEntity.setWorkRight(workRight);
                                 exportEntity.setLifeArea(StringUtils.isBlank(lifeArea) ? "" : lifeArea);
                                 exportEntity.setGrouthArea(StringUtils.isBlank(grouthArea) ? "" : grouthArea);
                                 exportEntity.setOldWorkPlace(StringUtils.isBlank(oldWorkPlace) ? "" : oldWorkPlace);
@@ -521,7 +521,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                             exportEntity.setOriganizationSize(StringUtils.isBlank(origanizationSize) ? "" : origanizationSize);
                             exportEntity.setWorkPosition(StringUtils.isBlank(workPosition) ? "" : workPosition);
                             exportEntity.setWorkLevel(StringUtils.isBlank(workLevel) ? "" : workLevel);
-                            exportEntity.setWorkRight(StringUtils.isBlank(workRight) ? "" : workRight);
+                            exportEntity.setWorkRight(workRight);
                             exportEntity.setLifeArea(StringUtils.isBlank(lifeArea) ? "" : lifeArea);
                             exportEntity.setGrouthArea(StringUtils.isBlank(grouthArea) ? "" : grouthArea);
                             exportEntity.setOldWorkPlace(StringUtils.isBlank(oldWorkPlace) ? "" : oldWorkPlace);
@@ -771,7 +771,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             row.createCell(callIndex++).setCellValue(exportEntity.getOriganizationSize());
             row.createCell(callIndex++).setCellValue(exportEntity.getWorkPosition());
             row.createCell(callIndex++).setCellValue(exportEntity.getWorkLevel());
-            row.createCell(callIndex++).setCellValue(exportEntity.getWorkRight());
+            row.createCell(callIndex++).setCellValue(WorkRight.enumToString(exportEntity.getWorkRight()));
             row.createCell(callIndex++).setCellValue(exportEntity.getLifeArea());
             row.createCell(callIndex++).setCellValue(exportEntity.getGrouthArea());
             row.createCell(callIndex++).setCellValue(exportEntity.getOldWorkPlace());

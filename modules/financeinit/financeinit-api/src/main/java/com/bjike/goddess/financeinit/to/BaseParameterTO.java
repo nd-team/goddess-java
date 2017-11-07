@@ -40,16 +40,28 @@ public class BaseParameterTO extends BaseTO {
     private AccountingSystem accountingSystem;
 
     /**
-     * 会计期间
+     * 会计期间界定方式
      */
-    @NotNull(message = "会计期间不能为空",groups = {ADD.class, EDIT.class})
-    private AccountingPeriod accountingPeriod;
+    @NotNull(message = "会计期间界定方式不能为空",groups = {ADD.class, EDIT.class})
+    private String defWayAccountPerod;
 
     /**
-     * 会计期间对应时间
+     * 会计年度启用时间
      */
-    @NotBlank(message = "会计期间对应时间不能为空",groups = {ADD.class, EDIT.class})
-    private String apDate;
+    @NotNull(message = "会计年度启用时间不能为空",groups = {ADD.class, EDIT.class})
+    private String accountingYear;
+
+    /**
+     * 账套会计期间启用日期
+     */
+    @NotNull(message = "账套会计期间启用日期不能为空",groups = {ADD.class, EDIT.class})
+    private String dateDuringPeriod;
+
+    /**
+     * 账套会计启用日期
+     */
+    @NotNull(message = "账套会计启用日期不能为空",groups = {ADD.class, EDIT.class})
+    private String accountOpening;
 
     /**
      * 税号
@@ -117,20 +129,36 @@ public class BaseParameterTO extends BaseTO {
         this.accountingSystem = accountingSystem;
     }
 
-    public AccountingPeriod getAccountingPeriod() {
-        return accountingPeriod;
+    public String getDefWayAccountPerod() {
+        return defWayAccountPerod;
     }
 
-    public void setAccountingPeriod(AccountingPeriod accountingPeriod) {
-        this.accountingPeriod = accountingPeriod;
+    public void setDefWayAccountPerod(String defWayAccountPerod) {
+        this.defWayAccountPerod = defWayAccountPerod;
     }
 
-    public String getApDate() {
-        return apDate;
+    public String getAccountingYear() {
+        return accountingYear;
     }
 
-    public void setApDate(String apDate) {
-        this.apDate = apDate;
+    public void setAccountingYear(String accountingYear) {
+        this.accountingYear = accountingYear;
+    }
+
+    public String getDateDuringPeriod() {
+        return dateDuringPeriod;
+    }
+
+    public void setDateDuringPeriod(String dateDuringPeriod) {
+        this.dateDuringPeriod = dateDuringPeriod;
+    }
+
+    public String getAccountOpening() {
+        return accountOpening;
+    }
+
+    public void setAccountOpening(String accountOpening) {
+        this.accountOpening = accountOpening;
     }
 
     public String getEin() {

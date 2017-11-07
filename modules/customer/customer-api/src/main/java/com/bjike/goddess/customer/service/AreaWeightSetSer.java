@@ -7,6 +7,7 @@ import com.bjike.goddess.customer.dto.AreaWeightSetDTO;
 import com.bjike.goddess.customer.dto.CustomerLevelDTO;
 import com.bjike.goddess.customer.entity.AreaWeightSet;
 import com.bjike.goddess.customer.to.AreaWeightSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -20,6 +21,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface AreaWeightSetSer extends Ser<AreaWeightSet, AreaWeightSetDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 地区权重设置列表总条数
      */
@@ -70,5 +83,26 @@ public interface AreaWeightSetSer extends Ser<AreaWeightSet, AreaWeightSetDTO> {
      */
     default void deleteAreaWeight(String id) throws SerException {
         return;
+    }
+    /**
+     * 根据省份和地区获取对应数据
+     *
+     * @param provinces 省份
+     * @param area 地区
+     */
+    default AreaWeightSetBO findByProArea(String provinces,String area) throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的省份
+     */
+    default List<String> findProvinces()throws SerException{
+        return null;
+    }
+    /**
+     * 根据省份获取对应的地区
+     */
+    default List<String> findAreaByPro(String provinces)throws SerException{
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.customer.dto.FunPowerWeightFactorDTO;
 import com.bjike.goddess.customer.service.FunPowerWeightFactorSer;
 import com.bjike.goddess.customer.service.FunPowerWeightFactorSerImpl;
 import com.bjike.goddess.customer.to.FunPowerWeightFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,17 @@ import java.util.List;
 public class FunPowerWeightFactorApiImpl implements FunPowerWeightFactorAPI {
     @Autowired
     private FunPowerWeightFactorSer funPowerWeightFactorSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return funPowerWeightFactorSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return funPowerWeightFactorSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countFunPower(FunPowerWeightFactorDTO funPowerWeightFactorDTO) throws SerException {
         return funPowerWeightFactorSer.countFunPower(funPowerWeightFactorDTO);
