@@ -12,8 +12,10 @@ import com.bjike.goddess.customer.api.VisitRecommSetAPI;
 import com.bjike.goddess.customer.bo.VisitRecommSetBO;
 import com.bjike.goddess.customer.dto.VisitRecommSetDTO;
 import com.bjike.goddess.customer.entity.VisitRecommSet;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.to.VisitRecommSetTO;
 import com.bjike.goddess.customer.vo.VisitRecommSetVO;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -45,21 +47,21 @@ public class VisitRecommSetAction {
      * @throws ActException
      * @version v1
      */
-//    @GetMapping("v1/guidePermission")
-//    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-//        try {
-//
-//            Boolean isHasPermission = cusEmailAPI.guidePermission(guidePermissionTO);
-//            if (!isHasPermission) {
-//                //int code, String msg
-//                return new ActResult(0, "没有权限", false);
-//            } else {
-//                return new ActResult(0, "有权限", true);
-//            }
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = visitRecommSetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 拜访设置列表总条数
@@ -194,6 +196,22 @@ public class VisitRecommSetAction {
         try {
             visitRecommSetAPI.thawVisitReco(id);
             return new ActResult("thaw success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 检测
+     *
+     * @des 调用更新算法
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail(   ) throws ActException {
+        try {
+            visitRecommSetAPI.checkSendObjectHour( );
+            return ActResult.initialize("发送成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -14,12 +14,14 @@ import com.bjike.goddess.customer.bo.FunPowerWeightFactorBO;
 import com.bjike.goddess.customer.dto.CustomerWeightFirstFactorDTO;
 import com.bjike.goddess.customer.dto.FunPowerWeightFactorDTO;
 import com.bjike.goddess.customer.to.FunPowerWeightFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.vo.FunPowerWeightFactorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -37,6 +39,28 @@ public class FunPowerWeightAction {
     @Autowired
     private FunPowerWeightFactorAPI funPowerWeightFactorAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = funPowerWeightFactorAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 职权因素层权重列表总条数
      *

@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.VisitScheduleBO;
 import com.bjike.goddess.customer.dto.VisitScheduleDTO;
 import com.bjike.goddess.customer.entity.VisitSchedule;
 import com.bjike.goddess.customer.service.VisitScheduleSer;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,16 @@ import org.springframework.stereotype.Service;
 public class VisitScheduleApiImpl implements VisitScheduleAPI {
     @Autowired
     private VisitScheduleSer visitScheduleSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return visitScheduleSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return visitScheduleSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public VisitScheduleBO findVisit(VisitScheduleDTO visitScheduleDTO) throws SerException {

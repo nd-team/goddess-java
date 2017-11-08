@@ -115,24 +115,6 @@ public class CommunicationFormworkAction {
         }
     }
 
-    /**
-     * 添加各类交流沟通模块
-     *
-     * @param to 各类交流沟通模块to
-     * @return class CommunicationFormworkVO
-     * @version v1
-     */
-    @LoginAuth
-    @PostMapping("v1/add")
-    public Result add(@Validated(value = {ADD.class}) CommunicationFormworkTO to, BindingResult result, HttpServletRequest request) throws ActException {
-        try {
-            CommunicationFormworkBO bo = communicationFormworkAPI.save(to);
-            CommunicationFormworkVO vo = BeanTransform.copyProperties(bo, CommunicationFormworkVO.class, request);
-            return ActResult.initialize(vo);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 根据id删除各类交流沟通模块
@@ -146,6 +128,25 @@ public class CommunicationFormworkAction {
         try {
             communicationFormworkAPI.remove(id);
             return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 添加
+     *
+     * @param to to
+     * @return class CommunicationFormworkBO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/add")
+    public Result add(@Validated(ADD.class) CommunicationFormworkTO to, BindingResult result) throws ActException {
+        try {
+            CommunicationFormworkBO bo = communicationFormworkAPI.save(to);
+            return new ActResult("add success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

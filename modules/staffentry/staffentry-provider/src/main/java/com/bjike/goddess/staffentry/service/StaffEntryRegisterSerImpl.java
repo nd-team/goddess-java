@@ -483,9 +483,11 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             excel.setUseCompanyComputer(checkBool(str.getUseCompanyComputer()));
             excel.setEntry(checkBool(str.getEntry()));
             excel.setNotice(checkBool(str.getNotice()));
-            excel.setPassword(userBO.getPassword());
-            excel.setUserName(userBO.getUsername());
-            excel.setEmpNumber(userBO.getEmployeeNumber());
+            if(userBO!=null){
+                excel.setPassword(userBO.getPassword());
+                excel.setUserName(userBO.getUsername());
+                excel.setEmpNumber(userBO.getEmployeeNumber());
+            }
             staffEntryRegisterExports.add(excel);
         }
         Excel excel = new Excel(0, 2);

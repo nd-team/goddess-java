@@ -1,5 +1,6 @@
 package com.bjike.goddess.customer.action.customer;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -11,9 +12,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.customer.api.CusPermissionAPI;
-import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
-import com.bjike.goddess.customer.api.CustomerDetailAPI;
+import com.bjike.goddess.customer.api.*;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
 import com.bjike.goddess.customer.bo.OptionBO;
 import com.bjike.goddess.customer.bo.PieOptionBO;
@@ -61,6 +60,10 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     private CustomerDetailAPI customerDetailAPI;
     @Autowired
     private CusPermissionAPI cusPermissionAPI;
+    @Autowired
+    private AreaWeightSetAPI areaWeightSetAPI;
+    @Autowired
+    private BussTypeWeightSetAPI bussTypeWeightSetAPI;
 
 
     /**
@@ -872,4 +875,61 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+    /**
+     * 添加编辑中省份下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAddProvinces")
+    public Result findAddProvinces( HttpServletRequest request) throws ActException {
+        try {
+            List<String> provinces = areaWeightSetAPI.findProvinces();
+            return ActResult.initialize(provinces);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加编辑中根据省份获取地区下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAreaBy/provinces")
+    public Result findAreaByPro(@RequestParam String provinces, HttpServletRequest request) throws ActException {
+        try {
+            List<String> area = areaWeightSetAPI.findAreaByPro(provinces);
+            return ActResult.initialize(area);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中的业务类型下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAddBussType")
+    public Result findAddBussType( HttpServletRequest request) throws ActException {
+        try {
+            List<String> bussType = bussTypeWeightSetAPI.findBussType();
+            return ActResult.initialize(bussType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中的根据业务类型获取业务方向
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAddBussType/bussWay")
+    public Result findAddBussWayBy(@RequestParam String bussType, HttpServletRequest request) throws ActException {
+        try {
+            List<String> bussWay = bussTypeWeightSetAPI.findBussWayByBussType(bussType);
+            return ActResult.initialize(bussWay);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

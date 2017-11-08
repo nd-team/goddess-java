@@ -64,7 +64,7 @@ public class CommunicationFormworkTO extends BaseTO {
     private String ccObj;
 
     /**
-     *
+     * 途径
      */
     private String way;
 
