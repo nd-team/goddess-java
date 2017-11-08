@@ -560,7 +560,22 @@ public interface VoucherGenerateAPI {
     default List<String> accountSubject() throws SerException {
         return null;
     }
-
+    /**
+     * 从已过账那里根据一级获取所有二级
+     *
+     * @throws SerException
+     */
+    default List<String> subSubject(String firstSubject) throws SerException {
+        return null;
+    }
+    /**
+     * 从已过账那里根据一级,二级获取所有三级
+     *
+     * @throws SerException
+     */
+    default List<String> thirdSubject(String firstSubject,String subSubject) throws SerException {
+        return null;
+    }
     /**
      * xiazhili
      * 在已过账记录里面根据二级或三级统计金额

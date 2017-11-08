@@ -205,6 +205,8 @@ public class DispatchSheetSerImpl extends ServiceImpl<DispatchSheet, DispatchShe
 
     @Override
     public Long countDispatchSheet(DispatchSheetDTO dispatchSheetDTO) throws SerException {
+        dispatchSheetDTO.getSorts().add("createTime=desc");
+
         searchCondition(dispatchSheetDTO);
 
         Long count = super.count(dispatchSheetDTO);

@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.OptionBO;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.excel.SonPermissionObject;
@@ -121,22 +122,22 @@ public class SiginManageApiImpl implements SiginManageAPI {
     }
 
     @Override
-    public OptionBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
         return siginManageSer.weekCollectFigure(year, month, week);
     }
 
     @Override
-    public OptionBO monthCollectFigure(Integer year, Integer month) throws SerException {
+    public OptionMakeBO monthCollectFigure(Integer year, Integer month) throws SerException {
         return siginManageSer.monthCollectFigure(year, month);
     }
 
     @Override
-    public OptionBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+    public OptionMakeBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
         return siginManageSer.quarterCollectFigure(year, quarter);
     }
 
     @Override
-    public OptionBO yearCollectFigure(Integer year) throws SerException {
+    public OptionMakeBO yearCollectFigure(Integer year) throws SerException {
         return siginManageSer.yearCollectFigure(year);
     }
 }

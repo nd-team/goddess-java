@@ -20,7 +20,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkhost.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.checkhost.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 	<dubbo:reference  validation="true" id="stayApplyApiImpl" interface="com.bjike.goddess.checkhost.api.StayApplyAPI" />
-	<dubbo:reference  validation="true" id="hostApplyApiImpl" interface="com.bjike.goddess.checkhost.api.HostApplyAPI" />
 	<dubbo:reference  validation="true" id="stayDaysApiImpl" interface="com.bjike.goddess.checkhost.api.StayDaysAPI" />
 	<dubbo:reference  validation="true" id="dormitoryInfoApiImpl" interface="com.bjike.goddess.checkhost.api.DormitoryInfoAPI" />
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>

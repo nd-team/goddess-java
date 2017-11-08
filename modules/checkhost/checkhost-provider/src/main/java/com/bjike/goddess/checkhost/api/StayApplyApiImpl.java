@@ -73,4 +73,14 @@ public class StayApplyApiImpl implements StayApplyAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return stayApplySer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public StayApplyBO applyHost(StayApplyTO to) throws SerException {
+        return stayApplySer.applyHost(to);
+    }
+
+    @Override
+    public StayApplyBO hostAudit(StayApplyTO to) throws SerException {
+        return stayApplySer.hostAudit(to);
+    }
 }

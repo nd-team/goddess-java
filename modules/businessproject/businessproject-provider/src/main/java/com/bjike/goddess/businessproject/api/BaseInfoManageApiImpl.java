@@ -66,7 +66,10 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     public void deleteBaseInfoManage(String id) throws SerException {
         baseInfoManageSer.deleteBaseInfoManage(id);
     }
-
+    @Override
+    public Double contractScale(String project) throws SerException {
+        return baseInfoManageSer.contractScale(project);
+    }
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
         return baseInfoManageSer.getInfoByInnerProjectNum(innerProjectNum);

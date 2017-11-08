@@ -21,15 +21,15 @@ public class MakeContractFigureBO extends BaseBO {
     /**
      * 预立项总数
      */
-    private Integer noMakeNum;
+    private Double noMakeNum;
     /**
      * 立项
      */
-    private Integer hadMakeNum;
+    private Double hadMakeNum;
     /**
      * 不立项
      */
-    private Integer notMakeNum;
+    private Double notMakeNum;
 
     public String getArea() {
         return area;
@@ -39,27 +39,27 @@ public class MakeContractFigureBO extends BaseBO {
         this.area = area;
     }
 
-    public Integer getNoMakeNum() {
+    public Double getNoMakeNum() {
         return noMakeNum;
     }
 
-    public void setNoMakeNum(Integer noMakeNum) {
+    public void setNoMakeNum(Double noMakeNum) {
         this.noMakeNum = noMakeNum;
     }
 
-    public Integer getHadMakeNum() {
+    public Double getHadMakeNum() {
         return hadMakeNum;
     }
 
-    public void setHadMakeNum(Integer hadMakeNum) {
+    public void setHadMakeNum(Double hadMakeNum) {
         this.hadMakeNum = hadMakeNum;
     }
 
-    public Integer getNotMakeNum() {
+    public Double getNotMakeNum() {
         return notMakeNum;
     }
 
-    public void setNotMakeNum(Integer notMakeNum) {
+    public void setNotMakeNum(Double notMakeNum) {
         this.notMakeNum = notMakeNum;
     }
 }

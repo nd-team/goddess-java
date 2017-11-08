@@ -206,6 +206,8 @@ public class ContractCategorySerImpl extends ServiceImpl<ContractCategory, Contr
 
     @Override
     public List<ContractCategoryBO> listContractCategory(ContractCategoryDTO contractCategoryDTO) throws SerException {
+        contractCategoryDTO.getSorts().add("createTime=desc");
+
         checkSeeIdentity();
 
         List<ContractCategory> list = super.findByPage(contractCategoryDTO);

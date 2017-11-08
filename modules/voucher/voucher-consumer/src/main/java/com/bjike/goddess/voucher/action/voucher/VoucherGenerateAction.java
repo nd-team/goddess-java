@@ -1145,6 +1145,36 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取所有已过账的根据一级科目获取二级科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/subSubject")
+    public Result subSubject(String firstSubject) throws ActException {
+        try {
+            List<String> subjectList = voucherGenerateAPI.subSubject(firstSubject);
+            return ActResult.initialize(subjectList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有已过账的根据一级科目二级科目获取三级科目
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/thirdSubject")
+    public Result thirdSubject(String firstSubject,String subSubject) throws ActException {
+        try {
+            List<String> subjectList = voucherGenerateAPI.thirdSubject(firstSubject, subSubject);
+            return ActResult.initialize(subjectList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**

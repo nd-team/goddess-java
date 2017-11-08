@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.OptionBO;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.entity.SiginManage;
@@ -199,10 +200,10 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
      * @param year
      * @param month
      * @param week
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+    default OptionMakeBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
         return null;
     }
 
@@ -211,10 +212,10 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
      *
      * @param year
      * @param month
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO monthCollectFigure(Integer year, Integer month) throws SerException {
+    default OptionMakeBO monthCollectFigure(Integer year, Integer month) throws SerException {
         return null;
     }
 
@@ -223,10 +224,10 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
      *
      * @param year
      * @param quarter
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+    default OptionMakeBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
         return null;
     }
 
@@ -234,10 +235,10 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
      * 合同签订与立项年汇总
      *
      * @param year
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionBO yearCollectFigure(Integer year) throws SerException {
+    default OptionMakeBO yearCollectFigure(Integer year) throws SerException {
         return null;
     }
 }

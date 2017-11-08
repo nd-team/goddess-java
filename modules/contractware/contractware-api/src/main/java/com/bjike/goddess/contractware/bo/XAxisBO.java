@@ -1,16 +1,18 @@
 package com.bjike.goddess.contractware.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.organize.bo.AxisLabelBO;
 
 /**
  * 转正图形展示横坐标传输对象
+ *
  * @Author: [lijuntao]
  * @Date: [2017-09-09 15:32]
  * @Description: [转正图形展示纵坐标传数对象 ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class XAxisBO extends BaseBO{
+public class XAxisBO extends BaseBO {
     /**
      * 数据
      */

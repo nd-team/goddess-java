@@ -129,6 +129,7 @@ public class DormitoryInfoAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 一个宿舍信息管理
      *
@@ -159,7 +160,7 @@ public class DormitoryInfoAction {
     public Result list(DormitoryInfoDTO dormitoryInfoDTO, HttpServletRequest request) throws ActException {
         try {
             List<DormitoryInfoVO> dormitoryInfoVOS = BeanTransform.copyProperties
-                    (dormitoryInfoAPI.findListDormitoryInfo(dormitoryInfoDTO),DormitoryInfoVO.class,request);
+                    (dormitoryInfoAPI.findListDormitoryInfo(dormitoryInfoDTO), DormitoryInfoVO.class, request);
             return ActResult.initialize(dormitoryInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -193,7 +194,7 @@ public class DormitoryInfoAction {
      * @version v1
      */
     @PostMapping("v1/edit")
-    public Result edit(@Validated(EDIT.class) DormitoryInfoTO dormitoryInfoTO,BindingResult bindingResult) throws ActException {
+    public Result edit(@Validated(EDIT.class) DormitoryInfoTO dormitoryInfoTO, BindingResult bindingResult) throws ActException {
         try {
             DormitoryInfoBO dormitoryInfoBO = dormitoryInfoAPI.editDormitoryInfo(dormitoryInfoTO);
             return ActResult.initialize(dormitoryInfoBO);
