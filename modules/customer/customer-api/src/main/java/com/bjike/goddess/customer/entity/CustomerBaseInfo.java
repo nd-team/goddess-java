@@ -136,6 +136,11 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @Column(name = "origanizationSize", columnDefinition = "VARCHAR(255)   COMMENT '组织机构规模'")
     private String origanizationSize;
+    /**
+     * 部门
+     */
+    @Column(name = "department", columnDefinition = "VARCHAR(255)   COMMENT '组织机构规模'")
+    private String department;
 
     /**
      * 岗位
@@ -153,7 +158,7 @@ public class CustomerBaseInfo extends BaseEntity {
      * 职权
      */
     @Column(name = "workRight", columnDefinition = "VARCHAR(255)   COMMENT '职权'")
-    private String workRight;
+    private WorkRight workRight;
 
     /**
      * 生活地区
@@ -325,6 +330,16 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @Column(name = "proceedMarketTreat", columnDefinition = "TINYINT(2)   COMMENT '是否需进行市场招待'")
     private Boolean proceedMarketTreat;
+    /**
+     * 冻结时间
+     */
+    @Column(name = "freezeTime", columnDefinition = "DATE   COMMENT '冻结时间'")
+    private LocalDate freezeTime;
+    /**
+     * 拜访周期
+     */
+    @Column(name = "callcyle", columnDefinition = "TINYINT(4)   COMMENT '拜访周期'")
+    private Integer callcyle;
 
     /**
      * 客户详细信息
@@ -500,11 +515,11 @@ public class CustomerBaseInfo extends BaseEntity {
         this.workLevel = workLevel;
     }
 
-    public String getWorkRight() {
+    public WorkRight getWorkRight() {
         return workRight;
     }
 
-    public void setWorkRight(String workRight) {
+    public void setWorkRight(WorkRight workRight) {
         this.workRight = workRight;
     }
 
@@ -594,6 +609,14 @@ public class CustomerBaseInfo extends BaseEntity {
 
     public void setContactPhace(ContactPhace contactPhace) {
         this.contactPhace = contactPhace;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public Timeliness getTimeliness() {
@@ -778,5 +801,21 @@ public class CustomerBaseInfo extends BaseEntity {
 
     public void setCustomerDetail(CustomerDetail customerDetail) {
         this.customerDetail = customerDetail;
+    }
+
+    public LocalDate getFreezeTime() {
+        return freezeTime;
+    }
+
+    public void setFreezeTime(LocalDate freezeTime) {
+        this.freezeTime = freezeTime;
+    }
+
+    public Integer getCallcyle() {
+        return callcyle;
+    }
+
+    public void setCallcyle(Integer callcyle) {
+        this.callcyle = callcyle;
     }
 }

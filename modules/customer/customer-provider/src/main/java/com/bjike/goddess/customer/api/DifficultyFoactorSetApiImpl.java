@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.DifficultyFoactorSetBO;
 import com.bjike.goddess.customer.dto.DifficultyFoactorSetDTO;
 import com.bjike.goddess.customer.service.DifficultyFoactorSetSer;
 import com.bjike.goddess.customer.to.DifficultyFoactorSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,17 @@ import java.util.List;
 public class DifficultyFoactorSetApiImpl implements DifficultyFoactorSetAPI {
     @Autowired
     private DifficultyFoactorSetSer difficultyFoactorSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return difficultyFoactorSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return difficultyFoactorSetSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countDifficulty(DifficultyFoactorSetDTO difficultyFoactorSetDTO) throws SerException {
         return difficultyFoactorSetSer.countDifficulty(difficultyFoactorSetDTO);

@@ -3,8 +3,10 @@ package com.bjike.goddess.customer.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.AreaWeightSetBO;
 import com.bjike.goddess.customer.dto.AreaWeightSetDTO;
+import com.bjike.goddess.customer.entity.AreaWeightSet;
 import com.bjike.goddess.customer.service.AreaWeightSetSer;
 import com.bjike.goddess.customer.to.AreaWeightSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,17 @@ import java.util.List;
 public class AreaWeightSetApiImpl implements AreaWeightSetAPI {
     @Autowired
     private AreaWeightSetSer areaWeightSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return areaWeightSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return areaWeightSetSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countAreaWeight(AreaWeightSetDTO areaWeightSetDTO) throws SerException {
         return areaWeightSetSer.countAreaWeight(areaWeightSetDTO);
@@ -51,5 +64,20 @@ public class AreaWeightSetApiImpl implements AreaWeightSetAPI {
     @Override
     public void deleteAreaWeight(String id) throws SerException {
         areaWeightSetSer.deleteAreaWeight(id);
+    }
+
+    @Override
+    public AreaWeightSetBO findByProArea(String provinces, String area) throws SerException {
+        return areaWeightSetSer.findByProArea(provinces,area);
+    }
+
+    @Override
+    public List<String> findProvinces() throws SerException {
+        return areaWeightSetSer.findProvinces();
+    }
+
+    @Override
+    public List<String> findAreaByPro(String provinces) throws SerException {
+        return areaWeightSetSer.findAreaByPro(provinces);
     }
 }

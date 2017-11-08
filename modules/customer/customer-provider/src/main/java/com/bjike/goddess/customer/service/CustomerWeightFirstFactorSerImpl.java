@@ -2,13 +2,18 @@ package com.bjike.goddess.customer.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.customer.bo.CustomerWeightFirstFactorBO;
 import com.bjike.goddess.customer.dto.CustomerWeightFirstFactorDTO;
 import com.bjike.goddess.customer.entity.CustomerWeightFirstFactor;
 import com.bjike.goddess.customer.entity.FirstFactorWeight;
+import com.bjike.goddess.customer.enums.GuideAddrStatus;
 import com.bjike.goddess.customer.to.CustomerWeightFirstFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.utils.AHPComputeWeight;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -33,7 +38,140 @@ import java.util.List;
 public class CustomerWeightFirstFactorSerImpl extends ServiceImpl<CustomerWeightFirstFactor, CustomerWeightFirstFactorDTO> implements CustomerWeightFirstFactorSer {
     @Autowired
     private FirstFactorWeightSer firstFactorWeightSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
 
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity("1");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity("3");
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity("1");
+                break;
+            case ADD:
+                flag = guideAddIdentity("3");
+                break;
+            case EDIT:
+                flag = guideAddIdentity("3");
+                break;
+            case DELETE:
+                flag = guideAddIdentity("3");
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity("3");
+                break;
+            case SEEFILE:
+                flag = guideAddIdentity("3");
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity("3");
+                break;
+            case CONGEL:
+                flag = guideAddIdentity("3");
+                break;
+            case THAW:
+                flag = guideAddIdentity("3");
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
     @Override
     public Long countFirstFactor(CustomerWeightFirstFactorDTO customerWeightFirstFactorDTO) throws SerException {
         Long count = super.count(customerWeightFirstFactorDTO);
@@ -48,6 +186,7 @@ public class CustomerWeightFirstFactorSerImpl extends ServiceImpl<CustomerWeight
 
     @Override
     public List<CustomerWeightFirstFactorBO> listFirstFactor(CustomerWeightFirstFactorDTO customerWeightFirstFactorDTO) throws SerException {
+        checkSeeIdentity("1");
         List<CustomerWeightFirstFactor> customerWeightFirstFactors = super.findByCis(customerWeightFirstFactorDTO, true);
         return BeanTransform.copyProperties(customerWeightFirstFactors, CustomerWeightFirstFactorBO.class);
     }
@@ -55,6 +194,7 @@ public class CustomerWeightFirstFactorSerImpl extends ServiceImpl<CustomerWeight
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerWeightFirstFactorBO addFirstFactor(CustomerWeightFirstFactorTO customerWeightFirstFactorTO) throws SerException {
+       checkAddIdentity("3");
         CustomerWeightFirstFactor customerWeightFirstFactor = BeanTransform.copyProperties(customerWeightFirstFactorTO, CustomerWeightFirstFactor.class, true);
         customerWeightFirstFactor.setCreateTime(LocalDateTime.now());
         super.save(customerWeightFirstFactor);
@@ -87,6 +227,7 @@ public class CustomerWeightFirstFactorSerImpl extends ServiceImpl<CustomerWeight
     @Transactional(rollbackFor = SerException.class)
     @Override
     public CustomerWeightFirstFactorBO editFirstFactor(CustomerWeightFirstFactorTO customerWeightFirstFactorTO) throws SerException {
+        checkAddIdentity("3");
         CustomerWeightFirstFactor customerWeightFirstFactor = super.findById(customerWeightFirstFactorTO.getId());
         LocalDateTime dateTime =customerWeightFirstFactor.getCreateTime();
         customerWeightFirstFactor = BeanTransform.copyProperties(customerWeightFirstFactorTO,CustomerWeightFirstFactor.class,true);
@@ -125,6 +266,7 @@ public class CustomerWeightFirstFactorSerImpl extends ServiceImpl<CustomerWeight
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteFirstFactor(String id) throws SerException {
+        checkAddIdentity("3");
         super.remove(id);
 
         List<FirstFactorWeight> firstFactorWeights = firstFactorWeightSer.findAll();

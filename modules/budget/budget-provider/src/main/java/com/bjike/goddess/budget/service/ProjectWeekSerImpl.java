@@ -173,6 +173,8 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     public ProjectWeekBO save(ProjectWeekTO to) throws SerException {
         checkAddIdentity();
         ProjectWeek projectWeek = BeanTransform.copyProperties(to, ProjectWeek.class, true);
+//        projectWeek.setTargetIncome(to.getPrice()*to.getTargetWork());
+//        projectWeek.setPlanIncome(to.getPrice()*to.getActualWork());
         super.save(projectWeek);
         projectMonthSer.deleteAll();
         List<ProjectWeekCountBO> list = count();
@@ -258,7 +260,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
         for (ProjectWeek a : list) {
             ProjectWeekBO bo = BeanTransform.copyProperties(a, ProjectWeekBO.class);
             bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
-            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            bo.setIncomeDifferences(a.getTargetIncome() - a.getPlanIncome());
             boList.add(bo);
         }
         return boList;
@@ -290,6 +292,10 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                                         if (months != null && months.size() > 0) {
                                             for (Integer month : months) {
                                                 List<WeekListBO> weekListBOS = findWeekByArProNaYeMo(area, project, projectName, year, month);
+                                                for(WeekListBO weekListBO : weekListBOS){
+                                                    weekListBO.setIncomeDifferences(weekListBO.getTargetIncome()-weekListBO.getPlanIncome());
+                                                    weekListBO.setWorkDifferences(weekListBO.getActualWork()-weekListBO.getTargetWork());
+                                                }
                                                 MonthListBO monthListBO = new MonthListBO();
                                                 monthListBO.setMonth(month);
                                                 monthListBO.setWeekListBOList(weekListBOS);
@@ -432,7 +438,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
         ProjectWeek projectWeek = super.findById(id);
         ProjectWeekBO bo = BeanTransform.copyProperties(projectWeek, ProjectWeekBO.class);
         bo.setWorkDifferences(projectWeek.getActualWork() - projectWeek.getTargetWork());
-        bo.setIncomeDifferences(projectWeek.getPlanIncome() - projectWeek.getTargetIncome());
+        bo.setIncomeDifferences(projectWeek.getTargetIncome() - projectWeek.getPlanIncome());
         return bo;
     }
 

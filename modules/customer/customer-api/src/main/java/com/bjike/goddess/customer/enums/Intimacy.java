@@ -38,4 +38,24 @@ public enum Intimacy {
     public int getCode() {
         return this.code;
     }
+
+    public static String enumToString(Intimacy intimacy) {
+        String name = "";
+        switch (intimacy) {
+            case VERYCLOSE:
+                name = "十分亲密";
+                break;
+            case CLOSE:
+                name = "亲密";
+                break;
+            case GENERAL:
+                name = "一般";
+                break;
+            default:
+                name = "";
+                break;
+
+        }
+        return name;
+    }
 }

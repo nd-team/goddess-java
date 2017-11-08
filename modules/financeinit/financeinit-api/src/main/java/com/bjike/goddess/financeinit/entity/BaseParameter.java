@@ -8,6 +8,7 @@ import com.bjike.goddess.financeinit.enums.ScaleShape;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
@@ -42,16 +43,28 @@ public class BaseParameter extends BaseEntity {
     private AccountingSystem accountingSystem;
 
     /**
-     * 会计期间
+     * 会计期间界定方式
      */
-    @Column(name = "accountingPeriod", nullable = false, columnDefinition = "TINYINT(2)  COMMENT '会计期间'")
-    private AccountingPeriod accountingPeriod;
+    @Column(name = "defWayAccountPerod", nullable = false, columnDefinition = "VARCHAR(255)  COMMENT '会计期间界定方式'")
+    private String defWayAccountPerod;
 
     /**
-     * 会计期间对应时间
+     * 会计年度启用时间
      */
-    @Column(name = "apDate", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会计期间对应时间'")
-    private String apDate;
+    @Column(name = "accountingYear", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会计年度启用时间'")
+    private String accountingYear;
+
+    /**
+     * 账套会计期间启用日期
+     */
+    @Column(name = "dateDuringPeriod", nullable = false, columnDefinition = "DATE   COMMENT '账套会计期间启用日期'")
+    private LocalDate dateDuringPeriod;
+
+    /**
+     * 账套会计启用日期
+     */
+    @Column(name = "apDate", nullable = false, columnDefinition = "DATE   COMMENT '账套会计启用日期'")
+    private LocalDate accountOpening;
 
     /**
      * 税号
@@ -120,20 +133,36 @@ public class BaseParameter extends BaseEntity {
         this.accountingSystem = accountingSystem;
     }
 
-    public AccountingPeriod getAccountingPeriod() {
-        return accountingPeriod;
+    public String getDefWayAccountPerod() {
+        return defWayAccountPerod;
     }
 
-    public void setAccountingPeriod(AccountingPeriod accountingPeriod) {
-        this.accountingPeriod = accountingPeriod;
+    public void setDefWayAccountPerod(String defWayAccountPerod) {
+        this.defWayAccountPerod = defWayAccountPerod;
     }
 
-    public String getApDate() {
-        return apDate;
+    public String getAccountingYear() {
+        return accountingYear;
     }
 
-    public void setApDate(String apDate) {
-        this.apDate = apDate;
+    public void setAccountingYear(String accountingYear) {
+        this.accountingYear = accountingYear;
+    }
+
+    public LocalDate getDateDuringPeriod() {
+        return dateDuringPeriod;
+    }
+
+    public void setDateDuringPeriod(LocalDate dateDuringPeriod) {
+        this.dateDuringPeriod = dateDuringPeriod;
+    }
+
+    public LocalDate getAccountOpening() {
+        return accountOpening;
+    }
+
+    public void setAccountOpening(LocalDate accountOpening) {
+        this.accountOpening = accountOpening;
     }
 
     public String getEin() {
