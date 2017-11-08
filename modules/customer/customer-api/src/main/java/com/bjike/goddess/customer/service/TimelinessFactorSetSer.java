@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.customer.bo.TimelinessFactorSetBO;
 import com.bjike.goddess.customer.dto.TimelinessFactorSetDTO;
 import com.bjike.goddess.customer.entity.TimelinessFactorSet;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.to.TimelinessFactorSetTO;
 
 import java.util.List;
@@ -20,6 +21,18 @@ import java.util.List;
  */
 public interface TimelinessFactorSetSer extends Ser<TimelinessFactorSet, TimelinessFactorSetDTO> {
 
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 时效性因素层设置总条数
      */

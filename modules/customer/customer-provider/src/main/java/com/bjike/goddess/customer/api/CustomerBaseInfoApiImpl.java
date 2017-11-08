@@ -224,4 +224,9 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     public PieOptionBO resoucePieShowBybussType(String bussType) throws SerException {
         return customerBaseInfoSer.resoucePieShowBybussType(bussType);
     }
+
+    @Override
+    public List<CustomerBaseInfoBO> computations() throws SerException {
+        return customerBaseInfoSer.computations();
+    }
 }

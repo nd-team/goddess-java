@@ -5,6 +5,7 @@ import com.bjike.goddess.customer.bo.ClosenessFoactorSetBO;
 import com.bjike.goddess.customer.dto.ClosenessFoactorSetDTO;
 import com.bjike.goddess.customer.service.ClosenessFoactorSetSer;
 import com.bjike.goddess.customer.to.ClosenessFoactorSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,17 @@ import java.util.List;
 public class ClosenessFoactorSetApiImpl implements ClosenessFoactorSetAPI {
     @Autowired
     private ClosenessFoactorSetSer closenessFoactorSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return closenessFoactorSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return closenessFoactorSetSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countCloseness(ClosenessFoactorSetDTO closenessFoactorSetDTO) throws SerException {
         return closenessFoactorSetSer.countCloseness(closenessFoactorSetDTO);

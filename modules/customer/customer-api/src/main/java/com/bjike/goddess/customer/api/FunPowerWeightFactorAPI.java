@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.FunPowerWeightFactorBO;
 import com.bjike.goddess.customer.dto.FunPowerWeightFactorDTO;
 import com.bjike.goddess.customer.to.FunPowerWeightFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface FunPowerWeightFactorAPI {
+
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 职权因素层设置总条数
      */

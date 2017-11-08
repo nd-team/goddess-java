@@ -160,7 +160,7 @@ public class CustomerBaseInfoExport extends BaseBO {
      * 职权
      */
     @ExcelHeader(name = "职权")
-    private String workRight;
+    private WorkRight workRight;
 
     /**
      * 生活地区
@@ -619,11 +619,11 @@ public class CustomerBaseInfoExport extends BaseBO {
         this.workLevel = workLevel;
     }
 
-    public String getWorkRight() {
+    public WorkRight getWorkRight() {
         return workRight;
     }
 
-    public void setWorkRight(String workRight) {
+    public void setWorkRight(WorkRight workRight) {
         this.workRight = workRight;
     }
 

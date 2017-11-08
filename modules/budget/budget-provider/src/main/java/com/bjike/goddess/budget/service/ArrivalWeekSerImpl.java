@@ -242,6 +242,8 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
     public ArrivalWeekBO save(ArrivalWeekTO to) throws SerException {
         checkAddIdentity();
         ArrivalWeek arrivalWeek = BeanTransform.copyProperties(to, ArrivalWeek.class, true);
+//        arrivalWeek.setTargetIncome(to.getPrice()*to.getTargetWork());
+//        arrivalWeek.setPlanIncome(to.getPrice()*to.getActualWork());
         super.save(arrivalWeek);
         arrivalMonthSer.deleteAll();
         List<ArrivalWeekCountBO> list = count();
@@ -330,8 +332,8 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
         List<ArrivalWeekBO> boList = new ArrayList<ArrivalWeekBO>();
         for (ArrivalWeek a : list) {
             ArrivalWeekBO bo = BeanTransform.copyProperties(a, ArrivalWeekBO.class);
-            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
-            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            bo.setWorkDifferences(a.getTargetWork() - a.getActualWork());
+            bo.setIncomeDifferences(a.getTargetIncome() - a.getPlanIncome());
             boList.add(bo);
         }
         return boList;
@@ -341,8 +343,8 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
     public ArrivalWeekBO findByID(String id) throws SerException {
         ArrivalWeek arrivalWeek = super.findById(id);
         ArrivalWeekBO bo = BeanTransform.copyProperties(arrivalWeek, ArrivalWeekBO.class);
-        bo.setWorkDifferences(arrivalWeek.getActualWork() - arrivalWeek.getTargetWork());
-        bo.setIncomeDifferences(arrivalWeek.getPlanIncome() - arrivalWeek.getTargetIncome());
+        bo.setWorkDifferences(arrivalWeek.getTargetWork() - arrivalWeek.getActualWork());
+        bo.setIncomeDifferences(arrivalWeek.getTargetIncome() - arrivalWeek.getPlanIncome());
         return bo;
     }
 
@@ -381,7 +383,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
                             incomeDifferencesSum += incomeDifference;
                             targetWorkSum += a.getTargetWork();
                             actualWorkSum += a.getActualWork();
-                            int workDifference = a.getActualWork() - a.getTargetWork();
+                            int workDifference = a.getTargetWork() - a.getActualWork();
                             workDifferencesSum += workDifference;
                         }
                     }
@@ -446,7 +448,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
                                 incomeDifferencesSum += incomeDifference;
                                 targetWorkSum += a.getTargetWork();
                                 actualWorkSum += a.getActualWork();
-                                int workDifference = a.getActualWork() - a.getTargetWork();
+                                int workDifference = a.getTargetWork() - a.getActualWork();
                                 workDifferencesSum += workDifference;
                             }
                         }

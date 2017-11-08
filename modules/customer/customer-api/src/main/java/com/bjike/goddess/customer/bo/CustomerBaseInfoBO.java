@@ -107,7 +107,10 @@ public class CustomerBaseInfoBO extends BaseBO {
      * 组织机构规模
      */
     private String origanizationSize;
-
+    /**
+     * 部门
+     */
+    private String department;
     /**
      * 岗位
      */
@@ -121,7 +124,7 @@ public class CustomerBaseInfoBO extends BaseBO {
     /**
      * 职权
      */
-    private String workRight;
+    private WorkRight workRight;
 
     /**
      * 生活地区
@@ -274,6 +277,15 @@ public class CustomerBaseInfoBO extends BaseBO {
     private Boolean proceedMarketTreat;
 
     /**
+     * 冻结时间
+     */
+    private String freezeTime;
+    /**
+     * 拜访周期
+     */
+    private Integer callcyle;
+
+    /**
      * 客户详细信息
      */
     private CustomerDetailBO customerDetailBO;
@@ -423,6 +435,14 @@ public class CustomerBaseInfoBO extends BaseBO {
         this.origanizationSize = origanizationSize;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public String getWorkPosition() {
         return workPosition;
     }
@@ -439,11 +459,11 @@ public class CustomerBaseInfoBO extends BaseBO {
         this.workLevel = workLevel;
     }
 
-    public String getWorkRight() {
+    public WorkRight getWorkRight() {
         return workRight;
     }
 
-    public void setWorkRight(String workRight) {
+    public void setWorkRight(WorkRight workRight) {
         this.workRight = workRight;
     }
 
@@ -733,5 +753,21 @@ public class CustomerBaseInfoBO extends BaseBO {
 
     public void setCustomerDetailBO(CustomerDetailBO customerDetailBO) {
         this.customerDetailBO = customerDetailBO;
+    }
+
+    public String getFreezeTime() {
+        return freezeTime;
+    }
+
+    public void setFreezeTime(String freezeTime) {
+        this.freezeTime = freezeTime;
+    }
+
+    public Integer getCallcyle() {
+        return callcyle;
+    }
+
+    public void setCallcyle(Integer callcyle) {
+        this.callcyle = callcyle;
     }
 }

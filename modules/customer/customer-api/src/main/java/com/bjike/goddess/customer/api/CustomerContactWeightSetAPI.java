@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.customer.bo.CustomerContactWeightSetBO;
 import com.bjike.goddess.customer.dto.CustomerContactWeightSetDTO;
 import com.bjike.goddess.customer.to.CustomerContactWeightSetTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -17,6 +18,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerContactWeightSetAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 客户接触阶段权重设置总条数
      */
@@ -68,5 +81,13 @@ public interface CustomerContactWeightSetAPI {
      */
     default void deleteContactWeight(String id) throws SerException {
         return;
+    }
+    /**
+     * 根据接触阶段名获取对应数据
+     *
+     * @param customerContactType 接触阶段名
+     */
+    default CustomerContactWeightSetBO findByCustomerType(String customerContactType) throws SerException {
+        return null;
     }
 }
