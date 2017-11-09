@@ -88,4 +88,11 @@
     <!-- 租车协议-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.rentcar.api.CarSendEmailAPI" id="carSendEmailApiImpl"/>
 
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.PhoneRemindAPI" id="phoneRemindApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.CaseCountSetAPI" id="caseCountSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.DayCountSetAPI" id="dayCountSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.FinanceSetAPI" id="financeSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.OverWorkCountSetAPI" id="overWorkCountSetApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.attendance.api.VacateCountSetAPI" id="vacateCountSetApiImpl"/>
+
 </beans>

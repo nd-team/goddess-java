@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.taskallotment.enums.TitleType;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 自定义字段

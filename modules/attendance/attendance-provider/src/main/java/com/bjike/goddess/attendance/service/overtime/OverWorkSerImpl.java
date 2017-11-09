@@ -1,18 +1,21 @@
 package com.bjike.goddess.attendance.service.overtime;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.attendance.api.VacateAPI;
 import com.bjike.goddess.attendance.bo.VacateBO;
-import com.bjike.goddess.attendance.bo.overtime.AreaBO;
-import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
-import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
+import com.bjike.goddess.attendance.bo.overtime.*;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.overtime.*;
 import com.bjike.goddess.attendance.entity.overtime.OverWork;
 import com.bjike.goddess.attendance.enums.AuditStatus;
-import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
-import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
-import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
-import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
+import com.bjike.goddess.attendance.enums.CountType;
+import com.bjike.goddess.attendance.enums.GuideAddrStatus;
+import com.bjike.goddess.attendance.service.CusPermissionSer;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
+import com.bjike.goddess.attendance.to.OverWorkAuditTO;
+import com.bjike.goddess.attendance.to.OverWorkTO;
+import com.bjike.goddess.attendance.vo.OverLongAndRelaxDayVO;
+import com.bjike.goddess.attendance.vo.PositionAndDepartVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -25,18 +28,21 @@ import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -59,17 +65,123 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
-    private UserAPI userAPI;
-    @Autowired
     private VacateAPI vacateAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("5");
+            if (!flag) {
+                throw new SerException("您不是相应岗位的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+            if (!flag) {
+                throw new SerException("您不是相应岗位的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("5");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
 
     @Override
     public Long countOverWork(OverWorkDTO overWorkDTO) throws SerException {
-        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())) {
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
-        if( null !=overWorkDTO.getAuditStatus() ){
+        if (null != overWorkDTO.getAuditStatus()) {
             overWorkDTO.getConditions().add(Restrict.eq("auditStatus", overWorkDTO.getAuditStatus().getCode()));
         }
         Long count = super.count(overWorkDTO);
@@ -79,30 +191,31 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
     @Override
     public OverWorkBO getOneById(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        OverWork overWork = super.findById( id );
+        OverWork overWork = super.findById(id);
         OverWorkBO overWorkBO = BeanTransform.copyProperties(overWork, OverWorkBO.class);
         return overWorkBO;
     }
 
     @Override
     public List<OverWorkBO> listOverWork(OverWorkDTO overWorkDTO) throws SerException {
-        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())) {
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
-        if( null !=overWorkDTO.getAuditStatus() ){
+        if (null != overWorkDTO.getAuditStatus()) {
             overWorkDTO.getConditions().add(Restrict.eq("auditStatus", overWorkDTO.getAuditStatus().getCode()));
         }
         overWorkDTO.getSorts().add("createTime=desc");
-        List<OverWork> list = super.findByCis( overWorkDTO ,true );
-        List<OverWorkBO> boList = BeanTransform.copyProperties( list, OverWorkBO.class);
+        List<OverWork> list = super.findByCis(overWorkDTO, true);
+        List<OverWorkBO> boList = BeanTransform.copyProperties(list, OverWorkBO.class);
 
         return boList;
     }
 
 
+    private Logger log = Logger.getLogger(OverWorkSerImpl.class);
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -111,45 +224,53 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         OverWork overWork = new OverWork();
-        BeanTransform.copyProperties(overWorkTO,overWork,"overStartTime","overEndTime");
-        overWork.setOverStartTime( DateUtil.parseDateTime(overWorkTO.getOverStartTime()) );
-        overWork.setOverEndTime( DateUtil.parseDateTime(overWorkTO.getOverEndTime()) );
+        BeanTransform.copyProperties(overWorkTO, overWork, "overStartTime", "overEndTime");
+        overWork.setOverStartTime(DateUtil.parseDateTime(overWorkTO.getOverStartTime()));
+        overWork.setOverEndTime(DateUtil.parseDateTime(overWorkTO.getOverEndTime()));
         overWork.setAuditStatus(AuditStatus.NONE);
-        overWork.setEntryer( userBO.getUsername() );
-        super.save( overWork );
+        overWork.setEntryer(userBO.getUsername());
+        super.save(overWork);
+
         //如果是项目经理下发的任务，则不用审核，将审核状态改为已通过
         RpcTransmit.transmitUserToken(userToken);
-        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        log.info("当前用户 ：" + JSON.toJSONString(userBO));
+        //获取录入人的主职位
+        Map<String, String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        log.info("当前用户2 ：" + JSON.toJSONString(positMap));
+
+
         RpcTransmit.transmitUserToken(userToken);
-        if(null != positMap) {
+        if (null != positMap) {
             String position = "";
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();
             }
             if (position.contains("项目经理")) {
+                log.info("当前用户3 ：" + position);
                 OverWork temp = super.findById(overWork.getId());
                 temp.setAuditStatus(AuditStatus.AGREE);
                 super.update(temp);
             }
         }
-        return BeanTransform.copyProperties( overWork, OverWorkBO.class);
+        return BeanTransform.copyProperties(overWork, OverWorkBO.class);
     }
+
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteOverWork(String id) throws SerException {
-        if (StringUtils.isBlank(id)){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        OverWork overWork = super.findById( id );
-        if( null!= overWork){
-            super.remove( id );
+        OverWork overWork = super.findById(id);
+        if (null != overWork) {
+            super.remove(id);
         }
     }
 
     @Override
     public List<AreaBO> areaList() throws SerException {
-        List<AreaBO> area = BeanTransform.copyProperties(departmentDetailAPI.findArea(),AreaBO.class);
+        List<AreaBO> area = BeanTransform.copyProperties(departmentDetailAPI.findArea(), AreaBO.class);
         return area;
     }
 
@@ -157,8 +278,8 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     public List<String> peopleList() throws SerException {
         List<UserBO> userBOS = positionDetailUserAPI.findUserList();
         List<String> userList = new ArrayList<>();
-        if( userBOS != null && userBOS.size()>0 ){
-            userList = userBOS.stream().filter(str->StringUtils.isNotBlank( str.getUsername()))
+        if (userBOS != null && userBOS.size() > 0) {
+            userList = userBOS.stream().filter(str -> StringUtils.isNotBlank(str.getUsername()))
                     .map(UserBO::getUsername).collect(Collectors.toList());
         }
         return userList;
@@ -167,11 +288,11 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     @Override
     public PositionAndDepartVO getPositAndDepart(String overWorker) throws SerException {
         PositionAndDepartVO vo = new PositionAndDepartVO();
-        Map<String,String> positMap = positionUserDetailAPI.departPosition(overWorker);
-        if ( positMap != null ){
-            for( Map.Entry str : positMap.entrySet() ){
-                vo.setDepart( (String)str.getKey() );
-                vo.setPosition( (String)str.getValue() );
+        Map<String, String> positMap = positionUserDetailAPI.departPosition(overWorker);
+        if (positMap != null) {
+            for (Map.Entry str : positMap.entrySet()) {
+                vo.setDepart((String) str.getKey());
+                vo.setPosition((String) str.getValue());
             }
         }
         return vo;
@@ -184,19 +305,19 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         //若没有午休：  加班时长= 结束时间 - 开始时间
         Double overLong = 0d;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime start = LocalDateTime.parse( overDTO.getStartTime(), formatter );
-        LocalDateTime end = LocalDateTime.parse( overDTO.getEndTime(), formatter );
-        Long hour = end.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()-start.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        overLong = new BigDecimal((double) hour/1000/60/60).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-        if ( overDTO.getNoonBreakOr().equals(true) ){
-            overLong = overLong-1.5d;
+        LocalDateTime start = LocalDateTime.parse(overDTO.getStartTime(), formatter);
+        LocalDateTime end = LocalDateTime.parse(overDTO.getEndTime(), formatter);
+        Long hour = end.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - start.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        overLong = new BigDecimal((double) hour / 1000 / 60 / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        if (overDTO.getNoonBreakOr().equals(true)) {
+            overLong = overLong - 1.5d;
         }
         //计算可休天数= 加班时长/8
-        Double relaxDay = overLong/8;
+        Double relaxDay = overLong / 8;
 
         OverLongAndRelaxDayVO vo = new OverLongAndRelaxDayVO();
-        vo.setOverLong( overLong );
-        vo.setRelaxDay( relaxDay );
+        vo.setOverLong(overLong);
+        vo.setRelaxDay(relaxDay);
 
         return vo;
     }
@@ -204,15 +325,15 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     @Override
     public Long countAudit(OverWorkDTO overWorkDTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())) {
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
-        if( null !=overWorkDTO.getAuditStatus() ){
+        if (null != overWorkDTO.getAuditStatus()) {
             overWorkDTO.getConditions().add(Restrict.eq("auditStatus", overWorkDTO.getAuditStatus().getCode()));
         }
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        if( !"admin".equals(userBO.getUsername())){
+        if (!"admin".equals(userBO.getUsername())) {
             overWorkDTO.getConditions().add(Restrict.eq("charger", userBO.getUsername()));
         }
 
@@ -223,51 +344,53 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
     @Override
     public List<OverWorkBO> listAudit(OverWorkDTO overWorkDTO) throws SerException {
+        checkSeeIdentity();
         String userToken = RpcTransmit.getUserToken();
-        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkDTO.getOverWorker())) {
             overWorkDTO.getConditions().add(Restrict.eq("overWorker", overWorkDTO.getOverWorker()));
         }
-        if( null !=overWorkDTO.getAuditStatus() ){
+        if (null != overWorkDTO.getAuditStatus()) {
             overWorkDTO.getConditions().add(Restrict.eq("auditStatus", overWorkDTO.getAuditStatus().getCode()));
         }
 
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        if( !"admin".equals(userBO.getUsername())){
+        if (!"admin".equals(userBO.getUsername())) {
             overWorkDTO.getConditions().add(Restrict.eq("charger", userBO.getUsername()));
         }
 
         overWorkDTO.getSorts().add("createTime=desc");
-        List<OverWork> list = super.findByCis( overWorkDTO ,true );
-        List<OverWorkBO> boList = BeanTransform.copyProperties( list, OverWorkBO.class);
+        List<OverWork> list = super.findByCis(overWorkDTO, true);
+        List<OverWorkBO> boList = BeanTransform.copyProperties(list, OverWorkBO.class);
 
         return boList;
     }
 
     @Override
     public OverWorkBO auditOverWork(OverWorkAuditTO auditTO) throws SerException {
+        checkAddIdentity();
         String userToken = RpcTransmit.getUserToken();
-        if( StringUtils.isBlank( auditTO.getId())){
+        if (StringUtils.isBlank(auditTO.getId())) {
             throw new SerException("id不能为空");
         }
-        if( null == auditTO.getAuditStatus() ){
+        if (null == auditTO.getAuditStatus()) {
             throw new SerException("审核状态AuditStatus不能为空");
         }
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        OverWork overWork = super.findById( auditTO.getId() );
-        if( !userBO.getUsername().equals( overWork.getCharger())){
+        OverWork overWork = super.findById(auditTO.getId());
+        if (!userBO.getUsername().equals(overWork.getCharger())) {
             throw new SerException("您不是审核人，不能审核");
         }
-        if( null != overWork  ){
-            overWork.setAuditAdvice( auditTO.getAuditAdvice() );
-            overWork.setAuditStatus( auditTO.getAuditStatus() );
-            overWork.setAuditTime( LocalDateTime.now() );
-            overWork.setModifyTime( LocalDateTime.now() );
-            super.update( overWork );
+        if (null != overWork) {
+            overWork.setAuditAdvice(auditTO.getAuditAdvice());
+            overWork.setAuditStatus(auditTO.getAuditStatus());
+            overWork.setAuditTime(LocalDateTime.now());
+            overWork.setModifyTime(LocalDateTime.now());
+            super.update(overWork);
         }
-        return BeanTransform.copyProperties( overWork , OverWorkBO.class);
+        return BeanTransform.copyProperties(overWork, OverWorkBO.class);
     }
 
     @Override
@@ -278,9 +401,9 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         //查询核算截至时间
         //若传加班人员条件,只能看但前加班人员的截至当前月的剩余加班数
         Long count = 0L;
-        if( StringUtils.isNotBlank(overWorkRestDayDTO.getOverWorker())){
+        if (StringUtils.isNotBlank(overWorkRestDayDTO.getOverWorker())) {
             count = 1L;
-        }else {
+        } else {
             List<String> userList = this.peopleList();
             if (userList != null && userList.size() > 0) {
                 count = (long) userList.size();
@@ -299,63 +422,63 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         //查询核算截至时间
         List<String> subUserList = new ArrayList<>();
         List<String> userList = new ArrayList<>();
-        if( StringUtils.isBlank(overWorkRestDayDTO.getOverWorker())){
+        if (StringUtils.isBlank(overWorkRestDayDTO.getOverWorker())) {
             userList = this.peopleList();
-        }else{
+        } else {
             userList.add(overWorkRestDayDTO.getOverWorker());
         }
-        if( null != userList ) {
+        if (null != userList) {
             //分页处理
             Integer page = overWorkRestDayDTO.getPage();
             Integer limmit = overWorkRestDayDTO.getLimit();
-            int startLine = page * limmit ;
+            int startLine = page * limmit;
             int endLine = page * limmit + limmit;
-            if( userList.size()-1 >= endLine ){
+            if (userList.size() - 1 >= endLine) {
                 subUserList = userList.subList(startLine, endLine);
-            }else if( userList.size()-1< endLine ){
+            } else if (userList.size() - 1 < endLine) {
                 subUserList = userList.subList(startLine, userList.size());
             }
-            if( subUserList != null && subUserList.size()>0 ) {
+            if (subUserList != null && subUserList.size() > 0) {
                 for (String userName : subUserList) {
                     //查加班开始时间在前三个月到本月的21号的累积
                     LocalDateTime now = LocalDateTime.now();
-                    if ( StringUtils.isNotBlank(overWorkRestDayDTO.getCheckEndTime())) {
-                        now = DateUtil.parseDateTime(  overWorkRestDayDTO.getCheckEndTime()+"-20");
+                    if (StringUtils.isNotBlank(overWorkRestDayDTO.getCheckEndTime())) {
+                        now = DateUtil.parseDateTime(overWorkRestDayDTO.getCheckEndTime() + "-20");
                     }
                     LocalDateTime thirdMonthAgo = now.minusMonths(3);
 
-                    LocalDateTime nowDate = LocalDateTime.of(now.getYear(),now.getMonthValue(),21,23,59,59);
-                    LocalDateTime thirdAgoMonth = LocalDateTime.of( thirdMonthAgo.getYear(),thirdMonthAgo.getMonthValue(),20,00,00,01);
+                    LocalDateTime nowDate = LocalDateTime.of(now.getYear(), now.getMonthValue(), 21, 23, 59, 59);
+                    LocalDateTime thirdAgoMonth = LocalDateTime.of(thirdMonthAgo.getYear(), thirdMonthAgo.getMonthValue(), 20, 00, 00, 01);
 
                     OverWorkDTO dto = new OverWorkDTO();
-                    dto.getConditions().add(Restrict.between("overStartTime",new LocalDateTime[]{thirdAgoMonth,nowDate}));
+                    dto.getConditions().add(Restrict.between("overStartTime", new LocalDateTime[]{thirdAgoMonth, nowDate}));
                     dto.getConditions().add(Restrict.eq("overWorker", userName));
-                    List<OverWork> listOver = super.findByCis(dto );
+                    List<OverWork> listOver = super.findByCis(dto);
                     //计算所有加班天数
-                    Double allOverDay = listOver==null ? 0d:listOver.stream().mapToDouble(OverWork::getRelaxDay).sum();
+                    Double allOverDay = listOver == null ? 0d : listOver.stream().mapToDouble(OverWork::getRelaxDay).sum();
                     //查询上月20到本月21号所有请假天数
                     LocalDateTime lastMonDate = now.minusMonths(1).minusDays(2).plusSeconds(2);
                     VacateConDTO vacateConDTO = new VacateConDTO();
-                    vacateConDTO.setEmpName( userName );
-                    vacateConDTO.setStartTime( String.valueOf(lastMonDate));
-                    vacateConDTO.setEndTime( String.valueOf( nowDate ));
-                    List<VacateBO> vacateBOList = vacateAPI.findByCon( vacateConDTO );
-                    Double vacateDay = vacateBOList==null ? 0d : vacateBOList.stream().mapToDouble(VacateBO::getTime).sum();
+                    vacateConDTO.setEmpName(userName);
+                    vacateConDTO.setStartTime(String.valueOf(lastMonDate));
+                    vacateConDTO.setEndTime(String.valueOf(nowDate));
+                    List<VacateBO> vacateBOList = vacateAPI.findByCon(vacateConDTO);
+                    Double vacateDay = vacateBOList == null ? 0d : vacateBOList.stream().mapToDouble(VacateBO::getTime).sum();
 
                     //计算剩余加班天数
                     Double restOverDay = allOverDay - vacateDay;
 
                     //查询员工编号
                     RpcTransmit.transmitUserToken(userToken);
-                    UserBO userBO = userAPI.findByUsername( userName );
+                    UserBO userBO = userAPI.findByUsername(userName);
                     RpcTransmit.transmitUserToken(userToken);
 
                     OverWorkRestDayBO overWorkRestDayBO = new OverWorkRestDayBO();
-                    overWorkRestDayBO.setEmpNum( userBO!= null ? userBO.getEmployeeNumber():"");
-                    overWorkRestDayBO.setEmpName( userName );
-                    overWorkRestDayBO.setRestDay( String.valueOf(restOverDay) );
-                    overWorkRestDayBO.setCheckEndTime( nowDate+"" );
-                    returnList.add( overWorkRestDayBO );
+                    overWorkRestDayBO.setEmpNum(userBO != null ? userBO.getEmployeeNumber() : "");
+                    overWorkRestDayBO.setEmpName(userName);
+                    overWorkRestDayBO.setRestDay(String.valueOf(restOverDay));
+                    overWorkRestDayBO.setCheckEndTime(nowDate + "");
+                    returnList.add(overWorkRestDayBO);
 
                 }
             }
@@ -364,13 +487,32 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     }
 
     @Override
+    public Double overDay(String name, LocalDate endTime) throws SerException {
+        LocalDate s = null;
+        if (endTime.getDayOfMonth() > 21) {
+            s = endTime.minusMonths(2);
+        } else {
+            s = endTime.minusMonths(3);
+        }
+        LocalDateTime start = LocalDateTime.of(s.getYear(), s.getMonthValue(), 20, 00, 00, 01);
+        LocalDateTime end = LocalDateTime.of(endTime.getYear(), endTime.getMonthValue(), endTime.getDayOfMonth(), 00, 00, 01);
+        OverWorkDTO dto = new OverWorkDTO();
+        dto.getConditions().add(Restrict.between("overStartTime", new LocalDateTime[]{start, end}));
+        dto.getConditions().add(Restrict.eq("overWorker", name));
+        List<OverWork> listOver = super.findByCis(dto);
+        //计算所有加班天数
+        Double allOverDay = listOver == null ? 0d : listOver.stream().mapToDouble(OverWork::getRelaxDay).sum();
+        return allOverDay;
+    }
+
+    @Override
     public List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
-        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyOverWorkDTO , OverWorkDTO.class,"serialVersionUID" );
-        dto.getConditions().add(Restrict.eq("overWorker",phoneMyOverWorkDTO.getOverWorker()));
+        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyOverWorkDTO, OverWorkDTO.class, "serialVersionUID");
+        dto.getConditions().add(Restrict.eq("overWorker", phoneMyOverWorkDTO.getOverWorker()));
 
         dto.getSorts().add("createTime=desc");
-        List<OverWork> list = super.findByCis( dto ,true );
-        return BeanTransform.copyProperties( list , OverWorkBO.class);
+        List<OverWork> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, OverWorkBO.class);
     }
 
     @Override
@@ -379,11 +521,11 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyEntryOverWorkDTO , OverWorkDTO.class,"serialVersionUID" );
-        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyEntryOverWorkDTO, OverWorkDTO.class, "serialVersionUID");
+        Map<String, String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
         Boolean isManage = false;
-        if(null != positMap) {
+        if (null != positMap) {
             String position = "";
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();
@@ -392,27 +534,27 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
                 isManage = true;
             }
         }
-        if(! isManage ){
+        if (!isManage) {
             //说明是不是项目经理或模块负责人。就显示录入人
-            dto.getConditions().add(Restrict.eq("entryer",phoneMyEntryOverWorkDTO.getEntryer()));
+            dto.getConditions().add(Restrict.eq("entryer", phoneMyEntryOverWorkDTO.getEntryer()));
         }
         //是项目经理就查所有，不传条件
         dto.getSorts().add("createTime=desc");
-        List<OverWork> list = super.findByCis( dto ,true );
-        return BeanTransform.copyProperties( list , OverWorkBO.class);
+        List<OverWork> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, OverWorkBO.class);
     }
 
     @Override
     public List<OverWorkBO> myAuditList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
-        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyEntryOverWorkDTO , OverWorkDTO.class,"serialVersionUID" );
+        OverWorkDTO dto = BeanTransform.copyProperties(phoneMyEntryOverWorkDTO, OverWorkDTO.class, "serialVersionUID");
 
         RpcTransmit.transmitUserToken(userToken);
-        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        Map<String, String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
         Boolean isManage = false;
-        if(null != positMap) {
+        if (null != positMap) {
             String position = "";
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();
@@ -422,31 +564,31 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             }
         }
 
-        if(! isManage ){
+        if (!isManage) {
             //说明是不是项目经理
-            dto.getConditions().add(Restrict.eq("charger",phoneMyEntryOverWorkDTO.getEntryer()));
+            dto.getConditions().add(Restrict.eq("charger", phoneMyEntryOverWorkDTO.getEntryer()));
         }
         //是项目经理就查所有，不传条件
 
-        dto.getConditions().add(Restrict.eq("auditStatus",AuditStatus.NONE));
+        dto.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
         dto.getSorts().add("createTime=desc");
-        List<OverWork> list = super.findByCis( dto ,true );
-        return BeanTransform.copyProperties( list , OverWorkBO.class);
+        List<OverWork> list = super.findByCis(dto, true);
+        return BeanTransform.copyProperties(list, OverWorkBO.class);
     }
 
     @Override
     public OverWorkBO getPhoneOneById(String id) throws SerException {
-        if(StringUtils.isBlank( id )){
+        if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
 
         RpcTransmit.transmitUserToken(userToken);
-        Map<String,String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
+        Map<String, String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
         Boolean isManage = false;
-        if(null != positMap) {
+        if (null != positMap) {
             String position = "";
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();
@@ -456,18 +598,177 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             }
         }
 
-        OverWork overWork = super.findById( id );
-        OverWorkBO bo = BeanTransform.copyProperties( overWork , OverWorkBO.class);
-        if( isManage && AuditStatus.NONE.equals(overWork.getAuditStatus()) ){
-            bo.setHasAuditIs( true );
-        }else{
-            bo.setHasAuditIs( false );
+        OverWork overWork = super.findById(id);
+        OverWorkBO bo = BeanTransform.copyProperties(overWork, OverWorkBO.class);
+        if (isManage && AuditStatus.NONE.equals(overWork.getAuditStatus())) {
+            bo.setHasAuditIs(true);
+        } else {
+            bo.setHasAuditIs(false);
         }
 
         return bo;
     }
 
 
+    @Override
+    public List<OverWorkMailBO> outWorkCountMail(OverWorkDTO dto) throws SerException {
+        List<OverWork> list = all(dto);
+        Set<String> departs = list.stream().map(OverWork::getDepart).collect(Collectors.toSet());
+        List<OverWorkMailBO> bos = new ArrayList<>();
+        double outWorkTimeSum = 0;
+        double normalTimeSum = 0;
+        int numSum = 0;   //总合计
+        for (String depart : departs) {
+            double outWorkTimeDepart = 0;
+            double normalTimeDepart = 0;
+            int numDepart = 0;   //部门合计
+            OverWorkMailBO bo = new OverWorkMailBO();
+            bo.setDepart(depart);
+            List<OutWorkDBO> sons = new ArrayList<>();
+            Set<String> names = list.stream().filter(overWork -> depart.equals(overWork.getDepart())).map(OverWork::getOverWorker).collect(Collectors.toSet());
+            for (String name : names) {
+                double normalTime = list.stream().filter(overWork -> "普通加班".equals(overWork.getOverType()) && name.equals(overWork.getOverWorker())).mapToDouble(OverWork::getOverLong).sum();
+                double outWorkTime = list.stream().filter(overWork -> name.equals(overWork.getOverWorker())).mapToDouble(OverWork::getOverLong).sum();
+                normalTimeDepart += normalTime;
+                outWorkTimeDepart += outWorkTime;
+                normalTimeSum += normalTime;
+                outWorkTimeSum += outWorkTime;
+                OutWorkDBO dbo = new OutWorkDBO(name, outWorkTime, normalTime);
+                sons.add(dbo);
+                numDepart++;
+                numSum++;
+            }
+            bo.setSons(sons);
+            bos.add(bo);
+            OverWorkMailBO count = new OverWorkMailBO();
+            count.setDepart("合计");
+            OutWorkDBO dbo = new OutWorkDBO(numDepart + "", outWorkTimeDepart, normalTimeDepart);
+            List<OutWorkDBO> sons1 = new ArrayList<>();
+            sons1.add(dbo);
+            count.setSons(sons1);
+            bos.add(count);
+        }
+        OutWorkDBO dbo = new OutWorkDBO(numSum + "", outWorkTimeSum, normalTimeSum);
+        OverWorkMailBO count = new OverWorkMailBO();
+        count.setDepart("总合计");
+        List<OutWorkDBO> sons = new ArrayList<>();
+        sons.add(dbo);
+        count.setSons(sons);
+        bos.add(count);
+        return bos;
+    }
 
+    @Override
+    public OverWorkCountBO outWorkCount(OverWorkDTO dto) throws SerException {
+        String time = dto.getStartTime() + "-" + dto.getEndTime();
+        List<OverWork> list = all(dto);
+        Set<String> areas = list.stream().map(OverWork::getArea).collect(Collectors.toSet());
+        List<OutWorkABO> abos = new ArrayList<>();
+        double outWorkTimeSum = 0;
+        double normalTimeSum = 0;
+        int numSum = 0;   //总合计
+        for (String area : areas) {
+            OutWorkABO abo = new OutWorkABO();
+            abo.setArea(area);
+            List<OutWorkBBO> bbos = new ArrayList<>();
+            Set<String> departs = list.stream().filter(overWork -> area.equals(overWork.getArea())).map(OverWork::getDepart).collect(Collectors.toSet());
+            for (String depart : departs) {
+                double outWorkTimeDepart = 0;
+                double normalTimeDepart = 0;
+                int numDepart = 0;   //部门合计
+                OutWorkBBO bbo = new OutWorkBBO();
+                bbo.setDepart(depart);
+                List<OutWorkCBO> cbos = new ArrayList<>();
+                Set<String> positions = list.stream().filter(overWork -> area.equals(overWork.getArea()) && depart.equals(overWork.getDepart())).map(OverWork::getPosition).collect(Collectors.toSet());
+                for (String position : positions) {
+                    OutWorkCBO cbo = new OutWorkCBO();
+                    List<OutWorkDBO> dbos = new ArrayList<>();
+                    Set<String> names = list.stream().filter(overWork -> area.equals(overWork.getArea()) && depart.equals(overWork.getDepart()) && position.equals(overWork.getPosition())).map(OverWork::getOverWorker).collect(Collectors.toSet());
+                    for (String name : names) {
+                        double normalTime = list.stream().filter(overWork -> "普通加班".equals(overWork.getOverType()) && name.equals(overWork.getOverWorker())).mapToDouble(OverWork::getOverLong).sum();
+                        double outWorkTime = list.stream().filter(overWork -> name.equals(overWork.getOverWorker())).mapToDouble(OverWork::getOverLong).sum();
+                        normalTimeDepart += normalTime;
+                        outWorkTimeDepart += outWorkTime;
+                        normalTimeSum += normalTime;
+                        outWorkTimeSum += outWorkTime;
+                        OutWorkDBO dbo = new OutWorkDBO(name, outWorkTime, normalTime);
+                        dbos.add(dbo);
+                        numDepart++;
+                        numSum++;
+                    }
+                    cbo.setSons(dbos);
+                    cbos.add(cbo);
+                }
+                bbo.setSons(cbos);
+                bbos.add(bbo);
+                OutWorkBBO departCount = count(outWorkTimeDepart, normalTimeDepart, numDepart, null);
+                bbos.add(departCount);
+            }
+            abo.setSons(bbos);
+            abos.add(abo);
+        }
+        OutWorkBBO sum = count(outWorkTimeSum, normalTimeSum, numSum, "总合计");
+        OutWorkABO abo = new OutWorkABO();
+        List<OutWorkBBO> bbos = new ArrayList<>();
+        bbos.add(sum);
+        abo.setSons(bbos);
+        abos.add(abo);
+        OverWorkCountBO countBO = new OverWorkCountBO();
+        countBO.setTime(time);
+        countBO.setSons(abos);
+        return countBO;
+    }
+
+    private OutWorkBBO count(double outWorkTimeDepart, double normalTimeDepart, int num, String type) throws SerException {
+        OutWorkBBO bo = new OutWorkBBO();
+        if ("总合计".equals(type)) {
+            bo.setDepart("总合计");
+        } else {
+            bo.setDepart("合计");
+        }
+        List<OutWorkCBO> cbos = new ArrayList<>();
+        OutWorkCBO cbo = new OutWorkCBO();
+        List<OutWorkDBO> dbos = new ArrayList<>();
+        OutWorkDBO count = new OutWorkDBO();
+        count.setName(num + "人");
+        count.setOutWorkTime(outWorkTimeDepart);
+        count.setNormalTime(normalTimeDepart);
+        dbos.add(count);
+        cbo.setSons(dbos);
+        bo.setSons(cbos);
+        return bo;
+    }
+
+    private List<OverWork> all(OverWorkDTO dto) throws SerException {
+        CountType countType = dto.getCountType();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT DISTINCT id FROM attendance_overwork" +
+                "        WHERE ");
+        if (CountType.DEPART.equals(countType)) {
+            String[] departs = dto.getDeparts();
+            if (null == departs) {
+                throw new SerException("部门汇总必须选择部门");
+            }
+            String[] departTemps = new String[departs.length];
+            int i = 0;
+            for (String s : departs) {
+                departTemps[i] = "'" + s + "'";
+                i++;
+            }
+            String departStr = StringUtils.join(departTemps, ",");
+            sb.append("depart in (" + departStr + ") AND ");
+        }
+        sb.append("('" + dto.getStartTime() + "' BETWEEN DATE_FORMAT(overStartTime, '%Y-%m-%d') AND DATE_FORMAT(overEndTime, '%Y-%m-%d'))" +
+                "   AND ('" + dto.getEndTime() + "' BETWEEN DATE_FORMAT(overStartTime, '%Y-%m-%d') AND DATE_FORMAT(overEndTime, '%Y-%m-%d'))");
+        List<OverWork> list = super.findBySql(sb.toString(), OverWork.class, new String[]{"id"});
+        List<OverWork> overWorks = new ArrayList<>();
+        if (null != list) {
+            List<String> ids = list.stream().map(OverWork::getId).collect(Collectors.toList());
+            for (String s : ids) {
+                overWorks.add(super.findById(s));
+            }
+        }
+        return overWorks;
+    }
 
 }

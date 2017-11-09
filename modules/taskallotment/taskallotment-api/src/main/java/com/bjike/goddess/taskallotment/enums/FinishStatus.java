@@ -1,5 +1,7 @@
 package com.bjike.goddess.taskallotment.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 完成状态
  *
@@ -13,10 +15,12 @@ public enum FinishStatus {
     /**
      * 已完成
      */
+    @ExcelValue(name = "已完成")
     FINISH(0),
     /**
      * 未完成
      */
+    @ExcelValue(name = "未完成")
     UNFINISHED(1);
 
     private int code;

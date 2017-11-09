@@ -1,9 +1,10 @@
 package com.bjike.goddess.attendance.entity.overtime;
 
-import com.bjike.goddess.attendance.enums.Status;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -50,7 +51,19 @@ public class ExtralOverWork extends BaseEntity {
     @Column(name = "creator", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '创建人'")
     private String creator;
 
+    /**
+     * 是否午休
+     */
+    @Column(name = "lunchBreak", nullable = false, columnDefinition = "TINYINT(1)   COMMENT '是否午休'")
+    private Boolean lunchBreak;
 
+    public Boolean getLunchBreak() {
+        return lunchBreak;
+    }
+
+    public void setLunchBreak(Boolean lunchBreak) {
+        this.lunchBreak = lunchBreak;
+    }
 
     public String getOverType() {
         return overType;

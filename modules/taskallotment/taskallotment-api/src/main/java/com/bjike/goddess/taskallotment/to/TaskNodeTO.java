@@ -49,7 +49,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 项目表id
      */
-    @NotBlank(groups = {ADD.class,TaskNodeTO.INITIATE.class}, message = "项目表id不能为空")
+    @NotBlank(groups = {ADD.class}, message = "项目表id不能为空")
     private String tableId;
     /**
      * 项目表
@@ -88,10 +88,10 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 任务内容
      */
-    @NotBlank(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.CONFIRM.class}, message = "任务类型不能为空")
+    @NotBlank(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.CONFIRM.class}, message = "任务内容不能为空")
     private String content;
 
-    /**
+    /**`
      * 计划任务量
      */
     @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class}, message = "计划任务量必须大于0")
@@ -100,7 +100,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 完成任务量
      */
-    @NotNull(groups = TaskNodeTO.CONFIRM.class,message = "完成任务量不能为空")
+    @NotNull(groups = {TaskNodeTO.CONFIRM.class,TaskNodeTO.WRITE.class},message = "完成任务量不能为空")
     private Double actualNum;
 
     /**

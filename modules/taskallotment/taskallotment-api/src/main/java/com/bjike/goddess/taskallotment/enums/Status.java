@@ -1,5 +1,7 @@
 package com.bjike.goddess.taskallotment.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 状态
  * @Author: [chenjunhao]
@@ -12,10 +14,12 @@ public enum Status {
     /**
      * 启用
      */
+    @ExcelValue(name = "启用")
     START(0),
     /**
      * 禁用
      */
+    @ExcelValue(name = "禁用")
     END(1);
 
     private int code;

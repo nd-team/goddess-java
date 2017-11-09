@@ -1,7 +1,6 @@
 package com.bjike.goddess.taskallotment.to;
 
 import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.taskallotment.enums.Status;
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,18 +17,33 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class TableTO extends BaseTO {
-    public interface EDITTABLE{}
+    public interface EDITTABLE {
+    }
 
     /**
      * 表名称
      */
-    @NotBlank(groups = TableTO.EDITTABLE.class,message = "表名称不能为空")
+    @NotBlank(groups = {TableTO.EDITTABLE.class,ADD.class}, message = "表名称不能为空")
     private String name;
     /**
      * 状态
      */
-    @NotNull(groups = TableTO.EDITTABLE.class,message = "状态不能为空")
+    @NotNull(groups = {TableTO.EDITTABLE.class,ADD.class}, message = "状态不能为空")
     private Status status;
+
+    /**
+     * 项目id
+     */
+    @NotBlank(groups = ADD.class, message = "项目id不能为空")
+    private String projectId;
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
 
     public Status getStatus() {
         return status;

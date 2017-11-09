@@ -1,10 +1,16 @@
 package com.bjike.goddess.taskallotment.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
+import com.bjike.goddess.taskallotment.enums.Status;
+import com.bjike.goddess.taskallotment.excel.ProjectExcel;
+import com.bjike.goddess.taskallotment.excel.TableExcel;
 import com.bjike.goddess.taskallotment.service.ProjectSer;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
@@ -15,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 项目列表业务接口实现
@@ -113,5 +120,63 @@ public class ProjectApiImpl implements ProjectAPI {
     @Override
     public Set<String> taskNames(String tableId) throws SerException {
         return projectSer.taskNames(tableId);
+    }
+
+    @Override
+    public void addTable(TableTO to) throws SerException {
+        projectSer.addTable(to);
+    }
+
+    @Override
+    public byte[] exportProjectExcel(ProjectDTO dto) throws SerException {
+        return projectSer.exportProjectExcel(dto);
+    }
+
+    @Override
+    public void leadProjectExcel(List<ProjectExcel> toList) throws SerException {
+        projectSer.leadProjectExcel(toList);
+    }
+
+    @Override
+    public byte[] exportTableExcel(TableDTO dto) throws SerException {
+        return projectSer.exportTableExcel(dto);
+    }
+
+    @Override
+    public void leadTableExcel(List<TableExcel> toList, String projectId) throws SerException {
+        projectSer.leadTableExcel(toList, projectId);
+    }
+
+    @Override
+    public List<String> areass() throws SerException{
+        ProjectDTO dto=new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        return projectSer.findByCis(dto).stream().map(Project::getArea).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> departs(String area) throws SerException{
+        ProjectDTO dto=new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        dto.getConditions().add(Restrict.eq("area",area));
+        return projectSer.findByCis(dto).stream().map(Project::getDepart).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> makeProjects(String area,String depart) throws SerException{
+        ProjectDTO dto=new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.eq("depart",depart));
+        return projectSer.findByCis(dto).stream().map(Project::getMakeProject).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProjectBO> projects(String area,String depart,String makeProject) throws SerException{
+        ProjectDTO dto=new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.eq("makeProject",makeProject));
+        return BeanTransform.copyProperties(projectSer.findByCis(dto),ProjectBO.class);
     }
 }

@@ -73,4 +73,14 @@ public class PositionUserDetailApiImpl implements PositionUserDetailAPI {
     public PositionDetailBO getPosition(String name) throws SerException {
         return positionUserDetailSer.getPosition(name);
     }
+
+    @Override
+    public List<String> findCharge() throws SerException {
+        return positionUserDetailSer.findCharge();
+    }
+
+    @Override
+    public List<String> projectManager() throws SerException {
+        return positionUserDetailSer.projectManager();
+    }
 }

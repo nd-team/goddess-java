@@ -2,13 +2,15 @@ package com.bjike.goddess.attendance.api.overtime;
 
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
+import com.bjike.goddess.attendance.bo.overtime.OverWorkCountBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.*;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
-import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
-import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
-import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
-import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
+import com.bjike.goddess.attendance.to.OverWorkAuditTO;
+import com.bjike.goddess.attendance.to.OverWorkTO;
+import com.bjike.goddess.attendance.vo.OverLongAndRelaxDayVO;
+import com.bjike.goddess.attendance.vo.PositionAndDepartVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class OverWorkApiImpl implements OverWorkAPI {
 
     @Override
     public Long countOverWork(OverWorkDTO overWorkDTO) throws SerException {
-        return overWorkSer.countOverWork( overWorkDTO );
+        return overWorkSer.countOverWork(overWorkDTO);
     }
 
     @Override
@@ -43,17 +45,17 @@ public class OverWorkApiImpl implements OverWorkAPI {
 
     @Override
     public List<OverWorkBO> listOverWork(OverWorkDTO overWorkDTO) throws SerException {
-        return overWorkSer.listOverWork( overWorkDTO );
+        return overWorkSer.listOverWork(overWorkDTO);
     }
 
     @Override
     public OverWorkBO addOverWork(OverWorkTO overWorkTO) throws SerException {
-        return overWorkSer.addOverWork( overWorkTO );
+        return overWorkSer.addOverWork(overWorkTO);
     }
 
     @Override
     public void deleteOverWork(String id) throws SerException {
-        overWorkSer.deleteOverWork( id );
+        overWorkSer.deleteOverWork(id);
     }
 
     @Override
@@ -68,17 +70,17 @@ public class OverWorkApiImpl implements OverWorkAPI {
 
     @Override
     public PositionAndDepartVO getPositAndDepart(String overWorker) throws SerException {
-        return overWorkSer.getPositAndDepart( overWorker );
+        return overWorkSer.getPositAndDepart(overWorker);
     }
 
     @Override
     public OverLongAndRelaxDayVO caculateTime(OverLongAndRelaxdayDTO overLongAndRelaxdayDTO) throws SerException {
-        return overWorkSer.caculateTime( overLongAndRelaxdayDTO );
+        return overWorkSer.caculateTime(overLongAndRelaxdayDTO);
     }
 
     @Override
     public Long countAudit(OverWorkDTO overWorkDTO) throws SerException {
-        return overWorkSer.countAudit( overWorkDTO);
+        return overWorkSer.countAudit(overWorkDTO);
     }
 
     @Override
@@ -103,21 +105,37 @@ public class OverWorkApiImpl implements OverWorkAPI {
 
     @Override
     public List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
-        return overWorkSer.myListOverWork( phoneMyOverWorkDTO );
+        return overWorkSer.myListOverWork(phoneMyOverWorkDTO);
     }
 
     @Override
     public List<OverWorkBO> myEntryList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
-        return overWorkSer.myEntryList( phoneMyEntryOverWorkDTO );
+        return overWorkSer.myEntryList(phoneMyEntryOverWorkDTO);
     }
 
     @Override
     public List<OverWorkBO> myAuditList(PhoneMyEntryOverWorkDTO phoneMyEntryOverWorkDTO) throws SerException {
-        return overWorkSer.myAuditList( phoneMyEntryOverWorkDTO ) ;
+        return overWorkSer.myAuditList(phoneMyEntryOverWorkDTO);
     }
 
     @Override
     public OverWorkBO getPhoneOneById(String id) throws SerException {
-        return overWorkSer.getPhoneOneById( id ) ;
+        return overWorkSer.getPhoneOneById(id);
+    }
+
+    @Override
+    public OverWorkCountBO outWorkCount(OverWorkDTO dto) throws SerException {
+        return overWorkSer.outWorkCount(dto);
+
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return overWorkSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return overWorkSer.guidePermission(guidePermissionTO);
     }
 }

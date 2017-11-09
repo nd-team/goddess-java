@@ -1,7 +1,10 @@
 package com.bjike.goddess.taskallotment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.taskallotment.enums.*;
+
+import java.util.List;
 
 /**
  * 完成情况汇总设置业务传输对象
@@ -26,17 +29,29 @@ public class FinishCountEmailBO extends BaseBO {
      * 项目组
      */
     private String depart;
+    /**
+     * 项目组
+     */
+    private List<DepartmentDetailBO> departs;
 
     /**
      * 项目
      */
     private String project;
+    /**
+     * 项目
+     */
+    private List<ProjectBO> projects;
 
     /**
      * 项目表
      */
     private String table;
 
+    /**
+     * 项目表
+     */
+    private List<TableBO> tables;
     /**
      * 提醒间隔
      */
@@ -61,6 +76,11 @@ public class FinishCountEmailBO extends BaseBO {
      * 通报对象
      */
     private ForObject forObject;
+    /**
+     * 通报部门
+     */
+    private List<DepartmentDetailBO> forDepart;
+
     /**
      * 通报部门
      */
@@ -106,6 +126,38 @@ public class FinishCountEmailBO extends BaseBO {
      * 备注
      */
     private String remark;
+
+    public List<DepartmentDetailBO> getForDepart() {
+        return forDepart;
+    }
+
+    public void setForDepart(List<DepartmentDetailBO> forDepart) {
+        this.forDepart = forDepart;
+    }
+
+    public List<DepartmentDetailBO> getDeparts() {
+        return departs;
+    }
+
+    public void setDeparts(List<DepartmentDetailBO> departs) {
+        this.departs = departs;
+    }
+
+    public List<ProjectBO> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectBO> projects) {
+        this.projects = projects;
+    }
+
+    public List<TableBO> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<TableBO> tables) {
+        this.tables = tables;
+    }
 
     public String getArea() {
         return area;

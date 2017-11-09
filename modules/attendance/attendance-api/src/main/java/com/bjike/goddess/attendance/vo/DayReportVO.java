@@ -3,16 +3,15 @@ package com.bjike.goddess.attendance.vo;
 import com.bjike.goddess.taskallotment.enums.TaskType;
 
 /**
- * 日报表现层对象
+ * 日报业务传输对象
  *
  * @Author: [ chenjunhao ]
  * @Date: [ 2017-10-07 10:28 ]
- * @Description: [ 日报表现层对象 ]
+ * @Description: [ 日报业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class DayReportVO {
-
     /**
      * id
      */
@@ -61,7 +60,6 @@ public class DayReportVO {
      * 计划时长(小时)
      */
     private Double planTime;
-
 
     public String getId() {
         return id;

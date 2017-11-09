@@ -1,17 +1,17 @@
 package com.bjike.goddess.attendance.service.overtime;
 
-import com.bjike.goddess.attendance.bo.overtime.AreaBO;
-import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
-import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
+import com.bjike.goddess.attendance.bo.overtime.*;
 import com.bjike.goddess.attendance.dto.overtime.*;
-import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
-import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
-import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
-import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
+import com.bjike.goddess.attendance.entity.overtime.OverWork;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
+import com.bjike.goddess.attendance.to.OverWorkAuditTO;
+import com.bjike.goddess.attendance.to.OverWorkTO;
+import com.bjike.goddess.attendance.vo.OverLongAndRelaxDayVO;
+import com.bjike.goddess.attendance.vo.PositionAndDepartVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.attendance.entity.overtime.OverWork;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -24,6 +24,8 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
+    Boolean sonPermission() throws SerException;
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 加班列表总条数
@@ -34,10 +36,12 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
 
     /**
      * 根据id获取加班
+     *
      * @return class OverWorkBO
      */
-    default OverWorkBO getOneById(String id) throws SerException {return null;}
-
+    default OverWorkBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -70,27 +74,23 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
 
     /**
      * 获取地区
-     *
      */
-    default List<AreaBO> areaList(   ) throws SerException {
+    default List<AreaBO> areaList() throws SerException {
         return null;
     }
 
     /**
      * 获取任务下达人或加班人员
-     *
      */
-    default List<String> peopleList(   ) throws SerException {
+    default List<String> peopleList() throws SerException {
         return null;
     }
 
 
-
     /**
      * 根据加班人员获取职位和部门
-     *
      */
-    default PositionAndDepartVO getPositAndDepart(String overWorker   ) throws SerException {
+    default PositionAndDepartVO getPositAndDepart(String overWorker) throws SerException {
         return null;
     }
 
@@ -109,6 +109,7 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
     default Long countAudit(OverWorkDTO overWorkDTO) throws SerException {
         return null;
     }
+
     /**
      * 加班审核列表
      *
@@ -154,6 +155,7 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
     default List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
         return null;
     }
+
     /**
      * 我录入的加班列表
      *
@@ -181,7 +183,30 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
         return null;
     }
 
+    /**
+     * 加班汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    OverWorkCountBO outWorkCount(OverWorkDTO dto) throws SerException;
 
+    /**
+     * 加班汇总邮件
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<OverWorkMailBO> outWorkCountMail(OverWorkDTO dto) throws SerException;
 
+    /**
+     * 某人某截止时间的剩余加班天数
+     * @param name
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    Double overDay(String name, LocalDate endTime) throws SerException;
 
 }

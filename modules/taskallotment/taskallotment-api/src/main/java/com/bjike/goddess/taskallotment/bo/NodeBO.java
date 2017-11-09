@@ -1,6 +1,8 @@
 package com.bjike.goddess.taskallotment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.taskallotment.enums.TaskType;
+import com.bjike.goddess.taskallotment.enums.TimeType;
 
 /**
  * 任务节点名称
@@ -13,9 +15,94 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  */
 public class NodeBO extends BaseBO {
     /**
-     * 任务名称
+     * 节点
      */
     private String taskName;
+    /**
+     * 执行人
+     */
+    private String execute;
+    /**
+     * 计划执行时间
+     */
+    private String planTime;
+    /**
+     * 任务类型
+     */
+    private TaskType taskType;
+    /**
+     * 计划任务量
+     */
+    private Double planNum;
+    /**
+     * 所需时长
+     */
+    private Double needTime;
+
+    /**
+     * 所需时长时间类型
+     */
+    private TimeType needType;
+    /**
+     * 备注
+     */
+    private String remark;
+
+    public String getExecute() {
+        return execute;
+    }
+
+    public void setExecute(String execute) {
+        this.execute = execute;
+    }
+
+    public String getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(String planTime) {
+        this.planTime = planTime;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
+    public Double getPlanNum() {
+        return planNum;
+    }
+
+    public void setPlanNum(Double planNum) {
+        this.planNum = planNum;
+    }
+
+    public Double getNeedTime() {
+        return needTime;
+    }
+
+    public void setNeedTime(Double needTime) {
+        this.needTime = needTime;
+    }
+
+    public TimeType getNeedType() {
+        return needType;
+    }
+
+    public void setNeedType(TimeType needType) {
+        this.needType = needType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getTaskName() {
         return taskName;

@@ -2,7 +2,8 @@ package com.bjike.goddess.taskallotment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -71,16 +72,24 @@ public class Question extends BaseEntity {
     /**
      * 任务节点信息
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "taskNode_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '任务节点信息'")
-    private TaskNode taskNode;
+//    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "taskNode_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '任务节点信息'")
+    private String taskNodeId;
 
-    public TaskNode getTaskNode() {
-        return taskNode;
+//    public TaskNode getTaskNode() {
+//        return taskNode;
+//    }
+//
+//    public void setTaskNode(TaskNode taskNode) {
+//        this.taskNode = taskNode;
+//    }
+
+    public String getTaskNodeId() {
+        return taskNodeId;
     }
 
-    public void setTaskNode(TaskNode taskNode) {
-        this.taskNode = taskNode;
+    public void setTaskNodeId(String taskNodeId) {
+        this.taskNodeId = taskNodeId;
     }
 
     public String getAudit() {

@@ -3,7 +3,8 @@ package com.bjike.goddess.taskallotment.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.taskallotment.enums.TitleType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 
 
@@ -34,7 +35,7 @@ public class CustomTitle extends BaseEntity {
     /**
      * 字段内容
      */
-    @Column(name = "content",columnDefinition = "VARCHAR(255)   COMMENT '字段内容'")
+    @Column(name = "content", columnDefinition = "VARCHAR(255)   COMMENT '字段内容'")
     private String content;
 
     /**
@@ -52,9 +53,17 @@ public class CustomTitle extends BaseEntity {
     /**
      * 任务节点信息
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "taskNode_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '任务节点信息'")
-    private TaskNode taskNode;
+//    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "taskNodeId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '任务节点信息'")
+    private String taskNodeId;
+
+    public String getTaskNodeId() {
+        return taskNodeId;
+    }
+
+    public void setTaskNodeId(String taskNodeId) {
+        this.taskNodeId = taskNodeId;
+    }
 
     public Integer getTitleIndex() {
         return titleIndex;
@@ -79,14 +88,14 @@ public class CustomTitle extends BaseEntity {
     public void setMandatory(Boolean mandatory) {
         this.mandatory = mandatory;
     }
-
-    public TaskNode getTaskNode() {
-        return taskNode;
-    }
-
-    public void setTaskNode(TaskNode taskNode) {
-        this.taskNode = taskNode;
-    }
+//
+//    public TaskNode getTaskNode() {
+//        return taskNode;
+//    }
+//
+//    public void setTaskNode(TaskNode taskNode) {
+//        this.taskNode = taskNode;
+//    }
 
     public String getTitle() {
         return title;
