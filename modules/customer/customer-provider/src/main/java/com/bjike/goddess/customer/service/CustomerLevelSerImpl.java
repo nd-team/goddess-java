@@ -303,6 +303,30 @@ public class CustomerLevelSerImpl extends ServiceImpl<CustomerLevel, CustomerLev
         }
         list.add(obj);
 
+        Boolean flagSeeVisitRecom = visitRecommSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("visitrecommset");
+        obj.setDescribesion("拜访推荐设置");
+        if (flagSeeVisitRecom) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeVisitSchedu = visitScheduleSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("visitschedule");
+        obj.setDescribesion("拜访日程表");
+        if (flagSeeVisitSchedu) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
         return list;
     }
 

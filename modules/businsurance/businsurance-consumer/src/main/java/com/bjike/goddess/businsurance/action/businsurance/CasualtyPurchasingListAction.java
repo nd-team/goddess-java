@@ -95,7 +95,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     /**
      * 一个团体意外险购买名单
      * @param id id
-     * @return CasualtyPurchasingListVO
+     * @return class CasualtyPurchasingListVO
      * @version v1
      */
     @LoginAuth

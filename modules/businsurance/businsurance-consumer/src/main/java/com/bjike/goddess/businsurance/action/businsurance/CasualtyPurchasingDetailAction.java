@@ -90,7 +90,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
      * 一个团体意外险购买详情
      *
      * @param id id
-     * @return CasualtyPurchasingDetailVO
+     * @return class CasualtyPurchasingDetailVO
      * @version v1
      */
     @LoginAuth
@@ -249,7 +249,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
     }
     /**
      * 根据员工编号获取信息
-     * @return
+     * @return class CasualtyPurchasingDetailBO
      * @des 根据员工编号获取信息
      * @version v1
      */

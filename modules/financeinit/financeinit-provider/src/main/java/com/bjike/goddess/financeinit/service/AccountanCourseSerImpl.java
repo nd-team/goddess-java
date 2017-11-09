@@ -390,7 +390,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         for (AccountanCourse str : accountanCourses){
             str.setCreateTime(LocalDateTime.now());
             str.setModifyTime(LocalDateTime.now());
-            super.save(accountanCourses);
+            super.save(str);
             if(str.getCode().length()==4){
                 InitDateEntry initDateEntry = new InitDateEntry();
                 initDateEntry.setCode(str.getCode());

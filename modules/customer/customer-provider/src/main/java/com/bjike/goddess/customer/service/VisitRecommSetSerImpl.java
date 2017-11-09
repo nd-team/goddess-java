@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
@@ -14,7 +15,9 @@ import com.bjike.goddess.customer.dto.VisitScheduleDTO;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.VisitRecommSet;
 import com.bjike.goddess.customer.entity.VisitSchedule;
+import com.bjike.goddess.customer.enums.GuideAddrStatus;
 import com.bjike.goddess.customer.enums.RecommInfoUpdateFreq;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.to.VisitRecommSetTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
@@ -22,6 +25,7 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +57,137 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
     private VisitScheduleSer visitScheduleSer;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission(flagId);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity(String flagId) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission(flagId);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity("1");
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity("3");
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity("1");
+                break;
+            case ADD:
+                flag = guideAddIdentity("3");
+                break;
+            case EDIT:
+                flag = guideAddIdentity("3");
+                break;
+            case DELETE:
+                flag = guideAddIdentity("3");
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity("3");
+                break;
+            case SEEFILE:
+                flag = guideAddIdentity("3");
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity("3");
+                break;
+            case CONGEL:
+                flag = guideAddIdentity("3");
+                break;
+            case THAW:
+                flag = guideAddIdentity("3");
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countVisitReco(VisitRecommSetDTO visitRecommSetDTO) throws SerException {
@@ -62,6 +197,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
 
     @Override
     public List<VisitRecommSetBO> listVisitReco(VisitRecommSetDTO visitRecommSetDTO) throws SerException {
+        checkSeeIdentity("1");
         List<VisitRecommSet> visitRecommSetList = super.findByCis(visitRecommSetDTO, true);
         return BeanTransform.copyProperties(visitRecommSetList, VisitRecommSetBO.class);
     }
@@ -74,7 +210,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
 
     @Override
     public VisitRecommSetBO addVisitReco(VisitRecommSetTO visitRecommSetTO) throws SerException {
-
+        checkAddIdentity("3");
         List<String> sendObjectList = visitRecommSetTO.getSendObject();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -100,6 +236,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
 
     @Override
     public VisitRecommSetBO editVisitReco(VisitRecommSetTO visitRecommSetTO) throws SerException {
+        checkAddIdentity("3");
         List<String> sendObjectList = visitRecommSetTO.getSendObject();
         StringBuffer emails = new StringBuffer("");
         if (sendObjectList != null && sendObjectList.size() > 0) {
@@ -128,11 +265,13 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
 
     @Override
     public void deleteVisitReco(String id) throws SerException {
+        checkAddIdentity("3");
         super.remove(id);
     }
 
     @Override
     public void congealVisitReco(String id) throws SerException {
+        checkAddIdentity("3");
         VisitRecommSet visitRecommSet = super.findById(id);
         visitRecommSet.setStatus(Status.CONGEAL);
         super.update(visitRecommSet);
@@ -140,6 +279,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
 
     @Override
     public void thawVisitReco(String id) throws SerException {
+        checkAddIdentity("3");
         VisitRecommSet visitRecommSet = super.findById(id);
         visitRecommSet.setStatus(Status.THAW);
         super.update(visitRecommSet);
@@ -188,22 +328,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 while (a + 5 < size) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setMonday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setMonday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setTuesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setTuesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setWednesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setWednesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 4:
-                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 5:
-                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                     }
                     a = a + 6;
@@ -212,22 +352,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 if (size % 6 != 0) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setMonday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setMonday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setTuesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setTuesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setWednesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setWednesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 4:
-                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 5:
-                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                     }
                 }
@@ -236,22 +376,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 while (a + 5 < size) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setTuesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setTuesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setWednesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setWednesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 4:
-                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 5:
-                            next.setMonday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setMonday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                     a = a + 6;
@@ -260,22 +400,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 if (size % 6 != 0) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setTuesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setTuesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setWednesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setWednesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 4:
-                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 5:
-                            next.setMonday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setMonday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                 }
@@ -284,22 +424,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 while (a + 5 < size) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setWednesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setWednesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 4:
-                            next.setMonday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setMonday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                     a = a + 6;
@@ -308,22 +448,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 if (size % 6 != 0) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setWednesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setWednesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 4:
-                            next.setMonday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setMonday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                 }
@@ -332,22 +472,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 while (a + 5 < size) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setThursday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            next.setMonday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            next.setMonday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 4:
-                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setWednesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setWednesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                     a = a + 6;
@@ -356,22 +496,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 if (size % 6 != 0) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setThursday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 3:
-                            next.setMonday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            next.setMonday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 4:
-                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setWednesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setWednesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                 }
@@ -380,22 +520,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 while (a + 5 < size) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setFridays(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            next.setMonday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            next.setMonday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 3:
-                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 4:
-                            next.setWednesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setWednesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setThursday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setThursday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                     a = a + 6;
@@ -404,22 +544,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 if (size % 6 != 0) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setFridays(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(1)));
+                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(1)));
                             break;
                         case 2:
-                            next.setMonday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            next.setMonday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 3:
-                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 4:
-                            next.setWednesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setWednesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setThursday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setThursday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                 }
@@ -428,22 +568,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 while (a + 5 < size) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setSaturday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            next.setMonday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            next.setMonday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 2:
-                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            next.setTuesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 3:
-                            next.setWednesday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            next.setWednesday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 4:
-                            next.setThursday(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setThursday(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setFridays(get(a, a + 5, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setFridays(get(a, a + 5, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                     a = a + 6;
@@ -452,22 +592,22 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 if (size % 6 != 0) {
                     switch (i) {
                         case 0:
-                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now()));
+                            visitSchedule.setSaturday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now()));
                             break;
                         case 1:
-                            next.setMonday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(2)));
+                            next.setMonday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(2)));
                             break;
                         case 2:
-                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(3)));
+                            next.setTuesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(3)));
                             break;
                         case 3:
-                            next.setWednesday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(4)));
+                            next.setWednesday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(4)));
                             break;
                         case 4:
-                            next.setThursday(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(5)));
+                            next.setThursday(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(5)));
                             break;
                         case 5:
-                            next.setFridays(get(a, size - 1, customerBaseInfoBOList,LocalDateTime.now().plusDays(6)));
+                            next.setFridays(get(a, size - 1, customerBaseInfoBOList, LocalDateTime.now().plusDays(6)));
                             break;
                     }
                 }
@@ -614,17 +754,15 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         if (list != null && list.size() > 0) {
             for (VisitRecommSet visitRecommSet : list) {
                 LocalDate date = LocalDate.now();
-                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfWeek().getValue()==date.getDayOfWeek().getValue()){
+                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfWeek().getValue() == date.getDayOfWeek().getValue()) {
                     LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
-                    if (dateTime==LocalDateTime.now()){
+                    if (dateTime == LocalDateTime.now()) {
                         weekData();
                     }
                 }
             }
         }
     }
-
-
 
 
     @Override
@@ -636,9 +774,9 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         if (list != null && list.size() > 0) {
             for (VisitRecommSet visitRecommSet : list) {
                 LocalDate date = LocalDate.now();
-                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfMonth()==date.getDayOfMonth()){
+                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfMonth() == date.getDayOfMonth()) {
                     LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
-                    if (dateTime==LocalDateTime.now()){
+                    if (dateTime == LocalDateTime.now()) {
                         weekData();
                     }
                 }
@@ -663,6 +801,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
             }
         }
     }
+
     @Override
     public void checkSendObjectDay() throws SerException {
         VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
@@ -679,6 +818,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
             }
         }
     }
+
     @Override
     public void checkSendObjectWeek() throws SerException {
         VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
@@ -688,25 +828,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         if (list != null && list.size() > 0) {
             for (VisitRecommSet visitRecommSet : list) {
                 LocalDate date = LocalDate.now();
-                if(visitRecommSet.getRecommendDate().getDayOfWeek().getValue()==date.getDayOfWeek().getValue()){
-                    LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
-                    if (dateTime2 == LocalDateTime.now()) {
-                        sendObject(visitRecommSet.getSendObject());
-                    }
-                }
-            }
-        }
-    }
-    @Override
-    public void checkSendObjectMonth() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYMONTH));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDate date = LocalDate.now();
-                if(visitRecommSet.getRecommendDate().getDayOfMonth()==date.getDayOfMonth()){
+                if (visitRecommSet.getRecommendDate().getDayOfWeek().getValue() == date.getDayOfWeek().getValue()) {
                     LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
                     if (dateTime2 == LocalDateTime.now()) {
                         sendObject(visitRecommSet.getSendObject());
@@ -716,7 +838,26 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         }
     }
 
-    private String get(int b, int a, List<CustomerBaseInfoBO> customerBaseInfoBOList,LocalDateTime dateTime) throws SerException {
+    @Override
+    public void checkSendObjectMonth() throws SerException {
+        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYMONTH));
+        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+        if (list != null && list.size() > 0) {
+            for (VisitRecommSet visitRecommSet : list) {
+                LocalDate date = LocalDate.now();
+                if (visitRecommSet.getRecommendDate().getDayOfMonth() == date.getDayOfMonth()) {
+                    LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
+                    if (dateTime2 == LocalDateTime.now()) {
+                        sendObject(visitRecommSet.getSendObject());
+                    }
+                }
+            }
+        }
+    }
+
+    private String get(int b, int a, List<CustomerBaseInfoBO> customerBaseInfoBOList, LocalDateTime dateTime) throws SerException {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = b; i <= a; i++) {
             if (i == a) {
@@ -734,40 +875,41 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
     }
 
     //提醒
-    private void remindSend() throws SerException{
+    public void remindSend() throws SerException {
         VisitRecommSetDTO dto = new VisitRecommSetDTO();
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
         List<VisitRecommSet> sets = super.findByCis(dto); //规则
-        String[] fields = new String[]{"customerNum","customerName","recommendVisitTime"};
+        String[] fields = new String[]{"customerNum", "customerName", "recommendVisitTime"};
         //查询6条
-        String sql ="select customerNum,customerName,recommendVisitTime from where recommendVisitTime=(select max(recommendVisitTime) from customer_customerbaseinfo) limit 1,6";
+        String sql = "select customerNum,customerName,recommendVisitTime from where recommendVisitTime=(select max(recommendVisitTime) from customer_customerbaseinfo) limit 1,6";
         List<CustomerBaseInfo> infos = customerBaseInfoSer.findBySql(sql, CustomerBaseInfo.class, fields);
         LocalDateTime maxTime = infos.get(0).getRecommendVisitTime();
-        String now = StringUtils.substringBefore(LocalDateTime.now().toString(),":");
+        String now = StringUtils.substringBefore(LocalDateTime.now().toString(), ":");
 //        List<String> mails = new ArrayList<String>(); //邮件列表
         StringBuffer content = new StringBuffer(); //内容
-        for (CustomerBaseInfo customerBaseInfo : infos){
-            content.append("编号为"+customerBaseInfo.getCustomerNum()+"的客户:"+customerBaseInfo.getCustomerName()+"拜访时间为:"+customerBaseInfo.getRecommendVisitTime()+";\n");
+        for (CustomerBaseInfo customerBaseInfo : infos) {
+            content.append("编号为" + customerBaseInfo.getCustomerNum() + "的客户:" + customerBaseInfo.getCustomerName() + "拜访时间为:" + customerBaseInfo.getRecommendVisitTime() + ";\n");
         }
-        for(VisitRecommSet set: sets){
+        for (VisitRecommSet set : sets) {
             int code = set.getReminderVisit().getCode();
-            String strMax=""; //最大时间字符串
-            switch (code){
+            String strMax = ""; //最大时间字符串
+            switch (code) {
                 case 0:
-                    strMax =  StringUtils.substringBefore(maxTime.minusHours(1).toString(),":");
+                    strMax = StringUtils.substringBefore(maxTime.minusHours(1).toString(), ":");
                     break;
                 case 1:
-                    strMax =  StringUtils.substringBefore(maxTime.minusDays(1).toString(),":");
+                    strMax = StringUtils.substringBefore(maxTime.minusDays(1).toString(), ":");
                     break;
                 case 2:
-                    strMax =  StringUtils.substringBefore(maxTime.minusMonths(1).toString(),":");
+                    strMax = StringUtils.substringBefore(maxTime.minusMonths(1).toString(), ":");
                     break;
                 case 3:
-                    strMax =  StringUtils.substringBefore(maxTime.minusYears(1).toString(),":");
+                    strMax = StringUtils.substringBefore(maxTime.minusYears(1).toString(), ":");
                     break;
-                    default: break;
+                default:
+                    break;
             }
-            if(strMax.equals(now)){
+            if (strMax.equals(now)) {
 
                 MessageTO messageTO = new MessageTO();
                 messageTO.setContent(content.toString());

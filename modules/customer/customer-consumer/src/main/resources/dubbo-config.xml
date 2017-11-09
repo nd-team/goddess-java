@@ -49,5 +49,7 @@
 	<dubbo:reference  validation="true" id="funPowerWeightFactorApiImpl" interface="com.bjike.goddess.customer.api.FunPowerWeightFactorAPI" />
 	<dubbo:reference  validation="true" id="timelinessFactorSetApiImpl" interface="com.bjike.goddess.customer.api.TimelinessFactorSetAPI" />
 	<dubbo:reference  validation="true" id="timelinessFactorWeightApiImpl" interface="com.bjike.goddess.customer.api.TimelinessFactorWeightAPI" />
+	<dubbo:reference  validation="true" id="visitRecommSetApiImpl" interface="com.bjike.goddess.customer.api.VisitRecommSetAPI" />
+	<dubbo:reference  validation="true" id="visitScheduleApiImpl" interface="com.bjike.goddess.customer.api.VisitScheduleAPI" />
 
 </beans>
