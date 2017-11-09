@@ -33,7 +33,7 @@ public class PunchSon extends BaseEntity {
     /**
      * 打卡地点
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地点'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地点'")
     private String area;
 
     /**

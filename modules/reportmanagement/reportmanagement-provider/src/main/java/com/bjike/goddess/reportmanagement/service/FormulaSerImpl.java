@@ -177,235 +177,235 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 
     @Override
     public List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException {
-        String[] strings = new String[]{foreignId};
-        List<Formula> list = null;
-        for (String s : strings) {
-            String sql = "select id,project,type1,form from reportmanagement_formula" +
-                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
-            String[] fileds = new String[]{"id","project", "type1", "form"};
-            list = super.findBySql(sql, Formula.class, fileds);
-        }
-        Integer startMonth = 0;
-        Integer endMonth = 0;
-        LocalDate s = Utils.tranTime(dto.getStartTime());
-        startMonth = s.getMonthValue();
-        LocalDate e = Utils.tranTime(dto.getEndTime());
-        endMonth = e.getMonthValue();
-        String[] projectNames = dto.getProjectNames();
-        String[] departs = dto.getDeparts();
-        String[] areas = dto.getAreas();
-        List<FormulaBO> boList = new ArrayList<FormulaBO>();
-        if ((list != null) && (!list.isEmpty())) {
-            double beginSum = 0;
-            double endSum = 0;
-            double currentSum = 0;
-            double yearSum = 0;
-            Form form = null;
-            for (Formula f : list) {
-                SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
-                subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                if (projectNames != null) {
-                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
-                }if (departs != null) {
-                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
-                }if (areas != null) {
-                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
-                }
-                SubjectCollectDTO beginDTO = new SubjectCollectDTO();
-                beginDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                if (projectNames != null) {
-                    beginDTO.getConditions().add(Restrict.in("projectName", projectNames));
-                }if (departs != null) {
-                    beginDTO.getConditions().add(Restrict.in("projectGroup", departs));
-                }if (areas != null) {
-                    beginDTO.getConditions().add(Restrict.in("area", areas));
-                }
-                if (LocalDate.now().getYear() == e.getYear()) {
-                    double year = 0;
-                    Integer[] years = new Integer[]{1, endMonth};
-                    subjectCollectDTO.getConditions().add(Restrict.between("months", years));
-                    SubjectCollectBO yearBO = subjectCollectAPI.getSum(subjectCollectDTO);
-                    FormulaBO bo1 = BeanTransform.copyProperties(f, FormulaBO.class);
-                    if (Form.DEBIT.equals(bo1.getForm())) {
-                        year = yearBO.getIssueDebitAmount();
-                    } else if (Form.CREDIT.equals(bo1.getForm())) {
-                        year = yearBO.getIssueCreditAmount();
-                    }
-                    if (LocalDate.now().getYear() == s.getYear()) {
-                        Integer[] months = new Integer[]{startMonth, endMonth};
-                        subjectCollectDTO.getConditions().add(Restrict.between("months", months));
-                        SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
-                        FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
-                        bo.setYear(year);
-                        form = bo.getForm();
-                        if ("1".equals(f.getType1())) {
-                            bo.setOperation("+");
-                        } else if ("2".equals(f.getType1())) {
-                            bo.setOperation("-");
-                        }
-                        if (Form.DEBIT.equals(bo.getForm())) {
-                            bo.setEnd(subjectCollectBO.getEndDebitAmount());
-                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
-                        } else if (Form.CREDIT.equals(bo.getForm())) {
-                            bo.setEnd(subjectCollectBO.getEndCreditAmount());
-                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
-                        }
-                        if (startMonth != 1) {
-                            beginDTO.getConditions().add(Restrict.eq("months", startMonth - 1));
-                            SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
-                            if (Form.DEBIT.equals(bo.getForm())) {
-                                bo.setBegin(beginBO.getEndDebitAmount());
-                            } else if (Form.CREDIT.equals(bo.getForm())) {
-                                bo.setBegin(beginBO.getEndCreditAmount());
-                            }
-                            if ("1".equals(f.getType1())) {     //1代表加
-                                beginSum += bo.getBegin();
-                                endSum += bo.getEnd();
-                                currentSum += bo.getCurrent();
-                                yearSum += bo.getYear();
-                            } else if ("2".equals(f.getType1())) {  //2代表减
-                                beginSum = beginSum - bo.getBegin();
-                                endSum = endSum - bo.getEnd();
-                                currentSum = currentSum - bo.getCurrent();
-                                yearSum -= bo.getYear();
-                            }
-                        } else {
-                            beginDTO.getConditions().add(Restrict.eq("months", 1));
-                            SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
-                            if (Form.DEBIT.equals(bo.getForm())) {
-                                bo.setBegin(beginBO.getBeginningDebitAmount());
-                            } else if (Form.CREDIT.equals(bo.getForm())) {
-                                bo.setBegin(beginBO.getBeginningCreditAmount());
-                            }
-                            if ("1".equals(f.getType1())) {     //1代表加
-                                beginSum += bo.getBegin();
-                                endSum += bo.getEnd();
-                                currentSum += bo.getCurrent();
-                                yearSum += bo.getYear();
-                            } else if ("2".equals(f.getType1())) {  //2代表减
-                                beginSum = beginSum - bo.getBegin();
-                                endSum = endSum - bo.getEnd();
-                                currentSum = currentSum - bo.getCurrent();
-                                yearSum -= bo.getYear();
-                            }
-                        }
-                        boList.add(bo);
-                    } else {
-                        Integer[] months = new Integer[]{1, endMonth};
-                        subjectCollectDTO.getConditions().add(Restrict.between("months", months));
-                        SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
-                        FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
-                        form = bo.getForm();
-                        bo.setYear(year);
-                        if ("1".equals(f.getType1())) {
-                            bo.setOperation("+");
-                        } else if ("2".equals(f.getType1())) {
-                            bo.setOperation("-");
-                        }
-                        if (Form.DEBIT.equals(bo.getForm())) {
-                            bo.setEnd(subjectCollectBO.getEndDebitAmount());
-                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
-                        } else if (Form.CREDIT.equals(bo.getForm())) {
-                            bo.setEnd(subjectCollectBO.getEndCreditAmount());
-                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
-                        }
-                        beginDTO.getConditions().add(Restrict.eq("months", 1));
-                        SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
-                        if (Form.DEBIT.equals(bo.getForm())) {
-                            bo.setBegin(beginBO.getBeginningDebitAmount());
-                        } else if (Form.CREDIT.equals(bo.getForm())) {
-                            bo.setBegin(beginBO.getBeginningCreditAmount());
-                        }
-                        if ("1".equals(f.getType1())) {     //1代表加
-                            currentSum += bo.getCurrent();
-                            beginSum += bo.getBegin();
-                            endSum += bo.getEnd();
-                            yearSum += bo.getYear();
-                        } else if ("2".equals(f.getType1())) {  //2代表减
-                            currentSum = currentSum - bo.getCurrent();
-                            beginSum = beginSum - bo.getBegin();
-                            endSum = endSum - bo.getEnd();
-                            yearSum -= bo.getYear();
-                        }
-                        boList.add(bo);
-                    }
-                }
-            }
-            FormulaBO bo = new FormulaBO();
-            bo.setProject("合计：");
-//            bo.setForm(form);
-            bo.setBegin(beginSum);
-            bo.setEnd(endSum);
-            bo.setCurrent(currentSum);
-            bo.setYear(yearSum);
-            boList.add(bo);
-            return boList;
-        }
+//        String[] strings = new String[]{foreignId};
+//        List<Formula> list = null;
+//        for (String s : strings) {
+//            String sql = "select id,project,type1,form from reportmanagement_formula" +
+//                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
+//            String[] fileds = new String[]{"id","project", "type1", "form"};
+//            list = super.findBySql(sql, Formula.class, fileds);
+//        }
+//        Integer startMonth = 0;
+//        Integer endMonth = 0;
+//        LocalDate s = Utils.tranTime(dto.getStartTime());
+//        startMonth = s.getMonthValue();
+//        LocalDate e = Utils.tranTime(dto.getEndTime());
+//        endMonth = e.getMonthValue();
+//        String[] projectNames = dto.getProjectNames();
+//        String[] departs = dto.getDeparts();
+//        String[] areas = dto.getAreas();
+//        List<FormulaBO> boList = new ArrayList<FormulaBO>();
+//        if ((list != null) && (!list.isEmpty())) {
+//            double beginSum = 0;
+//            double endSum = 0;
+//            double currentSum = 0;
+//            double yearSum = 0;
+//            Form form = null;
+//            for (Formula f : list) {
+//                SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
+//                subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
+//                if (projectNames != null) {
+//                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
+//                }if (departs != null) {
+//                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
+//                }if (areas != null) {
+//                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
+//                }
+//                SubjectCollectDTO beginDTO = new SubjectCollectDTO();
+//                beginDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
+//                if (projectNames != null) {
+//                    beginDTO.getConditions().add(Restrict.in("projectName", projectNames));
+//                }if (departs != null) {
+//                    beginDTO.getConditions().add(Restrict.in("projectGroup", departs));
+//                }if (areas != null) {
+//                    beginDTO.getConditions().add(Restrict.in("area", areas));
+//                }
+//                if (LocalDate.now().getYear() == e.getYear()) {
+//                    double year = 0;
+//                    Integer[] years = new Integer[]{1, endMonth};
+//                    subjectCollectDTO.getConditions().add(Restrict.between("months", years));
+//                    SubjectCollectBO yearBO = subjectCollectAPI.getSum(subjectCollectDTO);
+//                    FormulaBO bo1 = BeanTransform.copyProperties(f, FormulaBO.class);
+//                    if (Form.DEBIT.equals(bo1.getForm())) {
+//                        year = yearBO.getIssueDebitAmount();
+//                    } else if (Form.CREDIT.equals(bo1.getForm())) {
+//                        year = yearBO.getIssueCreditAmount();
+//                    }
+//                    if (LocalDate.now().getYear() == s.getYear()) {
+//                        Integer[] months = new Integer[]{startMonth, endMonth};
+//                        subjectCollectDTO.getConditions().add(Restrict.between("months", months));
+//                        SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
+//                        FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
+//                        bo.setYear(year);
+//                        form = bo.getForm();
+//                        if ("1".equals(f.getType1())) {
+//                            bo.setOperation("+");
+//                        } else if ("2".equals(f.getType1())) {
+//                            bo.setOperation("-");
+//                        }
+//                        if (Form.DEBIT.equals(bo.getForm())) {
+//                            bo.setEnd(subjectCollectBO.getEndDebitAmount());
+//                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
+//                        } else if (Form.CREDIT.equals(bo.getForm())) {
+//                            bo.setEnd(subjectCollectBO.getEndCreditAmount());
+//                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
+//                        }
+//                        if (startMonth != 1) {
+//                            beginDTO.getConditions().add(Restrict.eq("months", startMonth - 1));
+//                            SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
+//                            if (Form.DEBIT.equals(bo.getForm())) {
+//                                bo.setBegin(beginBO.getEndDebitAmount());
+//                            } else if (Form.CREDIT.equals(bo.getForm())) {
+//                                bo.setBegin(beginBO.getEndCreditAmount());
+//                            }
+//                            if ("1".equals(f.getType1())) {     //1代表加
+//                                beginSum += bo.getBegin();
+//                                endSum += bo.getEnd();
+//                                currentSum += bo.getCurrent();
+//                                yearSum += bo.getYear();
+//                            } else if ("2".equals(f.getType1())) {  //2代表减
+//                                beginSum = beginSum - bo.getBegin();
+//                                endSum = endSum - bo.getEnd();
+//                                currentSum = currentSum - bo.getCurrent();
+//                                yearSum -= bo.getYear();
+//                            }
+//                        } else {
+//                            beginDTO.getConditions().add(Restrict.eq("months", 1));
+//                            SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
+//                            if (Form.DEBIT.equals(bo.getForm())) {
+//                                bo.setBegin(beginBO.getBeginningDebitAmount());
+//                            } else if (Form.CREDIT.equals(bo.getForm())) {
+//                                bo.setBegin(beginBO.getBeginningCreditAmount());
+//                            }
+//                            if ("1".equals(f.getType1())) {     //1代表加
+//                                beginSum += bo.getBegin();
+//                                endSum += bo.getEnd();
+//                                currentSum += bo.getCurrent();
+//                                yearSum += bo.getYear();
+//                            } else if ("2".equals(f.getType1())) {  //2代表减
+//                                beginSum = beginSum - bo.getBegin();
+//                                endSum = endSum - bo.getEnd();
+//                                currentSum = currentSum - bo.getCurrent();
+//                                yearSum -= bo.getYear();
+//                            }
+//                        }
+//                        boList.add(bo);
+//                    } else {
+//                        Integer[] months = new Integer[]{1, endMonth};
+//                        subjectCollectDTO.getConditions().add(Restrict.between("months", months));
+//                        SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
+//                        FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
+//                        form = bo.getForm();
+//                        bo.setYear(year);
+//                        if ("1".equals(f.getType1())) {
+//                            bo.setOperation("+");
+//                        } else if ("2".equals(f.getType1())) {
+//                            bo.setOperation("-");
+//                        }
+//                        if (Form.DEBIT.equals(bo.getForm())) {
+//                            bo.setEnd(subjectCollectBO.getEndDebitAmount());
+//                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
+//                        } else if (Form.CREDIT.equals(bo.getForm())) {
+//                            bo.setEnd(subjectCollectBO.getEndCreditAmount());
+//                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
+//                        }
+//                        beginDTO.getConditions().add(Restrict.eq("months", 1));
+//                        SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
+//                        if (Form.DEBIT.equals(bo.getForm())) {
+//                            bo.setBegin(beginBO.getBeginningDebitAmount());
+//                        } else if (Form.CREDIT.equals(bo.getForm())) {
+//                            bo.setBegin(beginBO.getBeginningCreditAmount());
+//                        }
+//                        if ("1".equals(f.getType1())) {     //1代表加
+//                            currentSum += bo.getCurrent();
+//                            beginSum += bo.getBegin();
+//                            endSum += bo.getEnd();
+//                            yearSum += bo.getYear();
+//                        } else if ("2".equals(f.getType1())) {  //2代表减
+//                            currentSum = currentSum - bo.getCurrent();
+//                            beginSum = beginSum - bo.getBegin();
+//                            endSum = endSum - bo.getEnd();
+//                            yearSum -= bo.getYear();
+//                        }
+//                        boList.add(bo);
+//                    }
+//                }
+//            }
+//            FormulaBO bo = new FormulaBO();
+//            bo.setProject("合计：");
+////            bo.setForm(form);
+//            bo.setBegin(beginSum);
+//            bo.setEnd(endSum);
+//            bo.setCurrent(currentSum);
+//            bo.setYear(yearSum);
+//            boList.add(bo);
+//            return boList;
+//        }
         return null;
     }
 
     @Override
     public List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException {
-        String[] strings = new String[]{foreignId};
-        List<Formula> list = null;
-        for (String s : strings) {
-            String sql = "select project,type1,form from reportmanagement_formula" +
-                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
-            String[] fileds = new String[]{"project", "type1", "form"};
-            list = super.findBySql(sql, Formula.class, fileds);
-        }
-        Integer month = 0;
-        LocalDate t = Utils.tranTime(time);
-        month = t.getMonthValue();
-        List<FormulaBO> boList = new ArrayList<FormulaBO>();
-        String[] projectNames=dto.getProjectNames();
-        String[] departs=dto.getDeparts();
-        String[] areas=dto.getAreas();
-        if ((list != null) && (!list.isEmpty())) {
-            double currentSum = 0;
-            FormulaBO addBO = new FormulaBO();
-            addBO.setProject("加：");
-            boList.add(addBO);
-            boolean b = true;
-            for (Formula f : list) {
-                if ("2".equals(f.getType1()) && b) {    //2代表减
-                    FormulaBO bo = new FormulaBO();
-                    bo.setProject("减：");
-                    boList.add(bo);
-                    b = false;
-                }
-                SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
-                subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                if (projectNames != null) {
-                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
-                }if (departs != null) {
-                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
-                }if (areas != null) {
-                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
-                }
-                if (LocalDate.now().getYear() == t.getYear()) {
-                    subjectCollectDTO.getConditions().add(Restrict.eq("months", month));
-                    SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
-                    FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
-                    if (Form.DEBIT.equals(bo.getForm())) {
-                        bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
-                    } else if (Form.CREDIT.equals(bo.getForm())) {
-                        bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
-                    }
-                    if ("1".equals(f.getType1())) {     //1代表加
-                        currentSum += bo.getCurrent();
-                    } else if ("2".equals(f.getType1())) {  //2代表减
-                        currentSum = currentSum - bo.getCurrent();
-                    }
-                    boList.add(bo);
-                }
-            }
-            FormulaBO bo = new FormulaBO();
-            bo.setProject("合计：");
-            bo.setCurrent(currentSum);
-            boList.add(bo);
-            return boList;
-        }
+//        String[] strings = new String[]{foreignId};
+//        List<Formula> list = null;
+//        for (String s : strings) {
+//            String sql = "select project,type1,form from reportmanagement_formula" +
+//                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
+//            String[] fileds = new String[]{"project", "type1", "form"};
+//            list = super.findBySql(sql, Formula.class, fileds);
+//        }
+//        Integer month = 0;
+//        LocalDate t = Utils.tranTime(time);
+//        month = t.getMonthValue();
+//        List<FormulaBO> boList = new ArrayList<FormulaBO>();
+//        String[] projectNames=dto.getProjectNames();
+//        String[] departs=dto.getDeparts();
+//        String[] areas=dto.getAreas();
+//        if ((list != null) && (!list.isEmpty())) {
+//            double currentSum = 0;
+//            FormulaBO addBO = new FormulaBO();
+//            addBO.setProject("加：");
+//            boList.add(addBO);
+//            boolean b = true;
+//            for (Formula f : list) {
+//                if ("2".equals(f.getType1()) && b) {    //2代表减
+//                    FormulaBO bo = new FormulaBO();
+//                    bo.setProject("减：");
+//                    boList.add(bo);
+//                    b = false;
+//                }
+//                SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
+//                subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
+//                if (projectNames != null) {
+//                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
+//                }if (departs != null) {
+//                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
+//                }if (areas != null) {
+//                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
+//                }
+//                if (LocalDate.now().getYear() == t.getYear()) {
+//                    subjectCollectDTO.getConditions().add(Restrict.eq("months", month));
+//                    SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
+//                    FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
+//                    if (Form.DEBIT.equals(bo.getForm())) {
+//                        bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
+//                    } else if (Form.CREDIT.equals(bo.getForm())) {
+//                        bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
+//                    }
+//                    if ("1".equals(f.getType1())) {     //1代表加
+//                        currentSum += bo.getCurrent();
+//                    } else if ("2".equals(f.getType1())) {  //2代表减
+//                        currentSum = currentSum - bo.getCurrent();
+//                    }
+//                    boList.add(bo);
+//                }
+//            }
+//            FormulaBO bo = new FormulaBO();
+//            bo.setProject("合计：");
+//            bo.setCurrent(currentSum);
+//            boList.add(bo);
+//            return boList;
+//        }
         return null;
     }
 

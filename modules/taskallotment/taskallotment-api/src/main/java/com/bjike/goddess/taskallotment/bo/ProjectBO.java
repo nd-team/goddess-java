@@ -50,7 +50,10 @@ public class ProjectBO extends BaseBO {
      * 创建人
      */
     private String name;
-
+    /**
+     * 创建时间
+     */
+    private String createTime;
     /**
      * 状态
      */
@@ -60,6 +63,14 @@ public class ProjectBO extends BaseBO {
      * 项目表信息
      */
     private List<TableBO> tables;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public Status getStatus() {
         return status;

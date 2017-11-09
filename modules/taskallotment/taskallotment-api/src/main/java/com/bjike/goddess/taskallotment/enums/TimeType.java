@@ -1,5 +1,7 @@
 package com.bjike.goddess.taskallotment.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 时间类型
  * @Author: [chenjunhao]
@@ -12,14 +14,17 @@ public enum TimeType {
     /**
      * 分钟
      */
+    @ExcelValue(name = "分钟")
     MINUTE(0),
     /**
      * 小时
      */
+    @ExcelValue(name = "小时")
     HOUR(1),
     /**
      * 天
      */
+    @ExcelValue(name = "天")
     DAY(2);
 
     private int code;

@@ -15,7 +15,7 @@ import com.bjike.goddess.task.enums.TimeType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CustomizeBO extends BaseBO{
+public class CustomizeBO extends BaseBO {
     /**
      * 汇总名
      */
@@ -34,6 +34,10 @@ public class CustomizeBO extends BaseBO{
      * 表
      */
     private String[] tables;
+    /**
+     * 表名称
+     */
+    private String table;
     /**
      * 表id
      */
@@ -96,6 +100,14 @@ public class CustomizeBO extends BaseBO{
      * 上次发送时间
      */
     private String lastTime;
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
 
     public String getCollectName() {
         return collectName;

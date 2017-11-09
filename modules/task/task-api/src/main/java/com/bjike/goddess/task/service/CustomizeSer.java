@@ -56,5 +56,11 @@ public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
 
     }
 
-
+    /**
+     *
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Double get(String project) throws SerException;
 }

@@ -37,6 +37,19 @@ public class DayDBO extends BaseBO {
      */
     private Double outTime;
 
+    public DayDBO(){
+        super();
+    }
+
+    public DayDBO(String name, Double planNum, Double actualNum, Double taskTime, Double actualTime, Double outTime) {
+        this.name = name;
+        this.planNum = planNum;
+        this.actualNum = actualNum;
+        this.taskTime = taskTime;
+        this.actualTime = actualTime;
+        this.outTime = outTime;
+    }
+
     public String getName() {
         return name;
     }

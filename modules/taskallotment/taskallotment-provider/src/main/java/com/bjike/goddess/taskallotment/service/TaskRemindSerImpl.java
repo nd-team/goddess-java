@@ -151,13 +151,13 @@ public class TaskRemindSerImpl extends ServiceImpl<TaskRemind, TaskRemindDTO> im
             Project p = projectSer.findOne(projectDTO);
             if (null != p) {
                 TableDTO tableDTO = new TableDTO();
-                tableDTO.getConditions().add(Restrict.eq("project.id", p.getId()));
+                tableDTO.getConditions().add(Restrict.eq("projectId", p.getId()));
                 tableDTO.getConditions().add(Restrict.eq("name", table));
                 Table tb = tableSer.findOne(tableDTO);
                 if (null != tb) {
                     TaskNodeDTO dto = new TaskNodeDTO();
                     dto.getConditions().add(Restrict.eq("taskName", taskName));
-                    dto.getConditions().add(Restrict.eq("table.id", tb.getId()));
+                    dto.getConditions().add(Restrict.eq("tableId", tb.getId()));
                     List<TaskNode> taskNodes = taskNodeSer.findByCis(dto);
                     List<String> executes = taskNodes.stream().filter(taskNode -> null == taskNode.getConfirm() && (null != taskNode.getExecute())).map(taskNode -> taskNode.getExecute()).collect(Collectors.toList());
                     if (!executes.isEmpty()) {

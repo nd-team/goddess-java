@@ -9,6 +9,8 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -21,11 +23,12 @@ import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.excel.TaskNodeExcel;
+import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.to.DeleteFileTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.taskallotment.vo.*;
-import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
@@ -66,8 +70,6 @@ public class TaskNodeAction extends BaseFileAction {
     private PositionDetailUserAPI positionDetailUserAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
-    private UserAPI userAPI;
 
     /**
      * 功能导航权限
@@ -101,10 +103,10 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(ProjectDTO dto, HttpServletRequest request) throws ActException {
+    public Result list(@Validated(TableDTO.LIST.class) TableDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
-            List<ProjectBO> list = taskNodeAPI.list(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectVO.class, request));
+            List<TableBO> list = taskNodeAPI.list(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, TableVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -225,12 +227,12 @@ public class TaskNodeAction extends BaseFileAction {
     /**
      * 查找总记录数
      *
-     * @param dto 任务节点数据传输
+     * @param dto dto
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(TaskNodeDTO dto) throws ActException {
+    public Result count(@Validated(TableDTO.LIST.class) TableDTO dto, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(taskNodeAPI.count(dto));
         } catch (SerException e) {
@@ -312,7 +314,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/finish")
-    public Result finish(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to,BindingResult result) throws ActException {
+    public Result finish(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to, BindingResult result) throws ActException {
         try {
             taskNodeAPI.finish(to);
             return new ActResult("确认完成成功");
@@ -329,7 +331,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/unFinish")
-    public Result unFinish(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to,BindingResult result) throws ActException {
+    public Result unFinish(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to, BindingResult result) throws ActException {
         try {
             taskNodeAPI.unFinish(to);
             return new ActResult("确认未完成成功");
@@ -559,6 +561,23 @@ public class TaskNodeAction extends BaseFileAction {
     }
 
     /**
+     * 个人汇总图形化
+     *
+     * @param dto dto
+     * @return class OptionBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/person/count/figure")
+    public Result personCountFigure(@Validated(TaskNodeDTO.PERSON.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(taskNodeAPI.personCountFigure(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 人员标准工时汇总
      *
      * @param dto dto
@@ -571,6 +590,23 @@ public class TaskNodeAction extends BaseFileAction {
         try {
             List<TimeCountBO> list = taskNodeAPI.timeCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, TimeCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 人员标准工时汇总图形化
+     *
+     * @param dto dto
+     * @return class OptionBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/time/count/figure")
+    public Result timeCountFigure(@Validated(TaskNodeDTO.COUNT.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(taskNodeAPI.timeCountFigure(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -595,6 +631,23 @@ public class TaskNodeAction extends BaseFileAction {
     }
 
     /**
+     * 分配及确认汇总图形化
+     *
+     * @param dto dto
+     * @return class OptionBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/confirm/count/figure")
+    public Result confirmCountFigure(@Validated(TaskNodeDTO.COUNT.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(taskNodeAPI.confirmCountFigure(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 完成情况汇总
      *
      * @param dto dto
@@ -607,6 +660,23 @@ public class TaskNodeAction extends BaseFileAction {
         try {
             List<FinishCaseBO> list = taskNodeAPI.finishCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, FinishCaseVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 完成情况汇总图形化
+     *
+     * @param dto dto
+     * @return class OptionBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/finish/count/figure")
+    public Result finishCountFigure(@Validated(TaskNodeDTO.COUNT.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(taskNodeAPI.finishCountFigure(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -798,6 +868,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @return class UserVO
      * @throws ActException
      * @version v1
+     * @version v1
      */
     @GetMapping("v1/users")
     public Result users(HttpServletRequest request) throws ActException {
@@ -822,12 +893,153 @@ public class TaskNodeAction extends BaseFileAction {
             Set<String> set = new HashSet<>();
             String[] departIds = dto.getDeparIds();
             for (String s : departIds) {
-                Set<String> userIds = departmentDetailAPI.departPersons(s);
-                for (String id : userIds) {
-                    set.add(userAPI.findNameById(id));
+                Set<String> names = departmentDetailAPI.departPersons(s);
+                if (null != names) {
+                    set.addAll(names);
                 }
             }
             return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出任务excel
+     *
+     * @param dto dto
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export/excel")
+    public Result exportExcel(@Validated({TaskNodeDTO.EXPORT.class}) TaskNodeDTO dto, BindingResult result, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "任务节点.xlsx";
+            super.writeOutFile(response, taskNodeAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导入任务excel
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/lead/excel/{tableId}")
+    public Result leadTableExcel(@PathVariable String tableId, HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<TaskNodeExcel> toList = ExcelUtil.excelToClazz(is, TaskNodeExcel.class, excel);
+            List<TaskNodeLeadTO> tos = BeanTransform.copyProperties(toList, TaskNodeLeadTO.class);
+            taskNodeAPI.leadExcel(tos, tableId);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据项目表id获取任务名称
+     *
+     * @param tableId 项目表id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/taskNames/{tableId}")
+    public Result taskNames(@PathVariable String tableId) throws ActException {
+        try {
+            return ActResult.initialize(taskNodeAPI.taskNames(tableId));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 个人汇总饼状图
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/ping")
+    public Result ping(@Validated(TaskNodeDTO.PING.class) TaskNodeDTO dto, BindingResult result) throws ActException {
+        try {
+            return ActResult.initialize(taskNodeAPI.personBing(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区（列表）
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/areass")
+    public Result areass() throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.areass());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据地区获取部门
+     *
+     * @param area 地区
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/departs/{area}")
+    public Result departs(@PathVariable String area) throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.departs(area));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据地区和部门获取立项情况
+     *
+     * @param area   地区
+     * @param depart 部门
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/makeProjects/{area}/{depart}")
+    public Result makeProjects(@PathVariable String area, @PathVariable String depart) throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.makeProjects(area, depart));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据地区部门和立项情况获取项目
+     *
+     * @param area        地区
+     * @param depart      部门
+     * @param makeProject 立项情况
+     * @return class ProjectVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/projectss")
+    public Result projects(String area, String depart, String makeProject, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(projectAPI.projects(area, depart, makeProject), ProjectVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

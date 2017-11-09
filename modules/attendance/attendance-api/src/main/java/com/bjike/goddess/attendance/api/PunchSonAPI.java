@@ -1,12 +1,16 @@
 package com.bjike.goddess.attendance.api;
 
+import com.bjike.goddess.attendance.bo.CaseCountBO;
 import com.bjike.goddess.attendance.bo.PunchBO;
+import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 打卡子表业务接口
@@ -18,6 +22,8 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PunchSonAPI {
+    Boolean sonPermission() throws SerException;
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 打卡
      *
@@ -36,7 +42,7 @@ public interface PunchSonAPI {
      * @return
      * @throws SerException
      */
-    String string(Double longitude, Double latitude, String area) throws SerException;
+    List<String> string(Double longitude, Double latitude, String area) throws SerException;
 
     /**
      * 列表
@@ -46,6 +52,23 @@ public interface PunchSonAPI {
      * @throws SerException
      */
     List<PunchBO> list(PunchDTO dto) throws SerException;
+
+    /**
+     * 移动端列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<PunchPhoneBO> phoneList(PunchDTO dto) throws SerException;
+
+    /**
+     * 考勤情况汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CaseCountBO> caseCount(PunchDTO dto) throws SerException;
 
     /**
      * 总条数

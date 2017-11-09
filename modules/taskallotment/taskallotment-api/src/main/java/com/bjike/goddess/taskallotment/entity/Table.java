@@ -3,7 +3,8 @@ package com.bjike.goddess.taskallotment.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.taskallotment.enums.Status;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 
 /**
@@ -28,9 +29,15 @@ public class Table extends BaseEntity {
     /**
      * 项目信息
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_id",nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目信息'")
-    private Project project;
+//    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(name = "project_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目信息'")
+    private String projectId;
+
+    /**
+     * 创建人
+     */
+    @Column(name = "creater", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '创建人'")
+    private String creater;
 
     /**
      * 状态
@@ -38,12 +45,20 @@ public class Table extends BaseEntity {
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '状态'")
     private Status status;
 
-    public Project getProject() {
-        return project;
+    public String getCreater() {
+        return creater;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public Status getStatus() {

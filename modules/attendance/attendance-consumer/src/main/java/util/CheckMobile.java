@@ -1,5 +1,8 @@
 package util;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,6 +52,39 @@ public class CheckMobile {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 检测请求方是否为移动端
+     *
+     * @throws IOException
+     */
+    public static boolean check(HttpServletRequest request) throws IOException {
+        boolean isFromMobile = false;
+
+        HttpSession session = request.getSession();
+        //检查是否已经记录访问方式（移动端或pc端）
+        if (null == session.getAttribute("ua")) {
+            try {
+                //获取ua，用来判断是否为移动端访问
+                String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+                if (null == userAgent) {
+                    userAgent = "";
+                }
+                isFromMobile = CheckMobile.check(userAgent);
+                //判断是否为移动端访问
+                if (isFromMobile) {
+                    session.setAttribute("ua", "mobile");
+                } else {
+                    session.setAttribute("ua", "pc");
+                }
+            } catch (Exception e) {
+            }
+        } else {
+            isFromMobile = session.getAttribute("ua").equals("mobile");
+        }
+
+        return isFromMobile;
     }
 }
 

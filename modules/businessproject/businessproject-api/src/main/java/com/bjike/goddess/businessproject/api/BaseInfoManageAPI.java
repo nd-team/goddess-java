@@ -91,17 +91,6 @@ public interface BaseInfoManageAPI {
         return;
     }
 
-    ;
-    /**
-     * chenjunhao
-     *
-     * @param project
-     * @return
-     * @throws SerException
-     */
-    default Double contractScale(String project) throws SerException {
-        return null;
-    }
 
 
     /**
@@ -231,4 +220,13 @@ public interface BaseInfoManageAPI {
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 获取某内部项目名称的合同规模数量
+     *
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Double contractScale(String project) throws SerException;
 }
