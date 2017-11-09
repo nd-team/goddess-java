@@ -29,6 +29,12 @@ public interface VoucherGenerateAPI {
     default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermissionAccount() throws SerException {
+        return null;
+    }
 
     /**
      * 导航权限

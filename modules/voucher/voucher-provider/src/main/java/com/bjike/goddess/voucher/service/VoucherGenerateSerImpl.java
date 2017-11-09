@@ -186,6 +186,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
+    public List<SonPermissionObject> sonPermissionAccount() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("account");
+        obj.setDescribesion("明细账");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+        return list;
+    }
+
+    @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
@@ -2219,7 +2241,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             voucherGenerateBOs.stream().forEach(obj -> {
                 obj.setBorrowMoneyTotal(borrowMoneyTotal);
                 obj.setLoanMoneyTotal(loanMoneyTotal);
@@ -2270,7 +2292,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             voucherGenerateBOs.stream().forEach(obj -> {
                 obj.setBorrowMoneyTotal(borrowMoneyTotal);
                 obj.setLoanMoneyTotal(loanMoneyTotal);
@@ -2321,7 +2343,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             voucherGenerateBOs.stream().forEach(obj -> {
                 obj.setBorrowMoneyTotal(borrowMoneyTotal);
                 obj.setLoanMoneyTotal(loanMoneyTotal);
@@ -2420,7 +2442,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
             //财务初始化中根据会计科目名称获取方向
             String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction","balance"};
+            String[] field = new String[]{"direction", "balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
@@ -2465,7 +2487,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
             //财务初始化中根据会计科目名称获取方向
             String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction","balance"};
+            String[] field = new String[]{"direction", "balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
@@ -2518,7 +2540,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        List<String> firstSubjectList = list.stream().map(VoucherGenerate::getFirstSubject).collect(Collectors.toList());
 //        return firstSubjectList;
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.eq("transferStatus",TransferStatus.CHECK));
+        dto.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
         List<VoucherGenerate> list = super.findByCis(dto);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
@@ -2536,8 +2558,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<String> subSubject(String firstSubject) throws SerException {
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.eq("transferStatus",TransferStatus.CHECK));
-        dto.getConditions().add(Restrict.eq("firstSubject",firstSubject));
+        dto.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
         List<VoucherGenerate> list = super.findByCis(dto);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
@@ -2555,9 +2577,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.eq("transferStatus",TransferStatus.CHECK));
-        dto.getConditions().add(Restrict.eq("firstSubject",firstSubject));
-        dto.getConditions().add(Restrict.eq("secondSubject",subSubject));
+        dto.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+        dto.getConditions().add(Restrict.eq("secondSubject", subSubject));
         List<VoucherGenerate> list = super.findByCis(dto);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();

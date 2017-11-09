@@ -272,7 +272,8 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
     public StayApplyBO applyHost(StayApplyTO to) throws SerException {
         checkAddIdentity();
         StayApply apply = super.findById(to.getId());
-        BeanTransform.copyProperties(to,apply,true);
+        BeanTransform.copyProperties(to, apply, true);
+        apply.setTotalAmount(apply.getTollMoney() + apply.getAmount());
         apply.setModifyTime(LocalDateTime.now());
         super.update(apply);
         StayApplyBO bo = BeanTransform.copyProperties(apply, StayApplyBO.class);
