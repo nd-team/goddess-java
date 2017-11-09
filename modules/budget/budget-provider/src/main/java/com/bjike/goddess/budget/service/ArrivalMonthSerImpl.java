@@ -198,8 +198,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
         List<ArrivalMonthBO> boList = new ArrayList<ArrivalMonthBO>();
         for (ArrivalMonth a : list) {
             ArrivalMonthBO bo = BeanTransform.copyProperties(a, ArrivalMonthBO.class);
-            bo.setWorkDifferences(a.getActualWork() - a.getTargetWork());
-            bo.setIncomeDifferences(a.getPlanIncome() - a.getTargetIncome());
+            bo.setWorkDifferences(a.getTargetWork() - a.getActualWork());
+            bo.setIncomeDifferences(a.getTargetIncome() - a.getPlanIncome());
             boList.add(bo);
         }
         return boList;
@@ -209,8 +209,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     public ArrivalMonthBO findByID(String id) throws SerException {
         ArrivalMonth arrivalMonth = super.findById(id);
         ArrivalMonthBO bo = BeanTransform.copyProperties(arrivalMonth, ArrivalMonthBO.class);
-        bo.setWorkDifferences(arrivalMonth.getActualWork() - arrivalMonth.getTargetWork());
-        bo.setIncomeDifferences(arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome());
+        bo.setWorkDifferences(arrivalMonth.getTargetWork() - arrivalMonth.getActualWork());
+        bo.setIncomeDifferences(arrivalMonth.getTargetIncome() - arrivalMonth.getPlanIncome());
         return bo;
     }
 
@@ -267,11 +267,11 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                     if (arrivalMonth.getArrival().equals(arrival) && arrivalMonth.getYear().equals(year)) {
                         targetIncomeSum += arrivalMonth.getTargetIncome();
                         planIncomeSum += arrivalMonth.getPlanIncome();
-                        double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                        double incomeDifference = arrivalMonth.getTargetIncome() - arrivalMonth.getPlanIncome();
                         incomeDifferencesSum += incomeDifference;
                         targetWorkSum += arrivalMonth.getTargetWork();
                         actualWorkSum += arrivalMonth.getActualWork();
-                        int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                        int workDifference = arrivalMonth.getTargetWork() - arrivalMonth.getActualWork();
                         workDifferencesSum += workDifference;
                     }
                 }
@@ -322,11 +322,11 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
                         if (arrivalMonth.getYear().equals(year)) {
                             targetIncomeSum += arrivalMonth.getTargetIncome();
                             planIncomeSum += arrivalMonth.getPlanIncome();
-                            double incomeDifference = arrivalMonth.getPlanIncome() - arrivalMonth.getTargetIncome();
+                            double incomeDifference = arrivalMonth.getTargetIncome() - arrivalMonth.getPlanIncome();
                             incomeDifferencesSum += incomeDifference;
                             targetWorkSum += arrivalMonth.getTargetWork();
                             actualWorkSum += arrivalMonth.getActualWork();
-                            int workDifference = arrivalMonth.getActualWork() - arrivalMonth.getTargetWork();
+                            int workDifference = arrivalMonth.getTargetWork() - arrivalMonth.getActualWork();
                             workDifferencesSum += workDifference;
                         }
                     }
@@ -377,8 +377,8 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
             bo.setArrival(arrivalMonth.getArrival());
             bo.setYear(arrivalMonth.getYear());
             bo.setMonth(arrivalMonth.getMonth());
-            bo.setIncomeDifferences(bo.getPlanIncome() - bo.getTargetIncome());
-            bo.setWorkDifferences(bo.getActualWork() - bo.getTargetWork());
+            bo.setIncomeDifferences(bo.getTargetIncome() - bo.getPlanIncome());
+            bo.setWorkDifferences(arrivalMonth.getTargetWork() - arrivalMonth.getActualWork());
         }
         return list;
     }

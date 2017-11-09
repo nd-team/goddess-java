@@ -424,8 +424,9 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         String token = RpcTransmit.getUserToken();
         RpcTransmit.transmitUserToken(token);
         Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
-        if (moduleFlag) {
+        if (moduleFlag || positionFlag) {
             flag = true;
         } else {
             flag = false;

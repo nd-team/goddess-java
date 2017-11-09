@@ -4,10 +4,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.customer.bo.CusFamilyMemberBO;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.customer.enums.CustomerSex;
-import com.bjike.goddess.customer.enums.CustomerStatus;
-import com.bjike.goddess.customer.enums.CustomerType;
-import com.bjike.goddess.customer.enums.Origin;
+import com.bjike.goddess.customer.enums.*;
 
 import java.util.List;
 
@@ -146,7 +143,7 @@ public class CustomerDetailExport extends BaseBO {
      * 职权
      */
     @ExcelHeader(name = "职权",notNull = true)
-    private String workRight;
+    private WorkRight workRight;
 
     /**
      * 生活地区
@@ -386,11 +383,11 @@ public class CustomerDetailExport extends BaseBO {
         this.workLevel = workLevel;
     }
 
-    public String getWorkRight() {
+    public WorkRight getWorkRight() {
         return workRight;
     }
 
-    public void setWorkRight(String workRight) {
+    public void setWorkRight(WorkRight workRight) {
         this.workRight = workRight;
     }
 

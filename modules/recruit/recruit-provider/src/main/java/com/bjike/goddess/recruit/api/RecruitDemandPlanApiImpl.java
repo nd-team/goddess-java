@@ -1,10 +1,10 @@
 package com.bjike.goddess.recruit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.recruit.bo.RecruitDemandPlanBO;
-import com.bjike.goddess.recruit.bo.RecruitProgressBO;
+import com.bjike.goddess.recruit.bo.*;
 import com.bjike.goddess.recruit.dto.RecruitDemandPlanDTO;
 import com.bjike.goddess.recruit.service.RecruitDemandPlanSer;
+import com.bjike.goddess.recruit.to.ChannelTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitDemandPlanTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +70,7 @@ public class RecruitDemandPlanApiImpl implements RecruitDemandPlanAPI {
     public RecruitDemandPlanBO makePlan(RecruitDemandPlanTO to) throws SerException {
         return recruitDemandPlanSer.makePlan(to);
     }
+
     @Override
     public List<RecruitProgressBO> dayCollect(String time) throws SerException {
         return recruitDemandPlanSer.dayCollect(time);
@@ -99,4 +100,36 @@ public class RecruitDemandPlanApiImpl implements RecruitDemandPlanAPI {
     public List<RecruitProgressBO> totalCollect(String time) throws SerException {
         return recruitDemandPlanSer.totalCollect(time);
     }
+
+    @Override
+    public List<RecruitDetailsBO> dayRecruit(String time) throws SerException {
+        return recruitDemandPlanSer.dayRecruit(time);
+    }
+
+    @Override
+    public List<RecruitDetailsBO> weekRecruit(Integer year, Integer month, Integer week) throws SerException {
+        return recruitDemandPlanSer.weekRecruit(year, month, week);
+    }
+
+    @Override
+    public List<RecruitDetailsBO> monthRecruit(Integer year, Integer month) throws SerException {
+        return recruitDemandPlanSer.monthRecruit(year, month);
+    }
+    @Override
+    public OptionBO channelCollect(ChannelTO to) throws SerException {
+        return recruitDemandPlanSer.channelCollect(to);
+    } @Override
+    public OptionPieBO faceFigure(ChannelTO to) throws SerException {
+        return recruitDemandPlanSer.faceFigure(to);
+    }
+
+    @Override
+    public OptionPieBO entryFigure(ChannelTO to) throws SerException {
+        return recruitDemandPlanSer.entryFigure(to);
+    }
+    @Override
+    public List<String> getPosition() throws SerException{
+        return recruitDemandPlanSer.getPosition();
+    }
+
 }

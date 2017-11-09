@@ -66,7 +66,7 @@ public class CommunicationFormworkVO {
     private String ccObj;
 
     /**
-     *
+     * 途径
      */
     private String way;
 

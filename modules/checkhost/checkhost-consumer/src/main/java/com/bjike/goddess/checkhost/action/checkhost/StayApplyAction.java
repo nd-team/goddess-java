@@ -183,5 +183,37 @@ public class StayApplyAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 离宿申请
+     *
+     * @return class StayApplyVO
+     * @des 离宿申请
+     * @version v1
+     */
+    @PostMapping("v1/applyHost")
+    public Result applyHost(@Validated(StayApplyTO.TestHostApply.class) StayApplyTO to,BindingResult bindingResult) throws ActException {
+        try {
+            StayApplyBO stayApplyBO = stayApplyAPI.applyHost(to);
+            return ActResult.initialize(BeanTransform.copyProperties(stayApplyBO, StayApplyVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 模块负责人审核
+     *
+     * @return class StayApplyVO
+     * @des 模块负责人审核
+     * @version v1
+     */
+    @PostMapping("v1/hostAudit")
+    public Result hostAudit(@Validated(StayApplyTO.TestHostAudit.class) StayApplyTO to,BindingResult bindingResult) throws ActException {
+        try {
+            StayApplyBO stayApplyBO = stayApplyAPI.hostAudit(to);
+            return ActResult.initialize(BeanTransform.copyProperties(stayApplyBO, StayApplyVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

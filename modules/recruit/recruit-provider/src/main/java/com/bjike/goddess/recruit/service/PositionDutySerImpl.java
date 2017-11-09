@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -13,14 +14,12 @@ import com.bjike.goddess.recruit.to.PositionDutyTO;
 import com.bjike.goddess.recruit.type.GuideAddrStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.entity.Position;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -171,6 +170,7 @@ public class PositionDutySerImpl extends ServiceImpl<PositionDuty, PositionDutyD
 
     @Override
     public Long count(PositionDutyDTO dto) throws SerException {
+        search(dto);
         Long count = super.count(dto);
         return count;
     }
@@ -184,6 +184,8 @@ public class PositionDutySerImpl extends ServiceImpl<PositionDuty, PositionDutyD
 
     @Override
     public List<PositionDutyBO> list(PositionDutyDTO dto) throws SerException {
+        checkSeeIdentity();
+        search(dto);
         List<PositionDuty> positionDuties = super.findByCis(dto);
         List<PositionDutyBO> positionDutyBOS = BeanTransform.copyProperties(positionDuties, PositionDutyBO.class);
         return positionDutyBOS;
@@ -192,6 +194,7 @@ public class PositionDutySerImpl extends ServiceImpl<PositionDuty, PositionDutyD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDutyBO save(PositionDutyTO to) throws SerException {
+        checkAddIdentity();
         PositionDuty positionDuty = BeanTransform.copyProperties(to, PositionDuty.class);
         positionDuty.setCreateTime(LocalDateTime.now());
         super.save(positionDuty);
@@ -202,13 +205,14 @@ public class PositionDutySerImpl extends ServiceImpl<PositionDuty, PositionDutyD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDutyBO update(PositionDutyTO to) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             PositionDuty positionDuty = super.findById(to.getId());
             LocalDateTime createTime = positionDuty.getCreateTime();
-            positionDuty = BeanTransform.copyProperties(to,PositionDuty.class,true);
+            positionDuty = BeanTransform.copyProperties(to, PositionDuty.class, true);
             positionDuty.setCreateTime(createTime);
             positionDuty.setModifyTime(LocalDateTime.now());
-            PositionDutyBO bo = BeanTransform.copyProperties(positionDuty,PositionDutyBO.class);
+            PositionDutyBO bo = BeanTransform.copyProperties(positionDuty, PositionDutyBO.class);
             return bo;
         } else {
             throw new SerException("id不能为空");
@@ -218,6 +222,7 @@ public class PositionDutySerImpl extends ServiceImpl<PositionDuty, PositionDutyD
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void remove(String id) throws SerException {
+        checkAddIdentity();
         if (StringUtils.isNotBlank(id)) {
             super.remove(id);
         } else {
@@ -247,5 +252,14 @@ public class PositionDutySerImpl extends ServiceImpl<PositionDuty, PositionDutyD
         } else {
             throw new SerException("id不能为空");
         }
+    }
+
+    private List<PositionDutyBO> search(PositionDutyDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getPosition())) {
+            dto.getConditions().add(Restrict.like("position", dto.getPosition()));
+        }
+        List<PositionDuty> list = super.findByCis(dto);
+        List<PositionDutyBO> positionDutyBOS = BeanTransform.copyProperties(list, PositionDutyBO.class);
+        return positionDutyBOS;
     }
 }

@@ -19,10 +19,7 @@ import com.bjike.goddess.customer.entity.CusFamilyMember;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
 import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
-import com.bjike.goddess.customer.enums.CustomerMainStatus;
-import com.bjike.goddess.customer.enums.CustomerSex;
-import com.bjike.goddess.customer.enums.GuideAddrStatus;
-import com.bjike.goddess.customer.enums.VisitStatus;
+import com.bjike.goddess.customer.enums.*;
 import com.bjike.goddess.customer.excel.CustomerBaseInfoExport;
 import com.bjike.goddess.customer.excel.CustomerBaseInfoExportTemple;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
@@ -43,7 +40,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.crypto.Data;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -78,6 +74,22 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private AreaWeightSetSer areaWeightSetSer;
+    @Autowired
+    private BussTypeWeightSetSer bussTypeWeightSetSer;
+    @Autowired
+    private ClosenessFoactorWeightSer closenessFoactorWeightSer;
+    @Autowired
+    private FirstFactorWeightSer firstFactorWeightSer;
+    @Autowired
+    private FunPowerWeightSer funPowerWeightSer;
+    @Autowired
+    private TimelinessFactorWeightSer timelinessFactorWeightSer;
+    @Autowired
+    private CustomerContactWeightSetSer customerContactWeightSetSer;
+    @Autowired
+    private DifficultyFoactorWeightSer difficultyFoactorWeightSer;
 
 
     /**
@@ -185,6 +197,15 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             case DELETE:
                 flag = guideAddIdentity("3");
                 break;
+            case UPLOAD:
+                flag = guideAddIdentity("3");
+                break;
+            case SEEFILE:
+                flag = guideAddIdentity("3");
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity("3");
+                break;
             case CONGEL:
                 flag = guideAddIdentity("3");
                 break;
@@ -227,7 +248,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         //列表权限
         checkSeeIdentity("1");
         searchCondi(customerBaseInfoDTO);
-        customerBaseInfoDTO.getSorts().add("createTime=desc");
+//        customerBaseInfoDTO.getSorts().add("finalWeight=desc");
         List<CustomerBaseInfo> list = super.findByCis(customerBaseInfoDTO, true);
 
         List<CustomerBaseInfoBO> customerBaseInfoBOList = new ArrayList<>();
@@ -568,7 +589,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (StringUtils.isNotBlank(customerBaseInfoTO.getWorkRight())) {
+        if (customerBaseInfoTO.getWorkRight() != null) {
             now++;
         }
         sum++;
@@ -1851,7 +1872,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     public PieOptionBO resoucePieShowBybussType(String bussType) throws SerException {
         List<String> bussTypes = findBussType();
         List<DataBO> dataBOList = new ArrayList<>();
-        String[] datas = new String[]{"客户介绍新增客户数量","市场招待新增客户数量","商务洽谈新增客户数量","招投标新增客户数量","网站新增客户数量","员工介绍新增客户数量","其他来源新增客户数量"};
+        String[] datas = new String[]{"客户介绍新增客户数量", "市场招待新增客户数量", "商务洽谈新增客户数量", "招投标新增客户数量", "网站新增客户数量", "员工介绍新增客户数量", "其他来源新增客户数量"};
         if (bussTypes != null && bussTypes.size() > 0) {
             if (StringUtils.isBlank(bussType)) {
                 bussType = bussTypes.get(0);
@@ -1868,14 +1889,13 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             sql.append(" )");
             List<Object> objectList = super.findBySql(sql.toString());
             Object[] objects = (Object[]) objectList.get(0);
-            for (int i=0;i<7;i++){
+            for (int i = 0; i < 7; i++) {
                 DataBO dataBO = new DataBO();
                 dataBO.setName(datas[i]);
                 dataBO.setValue(Integer.parseInt(String.valueOf(objects[i])));
                 dataBOList.add(dataBO);
             }
         }
-
 
 
 //        String[] text_type = new String[bussTypes.size()];
@@ -1899,5 +1919,53 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         pieOptionBO.setSeries(pieSeriesBO);
 
         return pieOptionBO;
+    }
+
+    @Override
+    public List<CustomerBaseInfoBO> computations() throws SerException {
+        List<CustomerBaseInfo> customerBaseInfos = super.findAll();
+        if (customerBaseInfos != null && customerBaseInfos.size() > 0) {
+            for (CustomerBaseInfo customerBaseInfo : customerBaseInfos) {
+                //地区权重
+                AreaWeightSetBO areaWeightSetBO = areaWeightSetSer.findByProArea(customerBaseInfo.getProvinces(), customerBaseInfo.getArea());
+                //业务权重
+                BussTypeWeightSetBO bussTypeWeightSetBO = bussTypeWeightSetSer.findByProArea(customerBaseInfo.getBusinessType(), customerBaseInfo.getBusinessWay());
+                //客户接触阶段权重
+                CustomerContactWeightSetBO customerContactWeightSetBO = customerContactWeightSetSer.findByCustomerType(ContactPhace.enumToString(customerBaseInfo.getContactPhace()));
+                //职权一层权重
+                FirstFactorWeightBO funPowerBO = firstFactorWeightSer.findByName("职权");
+                //职权二级权重
+                FunPowerWeightBO funPowerWeightBO = funPowerWeightSer.findByName(WorkRight.enumToString(customerBaseInfo.getWorkRight()));
+                //时效性一层权重
+                FirstFactorWeightBO timelinessPowerBO = firstFactorWeightSer.findByName("时效性");
+                //时效性二层权重
+                TimelinessFactorWeightBO timelinessFactorWeightBO = timelinessFactorWeightSer.findByName(Timeliness.enumToString(customerBaseInfo.getTimeliness()));
+                //亲密度一层权重
+                FirstFactorWeightBO closenessPowerBO = firstFactorWeightSer.findByName("亲密度");
+                //亲密度二层权重
+                ClosenessFoactorWeightBO closenessFoactorWeightBO = closenessFoactorWeightSer.findByName(Intimacy.enumToString(customerBaseInfo.getIntimacy()));
+                //难易度一层权重
+                FirstFactorWeightBO difficultyBO = firstFactorWeightSer.findByName("难易度");
+                //难易度二层权重
+                DifficultyFoactorWeightBO difficultyFoactorWeightBO = difficultyFoactorWeightSer.findByName(DifficultyLevel.enumToString(customerBaseInfo.getDifficultyLevel()));
+
+                if (areaWeightSetBO != null && bussTypeWeightSetBO != null && customerContactWeightSetBO != null && funPowerBO != null && funPowerWeightBO != null && timelinessPowerBO != null && timelinessFactorWeightBO != null && closenessPowerBO != null && closenessFoactorWeightBO != null && difficultyBO != null && difficultyFoactorWeightBO != null) {
+                    Double finalWeight = areaWeightSetBO.getProvincesWeight() * areaWeightSetBO.getAreaWeight()
+                            + bussTypeWeightSetBO.getBusinessTypeWeight() * bussTypeWeightSetBO.getBusinessWayWeight()
+                            + customerContactWeightSetBO.getCustomerContactTypeWeight()
+                            + funPowerBO.getFirstFactorWeight() * funPowerWeightBO.getFunPowerTypeWeight()
+                            + timelinessPowerBO.getFirstFactorWeight() * timelinessFactorWeightBO.getTimelinessWeight()
+                            + closenessPowerBO.getFirstFactorWeight() * closenessFoactorWeightBO.getClosenessWeight()
+                            + difficultyBO.getFirstFactorWeight() * difficultyFoactorWeightBO.getDifficWeight();
+                    customerBaseInfo.setFinalWeight(finalWeight);
+                    super.update(customerBaseInfo);
+                }
+            }
+        }
+        CustomerBaseInfoDTO customerBaseInfoDTO = new CustomerBaseInfoDTO();
+        int limit = customerBaseInfoDTO.getLimit();
+        int start = limit * customerBaseInfoDTO.getPage();
+        List<CustomerBaseInfo> customerBaseInfoList = customerBaseInfos.stream().skip(start).limit(limit).collect(Collectors.toList());
+        return BeanTransform.copyProperties(customerBaseInfoList, CustomerBaseInfo.class);
     }
 }

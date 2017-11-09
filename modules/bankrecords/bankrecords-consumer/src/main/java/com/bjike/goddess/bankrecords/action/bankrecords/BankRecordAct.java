@@ -6,7 +6,10 @@ import com.bjike.goddess.bankrecords.dto.BankRecordDTO;
 import com.bjike.goddess.bankrecords.to.BankRecordTO;
 import com.bjike.goddess.bankrecords.to.CommunicateDeleteFileTO;
 import com.bjike.goddess.bankrecords.to.GuidePermissionTO;
-import com.bjike.goddess.bankrecords.vo.*;
+import com.bjike.goddess.bankrecords.vo.BankAccountInfoVO;
+import com.bjike.goddess.bankrecords.vo.BankRecordInfoVO;
+import com.bjike.goddess.bankrecords.vo.BankRecordPageListVO;
+import com.bjike.goddess.bankrecords.vo.ExcelTitleVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -75,17 +78,16 @@ public class BankRecordAct extends BaseFileAction {
     /**
      * 上传附件
      *
-     * @param id      id
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/upload/{id}")
-    public Result upload(@PathVariable String id, HttpServletRequest request) throws ActException {
+    @PostMapping("v1/upload")
+    public Result upload(HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String path = "/outsource/" + id;
+            String path = "/";
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
             return new ActResult("上传成功");
@@ -97,16 +99,15 @@ public class BankRecordAct extends BaseFileAction {
     /**
      * 文件附件列表
      *
-     * @param id 签订与立项id
      * @return class FileVO
      * @version v1
      */
     @LoginAuth
-    @GetMapping("v1/files/{id}")
-    public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/files")
+    public Result list(HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/outsource/" + id;
+            String path = "/";
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");
@@ -203,7 +204,8 @@ public class BankRecordAct extends BaseFileAction {
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             List<InputStream> streams = super.getInputStreams(request, path);
             to.setInputStreams(inputStreams);
-            bankRecordAPI.upload(to);;
+            bankRecordAPI.upload(to);
+            ;
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -275,7 +277,6 @@ public class BankRecordAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
 }

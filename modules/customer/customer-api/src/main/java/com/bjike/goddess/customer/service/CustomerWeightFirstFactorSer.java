@@ -8,6 +8,7 @@ import com.bjike.goddess.customer.dto.CustomerContactWeightSetDTO;
 import com.bjike.goddess.customer.dto.CustomerWeightFirstFactorDTO;
 import com.bjike.goddess.customer.entity.CustomerWeightFirstFactor;
 import com.bjike.goddess.customer.to.CustomerWeightFirstFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -21,6 +22,18 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface CustomerWeightFirstFactorSer extends Ser<CustomerWeightFirstFactor, CustomerWeightFirstFactorDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 客户权重一层因素层设置总条数
      */

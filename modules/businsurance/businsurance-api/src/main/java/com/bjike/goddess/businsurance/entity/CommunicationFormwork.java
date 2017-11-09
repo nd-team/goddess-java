@@ -81,7 +81,7 @@ public class CommunicationFormwork extends BaseEntity {
     private String ccObj;
 
     /**
-     *
+     * 途径
      */
     @Column(name = "way",  columnDefinition = "VARCHAR(255)   COMMENT ''")
     private String way;

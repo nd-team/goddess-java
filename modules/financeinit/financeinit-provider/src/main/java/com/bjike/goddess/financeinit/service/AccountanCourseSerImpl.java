@@ -198,6 +198,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
         checkSeeIdentity();
         searchCodi(accountanCourseDTO);
+        accountanCourseDTO.getSorts().add("code=asc");
         accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
         List<AccountanCourse> list = super.findByCis(accountanCourseDTO, true);
         return BeanTransform.copyProperties(list, AccountanCourseBO.class);
@@ -386,10 +387,17 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException {
         checkAddIdentity();
         List<AccountanCourse> accountanCourses = BeanTransform.copyProperties(accountanCourseTOS, AccountanCourse.class, true);
-        accountanCourses.stream().forEach(str -> {
+        for (AccountanCourse str : accountanCourses){
             str.setCreateTime(LocalDateTime.now());
             str.setModifyTime(LocalDateTime.now());
-        });
-        super.save(accountanCourses);
+            super.save(str);
+            if(str.getCode().length()==4){
+                InitDateEntry initDateEntry = new InitDateEntry();
+                initDateEntry.setCode(str.getCode());
+                initDateEntry.setAccountanName(str.getAccountanName());
+                initDateEntry.setBalanceDirection(str.getBalanceDirection());
+                initDateEntrySer.save(initDateEntry);
+            }
+        }
     }
 }

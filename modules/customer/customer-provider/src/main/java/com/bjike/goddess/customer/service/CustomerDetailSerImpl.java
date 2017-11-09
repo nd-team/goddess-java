@@ -56,9 +56,9 @@ import java.util.List;
 public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerDetailDTO> implements CustomerDetailSer {
 
     @Autowired
-    private CustomerBaseInfoSer customerBaseInfoAPI;
+    private CustomerBaseInfoSer customerBaseInfoSer;
     @Autowired
-    private CusFamilyMemberSer cusFamilyMemberAPI;
+    private CusFamilyMemberSer cusFamilyMemberSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
@@ -209,7 +209,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             //获取家庭信息
             CusFamilyMemberDTO familyMemberDTO = new CusFamilyMemberDTO();
             familyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", str.getId()));
-            List<CusFamilyMember> familyMembers = cusFamilyMemberAPI.findByCis(familyMemberDTO);
+            List<CusFamilyMember> familyMembers = cusFamilyMemberSer.findByCis(familyMemberDTO);
             List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(familyMembers, CusFamilyMemberBO.class);
             customerDetailBO.setCusFamilyMemberBOList(cusFamilyMemberBOList);
             customerDetailBOArrayList.add(customerDetailBO);
@@ -248,7 +248,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         String baseInfoNum = customerDetailTO.getCustomerNum();
         CustomerBaseInfoDTO baseInfoDTO = new CustomerBaseInfoDTO();
         baseInfoDTO.getConditions().add(Restrict.eq("customerNum", baseInfoNum));
-        CustomerBaseInfo baseInfo = customerBaseInfoAPI.findOne(baseInfoDTO);
+        CustomerBaseInfo baseInfo = customerBaseInfoSer.findOne(baseInfoDTO);
 
         CustomerDetail customerDetail = BeanTransform.copyProperties(customerDetailTO, CustomerDetail.class, true);
         customerDetail.setCreateTime(LocalDateTime.now());
@@ -269,7 +269,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 temp.setCreateTime(LocalDateTime.now());
                 temp.setCustomerDetail(customerDetail);
             }
-            cusFamilyMemberAPI.save(cusFamilyMemberList);
+            cusFamilyMemberSer.save(cusFamilyMemberList);
 //            }
         }
 
@@ -296,9 +296,9 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         //修改家庭信息  先删除再重新添加
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", cusDetail.getId()));
-        List<CusFamilyMember> cfamilyList = cusFamilyMemberAPI.findByCis(cusFamilyMemberDTO);
+        List<CusFamilyMember> cfamilyList = cusFamilyMemberSer.findByCis(cusFamilyMemberDTO);
         if (cfamilyList != null && cfamilyList.size() > 0) {
-            cusFamilyMemberAPI.remove(cfamilyList);
+            cusFamilyMemberSer.remove(cfamilyList);
         }
         //重新添加家庭信息
         List<CusFamilyMemberTO> familyMemberTOList = customerDetailTO.getCusFamilyMemberTOList();
@@ -309,7 +309,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 temp.setCreateTime(LocalDateTime.now());
                 temp.setCustomerDetail(cusDetail);
             }
-            cusFamilyMemberAPI.save(cusFamilyMemberList);
+            cusFamilyMemberSer.save(cusFamilyMemberList);
         }
 
 
@@ -326,10 +326,10 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", customerDetail.getId()));
-        List<CusFamilyMember> cfamilyList = cusFamilyMemberAPI.findByCis(cusFamilyMemberDTO);
+        List<CusFamilyMember> cfamilyList = cusFamilyMemberSer.findByCis(cusFamilyMemberDTO);
         if (cfamilyList != null && cfamilyList.size() > 0) {
             //先删除家庭成员
-            cusFamilyMemberAPI.remove(cfamilyList);
+            cusFamilyMemberSer.remove(cfamilyList);
         }
         try {
             super.remove(customerDetail);
@@ -352,7 +352,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         //查找家庭信息
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", id));
-        List<CusFamilyMember> cfamilyList = cusFamilyMemberAPI.findByCis(cusFamilyMemberDTO);
+        List<CusFamilyMember> cfamilyList = cusFamilyMemberSer.findByCis(cusFamilyMemberDTO);
         List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(cfamilyList, CusFamilyMemberBO.class);
 
         customerDetailBO.setCusFamilyMemberBOList(cusFamilyMemberBOList);
@@ -365,7 +365,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
     public CustomerDetailBO getCustomerDetailByNum(String customerNum) throws SerException {
         CustomerBaseInfoDTO cBaseInfoDTO = new CustomerBaseInfoDTO();
         cBaseInfoDTO.getConditions().add(Restrict.eq("customerNum", customerNum));
-        CustomerBaseInfo customerBaseInfo = customerBaseInfoAPI.findOne(cBaseInfoDTO);
+        CustomerBaseInfo customerBaseInfo = customerBaseInfoSer.findOne(cBaseInfoDTO);
         CustomerBaseInfoBO customerBaseInfoBO = BeanTransform.copyProperties(customerBaseInfo, CustomerBaseInfoBO.class);
         CustomerLevelBO customerLevelBO = BeanTransform.copyProperties(customerBaseInfo.getCustomerLevel(), CustomerLevelBO.class);
         customerBaseInfoBO.setCustomerLevelBO(customerLevelBO);
@@ -377,7 +377,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
         //查找家庭信息
         CusFamilyMemberDTO cusFamilyMemberDTO = new CusFamilyMemberDTO();
         cusFamilyMemberDTO.getConditions().add(Restrict.eq("customerDetail.id", customerDetail.getId()));
-        List<CusFamilyMember> cfamilyList = cusFamilyMemberAPI.findByCis(cusFamilyMemberDTO);
+        List<CusFamilyMember> cfamilyList = cusFamilyMemberSer.findByCis(cusFamilyMemberDTO);
         List<CusFamilyMemberBO> cusFamilyMemberBOList = BeanTransform.copyProperties(cfamilyList, CusFamilyMemberBO.class);
 
         customerDetailBO.setCustomerBaseInfoBO(customerBaseInfoBO);
@@ -403,7 +403,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             baseDto.getConditions().add(Restrict.in("customerName", customerDetailDTO.getCustomerNames()));
         }
         baseDto.getSorts().add("customerNum=asc");
-        List<CustomerBaseInfo> baseList = customerBaseInfoAPI.findByCis(baseDto);
+        List<CustomerBaseInfo> baseList = customerBaseInfoSer.findByCis(baseDto);
         if (baseList != null && baseList.size() > 0) {
             for (CustomerBaseInfo str : baseList) {
                 String customerNum = str.getCustomerNum();//客户信息编号
@@ -426,7 +426,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                 String origanizationSize = str.getOriganizationSize();//组织机构规模
                 String workPosition = str.getWorkPosition();//岗位
                 String workLevel = str.getWorkLevel();//职级
-                String workRight = str.getWorkRight();//职权
+                WorkRight workRight = str.getWorkRight();//职权
                 String lifeArea = str.getLifeArea();//生活地区
                 String grouthArea = str.getGrouthArea();//成长地区
                 String oldWorkPlace = str.getOldWorkPlace();//以往工作地区
@@ -446,7 +446,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
 
                         CusFamilyMemberDTO familyDto = new CusFamilyMemberDTO();
                         familyDto.getConditions().add(Restrict.eq("customerDetail.id", customerDetail.getId()));
-                        List<CusFamilyMember> familyList = cusFamilyMemberAPI.findByCis(familyDto);
+                        List<CusFamilyMember> familyList = cusFamilyMemberSer.findByCis(familyDto);
                         String title = "";
                         String name = "";
                         String relationWay = "";
@@ -483,7 +483,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                                 exportEntity.setOriganizationSize(StringUtils.isBlank(origanizationSize) ? "" : origanizationSize);
                                 exportEntity.setWorkPosition(StringUtils.isBlank(workPosition) ? "" : workPosition);
                                 exportEntity.setWorkLevel(StringUtils.isBlank(workLevel) ? "" : workLevel);
-                                exportEntity.setWorkRight(StringUtils.isBlank(workRight) ? "" : workRight);
+                                exportEntity.setWorkRight(workRight);
                                 exportEntity.setLifeArea(StringUtils.isBlank(lifeArea) ? "" : lifeArea);
                                 exportEntity.setGrouthArea(StringUtils.isBlank(grouthArea) ? "" : grouthArea);
                                 exportEntity.setOldWorkPlace(StringUtils.isBlank(oldWorkPlace) ? "" : oldWorkPlace);
@@ -521,7 +521,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
                             exportEntity.setOriganizationSize(StringUtils.isBlank(origanizationSize) ? "" : origanizationSize);
                             exportEntity.setWorkPosition(StringUtils.isBlank(workPosition) ? "" : workPosition);
                             exportEntity.setWorkLevel(StringUtils.isBlank(workLevel) ? "" : workLevel);
-                            exportEntity.setWorkRight(StringUtils.isBlank(workRight) ? "" : workRight);
+                            exportEntity.setWorkRight(workRight);
                             exportEntity.setLifeArea(StringUtils.isBlank(lifeArea) ? "" : lifeArea);
                             exportEntity.setGrouthArea(StringUtils.isBlank(grouthArea) ? "" : grouthArea);
                             exportEntity.setOldWorkPlace(StringUtils.isBlank(oldWorkPlace) ? "" : oldWorkPlace);
@@ -771,7 +771,7 @@ public class CustomerDetailSerImpl extends ServiceImpl<CustomerDetail, CustomerD
             row.createCell(callIndex++).setCellValue(exportEntity.getOriganizationSize());
             row.createCell(callIndex++).setCellValue(exportEntity.getWorkPosition());
             row.createCell(callIndex++).setCellValue(exportEntity.getWorkLevel());
-            row.createCell(callIndex++).setCellValue(exportEntity.getWorkRight());
+            row.createCell(callIndex++).setCellValue(WorkRight.enumToString(exportEntity.getWorkRight()));
             row.createCell(callIndex++).setCellValue(exportEntity.getLifeArea());
             row.createCell(callIndex++).setCellValue(exportEntity.getGrouthArea());
             row.createCell(callIndex++).setCellValue(exportEntity.getOldWorkPlace());

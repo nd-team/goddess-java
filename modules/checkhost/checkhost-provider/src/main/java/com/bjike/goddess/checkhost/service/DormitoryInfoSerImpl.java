@@ -43,8 +43,6 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
-    private HostApplySer hostApplySer;
-    @Autowired
     private StayApplySer stayApplySer;
     @Autowired
     private StayDaysSer stayDaysSer;
@@ -135,19 +133,6 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         obj.setName("dormitoryinfo");
         obj.setDescribesion("宿舍信息管理");
         if (flagSeeSign || flagAddSign) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = hostApplySer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("hostapply");
-        obj.setDescribesion("离宿申请");
-        if (flagSeeDis) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

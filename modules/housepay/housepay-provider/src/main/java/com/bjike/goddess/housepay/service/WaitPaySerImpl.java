@@ -450,7 +450,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<String> getAreas() throws SerException {
         String[] fields = new String[]{"area"};
-        List<WaitPayBO> waitPayBOS = super.findBySql("select distinct area from housepay_waitpay group by area order by area asc ", WaitPayBO.class, fields);
+        List<WaitPayBO> waitPayBOS = super.findBySql("select distinct area from housepay_waitpay where pay = 1 group by area order by area asc ", WaitPayBO.class, fields);
 
         List<String> areasList = waitPayBOS.stream().map(WaitPayBO::getArea)
                 .filter(area -> (area != null || !"".equals(area.trim()))).distinct().collect(Collectors.toList());
@@ -492,6 +492,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
             bo.setEnergy(boList.stream().mapToDouble(ProjectCollectBO::getEnergy).sum());
             bo.setOtherFee(boList.stream().mapToDouble(ProjectCollectBO::getOtherFee).sum());
             bo.setTotal(boList.stream().mapToDouble(ProjectCollectBO::getTotal).sum());
+            bo.setFee(boList.stream().mapToDouble(ProjectCollectBO::getFee).sum());
             boList.add(bo);
 
         }
@@ -608,7 +609,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
     @Override
     public List<String> getProject() throws SerException {
         String[] fields = new String[]{"project"};
-        List<WaitPayBO> waitPayBOS = super.findBySql("select distinct project from housepay_waitpay group by project order by project asc ", WaitPayBO.class, fields);
+        List<WaitPayBO> waitPayBOS = super.findBySql("select distinct project from housepay_waitpay where pay = 1 group by project order by project asc ", WaitPayBO.class, fields);
 
         List<String> projectsList = waitPayBOS.stream().map(WaitPayBO::getProject)
                 .filter(project -> (project != null || !"".equals(project.trim()))).distinct().collect(Collectors.toList());

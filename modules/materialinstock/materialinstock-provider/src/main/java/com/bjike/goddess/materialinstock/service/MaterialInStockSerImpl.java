@@ -293,7 +293,7 @@ public class MaterialInStockSerImpl extends ServiceImpl<MaterialInStock, Materia
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(MaterialInStockTO to) throws SerException {
-        checkPermission();
+//        checkPermission();
         if (StringUtils.isNotEmpty(to.getId())) {
             MaterialInStock model = super.findById(to.getId());
             if (model != null) {

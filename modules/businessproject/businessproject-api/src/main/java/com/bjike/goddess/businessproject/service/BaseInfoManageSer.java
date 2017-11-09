@@ -96,6 +96,17 @@ public interface BaseInfoManageSer extends Ser<BaseInfoManage, BaseInfoManageDTO
     ;
 
     /**
+     * chenjunhao
+     *
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    default Double contractScale(String project) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据内部项目编号查找项目合同基本信息
      *
      * @param innerProjectNum 内部项目编号

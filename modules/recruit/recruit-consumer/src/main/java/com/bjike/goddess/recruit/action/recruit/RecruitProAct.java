@@ -94,6 +94,7 @@ public class RecruitProAct {
     @GetMapping("v1/count")
     public Result count(@Validated RecruitProDTO dto, BindingResult result) throws ActException {
         try {
+
             Long count = recruitProAPI.count(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {

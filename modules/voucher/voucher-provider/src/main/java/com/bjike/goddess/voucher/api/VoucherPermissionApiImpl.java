@@ -65,4 +65,8 @@ public class VoucherPermissionApiImpl implements VoucherPermissionAPI {
     public Boolean busCusPermission(String idFlag) throws SerException {
         return cusPermissionSer.busCusPermission(idFlag);
     }
+    @Override
+    public Boolean accCusPermission(String idFlag) throws SerException {
+        return cusPermissionSer.accCusPermission(idFlag);
+    }
 }

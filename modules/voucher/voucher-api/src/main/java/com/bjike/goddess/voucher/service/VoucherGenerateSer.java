@@ -33,6 +33,13 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     }
 
     /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermissionAccount() throws SerException {
+        return null;
+    }
+
+    /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
@@ -506,6 +513,22 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @throws SerException
      */
     default List<String> accountSubject() throws SerException {
+        return null;
+    }
+    /**
+     * 从已过账那里根据一级获取所有二级
+     *
+     * @throws SerException
+     */
+    default List<String> subSubject(String firstSubject) throws SerException {
+        return null;
+    }
+    /**
+     * 从已过账那里根据一级,二级获取所有三级
+     *
+     * @throws SerException
+     */
+    default List<String> thirdSubject(String firstSubject,String subSubject) throws SerException {
         return null;
     }
 

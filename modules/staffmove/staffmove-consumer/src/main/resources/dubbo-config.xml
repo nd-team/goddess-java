@@ -17,7 +17,10 @@
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
 
-	<dubbo:reference  validation="true" id="staffMovementApplyApiImpl" interface="com.bjike.goddess.staffmove.api.StaffMovementApplyAPI" />
+	<dubbo:reference  validation="true" id="staffMoveIntendCaseApiImpl" interface="com.bjike.goddess.staffmove.api.StaffMoveIntendCaseAPI" />
+	<dubbo:reference  validation="true" id="staffMoveImplementAApiImpl" interface="com.bjike.goddess.staffmove.api.StaffMoveImplementAAPI" />
+	<dubbo:reference  validation="true" id="staffMoveImplementBApiImpl" interface="com.bjike.goddess.staffmove.api.StaffMoveImplementBAPI" />
+	<dubbo:reference  validation="true" id="staffMoveDemandApiImpl" interface="com.bjike.goddess.staffmove.api.StaffMoveDemandAPI" />
 
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.staffmove.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.staffmove.api.CusPermissionOperateAPI" />

@@ -43,4 +43,27 @@ public enum Timeliness {
     public int getCode() {
         return this.code;
     }
+
+    public static String enumToString(Timeliness timeliness) {
+        String name = "";
+        switch (timeliness) {
+            case URGENT:
+                name = "十分紧急";
+                break;
+            case URGENCY:
+                name = "紧急";
+                break;
+            case GENERAL:
+                name = "一般";
+                break;
+            case NOTURGENCY:
+                name = "不紧急";
+                break;
+            default:
+                name = "";
+                break;
+
+        }
+        return name;
+    }
 }

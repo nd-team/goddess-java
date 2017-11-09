@@ -12,12 +12,14 @@ import com.bjike.goddess.customer.api.CustomerWeightFirstFactorAPI;
 import com.bjike.goddess.customer.bo.CustomerWeightFirstFactorBO;
 import com.bjike.goddess.customer.dto.CustomerWeightFirstFactorDTO;
 import com.bjike.goddess.customer.to.CustomerWeightFirstFactorTO;
+import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.customer.vo.CustomerWeightFirstFactorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -36,6 +38,28 @@ public class CustomerWeightFirstFactorAction {
     @Autowired
     private CustomerWeightFirstFactorAPI customerWeightFirstFactorAPI;
 
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = customerWeightFirstFactorAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 客户权重一层因素层设置列表总条数
      *

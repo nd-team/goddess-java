@@ -28,6 +28,7 @@ import com.bjike.goddess.voucher.excel.VoucherTemplateExportExcel;
 import com.bjike.goddess.voucher.to.AnalysisTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -181,6 +182,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         list.add(obj);
 
+        return list;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermissionAccount() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("account");
+        obj.setDescribesion("明细账");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
         return list;
     }
 
@@ -2218,7 +2241,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             voucherGenerateBOs.stream().forEach(obj -> {
                 obj.setBorrowMoneyTotal(borrowMoneyTotal);
                 obj.setLoanMoneyTotal(loanMoneyTotal);
@@ -2269,7 +2292,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             voucherGenerateBOs.stream().forEach(obj -> {
                 obj.setBorrowMoneyTotal(borrowMoneyTotal);
                 obj.setLoanMoneyTotal(loanMoneyTotal);
@@ -2320,7 +2343,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if(null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             voucherGenerateBOs.stream().forEach(obj -> {
                 obj.setBorrowMoneyTotal(borrowMoneyTotal);
                 obj.setLoanMoneyTotal(loanMoneyTotal);
@@ -2419,7 +2442,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
             //财务初始化中根据会计科目名称获取方向
             String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction","balance"};
+            String[] field = new String[]{"direction", "balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
@@ -2464,7 +2487,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
             //财务初始化中根据会计科目名称获取方向
             String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction","balance"};
+            String[] field = new String[]{"direction", "balance"};
             boList1 = super.findBySql(sql, AccountInfoBO.class, field);
             if (boList1 != null && !boList1.isEmpty()) {
                 accountInfoBO.setDirection(boList1.get(0).getDirection());
@@ -2511,11 +2534,64 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<String> accountSubject() throws SerException {
-        String[] fields = new String[]{"firstSubject"};
-        String sql = "SELECT firstSubject AS firstSubject FROM voucher_vouchergenerate WHERE transferStatus=1 GROUP BY firstSubject ";
-        List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, fields);
-        List<String> firstSubjectList = list.stream().map(VoucherGenerate::getFirstSubject).collect(Collectors.toList());
-        return firstSubjectList;
+//        String[] fields = new String[]{"firstSubject"};
+//        String sql = "SELECT firstSubject AS firstSubject FROM voucher_vouchergenerate WHERE transferStatus=1 GROUP BY firstSubject ";
+//        List<VoucherGenerate> list = super.findBySql(sql, VoucherGenerate.class, fields);
+//        List<String> firstSubjectList = list.stream().map(VoucherGenerate::getFirstSubject).collect(Collectors.toList());
+//        return firstSubjectList;
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (VoucherGenerate model : list) {
+            String firstSubject = model.getFirstSubject();
+            if (StringUtils.isNotBlank(model.getFirstSubject())) {
+                set.add(firstSubject);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> subSubject(String firstSubject) throws SerException {
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (VoucherGenerate model : list) {
+            String secondSubject = model.getSecondSubject();
+            if (StringUtils.isNotBlank(model.getSecondSubject())) {
+                set.add(secondSubject);
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+        dto.getConditions().add(Restrict.eq("secondSubject", subSubject));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        Set<String> set = new HashSet<>();
+        for (VoucherGenerate model : list) {
+            String thirdSubject = model.getThirdSubject();
+            if (StringUtils.isNotBlank(model.getThirdSubject())) {
+                set.add(thirdSubject);
+            }
+        }
+        return new ArrayList<>(set);
     }
 
     //Jason

@@ -23,7 +23,10 @@ public class RecruitWayVO {
      * 招聘渠道
      */
     private String recruitName;
-
+    /**
+     * 招聘网站
+     */
+    private String recruitSite;
     /**
      * 会员名
      */
@@ -102,6 +105,14 @@ public class RecruitWayVO {
      * 状态
      */
     private Status status;
+
+    public String getRecruitSite() {
+        return recruitSite;
+    }
+
+    public void setRecruitSite(String recruitSite) {
+        this.recruitSite = recruitSite;
+    }
 
     public String getChannelTime() {
         return channelTime;

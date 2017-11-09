@@ -279,6 +279,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
     @Override
     public List<SiginManageBO> listSiginManage(SiginManageDTO siginManageDTO) throws SerException {
+        siginManageDTO.getSorts().add("createTime=desc");
         checkSeeIdentity();
 
         searchCondition(siginManageDTO);
@@ -606,7 +607,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     }
 
     @Override
-    public OptionBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekCollectFigure(Integer year, Integer month, Integer week) throws SerException {
         if (year == null || month == null || week == null) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
@@ -616,24 +617,24 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
         String startDate = String.valueOf(date[0]);
         String endDate = String.valueOf(date[1]);
-        String text_1 = "各地区立项情况周汇总" + startDate + "-" + endDate;
-        return makeContractFigure(startDate,endDate,text_1);
+        String text_1 = "各地区立项情况金额周汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate, endDate, text_1);
     }
 
     @Override
-    public OptionBO monthCollectFigure(Integer year, Integer month) throws SerException {
+    public OptionMakeBO monthCollectFigure(Integer year, Integer month) throws SerException {
         if (year == null && month == null) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
         }
         String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
         String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
-        String text_1 = "各地区立项情况月汇总" + startDate + "-" + endDate;
-        return makeContractFigure(startDate,endDate,text_1);
+        String text_1 = "各地区立项情况金额月汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate, endDate, text_1);
     }
 
     @Override
-    public OptionBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
+    public OptionMakeBO quarterCollectFigure(Integer year, Integer quarter) throws SerException {
         if (year == null && quarter == null) {
             year = LocalDate.now().getYear();
             quarter = (LocalDate.now().getMonthValue() + 2) / 3;
@@ -641,39 +642,52 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         String[] date = quarter(year, quarter);
         String startDate = date[0];
         String endDate = date[1];
-        String text_1 = "各地区立项情况季度汇总" + startDate + "-" + endDate;
-        return makeContractFigure(startDate,endDate,text_1);
+        String text_1 = "各地区立项情况金额季度汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate, endDate, text_1);
     }
 
     @Override
-    public OptionBO yearCollectFigure(Integer year) throws SerException {
+    public OptionMakeBO yearCollectFigure(Integer year) throws SerException {
         if (year == null) {
             year = LocalDate.now().getYear();
         }
         String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
         String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
-        String text_1 = "各地区立项情况年汇总" + startDate + "-" + endDate;
-        return makeContractFigure(startDate,endDate,text_1);
+        String text_1 = "各地区立项情况金额年汇总" + startDate + "-" + endDate;
+        return makeContractFigure(startDate, endDate, text_1);
     }
-    private OptionBO makeContractFigure(String startDate, String endDate, String text_1) throws SerException {
-        String[] fields = new String[]{"area", "noMakeNum", "hadMakeNum", "notMakeNum"};
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT a.area as area, ");
-        sb.append("  ifnull(MAX( CASE WHEN makeProject=0 THEN count END),0 ) AS noMakeNum, ");
-        sb.append(" ifnull(MAX( CASE WHEN makeProject=1 THEN count END ),0) AS hadMakeNum, ");
-        sb.append(" ifnull(MAX( CASE WHEN makeProject=2 THEN count END ),0) AS notMakeNum ");
-        sb.append(" from ");
-        sb.append(" (SELECT count(*) AS count,makeProject as makeProject,area AS area ");
-        sb.append(" FROM businessproject_siginmanage WHERE startProjectTime BETWEEN '" + startDate + "' AND '" + endDate + "' ");
-        sb.append("  GROUP BY area,makeProject)a GROUP BY a.area ");
 
-        List<MakeContractFigureBO> figureBOS = super.findBySql(sb.toString(), MakeContractFigureBO.class, fields);
+    private OptionMakeBO makeContractFigure(String startDate, String endDate, String text_1) throws SerException {
+        List<MakeContractFigureBO> figureBOS = new ArrayList<>();
+        List<MakeContractFigureBO> contractFigureBOS = new ArrayList<>();
+        String[] fields = new String[]{"area", "noMakeNum"};
+        StringBuilder sb = new StringBuilder();
+        //预立项 立项 不立项
+        sb.append(" SELECT area AS area,ifnull(sum(money) ,0) AS noMakeNum FROM businessproject_siginmanage ");
+        sb.append(" WHERE  startProjectTime BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=0 ");
+        sb.append(" GROUP BY area ");
+        List<MakeContractFigureBO> boList = super.findBySql(sb.toString(), MakeContractFigureBO.class, fields);
+        for (MakeContractFigureBO bo : boList) {
+            String[] hadFields = new String[]{"hadMakeNum"};
+            String hadSql = " SELECT ifnull(sum(money) ,0) AS hadMakeNum FROM businessproject_siginmanage WHERE startProjectTime BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=1 AND area='" + bo.getArea() + "' ";
+            contractFigureBOS = super.findBySql(hadSql, MakeContractFigureBO.class, hadFields);
+            for (MakeContractFigureBO bo1 : contractFigureBOS) {
+                bo.setHadMakeNum(bo1.getHadMakeNum());
+            }
+            String[] notFields = new String[]{"notMakeNum"};
+            String notSql = " SELECT ifnull(sum(money) ,0) AS notMakeNum FROM businessproject_siginmanage WHERE startProjectTime BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=2 AND area='" + bo.getArea() + "' ";
+            contractFigureBOS = super.findBySql(notSql, MakeContractFigureBO.class, notFields);
+            for (MakeContractFigureBO bo1 : contractFigureBOS) {
+                bo.setNotMakeNum(bo1.getNotMakeNum());
+            }
+            figureBOS.add(bo);
+        }
         //标题
         TitleBO titleBO = new TitleBO();
         titleBO.setText(text_1);
         //横坐标描述
         LegendBO legendBO = new LegendBO();
-        String[] text_2 = new String[]{"未立项合同单数数量", "立项合同单数数量", "不立项合同单数数量"};
+        String[] text_2 = new String[]{"未立项合同金额", "立项合同金额", "不立项合同金额"};
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
         //悬停提示
@@ -684,11 +698,11 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         AxisLabelBO axisLabelBO = new AxisLabelBO();
         axisLabelBO.setInterval(0);
         xAxisBO.setAxisLabel(axisLabelBO);
-        List<SeriesBO> seriesBOS = new ArrayList<>();
+        List<SeriesBBO> seriesBOS = new ArrayList<>();
         if (figureBOS != null && figureBOS.size() > 0) {
-            List<Integer> noNum = new ArrayList<>();
-            List<Integer> hadNum = new ArrayList<>();
-            List<Integer> notNum = new ArrayList<>();
+            List<Double> noNum = new ArrayList<>();
+            List<Double> hadNum = new ArrayList<>();
+            List<Double> notNum = new ArrayList<>();
             for (MakeContractFigureBO figureBO : figureBOS) {
                 text_list_3.add(figureBO.getArea());
 
@@ -697,16 +711,16 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
                 hadNum.add(figureBO.getHadMakeNum());
                 notNum.add(figureBO.getNotMakeNum());
             }
-            List<List<Integer>> nums = new ArrayList<>();
+            List<List<Double>> nums = new ArrayList<>();
             nums.add(noNum);
             nums.add(hadNum);
             nums.add(notNum);
-            String[] ziduan = new String[]{"未立项合同单数数量", "立项合同单数数量", "不立项合同单数数量"};
+            String[] ziduan = new String[]{"未立项合同金额", "立项合同金额", "不立项合同金额"};
             for (int i = 0; i < 3; i++) {
-                SeriesBO seriesBO = new SeriesBO();
+                SeriesBBO seriesBO = new SeriesBBO();
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
-                Integer[] text_int_4 = new Integer[nums.get(0).size()];
+                Double[] text_int_4 = new Double[nums.get(i).size()];
                 text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
@@ -717,10 +731,10 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         text_3 = text_list_3.toArray(text_3);
         xAxisBO.setData(text_3);
 
-        SeriesBO[] text_4 = new SeriesBO[seriesBOS.size()];
+        SeriesBBO[] text_4 = new SeriesBBO[seriesBOS.size()];
         text_4 = seriesBOS.toArray(text_4);
         legendBO.setData(text_2);
-        OptionBO optionBO = new OptionBO();
+        OptionMakeBO optionBO = new OptionMakeBO();
         optionBO.setTitle(titleBO);
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
@@ -730,6 +744,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         optionBO.setSeries(text_4);
         return optionBO;
     }
+
     //季度
     private String[] quarter(Integer year, Integer quarter) throws SerException {
         String startDate = null;

@@ -387,4 +387,13 @@ public interface CustomerBaseInfoAPI {
     default PieOptionBO resoucePieShowBybussType(String bussType) throws SerException{
         return null;
     }
+    /**
+     * 将所有数据重新计算一遍
+     * @return
+     * @throws SerException
+     */
+    default List<CustomerBaseInfoBO> computations() throws SerException{
+        return null;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -178,9 +180,25 @@ public class RecruitWaySerImpl extends ServiceImpl<RecruitWay, RecruitWayDTO> im
     @Transactional(rollbackFor = {SerException.class})
     public List<RecruitWayBO> list(RecruitWayDTO dto) throws SerException {
         checkSeeIdentity();
+        search(dto);
         List<RecruitWay> list = super.findByPage(dto);
         List<RecruitWayBO> listBO = BeanTransform.copyProperties(list, RecruitWayBO.class);
         return listBO;
+    }
+
+    private List<RecruitWayBO> search(RecruitWayDTO dto) throws SerException {
+        if(StringUtils.isNotBlank(dto.getRecruitSite())){
+            dto.getConditions().add(Restrict.like("recruitSite",dto.getRecruitSite()));
+        }
+        if(StringUtils.isNotBlank(dto.getChannelContact())) {
+            dto.getConditions().add(Restrict.like("channelContact",dto.getChannelContact()));
+        }
+        if(null!= dto.getStatus()){
+            dto.getConditions().add(Restrict.like("status",dto.getStatus()));
+        }
+        List<RecruitWay> list = super.findByCis(dto);
+        List<RecruitWayBO> recruitWayBOS = BeanTransform.copyProperties(list,RecruitWayBO.class);
+        return recruitWayBOS;
     }
 
     /**

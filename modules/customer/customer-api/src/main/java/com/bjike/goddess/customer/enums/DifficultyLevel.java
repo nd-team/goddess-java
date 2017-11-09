@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
 
 /**
  * 客户维护状态枚举
+ *
  * @Author: [lijuntao]
  * @Date: [2017-03-15 16:48]
  * @Description: [客户维护状态枚举]
@@ -37,5 +38,25 @@ public enum DifficultyLevel {
 
     public int getCode() {
         return this.code;
+    }
+
+    public static String enumToString(DifficultyLevel difficultyLevel) {
+        String name = "";
+        switch (difficultyLevel) {
+            case DIFFICULTY:
+                name = "困难";
+                break;
+            case GENERAL:
+                name = "一般";
+                break;
+            case EASY:
+                name = "容易";
+                break;
+            default:
+                name = "";
+                break;
+
+        }
+        return name;
     }
 }

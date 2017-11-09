@@ -97,5 +97,21 @@ public interface StayApplyAPI {
      * @throws SerException
      */
     StayApplyBO manageAudit(StayApplyTO to) throws SerException;
+    /**
+     * 离宿申请
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    StayApplyBO applyHost(StayApplyTO to) throws SerException;
 
+    /**
+     * 离宿申请审核
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    StayApplyBO hostAudit(StayApplyTO to) throws SerException;
 }

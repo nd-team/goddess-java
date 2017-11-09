@@ -2,10 +2,10 @@ package com.bjike.goddess.recruit.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.recruit.bo.RecruitDemandPlanBO;
-import com.bjike.goddess.recruit.bo.RecruitProgressBO;
+import com.bjike.goddess.recruit.bo.*;
 import com.bjike.goddess.recruit.dto.RecruitDemandPlanDTO;
 import com.bjike.goddess.recruit.entity.RecruitDemandPlan;
+import com.bjike.goddess.recruit.to.ChannelTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.RecruitDemandPlanTO;
 
@@ -154,5 +154,67 @@ public interface RecruitDemandPlanSer extends Ser<RecruitDemandPlan, RecruitDema
      */
     List<RecruitProgressBO> totalCollect(String time) throws SerException;
 
+    /**
+     * 招聘详情日汇总
+     *
+     * @param time
+     * @return
+     * @throws SerException
+     */
+    List<RecruitDetailsBO> dayRecruit(String time) throws SerException;
+
+    /**
+     * 招聘详情周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return
+     * @throws SerException
+     */
+    List<RecruitDetailsBO> weekRecruit(Integer year, Integer month, Integer week) throws SerException;
+
+    /**
+     * 招聘详情月汇总
+     *
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    List<RecruitDetailsBO> monthRecruit(Integer year, Integer month) throws SerException;
+
+    /**
+     * 渠道汇总图表
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    OptionBO channelCollect(ChannelTO to) throws SerException;
+
+    /**
+     * 面试率图表
+     *
+     * @return
+     * @throws SerException
+     */
+    OptionPieBO faceFigure(ChannelTO to) throws SerException;
+
+    /**
+     * 入职率图表
+     *
+     * @return
+     * @throws SerException
+     */
+    OptionPieBO entryFigure(ChannelTO to) throws SerException;
+
+    /**
+     * 获取所有岗位
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> getPosition() throws SerException;
 
 }
