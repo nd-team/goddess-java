@@ -338,6 +338,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
     @Override
     public List<BusinessContractsBO> list(BusinessContractDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         checkSeeIdentity();
         search(dto);
         List<BusinessContract> contracts = super.findByCis(dto);
@@ -615,9 +616,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         sb.append(" a.innerProject AS innerProject,sum(a.makeMoney) AS makeMoney,sum(a.forecastMoney) AS forecastMoney, ");
         sb.append(" sum(a.scale) AS scale,sum(a.forecastRoundMoney) AS forecastRoundMoney, ");
         sb.append(" sum(a.forecastMarchMoney) AS forecastMarchMoney,sum(a.estimatedMarketLosses) AS estimatedMarketLosses, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum, ");
         sb.append(" sum(a.scaleContract) AS scaleContract,a.projectCharge AS projectCharge, ");
         sb.append(" a.majorCompany AS majorCompany,a.subCompany AS subCompany ");
         sb.append(" FROM ");
@@ -641,15 +642,19 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         Double forecastUnit = 0.0;
         //todo 结算完成金额，预估确认时间，预估转正时间，实际完成规模数量需求方也不知道从哪拿
         for (BusinessContractDetailBO bo : detailBOS) {
-            //立项总单价(立项总金额/合同规模数量)
-            makeUnit = bo.getMakeMoney() / bo.getScaleContract();
-            //预估单价(预估总金额/预估规模)
-            forecastUnit = bo.getForecastMoney() / bo.getScale();
+            if(bo.getMakeMoney() != null && bo.getScaleContract()!= null){
+                //立项总单价(立项总金额/合同规模数量)
+                makeUnit = bo.getMakeMoney() / bo.getScaleContract();
+            }
+            if(bo.getForecastMoney()!= null && bo.getScale()!= null){
+                //预估单价(预估总金额/预估规模)
+                forecastUnit = bo.getForecastMoney() / bo.getScale();
+            }
             bo.setMakeUnit(makeUnit);
             bo.setForecastUnit(forecastUnit);
             //未进场
             String[] notApproachField = new String[]{"notApproach", "area"};
-            String notApproachSql = " SELECT count(notApproach) AS notApproach ,area AS area FROM businessproject_businesscontract " +
+            String notApproachSql = " SELECT ifnull(count(notApproach),0) AS notApproach ,area AS area FROM businessproject_businesscontract " +
                     " WHERE notApproach='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(notApproachSql, BusinessContractDetailBO.class, notApproachField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -657,7 +662,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //进场
             String[] approachField = new String[]{"approach", "area"};
-            String approachSql = " SELECT count(approach) AS approach ,area AS area FROM businessproject_businesscontract " +
+            String approachSql = " SELECT ifnull(count(approach),0) AS approach ,area AS area FROM businessproject_businesscontract " +
                     " WHERE approach='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(approachSql, BusinessContractDetailBO.class, approachField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -665,7 +670,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //停工
             String[] shutdownField = new String[]{"shutdown", "area"};
-            String shutdownSql = " SELECT count(shutdown) AS shutdown ,area AS area FROM businessproject_businesscontract " +
+            String shutdownSql = " SELECT ifnull(count(shutdown),0) AS shutdown ,area AS area FROM businessproject_businesscontract " +
                     " WHERE shutdown='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(shutdownSql, BusinessContractDetailBO.class, shutdownField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -673,7 +678,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //进行
             String[] marchField = new String[]{"march", "area"};
-            String marchSql = " SELECT count(march) AS march ,area AS area FROM businessproject_businesscontract " +
+            String marchSql = " SELECT ifnull(count(march),0) AS march ,area AS area FROM businessproject_businesscontract " +
                     " WHERE march='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(marchSql, BusinessContractDetailBO.class, marchField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -681,7 +686,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //完工
             String[] completeField = new String[]{"complete", "area"};
-            String completeSql = " SELECT count(complete) AS complete ,area AS area FROM businessproject_businesscontract " +
+            String completeSql = " SELECT ifnull(count(complete),0) AS complete ,area AS area FROM businessproject_businesscontract " +
                     " WHERE complete='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(completeSql, BusinessContractDetailBO.class, completeField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -689,7 +694,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //到货
             String[] goodsField = new String[]{"goods", "area"};
-            String goodsSql = " SELECT count(goods) AS goods ,area AS area FROM businessproject_businesscontract " +
+            String goodsSql = " SELECT ifnull(count(goods),0) AS goods ,area AS area FROM businessproject_businesscontract " +
                     " WHERE goods='到货' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(goodsSql, BusinessContractDetailBO.class, goodsField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -697,7 +702,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //初验
             String[] initialField = new String[]{"initialTest", "area"};
-            String initialSql = " SELECT count(initialTest) AS initialTest ,area AS area FROM businessproject_businesscontract " +
+            String initialSql = " SELECT ifnull(count(initialTest),0) AS initialTest ,area AS area FROM businessproject_businesscontract " +
                     " WHERE initialTest='完成' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(initialSql, BusinessContractDetailBO.class, initialField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -705,7 +710,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //终验
             String[] finalField = new String[]{"finalTest", "area"};
-            String finalSql = " SELECT count(finalTest) AS finalTest ,area AS area FROM businessproject_businesscontract " +
+            String finalSql = " SELECT ifnull(count(finalTest),0) AS finalTest ,area AS area FROM businessproject_businesscontract " +
                     " WHERE finalTest='完成' AND area = '" + bo.getArea() + "'GROUP BY area ";
             contractDetailBOS = super.findBySql(finalSql, BusinessContractDetailBO.class, finalField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -713,7 +718,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //2014立项金额
             String[] aField = new String[]{"makeMoneyA", "area"};
-            String aSql = " SELECT sum(makeMoney) AS makeMoneyA,area AS  area FROM businessproject_businesscontract " +
+            String aSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyA,area AS  area FROM businessproject_businesscontract " +
                     " WHERE year(signedTime)='2014' AND area = '" + bo.getArea() + "' GROUP BY area ";
             contractDetailBOS = super.findBySql(aSql, BusinessContractDetailBO.class, aField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -721,7 +726,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //2015立项金额
             String[] bField = new String[]{"makeMoneyB", "area"};
-            String bSql = " SELECT sum(makeMoney) AS makeMoneyB,area AS  area FROM businessproject_businesscontract " +
+            String bSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyB,area AS  area FROM businessproject_businesscontract " +
                     " WHERE year(signedTime)='2015' AND area = '" + bo.getArea() + "' GROUP BY area ";
             contractDetailBOS = super.findBySql(bSql, BusinessContractDetailBO.class, bField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -729,7 +734,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //2016立项金额
             String[] cField = new String[]{"makeMoneyC", "area"};
-            String cSql = " SELECT sum(makeMoney) AS makeMoneyC,area AS  area FROM businessproject_businesscontract " +
+            String cSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyC,area AS  area FROM businessproject_businesscontract " +
                     " WHERE year(signedTime)='2016' AND area = '" + bo.getArea() + "' GROUP BY area ";
             contractDetailBOS = super.findBySql(cSql, BusinessContractDetailBO.class, cField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -737,7 +742,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //2017立项金额
             String[] dField = new String[]{"makeMoneyD", "area"};
-            String dSql = " SELECT sum(makeMoney) AS makeMoneyD,area AS  area FROM businessproject_businesscontract " +
+            String dSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyD,area AS  area FROM businessproject_businesscontract " +
                     " WHERE year(signedTime)='2017' AND area = '" + bo.getArea() + "' GROUP BY area ";
             contractDetailBOS = super.findBySql(dSql, BusinessContractDetailBO.class, dField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -745,7 +750,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //2018立项金额
             String[] eField = new String[]{"makeMoneyE", "area"};
-            String eSql = " SELECT sum(makeMoney) AS makeMoneyE,area AS  area FROM businessproject_businesscontract " +
+            String eSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyE,area AS  area FROM businessproject_businesscontract " +
                     " WHERE year(signedTime)='2018' AND area = '" + bo.getArea() + "' GROUP BY area ";
             contractDetailBOS = super.findBySql(eSql, BusinessContractDetailBO.class, eField);
             for (BusinessContractDetailBO bo1 : contractDetailBOS) {
@@ -2390,15 +2395,16 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
         return new String[]{startDate, endDate};
     }
-    private OptionBO companyMakeCaseFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+
+    private OptionBO companyMakeCaseFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<MakeCaseCollectFigureBO> figureBOS = new ArrayList<>();
         List<MakeCaseCollectFigureBO> caseCollectFigureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"majorCompany", "innerNameNum", "hadNum", "noNum", "notNum"};
         sb.append(" SELECT a.majorCompany AS majorCompany,a.innerNameNum AS innerNameNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum ");
         sb.append(" FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract,majorCompany AS majorCompany,count(innerProject) AS innerNameNum ");
         sb.append(" FROM businessproject_businesscontract ");
@@ -2408,7 +2414,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         for (MakeCaseCollectFigureBO bo : collectFigureBOS) {
             //已完工单数数量
             String[] completeField = new String[]{"majorCompany", "complete"};
-            String sql = "SELECT majorCompany AS majorCompany,count(complete) AS complete FROM " +
+            String sql = "SELECT majorCompany AS majorCompany,ifnull(count(complete),0) AS complete FROM " +
                     " businessproject_businesscontract WHERE complete = '是' AND majorCompany = '" + bo.getMajorCompany() + "' " +
                     " GROUP BY majorCompany";
             caseCollectFigureBOS = super.findBySql(sql, MakeCaseCollectFigureBO.class, completeField);
@@ -2417,7 +2423,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //进行
             String[] marchField = new String[]{"majorCompany", "march"};
-            String marchSql = "SELECT majorCompany AS majorCompany,count(march) AS march FROM " +
+            String marchSql = "SELECT majorCompany AS majorCompany,ifnull(count(march),0) AS march FROM " +
                     " businessproject_businesscontract WHERE march = '是' AND majorCompany = '" + bo.getMajorCompany() + "' " +
                     " GROUP BY majorCompany";
             caseCollectFigureBOS = super.findBySql(marchSql, MakeCaseCollectFigureBO.class, marchField);
@@ -2532,7 +2538,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         for (MakeCaseCollectFigureBO bo : collectFigureBOS) {
             //已完工单数数量
             String[] completeField = new String[]{"major", "complete"};
-            String sql = "SELECT major AS major,count(complete) AS complete FROM " +
+            String sql = "SELECT major AS major,ifnull(count(complete),0) AS complete FROM " +
                     " businessproject_businesscontract WHERE complete = '是' AND major = '" + bo.getMajor() + "' " +
                     " GROUP BY major";
             caseCollectFigureBOS = super.findBySql(sql, MakeCaseCollectFigureBO.class, completeField);
@@ -2541,7 +2547,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //进行
             String[] marchField = new String[]{"major", "march"};
-            String marchSql = "SELECT major AS major,count(march) AS march FROM " +
+            String marchSql = "SELECT major AS major,ifnull(count(march),0) AS march FROM " +
                     " businessproject_businesscontract WHERE march = '是' AND major = '" + bo.getMajor() + "' " +
                     " GROUP BY major";
             caseCollectFigureBOS = super.findBySql(marchSql, MakeCaseCollectFigureBO.class, marchField);
@@ -2644,9 +2650,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"projectGroup", "innerNameNum", "hadNum", "noNum", "notNum"};
         sb.append(" SELECT a.projectGroup AS projectGroup,a.innerNameNum AS innerNameNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum ");
         sb.append(" FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract,projectGroup AS projectGroup,count(innerProject) AS innerNameNum ");
         sb.append(" FROM businessproject_businesscontract ");
@@ -2656,7 +2662,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         for (MakeCaseCollectFigureBO bo : collectFigureBOS) {
             //已完工单数数量
             String[] completeField = new String[]{"projectGroup", "complete"};
-            String sql = "SELECT projectGroup AS projectGroup,count(complete) AS complete FROM " +
+            String sql = "SELECT projectGroup AS projectGroup,ifnull(count(complete),0) AS complete FROM " +
                     " businessproject_businesscontract WHERE complete = '是' AND projectGroup = '" + bo.getProjectGroup() + "' " +
                     " GROUP BY projectGroup";
             caseCollectFigureBOS = super.findBySql(sql, MakeCaseCollectFigureBO.class, completeField);
@@ -2665,7 +2671,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //进行
             String[] marchField = new String[]{"projectGroup", "march"};
-            String marchSql = "SELECT projectGroup AS projectGroup,count(march) AS march FROM " +
+            String marchSql = "SELECT projectGroup AS projectGroup,ifnull(count(march),0) AS march FROM " +
                     " businessproject_businesscontract WHERE march = '是' AND projectGroup = '" + bo.getProjectGroup() + "' " +
                     " GROUP BY projectGroup";
             caseCollectFigureBOS = super.findBySql(marchSql, MakeCaseCollectFigureBO.class, marchField);
@@ -2768,9 +2774,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"area", "innerNameNum", "hadNum", "noNum", "notNum"};
         sb.append(" SELECT a.area AS area,a.innerNameNum AS innerNameNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notNum ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum ");
         sb.append(" FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract,area AS area,count(innerProject) AS innerNameNum ");
         sb.append(" FROM businessproject_businesscontract ");
@@ -2780,7 +2786,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         for (MakeCaseCollectFigureBO bo : collectFigureBOS) {
             //已完工单数数量
             String[] completeField = new String[]{"area", "complete"};
-            String sql = "SELECT area AS area,count(complete) AS complete FROM " +
+            String sql = "SELECT area AS area,ifnull(count(complete),0) AS complete FROM " +
                     " businessproject_businesscontract WHERE complete = '是' AND area = '" + bo.getArea() + "' " +
                     " GROUP BY area";
             caseCollectFigureBOS = super.findBySql(sql, MakeCaseCollectFigureBO.class, completeField);
@@ -2789,7 +2795,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
             }
             //进行
             String[] marchField = new String[]{"area", "march"};
-            String marchSql = "SELECT area AS area,count(march) AS march FROM " +
+            String marchSql = "SELECT area AS area,ifnull(count(march),0) AS march FROM " +
                     " businessproject_businesscontract WHERE march = '是' AND area = '" + bo.getArea() + "' " +
                     " GROUP BY area";
             caseCollectFigureBOS = super.findBySql(marchSql, MakeCaseCollectFigureBO.class, marchField);
@@ -2885,7 +2891,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setSeries(text_4);
         return optionBO;
     }
-    private OptionMakeBO companyMakeFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+
+    private OptionMakeBO companyMakeFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<MakeCaseFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT majorCompany AS majorCompany,sum(taskMoney) AS taskMoney, ");
@@ -2962,7 +2969,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
-        optionBO.setTooltipBO(tooltipBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -3046,7 +3053,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
-        optionBO.setTooltipBO(tooltipBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -3129,7 +3136,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
-        optionBO.setTooltipBO(tooltipBO);
+        optionBO.setTooltip(tooltipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
@@ -3211,17 +3218,18 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         optionBO.setTitle(titleBO);
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
-        optionBO.setTooltipBO(tooltipBO);
+        optionBO.setTooltip(tooltipBO);
         optionBO.setyAxis(yAxisBO);
 
         optionBO.setSeries(text_4);
         return optionBO;
     }
-    private OptionBO companyScaleFigureCollect(String startDate,String endDate,String text_1)throws SerException{
+
+    private OptionBO companyScaleFigureCollect(String startDate, String endDate, String text_1) throws SerException {
         List<ScaleContractFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"majorCompany", "scaleContract"};
-        sb.append(" SELECT majorCompany AS majorCompany, sum(scaleContract) AS scaleContract FROM businessproject_businesscontract");
+        sb.append(" SELECT majorCompany AS majorCompany, ifnull(sum(scaleContract),0) AS scaleContract FROM businessproject_businesscontract");
         sb.append(" WHERE signedTime between '" + startDate + "' and '" + endDate + "' GROUP BY majorCompany ");
         figureBOS = super.findBySql(sb.toString(), ScaleContractFigureBO.class, fields);
         ScaleContractFigureBO bo = new ScaleContractFigureBO();
@@ -3296,7 +3304,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         List<ScaleContractFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"major", "scaleContract"};
-        sb.append(" SELECT major AS major, sum(scaleContract) AS scaleContract FROM businessproject_businesscontract");
+        sb.append(" SELECT major AS major, ifnull(sum(scaleContract),0) AS scaleContract FROM businessproject_businesscontract");
         sb.append(" WHERE signedTime between '" + startDate + "' and '" + endDate + "' GROUP BY major ");
         figureBOS = super.findBySql(sb.toString(), ScaleContractFigureBO.class, fields);
         ScaleContractFigureBO bo = new ScaleContractFigureBO();
@@ -3371,7 +3379,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         List<ScaleContractFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"projectGroup", "scaleContract"};
-        sb.append(" SELECT projectGroup AS projectGroup, sum(scaleContract) AS scaleContract FROM businessproject_businesscontract");
+        sb.append(" SELECT projectGroup AS projectGroup, ifnull(sum(scaleContract),0) AS scaleContract FROM businessproject_businesscontract");
         sb.append(" WHERE signedTime between '" + startDate + "' and '" + endDate + "' GROUP BY projectGroup ");
         figureBOS = super.findBySql(sb.toString(), ScaleContractFigureBO.class, fields);
         ScaleContractFigureBO bo = new ScaleContractFigureBO();
@@ -3446,7 +3454,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         List<ScaleContractFigureBO> figureBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         String[] fields = new String[]{"area", "scaleContract"};
-        sb.append(" SELECT area AS area, sum(scaleContract) AS scaleContract FROM businessproject_businesscontract");
+        sb.append(" SELECT area AS area, ifnull(sum(scaleContract),0) AS scaleContract FROM businessproject_businesscontract");
         sb.append(" WHERE signedTime between '" + startDate + "' and '" + endDate + "' GROUP BY area ");
         figureBOS = super.findBySql(sb.toString(), ScaleContractFigureBO.class, fields);
         ScaleContractFigureBO bo = new ScaleContractFigureBO();
@@ -3519,13 +3527,13 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
     private List<BusinessContractProgressBO> progressCollect(String startTime, String endTime) throws SerException {
         StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT a.area AS area,a.projectGroup AS projectGroup,sum(notTaskMoney) AS notTaskMoney, ");
-        sb.append(" sum(a.hadTaskMoney) AS hadTaskMoney,sum(a.makeMoney) AS makeMoney,sum(forecastMoney) AS forecastMoney, ");
-        sb.append(" sum(a.scale) AS scale,sum(a.forecastRoundMoney) AS forecastRoundMoney,sum(a.estimatedMarketLosses) AS estimatedMarketLosses, ");
-        sb.append(" MAX( CASE WHEN makeContract=1 THEN count END ) AS hadMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=0 THEN count END ) AS noMakeNum, ");
-        sb.append(" MAX( CASE WHEN makeContract=2 THEN count END ) AS notMakeNum, ");
-        sb.append(" sum(a.scaleContract) AS scaleContract FROM ");
+        sb.append(" SELECT a.area AS area,a.projectGroup AS projectGroup,ifnull(sum(notTaskMoney),0) AS notTaskMoney, ");
+        sb.append(" sum(a.hadTaskMoney) AS hadTaskMoney,ifnull(sum(a.makeMoney),0) AS makeMoney,ifnull(sum(forecastMoney),0) AS forecastMoney, ");
+        sb.append(" ifnull(sum(a.scale),0) AS scale,sum(a.forecastRoundMoney) AS forecastRoundMoney,sum(a.estimatedMarketLosses) AS estimatedMarketLosses, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
+        sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum, ");
+        sb.append(" ifnull(sum(a.scaleContract),0) AS scaleContract FROM ");
         sb.append(" (SELECT count(*) AS count,makeContract as makeContract, ");
         sb.append(" area AS area,projectGroup AS  projectGroup,sum(forecastMoney) AS notTaskMoney, ");
         sb.append(" sum(taskMoney) AS hadTaskMoney,sum(makeMoney) AS makeMoney,sum(forecastMoney) AS forecastMoney, ");
@@ -3544,18 +3552,24 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         //todo 结算完成金额，清理派工归属数量,不需派工单但要跟进回款单数,不需派工单但要跟进回款金额,实际完成规模数量需求方也不知道从哪拿
         if (progressBOS != null) {
             for (BusinessContractProgressBO bo : progressBOS) {
-                //预估单价(预估总金额/预估规模)
-                forecastUnit = bo.getForecastMoney() / bo.getScale();
-                //立项总单价(立项总金额/合同规模数量)
-                makeUnit = bo.getMakeMoney() / bo.getScaleContract();
-                //总金额(立项总金额+预估总金额)
-                totalMoney = bo.getMakeMoney() + bo.getForecastMoney();
+                if (bo.getForecastMoney() != null && bo.getScale() != null) {
+                    //预估单价(预估总金额/预估规模)
+                    forecastUnit = bo.getForecastMoney() / bo.getScale();
+                }
+                if (bo.getMakeMoney() != null && bo.getScaleContract() != null) {
+                    //立项总单价(立项总金额/合同规模数量)
+                    makeUnit = bo.getMakeMoney() / bo.getScaleContract();
+                }
+                if (bo.getMakeMoney() != null && bo.getForecastMoney() != null) {
+                    //总金额(立项总金额+预估总金额)
+                    totalMoney = bo.getMakeMoney() + bo.getForecastMoney();
+                }
                 bo.setTotalMoney(totalMoney);
                 bo.setForecastUnit(forecastUnit);
                 bo.setMakeUnit(makeUnit);
                 //通报新合同单数
                 String[] passNumField = new String[]{"area", "passNum"};
-                String passNumSql = " SELECT area AS area,count(*) AS passNum FROM businessproject_businesscontract " +
+                String passNumSql = " SELECT area AS area,ifnull(count(*),0) AS passNum FROM businessproject_businesscontract " +
                         " WHERE is_notification=1 AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(passNumSql, BusinessContractProgressBO.class, passNumField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3563,7 +3577,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //是否有合同立项
                 String[] contractNumField = new String[]{"contractNum", "area"};
-                String contractNumSql = " SELECT sum(makeContract) AS contractNum,area AS  area FROM businessproject_businesscontract " +
+                String contractNumSql = " SELECT ifnull(sum(makeContract),0) AS contractNum,area AS  area FROM businessproject_businesscontract " +
                         " WHERE makeContract=1 AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(contractNumSql, BusinessContractProgressBO.class, contractNumField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3571,7 +3585,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //内包项目数
                 String[] insideNumField = new String[]{"insideNum", "area"};
-                String insideNumSql = " SELECT count(measureClassify) AS insideNum,area AS  area FROM businessproject_businesscontract " +
+                String insideNumSql = " SELECT ifnull(count(measureClassify),0) AS insideNum,area AS  area FROM businessproject_businesscontract " +
                         " WHERE measureClassify='内包' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(insideNumSql, BusinessContractProgressBO.class, insideNumField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3579,7 +3593,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //外包项目数
                 String[] outsourcingNumField = new String[]{"outsourcingNum", "area"};
-                String outsourcingNumSql = " SELECT count(measureClassify) AS outsourcingNum,area AS  area FROM businessproject_businesscontract " +
+                String outsourcingNumSql = " SELECT ifnull(count(measureClassify),0) AS outsourcingNum,area AS  area FROM businessproject_businesscontract " +
                         " WHERE measureClassify='外包' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(outsourcingNumSql, BusinessContractProgressBO.class, outsourcingNumField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3587,7 +3601,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //半外包项目数
                 String[] halfOutsourcingNumField = new String[]{"halfOutsourcingNum", "area"};
-                String halfOutsourcingNumSql = " SELECT count(measureClassify) AS halfOutsourcingNum,area AS  area FROM businessproject_businesscontract " +
+                String halfOutsourcingNumSql = " SELECT ifnull(count(measureClassify),0) AS halfOutsourcingNum,area AS  area FROM businessproject_businesscontract " +
                         " WHERE measureClassify='半外包' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(halfOutsourcingNumSql, BusinessContractProgressBO.class, halfOutsourcingNumField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3595,7 +3609,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //2014立项金额
                 String[] aField = new String[]{"makeMoneyA", "area"};
-                String aSql = " SELECT sum(makeMoney) AS makeMoneyA,area AS  area FROM businessproject_businesscontract " +
+                String aSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyA,area AS  area FROM businessproject_businesscontract " +
                         " WHERE year(signedTime)='2014' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(aSql, BusinessContractProgressBO.class, aField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3603,7 +3617,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //2015立项金额
                 String[] bField = new String[]{"makeMoneyB", "area"};
-                String bSql = " SELECT sum(makeMoney) AS makeMoneyB,area AS  area FROM businessproject_businesscontract " +
+                String bSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyB,area AS  area FROM businessproject_businesscontract " +
                         " WHERE year(signedTime)='2015' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(bSql, BusinessContractProgressBO.class, bField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3611,7 +3625,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //2016立项金额
                 String[] cField = new String[]{"makeMoneyC", "area"};
-                String cSql = " SELECT sum(makeMoney) AS makeMoneyC,area AS  area FROM businessproject_businesscontract " +
+                String cSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyC,area AS  area FROM businessproject_businesscontract " +
                         " WHERE year(signedTime)='2016' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(cSql, BusinessContractProgressBO.class, cField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3619,7 +3633,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //2017立项金额
                 String[] dField = new String[]{"makeMoneyD", "area"};
-                String dSql = " SELECT sum(makeMoney) AS makeMoneyD,area AS  area FROM businessproject_businesscontract " +
+                String dSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyD,area AS  area FROM businessproject_businesscontract " +
                         " WHERE year(signedTime)='2017' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(dSql, BusinessContractProgressBO.class, dField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3627,7 +3641,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //2018立项金额
                 String[] eField = new String[]{"makeMoneyE", "area"};
-                String eSql = " SELECT sum(makeMoney) AS makeMoneyE,area AS  area FROM businessproject_businesscontract " +
+                String eSql = " SELECT ifnull(sum(makeMoney),0) AS makeMoneyE,area AS  area FROM businessproject_businesscontract " +
                         " WHERE year(signedTime)='2018' AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(eSql, BusinessContractProgressBO.class, eField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3635,7 +3649,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //解决派工和现场数量不一致数量
                 String[] solutionBalanceField = new String[]{"solutionBalance", "area"};
-                String solutionBalanceSql = " SELECT count(is_solutionBalance) AS solutionBalance,area AS  area FROM businessproject_businesscontract " +
+                String solutionBalanceSql = " SELECT ifnull(count(is_solutionBalance),0) AS solutionBalance,area AS  area FROM businessproject_businesscontract " +
                         " WHERE is_solutionBalance=1 AND area = '" + bo.getArea() + "' GROUP BY area ";
                 contractProgressBOS = super.findBySql(solutionBalanceSql, BusinessContractProgressBO.class, solutionBalanceField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3643,7 +3657,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //未进场
                 String[] notApproachField = new String[]{"notApproach", "area"};
-                String notApproachSql = " SELECT count(notApproach) AS notApproach ,area AS area FROM businessproject_businesscontract " +
+                String notApproachSql = " SELECT ifnull(count(notApproach),0) AS notApproach ,area AS area FROM businessproject_businesscontract " +
                         " WHERE notApproach='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(notApproachSql, BusinessContractProgressBO.class, notApproachField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3651,7 +3665,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //进场
                 String[] approachField = new String[]{"approach", "area"};
-                String approachSql = " SELECT count(approach) AS approach ,area AS area FROM businessproject_businesscontract " +
+                String approachSql = " SELECT ifnull(count(approach),0) AS approach ,area AS area FROM businessproject_businesscontract " +
                         " WHERE approach='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(approachSql, BusinessContractProgressBO.class, approachField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3659,7 +3673,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //停工
                 String[] shutdownField = new String[]{"shutdown", "area"};
-                String shutdownSql = " SELECT count(shutdown) AS shutdown ,area AS area FROM businessproject_businesscontract " +
+                String shutdownSql = " SELECT ifnull(count(shutdown),0) AS shutdown ,area AS area FROM businessproject_businesscontract " +
                         " WHERE shutdown='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(shutdownSql, BusinessContractProgressBO.class, shutdownField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3667,7 +3681,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //进行
                 String[] marchField = new String[]{"march", "area"};
-                String marchSql = " SELECT count(march) AS march ,area AS area FROM businessproject_businesscontract " +
+                String marchSql = " SELECT ifnull(count(march),0) AS march ,area AS area FROM businessproject_businesscontract " +
                         " WHERE march='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(marchSql, BusinessContractProgressBO.class, marchField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3675,7 +3689,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //已完工单数
                 String[] completeField = new String[]{"complete", "area"};
-                String completeSql = " SELECT count(complete) AS complete ,area AS area FROM businessproject_businesscontract " +
+                String completeSql = " SELECT ifnull(count(complete),0) AS complete ,area AS area FROM businessproject_businesscontract " +
                         " WHERE complete='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(completeSql, BusinessContractProgressBO.class, completeField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3683,7 +3697,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //完工金额
                 String[] completeMoneyField = new String[]{"completeMoney", "area"};
-                String completeMoneySql = " SELECT sum(makeMoney+forecastFinishMoney) AS completeMoney ,area AS area FROM businessproject_businesscontract " +
+                String completeMoneySql = " SELECT ifnull(sum(makeMoney+forecastFinishMoney),0) AS completeMoney ,area AS area FROM businessproject_businesscontract " +
                         " WHERE complete='是' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(completeMoneySql, BusinessContractProgressBO.class, completeMoneyField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3691,7 +3705,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //初验
                 String[] initialField = new String[]{"initialTest", "area"};
-                String initialSql = " SELECT count(initialTest) AS initialTest ,area AS area FROM businessproject_businesscontract " +
+                String initialSql = " SELECT ifnull(count(initialTest),0) AS initialTest ,area AS area FROM businessproject_businesscontract " +
                         " WHERE initialTest='完成' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(initialSql, BusinessContractProgressBO.class, initialField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3699,7 +3713,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //初验金额
                 String[] initialTestMoneyField = new String[]{"initialTestMoney", "area"};
-                String initialTestMoneySql = " SELECT sum(makeMoney+forecastFinishMoney) AS initialTestMoney ,area AS area FROM businessproject_businesscontract " +
+                String initialTestMoneySql = " SELECT ifnull(sum(makeMoney+forecastFinishMoney),0) AS initialTestMoney ,area AS area FROM businessproject_businesscontract " +
                         " WHERE initialTest='完成' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(initialTestMoneySql, BusinessContractProgressBO.class, initialTestMoneyField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3707,7 +3721,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //终验
                 String[] finalField = new String[]{"finalTest", "area"};
-                String finalSql = " SELECT count(finalTest) AS finalTest ,area AS area FROM businessproject_businesscontract " +
+                String finalSql = " SELECT ifnull(count(finalTest),0) AS finalTest ,area AS area FROM businessproject_businesscontract " +
                         " WHERE finalTest='完成' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(finalSql, BusinessContractProgressBO.class, finalField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {
@@ -3715,7 +3729,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
                 //终验金额
                 String[] finalTestMoneyField = new String[]{"finalTestMoney", "area"};
-                String finalTestMoneySql = " SELECT sum(makeMoney+forecastFinishMoney) AS finalTestMoney ,area AS area FROM businessproject_businesscontract " +
+                String finalTestMoneySql = " SELECT ifnull(sum(makeMoney+forecastFinishMoney),0) AS finalTestMoney ,area AS area FROM businessproject_businesscontract " +
                         " WHERE finalTest='完成' AND area = '" + bo.getArea() + "'GROUP BY area ";
                 contractProgressBOS = super.findBySql(finalTestMoneySql, BusinessContractProgressBO.class, finalTestMoneyField);
                 for (BusinessContractProgressBO bo1 : contractProgressBOS) {

@@ -108,6 +108,12 @@ public class RecruitWay extends BaseEntity {
     @Column(name = "postNum",columnDefinition = "INT(10) COMMENT '剩余职位发布数' ")
     private Integer postNum;
     /**
+     * 招聘网站
+     */
+    @Column(length = 36, columnDefinition = "VARCHAR(36) COMMENT '招聘网站' ")
+    private String recruitSite;
+
+    /**
      * 剩余简历下载数
      */
     @Column(name = "resumeNum",columnDefinition = "INT(10) COMMENT '剩余简历下载数' ")
@@ -122,6 +128,14 @@ public class RecruitWay extends BaseEntity {
      */
     @Column(name = "status",columnDefinition = "VARCHAR(255) COMMENT '状态' ")
     private Status status;
+
+    public String getRecruitSite() {
+        return recruitSite;
+    }
+
+    public void setRecruitSite(String recruitSite) {
+        this.recruitSite = recruitSite;
+    }
 
     public LocalDate getChannelTime() {
         return channelTime;

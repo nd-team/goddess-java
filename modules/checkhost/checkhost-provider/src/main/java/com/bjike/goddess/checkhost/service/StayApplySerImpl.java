@@ -233,7 +233,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         if (!StringUtils.isEmpty(stayApplyTO.getId())) {
             StayApply stayApply = super.findById(stayApplyTO.getId());
             LocalDateTime createTime = stayApply.getCreateTime();
-            stayApply =  BeanTransform.copyProperties(stayApplyTO, StayApply.class, true);
+            stayApply = BeanTransform.copyProperties(stayApplyTO, StayApply.class, true);
             stayApply.setCreateTime(createTime);
             stayApply.setModifyTime(LocalDateTime.now());
             super.update(stayApply);
@@ -253,6 +253,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         super.remove(id);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public StayApplyBO manageAudit(StayApplyTO to) throws SerException {
         checkAduitIdentity();
@@ -266,4 +267,29 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         return bo;
     }
 
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public StayApplyBO applyHost(StayApplyTO to) throws SerException {
+        checkAddIdentity();
+        StayApply apply = super.findById(to.getId());
+        BeanTransform.copyProperties(to, apply, true);
+        apply.setTotalAmount(apply.getTollMoney() + apply.getAmount());
+        apply.setModifyTime(LocalDateTime.now());
+        super.update(apply);
+        StayApplyBO bo = BeanTransform.copyProperties(apply, StayApplyBO.class);
+        return bo;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public StayApplyBO hostAudit(StayApplyTO to) throws SerException {
+        checkAduitIdentity();
+        StayApply apply = super.findById(to.getId());
+        apply.setModuleAudit(to.getModuleAudit());
+        apply.setModuleCheckStatus(to.getModuleCheckStatus());
+        apply.setModifyTime(LocalDateTime.now());
+        super.update(apply);
+        StayApplyBO bo = BeanTransform.copyProperties(apply, StayApplyBO.class);
+        return bo;
+    }
 }

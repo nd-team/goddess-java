@@ -22,8 +22,6 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.InterviewAddressInforAPI" id="interviewAddressInforApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.InterviewInforAPI" id="interviewInforApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.NotEntryReasonAPI" id="notEntryReasonApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitDemandAPI" id="recruitDemandApiImpl"/>
-	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitPlanAPI" id="recruitPlanApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitProAPI" id="recruitProApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.RecruitWayAPI" id="RecruitWayApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.recruit.api.ReportAddressInforAPI" id="reportAddressInforApiImpl"/>

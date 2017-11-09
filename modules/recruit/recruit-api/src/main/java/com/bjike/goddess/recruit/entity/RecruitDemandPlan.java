@@ -48,8 +48,8 @@ public class RecruitDemandPlan extends BaseEntity {
     /**
      * 计划招聘人数
      */
-    @Column(name = "planRecruitNum", columnDefinition = "VARCHAR(255)   COMMENT '计划招聘人数'")
-    private String planRecruitNum;
+    @Column(name = "planRecruitNum", columnDefinition = "INT(10)   COMMENT '计划招聘人数'")
+    private Integer planRecruitNum;
 
     /**
      * 岗位描述
@@ -168,11 +168,11 @@ public class RecruitDemandPlan extends BaseEntity {
         this.populationGap = populationGap;
     }
 
-    public String getPlanRecruitNum() {
+    public Integer getPlanRecruitNum() {
         return planRecruitNum;
     }
 
-    public void setPlanRecruitNum(String planRecruitNum) {
+    public void setPlanRecruitNum(Integer planRecruitNum) {
         this.planRecruitNum = planRecruitNum;
     }
 

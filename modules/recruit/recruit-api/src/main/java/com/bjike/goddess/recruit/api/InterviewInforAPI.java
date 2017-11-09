@@ -129,5 +129,29 @@ public interface InterviewInforAPI {
      * 根据姓名获取通过面试的信息
      */
     InterviewInforBO findByName(String name) throws SerException;
+    /**
+     * 导入
+     *
+     * @param interviewInforTOS 面试信息
+     * @return class InterviewInforBO
+     */
+    default InterviewInforBO importExcel(List<InterviewInforTO> interviewInforTOS) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @param dto
+     * @throws SerException
+     */
+    byte[] exportExcel(InterviewInforDTO dto) throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
 }

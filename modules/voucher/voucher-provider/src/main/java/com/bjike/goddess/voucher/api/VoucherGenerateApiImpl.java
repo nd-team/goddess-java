@@ -34,6 +34,10 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public List<SonPermissionObject> sonPermission() throws SerException {
         return voucherGenerateSer.sonPermission();
     }
+    @Override
+    public List<SonPermissionObject> sonPermissionAccount() throws SerException {
+        return voucherGenerateSer.sonPermissionAccount();
+    }
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
@@ -263,6 +267,15 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<String> listGroup() throws SerException {
         return voucherGenerateSer.listGroup();
+    }
+    @Override
+    public List<String> subSubject(String firstSubject) throws SerException {
+        return voucherGenerateSer.subSubject(firstSubject);
+    }
+
+    @Override
+    public List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
+        return voucherGenerateSer.thirdSubject(firstSubject, subSubject);
     }
 
     @Override

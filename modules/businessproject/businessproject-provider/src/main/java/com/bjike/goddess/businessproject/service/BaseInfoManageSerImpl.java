@@ -225,6 +225,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        baseInfoManageDTO.getSorts().add("createTime=desc");
         checkSeeIdentity();
 
         searchCondition(baseInfoManageDTO);
@@ -280,6 +281,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         checkAddIdentity();
 
         super.remove(id);
+    }
+    @Override
+    public Double contractScale(String project) throws SerException {
+        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+        dto.getConditions().add(Restrict.eq("outerProject", project));
+        List<BaseInfoManage> list = super.findByCis(dto);
+        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
+            return list.get(0).getContractScale();
+        }
+        return 0d;
     }
 
 

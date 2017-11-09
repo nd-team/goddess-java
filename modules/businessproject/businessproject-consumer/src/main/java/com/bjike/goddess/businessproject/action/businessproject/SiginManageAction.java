@@ -1,7 +1,10 @@
 package com.bjike.goddess.businessproject.action.businessproject;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.businessproject.bo.OptionBO;
+import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
 import com.bjike.goddess.businessproject.enums.MakeProjectStatus;
@@ -12,6 +15,7 @@ import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.businessproject.to.SiginManageTO;
 import com.bjike.goddess.businessproject.vo.SiginManageVO;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -21,10 +25,16 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.vo.AreaVO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -59,6 +69,10 @@ public class SiginManageAction extends BaseFileAction {
 
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
 
     /**
@@ -515,13 +529,13 @@ public class SiginManageAction extends BaseFileAction {
      * @param year
      * @param month
      * @param week
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @version v1
      */
     @GetMapping("v1/weekCollectFigure")
     public Result weekCollectFigure(Integer year, Integer month, Integer week) throws ActException {
         try {
-            OptionBO optionBO = siginManageAPI.weekCollectFigure(year, month, week);
+            OptionMakeBO optionBO = siginManageAPI.weekCollectFigure(year, month, week);
             return ActResult.initialize(optionBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -533,13 +547,13 @@ public class SiginManageAction extends BaseFileAction {
      *
      * @param year
      * @param month
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @version v1
      */
     @GetMapping("v1/monthCollectFigure")
     public Result monthCollectFigure(Integer year, Integer month) throws ActException {
         try {
-            OptionBO optionBO = siginManageAPI.monthCollectFigure(year, month);
+            OptionMakeBO optionBO = siginManageAPI.monthCollectFigure(year, month);
             return ActResult.initialize(optionBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -551,13 +565,13 @@ public class SiginManageAction extends BaseFileAction {
      *
      * @param year
      * @param quarter
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @version v1
      */
     @GetMapping("v1/quarterCollectFigure")
     public Result quarterCollectFigure(Integer year, Integer quarter) throws ActException {
         try {
-            OptionBO optionBO = siginManageAPI.quarterCollectFigure(year, quarter);
+            OptionMakeBO optionBO = siginManageAPI.quarterCollectFigure(year, quarter);
             return ActResult.initialize(optionBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -568,13 +582,13 @@ public class SiginManageAction extends BaseFileAction {
      * 各地区立项情况年汇总
      *
      * @param year
-     * @return class OptionBO
+     * @return class OptionMakeBO
      * @version v1
      */
     @GetMapping("v1/yearCollectFigure")
     public Result yearCollectFigure(Integer year) throws ActException {
         try {
-            OptionBO optionBO = siginManageAPI.yearCollectFigure(year);
+            OptionMakeBO optionBO = siginManageAPI.yearCollectFigure(year);
             return ActResult.initialize(optionBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -604,4 +618,47 @@ public class SiginManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 查询地区
+     *
+     * @return class AreaVO
+     * @version v1
+     */
+    @GetMapping("v1/findArea")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            List<AreaBO> list = new ArrayList<>();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findArea();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, AreaVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询未冻结部门项目组详细信息
+     *
+     * @return class DepartmentDetailVO
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result department(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = new ArrayList<>();
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
+            if (moduleAPI.isCheck("organize")) {
+                RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+                list = departmentDetailAPI.findStatus();
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

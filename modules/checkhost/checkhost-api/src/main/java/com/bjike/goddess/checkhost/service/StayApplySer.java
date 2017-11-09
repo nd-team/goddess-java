@@ -3,7 +3,6 @@ package com.bjike.goddess.checkhost.service;
 import com.bjike.goddess.checkhost.bo.StayApplyBO;
 import com.bjike.goddess.checkhost.dto.StayApplyDTO;
 import com.bjike.goddess.checkhost.entity.StayApply;
-import com.bjike.goddess.checkhost.enums.CheckStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayApplyTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -102,5 +101,22 @@ public interface StayApplySer extends Ser<StayApply, StayApplyDTO> {
      */
     StayApplyBO manageAudit(StayApplyTO to) throws SerException;
 
+    /**
+     * 离宿申请
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    StayApplyBO applyHost(StayApplyTO to) throws SerException;
+
+    /**
+     * 离宿申请审核
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    StayApplyBO hostAudit(StayApplyTO to) throws SerException;
 
 }

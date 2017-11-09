@@ -23,8 +23,6 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.InterviewAddressInforAPI" ref="interviewAddressInforApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.InterviewInforAPI" ref="interviewInforApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.NotEntryReasonAPI" ref="notEntryReasonApiImpl"></dubbo:service>
-	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitDemandAPI" ref="recruitDemandApiImpl"></dubbo:service>
-	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitPlanAPI" ref="recruitPlanApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitProAPI" ref="recruitProApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitWayAPI" ref="recruitWayApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitWayAPI" ref="recruitWayApiImpl"></dubbo:service>
