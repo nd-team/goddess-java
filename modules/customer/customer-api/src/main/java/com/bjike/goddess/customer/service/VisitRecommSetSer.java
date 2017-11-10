@@ -112,53 +112,53 @@ public interface VisitRecommSetSer extends Ser<VisitRecommSet, VisitRecommSetDTO
     }
 
     /**
-     * 定时器检测每小时要更新的权重
+     * 定时器检测要更新的权重排拜访日程表和发送推荐日程表
      */
-    default void checkUpdateWeightHour() throws SerException {
+    default void checkUpdateWeight() throws SerException {
         return;
     }
-    /**
-     * 定时器检测每天要更新的权重
-     */
-    default void checkUpdateWeightDay() throws SerException {
-        return;
-    }
-    /**
-     * 定时器检测每周要更新的权重
-     */
-    default void checkUpdateWeightWeek() throws SerException {
-        return;
-    }
-    /**
-     * 定时器检测每月要更新的权重
-     */
-    default void checkUpdateWeightMonth() throws SerException {
-        return;
-    }
-    /**
-     * 定时器检测每小时要发送拜访课程表
-     */
-    default void checkSendObjectHour() throws SerException {
-        return;
-    }
-    /**
-     * 定时器检测每天要发送拜访课程表
-     */
-    default void checkSendObjectDay() throws SerException {
-        return;
-    }
-    /**
-     * 定时器检测每周要发送拜访课程表
-     */
-    default void checkSendObjectWeek() throws SerException {
-        return;
-    }
-    /**
-     * 定时器检测每月要发送拜访课程表
-     */
-    default void checkSendObjectMonth() throws SerException {
-        return;
-    }
+//    /**
+//     * 定时器检测每天要更新的权重
+//     */
+//    default void checkUpdateWeightDay() throws SerException {
+//        return;
+//    }
+//    /**
+//     * 定时器检测每周要更新的权重
+//     */
+//    default void checkUpdateWeightWeek() throws SerException {
+//        return;
+//    }
+//    /**
+//     * 定时器检测每月要更新的权重
+//     */
+//    default void checkUpdateWeightMonth() throws SerException {
+//        return;
+//    }
+//    /**
+//     * 定时器检测每小时要发送拜访课程表
+//     */
+//    default void checkSendObject() throws SerException {
+//        return;
+//    }
+//    /**
+//     * 定时器检测每天要发送拜访课程表
+//     */
+//    default void checkSendObjectDay() throws SerException {
+//        return;
+//    }
+//    /**
+//     * 定时器检测每周要发送拜访课程表
+//     */
+//    default void checkSendObjectWeek() throws SerException {
+//        return;
+//    }
+//    /**
+//     * 定时器检测每月要发送拜访课程表
+//     */
+//    default void checkSendObjectMonth() throws SerException {
+//        return;
+//    }
     /**
      * 定时器检测提醒发送
      */

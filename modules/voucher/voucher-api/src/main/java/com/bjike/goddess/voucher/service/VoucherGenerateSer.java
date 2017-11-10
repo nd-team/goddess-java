@@ -519,7 +519,6 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> accountSubject() throws SerException {
         return null;
     }
-
     /**
      * 从已过账那里根据一级获取所有二级
      *
@@ -528,16 +527,14 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> subSubject(String firstSubject) throws SerException {
         return null;
     }
-
     /**
      * 从已过账那里根据一级,二级获取所有三级
      *
      * @throws SerException
      */
-    default List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
+    default List<String> thirdSubject(String firstSubject,String subSubject) throws SerException {
         return null;
     }
-
 
     /**
      * 根据日期、项目组、地区、项目统计记账凭证
@@ -698,6 +695,18 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return null;
     }
 
+    /**
+     * 获取所有一级科目为现金或者银行存款的数据
+     */
+    default List<VoucherGenerateBO> findByCourseName() throws SerException {
+        return null;
+    }
+//    /**
+//     * 获取所有一级科目为现金或者银行存款的数据
+//     */
+//    default List<VoucherGenerateBO> findByCourseName() throws SerException {
+//        return null;
+//    }
     /**
      * 根据时间查询对应的解放和贷方金额
      * zhuangkaiqin

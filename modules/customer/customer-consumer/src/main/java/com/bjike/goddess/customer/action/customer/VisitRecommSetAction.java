@@ -210,7 +210,7 @@ public class VisitRecommSetAction {
     @GetMapping("v1/checkEmail")
     public Result checkEmail(   ) throws ActException {
         try {
-            visitRecommSetAPI.checkSendObjectHour( );
+            visitRecommSetAPI.remindSend( );
             return ActResult.initialize("发送成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -219,6 +219,13 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     }
 
     @Override
+    public InitDateEntryBO findByName(String name) throws SerException {
+        InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
+        initDateEntryDTO.getConditions().add(Restrict.eq("accountanName",name));
+        InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
+        return BeanTransform.copyProperties(initDateEntry,InitDateEntryBO.class);
+    }
+
     public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         if (StringUtils.isBlank(firstSubject)) {
             return null;
@@ -232,5 +239,4 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         }
         return null;
     }
-
 }

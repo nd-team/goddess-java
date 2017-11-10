@@ -61,6 +61,9 @@ public class InitDateEntryApiImpl implements InitDateEntryAPI {
     }
 
     @Override
+    public InitDateEntryBO findByName(String name) throws SerException {
+        return initDateEntrySer.findByName(name);
+    }
     public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         return initDateEntrySer.findBySubject(firstSubject);
     }

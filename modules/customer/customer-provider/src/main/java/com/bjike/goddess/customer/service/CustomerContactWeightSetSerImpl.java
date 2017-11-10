@@ -13,13 +13,16 @@ import com.bjike.goddess.customer.to.CustomerContactWeightSetTO;
 import com.bjike.goddess.customer.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 客户接触阶段权重设置业务实现
@@ -214,6 +217,15 @@ public class CustomerContactWeightSetSerImpl extends ServiceImpl<CustomerContact
         CustomerContactWeightSetDTO customerContactWeightSetDTO = new CustomerContactWeightSetDTO();
         customerContactWeightSetDTO.getConditions().add(Restrict.eq("customerContactType",customerContactType));
         CustomerContactWeightSet customerContactWeightSet = super.findOne(customerContactWeightSetDTO);
-        return BeanTransform.copyProperties(customerContactWeightSet,CustomerContactWeightSet.class);
+        return BeanTransform.copyProperties(customerContactWeightSet,CustomerContactWeightSetBO.class);
+    }
+
+    @Override
+    public List<String> findName() throws SerException {
+        List<CustomerContactWeightSet> customerContactWeightSetList = super.findAll();
+        if(CollectionUtils.isEmpty(customerContactWeightSetList)){
+            return Collections.emptyList();
+        }
+        return customerContactWeightSetList.stream().map(CustomerContactWeightSet::getCustomerContactType).distinct().collect(Collectors.toList());
     }
 }

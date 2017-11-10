@@ -213,7 +213,7 @@ public class ClosenessFoactorSetSerImpl extends ServiceImpl<ClosenessFoactorSet,
         //将权重插入权重表中
         List<ClosenessFoactorWeight> closenessFoactorWeights = new ArrayList<>();
         String[] name_str = new String[]{"一般", "亲密", "非常亲密"};
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             ClosenessFoactorWeight closenessFoactorWeight = new ClosenessFoactorWeight();
             closenessFoactorWeight.setClosenessName(name_str[i]);
             closenessFoactorWeight.setClosenessWeight(weight[i]);

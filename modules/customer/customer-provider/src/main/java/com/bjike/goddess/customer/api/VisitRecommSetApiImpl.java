@@ -76,43 +76,8 @@ public class VisitRecommSetApiImpl implements VisitRecommSetAPI {
     }
 
     @Override
-    public void checkUpdateWeightHour() throws SerException {
-        visitRecommSetSer.checkUpdateWeightHour();
-    }
-
-    @Override
-    public void checkUpdateWeightDay() throws SerException {
-        visitRecommSetSer.checkUpdateWeightDay();
-    }
-
-    @Override
-    public void checkUpdateWeightWeek() throws SerException {
-        visitRecommSetSer.checkUpdateWeightWeek();
-    }
-
-    @Override
-    public void checkUpdateWeightMonth() throws SerException {
-        visitRecommSetSer.checkUpdateWeightMonth();
-    }
-
-    @Override
-    public void checkSendObjectHour() throws SerException {
-        visitRecommSetSer.checkSendObjectHour();
-    }
-
-    @Override
-    public void checkSendObjectDay() throws SerException {
-        visitRecommSetSer.checkSendObjectDay();
-    }
-
-    @Override
-    public void checkSendObjectWeek() throws SerException {
-        visitRecommSetSer.checkSendObjectWeek();
-    }
-
-    @Override
-    public void checkSendObjectMonth() throws SerException {
-        visitRecommSetSer.checkSendObjectMonth();
+    public void checkUpdateWeight() throws SerException {
+        visitRecommSetSer.checkUpdateWeight();
     }
 
     @Override

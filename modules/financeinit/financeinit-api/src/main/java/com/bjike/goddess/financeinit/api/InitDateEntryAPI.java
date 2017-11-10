@@ -77,6 +77,12 @@ public interface InitDateEntryAPI {
     default String trialBalance() throws SerException {
         return null;
     }
+    /**
+     * 根据会计科目名称获取方向和期初余额
+     * @return
+     * @throws SerException
+     */
+    default InitDateEntryBO findByName(String name) throws SerException{return null;}
 
     /**
      * 根据科目获取期初数

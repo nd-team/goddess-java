@@ -52,22 +52,29 @@ public class FundRecord extends BaseEntity {
     private String digest;
 
     /**
-     * 收入
+     * 收入(借方)
      */
     @Column(name = "income", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '收入'")
     private Double income;
 
     /**
-     * 支出
+     * 支出(贷方)
      */
     @Column(name = "expenditure", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '支出'")
     private Double expenditure;
+
+    /**
+     * 金额
+     */
+    @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
+    private Double amount;
 
     /**
      * 数据来源
      */
     @Column(name = "dataSource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
     private String dataSource;
+
 
 
     public LocalDate getRecordDate() {
@@ -124,6 +131,14 @@ public class FundRecord extends BaseEntity {
 
     public void setExpenditure(Double expenditure) {
         this.expenditure = expenditure;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getDataSource() {

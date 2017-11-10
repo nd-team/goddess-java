@@ -47,6 +47,11 @@ public class AccountTO extends BaseTO {
     private String bankAddr;
 
     /**
+     * 金额
+     */
+    private Double amount;
+
+    /**
      * 备注
      */
     private String remark;
@@ -108,6 +113,14 @@ public class AccountTO extends BaseTO {
 
     public void setBankAddr(String bankAddr) {
         this.bankAddr = bankAddr;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getRemark() {

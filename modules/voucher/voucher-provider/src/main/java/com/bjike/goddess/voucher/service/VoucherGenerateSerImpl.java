@@ -3683,4 +3683,23 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return ret;
     }
 
+    @Override
+    public List<VoucherGenerateBO> findByCourseName() throws SerException {
+       String[] feilds = new String[]{"area","projectName","projectGroup","sumary","borrowMoney","loanMoney","firstSubject","secondSubject","thirdSubject"};
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ");
+        sql.append("  area AS area,");
+        sql.append("  projectName   AS projectName,");
+        sql.append("  projectGroup  AS projectGroup,");
+        sql.append("  sumary        AS sumary,");
+        sql.append("  borrowMoney   AS borrowMoney,");
+        sql.append("  loanMoney     AS loanMoney,");
+        sql.append("  firstSubject  AS firstSubject,");
+        sql.append("  secondSubject AS secondSubject,");
+        sql.append("  thirdSubject  AS thirdSubject");
+        sql.append("  FROM voucher_vouchergenerate");
+        sql.append("  WHERE firstSubject = '现金' OR firstSubject = '银行存款'");
+        List<VoucherGenerateBO> voucherGenerateBOS =super.findBySql(sql.toString(),VoucherGenerateBO.class,feilds);
+        return voucherGenerateBOS;
+    }
 }

@@ -15,7 +15,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-//		JapiClient.delete(true);
+		JapiClient.delete(true);
 		JapiClient.setPrefixPath("/home/ike/github/ljt/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/customer/customer-consumer");//主项目位置

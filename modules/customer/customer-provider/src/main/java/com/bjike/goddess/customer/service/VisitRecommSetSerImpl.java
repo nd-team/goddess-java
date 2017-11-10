@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -221,13 +222,14 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 emails.append(emailStr + ",");
             }
         }
+        String recivers = emails.substring(0, emails.toString().lastIndexOf(",") );
         VisitRecommSet visitRecommSet = BeanTransform.copyProperties(visitRecommSetTO, VisitRecommSet.class, true, "sendObject");
         visitRecommSet.setCreateTime(LocalDateTime.now());
         visitRecommSet.setStatus(Status.THAW);
         visitRecommSet.setUpdateDate(LocalDateTime.now());
         visitRecommSet.setCreatePersion(userAPI.currentUser().getUsername());
         //设置发送对象
-        visitRecommSet.setSendObject(String.valueOf(emails));
+        visitRecommSet.setSendObject(recivers);
 
         super.save(visitRecommSet);
 
@@ -247,11 +249,12 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 emails.append(emailStr + ",");
             }
         }
+        String recivers = emails.substring(0, emails.toString().lastIndexOf(",") );
         VisitRecommSet temp = super.findById(visitRecommSetTO.getId());
 
         VisitRecommSet buySendEmail = BeanTransform.copyProperties(visitRecommSetTO, VisitRecommSet.class, true, "sendObject");
         //设置发送对象
-        buySendEmail.setSendObject(String.valueOf(emails));
+        buySendEmail.setSendObject( recivers );
 
         BeanUtils.copyProperties(buySendEmail, temp, "id", "createTime", "createPersion", "status", "updateDate");
         temp.setModifyTime(LocalDateTime.now());
@@ -614,7 +617,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 break;
         }
         if (null != visitSchedule1) {
-            BeanUtils.copyProperties(visitSchedule, visitSchedule1, "year", "month", "week");
+            BeanUtils.copyProperties(visitSchedule, visitSchedule1, "year", "month", "week","id","createTime");
             visitSchedule1.setRecommendDate(LocalDateTime.now());
             visitSchedule1.setModifyTime(LocalDateTime.now());
             visitScheduleSer.update(visitSchedule1);
@@ -626,7 +629,7 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
             visitScheduleSer.save(visitSchedule);
         }
         if (null != next1) {
-            BeanUtils.copyProperties(next, next1, "year", "month", "week");
+            BeanUtils.copyProperties(next, next1, "year", "month", "week","id","createTime");
             next1.setRecommendDate(LocalDateTime.now());
             next1.setModifyTime(LocalDateTime.now());
             visitScheduleSer.update(next1);
@@ -660,12 +663,12 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         messageTO.setTitle("定时发送拜访日程表");
         messageTO.setMsgType(MsgType.SYS);
         messageTO.setSendType(SendType.EMAIL);
-        messageTO.setRangeType(RangeType.SPECIFIED);
+//        messageTO.setRangeType(RangeType.SPECIFIED);
         //定时发送必须写
         messageTO.setSenderId("SYSTEM");
         messageTO.setSenderName("SYSTEM");
 
-        messageTO.setReceivers(sendObject.split(";"));
+        messageTO.setReceivers(sendObject.split(","));
         messageAPI.send(messageTO);
     }
 
@@ -710,162 +713,203 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
     }
 
     @Override
-    public void checkUpdateWeightHour() throws SerException {
+    public void checkUpdateWeight() throws SerException {
         VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYHOUR));
         visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
         List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
         if (list != null && list.size() > 0) {
             for (VisitRecommSet visitRecommSet : list) {
-                int hour = visitRecommSet.getRecommInfoUpdateTime().getHour() - LocalDateTime.now().getHour();
-                int minutes = visitRecommSet.getRecommInfoUpdateTime().getMinute() - LocalDateTime.now().getMinute();
-                int ms = visitRecommSet.getRecommInfoUpdateTime().getSecond() - LocalDateTime.now().getSecond();
-                if (hour <= 0 && minutes == 0 && ms == 0) {
-                    weekData();
+                switch (visitRecommSet.getRecommInfoUpdateFreq()){
+                    case EVERYHOUR:
+                        int hour = visitRecommSet.getRecommInfoUpdateTime().getHour() - LocalDateTime.now().getHour();
+                        int minutes = visitRecommSet.getRecommInfoUpdateTime().getMinute() - LocalDateTime.now().getMinute();
+                        if (hour <= 0 && minutes==0) {
+                            weekData();
+                        }
+                        int sendHour = visitRecommSet.getRecommendDate().getHour() - LocalDateTime.now().getHour();
+                        int sendMinutes = visitRecommSet.getRecommendDate().getMinute() - LocalDateTime.now().getMinute();
+                        if(sendHour <=0 && sendMinutes==0){
+                            sendObject(visitRecommSet.getSendObject());
+                        }
+                        break;
+                    case EVERYDAY:
+                        LocalDateTime recommDate =  visitRecommSet.getRecommInfoUpdateTime();
+                        if (recommDate.getHour() == LocalDateTime.now().getHour() && recommDate.getMinute() == LocalDateTime.now().getMinute()) {
+                            weekData();
+                        }
+                        LocalDateTime sendDate =  visitRecommSet.getRecommendDate();
+                        if (sendDate.getHour() == LocalDateTime.now().getHour() && sendDate.getMinute() == LocalDateTime.now().getMinute()) {
+                            sendObject(visitRecommSet.getSendObject());
+                        }
+                        break;
+                    case EVERYWEEK:
+                        if (visitRecommSet.getRecommInfoUpdateTime().getDayOfWeek().getValue() == LocalDate.now().getDayOfWeek().getValue()) {
+                            if (visitRecommSet.getRecommInfoUpdateTime().getHour() == LocalDateTime.now().getHour() && visitRecommSet.getRecommInfoUpdateTime().getMinute()==LocalDateTime.now().getMinute()) {
+                                weekData();
+                            }
+                        }
+                        if (visitRecommSet.getRecommendDate().getDayOfWeek().getValue() == LocalDate.now().getDayOfWeek().getValue()) {
+                            if (visitRecommSet.getRecommendDate().getHour() == LocalDateTime.now().getHour() && visitRecommSet.getRecommendDate().getMinute()==LocalDateTime.now().getMinute()) {
+                                sendObject(visitRecommSet.getSendObject());
+                            }
+                        }
+                        break;
+                    case EVERYMONTH:
+                        if (visitRecommSet.getRecommInfoUpdateTime().getDayOfMonth() == LocalDate.now().getDayOfMonth()) {
+                            if (visitRecommSet.getRecommInfoUpdateTime().getHour() == LocalDateTime.now().getHour() && visitRecommSet.getRecommInfoUpdateTime().getMinute()==LocalDateTime.now().getMinute()) {
+                                weekData();
+                            }
+                        }
+                        if (visitRecommSet.getRecommendDate().getDayOfMonth() == LocalDate.now().getDayOfMonth()) {
+                            if (visitRecommSet.getRecommendDate().getHour() == LocalDateTime.now().getHour() && visitRecommSet.getRecommendDate().getMinute()==LocalDateTime.now().getMinute()) {
+                                sendObject(visitRecommSet.getSendObject());
+                            }
+                        }
+                        break;
                 }
             }
         }
 
     }
 
-    @Override
-    public void checkUpdateWeightDay() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYDAY));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDate date = LocalDate.now();
-                LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
-                if (dateTime == LocalDateTime.now()) {
-                    weekData();
-                }
-            }
-        }
-    }
+//    @Override
+//    public void checkUpdateWeightDay() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYDAY));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                LocalDateTime recommDate =  visitRecommSet.getRecommInfoUpdateTime();
+////                LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
+//                if (recommDate.getHour() == LocalDateTime.now().getHour() && recommDate.getMinute() == LocalDateTime.now().getMinute()) {
+//                    weekData();
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void checkUpdateWeightWeek() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYWEEK));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                LocalDate date = LocalDate.now();
+//                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfWeek().getValue() == date.getDayOfWeek().getValue()) {
+////                    LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
+//                    if (visitRecommSet.getRecommInfoUpdateTime().getHour() == LocalDateTime.now().getHour() && visitRecommSet.getRecommInfoUpdateTime().getMinute()==LocalDateTime.now().getMinute()) {
+//                        weekData();
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//
+//    @Override
+//    public void checkUpdateWeightMonth() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYMONTH));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                LocalDate date = LocalDate.now();
+//                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfMonth() == date.getDayOfMonth()) {
+////                    LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
+//                    if (visitRecommSet.getRecommInfoUpdateTime().getHour() == LocalDateTime.now().getHour() && visitRecommSet.getRecommInfoUpdateTime().getMinute()==LocalDateTime.now().getMinute()) {
+//                        weekData();
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    @Override
-    public void checkUpdateWeightWeek() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYWEEK));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDate date = LocalDate.now();
-                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfWeek().getValue() == date.getDayOfWeek().getValue()) {
-                    LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
-                    if (dateTime == LocalDateTime.now()) {
-                        weekData();
-                    }
-                }
-            }
-        }
-    }
-
-
-    @Override
-    public void checkUpdateWeightMonth() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommInfoUpdateFreq", RecommInfoUpdateFreq.EVERYMONTH));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDate date = LocalDate.now();
-                if (visitRecommSet.getRecommInfoUpdateTime().getDayOfMonth() == date.getDayOfMonth()) {
-                    LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommInfoUpdateTime().getHour(), visitRecommSet.getRecommInfoUpdateTime().getMinute(), visitRecommSet.getRecommInfoUpdateTime().getSecond());
-                    if (dateTime == LocalDateTime.now()) {
-                        weekData();
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void checkSendObjectHour() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYHOUR));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                int sendHour = visitRecommSet.getRecommendDate().getHour() - LocalDateTime.now().getHour();
-                int sendMinutes = visitRecommSet.getRecommendDate().getMinute() - LocalDateTime.now().getMinute();
-                int sendMs = visitRecommSet.getRecommendDate().getSecond() - LocalDateTime.now().getSecond();
-                if (sendHour <= 0 && sendMinutes == 0 && sendMs == 0) {
-                    sendObject(visitRecommSet.getSendObject());
-                }
-            }
-        }
-    }
-
-    @Override
-    public void checkSendObjectDay() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYDAY));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        LocalDate date = LocalDate.now();
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
-                if (dateTime2 == LocalDateTime.now()) {
-                    sendObject(visitRecommSet.getSendObject());
-                }
-            }
-        }
-    }
-
-    @Override
-    public void checkSendObjectWeek() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYWEEK));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDate date = LocalDate.now();
-                if (visitRecommSet.getRecommendDate().getDayOfWeek().getValue() == date.getDayOfWeek().getValue()) {
-                    LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
-                    if (dateTime2 == LocalDateTime.now()) {
-                        sendObject(visitRecommSet.getSendObject());
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void checkSendObjectMonth() throws SerException {
-        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
-        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYMONTH));
-        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
-        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
-        if (list != null && list.size() > 0) {
-            for (VisitRecommSet visitRecommSet : list) {
-                LocalDate date = LocalDate.now();
-                if (visitRecommSet.getRecommendDate().getDayOfMonth() == date.getDayOfMonth()) {
-                    LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
-                    if (dateTime2 == LocalDateTime.now()) {
-                        sendObject(visitRecommSet.getSendObject());
-                    }
-                }
-            }
-        }
-    }
+//    @Override
+//    public void checkSendObject() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+////        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYHOUR));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                int sendHour = visitRecommSet.getRecommendDate().getHour() - LocalDateTime.now().getHour();
+//                int sendMinutes = visitRecommSet.getRecommendDate().getMinute() - LocalDateTime.now().getMinute();
+//                int sendMs = visitRecommSet.getRecommendDate().getSecond() - LocalDateTime.now().getSecond();
+//                if (sendHour <= 0 && sendMinutes == 0 && sendMs == 0) {
+//                    sendObject(visitRecommSet.getSendObject());
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void checkSendObjectDay() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYDAY));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        LocalDate date = LocalDate.now();
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
+//                if (dateTime2 == LocalDateTime.now()) {
+//                    sendObject(visitRecommSet.getSendObject());
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void checkSendObjectWeek() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYWEEK));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                LocalDate date = LocalDate.now();
+//                if (visitRecommSet.getRecommendDate().getDayOfWeek().getValue() == date.getDayOfWeek().getValue()) {
+//                    LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
+//                    if (dateTime2 == LocalDateTime.now()) {
+//                        sendObject(visitRecommSet.getSendObject());
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void checkSendObjectMonth() throws SerException {
+//        VisitRecommSetDTO visitRecommSetDTO = new VisitRecommSetDTO();
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("recommendInterval", RecommInfoUpdateFreq.EVERYMONTH));
+//        visitRecommSetDTO.getConditions().add(Restrict.eq("status", Status.THAW));
+//        List<VisitRecommSet> list = super.findByCis(visitRecommSetDTO);
+//        if (list != null && list.size() > 0) {
+//            for (VisitRecommSet visitRecommSet : list) {
+//                LocalDate date = LocalDate.now();
+//                if (visitRecommSet.getRecommendDate().getDayOfMonth() == date.getDayOfMonth()) {
+//                    LocalDateTime dateTime2 = LocalDateTime.of(date.getYear(), date.getMonthValue(), visitRecommSet.getRecommendDate().getHour(), visitRecommSet.getRecommendDate().getMinute(), visitRecommSet.getRecommendDate().getSecond());
+//                    if (dateTime2 == LocalDateTime.now()) {
+//                        sendObject(visitRecommSet.getSendObject());
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private String get(int b, int a, List<CustomerBaseInfoBO> customerBaseInfoBOList, LocalDateTime dateTime) throws SerException {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = b; i <= a; i++) {
             if (i == a) {
-                stringBuilder.append(customerBaseInfoBOList.get(a).getCustomerName());
+                stringBuilder.append(customerBaseInfoBOList.get(i).getCustomerName());
             } else {
-                stringBuilder.append(customerBaseInfoBOList.get(a).getCustomerName() + ";");
+                stringBuilder.append(customerBaseInfoBOList.get(i).getCustomerName() + ";");
             }
-            CustomerBaseInfoBO customerBaseInfoBO = customerBaseInfoBOList.get(a);
+            CustomerBaseInfoBO customerBaseInfoBO = customerBaseInfoBOList.get(i);
             CustomerBaseInfo customerBaseInfo = customerBaseInfoSer.findById(customerBaseInfoBO.getId());
             customerBaseInfo.setRecommendVisitTime(dateTime);
             customerBaseInfo.setModifyTime(LocalDateTime.now());
@@ -881,15 +925,16 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
         List<VisitRecommSet> sets = super.findByCis(dto); //规则
         String[] fields = new String[]{"customerNum", "customerName", "recommendVisitTime"};
         //查询6条
-        String sql = "select customerNum,customerName,recommendVisitTime from where recommendVisitTime=(select max(recommendVisitTime) from customer_customerbaseinfo) limit 1,6";
+        String sql = "select customerNum,customerName ,recommendVisitTime  from customer_customerbaseinfo where recommendVisitTime = (select max(recommendVisitTime) from customer_customerbaseinfo) limit 0,5";
         List<CustomerBaseInfo> infos = customerBaseInfoSer.findBySql(sql, CustomerBaseInfo.class, fields);
         LocalDateTime maxTime = infos.get(0).getRecommendVisitTime();
         String now = StringUtils.substringBefore(LocalDateTime.now().toString(), ":");
 //        List<String> mails = new ArrayList<String>(); //邮件列表
         StringBuffer content = new StringBuffer(); //内容
         for (CustomerBaseInfo customerBaseInfo : infos) {
-            content.append("编号为" + customerBaseInfo.getCustomerNum() + "的客户:" + customerBaseInfo.getCustomerName() + "拜访时间为:" + customerBaseInfo.getRecommendVisitTime() + ";\n");
+            content.append("客户信息编号为:" + customerBaseInfo.getCustomerNum() + "的客户:" + customerBaseInfo.getCustomerName() + ",拜访时间为:" + customerBaseInfo.getRecommendVisitTime() + ";\n");
         }
+        content.append("请悉知!");
         for (VisitRecommSet set : sets) {
             int code = set.getReminderVisit().getCode();
             String strMax = ""; //最大时间字符串
@@ -916,12 +961,12 @@ public class VisitRecommSetSerImpl extends ServiceImpl<VisitRecommSet, VisitReco
                 messageTO.setTitle("定时提醒发送邮件");
                 messageTO.setMsgType(MsgType.SYS);
                 messageTO.setSendType(SendType.EMAIL);
-                messageTO.setRangeType(RangeType.SPECIFIED);
+//                messageTO.setRangeType(RangeType.SPECIFIED);
                 //定时发送必须写
                 messageTO.setSenderId("SYSTEM");
                 messageTO.setSenderName("SYSTEM");
 
-                messageTO.setReceivers(set.getSendObject().split(";"));
+                messageTO.setReceivers(set.getSendObject().split(","));
                 messageAPI.send(messageTO);
 //                send(content,mails);
             }

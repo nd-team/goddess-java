@@ -348,6 +348,37 @@ public class AssetAct extends BaseFileAction {
         }
     }
 
+
+//    /**
+//     * 获取所有科目
+//     *
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/allFirstSubjects")
+//    public Result allFirstSubjects() throws ActException {
+//        try {
+//            return ActResult.initialize(subjectCollectAPI.allFirstSubjects());
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
+//    /**
+//     * 获取所有项目名称
+//     *
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/allProjectNames")
+//    public Result allProjectNames() throws ActException {
+//        try {
+//            return ActResult.initialize(subjectCollectAPI.allProjectNames());
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获取所有科目
      *
@@ -378,6 +409,7 @@ public class AssetAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
 
     /**
      * 获取所有项目组，部门

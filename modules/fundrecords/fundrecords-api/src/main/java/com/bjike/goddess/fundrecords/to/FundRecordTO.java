@@ -60,6 +60,18 @@ public class FundRecordTO extends BaseTO {
     @NotNull(message = "支出不能为空", groups = {ADD.class, EDIT.class})
     private Double expenditure;
 
+    /**
+     * 账户来源
+     */
+    @NotNull(message = "账户来源不能为空", groups = {ADD.class, EDIT.class})
+    private String dataSource;
+
+    /**
+     * 金额
+     */
+    @NotNull(message = "金额不能为空", groups = {ADD.class, EDIT.class})
+    private Double amount;
+
     public String getRecordDate() {
         return recordDate;
     }
@@ -116,5 +128,19 @@ public class FundRecordTO extends BaseTO {
         this.expenditure = expenditure;
     }
 
+    public String getDataSource() {
+        return dataSource;
+    }
 
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 }
