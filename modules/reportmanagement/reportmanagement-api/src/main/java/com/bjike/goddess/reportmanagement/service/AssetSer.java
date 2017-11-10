@@ -148,4 +148,24 @@ public interface AssetSer extends Ser<Asset, AssetDTO> {
     default byte[] exportExcel(AssetDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 获取所有科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> allFirstSubjects() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> allProjectNames() throws SerException {
+        return null;
+    }
 }

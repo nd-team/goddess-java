@@ -1,5 +1,6 @@
 package com.bjike.goddess.organize.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionDetailUserDTO;
@@ -9,6 +10,7 @@ import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.organize.to.PhoneLoginUserInfoTO;
 import com.bjike.goddess.organize.to.PositionDetailUserTO;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,8 +79,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
-    public Long getTotal() throws SerException {
-        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+    public Long getTotal(PositionDetailUserDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getName())){
+            dto.getConditions().add(Restrict.eq("name",dto.getName()));
+        }
         return positionDetailUserSer.count(dto);
     }
 

@@ -2,6 +2,7 @@ package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
@@ -312,6 +313,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public List<PartBO> findByMoney(VoucherGenerateDTO dto) throws SerException {
         return voucherGenerateSer.findByMoney(dto);
     }
+
     @Override
     public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
         return voucherGenerateSer.accountCollect(dto);
@@ -374,7 +376,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
 
     @Override
     public List<VoucherGenerateBO> findCkRecordByTime(String month, Integer quart, String year) throws SerException {
-        return voucherGenerateSer.findCkRecordByTime(month,quart,year);
+        return voucherGenerateSer.findCkRecordByTime(month, quart, year);
     }
 
     @Override
@@ -385,5 +387,25 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public OptionBO ctReSubHistogram() throws SerException {
         return voucherGenerateSer.ctReSubHistogram();
+    }
+
+    @Override
+    public SubjectCollectBO getSum(SubjectCollectDTO dto, String time, Boolean tar) throws SerException {
+        return voucherGenerateSer.getSum(dto, time, tar);
+    }
+
+    @Override
+    public Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrent(subjectCollectDTO, s, s1, tar);
+    }
+
+    @Override
+    public List<String> findProjectName() throws SerException {
+        return voucherGenerateSer.findProjectName();
+    }
+
+    @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
+        return voucherGenerateSer.findCurrentAndYear(firstSubject, startTime, endTime);
     }
 }

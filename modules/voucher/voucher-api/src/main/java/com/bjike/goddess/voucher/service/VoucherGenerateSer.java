@@ -3,6 +3,7 @@ package com.bjike.goddess.voucher.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -491,6 +492,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> accountArea() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有项目名称
      *
@@ -499,6 +501,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> accountProjectName() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有项目组部门
      *
@@ -507,6 +510,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> accountProjectGroup() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里获取所有科目
      *
@@ -531,7 +535,6 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     default List<String> thirdSubject(String firstSubject,String subSubject) throws SerException {
         return null;
     }
-
 
     /**
      * 根据日期、项目组、地区、项目统计记账凭证
@@ -704,4 +707,65 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 //    default List<VoucherGenerateBO> findByCourseName() throws SerException {
 //        return null;
 //    }
+    /**
+     * 根据时间查询对应的解放和贷方金额
+     * zhuangkaiqin
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String time, Boolean tar) throws SerException {
+        return null;
+    }
+
+    default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的项目名称
+     */
+    default List<String> findProjectName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目,时间获取本期
+     *
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar          true:借方,false:贷方
+     * @return
+     * @throws SerException
+     */
+    default Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目,时间获取本期或本年
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default Double findCurrent(String firstSubject, String startTime, String endTime) throws SerException {
+        return null;
+    }
 }

@@ -14,6 +14,7 @@ import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.InitDateEntryTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -159,6 +160,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countInit(InitDateEntryDTO initDateEntryDTO) throws SerException {
         Long count = super.count(initDateEntryDTO);
@@ -175,7 +177,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     public List<InitDateEntryBO> listInit(InitDateEntryDTO initDateEntryDTO) throws SerException {
         checkSeeIdentity();
         initDateEntryDTO.getSorts().add("code=asc");
-        List<InitDateEntry> initDateEntries = super.findByCis(initDateEntryDTO,true);
+        List<InitDateEntry> initDateEntries = super.findByCis(initDateEntryDTO, true);
         return BeanTransform.copyProperties(initDateEntries, InitDateEntryBO.class);
     }
 
@@ -193,7 +195,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
 
     @Override
     public String trialBalance() throws SerException {
-       checkAddIdentity();
+        checkAddIdentity();
         List<InitDateEntry> initDateEntryList = super.findAll();
         Double yearBorrowerNum = 0d;//本年借方累计数
         Double yearLenderNum = 0d;//本年贷方累计数
@@ -212,7 +214,7 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
                 }
             }
         }
-        String str = "本年借方累计数("+yearBorrowerNum+")"+(yearBorrowerNum.doubleValue()==yearLenderNum.doubleValue()?"=":"≠")+"本年贷方累计数("+yearLenderNum+")且本年借方累计数＋期初余额("+boorrowerBalance+")"+(boorrowerBalance.doubleValue()==lendBalance.doubleValue()?"=":"≠")+"本年贷方累计数＋期初余额("+lendBalance+")";
+        String str = "本年借方累计数(" + yearBorrowerNum + ")" + (yearBorrowerNum.doubleValue() == yearLenderNum.doubleValue() ? "=" : "≠") + "本年贷方累计数(" + yearLenderNum + ")且本年借方累计数＋期初余额(" + boorrowerBalance + ")" + (boorrowerBalance.doubleValue() == lendBalance.doubleValue() ? "=" : "≠") + "本年贷方累计数＋期初余额(" + lendBalance + ")";
         return str;
     }
 
@@ -222,5 +224,19 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         initDateEntryDTO.getConditions().add(Restrict.eq("accountanName",name));
         InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
         return BeanTransform.copyProperties(initDateEntry,InitDateEntryBO.class);
+    }
+
+    public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        InitDateEntryDTO dto = new InitDateEntryDTO();
+        dto.getConditions().add(Restrict.eq("accountanName", firstSubject));
+        List<InitDateEntry> list = super.findByCis(dto);
+        List<InitDateEntryBO> bos = BeanTransform.copyProperties(list, InitDateEntryBO.class, false);
+        if (null != bos && bos.size() > 0) {
+            return bos.get(0);
+        }
+        return null;
     }
 }

@@ -185,7 +185,7 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
                         "                                   FROM organize_position_detail " +
                         "                                   WHERE arrangement_id IN ((SELECT id " +
                         "                                                             FROM organize_arrangement " +
-                        "                                                             WHERE arrangement IN ('管理层','决策层')))and department_id='"+departId+"'))";
+                        "                                                             WHERE arrangement IN ('管理层','决策层')))and department_id='" + departId + "'))";
                 List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
                 if (null != list) {
                     set = list.stream().map(positionDetailUserBO -> positionDetailUserBO.getName()).collect(Collectors.toSet());
@@ -199,7 +199,7 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
                         "                                   FROM organize_position_detail " +
                         "                                   WHERE arrangement_id IN ((SELECT id " +
                         "                                                             FROM organize_arrangement " +
-                        "                                                             WHERE arrangement IN ('决策层')))and department_id='"+departId+"'))";
+                        "                                                             WHERE arrangement IN ('决策层')))and department_id='" + departId + "'))";
                 List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
                 if (null != list) {
                     set = list.stream().map(positionDetailUserBO -> positionDetailUserBO.getName()).collect(Collectors.toSet());

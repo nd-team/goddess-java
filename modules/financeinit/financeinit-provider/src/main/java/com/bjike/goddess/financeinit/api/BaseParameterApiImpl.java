@@ -3,7 +3,6 @@ package com.bjike.goddess.financeinit.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.BaseParameterBO;
 import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
-import com.bjike.goddess.financeinit.entity.BaseParameter;
 import com.bjike.goddess.financeinit.service.BaseParameterSer;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
@@ -64,5 +63,10 @@ public class BaseParameterApiImpl implements BaseParameterAPI {
     @Override
     public void deleteBasicPara(String id) throws SerException {
         baseParameterSer.deleteBasicPara(id);
+    }
+
+    @Override
+    public String findDoudap() throws SerException {
+        return baseParameterSer.findDoudap();
     }
 }

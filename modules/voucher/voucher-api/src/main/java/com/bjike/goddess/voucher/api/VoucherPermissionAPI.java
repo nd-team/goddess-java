@@ -26,6 +26,27 @@ public interface VoucherPermissionAPI {
     default Long countPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
         return null;
     }
+    /**
+     * 明细账权限总条数
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default Long countAccountPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 明细账权限列表
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherPermissionBO> listAccount(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 客户权限列表

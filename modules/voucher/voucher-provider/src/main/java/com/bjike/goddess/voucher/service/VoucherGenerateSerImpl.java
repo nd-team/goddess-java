@@ -11,11 +11,16 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.api.BaseParameterAPI;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
+import com.bjike.goddess.financeinit.api.InitDateEntryAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
+import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
+import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
@@ -75,6 +80,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     private CategoryAPI categoryAPI;
     @Autowired
     private VoucherPermissionSer voucherPermissionSer;
+    @Autowired
+    private BaseParameterAPI baseParameterAPI;
+    @Autowired
+    private InitDateEntryAPI initDateEntryAPI;
 
 
     /**
@@ -498,6 +507,169 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     }
 
+    @Override
+    public SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String time, Boolean tar) throws SerException {
+        Double begin = 0d;
+        Double end = 0d;
+        Double startSum = 0d;
+
+        //获取财务初始化开始时间
+        String firstTime = baseParameterAPI.findDoudap();
+        if (StringUtils.isBlank(firstTime)) {
+            firstTime = "1970-01-01";
+        }
+        InitDateEntryBO initDateEntryBO = initDateEntryAPI.findBySubject(subjectCollectDTO.getFirstSubject());
+        if (null != initDateEntryBO) {
+            if (BalanceDirection.BORROW.equals(initDateEntryBO.getBalanceDirection())) {
+                tar = true;
+            } else {
+                tar = false;
+            }
+            startSum = initDateEntryBO.getBegingBalance();
+        }
+
+        int year = Integer.valueOf(time.substring(0, 4)) - 1;
+//        String startYear = String.valueOf(Integer.valueOf(time.substring(0, 4))) + "-01-01";
+//        String startTime = year + "-01-01";
+        String startTime = firstTime;
+        String endTime = year + "-12-31";
+        String[] times = new String[]{startTime, endTime};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        BeanUtils.copyProperties(subjectCollectDTO, dto);
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            if (tar) {
+                begin = startSum + list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+            } else {
+                begin = startSum + list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            }
+        }
+        times = new String[]{startTime, time};
+        VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
+        BeanUtils.copyProperties(subjectCollectDTO, dto1);
+        dto1.getConditions().add(Restrict.between("voucherDate", times));
+        List<VoucherGenerate> list1 = super.findByCis(dto);
+        if (null != list1 && list1.size() > 0) {
+            if (tar) {
+                end = startSum + list1.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list1.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+            } else {
+                end = startSum + list1.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list1.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            }
+        }
+        SubjectCollectBO bo = new SubjectCollectBO();
+        bo.setBeginAmount(begin);
+        bo.setEndAmount(end);
+        return bo;
+    }
+
+    @Override
+    public Double getCurrent(SubjectCollectDTO subjectCollectDTO, String startTime, String endTime, Boolean tar) throws SerException {
+        Double current = 0d;
+        String[] times = new String[]{startTime, endTime};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        BeanUtils.copyProperties(subjectCollectDTO, dto);
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            if (tar) {
+                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            } else {
+                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+            }
+        }
+        return current;
+    }
+
+    @Override
+    public List<String> findProjectName() throws SerException {
+        List<VoucherGenerate> voucherGenerateList = super.findAll();
+        if (null != voucherGenerateList && voucherGenerateList.size() > 0) {
+            List<String> list = voucherGenerateList.stream().map(VoucherGenerate::getProjectName).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        SubjectCollectBO bo = new SubjectCollectBO();
+        bo.setCurrentAmount(findCurrent(firstSubject, startTime, endTime));
+        bo.setYearAmount(findCurrent(firstSubject, startTime.substring(0, 4) + "-01-01", endTime));
+        return bo;
+    }
+
+    @Override
+    public Double findCurrent(String firstSubject, String startTime, String endTime) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        Double current = 0d;
+        Double year = 0d;
+        Double profit = 0d;
+        String[] times = new String[]{startTime, endTime};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            if ("营业收入".equals(firstSubject)) {
+                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+                profit += current;
+            } else if ("营业成本".equals(firstSubject)) {
+                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+                profit = profit - current;
+            } else if ("营业税金及附加".equals(firstSubject)) {
+                current = getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true);
+                profit = profit - current;
+            } else if ("销售费用".equals(firstSubject)) {
+                current = getCurrent("销售费用", startTime, endTime, true);
+                profit = profit - current;
+            } else if ("管理费用".equals(firstSubject)) {
+                current = getCurrent("管理费用", startTime, endTime, true);
+                profit = profit - current;
+            } else if ("财务费用".equals(firstSubject)) {
+                current = getCurrent("财务费用", startTime, endTime, true);
+                profit = profit - current;
+            } else if ("营业外收入".equals(firstSubject)) {
+                current = getCurrent("营业外收入", startTime, endTime, true);
+                profit = profit + current;
+            } else if ("营业外支出".equals(firstSubject)) {
+                current = getCurrent("营业外支出", startTime, endTime, false);
+                profit = profit - current;
+            } else if ("营业利润(亏损以“-”号填列)".equals(firstSubject)) {
+                current = profit;
+            } else {
+                current = getCurrent(firstSubject, startTime, endTime, true);
+            }
+            return current;
+        }
+        return 0d;
+    }
+
+    //tar:true,获取借方,false,获取贷方
+    @Override
+    public Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        Double current = 0d;
+        String[] times = new String[]{startTime, endTime};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+//        BeanUtils.copyProperties(subjectCollectDTO, dto);
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            if (tar) {
+                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+            } else {
+                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            }
+        }
+        return current;
+    }
+
     //柱状图数据
     private OptionBO getOptionBO(String text_1, List<HistogramBO> histogramBOList) throws SerException {
         List<String> monthList = histogramBOList.stream().map(HistogramBO::getMonth).collect(Collectors.toList());
@@ -567,6 +739,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         optionBO.setSeries(text_4);
         return optionBO;
     }
+
 
     //得到偏差分析
     private List<AnalysisBO> getVarianceAnalysisBOs(AnalysisTO to, String month) throws SerException {
@@ -930,7 +1103,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getSorts().add("createTime=desc");
+        voucherGenerateDTO.getSorts().add("voucherDate=desc");
 //        voucherGenerateDTO.getSorts().add("totalId=desc");
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
 
@@ -942,9 +1117,27 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 str.setMoneyTotal(vt.getMoney());
             }
         }
-
-
         return listBO;
+    }
+
+    private void searchCondition(VoucherGenerateDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getFirstSubject())) {
+            dto.getConditions().add(Restrict.eq("firstSubject", dto.getFirstSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getSecondSubject())) {
+            dto.getConditions().add(Restrict.eq("secondSubject", dto.getSecondSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getThirdSubject())) {
+            dto.getConditions().add(Restrict.eq("thirdSubject", dto.getThirdSubject()));
+        }
+        if (StringUtils.isNotBlank(dto.getVoucherDate())) {
+            dto.getConditions().add(Restrict.eq("voucherDate", dto.getVoucherDate()));
+        }
+        if ("升序".equals(dto.getAscOrDesc())) {
+            dto.getSorts().add("voucherNum=asc");
+        } else {
+            dto.getSorts().add("voucherNum=desc");
+        }
     }
 
     @Override
@@ -1146,6 +1339,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public Long countAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
         Long count = super.count(voucherGenerateDTO);
         return count;
@@ -1153,6 +1347,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> listAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getSorts().add("createTime=desc");
         voucherGenerateDTO.getSorts().add("totalId=desc");
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
@@ -1253,6 +1448,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public Long countAudited(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
         voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.NONE));
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
@@ -1262,6 +1458,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> listAudited(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
         voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.NONE));
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
@@ -1532,6 +1729,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public Long countChecked(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
@@ -1541,6 +1739,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> listChecked(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
         voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
@@ -1835,6 +2034,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public Long countCkRecord(VoucherGenerateDTO voucherGenerateDTO) throws
             SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
         Long count = super.count(voucherGenerateDTO);
         return count;
@@ -1843,6 +2043,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<VoucherGenerateBO> listCkRecord(VoucherGenerateDTO
                                                         voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
         voucherGenerateDTO.getSorts().add("voucherDate=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
@@ -2102,6 +2303,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> listRecord(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
+        searchCondition(voucherGenerateDTO);
         voucherGenerateDTO.getSorts().add("createTime=desc");
         voucherGenerateDTO.getSorts().add("totalId=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);

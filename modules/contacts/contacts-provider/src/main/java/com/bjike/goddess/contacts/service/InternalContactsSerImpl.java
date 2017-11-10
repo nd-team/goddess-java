@@ -768,10 +768,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
     @Override
     public InternalContactsConditionBO getByName(String name) throws SerException {
-        if (moduleAPI.isCheck("organize")) {
+//        if (moduleAPI.isCheck("organize")) {
             return positionDetailUserAPI.getByName(name);
-        }
-        return null;
+//        }
+//        return null;
     }
 
 

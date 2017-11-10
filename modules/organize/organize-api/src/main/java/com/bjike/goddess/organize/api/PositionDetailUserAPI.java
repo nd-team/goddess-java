@@ -28,7 +28,7 @@ public interface PositionDetailUserAPI {
      * @return
      * @throws SerException
      */
-    Long getTotal() throws SerException;
+    Long getTotal(PositionDetailUserDTO dto) throws SerException;
 
     /**
      * 通过id查找

@@ -86,4 +86,11 @@ public interface BaseParameterSer extends Ser<BaseParameter, BaseParameterDTO> {
     default void deleteBasicPara(String id) throws SerException {
         return;
     }
+
+    /**
+     * 获取账套会计期间启用日期
+     */
+    default String findDoudap() throws SerException {
+        return null;
+    }
 }
