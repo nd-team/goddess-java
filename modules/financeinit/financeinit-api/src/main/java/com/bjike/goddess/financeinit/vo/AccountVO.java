@@ -60,7 +60,10 @@ public class AccountVO {
      * 三级类别名
      */
     private String thirdSubject;
-
+    /**
+     * 金额
+     */
+    private Double amount;
 
     public String getId() {
         return id;
@@ -140,5 +143,13 @@ public class AccountVO {
 
     public void setThirdSubject(String thirdSubject) {
         this.thirdSubject = thirdSubject;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

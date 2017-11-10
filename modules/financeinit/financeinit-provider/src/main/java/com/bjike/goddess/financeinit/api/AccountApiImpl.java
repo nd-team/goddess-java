@@ -99,4 +99,9 @@ public class AccountApiImpl implements AccountAPI {
     public byte[] exportExcel() throws SerException {
         return accountSer.exportExcel();
     }
+
+    @Override
+    public Double findByCourseName(String courseName) throws SerException {
+        return accountSer.findByCourseName(courseName);
+    }
 }

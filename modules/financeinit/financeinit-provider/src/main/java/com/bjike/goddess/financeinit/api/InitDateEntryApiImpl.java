@@ -59,4 +59,9 @@ public class InitDateEntryApiImpl implements InitDateEntryAPI {
     public String trialBalance() throws SerException {
         return initDateEntrySer.trialBalance();
     }
+
+    @Override
+    public InitDateEntryBO findByName(String name) throws SerException {
+        return initDateEntrySer.findByName(name);
+    }
 }

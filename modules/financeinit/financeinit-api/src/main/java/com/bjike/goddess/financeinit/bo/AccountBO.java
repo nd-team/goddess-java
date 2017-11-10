@@ -62,7 +62,10 @@ public class AccountBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
-
+    /**
+     * 金额
+     */
+    private Double amount;
 
     public String getName() {
         return name;
@@ -142,5 +145,13 @@ public class AccountBO extends BaseBO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

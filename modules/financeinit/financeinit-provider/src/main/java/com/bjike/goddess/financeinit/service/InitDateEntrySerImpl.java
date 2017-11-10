@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -215,4 +216,11 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         return str;
     }
 
+    @Override
+    public InitDateEntryBO findByName(String name) throws SerException {
+        InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
+        initDateEntryDTO.getConditions().add(Restrict.eq("accountanName",name));
+        InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
+        return BeanTransform.copyProperties(initDateEntry,InitDateEntryBO.class);
+    }
 }
