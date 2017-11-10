@@ -37,6 +37,16 @@ public class VoucherPermissionApiImpl implements VoucherPermissionAPI {
     }
 
     @Override
+    public Long countAccountPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return cusPermissionSer.countAccountPermission(cusPermissionDTO);
+    }
+
+    @Override
+    public List<VoucherPermissionBO> listAccount(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return cusPermissionSer.listAccount(cusPermissionDTO);
+    }
+
+    @Override
     public VoucherPermissionBO getOneById(String id) throws SerException {
         return cusPermissionSer.getOneById(id);
     }

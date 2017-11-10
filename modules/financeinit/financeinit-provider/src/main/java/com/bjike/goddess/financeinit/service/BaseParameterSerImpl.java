@@ -5,11 +5,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.financeinit.bo.BaseParameterBO;
 import com.bjike.goddess.financeinit.bo.CompanyBasicInfoBO;
 import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
 import com.bjike.goddess.financeinit.entity.BaseParameter;
-import com.bjike.goddess.financeinit.entity.CompanyBasicInfo;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
@@ -20,10 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import redis.clients.jedis.BinaryClient;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 基本参数业务实现
@@ -165,6 +166,7 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countBasicPara(BaseParameterDTO baseParameterDTO) throws SerException {
         seachCondi(baseParameterDTO);
@@ -175,7 +177,7 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
     @Override
     public BaseParameterBO getOneById(String id) throws SerException {
         BaseParameter baseParameter = super.findById(id);
-        return BeanTransform.copyProperties(baseParameter,BaseParameterBO.class);
+        return BeanTransform.copyProperties(baseParameter, BaseParameterBO.class);
     }
 
     @Override
@@ -183,19 +185,20 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         checkSeeIdentity();
         seachCondi(baseParameterDTO);
         List<BaseParameter> baseParameters = super.findByCis(baseParameterDTO);
-        return BeanTransform.copyProperties(baseParameters,BaseParameterBO.class);
+        return BeanTransform.copyProperties(baseParameters, BaseParameterBO.class);
     }
 
-    public void seachCondi(BaseParameterDTO baseParameterDTO)throws SerException{
-        if(StringUtils.isNotBlank(baseParameterDTO.getCompanyName())){
-            baseParameterDTO.getConditions().add(Restrict.eq("companyName",baseParameterDTO.getCompanyName()));
+    public void seachCondi(BaseParameterDTO baseParameterDTO) throws SerException {
+        if (StringUtils.isNotBlank(baseParameterDTO.getCompanyName())) {
+            baseParameterDTO.getConditions().add(Restrict.eq("companyName", baseParameterDTO.getCompanyName()));
         }
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public BaseParameterBO addBasicPara(BaseParameterTO baseParameterTO) throws SerException {
-       checkAddIdentity();
-        BaseParameter baseParameter = BeanTransform.copyProperties(baseParameterTO,BaseParameter.class,true);
+        checkAddIdentity();
+        BaseParameter baseParameter = BeanTransform.copyProperties(baseParameterTO, BaseParameter.class, true);
         baseParameter.setCreateTime(LocalDateTime.now());
         CompanyBasicInfoBO companyBasicInfoBO = companyBasicInfoSer.findByCompanyName(baseParameterTO.getCompanyName());
         baseParameter.setEin(companyBasicInfoBO.getEin());
@@ -206,24 +209,38 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         baseParameter.setScaleShape(companyBasicInfoBO.getScaleShape());
         baseParameter.setRemark(companyBasicInfoBO.getRemark());
         super.save(baseParameter);
-        return BeanTransform.copyProperties(baseParameter,BaseParameterBO.class);
+        return BeanTransform.copyProperties(baseParameter, BaseParameterBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public BaseParameterBO editBasicPara(BaseParameterTO baseParameterTO) throws SerException {
-       checkAddIdentity();
+        checkAddIdentity();
         BaseParameter baseParameter = super.findById(baseParameterTO.getId());
         LocalDateTime date = baseParameter.getCreateTime();
-        baseParameter = BeanTransform.copyProperties(baseParameterTO,BaseParameter.class,true);
+        baseParameter = BeanTransform.copyProperties(baseParameterTO, BaseParameter.class, true);
         baseParameter.setCreateTime(date);
         baseParameter.setModifyTime(LocalDateTime.now());
         super.update(baseParameter);
-        return BeanTransform.copyProperties(baseParameter,BaseParameterBO.class);
+        return BeanTransform.copyProperties(baseParameter, BaseParameterBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void deleteBasicPara(String id) throws SerException {
         checkAddIdentity();
         super.remove(id);
+    }
+
+    @Override
+    public String findDoudap() throws SerException {
+        List<BaseParameter> baseParameters = super.findAll();
+        if (null != baseParameters && baseParameters.size() > 0) {
+            List<LocalDate> time = baseParameters.stream().map(BaseParameter::getDateDuringPeriod).collect(Collectors.toList());
+            if (null != time && time.size() > 0) {
+                return DateUtil.dateToString(time.get(0));
+            }
+        }
+        return null;
     }
 }

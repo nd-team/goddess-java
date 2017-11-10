@@ -663,4 +663,11 @@ public class DimissionInfoAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取地区,部门,员工编号,岗位,岗位层级,学历,入职时间,在司工龄
+     *
+     * @version v1
+     */
+
 }

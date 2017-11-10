@@ -967,7 +967,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listSubByFirst")
-    public Result listSubByFirst(@RequestParam String firstSub,BindingResult bindingResult) throws ActException {
+    public Result listSubByFirst(@RequestParam String firstSub) throws ActException {
         try {
             List<String> userList = voucherGenerateAPI.listSubByFirst(firstSub);
             return ActResult.initialize(userList);
@@ -983,7 +983,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listTubByFirst")
-    public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub,BindingResult bindingResult) throws ActException {
+    public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub) throws ActException {
         try {
             List<String> userList = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
             return ActResult.initialize(userList);
@@ -1383,44 +1383,47 @@ public class VoucherGenerateAction extends BaseFileAction {
                     borrowMoneys.add(str.getBorrowMoney());
                     loanMoneys.add(str.getLoanMoney());
                 } else {
-                    if (index < tos.size() - 1) {
-                        voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 1), VoucherGenerateTO.class, "firstSubject",
-                                "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
-                        voucherGenerateTO.setFirstSubjects(firstSubjects);
-                        voucherGenerateTO.setSecondSubjects(secondSubjects);
-                        voucherGenerateTO.setThirdSubjects(thirdSubjects);
-                        voucherGenerateTO.setBorrowMoneys(borrowMoneys);
-                        voucherGenerateTO.setLoanMoneys(loanMoneys);
+                    voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 1), VoucherGenerateTO.class, "firstSubject",
+                            "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
+                    voucherGenerateTO.setFirstSubjects(firstSubjects);
+                    voucherGenerateTO.setSecondSubjects(secondSubjects);
+                    voucherGenerateTO.setThirdSubjects(thirdSubjects);
+                    voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+                    voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-                        voucherGenerateTOS.add(voucherGenerateTO);
-                    }
+                    voucherGenerateTOS.add(voucherGenerateTO);
+
                     firstSubjects = new ArrayList<>();
                     secondSubjects = new ArrayList<>();
                     thirdSubjects = new ArrayList<>();
                     borrowMoneys = new ArrayList<>();
                     loanMoneys = new ArrayList<>();
-                    num = str.getNum();
 
-
+                    firstSubjects.add(str.getFirstSubject());
+                    secondSubjects.add(str.getSecondSubject());
+                    thirdSubjects.add(str.getThirdSubject());
+                    borrowMoneys.add(str.getBorrowMoney());
+                    loanMoneys.add(str.getLoanMoney());
                 }
+                num = str.getNum();
                 index++;
             }
 
-            String temp = tos.get(index - 1).getNum();
-            if (index == tos.size() && !num.equals(tos.get(index - 2).getNum())) {
-                firstSubjects = new ArrayList<>();
-                secondSubjects = new ArrayList<>();
-                thirdSubjects = new ArrayList<>();
-                borrowMoneys = new ArrayList<>();
-                loanMoneys = new ArrayList<>();
-
-
-            }
-            firstSubjects.add(tos.get(index - 2).getFirstSubject());
-            secondSubjects.add(tos.get(index - 2).getSecondSubject());
-            thirdSubjects.add(tos.get(index - 2).getThirdSubject());
-            borrowMoneys.add(tos.get(index - 2).getBorrowMoney());
-            loanMoneys.add(tos.get(index - 2).getLoanMoney());
+//            String temp = tos.get(index - 1).getNum();
+//            if (index == tos.size() && !num.equals(tos.get(index - 2).getNum())) {
+//                firstSubjects = new ArrayList<>();
+//                secondSubjects = new ArrayList<>();
+//                thirdSubjects = new ArrayList<>();
+//                borrowMoneys = new ArrayList<>();
+//                loanMoneys = new ArrayList<>();
+//
+//
+//            }
+//            firstSubjects.add(tos.get(index - 2).getFirstSubject());
+//            secondSubjects.add(tos.get(index - 2).getSecondSubject());
+//            thirdSubjects.add(tos.get(index - 2).getThirdSubject());
+//            borrowMoneys.add(tos.get(index - 2).getBorrowMoney());
+//            loanMoneys.add(tos.get(index - 2).getLoanMoney());
 
             voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 2), VoucherGenerateTO.class, "firstSubject",
                     "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
@@ -1528,6 +1531,5 @@ public class VoucherGenerateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
 }
