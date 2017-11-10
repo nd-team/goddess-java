@@ -24,12 +24,14 @@ public interface InitDateEntryAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 初始化数据列表总条数
      */
@@ -73,6 +75,13 @@ public interface InitDateEntryAPI {
      * @throws SerException
      */
     default String trialBalance() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据科目获取期初数
+     */
+    default InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         return null;
     }
 }

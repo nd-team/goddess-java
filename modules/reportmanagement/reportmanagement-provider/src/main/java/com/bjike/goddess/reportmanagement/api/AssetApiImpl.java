@@ -93,4 +93,14 @@ public class AssetApiImpl implements AssetAPI {
     public byte[] exportExcel(AssetDTO dto) throws SerException {
         return assetSer.exportExcel(dto);
     }
+
+    @Override
+    public List<String> allFirstSubjects() throws SerException {
+        return assetSer.allFirstSubjects();
+    }
+
+    @Override
+    public List<String> allProjectNames() throws SerException {
+        return assetSer.allProjectNames();
+    }
 }

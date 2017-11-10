@@ -3,7 +3,6 @@ package com.bjike.goddess.dimission.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.dimission.enums.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -18,6 +17,13 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class DimissionInfoAddEditTO extends BaseTO {
+
+    /**
+     * 地区
+     */
+    @NotBlank
+    private String eare;
+
 
     /**
      * 私人邮箱

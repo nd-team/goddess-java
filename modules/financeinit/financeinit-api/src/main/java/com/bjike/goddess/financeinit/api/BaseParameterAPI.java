@@ -24,12 +24,14 @@ public interface BaseParameterAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 基本参数列表总条数
      */
@@ -83,5 +85,12 @@ public interface BaseParameterAPI {
      */
     default void deleteBasicPara(String id) throws SerException {
         return;
+    }
+
+    /**
+     * 获取账套会计期间启用日期
+     */
+    default String findDoudap() throws SerException {
+        return null;
     }
 }

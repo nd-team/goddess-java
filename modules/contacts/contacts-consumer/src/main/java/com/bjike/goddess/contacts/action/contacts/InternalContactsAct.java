@@ -44,7 +44,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("internalcontacts")
-public class                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        InternalContactsAct extends BaseFileAction {
+public class InternalContactsAct extends BaseFileAction {
 
     @Autowired
     private InternalContactsAPI internalContactsAPI;
@@ -285,7 +285,7 @@ public class                                                                    
      * @version v1
      */
     @PostMapping("v1/getByName")
-    public Result getByName(String name, HttpServletRequest request) throws ActException {
+    public Result getByName(@RequestParam String name, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(internalContactsAPI.getByName(name));
         } catch (Exception e) {

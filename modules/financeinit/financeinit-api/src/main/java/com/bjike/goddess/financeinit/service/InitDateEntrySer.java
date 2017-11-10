@@ -76,4 +76,11 @@ public interface InitDateEntrySer extends Ser<InitDateEntry, InitDateEntryDTO> {
     default String trialBalance() throws SerException{
         return null;
     }
+
+    /**
+     * 根据科目获取期初数
+     */
+    default InitDateEntryBO findBySubject(String firstSubject) throws SerException {
+        return null;
+    }
 }
