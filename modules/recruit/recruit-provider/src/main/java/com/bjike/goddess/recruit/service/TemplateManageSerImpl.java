@@ -268,7 +268,9 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
      * @throws SerException
      */
     private void updateTemplateManage(TemplateManageTO to, TemplateManage model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime createTime = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, TemplateManage.class, true);
+        model.setCreateTime(createTime);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

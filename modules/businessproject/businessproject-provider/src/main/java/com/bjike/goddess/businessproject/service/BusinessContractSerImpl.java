@@ -2366,6 +2366,72 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         return bytes;
     }
 
+    @Override
+    public OptionMakeBO weekPersonFigure(String user,Integer year, Integer month, Integer week) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        user = userBO.getUsername();
+        if(null == year && null == month && null == week){
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+        String startDate = String.valueOf(date[0]);
+        String endDate = String.valueOf(date[1]);
+        String text_1 = "个人合同立项情况图表周汇总" + startDate + "-" + endDate;
+        return personFigure(startDate, endDate, text_1);
+
+    }
+    private OptionMakeBO personFigure(String startDate,String endDate,String text_1)throws SerException{
+        List<PersonCollectBO> collectBOS = new ArrayList<>();
+        List<PersonCollectBO> personCollectBOS = new ArrayList<>();
+        String[] fields = new String[]{"innerProject"};
+        StringBuilder sb = new StringBuilder();
+        //预立项 立项 不立项
+        sb.append(" SELECT innerProject AS innerProject FROM businessproject_siginmanage ");
+        sb.append(" WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' ");
+        sb.append(" GROUP BY innerProject ");
+        List<PersonCollectBO> boList = super.findBySql(sb.toString(), PersonCollectBO.class, fields);
+        for (PersonCollectBO bo : boList) {
+            String[] noFields = new String[]{"noMakeNum"};
+            String noSql = " SELECT ifnull(sum(money) ,0) AS noMakeNum FROM businessproject_siginmanage WHERE realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=0 AND innerProject='" + bo.getInnerName() + "' ";
+            personCollectBOS = super.findBySql(noSql, MakeContractFigureBO.class, noFields);
+            for (PersonCollectBO bo1 : personCollectBOS) {
+                bo.setHadMakeNum(bo1.getHadMakeNum());
+            }
+            String[] hadFields = new String[]{"hadMakeNum"};
+            String hadSql = " SELECT ifnull(sum(money) ,0) AS hadMakeNum FROM businessproject_siginmanage WHERE realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=1 AND innerProject='" + bo.getInnerName() + "' ";
+            personCollectBOS = super.findBySql(hadSql, MakeContractFigureBO.class, hadFields);
+            for (PersonCollectBO bo1 : personCollectBOS) {
+                bo.setHadMakeNum(bo1.getHadMakeNum());
+            }
+            String[] notFields = new String[]{"notMakeNum"};
+            String notSql = " SELECT ifnull(sum(money) ,0) AS notMakeNum FROM businessproject_siginmanage WHERE realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=2 AND innerProject='" + bo.getInnerName() + "' ";
+            personCollectBOS = super.findBySql(notSql, MakeContractFigureBO.class, notFields);
+            for (PersonCollectBO bo1 : personCollectBOS) {
+                bo.setNotMakeNum(bo1.getNotMakeNum());
+            }
+            collectBOS.add(bo);
+        }
+        return null;
+    }
+
+    @Override
+    public OptionMakeBO monthPersonFigure(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    @Override
+    public OptionMakeBO quarterPersonFigure(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    @Override
+    public OptionMakeBO yearPersonFigure(Integer year) throws SerException {
+        return null;
+    }
+
     //季度
     private String[] quarter(Integer year, Integer quarter) throws SerException {
         String startDate = null;

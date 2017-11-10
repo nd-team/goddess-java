@@ -2612,7 +2612,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<AccountInfoBO> accountCollect(VoucherGenerateDTO dto) throws SerException {
         List<AccountInfoBO> boList = new ArrayList<>();
-        List<AccountInfoBO> boList1 = null;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT voucherDate AS voucherDate,voucherWord AS voucherWord,voucherNum AS voucherNum, ");
         sb.append(" area AS area,projectName AS projectName,projectGroup AS projectGroup,sumary AS sumary, ");
@@ -2642,13 +2641,25 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 "firstSubject", "secondSubject", "thirdSubject", "borrowMoney", "loanMoney"};
         List<AccountInfoBO> accountInfoBOS = super.findBySql(sb.toString(), AccountInfoBO.class, fields);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
-            //财务初始化中根据会计科目名称获取方向
-            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction", "balance"};
-            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
-            if (boList1 != null && !boList1.isEmpty()) {
-                accountInfoBO.setDirection(boList1.get(0).getDirection());
-                accountInfoBO.setBalance(boList1.get(0).getBalance());
+//            财务初始化中根据会计科目名称获取方向
+            InitDateEntryBO initDateEntryBO = initDateEntryAPI.findBySubject(accountInfoBO.getFirstSubject());
+//            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
+//            String[] field = new String[]{"direction", "balance"};
+//            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
+//            if (boList1 != null && !boList1.isEmpty()) {
+//                accountInfoBO.setDirection(boList1.get(0).getDirection());
+//                accountInfoBO.setBalance(boList1.get(0).getBalance());
+//            }
+            if (initDateEntryBO != null) {
+                if (initDateEntryBO.getBalanceDirection() != null) {
+                    if (initDateEntryBO.getBalanceDirection().equals(BalanceDirection.CREDIT)) {
+                        accountInfoBO.setDirection("贷");
+                    } else if (initDateEntryBO.getBalanceDirection().equals(BalanceDirection.BORROW)) {
+                        accountInfoBO.setDirection("借");
+                    }
+                }
+//                accountInfoBO.setDirection(String.valueOf(initDateEntryBO.getBalanceDirection()));
+                accountInfoBO.setBalance(initDateEntryBO.getBegingBalance());
             }
             boList.add(accountInfoBO);
         }
@@ -2683,17 +2694,21 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             dto.getConditions().add(Restrict.between("voucherDate", voucherDate));
         }
         List<AccountInfoBO> boList = new ArrayList<>();
-        List<AccountInfoBO> boList1 = null;
         List<VoucherGenerate> list = super.findByCis(dto);
         List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
         for (AccountInfoBO accountInfoBO : accountInfoBOS) {
             //财务初始化中根据会计科目名称获取方向
-            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
-            String[] field = new String[]{"direction", "balance"};
-            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
-            if (boList1 != null && !boList1.isEmpty()) {
-                accountInfoBO.setDirection(boList1.get(0).getDirection());
-                accountInfoBO.setBalance(boList1.get(0).getBalance());
+            InitDateEntryBO initDateEntryBO = initDateEntryAPI.findBySubject(accountInfoBO.getFirstSubject());
+//            String sql = " SELECT balanceDirection AS direction,begingBalance as balance FROM financeinit_initdateentry WHERE accountanName='" + accountInfoBO.getFirstSubject() + "' ";
+//            String[] field = new String[]{"direction", "balance"};
+//            boList1 = super.findBySql(sql, AccountInfoBO.class, field);
+//            if (boList1 != null && !boList1.isEmpty()) {
+//                accountInfoBO.setDirection(boList1.get(0).getDirection());
+//                accountInfoBO.setBalance(boList1.get(0).getBalance());
+//            }
+            if (initDateEntryBO != null) {
+                accountInfoBO.setDirection(String.valueOf(initDateEntryBO.getBalanceDirection()));
+                accountInfoBO.setBalance(initDateEntryBO.getBegingBalance());
             }
             boList.add(accountInfoBO);
         }
@@ -3685,7 +3700,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> findByCourseName() throws SerException {
-       String[] feilds = new String[]{"area","projectName","projectGroup","sumary","borrowMoney","loanMoney","firstSubject","secondSubject","thirdSubject"};
+        String[] feilds = new String[]{"area", "projectName", "projectGroup", "sumary", "borrowMoney", "loanMoney", "firstSubject", "secondSubject", "thirdSubject"};
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         sql.append("  area AS area,");
@@ -3699,7 +3714,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         sql.append("  thirdSubject  AS thirdSubject");
         sql.append("  FROM voucher_vouchergenerate");
         sql.append("  WHERE firstSubject = '现金' OR firstSubject = '银行存款'");
-        List<VoucherGenerateBO> voucherGenerateBOS =super.findBySql(sql.toString(),VoucherGenerateBO.class,feilds);
+        List<VoucherGenerateBO> voucherGenerateBOS = super.findBySql(sql.toString(), VoucherGenerateBO.class, feilds);
         return voucherGenerateBOS;
     }
 }

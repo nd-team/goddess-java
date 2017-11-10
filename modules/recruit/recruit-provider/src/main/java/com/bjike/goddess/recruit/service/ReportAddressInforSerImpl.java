@@ -270,7 +270,9 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
      * @throws SerException
      */
     private void updateReportAddressInfor(ReportAddressInforTO to, ReportAddressInfor model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime createTime = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, ReportAddressInfor.class, true);
+        model.setCreateTime(createTime);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

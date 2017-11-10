@@ -114,7 +114,7 @@ public class AccountAction extends BaseFileAction {
     public Result sonPermission() throws ActException {
         try {
 
-            List<SonPermissionObject> hasPermissionList = voucherGenerateAPI.sonPermissionAccount();
+            List<SonPermissionObject> hasPermissionList = voucherGenerateAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 
         } catch (SerException e) {

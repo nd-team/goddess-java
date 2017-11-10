@@ -229,7 +229,9 @@ public class FailPhoneReasonSerImpl extends ServiceImpl<FailPhoneReason, FailPho
      * @throws SerException
      */
     private void updateFailPhoneReason(FailPhoneReasonTO to, FailPhoneReason model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime createTime = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, FailPhoneReason.class, true);
+        model.setCreateTime(createTime);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

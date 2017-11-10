@@ -1128,6 +1128,7 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
         return null;
     }
 
+
     /**
      * 导入
      *
@@ -1152,4 +1153,99 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+    /**
+     * 部门图表周汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO weekDepartFigure(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门图表月汇总
+     *
+     * @param year
+     * @param month
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO monthDepartFigure(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO quarterDepartFigure(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门图表年汇总
+     *
+     * @param year
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO yearDepartFigure(Integer year) throws SerException {
+        return null;
+    }
+    /**
+     * 个人图表周汇总
+     *
+     * @param user
+     * @param year
+     * @param month
+     * @param week
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO weekPersonFigure(String user,Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+    /**
+     * 个人图表月汇总
+     *
+//     * @param user
+     * @param year
+     * @param month
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO monthPersonFigure(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 个人图表季度汇总
+     *
+     * @param year
+     * @param quarter
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO quarterPersonFigure(Integer year, Integer quarter) throws SerException {
+        return null;
+    }
+
+    /**
+     * 个人图表年汇总
+     *
+     * @param year
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO yearPersonFigure(Integer year) throws SerException {
+        return null;
+    }
 }

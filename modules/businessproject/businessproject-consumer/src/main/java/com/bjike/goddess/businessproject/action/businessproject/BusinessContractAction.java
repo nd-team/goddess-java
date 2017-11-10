@@ -563,5 +563,24 @@ public class BusinessContractAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+    /**
+     * 个人图表周汇总
+     *
+     * @param user
+     * @param year
+     * @param month
+     * @param week
+     * @des 个人图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/weekPersonFigure")
+    public Result weekPersonFigure(String user,Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.weekPersonFigure(user,year, month, week);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

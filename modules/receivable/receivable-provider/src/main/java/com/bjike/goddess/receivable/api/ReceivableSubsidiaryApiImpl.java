@@ -156,6 +156,15 @@ public class ReceivableSubsidiaryApiImpl implements ReceivableSubsidiaryAPI {
         return receivableSubsidiarySer.collectCompare(to);
     }
     @Override
+    public ReceivableSubsidiaryBO importExcelBack(String id, List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return receivableSubsidiarySer.importExcelBack(id,receivableSubsidiaryTOS);
+    }
+
+    @Override
+    public byte[] templateExportBack() throws SerException {
+        return receivableSubsidiarySer.templateExportBack();
+    }
+    @Override
     public ReceivableSubsidiaryBO importExcel(List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
         return receivableSubsidiarySer.importExcel(receivableSubsidiaryTOS);
     }

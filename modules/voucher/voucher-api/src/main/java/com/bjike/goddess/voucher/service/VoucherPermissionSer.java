@@ -125,25 +125,6 @@ public interface VoucherPermissionSer extends Ser<VoucherPermission, VoucherPerm
     default Boolean busCusPermission(String idFlag) throws SerException {
         return null;
     }
-    /**
-     * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
-     *
-     * @param idFlag 客户权限idFlag
-     * @throws SerException
-     */
-    default Boolean accCusPermission(String idFlag) throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
-     *
-     * @param idFlag 客户权限idFlag
-     * @throws SerException
-     */
-    default Boolean accCusPermission(String idFlag) throws SerException {
-        return null;
-    }
 
 
 }
