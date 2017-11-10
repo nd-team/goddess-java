@@ -80,6 +80,10 @@ public class BaseInfoManageBO extends BaseBO {
      * 签订时间
      */
     private String siginTime;
+    /**
+     * 签订状态
+     */
+    private String siginStatus;
 
     /**
      * 合同金额
@@ -219,6 +223,14 @@ public class BaseInfoManageBO extends BaseBO {
      * 修改时间
      */
     private String modifyTime;
+
+    public String getSiginStatus() {
+        return siginStatus;
+    }
+
+    public void setSiginStatus(String siginStatus) {
+        this.siginStatus = siginStatus;
+    }
 
     public MakeContract getMakeContract() {
         return makeContract;

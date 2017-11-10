@@ -24,7 +24,10 @@ public class TableVO {
      * 表名称
      */
     private String name;
-
+    /**
+     * 创建人
+     */
+    private String creater;
     /**
      * 状态
      */
@@ -34,6 +37,14 @@ public class TableVO {
      * 任务节点名称集合
      */
     private List<NodeBO> nodeS;
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
 
     public List<NodeBO> getNodeS() {
         return nodeS;

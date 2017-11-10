@@ -38,13 +38,13 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.user.api.UserDetailAPI" id="userDetailApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.storage.api.StorageUserAPI"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModulesAPI" id="modulesApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TableAPI" id="tablesApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.ProjectAPI" id="projectApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" id="baseInfoManageApiImpl"/>
 
 </beans>

@@ -19,7 +19,10 @@
 	<!--以下业配置为消费者(user-consumer)所依赖的需注入的,凡是消费者远程注入的业务接口,都必须在此配置声明
 	另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 	<!--发布接口,供其他模块调用-->
-	<dubbo:service interface="com.bjike.goddess.staffmove.api.StaffMovementApplyAPI" ref="staffMovementApplyApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.staffmove.api.StaffMoveDemandAPI" ref="staffMoveDemandApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.staffmove.api.StaffMoveImplementAAPI" ref="staffMoveImplementAApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.staffmove.api.StaffMoveImplementBAPI" ref="staffMoveImplementBApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.staffmove.api.StaffMoveIntendCaseAPI" ref="staffMoveIntendCaseApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.staffmove.api.CusPermissionAPI" ref="cusPermissionApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.staffmove.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl" />
 

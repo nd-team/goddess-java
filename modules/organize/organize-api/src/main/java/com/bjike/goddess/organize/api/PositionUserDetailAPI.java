@@ -59,7 +59,7 @@ public interface PositionUserDetailAPI {
 
     /**
      * chenjunhao
-     * 获取某员工所属的部门和岗位
+     * 获取某员工所属的部门和岗位（主职位）
      *
      * @param name
      * @return
@@ -102,4 +102,20 @@ public interface PositionUserDetailAPI {
      * @throws SerException
      */
     List<PositionDetailUserBO> findManager() throws SerException;
+
+    /**
+     * chenjunhao
+     * 查找负责人（管理层,决策层）
+     * @return
+     * @throws SerException
+     */
+    List<String> findCharge() throws SerException;
+
+    /**
+     * chenjunhao
+     * 查找项目经理
+     * @return
+     * @throws SerException
+     */
+    List<String> projectManager() throws SerException;
 }

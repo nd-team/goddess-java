@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scala.collection.script.Reset;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -190,11 +191,27 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     @Transactional(rollbackFor = {SerException.class})
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
         checkSeeIdentity();
+        search(dto);
         List<FirstPhoneRecord> list = super.findByPage(dto);
         List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class);
         return listBO;
     }
 
+    private List<FirstPhoneRecordBO> search(FirstPhoneRecordDTO dto)throws SerException{
+
+        if(StringUtils.isNotBlank(dto.getPosition())){
+            dto.getConditions().add(Restrict.like("position",dto.getPosition()));
+        }
+        if(StringUtils.isNotBlank(dto.getName())){
+            dto.getConditions().add(Restrict.like("name",dto.getName()));
+        }
+        if(StringUtils.isNotBlank(dto.getStartDate()) && StringUtils.isNotBlank(dto.getEndDate())){
+            dto.getConditions().add(Restrict.between("date",new String[]{dto.getStartDate(),dto.getEndDate()}));
+        }
+        List<FirstPhoneRecord> list = super.findByPage(dto);
+        List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class);
+        return listBO;
+    }
     /**
      * 保存第一次电访记录
      *
@@ -318,45 +335,45 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
                     "retrial");
             //简历筛选是否通过
             if(str.getWhetherPass().equals(0)){
-                export.setWhetherPass("是");
-            }else {
                 export.setWhetherPass("否");
+            }else {
+                export.setWhetherPass("是");
             }
             //通话是否成功
             if(str.getWhetherPhoneSuccess().equals(0)){
-                export.setWhetherPhoneSuccess("是");
-            }else {
                 export.setWhetherPhoneSuccess("否");
+            }else {
+                export.setWhetherPhoneSuccess("是");
             }
             //是否有相关工作经验
             if(str.getWhetherWorkExperience().equals(0)){
-                export.setWhetherWorkExperience("是");
-            }else {
                 export.setWhetherWorkExperience("否");
+            }else {
+                export.setWhetherWorkExperience("是");
             }
             //是否成功邀约初试
             if(str.getWhetherFirstInviteSuccess().equals(0)){
-                export.setWhetherFirstInviteSuccess("是");
-            }else {
                 export.setWhetherFirstInviteSuccess("否");
+            }else {
+                export.setWhetherFirstInviteSuccess("是");
             }
             //是否初试
             if(str.getWhetherFirstInterview().equals(0)){
-                export.setWhetherFirstInterview("是");
-            }else {
                 export.setWhetherFirstInterview("否");
+            }else {
+                export.setWhetherFirstInterview("是");
             }
             //初试是否为面试
             if(str.getWhetherFaceTest().equals(0)){
-                export.setWhetherFaceTest("是");
-            }else {
                 export.setWhetherFaceTest("否");
+            }else {
+                export.setWhetherFaceTest("是");
             }
             //是否需要复试
             if(str.getRetrial().equals(0)){
-                export.setRetrial("是");
-            }else {
                 export.setRetrial("否");
+            }else {
+                export.setRetrial("是");
             }
             export.setGender(Gender.exportStrConvert(str.getGender()));
             exports.add(export);

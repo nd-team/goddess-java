@@ -374,6 +374,7 @@ public class PayRecordSerImpl extends ServiceImpl<PayRecord, PayRecordDTO> imple
             bo.setEnergy(boList.stream().mapToDouble(ProjectCollectBO::getEnergy).sum());
             bo.setOtherFee(boList.stream().mapToDouble(ProjectCollectBO::getOtherFee).sum());
             bo.setTotal(boList.stream().mapToDouble(ProjectCollectBO::getTotal).sum());
+            bo.setFee(boList.stream().mapToDouble(ProjectCollectBO::getFee).sum());
             boList.add(bo);
 
         }

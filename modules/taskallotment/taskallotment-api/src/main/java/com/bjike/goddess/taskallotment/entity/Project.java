@@ -69,19 +69,19 @@ public class Project extends BaseEntity {
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '状态'")
     private Status status;
 
-    /**
-     * 项目表信息
-     */
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE,CascadeType.PERSIST},mappedBy ="project" )
-    private List<com.bjike.goddess.taskallotment.entity.Table> tables;
+//    /**
+//     * 项目表信息
+//     */
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE,CascadeType.PERSIST},mappedBy ="project" )
+//    private List<com.bjike.goddess.taskallotment.entity.Table> tables;
 
-    public List<com.bjike.goddess.taskallotment.entity.Table> getTables() {
-        return tables;
-    }
-
-    public void setTables(List<com.bjike.goddess.taskallotment.entity.Table> tables) {
-        this.tables = tables;
-    }
+//    public List<com.bjike.goddess.taskallotment.entity.Table> getTables() {
+//        return tables;
+//    }
+//
+//    public void setTables(List<com.bjike.goddess.taskallotment.entity.Table> tables) {
+//        this.tables = tables;
+//    }
 
     public Status getStatus() {
         return status;

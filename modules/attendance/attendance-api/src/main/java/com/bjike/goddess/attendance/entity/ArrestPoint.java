@@ -36,13 +36,13 @@ public class ArrestPoint extends BaseEntity {
     /**
      * 经度
      */
-    @Column(name = "longitude", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '经度'")
+    @Column(name = "longitude", nullable = false, columnDefinition = "DECIMAL(10,5)   COMMENT '经度'")
     private Double longitude;
 
     /**
      * 纬度
      */
-    @Column(name = "latitude", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '纬度'")
+    @Column(name = "latitude", nullable = false, columnDefinition = "DECIMAL(10,5)   COMMENT '纬度'")
     private Double latitude;
 
     /**

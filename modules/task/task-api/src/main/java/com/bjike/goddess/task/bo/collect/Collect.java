@@ -25,8 +25,10 @@ public class Collect implements Serializable {
     private String isFinish;//是否完工
     @ExcelHeader(name = "人工数")
     private int workerCount;//人工数
-    @ExcelHeader(name = "总规模数")
-    private int scaleCount;//总规模数（从商务合同管理获取）
+    @ExcelHeader(name = "合同规模数")
+    private double scaleCount;//合同规模数（从商务合同管理获取）
+    @ExcelHeader(name = "实际完成规模数")
+    private double finishCount;
     @ExcelHeader(name = "出车数量")
     private int carCount;//出车数量（从出车记录管理获取）
 
@@ -39,9 +41,17 @@ public class Collect implements Serializable {
     private List<TaskCollect> todayCollects;
 
     /**
-     *部门汇总(明天)
+     * 部门汇总(明天)
      */
     private List<TomorrowCollect> tomorrowCollects;
+
+    public double getFinishCount() {
+        return finishCount;
+    }
+
+    public void setFinishCount(double finishCount) {
+        this.finishCount = finishCount;
+    }
 
     public String getProject() {
         return project;
@@ -83,11 +93,11 @@ public class Collect implements Serializable {
         this.workerCount = workerCount;
     }
 
-    public int getScaleCount() {
+    public double getScaleCount() {
         return scaleCount;
     }
 
-    public void setScaleCount(int scaleCount) {
+    public void setScaleCount(double scaleCount) {
         this.scaleCount = scaleCount;
     }
 

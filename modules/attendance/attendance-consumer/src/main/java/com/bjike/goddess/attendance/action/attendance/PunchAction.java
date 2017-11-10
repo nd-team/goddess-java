@@ -1,11 +1,18 @@
 package com.bjike.goddess.attendance.action.attendance;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.attendance.api.PunchSonAPI;
+import com.bjike.goddess.attendance.bo.CaseCountBO;
 import com.bjike.goddess.attendance.bo.PunchBO;
+import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.enums.PunchSource;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.CaseCountVO;
+import com.bjike.goddess.attendance.vo.PunchPhoneVO;
 import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.attendance.vo.PunchVO;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -13,6 +20,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.token.Address;
+import com.bjike.goddess.common.utils.token.AddressResult;
 import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -28,8 +38,7 @@ import util.AddressUtils;
 import util.CheckMobile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -49,48 +58,52 @@ public class PunchAction {
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
-    private boolean check(HttpServletRequest request) throws IOException {
-        boolean isFromMobile = false;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
-        HttpSession session = request.getSession();
-        //检查是否已经记录访问方式（移动端或pc端）
-        if (null == session.getAttribute("ua")) {
-            try {
-                //获取ua，用来判断是否为移动端访问
-                String userAgent = request.getHeader("USER-AGENT").toLowerCase();
-                if (null == userAgent) {
-                    userAgent = "";
-                }
-                isFromMobile = CheckMobile.check(userAgent);
-                //判断是否为移动端访问
-                if (isFromMobile) {
-                    session.setAttribute("ua", "mobile");
-                } else {
-                    session.setAttribute("ua", "pc");
-                }
-            } catch (Exception e) {
+            Boolean isHasPermission = punchSonAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
             }
-        } else {
-            isFromMobile = session.getAttribute("ua").equals("mobile");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
-
-        return isFromMobile;
     }
 
     /**
      * 列表
      *
      * @param dto dto
-     * @return class PunchVO
+     * @return class PunchPhoneVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(PunchDTO dto, HttpServletRequest request) throws ActException {
+        String ss = RpcContext.getContext().getAttachment("userToken");
+        System.out.println(ss);
         try {
-            List<PunchBO> list = punchSonAPI.list(dto);
-            return ActResult.initialize(BeanTransform.copyProperties(list, PunchVO.class, request));
-        } catch (SerException e) {
+            if (CheckMobile.check(request)) {   //移动端列表
+                dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
+                dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
+                List<PunchPhoneBO> list = punchSonAPI.phoneList(dto);
+                return ActResult.initialize(BeanTransform.copyProperties(list, PunchPhoneVO.class, request));
+            } else {
+                List<PunchBO> list = punchSonAPI.list(dto);
+                return ActResult.initialize(BeanTransform.copyProperties(list, PunchVO.class, request));
+            }
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -139,12 +152,16 @@ public class PunchAction {
      * @version v1
      */
     @PostMapping("v1/pc")
-    public Result pc(@Validated(PunchSonTO.PC.class) PunchSonTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result pc(@Validated(PunchSonTO.PC.class) PunchSonTO to, BindingResult result1, HttpServletRequest request) throws ActException {
         try {
-            String ip=IpUtil.getIp(request);
-            AddressUtils addressUtils = new AddressUtils();
-            String area = addressUtils.getAddresses("ip=" + ip, "utf-8");
-            to.setArea(area);
+//            String addr = "";
+//            String str = AddressUtils.getJsonContent("http://ip.taobao.com/service/getIpInfo.php?ip=" + IpUtil.getIp(request));
+//            AddressResult result = JSON.parseObject(str, AddressResult.class);
+//            if ("0".equals(result.getCode())) {
+//                Address ad = JSON.parseObject(result.getData(), Address.class);
+//                addr = ad.getRegion() + ad.getCity();
+//            }
+//            to.setArea(addr);
             to.setPunchSource(PunchSource.PC);
             PunchSonBO bo = punchSonAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, PunchSonVO.class, request));
@@ -182,6 +199,24 @@ public class PunchAction {
         try {
             List<UserBO> userBOS = positionDetailUserAPI.findUserListInOrgan();
             return ActResult.initialize(BeanTransform.copyProperties(userBOS, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 考勤情况汇总
+     *
+     * @param dto dto
+     * @return class CaseCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/case/count")
+    public Result caseCount(@Validated(PunchDTO.COUNT.class) PunchDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            List<CaseCountBO> userBOS = punchSonAPI.caseCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(userBOS, CaseCountVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

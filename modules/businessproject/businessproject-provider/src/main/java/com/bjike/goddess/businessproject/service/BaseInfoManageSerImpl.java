@@ -225,6 +225,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
     @Override
     public List<BaseInfoManageBO> listBaseInfoManage(BaseInfoManageDTO baseInfoManageDTO) throws SerException {
+        baseInfoManageDTO.getSorts().add("createTime=desc");
         checkSeeIdentity();
 
         searchCondition(baseInfoManageDTO);
@@ -280,6 +281,16 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
         checkAddIdentity();
 
         super.remove(id);
+    }
+    @Override
+    public Double contractScale(String project) throws SerException {
+        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+        dto.getConditions().add(Restrict.eq("outerProject", project));
+        List<BaseInfoManage> list = super.findByCis(dto);
+        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
+            return list.get(0).getContractScale();
+        }
+        return 0d;
     }
 
 
@@ -505,7 +516,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
                     for (BaseInfoManage b : list) {
                         if (s.equals(b.getInnerProject())) {
                             BaseInfoManageExcel excel = new BaseInfoManageExcel();
-                            BeanUtils.copyProperties(b, excel,"makeContract","projectStatus");
+                            BeanUtils.copyProperties(b, excel, "makeContract", "projectStatus");
                             excel.setMakeContract(MakeContract.exportStrConvert(b.getMakeContract()));
                             excel.setProjectStatus(ProjectStatus.exportStrConvert(b.getProjectStatus()));
                             toList.add(excel);
@@ -517,7 +528,7 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             List<BaseInfoManage> list = super.findByCis(dto);
             for (BaseInfoManage b : list) {
                 BaseInfoManageExcel excel = new BaseInfoManageExcel();
-                BeanUtils.copyProperties(b, excel,"makeContract","projectStatus");
+                BeanUtils.copyProperties(b, excel, "makeContract", "projectStatus");
                 excel.setMakeContract(MakeContract.exportStrConvert(b.getMakeContract()));
                 excel.setProjectStatus(ProjectStatus.exportStrConvert(b.getProjectStatus()));
                 toList.add(excel);
@@ -711,6 +722,17 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
             return "0001";
         }
 
+    }
+
+    @Override
+    public Double contractScale(String project) throws SerException {
+        BaseInfoManageDTO dto = new BaseInfoManageDTO();
+        dto.getConditions().add(Restrict.eq("outerProject", project));
+        List<BaseInfoManage> list = super.findByCis(dto);
+        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
+            return list.get(0).getContractScale();
+        }
+        return 0d;
     }
 
 }

@@ -4,8 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
+import com.bjike.goddess.taskallotment.bo.figure.DataBO;
+import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.service.TaskNodeSer;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
@@ -29,8 +34,13 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     private TaskNodeSer taskNodeSer;
 
     @Override
-    public List<ProjectBO> list(ProjectDTO dto) throws SerException {
+    public List<TableBO> list(TableDTO dto) throws SerException {
         return taskNodeSer.list(dto);
+    }
+
+    @Override
+    public Long count(TableDTO dto) throws SerException {
+        return taskNodeSer.count(dto);
     }
 
     @Override
@@ -200,6 +210,11 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
+    public List<DayReportMailBO> dayCountMail(String startTime, String endTime, String[] departIds) throws SerException {
+        return taskNodeSer.dayCountMail(startTime, endTime, departIds);
+    }
+
+    @Override
     public Double finishDay(String date,String name) throws SerException {
         return taskNodeSer.finishDay(date,name);
     }
@@ -207,5 +222,45 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     @Override
     public List<ObjectBO> taskSituation(String[] names, String date) throws SerException {
         return taskNodeSer.taskSituation(names, date);
+    }
+
+    @Override
+    public byte[] exportExcel(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.exportExcel(dto);
+    }
+
+    @Override
+    public void leadExcel(List<TaskNodeLeadTO> toList, String tableId) throws SerException {
+        taskNodeSer.leadExcel(toList, tableId);
+    }
+
+    @Override
+    public OptionBO personCountFigure(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.personCountFigure(dto);
+    }
+
+    @Override
+    public OptionBO timeCountFigure(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.timeCountFigure(dto);
+    }
+
+    @Override
+    public OptionBO confirmCountFigure(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.confirmCountFigure(dto);
+    }
+
+    @Override
+    public OptionBO finishCountFigure(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.finishCountFigure(dto);
+    }
+
+    @Override
+    public List<String> taskNames(String tableID) throws SerException {
+        return taskNodeSer.taskNames(tableID);
+    }
+
+    @Override
+    public DataBO personBing(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.personBing(dto);
     }
 }

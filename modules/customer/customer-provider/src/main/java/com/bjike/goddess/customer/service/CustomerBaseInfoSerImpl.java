@@ -589,7 +589,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
             now++;
         }
         sum++;
-        if (customerBaseInfoTO.getWorkRight()!=null) {
+        if (customerBaseInfoTO.getWorkRight() != null) {
             now++;
         }
         sum++;
@@ -1951,12 +1951,12 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 
                 if (areaWeightSetBO != null && bussTypeWeightSetBO != null && customerContactWeightSetBO != null && funPowerBO != null && funPowerWeightBO != null && timelinessPowerBO != null && timelinessFactorWeightBO != null && closenessPowerBO != null && closenessFoactorWeightBO != null && difficultyBO != null && difficultyFoactorWeightBO != null) {
                     Double finalWeight = areaWeightSetBO.getProvincesWeight() * areaWeightSetBO.getAreaWeight()
-                                        + bussTypeWeightSetBO.getBusinessTypeWeight() * bussTypeWeightSetBO.getBusinessWayWeight()
-                                        + customerContactWeightSetBO.getCustomerContactTypeWeight()
-                                        + funPowerBO.getFirstFactorWeight() * funPowerWeightBO.getFunPowerTypeWeight()
-                                        + timelinessPowerBO.getFirstFactorWeight() * timelinessFactorWeightBO.getTimelinessWeight()
-                                        + closenessPowerBO.getFirstFactorWeight() * closenessFoactorWeightBO.getClosenessWeight()
-                                        + difficultyBO.getFirstFactorWeight() * difficultyFoactorWeightBO.getDifficWeight();
+                            + bussTypeWeightSetBO.getBusinessTypeWeight() * bussTypeWeightSetBO.getBusinessWayWeight()
+                            + customerContactWeightSetBO.getCustomerContactTypeWeight()
+                            + funPowerBO.getFirstFactorWeight() * funPowerWeightBO.getFunPowerTypeWeight()
+                            + timelinessPowerBO.getFirstFactorWeight() * timelinessFactorWeightBO.getTimelinessWeight()
+                            + closenessPowerBO.getFirstFactorWeight() * closenessFoactorWeightBO.getClosenessWeight()
+                            + difficultyBO.getFirstFactorWeight() * difficultyFoactorWeightBO.getDifficWeight();
                     customerBaseInfo.setFinalWeight(finalWeight);
                     super.update(customerBaseInfo);
                 }
@@ -1964,8 +1964,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         }
         CustomerBaseInfoDTO customerBaseInfoDTO = new CustomerBaseInfoDTO();
         int limit = customerBaseInfoDTO.getLimit();
-        int start = limit*customerBaseInfoDTO.getPage();
+        int start = limit * customerBaseInfoDTO.getPage();
         List<CustomerBaseInfo> customerBaseInfoList = customerBaseInfos.stream().skip(start).limit(limit).collect(Collectors.toList());
-        return BeanTransform.copyProperties(customerBaseInfoList,CustomerBaseInfo.class);
+        return BeanTransform.copyProperties(customerBaseInfoList, CustomerBaseInfoBO.class);
     }
 }

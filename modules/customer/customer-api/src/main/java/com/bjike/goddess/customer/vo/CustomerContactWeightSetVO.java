@@ -23,7 +23,7 @@ public class CustomerContactWeightSetVO {
     /**
      * 客户接触阶段类型权重
      */
-    private String customerContactTypeWeight;
+    private Double customerContactTypeWeight;
 
 
     public String getId() {
@@ -42,11 +42,11 @@ public class CustomerContactWeightSetVO {
         this.customerContactType = customerContactType;
     }
 
-    public String getCustomerContactTypeWeight() {
+    public Double getCustomerContactTypeWeight() {
         return customerContactTypeWeight;
     }
 
-    public void setCustomerContactTypeWeight(String customerContactTypeWeight) {
+    public void setCustomerContactTypeWeight(Double customerContactTypeWeight) {
         this.customerContactTypeWeight = customerContactTypeWeight;
     }
 }

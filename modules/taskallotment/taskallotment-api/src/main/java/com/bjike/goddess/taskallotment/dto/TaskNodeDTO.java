@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.taskallotment.enums.CountType;
+import com.bjike.goddess.taskallotment.enums.PersonCountType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -21,8 +22,13 @@ public class TaskNodeDTO extends BaseDTO {
 
     public interface PERSON {
     }
+    public interface PING{}
 
-    public interface NAME{}
+    public interface NAME {
+    }
+
+    public interface EXPORT {
+    }
 
     /**
      * 汇总类型
@@ -61,24 +67,30 @@ public class TaskNodeDTO extends BaseDTO {
     /**
      * 部门id
      */
-    @NotNull(groups = TaskNodeDTO.NAME.class,message = "部门id不能为空")
+    @NotNull(groups = TaskNodeDTO.NAME.class, message = "部门id不能为空")
     private String[] deparIds;
+    /**
+     * 项目表id
+     */
+    @NotNull(groups = TaskNodeDTO.EXPORT.class, message = "项目表id不能为空")
+    private String tableId;
+    /**
+     * 任务名称
+     */
+    @NotNull(groups = TaskNodeDTO.EXPORT.class, message = "任务名称不能为空")
+    private String[] taskNames;
 
-    public String[] getDeparIds() {
-        return deparIds;
-    }
+    /**
+     * 个人饼状图汇总类型
+     */
+    @NotNull(groups = TaskNodeDTO.PING.class, message = "个人饼状图汇总类型不能为空")
+    private PersonCountType personCountType;
 
-    public void setDeparIds(String[] deparIds) {
-        this.deparIds = deparIds;
-    }
-
-    public String[] getTables() {
-        return tables;
-    }
-
-    public void setTables(String[] tables) {
-        this.tables = tables;
-    }
+    /**
+     * 姓名
+     */
+    @NotBlank(groups = TaskNodeDTO.PING.class, message = "姓名不能为空")
+    private String user;
 
     public CountType getCountType() {
         return countType;
@@ -126,5 +138,53 @@ public class TaskNodeDTO extends BaseDTO {
 
     public void setName(String[] name) {
         this.name = name;
+    }
+
+    public String[] getTables() {
+        return tables;
+    }
+
+    public void setTables(String[] tables) {
+        this.tables = tables;
+    }
+
+    public String[] getDeparIds() {
+        return deparIds;
+    }
+
+    public void setDeparIds(String[] deparIds) {
+        this.deparIds = deparIds;
+    }
+
+    public String getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
+    }
+
+    public String[] getTaskNames() {
+        return taskNames;
+    }
+
+    public void setTaskNames(String[] taskNames) {
+        this.taskNames = taskNames;
+    }
+
+    public PersonCountType getPersonCountType() {
+        return personCountType;
+    }
+
+    public void setPersonCountType(PersonCountType personCountType) {
+        this.personCountType = personCountType;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

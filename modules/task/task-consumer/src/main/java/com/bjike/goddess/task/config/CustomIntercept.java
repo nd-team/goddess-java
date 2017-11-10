@@ -35,8 +35,8 @@ public class CustomIntercept implements Interceptor {
          * 登录拦截器
          */
         HIInfo loginInfo = new HIInfo(new LoginIntercept(userAPI), "/**");
-        HIInfo storageInfo = new HIInfo(new StorageIntercept(storageUserAPI, "task", "task123456", "task"), "/**");
-        return Arrays.asList( storageInfo,loginInfo);
+        HIInfo storage = new HIInfo(new StorageIntercept(storageUserAPI, "taskallotment", "123456", "taskallotment"), "/**");
+        return Arrays.asList( storage,loginInfo);
 
     }
 }

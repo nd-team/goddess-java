@@ -1,13 +1,5 @@
 package com.bjike.goddess.voucher.service;
 
-import com.bjike.goddess.voucher.bo.VoucherOperateBO;
-import com.bjike.goddess.voucher.bo.VoucherPermissionBO;
-import com.bjike.goddess.voucher.dto.VoucherPermissionDTO;
-import com.bjike.goddess.voucher.dto.VoucherPermissionOperateDTO;
-import com.bjike.goddess.voucher.entity.VoucherPermission;
-import com.bjike.goddess.voucher.entity.VoucherPermissionOperate;
-import com.bjike.goddess.voucher.enums.VoucherPermissionType;
-import com.bjike.goddess.voucher.to.VoucherPermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -17,6 +9,14 @@ import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.bo.VoucherOperateBO;
+import com.bjike.goddess.voucher.bo.VoucherPermissionBO;
+import com.bjike.goddess.voucher.dto.VoucherPermissionDTO;
+import com.bjike.goddess.voucher.dto.VoucherPermissionOperateDTO;
+import com.bjike.goddess.voucher.entity.VoucherPermission;
+import com.bjike.goddess.voucher.entity.VoucherPermissionOperate;
+import com.bjike.goddess.voucher.enums.VoucherPermissionType;
+import com.bjike.goddess.voucher.to.VoucherPermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -344,7 +344,7 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
 
 
         //TODO 部门
-        if (  depart) {
+        if (depart) {
             flag = true;
         } else {
             flag = false;
@@ -356,6 +356,55 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
 
     @Override
     public Boolean busCusPermission(String idFlag) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flag = false;
+        //但前用户
+        UserBO userBO = userAPI.currentUser();
+        String userId = userBO.getId();
+        if (StringUtils.isBlank(idFlag)) {
+            throw new SerException("idFlag不能为空");
+        }
+        VoucherPermissionDTO dto = new VoucherPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag", idFlag));
+        VoucherPermission cusPermission = super.findOne(dto);
+
+
+        //先查询操作对象
+        List<String> idList = new ArrayList<>();
+        VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
+        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        List<VoucherPermissionOperate> operateList = voucherPermissionOperateSer.findByCis(cpoDTO);
+        if (operateList != null && operateList.size() > 0) {
+            operateList.stream().forEach(op -> {
+                idList.add(op.getOperator());
+            });
+        }
+        String[] operateIds = null;
+        if (null != idList && idList.size() > 0) {
+            operateIds = new String[idList.size()];
+            for (int i = 0; i < idList.size(); i++) {
+                operateIds[i] = idList.get(i);
+            }
+
+        }
+
+
+        //TODO 部门id 商务部
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+
+        if (moduleFlag) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        String aa = RpcTransmit.getUserToken();
+        return flag;
+    }
+
+    public Boolean accCusPermission(String idFlag) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户

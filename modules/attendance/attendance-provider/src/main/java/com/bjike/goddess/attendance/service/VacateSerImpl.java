@@ -1,25 +1,41 @@
 package com.bjike.goddess.attendance.service;
 
-import com.bjike.goddess.attendance.bo.VacateBO;
+import com.bjike.goddess.attendance.bo.*;
+import com.bjike.goddess.attendance.dto.VacateAuditDTO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
+import com.bjike.goddess.attendance.dto.VacateSetDTO;
 import com.bjike.goddess.attendance.entity.Vacate;
-import com.bjike.goddess.attendance.enums.EndTime;
-import com.bjike.goddess.attendance.enums.StartTime;
+import com.bjike.goddess.attendance.entity.VacateAudit;
+import com.bjike.goddess.attendance.entity.VacateSet;
+import com.bjike.goddess.attendance.enums.*;
+import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
+import com.bjike.goddess.attendance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 请假管理业务实现
@@ -33,33 +49,380 @@ import java.util.List;
 @CacheConfig(cacheNames = "attendanceSerCache")
 @Service
 public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements VacateSer {
+    @Autowired
+    private PositionUserDetailAPI positionUserDetailAPI;
+    @Autowired
+    private MessageAPI messageAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private VacateAuditSer vacateAuditSer;
+    @Autowired
+    private VacateSetSer vacateSetSer;
+    @Autowired
+    private PunchSonSer punchSonSer;
+    @Autowired
+    private DayReportSer dayReportSer;
+    @Autowired
+    private VacateSer vacateSer;
+    @Autowired
+    private OverWorkSer overWorkSer;
+    @Autowired
+    private FinanceAttendanceSer financeAttendanceSer;
+    @Autowired
+    private HolidaySetSer holidaySetSer;
+    @Autowired
+    private AuditTimeSetSer auditTimeSetSer;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    private String content = "%s提交了%d天的请假申请，时间为%s至%s,请及时上系统查看审核";
+    private String content1 = "%s提交了%d天的请假申请，时间为%s至%s,请注意工作交接情况";
+    private String title = "%s的请假申请";
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+            if (!flag) {
+                throw new SerException("您不是相应岗位的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private void checkAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+            if (!flag) {
+                throw new SerException("您不是相应岗位的人员，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("3");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAddSign = guideAddIdentity();
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("vacate");
+        obj.setDescribesion("请假审核列表");
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis = punchSonSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("punchson");
+        obj.setDescribesion("考勤列表");
+        if (flagSeeDis) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeCate = dayReportSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("dayReport");
+        obj.setDescribesion("日报列表");
+        if (flagSeeCate) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeEmail = vacateSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("vacateSet");
+        obj.setDescribesion("请假设置");
+        if (flagSeeEmail) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase = overWorkSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("overWork");
+        obj.setDescribesion("加班审核列表");
+        if (flagSeeBase) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase1 = financeAttendanceSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("financeAttendance");
+        obj.setDescribesion("财务出勤审批列表");
+        if (flagSeeBase1) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase2 = holidaySetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("holidaySet");
+        obj.setDescribesion("假期设置");
+        if (flagSeeBase2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagSeeBase3 = auditTimeSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("auditTimeSet");
+        obj.setDescribesion("审批时间设置");
+        if (flagSeeBase3) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public VacateBO save(VacateTO to) throws SerException {
+    public void save(VacateTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String startDate = to.getStartDate();
-        String startTime = to.getStartTime().toString().toString() + ":00";
+        String startTime = to.getStartTime().toString() + ":00";
         LocalDateTime start = DateUtil.parseDateTime(startDate + " " +
                 startTime);
-        long mis = DateUtil.mis(LocalDateTime.now(), start);
-        if (mis <= 0) {
+        long mis = DateUtil.mis(start, LocalDateTime.now());
+        if (mis < 0) {
             throw new SerException("请假开始时间必须大于当前时间");
         }
         double time = getTime(to);
-        if (time > 3) {    //请假大于3天需提前1周
+        check(to, time, userToken);   //检测是否符合请假设置
+        String[] mains = to.getMains();
+        String[] carbons = to.getCarbons();
+        boolean falg = containManager(mains);   //主送人是否包含总经理
+        if (time >= 3) {    //请假大于等于3天需提前1周
             LocalDate s = DateUtil.parseDate(startDate);
             long days = Math.abs(s.toEpochDay() - LocalDate.now().toEpochDay());
             if (days < 7) {
-                throw new SerException("请假>3天的要提前一周");
+                throw new SerException("请假>=3天的要提前一周");
+            }
+            if (!falg) {
+                throw new SerException("请假>=3天的要主送给总经理");
             }
         }
-        String[] mains = to.getMains();
-        String[] carbons = to.getCarbons();
+        List<String> list = positionUserDetailAPI.arrangementAndDepartId(to.getName());
+        if (null != list) {
+            String arrangement = list.get(0);
+            if ("决策层".equals(arrangement)) {
+                if (time > 1) {
+                    if (!falg) {
+                        throw new SerException("决策层请假>1天的要主送给总经理");
+                    }
+                }
+            }
+        }
         Vacate entity = BeanTransform.copyProperties(to, Vacate.class, true, "startTime", "endTime");
         entity.setMain(toString(mains));
-        entity.setCarbon(toString(carbons));
+        title = String.format(title, entity.getName());
+        List<String> carbon = new ArrayList<>();
+        if (null != carbons) {
+            entity.setCarbon(toString(carbons));
+            carbon = internalContactsAPI.getEmails(carbons);
+            if (!carbon.isEmpty()) {
+                String[] receivers = new String[carbon.size()];
+                receivers = carbon.toArray(receivers);
+//                content1 = String.format(content1, entity.getName(), time, to.getStartDate() + to.getStartTime().toString(), to.getEndDate() + to.getEndTime().toString());
+                String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
+                send(title, content, receivers);
+            }
+        }
+        if (time < 3) {
+            LocalDate s = DateUtil.parseDate(startDate);
+            long days = Math.abs(s.toEpochDay() - LocalDate.now().toEpochDay());
+            if (days < 1) {
+                entity.setAdvance(false);
+            } else {
+                entity.setAdvance(true);
+            }
+        }
+        entity.setAdvance(true);
+        entity.setConform(true);
+        entity.setTime(time);
+        entity.setStartTime(start);
+        LocalDateTime end = DateUtil.parseDateTime(to.getEndDate() + " " +
+                to.getEndTime() + ":00");
+        entity.setEndTime(end);
+        List<VacateAudit> sons = getSon(entity);
+        entity.setVacateAudits(sons);
+        entity.setDate(LocalDate.now());
+        entity.setCreateTime(LocalDateTime.now());
+        entity.setModifyTime(LocalDateTime.now());
         super.save(entity);
-        return BeanTransform.copyProperties(entity, VacateBO.class);
+        List<String> main = internalContactsAPI.getEmails(mains);
+        if (!main.isEmpty()) {
+            String[] receivers = new String[main.size()];
+            receivers = main.toArray(receivers);
+//            content = String.format(content, entity.getName(), time, to.getStartDate() + to.getStartTime().toString(), to.getEndDate() + to.getEndTime().toString());
+            String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
+            send(title, content, receivers);
+        }
+    }
+
+    private void check(VacateTO to, double time, String userToken) throws SerException {
+        VacateSetDTO dto = new VacateSetDTO();
+        dto.getConditions().add(Restrict.eq("vacateType", to.getVacateType()));
+        VacateSet vacateSet = vacateSetSer.findOne(dto);
+//        String storageToken = storageUserAPI.getStorageToken("attendance", "123456", "attendance", userToken);
+//        FileInfo fileInfo = new FileInfo();
+//        fileInfo.setPath("/attendance/vacate" + to.getUuid());
+//        fileInfo.setStorageToken(storageToken);
+//        List<FileBO> list = fileAPI.list(fileInfo);
+        if (null != vacateSet) {
+            if (time > vacateSet.getMaxDay()) {
+                throw new SerException("请假时间不能大于请假设置里的最大可选天数");
+            }
+//            if (vacateSet.getAttachment()) {
+//                if (null == list || list.size() == 0) {
+//                    throw new SerException(to.getVacateType().toString() + "必需要上传附件");
+//                }
+//            }
+        }
+
+    }
+
+    private List<VacateAudit> getSon(Vacate entity) throws SerException {
+        String[] mains = entity.getMain().split(",");
+        List<VacateAudit> list = new ArrayList<>();
+        for (String s : mains) {
+            VacateAudit vacateAudit = new VacateAudit();
+            vacateAudit.setName(s);
+            vacateAudit.setVacate(entity);
+            vacateAudit.setAduitStatus(AduitStatus.DOING);
+            list.add(vacateAudit);
+        }
+        return list;
+    }
+
+    private void send(String title, String content, String[] receivers) throws SerException {
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle(title);
+        messageTO.setContent(content);
+        messageTO.setReceivers(receivers);
+        messageAPI.send(messageTO);
+    }
+
+    private Boolean containManager(String[] mains) throws SerException {
+        boolean falg = false;
+        List<PositionDetailUserBO> managers = positionUserDetailAPI.findManager();
+        if (null != managers) {
+            List<String> list = Arrays.asList(mains);
+            for (PositionDetailUserBO p : managers) {
+                if (list.contains(p.getName())) {
+                    falg = true;
+                    break;
+                }
+            }
+        }
+        return falg;
     }
 
     private String toString(String[] strings) throws SerException {
@@ -68,7 +431,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             if (i == strings.length - 1) {
                 sb.append(strings[i]);
             } else {
-                sb.append(strings[i]+",");
+                sb.append(strings[i] + ",");
             }
         }
         return sb.toString();
@@ -137,22 +500,223 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         return result;
     }
 
+    private VacateBO tranBOPhone(Vacate vacate) throws SerException {
+        VacateBO bo = BeanTransform.copyProperties(vacate, VacateBO.class);
+        VacateAuditDTO dto = new VacateAuditDTO();
+        dto.getConditions().add(Restrict.eq("vacate.id", vacate.getId()));
+        List<VacateAudit> list = vacateAuditSer.findByCis(dto);
+        List<VacateAuditBO> vacateAuditBOS = BeanTransform.copyProperties(list, VacateAuditBO.class);
+        bo.setSons(vacateAuditBOS);
+        //通过条数
+        long agreeNum = list.stream().filter(vacateAudit -> AduitStatus.AGREE.equals(vacateAudit.getAduitStatus())).count();
+        //不通过条数
+        long rejectNum = list.stream().filter(vacateAudit -> AduitStatus.REJECT.equals(vacateAudit.getAduitStatus())).count();
+        if (agreeNum == list.size()) {
+            bo.setAduitStatus(AduitStatus.AGREE);
+        } else if (rejectNum == list.size()) {
+            bo.setAduitStatus(AduitStatus.REJECT);
+        } else {
+            bo.setAduitStatus(AduitStatus.DOING);
+        }
+        return bo;
+    }
+
+    private VacateBO tranBO(Vacate vacate) throws SerException {
+        VacateBO bo = BeanTransform.copyProperties(vacate, VacateBO.class);
+        VacateAuditDTO dto = new VacateAuditDTO();
+        dto.getConditions().add(Restrict.eq("vacate.id", vacate.getId()));
+        List<VacateAudit> list = vacateAuditSer.findByCis(dto);
+        StringBuilder sb = new StringBuilder();
+        for (VacateAudit v : list) {
+            String advice = v.getAdvice();
+            if (null != advice) {
+                sb.append(v.getName() + ":" + advice + ";");
+            }
+        }
+        //已审核条数
+        int agreeNum = Integer.parseInt(list.stream().filter(vacateAudit -> AduitStatus.AGREE.equals(vacateAudit.getAduitStatus())).count() + "");
+        int rejectNum = Integer.parseInt(list.stream().filter(vacateAudit -> AduitStatus.REJECT.equals(vacateAudit.getAduitStatus())).count() + "");
+        if (agreeNum == list.size()) {
+            bo.setAduitStatus(AduitStatus.AGREE);
+        } else if (rejectNum == list.size()) {
+            bo.setAduitStatus(AduitStatus.REJECT);
+        } else {
+            bo.setAduitStatus(AduitStatus.DOING);
+        }
+        bo.setAdvice(sb.toString());
+        return bo;
+    }
+
+    @Override
+    public List<VacateBO> auditList(VacateDTO dto) throws SerException {
+        checkSeeIdentity();
+        String name = userAPI.currentUser().getUsername();
+        VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
+        vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
+        List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
+        Set<String> vacateIds = list.stream().map(vacateAudit -> vacateAudit.getVacate().getId()).collect(Collectors.toSet());
+        List<VacateBO> bos = new ArrayList<>();
+        if (!vacateIds.isEmpty()) {
+            dto.getConditions().add(Restrict.in(ID, vacateIds));
+            dto.getSorts().add("startTime=desc");
+            List<Vacate> vacates = super.findByCis(dto, true);
+            for (Vacate v : vacates) {
+                bos.add(tranBO(v));
+            }
+        }
+        return bos;
+    }
+
+    @Override
+    public List<VacateBO> auditListPhone(VacateDTO dto) throws SerException {
+        String name = userAPI.currentUser().getUsername();
+        VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
+        vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
+        List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
+        Set<String> vacateIds = list.stream().map(vacateAudit -> vacateAudit.getVacate().getId()).collect(Collectors.toSet());
+        List<VacateBO> bos = new ArrayList<>();
+        if (!vacateIds.isEmpty()) {
+            dto.getConditions().add(Restrict.in(ID, vacateIds));
+            dto.getSorts().add("date=desc");
+            List<Vacate> vacates = super.findByCis(dto, true);
+            for (Vacate v : vacates) {
+                bos.add(tranBOPhone(v));
+            }
+        }
+        return bos;
+    }
+
+    @Override
+    public Long auditListCount(VacateDTO dto) throws SerException {
+        String name = userAPI.currentUser().getUsername();
+        VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
+        vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
+        List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
+        Set<String> vacateIds = list.stream().map(vacateAudit -> vacateAudit.getVacate().getId()).collect(Collectors.toSet());
+        if (!vacateIds.isEmpty()) {
+            dto.getConditions().add(Restrict.in(ID, vacateIds));
+            return super.count(dto);
+        } else {
+            return 0l;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void audit(VacateTO to) throws SerException {
+        checkAddIdentity();
+        Vacate entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("该对象不存在");
+        }
+        String name = userAPI.currentUser().getUsername();
+        VacateAuditDTO dto = new VacateAuditDTO();
+        dto.getConditions().add(Restrict.eq("vacate.id", entity.getId()));
+        dto.getConditions().add(Restrict.eq("name", name));
+        VacateAudit vacateAudit = vacateAuditSer.findOne(dto);
+        if (!AduitStatus.DOING.equals(vacateAudit.getAduitStatus())) {
+            throw new SerException("该请假记录已被审核");
+        }
+        vacateAudit.setAdvice(to.getAdvice());
+        vacateAudit.setAduitStatus(to.getAduitStatus());
+        vacateAudit.setDate(LocalDate.now());
+        vacateAudit.setModifyTime(LocalDateTime.now());
+        vacateAuditSer.update(vacateAudit);
+        VacateBO bo = tranBO(entity);
+        AduitStatus aduitStatus = bo.getAduitStatus();
+        if (!AduitStatus.DOING.equals(aduitStatus)) {
+            String vacateName = entity.getName();
+            String email = internalContactsAPI.getEmail(vacateName);
+            if (null != email) {
+                String title = "请假审核";
+                String content = "您" + bo.getStartTime() + "至" + bo.getEndTime() + "的请假申请审核" + aduitStatus.toString() + "";
+                MessageTO messageTO = new MessageTO();
+                messageTO.setTitle(title);
+                messageTO.setContent(content);
+                messageTO.setReceivers(new String[]{email});
+                messageAPI.send(messageTO);
+            }
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void edit(VacateTO to) throws SerException {
-        Vacate entity = super.findById(to.getId());
-        LocalDateTime a = entity.getCreateTime();
-        entity = BeanTransform.copyProperties(to, Vacate.class, true);
-        entity.setCreateTime(a);
-        entity.setModifyTime(LocalDateTime.now());
-        super.update(entity);
+    public void fill(VacateTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        double time = getTime(to);
+        check(to, time, userToken);   //检测是否符合请假设置
+        String[] mains = to.getMains();
+        boolean falg = containManager(mains);   //主送人是否包含总经理
+        if (time >= 3) {    //请假大于等于3天需提前1周
+            if (!falg) {
+                throw new SerException("请假>=3天的要主送给总经理");
+            }
+        }
+        List<String> list = positionUserDetailAPI.arrangementAndDepartId(to.getName());
+        if (null != list) {
+            String arrangement = list.get(0);
+            if ("决策层".equals(arrangement)) {
+                if (time > 1) {
+                    if (!falg) {
+                        throw new SerException("决策层请假>1天的要主送给总经理");
+                    }
+                }
+            }
+        }
+        Vacate entity = BeanTransform.copyProperties(to, Vacate.class, true, "startTime", "endTime");
+        entity.setMain(toString(mains));
+        String[] carbons = to.getCarbons();
+        if (null != carbons) {
+            entity.setCarbon(toString(carbons));
+        }
+        title = String.format(title, entity.getName());
+        entity.setAdvance(false);
+        entity.setConform(true);
+        entity.setTime(time);
+        LocalDateTime start = DateUtil.parseDateTime(to.getStartDate() + " " +
+                to.getStartTime() + ":00");
+        LocalDateTime end = DateUtil.parseDateTime(to.getEndDate() + " " +
+                to.getEndTime() + ":00");
+        entity.setStartTime(start);
+        entity.setEndTime(end);
+        List<VacateAudit> sons = getSon(entity);
+        entity.setVacateAudits(sons);
+        entity.setDate(LocalDate.now());
+        super.save(entity);
+        List<String> main = internalContactsAPI.getEmails(mains);
+        if (!main.isEmpty()) {
+            String[] receivers = new String[main.size()];
+            receivers = main.toArray(receivers);
+//            content = String.format(content, entity.getName(), time, to.getStartDate() + to.getStartTime().toString(), to.getEndDate() + to.getEndTime().toString());
+            String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
+            send(title, content, receivers);
+        }
     }
 
     @Override
     public List<VacateBO> list(VacateDTO dto) throws SerException {
+        String name = userAPI.currentUser().getUsername();
         dto.getSorts().add("createTime=desc");
+        dto.getConditions().add(Restrict.eq("name", name));
         List<Vacate> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, VacateBO.class);
+        List<VacateBO> bos = new ArrayList<>();
+        for (Vacate v : list) {
+            bos.add(tranBO(v));
+        }
+        return bos;
+    }
+
+    @Override
+    public List<VacateBO> listPhone(VacateDTO dto) throws SerException {
+        String name = userAPI.currentUser().getUsername();
+        dto.getSorts().add("createTime=desc");
+        dto.getConditions().add(Restrict.eq("name", name));
+        List<Vacate> list = super.findByCis(dto, true);
+        List<VacateBO> bos = new ArrayList<>();
+        for (Vacate v : list) {
+            bos.add(tranBOPhone(v));
+        }
+        return bos;
     }
 
     @Override
@@ -161,6 +725,11 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         Vacate entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
+        }
+        List<VacateAudit> list = entity.getVacateAudits();
+        long num = list.stream().filter(vacateAudit -> !AduitStatus.DOING.equals(vacateAudit.getAduitStatus())).count();
+        if (num > 0) {
+            throw new SerException("该请假记录已审核，不能删除");
         }
         super.remove(id);
     }
@@ -171,11 +740,22 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        return BeanTransform.copyProperties(entity, VacateBO.class);
+        return tranBO(entity);
+    }
+
+    @Override
+    public VacateBO findByIDPhone(String id) throws SerException {
+        Vacate entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        return tranBOPhone(entity);
     }
 
     @Override
     public Long count(VacateDTO dto) throws SerException {
+        String name = userAPI.currentUser().getUsername();
+        dto.getConditions().add(Restrict.eq("name", name));
         return super.count(dto);
     }
 
@@ -185,11 +765,353 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         LocalDateTime end = LocalDateTime.parse(vacateConDTO.getEndTime());
 
         VacateDTO dto = new VacateDTO();
-        BeanTransform.copyProperties( vacateConDTO , dto,"serialVersionUID");
-        dto.getConditions().add(Restrict.eq("name",vacateConDTO.getEmpName()));
-        dto.getConditions().add(Restrict.between("startTime",new LocalDateTime[]{start,end}));
 
-        List<Vacate> vacateList = super.findByCis( dto );
+        BeanTransform.copyProperties(vacateConDTO, dto, "serialVersionUID");
+        dto.getConditions().add(Restrict.eq("name", vacateConDTO.getEmpName()));
+        dto.getConditions().add(Restrict.between("startTime", new LocalDateTime[]{start, end}));
+
+
+        List<Vacate> vacateList = super.findByCis(dto);
         return BeanTransform.copyProperties(vacateList, VacateBO.class);
+    }
+
+    @Override
+    public VacateCountBO vacateCount(VacateDTO dto) throws SerException {
+        if (CountType.DEPART.equals(dto.getCountType())) {
+            String[] departs = dto.getDeparts();
+            if (null == departs) {
+                throw new SerException("部门汇总必须选择部门");
+            }
+        }
+        return getCount(dto);
+    }
+
+    @Override
+    public List<VacateMailBO> vacateCountMail(VacateDTO dto) throws SerException {
+        List<Vacate> list = new ArrayList<>();
+        List<String> ids = vacateIds(dto);
+        for (String id : ids) {
+            list.add(super.findById(id));
+        }
+        List<String> extralVacateIds = extralVacates(dto);
+        ids.removeAll(extralVacateIds);
+        List<Vacate> normals = new ArrayList<>();
+        for (String id : ids) {
+            normals.add(super.findById(id));   //正常工作日请假信息
+        }
+        List<Vacate> extrals = new ArrayList<>();
+        for (String id : extralVacateIds) {
+            extrals.add(super.findById(id));   //补班请假信息
+        }
+        Set<String> departs = list.stream().map(Vacate::getDepart).collect(Collectors.toSet());
+        VacateCountBO vacateCountBO = new VacateCountBO();
+        vacateCountBO.setTime(dto.getStartTime() + "-" + dto.getEndTime());
+        List<VacateMailBO> bos = new ArrayList<>();
+        double sumNormal = 0;   //正常请假时长总汇总
+        double sumFill = 0;   //补班请假时长总汇总
+        int sumNum = 0;    //总人数汇总
+        for (String depart : departs) {
+            double departNormal = 0;   //部门正常请假时长汇总
+            double departFill = 0;   //部门补班请假时长汇总
+            int departNum = 0;    //部门人数汇总
+            VacateMailBO bo = new VacateMailBO();
+            bo.setDepart(depart);
+            List<VacateDBO> sons = new ArrayList<>();
+            Set<String> names = list.stream().filter(vacate -> depart.equals(vacate.getDepart())).map(Vacate::getName).collect(Collectors.toSet());
+            for (String name : names) {
+                //正常请假时长
+                double normalTime = normals.stream().filter(vacate -> name.equals(vacate.getName())).mapToDouble(Vacate::getTime).sum();
+                departNormal += normalTime;
+                sumNormal += normalTime;
+                departNum++;
+                sumNum++;
+                //补班请假时长
+                double fillTime = extrals.stream().filter(vacate -> name.equals(vacate.getName())).mapToDouble(Vacate::getTime).sum();
+                departFill += fillTime;
+                sumFill += fillTime;
+                VacateDBO dbo = new VacateDBO();
+                dbo.setName(name);
+                dbo.setNormalTime(normalTime);
+                dbo.setFillTime(fillTime);
+                sons.add(dbo);
+            }
+            bo.setSons(sons);
+            bos.add(bo);
+            VacateDBO dbo = new VacateDBO(departNum + "", departFill, departNormal);
+            VacateMailBO count = new VacateMailBO();
+            count.setDepart("合计");
+            List<VacateDBO> sons1 = new ArrayList<>();
+            sons1.add(dbo);
+            count.setSons(sons1);
+            bos.add(count);
+        }
+        VacateDBO dbo = new VacateDBO(sumNum + "", sumFill, sumNormal);
+        VacateMailBO count = new VacateMailBO();
+        count.setDepart("总合计");
+        List<VacateDBO> sons1 = new ArrayList<>();
+        sons1.add(dbo);
+        count.setSons(sons1);
+        bos.add(count);
+        return bos;
+    }
+
+    //补班的请假信息
+    private List<String> extralVacates(VacateDTO dto) throws SerException {
+        List<Vacate> list = new ArrayList<>();
+        LocalDate startTimes = DateUtil.parseDate(dto.getStartTime());
+        LocalDate endTime = DateUtil.parseDate(dto.getEndTime());
+        long misDay = DateUtil.misDay(endTime, startTimes);
+        for (long i = 0; i <= misDay; i++) {
+            LocalDate startTime = startTimes.plusDays(i);
+            String date = DateUtil.dateToString(startTime);
+            double time = punchSonSer.extralWork(date);   //某天的补班天数
+            if (time > 0) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("SELECT id FROM attendance_vacate WHERE ");
+                if (CountType.DEPART.equals(dto.getCountType())) {
+                    sb.append("depart in ('" + StringUtils.join(dto.getDeparts(), "','") + "') AND");
+                }
+                sb.append("  '" + date + "' BETWEEN DATE_FORMAT(startTime,'%Y-%m-%d') AND DATE_FORMAT(endTime,'%Y-%m-%d')");
+                List<Vacate> vacates = super.findBySql(sb.toString(), Vacate.class, new String[]{"id"});
+                if (null != vacates) {
+                    list.addAll(vacates);
+                }
+            }
+        }
+        Set<String> ids = new HashSet<>();
+        for (Vacate v : list) {
+            ids.add(v.getId());  //把重复的去掉
+        }
+        return new ArrayList<>(ids);
+    }
+
+    private List<String> vacateIds(VacateDTO dto) throws SerException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT id FROM attendance_vacate WHERE ");
+        if (CountType.DEPART.equals(dto.getCountType())) {
+            sb.append("depart in ('" + StringUtils.join(dto.getDeparts(), "','") + "') AND");
+        }
+        sb.append(" (DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '"+dto.getStartTime()+"' AND '"+dto.getEndTime()+"') AND" +
+                "      (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '"+dto.getStartTime()+"' AND '"+dto.getEndTime()+"')");
+        List<Vacate> list = super.findBySql(sb.toString(), Vacate.class, new String[]{"id"});
+        if (null != list) {
+            return list.stream().map(Vacate::getId).distinct().collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    private VacateCountBO getCount(VacateDTO dto) throws SerException {
+        List<Vacate> list = new ArrayList<>();
+        List<String> ids = vacateIds(dto);
+        for (String id : ids) {
+            list.add(super.findById(id));
+        }
+        List<String> extralVacateIds = extralVacates(dto);
+        ids.removeAll(extralVacateIds);
+        List<Vacate> normals = new ArrayList<>();
+        for (String id : ids) {
+            normals.add(super.findById(id));   //正常工作日请假信息
+        }
+        List<Vacate> extrals = new ArrayList<>();
+        for (String id : extralVacateIds) {
+            extrals.add(super.findById(id));   //补班请假信息
+        }
+        Set<String> areas = list.stream().map(Vacate::getArea).collect(Collectors.toSet());
+        VacateCountBO vacateCountBO = new VacateCountBO();
+        vacateCountBO.setTime(dto.getStartTime() + "-" + dto.getEndTime());
+        List<VacateABO> abos = new ArrayList<>();
+        double sumNormal = 0;   //正常请假时长总汇总
+        double sumFill = 0;   //补班请假时长总汇总
+        int sumNum = 0;    //总人数汇总
+        for (String area : areas) {
+            VacateABO abo = new VacateABO();
+            abo.setArea(area);
+            List<VacateBBO> bbos = new ArrayList<>();
+            Set<String> departs = list.stream().filter(vacate -> area.equals(vacate.getArea())).map(Vacate::getDepart).collect(Collectors.toSet());
+            for (String depart : departs) {
+                double departNormal = 0;   //部门正常请假时长汇总
+                double departFill = 0;   //部门补班请假时长汇总
+                int departNum = 0;    //部门人数汇总
+                VacateBBO bbo = new VacateBBO();
+                bbo.setDepart(depart);
+                List<VacateCBO> cbos = new ArrayList<>();
+                Set<String> positions = list.stream().filter(vacate -> depart.equals(vacate.getDepart())).map(Vacate::getPosition).collect(Collectors.toSet());
+                for (String position : positions) {
+                    VacateCBO cbo = new VacateCBO();
+                    cbo.setPosition(position);
+                    List<VacateDBO> dbos = new ArrayList<>();
+                    Set<String> names = list.stream().filter(vacate -> position.equals(vacate.getPosition())).map(Vacate::getName).collect(Collectors.toSet());
+                    for (String name : names) {
+                        //正常请假时长
+                        double normalTime = normals.stream().filter(vacate -> name.equals(vacate.getName())).mapToDouble(Vacate::getTime).sum();
+                        departNormal += normalTime;
+                        sumNormal += normalTime;
+                        departNum++;
+                        sumNum++;
+                        //补班请假时长
+                        double fillTime = extrals.stream().filter(vacate -> name.equals(vacate.getName())).mapToDouble(Vacate::getTime).sum();
+                        departFill += fillTime;
+                        sumFill += fillTime;
+                        VacateDBO dbo = new VacateDBO();
+                        dbo.setName(name);
+                        dbo.setNormalTime(normalTime);
+                        dbo.setFillTime(fillTime);
+                        dbos.add(dbo);
+                    }
+                    cbo.setSons(dbos);
+                    cbos.add(cbo);
+                }
+                bbo.setSons(cbos);
+                bbos.add(bbo);
+                bbos.add(departCount(departNormal, departFill, departNum, null));
+            }
+            abo.setSons(bbos);
+            abos.add(abo);
+        }
+        VacateABO vacateABO = new VacateABO();
+        List<VacateBBO> bbos = new ArrayList<>();
+        bbos.add(departCount(sumNormal, sumFill, sumNum, "总合计"));
+        vacateABO.setSons(bbos);
+        abos.add(vacateABO);
+        vacateCountBO.setSons(abos);
+        return vacateCountBO;
+    }
+
+    /**
+     * 计算合计数量
+     *
+     * @throws SerException
+     */
+    private VacateBBO departCount(double departNormal, double departFill, int num, String type) throws SerException {
+        VacateBBO departCount = new VacateBBO();
+        if ("总合计".equals(type)) {
+            departCount.setDepart("总合计");
+        } else {
+            departCount.setDepart("合计");
+        }
+        List<VacateCBO> cbos = new ArrayList<>();
+        List<VacateDBO> dbos = new ArrayList<>();
+        VacateCBO cbo = new VacateCBO();
+        VacateDBO dbo = new VacateDBO();
+        dbo.setNormalTime(departNormal);
+        dbo.setFillTime(departFill);
+        dbo.setName(num + "人");
+        dbos.add(dbo);
+        cbo.setSons(dbos);
+        cbos.add(cbo);
+        departCount.setSons(cbos);
+        return departCount;
+    }
+
+    @Override
+    public Double currentVacateTime(String start, String end, String date) throws SerException {
+        StartTime startTime = null;
+        EndTime endTime = null;
+        switch (start) {
+            case "08:30":
+                startTime = StartTime.A;
+                break;
+            case "09:00":
+                startTime = StartTime.B;
+                break;
+            case "09:30":
+                startTime = StartTime.C;
+                break;
+            case "10:00":
+                startTime = StartTime.D;
+                break;
+            case "10:30":
+                startTime = StartTime.E;
+                break;
+            case "11:00":
+                startTime = StartTime.F;
+                break;
+            case "11:30":
+                startTime = StartTime.G;
+                break;
+            case "13:30":
+                startTime = StartTime.H;
+                break;
+            case "14:00":
+                startTime = StartTime.I;
+                break;
+            case "14:30":
+                startTime = StartTime.J;
+                break;
+            case "15:00":
+                startTime = StartTime.K;
+                break;
+            case "15:30":
+                startTime = StartTime.L;
+                break;
+            case "16:00":
+                startTime = StartTime.M;
+                break;
+            case "16:30":
+                startTime = StartTime.N;
+                break;
+            case "17:00":
+                startTime = StartTime.O;
+                break;
+            case "17:30":
+                startTime = StartTime.P;
+                break;
+        }
+        switch (end) {
+            case "09:00":
+                endTime = EndTime.A;
+                break;
+            case "09:30":
+                endTime = EndTime.B;
+                break;
+            case "10:00":
+                endTime = EndTime.C;
+                break;
+            case "10:30":
+                endTime = EndTime.D;
+                break;
+            case "11:00":
+                endTime = EndTime.E;
+                break;
+            case "11:30":
+                endTime = EndTime.F;
+                break;
+            case "12:00":
+                endTime = EndTime.G;
+                break;
+            case "14:00":
+                endTime = EndTime.H;
+                break;
+            case "14:30":
+                endTime = EndTime.I;
+                break;
+            case "15:00":
+                endTime = EndTime.J;
+                break;
+            case "15:30":
+                endTime = EndTime.K;
+                break;
+            case "16:00":
+                endTime = EndTime.L;
+                break;
+            case "16:30":
+                endTime = EndTime.M;
+                break;
+            case "17:00":
+                endTime = EndTime.N;
+                break;
+            case "17:30":
+                endTime = EndTime.O;
+                break;
+            case "18:00":
+                endTime = EndTime.P;
+                break;
+        }
+        VacateTO to = new VacateTO();
+        to.setStartDate(date);
+        to.setEndDate(date);
+        to.setStartTime(startTime);
+        to.setEndTime(endTime);
+        return getTime(to);
     }
 }

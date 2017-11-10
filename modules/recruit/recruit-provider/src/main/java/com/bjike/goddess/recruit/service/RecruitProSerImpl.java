@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -256,11 +257,23 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
     @Transactional(rollbackFor = {SerException.class})
     public List<RecruitProBO> list(RecruitProDTO dto) throws SerException {
         checkSeeIdentity();
+        search(dto);
         List<RecruitPro> list = super.findByPage(dto);
         List<RecruitProBO> listBO = BeanTransform.copyProperties(list, RecruitProBO.class);
         return listBO;
     }
 
+    private List<RecruitProBO> search(RecruitProDTO dto)throws SerException{
+        if(StringUtils.isNotBlank(dto.getRecruitSite())){
+            dto.getConditions().add(Restrict.like("recruitSite",dto.getRecruitSite()));
+        }
+        if(null != dto.getHaveContract()){
+            dto.getConditions().add(Restrict.eq("haveContract",dto.getHaveContract()));
+        }
+        List<RecruitPro> list = super.findByCis(dto);
+        List<RecruitProBO> recruitProBOS = BeanTransform.copyProperties(list,RecruitProBO.class);
+        return recruitProBOS;
+    }
     /**
      * 保存招聘方案
      *

@@ -91,7 +91,7 @@ public interface BaseInfoManageAPI {
         return;
     }
 
-    ;
+
 
     /**
      * 根据内部项目编号查找项目合同基本信息
@@ -220,4 +220,13 @@ public interface BaseInfoManageAPI {
         return null;
     }
 
+    /**
+     * chenjunhao
+     * 获取某内部项目名称的合同规模数量
+     *
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Double contractScale(String project) throws SerException;
 }

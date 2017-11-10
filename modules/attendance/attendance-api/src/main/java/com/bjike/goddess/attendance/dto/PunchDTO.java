@@ -1,5 +1,7 @@
 package com.bjike.goddess.attendance.dto;
 
+import com.bjike.goddess.attendance.enums.CountType;
+import com.bjike.goddess.attendance.enums.TotalType;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -18,18 +20,35 @@ public class PunchDTO extends BaseDTO {
     public interface RANGE {
     }
 
+    public interface COUNT {
+    }
+
     /**
      * 姓名
      */
     private String name;
-
+    /**
+     * 汇总类型
+     */
+    @NotNull(groups = PunchDTO.COUNT.class, message = "汇总类型不能为空")
+    private CountType countType;
+    /**
+     * 统计类型
+     */
+    private TotalType totalType;
+    /**
+     * 部门数组
+     */
+    private String[] departs;
     /**
      * 开始时间
      */
+    @NotBlank(groups = PunchDTO.COUNT.class, message = "汇总类型不能为空")
     private String startTime;
     /**
      * 结束时间
      */
+    @NotBlank(groups = PunchDTO.COUNT.class, message = "汇总类型不能为空")
     private String endTime;
 
     /**
@@ -47,6 +66,30 @@ public class PunchDTO extends BaseDTO {
      */
     @NotBlank(groups = PunchDTO.RANGE.class, message = "当前位置不能为空")
     private String area;
+
+    public TotalType getTotalType() {
+        return totalType;
+    }
+
+    public void setTotalType(TotalType totalType) {
+        this.totalType = totalType;
+    }
+
+    public CountType getCountType() {
+        return countType;
+    }
+
+    public void setCountType(CountType countType) {
+        this.countType = countType;
+    }
+
+    public String[] getDeparts() {
+        return departs;
+    }
+
+    public void setDeparts(String[] departs) {
+        this.departs = departs;
+    }
 
     public String getStartTime() {
         return startTime;

@@ -3,10 +3,10 @@ package com.bjike.goddess.taskallotment.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.taskallotment.enums.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 /**
@@ -21,7 +21,17 @@ import java.util.List;
 @Entity
 @Table(name = "taskallotment_tasknode")
 public class TaskNode extends BaseEntity {
+    /**
+     * 父id（用于拆分任务识别）
+     */
+    @Column(name = "father_id", columnDefinition = "VARCHAR(36)   COMMENT '父id'")
+    private String fatherId;
 
+    /**
+     * 是否有子记录（用于拆分任务识别）
+     */
+    @Column(name = "haveSon", columnDefinition = "TINYINT(1)   COMMENT '是否有子记录'")
+    private Boolean haveSon;
     /**
      * 发起人
      */
@@ -278,20 +288,41 @@ public class TaskNode extends BaseEntity {
     /**
      * 项目表信息
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "table_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目表信息'")
-    private com.bjike.goddess.taskallotment.entity.Table table;
+    @Column(name = "table_id", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '项目表信息'")
+    private String tableId;
 
     /**
-     * 自定义字段信息
+     * 分发时间
      */
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "taskNode")
-    private List<CustomTitle> customTitles;
-    /**
-     * 问题信息
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "taskNode")
-    private List<Question> questions;
+    @Column(name = "time", columnDefinition = "DATETIME   COMMENT '分发时间'")
+    private LocalDateTime time;
+
+//    /**
+//     * 自定义字段信息
+//     */
+//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.REFRESH,CascadeType.PERSIST}, mappedBy = "taskNode")
+//    private List<CustomTitle> customTitles;
+//    /**
+//     * 问题信息
+//     */
+//    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "taskNode")
+//    private List<Question> questions;
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
+    }
 
     public String getReason() {
         return reason;
@@ -413,13 +444,13 @@ public class TaskNode extends BaseEntity {
         this.initiate = initiate;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
+//    public List<Question> getQuestions() {
+//        return questions;
+//    }
+//
+//    public void setQuestions(List<Question> questions) {
+//        this.questions = questions;
+//    }
 
     public LocalDateTime getStartExecute() {
         return startExecute;
@@ -565,9 +596,9 @@ public class TaskNode extends BaseEntity {
         this.summary = summary;
     }
 
-    public List<CustomTitle> getCustomTitles() {
-        return customTitles;
-    }
+//    public List<CustomTitle> getCustomTitles() {
+//        return customTitles;
+//    }
 
     public LocalDateTime getStartTime() {
         return startTime;
@@ -617,9 +648,9 @@ public class TaskNode extends BaseEntity {
         this.execute = execute;
     }
 
-    public void setCustomTitles(List<CustomTitle> customTitles) {
-        this.customTitles = customTitles;
-    }
+//    public void setCustomTitles(List<CustomTitle> customTitles) {
+//        this.customTitles = customTitles;
+//    }
 
     public TaskType getTaskType() {
         return taskType;
@@ -637,12 +668,12 @@ public class TaskNode extends BaseEntity {
         this.type = type;
     }
 
-    public com.bjike.goddess.taskallotment.entity.Table getTable() {
-        return table;
+    public String getTableId() {
+        return tableId;
     }
 
-    public void setTable(com.bjike.goddess.taskallotment.entity.Table table) {
-        this.table = table;
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
     }
 
     public String getTaskName() {
@@ -691,5 +722,13 @@ public class TaskNode extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Boolean getHaveSon() {
+        return haveSon;
+    }
+
+    public void setHaveSon(Boolean haveSon) {
+        this.haveSon = haveSon;
     }
 }

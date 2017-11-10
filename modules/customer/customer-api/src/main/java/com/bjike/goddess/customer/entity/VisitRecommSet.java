@@ -39,8 +39,8 @@ public class VisitRecommSet extends BaseEntity {
     /**
      * 推荐更新信息时间
      */
-    @Column(name = "RecommInfoUpdateTime", nullable = false, columnDefinition = "DATETIME   COMMENT '推荐更新信息时间'")
-    private LocalDateTime RecommInfoUpdateTime;
+    @Column(name = "recommInfoUpdateTime", nullable = false, columnDefinition = "DATETIME   COMMENT '推荐更新信息时间'")
+    private LocalDateTime recommInfoUpdateTime;
     /**
      * 推荐信息更新频率
      */
@@ -94,11 +94,11 @@ public class VisitRecommSet extends BaseEntity {
     }
 
     public LocalDateTime getRecommInfoUpdateTime() {
-        return RecommInfoUpdateTime;
+        return recommInfoUpdateTime;
     }
 
     public void setRecommInfoUpdateTime(LocalDateTime recommInfoUpdateTime) {
-        RecommInfoUpdateTime = recommInfoUpdateTime;
+        this.recommInfoUpdateTime = recommInfoUpdateTime;
     }
 
     public RecommInfoUpdateFreq getRecommInfoUpdateFreq() {

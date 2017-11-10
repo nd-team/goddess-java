@@ -37,14 +37,14 @@ public class OptionMakeBO extends BaseBO {
      */
     private SeriesBBO[] series;
     //悬停提示
-    private TooltipBO tooltipBO;
+    private TooltipBO tooltip;
 
-    public TooltipBO getTooltipBO() {
-        return tooltipBO;
+    public TooltipBO getTooltip() {
+        return tooltip;
     }
 
-    public void setTooltipBO(TooltipBO tooltipBO) {
-        this.tooltipBO = tooltipBO;
+    public void setTooltip(TooltipBO tooltip) {
+        this.tooltip = tooltip;
     }
 
     public TitleBO getTitle() {

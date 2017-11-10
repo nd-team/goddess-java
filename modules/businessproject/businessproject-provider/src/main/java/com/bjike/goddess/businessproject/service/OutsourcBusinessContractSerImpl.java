@@ -214,6 +214,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
 
     @Override
     public List<OutsourcBusinessContractBO> list(OutsourcBusinessContractDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
         checkSeeIdentity();
         search(dto);
         OutsourcBusinessContract outsourcBusinessContract = new OutsourcBusinessContract();

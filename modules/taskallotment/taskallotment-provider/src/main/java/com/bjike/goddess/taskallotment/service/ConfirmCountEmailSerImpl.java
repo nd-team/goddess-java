@@ -13,17 +13,24 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.dto.ConfirmCountEmailDTO;
-import com.bjike.goddess.taskallotment.dto.FinishCountEmailDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.entity.ConfirmCountEmail;
-import com.bjike.goddess.taskallotment.entity.FinishCountEmail;
+import com.bjike.goddess.taskallotment.entity.Project;
+import com.bjike.goddess.taskallotment.entity.Table;
 import com.bjike.goddess.taskallotment.enums.*;
 import com.bjike.goddess.taskallotment.to.ConfirmCountEmailTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -48,6 +55,8 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "taskallotmentSerCache")
 @Service
 public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, ConfirmCountEmailDTO> implements ConfirmCountEmailSer {
+    public static final Logger LOGGER = LoggerFactory.getLogger(ConfirmCountEmailSerImpl.class);
+
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -60,6 +69,12 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
     private CommonalityAPI commonalityAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ProjectSer projectSer;
+    @Autowired
+    private TableSer tableSer;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -69,9 +84,11 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
         long mis = DateUtil.mis(entity.getSetTime(), LocalDateTime.now());
         if (mis < 0) {
             throw new SerException("设置时间必须大于当前时间");
-        }if (null==to.getCountFrequency()&&null==to.getStartTime()&&null==to.getEndTime()){
+        }
+        if (null == to.getCountFrequency() && StringUtils.isBlank(to.getStartTime()) && StringUtils.isBlank(to.getEndTime())) {
             throw new SerException("汇总频率和汇总时间区间必须选一个，且只能有一个");
-        }if (null!=to.getCountFrequency()&&null!=to.getStartTime()&&null!=to.getEndTime()){
+        }
+        if (null != to.getCountFrequency() && StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getStartTime())) {
             throw new SerException("汇总频率和汇总时间区间只能有一个");
         }
         entity.setCreater(name);
@@ -150,9 +167,11 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
         long mis = DateUtil.mis(entity.getSetTime(), LocalDateTime.now());
         if (mis < 0) {
             throw new SerException("设置时间必须大于当前时间");
-        }if (null==to.getCountFrequency()&&null==to.getStartTime()&&null==to.getEndTime()){
+        }
+        if (null == to.getCountFrequency() && StringUtils.isBlank(to.getStartTime()) && StringUtils.isBlank(to.getEndTime())) {
             throw new SerException("汇总频率和汇总时间区间必须选一个，且只能有一个");
-        }if (null!=to.getCountFrequency()&&null!=to.getStartTime()&&null!=to.getEndTime()){
+        }
+        if (null != to.getCountFrequency() && StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getStartTime())) {
             throw new SerException("汇总频率和汇总时间区间只能有一个");
         }
         String[] countPersonss = to.getCountPersonss();
@@ -232,7 +251,58 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        return BeanTransform.copyProperties(entity, ConfirmCountEmailBO.class);
+        String[] departs = null;
+        String[] projects = null;
+        String[] tables = null;
+        String[] forDepart = null;
+        if (null != entity.getForDeparts()) {
+            forDepart = entity.getForDeparts().split(",");
+        }
+        if (null != entity.getDepart()) {
+            departs = entity.getDepart().split(",");
+        }
+        if (null != entity.getProject()) {
+            projects = entity.getProject().split(",");
+        }
+        if (null != entity.getTable()) {
+            tables = entity.getTable().split(",");
+        }
+        List<ProjectBO> projectBOS = new ArrayList<>();
+        List<TableBO> tableBOS = new ArrayList<>();
+        if (null != projects) {
+            for (String project : projects) {
+                ProjectDTO projectDTO = new ProjectDTO();
+                projectDTO.getConditions().add(Restrict.eq("project", project));
+                List<Project> projects1 = projectSer.findByCis(projectDTO);
+                if (!projects1.isEmpty()) {
+                    projectBOS.add(BeanTransform.copyProperties(projects1.get(0), ProjectBO.class));
+                }
+            }
+        }
+        if (null != tables) {
+            for (String project : tables) {
+                TableDTO projectDTO = new TableDTO();
+                projectDTO.getConditions().add(Restrict.eq("name", project));
+                List<Table> projects1 = tableSer.findByCis(projectDTO);
+                if (!projects1.isEmpty()) {
+                    tableBOS.add(BeanTransform.copyProperties(projects1.get(0), TableBO.class));
+                }
+            }
+        }
+        List<DepartmentDetailBO> detailBOS = new ArrayList<>();
+        List<DepartmentDetailBO> forDetailBOS = new ArrayList<>();
+        if (null != departs) {
+            detailBOS = departmentDetailAPI.departByName(departs);
+        }
+        if (null != forDepart) {
+            forDetailBOS = departmentDetailAPI.departByName(forDepart);
+        }
+        ConfirmCountEmailBO bo = BeanTransform.copyProperties(entity, ConfirmCountEmailBO.class);
+        bo.setDeparts(detailBOS);
+        bo.setProjects(projectBOS);
+        bo.setTables(tableBOS);
+        bo.setForDepart(forDetailBOS);
+        return bo;
     }
 
     @Override
@@ -251,19 +321,44 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
             String[] mails = null;
             switch (forObject) {
                 case ALL:
-                    List<UserBO> users = positionDetailUserAPI.findUserListInOrgan();
-                    List<String> names = users.stream().map(userBO -> userBO.getUsername()).collect(Collectors.toList());
-                    String[] name = new String[names.size()];
-                    name = names.toArray(name);
-                    List<String> emails = internalContactsAPI.getEmails(name);
-                    mails = new String[emails.size()];
-                    mails = emails.toArray(mails);
+                    List<UserBO> users = null;
+                    try {
+                        users = positionDetailUserAPI.findUserListInOrgan();
+                    } catch (Exception e) {
+                        if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                            LOGGER.error("organize模块服务不可用!");
+                        }
+                    }
+                    if (null != users) {
+                        List<String> names = users.stream().map(userBO -> userBO.getUsername()).collect(Collectors.toList());
+                        String[] name = new String[names.size()];
+                        name = names.toArray(name);
+                        List<String> emails = null;
+                        try {
+                            emails = internalContactsAPI.getEmails(name);
+                        } catch (Exception e) {
+                            if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                                LOGGER.error("通讯录模块服务不可用!");
+                            }
+                        }
+                        if (null != emails) {
+                            mails = new String[emails.size()];
+                            mails = emails.toArray(mails);
+                        }
+                    }
                     break;
                 case DEPART:
                     String[] forDeparts = f.getForDeparts().split(",");   //存的是部门id
                     List<String> list1 = new ArrayList<>();
                     for (String departId : forDeparts) {
-                        CommonalityBO commonalityBO = commonalityAPI.findByDepartment(departId);
+                        CommonalityBO commonalityBO = null;
+                        try {
+                            commonalityBO = commonalityAPI.findByDepartment(departId);
+                        } catch (Exception e) {
+                            if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                                LOGGER.error("通讯录模块服务不可用!");
+                            }
+                        }
                         if (null != commonalityBO) {
                             list1.add(commonalityBO.getEmail());
                         }
@@ -275,7 +370,14 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
                     break;
                 case PERSON:
                     String[] strings = f.getForPersons().split(",");
-                    List<String> stringList = internalContactsAPI.getEmails(strings);
+                    List<String> stringList = null;
+                    try {
+                        stringList = internalContactsAPI.getEmails(strings);
+                    } catch (Exception e) {
+                        if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                            LOGGER.error("通讯录模块服务不可用!");
+                        }
+                    }
                     if (null != stringList && !stringList.isEmpty()) {
                         mails = new String[stringList.size()];
                         mails = stringList.toArray(mails);
@@ -318,7 +420,13 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
                 if (null != mails && mails.length > 0) {
                     messageTO.setReceivers(mails);
                 }
-                messageAPI.send(messageTO);
+                try {
+                    messageAPI.send(messageTO);
+                } catch (Exception e) {
+                    if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                        LOGGER.error("message服务不可用!");
+                    }
+                }
                 f.setLastTime(LocalDateTime.now());
                 f.setModifyTime(LocalDateTime.now());
                 super.update(f);
@@ -326,7 +434,7 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
         }
     }
 
-    private List<ConfirmCountBO> ConfirmCountBOs(ConfirmCountEmail f) throws SerException{
+    private List<ConfirmCountBO> ConfirmCountBOs(ConfirmCountEmail f) throws SerException {
         TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
         LocalDate startTime = f.getStartTime();
         LocalDate endTime = f.getEndTime();
@@ -387,7 +495,7 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
         }
         taskNodeDTO.setStartTime(DateUtil.dateToString(startTime));
         taskNodeDTO.setEndTime(DateUtil.dateToString(endTime));
-        List<ConfirmCountBO> list=taskNodeSer.confirmCount(taskNodeDTO);
+        List<ConfirmCountBO> list = taskNodeSer.confirmCount(taskNodeDTO);
         return list;
     }
 
@@ -490,7 +598,7 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
                             }
                             if (null != last.getTaskType()) {
                                 sb.append("<td>" + last.getTaskType() + "</td>");
-                            }else {
+                            } else {
                                 sb.append("<td> </td>");
                             }
                             sb.append("<td>" + last.getHaveInitiate() + "</td>");
@@ -505,7 +613,6 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
             }
         }
         sb.append("</table>");
-        System.out.println(sb.toString());
         return sb.toString();
     }
 
@@ -518,7 +625,7 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
                 List<ConfirmGrandSonBO> grandSonS = table.getGrandSonS();
                 for (ConfirmGrandSonBO grandSonBO : grandSonS) {
                     List<ConfirmLastBO> caseLastS = grandSonBO.getConfirmLastS();
-                    num+=caseLastS.size();
+                    num += caseLastS.size();
                 }
             }
         }

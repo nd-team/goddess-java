@@ -275,7 +275,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         Double unfinishMoney = receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getUnfinishNum();
         receivableSubsidiary.setUnfinishMoney(unfinishMoney);
         //管理费(实际数量金额*承包商比例)
-        Double managementFee = contractor.getPercent() * receivableSubsidiary.getRealCountMoney();
+        Double managementFee = (contractor.getPercent()/100) * receivableSubsidiary.getRealCountMoney();
         receivableSubsidiary.setManagementFee(managementFee);
         //到帐金额(实际数量金额-管理费)
         Double accountMoney = receivableSubsidiary.getRealCountMoney() - managementFee;
@@ -322,7 +322,7 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         Double unfinishMoney = receivableSubsidiary.getTaskPrice() * receivableSubsidiary.getUnfinishNum();
         receivableSubsidiary.setUnfinishMoney(unfinishMoney);
         //管理费(实际数量金额*承包商比例)
-        Double managementFee = contractor.getPercent() * receivableSubsidiary.getRealCountMoney();
+        Double managementFee = (contractor.getPercent()/100) * receivableSubsidiary.getRealCountMoney();
         receivableSubsidiary.setManagementFee(managementFee);
         //到帐金额(实际数量金额-管理费)
         Double accountMoney = receivableSubsidiary.getRealCountMoney() - managementFee;
@@ -1064,6 +1064,13 @@ public class ReceivableSubsidiarySerImpl extends ServiceImpl<ReceivableSubsidiar
         export.setFrame("test");
         export.setPact("test");
         export.setFlow("test");
+        export.setFinishTime(LocalDate.now());
+        export.setCheckTime(LocalDate.now());
+        export.setAuditTime(LocalDate.now());
+        export.setCountTime(LocalDate.now());
+        export.setBillTime(LocalDate.now());
+        export.setPlanTime(LocalDate.now());
+        export.setAccountTime(LocalDate.now());
         templateExports.add(export);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(templateExports, exce);

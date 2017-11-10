@@ -1,13 +1,12 @@
 package com.bjike.goddess.attendance.entity;
 
-import com.bjike.goddess.attendance.enums.AduitStatus;
 import com.bjike.goddess.attendance.enums.VacateType;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -24,6 +23,12 @@ import java.time.LocalDateTime;
 public class Vacate extends BaseEntity {
 
     /**
+     * 请假时间
+     */
+    @Column(name = "date", nullable = false, columnDefinition = "DATE   COMMENT '开始时间'")
+    private LocalDate date;
+
+    /**
      * 员工编号
      */
     @Column(name = "employeeNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
@@ -34,6 +39,12 @@ public class Vacate extends BaseEntity {
      */
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '请假人'")
     private String name;
+
+    /**
+     * 地区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
 
     /**
      * 项目组/部门
@@ -92,26 +103,72 @@ public class Vacate extends BaseEntity {
     /**
      * 主送人
      */
-    @Column(name = "main", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '主送人'")
+    @Column(name = "main", nullable = false, columnDefinition = "TEXT   COMMENT '主送人'")
     private String main;
 
     /**
      * 抄送人
      */
-    @Column(name = "carbon", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '抄送人'")
+    @Column(name = "carbon", columnDefinition = "TEXT   COMMENT '抄送人'")
     private String carbon;
 
     /**
-     * 审核意见
+     * 工作交接内容
      */
-    @Column(name = "advice", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
-    private String advice;
+    @Column(name = "handoff", columnDefinition = "TEXT   COMMENT '工作交接内容'")
+    private String handoff;
 
     /**
-     * 审核状态
+     * uuid
      */
-    @Column(name = "aduitStatus", nullable = false, columnDefinition = "TINYINT(2) COMMENT '审核状态'")
-    private AduitStatus aduitStatus;
+    @Column(name = "uuid", columnDefinition = "VARCHAR(36)   COMMENT 'uuid'")
+    private String uuid;
+
+    /**
+     * 请假审核信息
+     */
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, mappedBy = "vacate")
+    private List<VacateAudit> vacateAudits;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public List<VacateAudit> getVacateAudits() {
+        return vacateAudits;
+    }
+
+    public void setVacateAudits(List<VacateAudit> vacateAudits) {
+        this.vacateAudits = vacateAudits;
+    }
+
+    public String getHandoff() {
+        return handoff;
+    }
+
+    public void setHandoff(String handoff) {
+        this.handoff = handoff;
+    }
 
     public VacateType getVacateType() {
         return vacateType;
@@ -119,14 +176,6 @@ public class Vacate extends BaseEntity {
 
     public void setVacateType(VacateType vacateType) {
         this.vacateType = vacateType;
-    }
-
-    public AduitStatus getAduitStatus() {
-        return aduitStatus;
-    }
-
-    public void setAduitStatus(AduitStatus aduitStatus) {
-        this.aduitStatus = aduitStatus;
     }
 
     public String getEmployeeNumber() {
@@ -223,13 +272,5 @@ public class Vacate extends BaseEntity {
 
     public void setCarbon(String carbon) {
         this.carbon = carbon;
-    }
-
-    public String getAdvice() {
-        return advice;
-    }
-
-    public void setAdvice(String advice) {
-        this.advice = advice;
     }
 }

@@ -20,7 +20,6 @@
 	另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
 	<!--发布接口,供其他模块调用-->
 	<dubbo:service interface="com.bjike.goddess.checkhost.api.StayApplyAPI" ref="stayApplyApiImpl" />
-	<dubbo:service interface="com.bjike.goddess.checkhost.api.HostApplyAPI" ref="hostApplyApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.checkhost.api.StayDaysAPI" ref="stayDaysApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.checkhost.api.DormitoryInfoAPI" ref="dormitoryInfoApiImpl" />
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.checkhost.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>

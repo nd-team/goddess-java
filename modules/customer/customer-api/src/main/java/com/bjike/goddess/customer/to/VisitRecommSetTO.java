@@ -25,33 +25,37 @@ public class VisitRecommSetTO extends BaseTO {
     /**
      * 推荐更新信息时间
      */
-    @NotBlank(message = "推荐更新信息时间不能为空",groups = {ADD.class,EDIT.class})
-    private String RecommInfoUpdateTime;
+    @NotBlank(message = "推荐更新信息时间不能为空", groups = {ADD.class, EDIT.class})
+    private String recommInfoUpdateTime;
+
     /**
      * 推荐信息更新频率
      */
-    @NotNull(message = "推荐信息更新频率不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "推荐信息更新频率不能为空", groups = {ADD.class, EDIT.class})
     private RecommInfoUpdateFreq recommInfoUpdateFreq;
+
     /**
      * 推荐间隔
      */
-    @NotNull(message = "推荐间隔不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "推荐间隔不能为空", groups = {ADD.class, EDIT.class})
     private RecommInfoUpdateFreq recommendInterval;
+
     /**
      * 推荐提醒时间
      */
-    @NotNull(message = "推荐提醒时间不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "推荐提醒时间不能为空", groups = {ADD.class, EDIT.class})
     private ReminderVisit reminderVisit;
+
     /**
      * 推荐时间
      */
-    @NotBlank(message = "推荐时间不能为空",groups = {ADD.class,EDIT.class})
+    @NotBlank(message = "推荐时间不能为空", groups = {ADD.class, EDIT.class})
     private String recommendDate;
 
     /**
      * 发送对象
      */
-    @NotNull(message = "发送对象不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "发送对象不能为空", groups = {ADD.class, EDIT.class})
     private List<String> sendObject;
 
     /**
@@ -60,11 +64,11 @@ public class VisitRecommSetTO extends BaseTO {
     private Status status;
 
     public String getRecommInfoUpdateTime() {
-        return RecommInfoUpdateTime;
+        return recommInfoUpdateTime;
     }
 
     public void setRecommInfoUpdateTime(String recommInfoUpdateTime) {
-        RecommInfoUpdateTime = recommInfoUpdateTime;
+        this.recommInfoUpdateTime = recommInfoUpdateTime;
     }
 
     public RecommInfoUpdateFreq getRecommInfoUpdateFreq() {

@@ -29,7 +29,7 @@ public class VisitRecommSetBO extends BaseBO {
     /**
      * 推荐更新信息时间
      */
-    private String RecommInfoUpdateTime;
+    private String recommInfoUpdateTime;
     /**
      * 推荐信息更新频率
      */
@@ -77,11 +77,11 @@ public class VisitRecommSetBO extends BaseBO {
     }
 
     public String getRecommInfoUpdateTime() {
-        return RecommInfoUpdateTime;
+        return recommInfoUpdateTime;
     }
 
     public void setRecommInfoUpdateTime(String recommInfoUpdateTime) {
-        RecommInfoUpdateTime = recommInfoUpdateTime;
+        this.recommInfoUpdateTime = recommInfoUpdateTime;
     }
 
     public RecommInfoUpdateFreq getRecommInfoUpdateFreq() {

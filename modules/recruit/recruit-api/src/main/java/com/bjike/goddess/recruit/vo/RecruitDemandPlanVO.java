@@ -38,7 +38,7 @@ public class RecruitDemandPlanVO {
     /**
      * 计划招聘人数
      */
-    private String planRecruitNum;
+    private Integer planRecruitNum;
 
     /**
      * 岗位描述
@@ -151,11 +151,11 @@ public class RecruitDemandPlanVO {
         this.populationGap = populationGap;
     }
 
-    public String getPlanRecruitNum() {
+    public Integer getPlanRecruitNum() {
         return planRecruitNum;
     }
 
-    public void setPlanRecruitNum(String planRecruitNum) {
+    public void setPlanRecruitNum(Integer planRecruitNum) {
         this.planRecruitNum = planRecruitNum;
     }
 

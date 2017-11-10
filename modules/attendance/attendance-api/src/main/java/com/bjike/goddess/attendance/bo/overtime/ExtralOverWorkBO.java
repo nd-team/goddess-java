@@ -1,9 +1,6 @@
 package com.bjike.goddess.attendance.bo.overtime;
 
-import com.bjike.goddess.attendance.enums.Status;
 import com.bjike.goddess.common.api.bo.BaseBO;
-
-import javax.persistence.Column;
 
 /**
  * 补班设置业务传输对象
@@ -51,6 +48,18 @@ public class ExtralOverWorkBO extends BaseBO {
      */
     private String modifyTime;
 
+    /**
+     * 是否午休
+     */
+    private Boolean lunchBreak;
+
+    public Boolean getLunchBreak() {
+        return lunchBreak;
+    }
+
+    public void setLunchBreak(Boolean lunchBreak) {
+        this.lunchBreak = lunchBreak;
+    }
 
     public String getOverType() {
         return overType;

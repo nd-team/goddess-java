@@ -5,7 +5,10 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
+import com.bjike.goddess.taskallotment.excel.ProjectExcel;
+import com.bjike.goddess.taskallotment.excel.TableExcel;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
 import com.bjike.goddess.taskallotment.to.TableTO;
@@ -163,4 +166,42 @@ public interface ProjectSer extends Ser<Project, ProjectDTO> {
      * @throws SerException
      */
     Set<String> taskNames(String tableId) throws SerException;
+
+    /**
+     * 添加表
+     * @param to
+     * @throws SerException
+     */
+    void addTable(TableTO to) throws SerException;
+
+    /**
+     * 导出项目excel
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    byte[] exportProjectExcel(ProjectDTO dto) throws SerException;
+
+    /**
+     * 导入项目excel
+     * @param toList
+     * @throws SerException
+     */
+    void leadProjectExcel(List<ProjectExcel> toList) throws SerException;
+
+    /**
+     * 导出项目表excel
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    byte[] exportTableExcel(TableDTO dto) throws SerException;
+
+    /**
+     * 导入项目表excel
+     * @param toList
+     * @param projectId
+     * @throws SerException
+     */
+    void leadTableExcel(List<TableExcel> toList, String projectId) throws SerException;
 }

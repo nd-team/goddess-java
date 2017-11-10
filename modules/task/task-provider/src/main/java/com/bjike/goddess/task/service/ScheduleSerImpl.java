@@ -1,5 +1,6 @@
 package com.bjike.goddess.task.service;
 
+import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -7,11 +8,13 @@ import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.ModulesAPI;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.collect.Collect;
@@ -23,6 +26,7 @@ import com.bjike.goddess.task.dto.CollectDTO;
 import com.bjike.goddess.task.entity.Customize;
 import com.bjike.goddess.task.enums.*;
 import com.bjike.goddess.task.util.HtmlBuild;
+import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
@@ -36,6 +40,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: [liguiqin]
@@ -59,6 +64,16 @@ public class ScheduleSerImpl implements ScheduleSer {
     private ModulesAPI modulesAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private ProjectAPI projectAPI;
+    @Autowired
+    private BaseInfoManageAPI baseInfoManageAPI;
+    @Autowired
+    private CustomizeSer customizeSer;
 
     @Override
     public Collect collect(CollectDTO dto) throws SerException {
@@ -77,7 +92,16 @@ public class ScheduleSerImpl implements ScheduleSer {
         Collect collect = new Collect();
         if (dto.isNeedFixed()) {
             String sql = getSql(dto);
-            //todo 总规模数（从商务合同管理获取），出车数量（从出车记录管理获取）未获取
+            String project = projectAPI.findByID(dto.getProjectId()).getProject();
+            try {
+                collect.setScaleCount(baseInfoManageAPI.contractScale(project));
+            } catch (Exception e) {
+                if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                    LOGGER.error("businessproject服务不可用!");
+                }
+            }
+            collect.setFinishCount(customizeSer.get(project));
+            //todo 出车数量（从出车记录管理获取）未获取
             List<Object> objects = tableSer.findBySql(sql);
             if (null != objects && objects.size() > 0) {
                 Object o = objects.get(0);
@@ -239,7 +263,7 @@ public class ScheduleSerImpl implements ScheduleSer {
         String projectId = dto.getProjectId();
         String cons = null;
         if (null != dto.getTablesId()) {
-            cons = "AND t.id IN('" + StringUtils.join(dto.getTablesId(), "','") + "')";
+            cons = " AND t.id IN('" + StringUtils.join(dto.getTablesId(), "','") + "')";
         }
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT * FROM ( ");
@@ -258,7 +282,7 @@ public class ScheduleSerImpl implements ScheduleSer {
         if (null != cons) {
             sb.append(cons);
         }
-        sb.append(" GROUP BY execute)a ");
+        sb.append(" GROUP BY execute) a ");
         sb.append("  ) b ");
         return sb.toString();
     }
@@ -361,26 +385,37 @@ public class ScheduleSerImpl implements ScheduleSer {
                 project.setTables(tables);
                 String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
                 //邮件发送
-                List<String> mails = new ArrayList<>();
-                List<UserBO> userBOS = null;
                 NoticeType type = customize.getNoticeType();
+                String[] strings = null;
                 if (type.equals(NoticeType.PERSON)) {
-                    UserDTO dto = new UserDTO();
-                    dto.getConditions().add(Restrict.in("username", customize.getNoticeTarget().split(",")));
-                    userBOS = userAPI.findByCis(dto);
+                    strings = customize.getNoticeTarget().split(",");
                 } else if (type.equals(NoticeType.DEPT)) {
-                    userBOS = userAPI.findByDept(customize.getNoticeTarget().split(","));
-                } else {
-                    userBOS = userAPI.findAllUser();
-                }
-                if (null != userBOS) {
-                    for (UserBO user : userBOS) {
-                        if (null != user.getEmail()) {
-                            mails.add(user.getEmail());
+                    String[] s = customize.getNoticeTarget().split(",");  //部门数组
+                    Set<String> set = new HashSet<>();
+                    List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(strings);
+                    if (null != detailBOS) {
+                        for (DepartmentDetailBO d : detailBOS) {
+                            Set<String> names = departmentDetailAPI.departPersons(d.getId());
+                            if (null != names) {
+                                set.addAll(names);
+                            }
                         }
                     }
-                    if (mails.size() > 0) {
-                        sendMail(customize.getName(), html, mails);
+                    List<String> list = new ArrayList<>(set);
+                    strings = new String[list.size()];
+                    strings = list.toArray(strings);
+                } else {
+                    List<UserBO> findUserListInOrgan = positionDetailUserAPI.findUserListInOrgan();
+                    List<String> list = findUserListInOrgan.stream().map(UserBO::getUsername).collect(Collectors.toList());
+                    strings = new String[list.size()];
+                    strings = list.toArray(strings);
+                }
+                if (null != strings) {
+                    List<String> mails = internalContactsAPI.getEmails(strings);
+                    if (null != mails && !mails.isEmpty()) {
+                        String[] recivers = new String[mails.size()];
+                        recivers = mails.toArray(recivers);
+                        sendMail(customize.getName(), html, recivers);
                     }
                 }
             }
@@ -393,15 +428,13 @@ public class ScheduleSerImpl implements ScheduleSer {
      *
      * @param title
      * @param content
-     * @param mails
+     * @param recivers
      * @throws SerException
      */
-    private void sendMail(String title, String content, List<String> mails) throws SerException {
+    private void sendMail(String title, String content, String[] recivers) throws SerException {
         MessageTO to = new MessageTO(title, content);
         to.setSendType(SendType.EMAIL);
-        String[] receivers = new String[mails.size()];
-        receivers = mails.toArray(receivers);
-        to.setReceivers(receivers);
+        to.setReceivers(recivers);
         messageAPI.send(to);
     }
 

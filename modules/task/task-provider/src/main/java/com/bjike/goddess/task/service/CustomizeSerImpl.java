@@ -60,7 +60,16 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 if (null != project) {
                     bo.setProject(project.getProject());
                 }
-                bo.setTables(tableAPI.names(bo.getTablesId().split(",")));
+                String[] tableIds = bo.getTablesId().split(",");
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < tableIds.length; i++) {
+                    if (i == tableIds.length - 1) {
+                        sb.append(tableAPI.names(new String[]{tableIds[i]})[0]);
+                    } else {
+                        sb.append(tableAPI.names(new String[]{tableIds[i]})[0] + ",");
+                    }
+                }
+                bo.setTable(sb.toString());
             }
         }
         return bos;
@@ -89,14 +98,14 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
 
     @Override
     public void edit(CustomizeTO to) throws SerException {
-        Customize entity=super.findById(to.getId());
+        Customize entity = super.findById(to.getId());
         validated(to);
         Customize customize = BeanTransform.copyProperties(to, Customize.class, "tables", "fields");
         customize.setTablesId(StringUtils.join(to.getTables(), ","));
         customize.setFields(StringUtils.join(to.getFields(), ","));
         customize.setName(to.getCollectName());
         customize.setLastTime(LocalDateTime.now());
-        BeanUtils.copyProperties(customize,entity,"id","user","createTime");
+        BeanUtils.copyProperties(customize, entity, "id", "user", "createTime");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         if (entity.getEnable()) {
@@ -134,9 +143,10 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             if (StringUtils.isBlank(to.getNoticeTarget())) {
                 throw new SerException("请指定提醒部门或者人员");
             }
-        }try {
+        }
+        try {
             Integer.parseInt(to.getTimeVal());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new SerException("定时时间间隔值必须为整数数字");
         }
     }
@@ -213,7 +223,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 if (second < ChronoUnit.SECONDS.between(last, now)) {
                     return true;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 return false;
             }
         } else { //每天
@@ -229,4 +239,17 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         return false;
     }
 
+    @Override
+    public Double get(String project) throws SerException {
+        String sql = "SELECT count(*) count FROM taskallotment_tasknode " +
+                "WHERE table_id in (SELECT id FROM taskallotment_table " +
+                "WHERE project_id in (SELECT id FROM taskallotment_project " +
+                "WHERE project='" + project + "')) AND taskStatus=0";
+        List<Object> objects = super.findBySql(sql);
+        if (null != objects) {
+            Object[] obj = (Object[]) objects.get(0);
+            return Double.parseDouble(obj[0] + "");
+        }
+        return 0d;
+    }
 }

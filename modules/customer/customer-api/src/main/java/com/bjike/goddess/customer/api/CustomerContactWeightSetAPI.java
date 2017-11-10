@@ -90,4 +90,11 @@ public interface CustomerContactWeightSetAPI {
     default CustomerContactWeightSetBO findByCustomerType(String customerContactType) throws SerException {
         return null;
     }
+    /**
+     * 获取所有的接触阶段名
+     *
+     */
+    default List<String> findName() throws SerException {
+        return null;
+    }
 }
