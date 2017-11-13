@@ -4,9 +4,11 @@ import com.bjike.goddess.attendance.bo.VacateBO;
 import com.bjike.goddess.attendance.bo.VacateCountBO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.service.VacateSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +118,10 @@ public class VacateApiImpl implements VacateAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return vacateSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return vacateSer.userOverTimeCollect( overTimesDTO);
     }
 }

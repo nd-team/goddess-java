@@ -13,8 +13,8 @@ import com.bjike.goddess.attendance.push.ios.IOSUnicast;
  * @Copy: [com.bjike]
  */
 public class Push {
-    private static String appkey = null;   //友盟对应用的唯一标识，注册时获取
-    private static String appMasterSecret = null;   //服务器秘钥，注册时获取
+    private static String appkey = "5a040e41f43e4849a0000385";   //友盟对应用的唯一标识，注册时获取
+    private static String appMasterSecret = "dgoqr91srxuf9p7nfxjahjj1fqwxokcp";   //服务器秘钥，注册时获取
     private static PushClient client = new PushClient();
 
     /**
@@ -61,5 +61,15 @@ public class Push {
         // Set customized fields
         unicast.setCustomizedField("test", "push");
         return client.send(unicast);
+    }
+
+
+    public static void main(String[] args) {
+        try {
+            Boolean s = androidUnicast("aaaaaaaaaaaaaaaaaaaabbbbbbbbbbccccccccccdddd","大饭店否","该广告","看看");
+            System.out.println( s );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

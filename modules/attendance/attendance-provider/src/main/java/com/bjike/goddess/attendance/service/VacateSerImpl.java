@@ -5,6 +5,7 @@ import com.bjike.goddess.attendance.dto.VacateAuditDTO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
 import com.bjike.goddess.attendance.dto.VacateSetDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.Vacate;
 import com.bjike.goddess.attendance.entity.VacateAudit;
 import com.bjike.goddess.attendance.entity.VacateSet;
@@ -12,6 +13,7 @@ import com.bjike.goddess.attendance.enums.*;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -32,8 +34,10 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1114,4 +1118,148 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         to.setEndTime(endTime);
         return getTime(to);
     }
+
+    @Override
+    public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        OverWorkTimesVO overWorkTimesVO = new OverWorkTimesVO();
+
+        String userName = overTimesDTO.getOverWorker();
+        OverTimesType overTimesType = overTimesDTO.getOverTimesType();
+        if (StringUtils.isBlank( userName )){
+            throw new SerException("请假人员不能为空");
+        }
+        if( null == overTimesType ){
+            throw new SerException("汇总时间类型不能为空");
+        }
+
+        LocalDate timeBegan = LocalDate.now();
+        LocalDate timeEnd = LocalDate.now();
+        switch (overTimesDTO.getOverTimesType()) {
+            case WEEK:
+                if (StringUtils.isBlank("" + overTimesDTO.getYear()) || StringUtils.isBlank("" + overTimesDTO.getMonth()) || StringUtils.isBlank("" + overTimesDTO.getWeek())) {
+                    throw new SerException("年份或月份或周数不能为空");
+                }
+                LocalDate[] dateDuring = DateUtil.getWeekTimes(overTimesDTO.getYear(), overTimesDTO.getMonth(), overTimesDTO.getWeek());
+                timeBegan = dateDuring[0];
+                timeEnd = dateDuring[1];
+                break;
+            case QUART:
+                if (StringUtils.isBlank("" + overTimesDTO.getYear()) || overTimesDTO.getQuart() > 4 || overTimesDTO.getQuart() < 1) {
+                    throw new SerException("年份(year)或季度（quart）不能为空,且year大于1900,quart在1～4之间");
+                }
+                switch (overTimesDTO.getQuart()) {
+                    case 1:
+                        timeBegan = DateUtil.parseDate(overTimesDTO.getYear() + "-01-01");
+                        timeEnd = DateUtil.parseDate(overTimesDTO.getYear() + "-03-31");
+                        break;
+                    case 2:
+                        timeBegan = DateUtil.parseDate(overTimesDTO.getYear() + "-04-01");
+                        timeEnd = DateUtil.parseDate(overTimesDTO.getYear() + "-06-30");
+                        break;
+                    case 3:
+                        timeBegan = DateUtil.parseDate(overTimesDTO.getYear() + "-07-01");
+                        timeEnd = DateUtil.parseDate(overTimesDTO.getYear() + "-09-31");
+                        break;
+                    case 4:
+                        timeBegan = DateUtil.parseDate(overTimesDTO.getYear() + "-10-01");
+                        timeEnd = DateUtil.parseDate(overTimesDTO.getYear() + "-12-31");
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                return null;
+        }
+        if( overTimesType.equals( OverTimesType.WEEK) ){
+            while (timeBegan.isBefore(timeEnd) || timeBegan.isEqual(timeEnd)) {
+                DayOfWeek week = timeBegan.getDayOfWeek();
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
+                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),12,59,59);
+
+                VacateDTO overWorkDTO = new VacateDTO();
+                overWorkDTO.getConditions().add(Restrict.eq("name", userName));
+                overWorkDTO.getConditions().add(Restrict.lt_eq("startTime", start));
+                overWorkDTO.getConditions().add(Restrict.lt_eq("endTime", end));
+                Long count = super.count( overWorkDTO );
+
+                switch (week) {
+                    case MONDAY:
+                        overWorkTimesVO.setFirst(""+count);
+                        break;
+                    case TUESDAY:
+                        overWorkTimesVO.setSecond(""+count);
+                        break;
+                    case WEDNESDAY:
+                        overWorkTimesVO.setThird(""+count);
+                        break;
+                    case THURSDAY:
+                        overWorkTimesVO.setFour(""+count);
+                        break;
+                    case FRIDAY:
+                        overWorkTimesVO.setFive(""+count);
+                        break;
+                    case SATURDAY:
+                        overWorkTimesVO.setSix(""+count);
+                        break;
+                    case SUNDAY:
+                        overWorkTimesVO.setSeven(""+count);
+                        break;
+                    default:
+                        break;
+
+                }
+                timeBegan = timeBegan.plusDays(1);
+            }
+            overWorkTimesVO.setFirst( StringUtils.isBlank(overWorkTimesVO.getFirst())?0+"": overWorkTimesVO.getFirst());
+            overWorkTimesVO.setSecond( StringUtils.isBlank(overWorkTimesVO.getSecond())?0+"": overWorkTimesVO.getSecond());
+            overWorkTimesVO.setThird( StringUtils.isBlank(overWorkTimesVO.getThird())?0+"": overWorkTimesVO.getThird());
+            overWorkTimesVO.setFour( StringUtils.isBlank(overWorkTimesVO.getFour())?0+"": overWorkTimesVO.getFour());
+            overWorkTimesVO.setFive( StringUtils.isBlank(overWorkTimesVO.getFive())?0+"": overWorkTimesVO.getFive());
+            overWorkTimesVO.setSix( StringUtils.isBlank(overWorkTimesVO.getSix())?0+"": overWorkTimesVO.getSix());
+            overWorkTimesVO.setSeven( StringUtils.isBlank(overWorkTimesVO.getSeven())?0+"": overWorkTimesVO.getSeven());
+
+        }else if ( overTimesType.equals( OverTimesType.QUART)){
+            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue()-timeBegan.getMonthValue()<=2 && timeEnd.getMonthValue()-timeBegan.getMonthValue()>=0  ) {
+                int monthMinus = timeEnd.getMonthValue()-timeBegan.getMonthValue();
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
+                LocalDateTime end = start.with(TemporalAdjusters.lastDayOfMonth());
+
+                VacateDTO overWorkDTO = new VacateDTO();
+                overWorkDTO.getConditions().add(Restrict.eq("name", userName));
+                overWorkDTO.getConditions().add(Restrict.lt_eq("startTime", start));
+                overWorkDTO.getConditions().add(Restrict.lt_eq("endTime", end));
+                Long count = super.count( overWorkDTO );
+
+                switch (monthMinus) {
+                    case 2:
+                        overWorkTimesVO.setFirstMonth(start+"月-"+count);
+                        break;
+                    case 1:
+                        overWorkTimesVO.setSecndMonth(start+"月-"+count);
+                        break;
+                    case 0:
+                        overWorkTimesVO.setThirdMonth(start+"月-"+count);
+                        break;
+                    default:
+                        break;
+
+                }
+
+                timeBegan = timeBegan.plusMonths(1);
+            }
+            overWorkTimesVO.setFirstMonth( StringUtils.isBlank(overWorkTimesVO.getFirstMonth())?0+"": overWorkTimesVO.getFirstMonth());
+            overWorkTimesVO.setSecndMonth( StringUtils.isBlank(overWorkTimesVO.getSecndMonth())?0+"": overWorkTimesVO.getSecndMonth());
+            overWorkTimesVO.setThirdMonth( StringUtils.isBlank(overWorkTimesVO.getThirdMonth())?0+"": overWorkTimesVO.getThirdMonth());
+        }
+
+        overWorkTimesVO.setOverTimesType( overTimesType );
+        overWorkTimesVO.setUserName( userName );
+
+
+        return overWorkTimesVO;
+    }
+
+
+
 }

@@ -5,9 +5,11 @@ import com.bjike.goddess.attendance.bo.PunchBO;
 import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.service.PunchSonSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,5 +69,10 @@ public class PunchSonApiImpl implements PunchSonAPI {
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return punchSonSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return punchSonSer.userOverTimeCollect(overTimesDTO) ;
     }
 }

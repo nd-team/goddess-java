@@ -7,6 +7,7 @@ import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.OverWorkTO;
 import com.bjike.goddess.attendance.vo.OverLongAndRelaxDayVO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.PositionAndDepartVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
@@ -208,5 +209,8 @@ public interface OverWorkSer extends Ser<OverWork, OverWorkDTO> {
      * @throws SerException
      */
     Double overDay(String name, LocalDate endTime) throws SerException;
+
+    //某人当前周从周一至周五加班次数
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
 
 }
