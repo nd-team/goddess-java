@@ -88,7 +88,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busRotainCusPermission("2");
+            flag = cusPermissionSer.getRotainCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -107,7 +107,23 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busRotainCusPermission("2");
+            flag = cusPermissionSer.getRotainCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+    /**
+     * 员工档案列表层级查看权限（层级级别）
+     */
+    private Boolean guideSeeLevelIdentity(String flagId ) throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busRotainCusPermission(flagId );
         } else {
             flag = true;
         }
@@ -137,7 +153,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getRotainCusPermission("1");
+            flag = cusPermissionSer.getRotainCusPermission("2");
         } else {
             flag = true;
         }
