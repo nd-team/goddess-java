@@ -5,8 +5,10 @@ import com.bjike.goddess.attendance.bo.PunchBO;
 import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -78,4 +80,14 @@ public interface PunchSonAPI {
      * @throws SerException
      */
     Long count(PunchDTO dto) throws SerException;
+
+    /**
+     * 某人当前周从周一至周日请假次数或某个季度分别未打卡次数
+     * @param overTimesDTO
+     * @return
+     * @throws SerException
+     */
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+
+
 }

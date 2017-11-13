@@ -4,9 +4,11 @@ import com.bjike.goddess.attendance.bo.VacateBO;
 import com.bjike.goddess.attendance.bo.VacateCountBO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.Vacate;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -166,6 +168,15 @@ public interface VacateAPI {
      * @throws SerException
      */
     Double currentVacateTime(String start, String end, String date) throws SerException;
+
+    /**
+     * 某人当前周从周一至周日请假次数或某个季度分别请假次数
+     * @param overTimesDTO
+     * @return
+     * @throws SerException
+     */
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+
 
 
 }

@@ -3,9 +3,11 @@ package com.bjike.goddess.attendance.service;
 import com.bjike.goddess.attendance.bo.*;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.dto.PunchSonDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.PunchSon;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -113,4 +115,14 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
      * @throws SerException
      */
     Double outWorkTime(String name, String date) throws SerException;
+
+    /**
+     * 某人当前周从周一至周日请假次数或某个季度分别未打卡次数
+     * @param overTimesDTO
+     * @return
+     * @throws SerException
+     */
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+
+
 }

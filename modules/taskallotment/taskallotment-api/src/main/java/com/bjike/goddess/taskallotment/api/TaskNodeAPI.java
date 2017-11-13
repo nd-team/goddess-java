@@ -10,8 +10,10 @@ import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 
 import java.util.List;
 
@@ -418,4 +420,14 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     DataBO personBing(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 个人项目汇总
+     * @param collectDataTO
+     * @return
+     * @throws SerException
+     * @desc 根据某个用户名汇总返回用户和参与的项目名称
+     * @author tanghaixiang
+     */
+     default CollectDataVO personProjectCollect (CollectDataTO collectDataTO) throws SerException{return null;};
 }

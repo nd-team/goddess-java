@@ -12,14 +12,20 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -36,6 +42,9 @@ import java.util.List;
 public class DayReportAction {
     @Autowired
     private DayReportAPI dayReportAPI;
+
+    @Autowired
+    private TaskNodeAPI taskNodeAPI;
 
     /**
      * 功能导航权限
@@ -95,5 +104,91 @@ public class DayReportAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 个人项目汇总
+     *
+     * @param collectDataTO collectDataTO
+     * @return class CollectDataVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/person/collect")
+    public Result personCollect( CollectDataTO collectDataTO, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            CollectDataVO list = taskNodeAPI.personProjectCollect( collectDataTO );
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有年份
+     *
+     * @des 获取所有年份
+     * @version v1
+     */
+    @GetMapping("v1/allYear")
+    public Result listYear( ) throws ActException {
+        try {
+            LocalDate date = LocalDate.now();
+            List<Integer> list = DateUtil.allYearList(date);
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取当前年月有几周
+     *
+     * @des 获取当前年月有几周
+     * @version v1
+     */
+    @GetMapping("v1/weeks/{year}/{month}")
+    public Result weeksByYearAndMonth(@PathVariable int year , @PathVariable int month) throws ActException {
+        try {
+            LocalDate date = LocalDate.now();
+            int weekNum = DateUtil.getWeekNum(year, month);
+            return ActResult.initialize(weekNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前时间是第几周
+     *
+     * @des 获取当前时间是本年本月的第几周
+     * @version v1
+     */
+    @GetMapping("v1/todayWeekNum")
+    public Result todayWeekNum( ) throws ActException {
+        try {
+            LocalDate date = LocalDate.now();
+            int weekNum = DateUtil.todayWeek( date );
+            return ActResult.initialize(weekNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前时间是第几季度
+     *
+     * @des 获取当前时间是本年的第几季度
+     * @version v1
+     */
+    @GetMapping("v1/todayQuaryNum")
+    public Result todayQuaryNum( ) throws ActException {
+        try {
+            LocalDate date = LocalDate.now();
+            int quartNum = DateUtil.todayQuart( date );
+            return ActResult.initialize(quartNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

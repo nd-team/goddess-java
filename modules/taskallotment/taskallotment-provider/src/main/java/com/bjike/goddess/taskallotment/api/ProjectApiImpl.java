@@ -176,6 +176,7 @@ public class ProjectApiImpl implements ProjectAPI {
         ProjectDTO dto=new ProjectDTO();
         dto.getConditions().add(Restrict.eq("status", Status.START));
         dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.eq("depart",depart));
         dto.getConditions().add(Restrict.eq("makeProject",makeProject));
         return BeanTransform.copyProperties(projectSer.findByCis(dto),ProjectBO.class);
     }
