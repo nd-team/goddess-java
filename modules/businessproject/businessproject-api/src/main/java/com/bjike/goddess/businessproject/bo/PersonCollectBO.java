@@ -15,17 +15,9 @@ public class PersonCollectBO extends BaseBO {
      */
     private String innerName;
     /**
-     * 预立项总数
+     * 总金额
      */
-    private Double noMakeNum;
-    /**
-     * 立项
-     */
-    private Double hadMakeNum;
-    /**
-     * 不立项
-     */
-    private Double notMakeNum;
+    private Double totalMoney;
 
     public String getInnerName() {
         return innerName;
@@ -35,27 +27,11 @@ public class PersonCollectBO extends BaseBO {
         this.innerName = innerName;
     }
 
-    public Double getNoMakeNum() {
-        return noMakeNum;
+    public Double getTotalMoney() {
+        return totalMoney;
     }
 
-    public void setNoMakeNum(Double noMakeNum) {
-        this.noMakeNum = noMakeNum;
-    }
-
-    public Double getHadMakeNum() {
-        return hadMakeNum;
-    }
-
-    public void setHadMakeNum(Double hadMakeNum) {
-        this.hadMakeNum = hadMakeNum;
-    }
-
-    public Double getNotMakeNum() {
-        return notMakeNum;
-    }
-
-    public void setNotMakeNum(Double notMakeNum) {
-        this.notMakeNum = notMakeNum;
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }

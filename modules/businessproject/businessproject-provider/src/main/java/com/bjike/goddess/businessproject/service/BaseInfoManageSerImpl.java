@@ -3,7 +3,6 @@ package com.bjike.goddess.businessproject.service;
 import com.bjike.goddess.businessproject.bo.BaseInfoManageBO;
 import com.bjike.goddess.businessproject.dto.BaseInfoManageDTO;
 import com.bjike.goddess.businessproject.entity.BaseInfoManage;
-import com.bjike.goddess.businessproject.entity.BusinessContract;
 import com.bjike.goddess.businessproject.enums.*;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageExcel;
 import com.bjike.goddess.businessproject.excel.BaseInfoManageLeadExcel;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -285,17 +283,6 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
         super.remove(id);
     }
-    @Override
-    public Double contractScale(String project) throws SerException {
-        BaseInfoManageDTO dto = new BaseInfoManageDTO();
-        dto.getConditions().add(Restrict.eq("outerProject", project));
-        List<BaseInfoManage> list = super.findByCis(dto);
-        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
-            return list.get(0).getContractScale();
-        }
-        return 0d;
-    }
-
 
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {

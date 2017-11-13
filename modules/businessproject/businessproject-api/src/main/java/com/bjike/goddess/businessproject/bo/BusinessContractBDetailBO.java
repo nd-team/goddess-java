@@ -19,22 +19,13 @@ public class BusinessContractBDetailBO extends BaseBO {
     private String area;
 
     /**
-     * 专业/工期
-     */
-    private String major;
-    /**
      * 内部项目编号
      */
     private String internalProjectNum;
     /**
-     * 内部项目名称
+     * 立项情况
      */
-    private String innerProject;
-
-    /**
-     * 总金额
-     */
-    private Double totalMoney;
+    private String major;
 
     /**
      * 立项总金额
@@ -131,16 +122,6 @@ public class BusinessContractBDetailBO extends BaseBO {
      * 不立项合同单数数量
      */
     private Integer notMakeNum;
-
-    /**
-     * 总规模数量
-     */
-    private Double scaleContract;
-
-    /**
-     * 实际完成规模数量
-     */
-    private Double finishScale;
 
     /**
      * 未进场
@@ -259,21 +240,6 @@ public class BusinessContractBDetailBO extends BaseBO {
         this.internalProjectNum = internalProjectNum;
     }
 
-    public String getInnerProject() {
-        return innerProject;
-    }
-
-    public void setInnerProject(String innerProject) {
-        this.innerProject = innerProject;
-    }
-
-    public Double getTotalMoney() {
-        return totalMoney;
-    }
-
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
-    }
 
     public Double getMakeMoney() {
         return makeMoney;
@@ -395,21 +361,6 @@ public class BusinessContractBDetailBO extends BaseBO {
         this.notMakeNum = notMakeNum;
     }
 
-    public Double getScaleContract() {
-        return scaleContract;
-    }
-
-    public void setScaleContract(Double scaleContract) {
-        this.scaleContract = scaleContract;
-    }
-
-    public Double getFinishScale() {
-        return finishScale;
-    }
-
-    public void setFinishScale(Double finishScale) {
-        this.finishScale = finishScale;
-    }
 
     public Integer getNotApproach() {
         return notApproach;

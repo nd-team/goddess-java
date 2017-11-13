@@ -17,20 +17,27 @@ public class BusinessContractDetailBO extends BaseBO {
      * 地区
      */
     private String area;
-
     /**
-     * 专业/工期
+     * 所属项目组
      */
-    private String major;
-    /**
-     * 内部项目编号
-     */
-    private String internalProjectNum;
+    private String projectGroup;
     /**
      * 内部项目名称
      */
     private String innerProject;
 
+    /**
+     * 内部项目编号
+     */
+    private String internalProjectNum;
+    /**
+     * 立项情况
+     */
+    private String major;
+    /**
+     * 总金额
+     */
+    private Double totalMoney;
     /**
      * 立项总金额
      */
@@ -189,6 +196,22 @@ public class BusinessContractDetailBO extends BaseBO {
      * 分包单位名称
      */
     private String subCompany;
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
+    }
+
+    public Double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
+    }
 
     public String getArea() {
         return area;

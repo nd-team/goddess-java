@@ -61,7 +61,7 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
-
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag",new String[]{"1","2"}));
         Long count = super.count(cusPermissionDTO);
         return count;
     }
@@ -144,7 +144,7 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
         if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
             cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
         }
-
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag",new String[]{"1","2"}));
         List<VoucherPermission> list = super.findByCis(cusPermissionDTO, true);
         List<VoucherPermissionBO> bo = new ArrayList<>();
         for (VoucherPermission str : list) {
@@ -465,9 +465,9 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
         Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
-        if (moduleFlag) {
+        if (moduleFlag || positionFlag) {
             flag = true;
         } else {
             flag = false;

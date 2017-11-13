@@ -3,6 +3,7 @@ package com.bjike.goddess.businessproject.api;
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
+import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
@@ -179,11 +180,21 @@ public interface BusinessContractAPI {
     /**
      * 根据地区汇总商务合同管理明细汇总
      *
-     * @param areas
      * @return class BusinessContractADetailBO
      * @throws SerException
      */
-    default List<BusinessContractADetailBO> collect(String[] areas) throws SerException {
+    default List<BusinessContractADetailBO> collect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 修改商务合同管理明细汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    default List<BusinessContractADetailBO> collectUpdate(CollectUpdateTO to) throws SerException {
         return null;
     }
 

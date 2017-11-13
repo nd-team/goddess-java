@@ -2,12 +2,15 @@ package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
+import com.bjike.goddess.businessproject.dto.CollectUpdateDTO;
 import com.bjike.goddess.businessproject.entity.BusinessContract;
+import com.bjike.goddess.businessproject.entity.CollectUpdate;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.enums.MakeContract;
 import com.bjike.goddess.businessproject.excel.BusinessContractExport;
 import com.bjike.goddess.businessproject.excel.BusinessContractTemplateExcel;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
+import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -62,6 +65,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     private InternalContactsAPI internalContactsAPI;
     @Autowired
     private OutsourcBusinessContractSer outsourcBusinessContractSer;
+    @Autowired
+    private CollectUpdateSer collectUpdateSer;
 
 
     /**
@@ -597,61 +602,54 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
-    public List<BusinessContractADetailBO> collect(String[] areas) throws SerException {
+    public List<BusinessContractADetailBO> collect() throws SerException {
         List<BusinessContractADetailBO> aDetailBOS = new ArrayList<>();
         List<BusinessContractDetailBO> boList = new ArrayList<>();
         List<BusinessContractDetailBO> contractDetailBOS = new ArrayList<>();
-        if (areas == null && areas.length <= 0) {
-            throw new SerException("汇总失败,请选择地区");
-        }
-
-        String[] areasTemp = new String[areas.length];
-        for (int i = 0; i < areas.length; i++) {
-            areasTemp[i] = "'" + areas[i] + "'";
-        }
-        String areasStr = StringUtils.join(areasTemp, ",");
         StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT ");
-        sb.append(" a.area AS area,a.major AS major,a.internalProjectNum AS internalProjectNum, ");
-        sb.append(" a.innerProject AS innerProject,sum(a.makeMoney) AS makeMoney,sum(a.forecastMoney) AS forecastMoney, ");
-        sb.append(" sum(a.scale) AS scale,sum(a.forecastRoundMoney) AS forecastRoundMoney, ");
-        sb.append(" sum(a.forecastMarchMoney) AS forecastMarchMoney,sum(a.estimatedMarketLosses) AS estimatedMarketLosses, ");
+        sb.append(" SELECT a.area AS area, a.projectGroup AS projectGroup,a.innerProject AS innerProject, ");
+        sb.append(" a.internalProjectNum AS internalProjectNum,a.major AS major, ");
+        sb.append(" ifnull(sum(a.makeMoney),0) AS makeMoney,ifnull(sum(a.forecastMoney),0) AS forecastMoney, ");
+        sb.append(" ifnull(sum(a.scale),0) AS scale,ifnull(sum(a.forecastRoundMoney),0) AS forecastRoundMoney, ");
+        sb.append(" ifnull(sum(a.forecastMarchMoney),0) AS forecastMarchMoney,ifnull(sum(a.estimatedMarketLosses),0) AS estimatedMarketLosses, ");
         sb.append(" ifnull(MAX( CASE WHEN makeContract=0 THEN count END),0 ) AS noMakeNum, ");
         sb.append(" ifnull(MAX( CASE WHEN makeContract=1 THEN count END ),0) AS hadMakeNum, ");
         sb.append(" ifnull(MAX( CASE WHEN makeContract=2 THEN count END ),0) AS notMakeNum, ");
-        sb.append(" sum(a.scaleContract) AS scaleContract,a.projectCharge AS projectCharge, ");
-        sb.append(" a.majorCompany AS majorCompany,a.subCompany AS subCompany ");
-        sb.append(" FROM ");
-        sb.append(" (SELECT count(*) AS count,makeContract as makeContract, ");
-        sb.append(" area,major,internalProjectNum,innerProject,projectCharge,majorCompany,subCompany, ");
+        sb.append(" ifnull(sum(a.scaleContract),0) AS scaleContract,a.projectCharge AS projectCharge, ");
+        sb.append(" a.majorCompany AS majorCompany,a.subCompany AS subCompany  FROM ");
+        sb.append(" ( ");
+        sb.append(" SELECT count(*) AS count,makeContract as makeContract, ");
+        sb.append(" area,projectGroup,innerProject,internalProjectNum,major,projectCharge,majorCompany,subCompany, ");
         sb.append(" sum(makeMoney) AS makeMoney,sum(forecastMoney) AS forecastMoney, ");
         sb.append(" sum(scale) AS scale,sum(forecastFinishMoney) AS forecastRoundMoney, ");
         sb.append(" sum(forecastMarchMoney) AS forecastMarchMoney,sum(estimatedMarketLosses) AS estimatedMarketLosses, ");
-        sb.append(" sum(scaleContract) AS scaleContract ");
-        sb.append(" FROM businessproject_businesscontract ");
-        sb.append(" WHERE area IN (%s) ");
-        sb.append(" GROUP BY makeContract,area,major,internalProjectNum,innerProject, projectCharge,majorCompany,subCompany)a ");
-        sb.append(" GROUP BY a.area,a.major,a.internalProjectNum,a.innerProject, a.projectCharge,a.majorCompany,a.subCompany ");
-        String[] fields = new String[]{"area", "major", "internalProjectNum", "innerProject", "makeMoney", "forecastMoney",
+        sb.append(" sum(scaleContract) AS scaleContract  FROM businessproject_businesscontract ");
+        sb.append(" GROUP BY makeContract,area,projectGroup,innerProject,internalProjectNum,major,projectCharge,majorCompany,subCompany, ");
+        sb.append(" projectCharge,majorCompany,subCompany)a  GROUP BY a.area,a.projectGroup, a.innerProject,a.internalProjectNum, ");
+        sb.append(" a.major,a.projectCharge,a.majorCompany,a.subCompany ");
+        String[] fields = new String[]{"area", "projectGroup", "innerProject", "internalProjectNum", "major", "makeMoney", "forecastMoney",
                 "scale", "forecastRoundMoney", "forecastMarchMoney", "estimatedMarketLosses", "hadMakeNum", "noMakeNum", "notMakeNum",
                 "scaleContract", "projectCharge", "majorCompany", "subCompany"};
         String sql = sb.toString();
-        sql = String.format(sql, areasStr);
         List<BusinessContractDetailBO> detailBOS = super.findBySql(sql, BusinessContractDetailBO.class, fields);
         Double makeUnit = 0.0;
         Double forecastUnit = 0.0;
         //todo 结算完成金额，预估确认时间，预估转正时间，实际完成规模数量需求方也不知道从哪拿
         for (BusinessContractDetailBO bo : detailBOS) {
-            if(bo.getMakeMoney() != null && bo.getScaleContract()!= null){
+            if (bo.getMakeMoney() != null && bo.getScaleContract() != null) {
                 //立项总单价(立项总金额/合同规模数量)
                 makeUnit = bo.getMakeMoney() / bo.getScaleContract();
+                bo.setMakeUnit(makeUnit);
+            } else {
+                bo.setMakeUnit(0.0);
             }
-            if(bo.getForecastMoney()!= null && bo.getScale()!= null){
+            if (bo.getForecastMoney() != null && bo.getScale() != null) {
                 //预估单价(预估总金额/预估规模)
                 forecastUnit = bo.getForecastMoney() / bo.getScale();
+                bo.setForecastUnit(forecastUnit);
+            } else {
+                bo.setForecastUnit(0.0);
             }
-            bo.setMakeUnit(makeUnit);
-            bo.setForecastUnit(forecastUnit);
             //未进场
             String[] notApproachField = new String[]{"notApproach", "area"};
             String notApproachSql = " SELECT ifnull(count(notApproach),0) AS notApproach ,area AS area FROM businessproject_businesscontract " +
@@ -760,18 +758,68 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
         }
         List<BusinessContractBDetailBO> bDetailBOS = new ArrayList<>();
-        Set<String> majors = boList.stream().map(BusinessContractDetailBO::getMajor).collect(Collectors.toSet());
+        Set<String> departs = boList.stream().map(BusinessContractDetailBO::getProjectGroup).collect(Collectors.toSet());
+        Set<String> innerNames = boList.stream().map(BusinessContractDetailBO::getInnerProject).collect(Collectors.toSet());
         Double totalMoney = 0.0;
-        for (String major : majors) {
-            List<BusinessContractDetailBO> bos = boList.stream().filter(businessContractDetailBO -> major.equals(businessContractDetailBO.getMajor())).collect(Collectors.toList());
-            bDetailBOS = BeanTransform.copyProperties(bos, BusinessContractBDetailBO.class);
-            totalMoney = bDetailBOS.stream().filter(p -> p.getMakeMoney() != null).mapToDouble(p -> p.getMakeMoney()).sum();
-            BusinessContractADetailBO aDetailBO = new BusinessContractADetailBO();
-            aDetailBO.setTotalMoney(totalMoney);
-            aDetailBO.setBusinessContractBDetailBOS(bDetailBOS);
-            aDetailBOS.add(aDetailBO);
+        BusinessContractADetailBO aDetailBO = new BusinessContractADetailBO();
+        for (String depart : departs) {
+            for (String innerName : innerNames) {
+                List<BusinessContractDetailBO> bos = boList.stream().filter(businessContractDetailBO -> depart.equals(businessContractDetailBO.getProjectGroup()) || innerName.equals(businessContractDetailBO.getInnerProject())).collect(Collectors.toList());
+//             bos = boList.stream().filter(businessContractDetailBO -> innerName.equals(businessContractDetailBO.getInnerProject())).collect(Collectors.toList());
+                bDetailBOS = BeanTransform.copyProperties(bos, BusinessContractBDetailBO.class);
+                totalMoney = bDetailBOS.stream().filter(p -> p.getMakeMoney() != null).mapToDouble(p -> p.getMakeMoney()).sum();
+                aDetailBO.setTotalMoney(totalMoney);
+                aDetailBO.setInnerProject(innerName);
+                aDetailBO.setProjectGroup(depart);
+                if (aDetailBO.getFinishScale() == null) {
+                    aDetailBO.setFinishScale(0.0);
+                } else {
+                    CollectUpdateDTO dto = new CollectUpdateDTO();
+                    dto.getConditions().add(Restrict.eq("innerName", aDetailBO.getInnerProject()));
+                    List<CollectUpdate> collectUpdates = collectUpdateSer.findByCis(dto);
+                    for (CollectUpdate update : collectUpdates) {
+                        aDetailBO.setFinishScale(update.getFinishScale());
+                    }
+                }
+                if (aDetailBO.getScaleContract() == null) {
+                    aDetailBO.setScaleContract(0.0);
+                } else {
+                    CollectUpdateDTO dto = new CollectUpdateDTO();
+                    dto.getConditions().add(Restrict.eq("innerName", aDetailBO.getInnerProject()));
+                    List<CollectUpdate> collectUpdates = collectUpdateSer.findByCis(dto);
+                    for (CollectUpdate update : collectUpdates) {
+                        aDetailBO.setScaleContract(update.getScaleContract());
+                    }
+                }
+            }
         }
+        aDetailBO.setBusinessContractBDetailBOS(bDetailBOS);
+        aDetailBOS.add(aDetailBO);
         return aDetailBOS;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public List<BusinessContractADetailBO> collectUpdate(CollectUpdateTO to) throws SerException {
+        List<BusinessContractADetailBO> boList = new ArrayList<>();
+        BusinessContractADetailBO bo = new BusinessContractADetailBO();
+        if (StringUtils.isNotBlank(to.getInnerName())) {
+
+            CollectUpdate collectUpdate = BeanTransform.copyProperties(to, CollectUpdate.class, true);
+            bo.setInnerProject(collectUpdate.getInnerName());
+            bo.setFinishScale(collectUpdate.getFinishScale());
+            bo.setScaleContract(collectUpdate.getScaleContract());
+            collectUpdate.setModifyTime(LocalDateTime.now());
+            collectUpdateSer.update(collectUpdate);
+            CollectUpdateDTO dto = new CollectUpdateDTO();
+            dto.getConditions().add(Restrict.eq("innerName", collectUpdate.getInnerName()));
+            List<CollectUpdate> collectUpdates = collectUpdateSer.findByCis(dto);
+            for (CollectUpdate c : collectUpdates) {
+                collectUpdateSer.update(c);
+            }
+            boList.add(bo);
+        }
+        return boList;
     }
 
     @Override
@@ -2367,10 +2415,10 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
-    public OptionMakeBO weekPersonFigure(String user,Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekPersonFigure(String user, Integer year, Integer month, Integer week) throws SerException {
         UserBO userBO = userAPI.currentUser();
         user = userBO.getUsername();
-        if(null == year && null == month && null == week){
+        if (null == year && null == month && null == week) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
             Calendar c = Calendar.getInstance();
@@ -2382,39 +2430,6 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         String text_1 = "个人合同立项情况图表周汇总" + startDate + "-" + endDate;
         return personFigure(startDate, endDate, text_1);
 
-    }
-    private OptionMakeBO personFigure(String startDate,String endDate,String text_1)throws SerException{
-        List<PersonCollectBO> collectBOS = new ArrayList<>();
-        List<PersonCollectBO> personCollectBOS = new ArrayList<>();
-        String[] fields = new String[]{"innerProject"};
-        StringBuilder sb = new StringBuilder();
-        //预立项 立项 不立项
-        sb.append(" SELECT innerProject AS innerProject FROM businessproject_siginmanage ");
-        sb.append(" WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' ");
-        sb.append(" GROUP BY innerProject ");
-        List<PersonCollectBO> boList = super.findBySql(sb.toString(), PersonCollectBO.class, fields);
-        for (PersonCollectBO bo : boList) {
-            String[] noFields = new String[]{"noMakeNum"};
-            String noSql = " SELECT ifnull(sum(money) ,0) AS noMakeNum FROM businessproject_siginmanage WHERE realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=0 AND innerProject='" + bo.getInnerName() + "' ";
-            personCollectBOS = super.findBySql(noSql, MakeContractFigureBO.class, noFields);
-            for (PersonCollectBO bo1 : personCollectBOS) {
-                bo.setHadMakeNum(bo1.getHadMakeNum());
-            }
-            String[] hadFields = new String[]{"hadMakeNum"};
-            String hadSql = " SELECT ifnull(sum(money) ,0) AS hadMakeNum FROM businessproject_siginmanage WHERE realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=1 AND innerProject='" + bo.getInnerName() + "' ";
-            personCollectBOS = super.findBySql(hadSql, MakeContractFigureBO.class, hadFields);
-            for (PersonCollectBO bo1 : personCollectBOS) {
-                bo.setHadMakeNum(bo1.getHadMakeNum());
-            }
-            String[] notFields = new String[]{"notMakeNum"};
-            String notSql = " SELECT ifnull(sum(money) ,0) AS notMakeNum FROM businessproject_siginmanage WHERE realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND makeProject=2 AND innerProject='" + bo.getInnerName() + "' ";
-            personCollectBOS = super.findBySql(notSql, MakeContractFigureBO.class, notFields);
-            for (PersonCollectBO bo1 : personCollectBOS) {
-                bo.setNotMakeNum(bo1.getNotMakeNum());
-            }
-            collectBOS.add(bo);
-        }
-        return null;
     }
 
     @Override
@@ -2429,6 +2444,27 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
     @Override
     public OptionMakeBO yearPersonFigure(Integer year) throws SerException {
+        if (null == year) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        return null;
+    }
+
+    private OptionMakeBO personFigure(String startDate, String endDate, String text_1) throws SerException {
+        List<PersonCollectBO> collectBOS = new ArrayList<>();
+        String[] fields = new String[]{"innerProject","totalMoney"};
+        StringBuilder sb = new StringBuilder();
+        //内部项目名称 立项金额总和
+        sb.append(" SELECT innerProject AS innerProject ,ifnull(sum(makeMoney),0) AS totalMoney FROM businessproject_siginmanage ");
+        sb.append(" WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' ");
+        sb.append(" GROUP BY innerProject ");
+        List<PersonCollectBO> boList = super.findBySql(sb.toString(), PersonCollectBO.class, fields);
+        if (boList != null && boList.size() > 0) {
+
+        }
+
         return null;
     }
 
@@ -2562,7 +2598,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -2686,7 +2722,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -2810,7 +2846,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -2934,7 +2970,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Integer[] text_int_4 = new Integer[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -3017,7 +3053,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Double[] text_int_4 = new Double[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -3101,7 +3137,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Double[] text_int_4 = new Double[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -3184,7 +3220,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBO.setName(ziduan[i]);
                 seriesBO.setType("bar");
                 Double[] text_int_4 = new Double[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBO.setData(text_int_4);
                 seriesBOS.add(seriesBO);
             }
@@ -3267,7 +3303,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 seriesBBO.setName(ziduan[i]);
                 seriesBBO.setType("bar");
                 Double[] text_int_4 = new Double[nums.get(0).size()];
-                text_int_4 = nums.get(0).toArray(text_int_4);
+                text_int_4 = nums.get(i).toArray(text_int_4);
                 seriesBBO.setData(text_int_4);
                 seriesBBOS.add(seriesBBO);
             }
