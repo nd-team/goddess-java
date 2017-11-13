@@ -36,7 +36,7 @@ public class PushUserInfoAction {
      * @throws ActException
      * @Version v1
      */
-    @PostMapping("v1/login")
+    @PostMapping("v1/phone/login")
     public Result login(@Validated(ADD.class) PushUserInfoTO to, BindingResult result) throws ActException {
         try {
             pushUserInfoAPI.save(to);
