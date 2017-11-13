@@ -22,10 +22,8 @@ import com.bjike.goddess.taskallotment.entity.*;
 import com.bjike.goddess.taskallotment.enums.*;
 import com.bjike.goddess.taskallotment.excel.TaskNodeExcel;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
-import com.bjike.goddess.taskallotment.to.CustomTitleTO;
-import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
-import com.bjike.goddess.taskallotment.to.QuestionTO;
-import com.bjike.goddess.taskallotment.to.TaskNodeTO;
+import com.bjike.goddess.taskallotment.to.*;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +37,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -2987,4 +2987,94 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         dto.getConditions().add(Restrict.eq("tableId", tableID));
         return super.findByCis(dto).stream().map(TaskNode::getTaskName).distinct().collect(Collectors.toList());
     }
+
+    @Override
+    public CollectDataVO personProjectCollect(CollectDataTO collectDataTO) throws SerException {
+        TimeStatus timeStatus = collectDataTO.getTimeStatus();
+        String userName = collectDataTO.getUserName();
+        if( StringUtils.isBlank(userName) ){
+            throw new SerException("用户名不能为空");
+        }
+        if( null == timeStatus ){
+            throw new SerException("时间汇总类型不能为空");
+        }
+
+        //TODO 根据时间类型计算时间
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now();
+        List<String> tableId = new ArrayList<>();
+        switch (collectDataTO.getTimeStatus()) {
+            case YEAR:
+                if (StringUtils.isBlank("" + collectDataTO.getYear())) {
+                    throw new SerException("年份不能为空");
+                }
+                start = DateUtil.parseDateTime(collectDataTO.getYear() + "-01-01 00:00:01") ;
+                end = DateUtil.parseDateTime(collectDataTO.getYear() + "-12-31 12:59:59");
+
+                break;
+            case MONTH:
+                if (StringUtils.isBlank("" + collectDataTO.getYear()) || StringUtils.isBlank("" + collectDataTO.getMonth())) {
+                    throw new SerException("年份或月份不能为空");
+                }
+                start = LocalDateTime.of(collectDataTO.getYear(),collectDataTO.getMonth(),1,0,0,1) ;
+                end = start.with(TemporalAdjusters.lastDayOfMonth());
+                break;
+            case WEEK:
+                if (StringUtils.isBlank("" + collectDataTO.getYear()) || StringUtils.isBlank("" + collectDataTO.getMonth()) || StringUtils.isBlank("" + collectDataTO.getWeek())) {
+                    throw new SerException("年份或月份或周数不能为空");
+                }
+                LocalDate[] dateDuring = DateUtil.getWeekTimes(collectDataTO.getYear(), collectDataTO.getMonth(), collectDataTO.getWeek());
+                start = LocalDateTime.of(dateDuring[0].getYear(),dateDuring[0].getMonth(),dateDuring[0].getDayOfMonth(),0,0,1) ;
+                end = LocalDateTime.of(dateDuring[1].getYear(),dateDuring[1].getMonth(),dateDuring[1].getDayOfMonth(),12,59,59) ;
+                break;
+            default:
+                return null;
+        }
+
+
+
+        //获取当前用户该时间段内参与的任务
+        TaskNodeDTO dto = new TaskNodeDTO();
+        dto.getConditions().add(Restrict.eq("execute",userName));
+        dto.getConditions().add(Restrict.isNull("haveSon" ));
+        dto.getConditions().add(Restrict.between("planTime",new LocalDateTime[]{start,end}));
+        //没有父节点
+        dto.getConditions().add(Restrict.isNull("father_id"));
+        List<TaskNode> listNoFather = super.findByCis( dto );
+        if (listNoFather != null && listNoFather.size()>0 ){
+            tableId.addAll( listNoFather.stream().map(TaskNode::getTableId).collect(Collectors.toList()) );
+        }
+
+        //有父节点
+        String []filed = new String[]{"execute","tableId"};
+        StringBuffer sql = new StringBuffer("");
+        sql.append(" select b.execute as execute , b.table_id as tableId from taskallotment_tasknode b where b.id in ( ")
+                .append( " select a.father_id from taskallotment_tasknode a  where a.haveSon IS NULL and father_id IS NOT NULL " )
+                .append( " and execute = '"+userName+"' and planTime BETWEEN '"+start+"' and '"+end+"' " )
+                .append( " ) and b.haveSon IS  NULL and b.father_id IS NULL " )
+                ;
+        listNoFather = super.findBySql( sql.toString() , TaskNode.class , filed );
+        if (listNoFather != null && listNoFather.size()>0 ){
+            tableId.addAll( listNoFather.stream().map(TaskNode::getTableId).collect(Collectors.toList()) );
+        }
+        if( tableId == null || tableId.size()<=0 ){
+            return null;
+        }
+        //根据任务获取参与的内部项目名称
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.getConditions().add(Restrict.in("id", tableId ));
+        List<Table> tables = tableSer.findByCis( tableDTO );
+        List<String> projectId = tables.stream().map(Table::getProjectId).collect(Collectors.toList());
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.getConditions().add(Restrict.in("id", projectId ));
+        List<Project> projectList = projectSer.findByCis( projectDTO );
+
+        CollectDataVO collectDataVO = new CollectDataVO();
+        collectDataVO.setPersonName( userName );
+        collectDataVO.setProjectName( projectId );
+
+        return collectDataVO;
+    }
+
+
 }

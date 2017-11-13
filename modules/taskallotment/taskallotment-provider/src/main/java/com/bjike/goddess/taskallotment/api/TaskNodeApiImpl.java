@@ -12,8 +12,10 @@ import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.service.TaskNodeSer;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -262,5 +264,10 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     @Override
     public DataBO personBing(TaskNodeDTO dto) throws SerException {
         return taskNodeSer.personBing(dto);
+    }
+
+    @Override
+    public CollectDataVO personProjectCollect(CollectDataTO collectDataTO) throws SerException {
+        return taskNodeSer.personProjectCollect( collectDataTO ) ;
     }
 }

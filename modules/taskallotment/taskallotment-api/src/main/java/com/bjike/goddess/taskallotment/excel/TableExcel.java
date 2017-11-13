@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.taskallotment.enums.Status;
 
+import javax.persistence.Column;
+
 /**
  * 项目表excel
  *
@@ -25,6 +27,19 @@ public class TableExcel extends BaseTO {
      */
     @ExcelHeader(name = "状态", notNull = true)
     private Status status;
+    /**
+     * 创建人
+     */
+    @ExcelHeader(name = "创建人", notNull = true)
+    private String creater;
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
 
     public String getName() {
         return name;
