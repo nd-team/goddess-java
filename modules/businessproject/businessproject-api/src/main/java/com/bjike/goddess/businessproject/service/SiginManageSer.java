@@ -1,6 +1,5 @@
 package com.bjike.goddess.businessproject.service;
 
-import com.bjike.goddess.businessproject.bo.OptionBO;
 import com.bjike.goddess.businessproject.bo.OptionMakeBO;
 import com.bjike.goddess.businessproject.bo.SiginManageBO;
 import com.bjike.goddess.businessproject.dto.SiginManageDTO;
@@ -241,4 +240,32 @@ public interface SiginManageSer extends Ser<SiginManage, SiginManageDTO> {
     default OptionMakeBO yearCollectFigure(Integer year) throws SerException {
         return null;
     }
+//    @Override
+//    public List<DepartCollectBO> departWeekCollect(CollectTO to) throws SerException {
+//        List<DepartCollectBO> collectBOS = new ArrayList<>();
+//        DepartCollectBO departCollectBO =new DepartCollectBO();
+//        String department = to.getDepartment();
+//        TaskNodeDTO dto = new TaskNodeDTO();
+//        dto.getConditions().add(Restrict.eq("executeDepart", department));
+//        List<TaskNode> taskNodes = super.findByCis(dto);
+//        for(TaskNode taskNode:taskNodes){
+//            TableDTO tableDTO = new TableDTO();
+//            List<Table> tables = tableSer.findByCis(tableDTO);
+//            departCollectBO.setDepartment(taskNode.getExecuteDepart());
+//            departCollectBO.setPerson(taskNode.getExecute());
+//            for (Table table : tables) {
+//                dto.getConditions().add(Restrict.eq("table.id", table.getId()));
+//                ProjectDTO projectDTO = new ProjectDTO();
+//                List<Project>projects = projectSer.findByCis(projectDTO);
+//
+//                for(Project project:projects){
+//                    tableDTO.getConditions().add(Restrict.eq("project.id",project.getId()));
+//                    departCollectBO.setInnerName(project.getInnerProject());
+//                }
+//            }
+//            collectBOS.add(departCollectBO);
+//
+//        }
+//        return collectBOS;
+//    }
 }

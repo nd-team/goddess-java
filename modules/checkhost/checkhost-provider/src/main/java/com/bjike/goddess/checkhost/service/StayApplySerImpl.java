@@ -259,6 +259,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         checkAduitIdentity();
 //        UserBO userBO = userAPI.currentUser();
         StayApply apply = super.findById(to.getId());
+        BeanTransform.copyProperties(to,apply,true);
         apply.setHeadAudit(to.getHeadAudit());
         apply.setCheckStatus(to.getCheckStatus());
         apply.setModifyTime(LocalDateTime.now());
@@ -285,6 +286,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
     public StayApplyBO hostAudit(StayApplyTO to) throws SerException {
         checkAduitIdentity();
         StayApply apply = super.findById(to.getId());
+        BeanTransform.copyProperties(to,apply,true);
         apply.setModuleAudit(to.getModuleAudit());
         apply.setModuleCheckStatus(to.getModuleCheckStatus());
         apply.setModifyTime(LocalDateTime.now());
