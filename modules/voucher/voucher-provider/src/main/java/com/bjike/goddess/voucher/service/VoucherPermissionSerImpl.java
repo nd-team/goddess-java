@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "voucherSerCache")
 @Service
 public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, VoucherPermissionDTO> implements VoucherPermissionSer {
-
     @Autowired
     private UserAPI userAPI;
     @Autowired

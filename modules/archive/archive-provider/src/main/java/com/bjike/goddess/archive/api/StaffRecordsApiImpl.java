@@ -6,6 +6,7 @@ import com.bjike.goddess.archive.service.StaffRecordsSer;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
+import com.bjike.goddess.archive.to.StaffRecordsTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,5 +121,30 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     @Override
     public CurrentMessageBO findCurrentMessage() throws SerException {
         return staffRecordsSer.findCurrentMessage();
+    }
+
+    @Override
+    public void add(StaffRecordsTO to) throws SerException {
+        staffRecordsSer.add(to);
+    }
+
+    @Override
+    public void edit(StaffRecordsTO to) throws SerException {
+        staffRecordsSer.edit(to);
+    }
+
+    @Override
+    public StaffRecordsBO findEntity(String id) throws SerException {
+        return staffRecordsSer.findEntity(id);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        staffRecordsSer.delete(id);
+    }
+
+    @Override
+    public byte[] exportExcel(StaffRecordsDTO dto) throws SerException {
+        return staffRecordsSer.exportExcel(dto);
     }
 }

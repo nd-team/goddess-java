@@ -9,6 +9,7 @@ import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
+import com.bjike.goddess.archive.to.StaffRecordsTO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -24,6 +25,8 @@ import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -471,9 +474,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         UserBO userBO = userAPI.currentUser();
         userBO.getEmployeeNumber();
         StaffRecordsDTO staffRecordsDTO = new StaffRecordsDTO();
-        staffRecordsDTO.getConditions().add(Restrict.eq("serialNumber",userBO.getEmployeeNumber()));
+        staffRecordsDTO.getConditions().add(Restrict.eq("serialNumber", userBO.getEmployeeNumber()));
         List<StaffRecords> staffRecordses = super.findByCis(staffRecordsDTO);
-        if(null != staffRecordses && staffRecordses.size() > 0){
+        if (null != staffRecordses && staffRecordses.size() > 0) {
             StaffRecords entity = staffRecordses.get(0);
             CurrentMessageBO currentMessageBO = new CurrentMessageBO();
             currentMessageBO.setHeadAdrees(userBO.getHeadSculpture());
@@ -484,13 +487,76 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             currentMessageBO.setBirth(DateUtil.dateToString(entity.getBirth()));
             currentMessageBO.setEmail(entity.getEmail());
             //如果离职时间不存在,证明还在职
-            if(null == entity.getDimissionTime()){
+            if (null == entity.getDimissionTime()) {
                 currentMessageBO.setIncumbency(true);
-            }else{
+            } else {
                 currentMessageBO.setIncumbency(false);
             }
             return currentMessageBO;
         }
         return null;
+    }
+
+    @Override
+    public void add(StaffRecordsTO to) throws SerException {
+        StaffRecords entity = BeanTransform.copyProperties(to, StaffRecords.class, true);
+        entity.setStatus(Status.THAW);
+        super.save(entity);
+    }
+
+    @Override
+    public void edit(StaffRecordsTO to) throws SerException {
+        StaffRecords entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("目标数据队形不能为空");
+        }
+        BeanUtils.copyProperties(to, entity, "createTime", "id");
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public StaffRecordsBO findEntity(String id) throws SerException {
+        StaffRecords entity = super.findById(id);
+        if (null == entity) {
+            throw new SerException("目标数据队形不能为空");
+        }
+        StaffRecordsBO bo = BeanTransform.copyProperties(entity, StaffRecordsBO.class, false);
+        return bo;
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        StaffRecords entity = super.findById(id);
+        if (null == entity) {
+            throw new SerException("目标数据队形不能为空");
+        }
+        super.remove(entity);
+    }
+
+    @Override
+    public byte[] exportExcel(StaffRecordsDTO dto) throws SerException {
+        searchCondition(dto);
+        List<StaffRecords> list = super.findByCis(dto);
+        Excel excel = new Excel(0, 2);
+
+        List<StaffRecordsExcel> staffRecordsExcels = new ArrayList<>(0);
+        if (null != list && list.size() > 0) {
+            list.stream().forEach(obj -> {
+                staffRecordsExcels.add(BeanTransform.copyProperties(obj, StaffRecordsExcel.class));
+            });
+        }
+
+        byte[] bytes = ExcelUtil.clazzToExcel(staffRecordsExcels, excel);
+        return bytes;
+    }
+
+    private void searchCondition(StaffRecordsDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getUsername())) {
+            dto.getConditions().add(Restrict.eq("username", dto.getUsername()));
+        }
+        if (StringUtils.isNotBlank(dto.getProject())) {
+            dto.getConditions().add(Restrict.eq("project", dto.getProject()));
+        }
     }
 }

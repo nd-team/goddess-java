@@ -33,6 +33,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class CurrencySerImpl extends ServiceImpl<Currency, CurrencyDTO> implements CurrencySer {
+
     @Autowired
     private UserAPI userAPI;
     @Autowired

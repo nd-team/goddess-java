@@ -557,7 +557,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitBO> list(ProfitDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
             dto.setEndTime(DateUtil.dateToString(LocalDate.now()));

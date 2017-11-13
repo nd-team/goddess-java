@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class CategorySerImpl extends ServiceImpl<Category, CategoryDTO> implements CategorySer {
-
     @Autowired
     private FirstSubjectSer firstSubjectSer;
     @Autowired

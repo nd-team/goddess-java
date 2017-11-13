@@ -10,6 +10,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dimission.api.InterviewAPI;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
@@ -21,9 +22,6 @@ import com.bjike.goddess.dimission.to.*;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
-import com.bjike.goddess.organize.bo.PositionUserDetailBO;
-import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -33,9 +31,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -282,68 +282,68 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
 
     private DimissionInfoBO transformBO(DimissionInfo entity) throws SerException {
         DimissionInfoBO bo = BeanTransform.copyProperties(entity, DimissionInfoBO.class);
-        UserBO user = userAPI.findByUsername(entity.getUsername());
-        if (user != null) {
-//            bo.setEmployeeNumber(user.getEmployeeNumber());
-//            bo.setPhone(user.getPhone());
-            if (moduleAPI.isCheck("archive")) {
-                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(entity.getUsername());
-                if (null != staffRecordsBO) {
-                    bo.setEntryTime(staffRecordsBO.getEntryTime());
-                    bo.setEducation(staffRecordsBO.getEducation());
-                    bo.setPhone(staffRecordsBO.getTelephone());
-                }
-            }
-            if (moduleAPI.isCheck("organize")) {
-                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
-                if (null != detailBO) {
-                    bo.setEmployeeNumber(detailBO.getNumber());
-                }
-                bo.setArea("");
-                bo.setPosition("");
-                bo.setArrangement("");
-                bo.setDepartment("");
-                if (null != detailBO) {
-                    List<PositionDetailBO> positionBOs = new ArrayList<>();
-                    List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
-                    if (null != positionUserDetailBOSList) {
-                        for (PositionUserDetailBO p : positionUserDetailBOSList) {
-                            if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
-                                positionBOs = positionDetailAPI.findByPostIds(p.getPositionId().split(","));
-                            }
-                        }
-                    }
-                    String area = "", department = "", arrangement = "";
-                    if (positionBOs != null) {
-                        for (PositionDetailBO position : positionBOs.stream()
-                                .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
-                                .collect(Collectors.toList())) {
-                            bo.setPosition(position.getPosition() + "," + bo.getPosition());
-                            if (!arrangement.equals(position.getArrangementName())) {
-                                arrangement = position.getArrangementName();
-                                bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
-                            }
-                        }
-
-                        for (PositionDetailBO position : positionBOs.stream()
-                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                                .collect(Collectors.toList()))
-                            if (!department.equals(position.getDepartmentName())) {
-                                department = position.getDepartmentName();
-                                bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
-                            }
-
-                        for (PositionDetailBO position : positionBOs.stream()
-                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
-                                .collect(Collectors.toList()))
-                            if (!area.equals(position.getArea())) {
-                                area = position.getArea();
-                                bo.setArea(position.getArea() + "," + bo.getArea());
-                            }
-                    }
-                }
-            }
-        }
+//        UserBO user = userAPI.findByUsername(entity.getUsername());
+//        if (user != null) {
+////            bo.setEmployeeNumber(user.getEmployeeNumber());
+////            bo.setPhone(user.getPhone());
+//            if (moduleAPI.isCheck("archive")) {
+//                StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(entity.getUsername());
+//                if (null != staffRecordsBO) {
+//                    bo.setEntryTime(staffRecordsBO.getEntryTime());
+//                    bo.setEducation(staffRecordsBO.getEducation());
+//                    bo.setPhone(staffRecordsBO.getTelephone());
+//                }
+//            }
+//            if (moduleAPI.isCheck("organize")) {
+//                PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+//                if (null != detailBO) {
+//                    bo.setEmployeeNumber(detailBO.getNumber());
+//                }
+//                bo.setArea("");
+//                bo.setPosition("");
+//                bo.setArrangement("");
+//                bo.setDepartment("");
+//                if (null != detailBO) {
+//                    List<PositionDetailBO> positionBOs = new ArrayList<>();
+//                    List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
+//                    if (null != positionUserDetailBOSList) {
+//                        for (PositionUserDetailBO p : positionUserDetailBOSList) {
+//                            if (WorkStatus.MAIN.equals(p.getWorkStatus())) {
+//                                positionBOs = positionDetailAPI.findByPostIds(p.getPositionId().split(","));
+//                            }
+//                        }
+//                    }
+//                    String area = "", department = "", arrangement = "";
+//                    if (positionBOs != null) {
+//                        for (PositionDetailBO position : positionBOs.stream()
+//                                .sorted(Comparator.comparing(PositionDetailBO::getArrangementId))
+//                                .collect(Collectors.toList())) {
+//                            bo.setPosition(position.getPosition() + "," + bo.getPosition());
+//                            if (!arrangement.equals(position.getArrangementName())) {
+//                                arrangement = position.getArrangementName();
+//                                bo.setArrangement(bo.getArrangement() + "," + position.getArrangementName());
+//                            }
+//                        }
+//
+//                        for (PositionDetailBO position : positionBOs.stream()
+//                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+//                                .collect(Collectors.toList()))
+//                            if (!department.equals(position.getDepartmentName())) {
+//                                department = position.getDepartmentName();
+//                                bo.setDepartment(position.getDepartmentName() + "," + bo.getDepartment());
+//                            }
+//
+//                        for (PositionDetailBO position : positionBOs.stream()
+//                                .sorted(Comparator.comparing(PositionDetailBO::getDepartmentId))
+//                                .collect(Collectors.toList()))
+//                            if (!area.equals(position.getArea())) {
+//                                area = position.getArea();
+//                                bo.setArea(position.getArea() + "," + bo.getArea());
+//                            }
+//                    }
+//                }
+//            }
+//        }
 
         return bo;
     }
@@ -871,6 +871,57 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
             }
         }
         return null;
+    }
+
+    @Override
+    public DataBO findDataByName() throws SerException {
+        Boolean tar = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        DataBO bo = new DataBO();
+        bo.setUsername(userBO.getUsername());
+        bo.setEmployeeNumber(userBO.getEmployeeNumber());
+        bo.setPhone(userBO.getPhone());
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getUsername());
+            if (null != positionDetailBOs && positionDetailBOs.size() > 0) {
+                bo.setArea(positionDetailBOs.get(0).getArea());
+                bo.setDepartment(positionDetailBOs.get(0).getDepartmentName());
+                bo.setPosition(positionDetailBOs.get(0).getPosition());
+                bo.setArrangement(positionDetailBOs.get(0).getArrangementName());
+            }
+        }
+        if (moduleAPI.isCheck("archive")) {
+            StaffRecordsBO staffRecordsBO = staffRecordsAPI.findByName(userBO.getUsername());
+            if (null != staffRecordsBO) {
+                bo.setEntryTime(staffRecordsBO.getEntryTime());
+                bo.setEducation(staffRecordsBO.getEducation());
+                bo.setPhone(staffRecordsBO.getTelephone());
+                bo.setSeniority(String.valueOf(findSeniority(bo.getEntryTime(), DateUtil.dateToString(LocalDate.now()))));
+            }
+//            StaffStatus staffStatus = positionDetailUserAPI.statusByName(userBO.getUsername());
+//            if (StaffStatus.HAVELEAVE.equals(staffStatus)) {
+//                tar = true;
+//            }
+        }
+        return bo;
+    }
+
+    //得到在司工龄
+    private int findSeniority(String date1, String date2) throws SerException {
+        try {
+            int result = 0;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar c1 = Calendar.getInstance();
+            Calendar c2 = Calendar.getInstance();
+            c1.setTime(sdf.parse(date1));
+            c2.setTime(sdf.parse(date2));
+            result = c1.get(Calendar.MONTH) - c2.get(Calendar.MONTH);
+            return result == 0 ? 1 : Math.abs(result);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
     }
 
     @Override
