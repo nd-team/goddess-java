@@ -38,7 +38,6 @@ import java.util.List;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implements WithUnitSer {
-
     @Autowired
     private AccountanCourseSer accountanCourseSer;
     @Autowired

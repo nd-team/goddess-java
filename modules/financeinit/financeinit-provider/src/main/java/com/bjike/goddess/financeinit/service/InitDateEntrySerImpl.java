@@ -34,6 +34,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEntryDTO> implements InitDateEntrySer {
+
     @Autowired
     private UserAPI userAPI;
     @Autowired

@@ -383,7 +383,6 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 
     @Override
     public List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException {
-<<<<<<< HEAD
 //        String[] strings = new String[]{foreignId};
 //        List<Formula> list = null;
 //        for (String s : strings) {
@@ -548,8 +547,6 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 //            boList.add(bo);
 //            return boList;
 //        }
-        return null;
-=======
         double beginSum = 0;
         double endSum = 0;
         double currentSum = 0;
@@ -574,8 +571,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
             for (Formula f : list) {
                 Boolean tar = false;
                 SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
+                subjectCollectDTO.setFirstSubject(f.getProject());
                 subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                if ("DEBIT".equals(f.getForm())) {
+                if (Form.DEBIT.equals(f.getForm())) {
                     tar = true;
                 }
                 SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, DateUtil.dateToString(e), tar);
@@ -613,7 +611,6 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 //        bo.setYear(yearSum);
         boList.add(bo);
         return boList;
->>>>>>> upstream/develop
     }
 
 
@@ -659,12 +656,9 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 //                if (LocalDate.now().getYear() == t.getYear()) {
 //                    subjectCollectDTO.getConditions().add(Restrict.eq("months", month));
 //                    SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
-<<<<<<< HEAD
-=======
 //                if (LocalDate.now().getYear() == t.getYear()) {
 //                    subjectCollectDTO.getConditions().add(Restrict.eq("months", month));
 //                    SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO);
->>>>>>> upstream/develop
 //                    FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
 //                    if (Form.DEBIT.equals(bo.getForm())) {
 //                        bo.setCurrent(subjectCollectBO.getIssueDebitAmount());

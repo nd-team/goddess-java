@@ -38,6 +38,7 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+
     /**
      * 核对查看权限（部门级别）
      */

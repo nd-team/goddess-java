@@ -76,6 +76,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
 
+
+
     /**
      * 核对查看权限（部门级别）
      */

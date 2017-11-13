@@ -6,6 +6,7 @@ import com.bjike.goddess.archive.entity.StaffRecords;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
+import com.bjike.goddess.archive.to.StaffRecordsTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -173,6 +174,58 @@ public interface StaffRecordsSer extends Ser<StaffRecords, StaffRecordsDTO> {
      * 获取当前员工的信息(在职状态为true,在职,反之,离职)
      */
     default CurrentMessageBO findCurrentMessage() throws SerException{
+        return null;
+    }
+
+    /**
+     * 添加
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void add(StaffRecordsTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void edit(StaffRecordsTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 根据id获取对象
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default StaffRecordsBO findEntity(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void delete(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(StaffRecordsDTO dto) throws SerException {
         return null;
     }
 }

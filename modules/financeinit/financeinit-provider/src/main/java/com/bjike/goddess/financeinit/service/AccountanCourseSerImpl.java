@@ -304,7 +304,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
     @Override
     public List<AccountAddDateBO> findFirstNameCode() throws SerException {
-        List<AccountanCourse> accountanCourses = super.findAll();
+        AccountanCourseDTO dto = new AccountanCourseDTO();
+        dto.getSorts().add("code=asc");
+        List<AccountanCourse> accountanCourses = super.findByCis(dto);
         List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
         if (accountanCourses != null && accountanCourses.size() > 0) {
             for (AccountanCourse accountanCourse : accountanCourses) {

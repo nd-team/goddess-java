@@ -11,10 +11,12 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
 import com.bjike.goddess.dimission.enums.DimissionType;
 import com.bjike.goddess.dimission.excel.SonPermissionObject;
 import com.bjike.goddess.dimission.to.*;
+import com.bjike.goddess.dimission.vo.DataVO;
 import com.bjike.goddess.dimission.vo.DimissionInfoCollectVO;
 import com.bjike.goddess.dimission.vo.DimissionInfoVO;
 import com.bjike.goddess.dimission.vo.DimissionReasonVO;
@@ -665,9 +667,17 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 获取地区,部门,员工编号,岗位,岗位层级,学历,入职时间,在司工龄
+     * 根据当前登陆用户获取地区部门员工编号岗位岗位层级学历联系电话入职时间在司工龄
      *
      * @version v1
      */
-
+    @GetMapping("v1/findDataByName")
+    public Result findDataByName() throws ActException{
+        try {
+            DataBO dataBOs = dimissionInfoAPI.findDataByName();
+            return ActResult.initialize(BeanTransform.copyProperties(dataBOs, DataVO.class));
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 }
