@@ -264,6 +264,22 @@ public interface ReceivableSubsidiaryAPI {
         return null;
     }
     /**
+     * 导入
+     *
+     * @param id id
+     * @param receivableSubsidiaryTOS 回款管理
+     * @return class ReceivableSubsidiaryBO
+     */
+    default ReceivableSubsidiaryBO importExcelBack(String id,List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return null;
+    }
+    /**
+     * Excel下载模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExportBack() throws SerException;
+    /**
      *  导入
      * @param receivableSubsidiaryTOS 回款管理
      * @return class ReceivableSubsidiaryBO

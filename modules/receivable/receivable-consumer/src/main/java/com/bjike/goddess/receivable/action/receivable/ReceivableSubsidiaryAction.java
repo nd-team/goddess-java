@@ -15,6 +15,7 @@ import com.bjike.goddess.receivable.api.ReceivableSubsidiaryAPI;
 import com.bjike.goddess.receivable.bo.ContractorBO;
 import com.bjike.goddess.receivable.bo.ReceivableSubsidiaryBO;
 import com.bjike.goddess.receivable.dto.ReceivableSubsidiaryDTO;
+import com.bjike.goddess.receivable.excel.BackExcel;
 import com.bjike.goddess.receivable.excel.ReceivableSubsidiaryExcel;
 import com.bjike.goddess.receivable.to.CollectCompareTO;
 import com.bjike.goddess.receivable.to.GuidePermissionTO;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import scala.util.parsing.combinator.testing.Str;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -606,6 +608,74 @@ public class ReceivableSubsidiaryAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+//    @LoginAuth
+    @PostMapping("v1/importExcelAcc/{id}")
+    public Result importExcelAcc(@PathVariable String id,HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<BackExcel> tos = ExcelUtil.excelToClazz(is, BackExcel.class, excel);
+            List<ReceivableSubsidiaryTO> tocs = new ArrayList<>();
+            for (BackExcel str : tos) {
+                ReceivableSubsidiaryTO receivableSubsidiaryTO = BeanTransform.copyProperties(str, ReceivableSubsidiaryTO.class, "contractor", "pay", "frame", "pact", "flow");
+//                if(null != str.getContractor()) {
+//                  receivableSubsidiaryTO.setContractorName(str.getContractor());
+//                }
+                if (str.getPay().equals("是")) {
+                    receivableSubsidiaryTO.setPay(true);
+                } else {
+                    receivableSubsidiaryTO.setPay(false);
+                }
+                if (str.getFrame().equals("是")) {
+                    receivableSubsidiaryTO.setFrame(true);
+                } else {
+                    receivableSubsidiaryTO.setFrame(false);
+                }
+                if (str.getPact().equals("是")) {
+                    receivableSubsidiaryTO.setPact(true);
+                } else {
+                    receivableSubsidiaryTO.setPact(false);
+                }
+                if (str.getFlow().equals("是")) {
+                    receivableSubsidiaryTO.setFlow(true);
+                } else {
+                    receivableSubsidiaryTO.setFlow(false);
+                }
+                tocs.add(receivableSubsidiaryTO);
+            }
+            //注意序列化
+            receivableSubsidiaryAPI.importExcelBack(id,tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板回款管理
+     * @version v1
+     */
+    @GetMapping("v1/templateExportAcc")
+    public Result templateExportAcc(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "回款管理导入模板.xlsx";
+            super.writeOutFile(response, receivableSubsidiaryAPI.templateExportBack(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 
 //    @GetMapping("v1/r")
 //    public Result r(@RequestParam String startTime,String endTime) throws ActException {

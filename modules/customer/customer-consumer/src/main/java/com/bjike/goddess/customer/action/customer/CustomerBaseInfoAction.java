@@ -59,7 +59,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     @Autowired
     private CustomerDetailAPI customerDetailAPI;
     @Autowired
-    private CusPermissionAPI cusPermissionAPI;
+    private CustomerContactWeightSetAPI contactWeightSetAPI;
     @Autowired
     private AreaWeightSetAPI areaWeightSetAPI;
     @Autowired
@@ -927,6 +927,20 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         try {
             List<String> bussWay = bussTypeWeightSetAPI.findBussWayByBussType(bussType);
             return ActResult.initialize(bussWay);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 添加中的接触阶段下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/contact")
+    public Result findContact(HttpServletRequest request) throws ActException {
+        try {
+            List<String> name = contactWeightSetAPI.findName();
+            return ActResult.initialize(name);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

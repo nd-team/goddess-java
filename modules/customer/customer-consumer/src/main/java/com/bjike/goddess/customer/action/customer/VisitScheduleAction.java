@@ -63,7 +63,7 @@ public class VisitScheduleAction {
      * 拜访日程表
      *
      * @param visitScheduleDTO 客户基本信息dto
-     * @return class CustomerBaseInfoVO
+     * @return class VisitScheduleVO
      * @des 获取所有客户基本信息
      * @version v1
      */

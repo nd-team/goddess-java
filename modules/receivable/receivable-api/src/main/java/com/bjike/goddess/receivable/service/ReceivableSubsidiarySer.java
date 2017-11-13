@@ -265,7 +265,22 @@ public interface ReceivableSubsidiarySer extends Ser<ReceivableSubsidiary, Recei
     default List<CollectCompareBO> collectCompare(CollectCompareTO to) throws SerException {
         return null;
     }
-
+    /**
+     * 导入
+     *
+     * @param id id
+     * @param receivableSubsidiaryTOS 回款管理
+     * @return class ReceivableSubsidiaryBO
+     */
+    default ReceivableSubsidiaryBO importExcelBack(String id,List<ReceivableSubsidiaryTO> receivableSubsidiaryTOS) throws SerException {
+        return null;
+    }
+    /**
+     * Excel下载模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExportBack() throws SerException;
     /**
      * 导入
      *

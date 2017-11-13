@@ -268,7 +268,9 @@ public class InterviewAddressInforSerImpl extends ServiceImpl<InterviewAddressIn
      * @throws SerException
      */
     private void updateInterviewAddressInfor(InterviewAddressInforTO to, InterviewAddressInfor model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime createTime = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, InterviewAddressInfor.class, true);
+        model.setCreateTime(createTime);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

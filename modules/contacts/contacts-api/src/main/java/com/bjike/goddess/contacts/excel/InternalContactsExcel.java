@@ -23,6 +23,11 @@ public class InternalContactsExcel extends BaseEntity {
 //    private String userId;
 
     /**
+     * 地区
+     */
+    @ExcelHeader(name = "地区", notNull = true)
+    private String area;
+    /**
      * 姓名
      */
     @ExcelHeader(name = "姓名", notNull = true)
@@ -33,16 +38,11 @@ public class InternalContactsExcel extends BaseEntity {
     @ExcelHeader(name = "员工编号", notNull = true)
     private String employeeNum;
 
-    /**
-     * 地区
-     */
-    @ExcelHeader(name = "地区", notNull = true)
-    private String area;
 
     /**
      * 部门/项目组
      */
-    @ExcelHeader(name = "部门", notNull = true)
+    @ExcelHeader(name = "部门/项目组", notNull = true)
     private String department;
 
     /**

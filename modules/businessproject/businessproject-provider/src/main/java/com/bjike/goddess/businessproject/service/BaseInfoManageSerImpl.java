@@ -27,6 +27,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -282,17 +283,6 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
 
         super.remove(id);
     }
-    @Override
-    public Double contractScale(String project) throws SerException {
-        BaseInfoManageDTO dto = new BaseInfoManageDTO();
-        dto.getConditions().add(Restrict.eq("outerProject", project));
-        List<BaseInfoManage> list = super.findByCis(dto);
-        if (!list.isEmpty() && null != list.get(0).getContractScale()) {
-            return list.get(0).getContractScale();
-        }
-        return 0d;
-    }
-
 
     @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
@@ -450,6 +440,45 @@ public class BaseInfoManageSerImpl extends ServiceImpl<BaseInfoManage, BaseInfoM
     public byte[] templateExcel() throws SerException {
         List<BaseInfoManageLeadExcel> toList = new ArrayList<BaseInfoManageLeadExcel>();
         BaseInfoManageLeadExcel baseInfoManageLeadExcel = new BaseInfoManageLeadExcel();
+        baseInfoManageLeadExcel.setBusinessType(BusinessType.ADVERT);
+        baseInfoManageLeadExcel.setBusinessSubject("test");
+        baseInfoManageLeadExcel.setOuterProject("test");
+        baseInfoManageLeadExcel.setOutProjectNum("test");
+        baseInfoManageLeadExcel.setSaleContractNum("test");
+        baseInfoManageLeadExcel.setBusinessCooperate(BusinessCooperate.BACKTOBACK);
+        baseInfoManageLeadExcel.setInnerProject("test");
+        baseInfoManageLeadExcel.setArea("test");
+        baseInfoManageLeadExcel.setProjectGroup("test");
+        baseInfoManageLeadExcel.setSiginTime(LocalDate.now());
+        baseInfoManageLeadExcel.setMoney(0d);
+        baseInfoManageLeadExcel.setStartProjectTime(LocalDate.now());
+        baseInfoManageLeadExcel.setEndProjectTime(LocalDate.now());
+        baseInfoManageLeadExcel.setContractRang("test");
+        baseInfoManageLeadExcel.setFirstCompany("test");
+        baseInfoManageLeadExcel.setFirstRelation("test");
+        baseInfoManageLeadExcel.setFirstTel("test");
+        baseInfoManageLeadExcel.setSecondCompany("test");
+        baseInfoManageLeadExcel.setProjectCharge("test");
+        baseInfoManageLeadExcel.setProjectChargeTel("test");
+        baseInfoManageLeadExcel.setCustomerName("test");
+        baseInfoManageLeadExcel.setContractText("test");
+        baseInfoManageLeadExcel.setRate(0d);
+        baseInfoManageLeadExcel.setContractProperty(ContractProperty.FRAMECONTRACT);
+        baseInfoManageLeadExcel.setPayWays(PayWays.BANK);
+        baseInfoManageLeadExcel.setPayRate("test");
+        baseInfoManageLeadExcel.setPayFeeOrigin(PayFeeOrigin.ADVANCE);
+        baseInfoManageLeadExcel.setFileCondition("已归档");
+        baseInfoManageLeadExcel.setFileCount(0d);
+        baseInfoManageLeadExcel.setRemark("test");
+        baseInfoManageLeadExcel.setTempContractNum("test");
+        baseInfoManageLeadExcel.setMakeContract(MakeContract.HADMAKE);
+        baseInfoManageLeadExcel.setTaskNum("test");
+        baseInfoManageLeadExcel.setProjectStatus(ProjectStatus.APPROACH);
+        baseInfoManageLeadExcel.setContractScale(0d);
+        baseInfoManageLeadExcel.setScale(0d);
+        baseInfoManageLeadExcel.setMajor("test");
+
+
         toList.add(baseInfoManageLeadExcel);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);

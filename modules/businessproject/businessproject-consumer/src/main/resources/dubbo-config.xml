@@ -22,6 +22,7 @@
 	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
 	<dubbo:reference  validation="true" id="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
 	<dubbo:reference  validation="true" id="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
+	<dubbo:reference  validation="true" id="collectUpdateApiImpl" interface="com.bjike.goddess.businessproject.api.CollectUpdateAPI" />
 	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
 	<dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
 	<dubbo:reference  validation="true" id="outsourcBusinessContractApiImpl" interface="com.bjike.goddess.businessproject.api.OutsourcBusinessContractAPI" />

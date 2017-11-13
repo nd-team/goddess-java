@@ -2,6 +2,7 @@ package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.*;
+import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
@@ -27,12 +28,6 @@ public interface VoucherGenerateAPI {
      * 下拉导航权限
      */
     default List<SonPermissionObject> sonPermission() throws SerException {
-        return null;
-    }
-    /**
-     * 下拉导航权限
-     */
-    default List<SonPermissionObject> sonPermissionAccount() throws SerException {
         return null;
     }
 
@@ -566,6 +561,7 @@ public interface VoucherGenerateAPI {
     default List<String> accountSubject() throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里根据一级获取所有二级
      *
@@ -574,14 +570,16 @@ public interface VoucherGenerateAPI {
     default List<String> subSubject(String firstSubject) throws SerException {
         return null;
     }
+
     /**
      * 从已过账那里根据一级,二级获取所有三级
      *
      * @throws SerException
      */
-    default List<String> thirdSubject(String firstSubject,String subSubject) throws SerException {
+    default List<String> thirdSubject(String firstSubject, String subSubject) throws SerException {
         return null;
     }
+
     /**
      * xiazhili
      * 在已过账记录里面根据二级或三级统计金额
@@ -679,6 +677,42 @@ public interface VoucherGenerateAPI {
      * 记账凭证记录科目汇总柱状图
      */
     default OptionBO ctReSubHistogram() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据时间查询对应的借方和贷方金额
+     * zhuangkaiqin
+     *
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String time, Boolean tar) throws SerException {
+        return null;
+    }
+
+    default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的项目名称
+     */
+    default List<String> findProjectName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
 }

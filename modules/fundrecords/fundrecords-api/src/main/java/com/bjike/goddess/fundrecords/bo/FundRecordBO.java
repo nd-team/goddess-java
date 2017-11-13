@@ -49,6 +49,10 @@ public class FundRecordBO extends BaseBO {
     private Double expenditure;
 
     /**
+     * 金额
+     */
+    private Double amount;
+    /**
      * 数据来源
      */
     private String dataSource;
@@ -120,6 +124,14 @@ public class FundRecordBO extends BaseBO {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getCreateTime() {

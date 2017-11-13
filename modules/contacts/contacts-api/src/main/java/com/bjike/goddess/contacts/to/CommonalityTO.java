@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.contacts.enums.Status;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -21,7 +22,7 @@ public class CommonalityTO extends BaseTO {
      * 项目组/部门
      */
     @NotNull(message = "项目组/部门不能为空", groups = {ADD.class, EDIT.class})
-    private String department;
+    private String departmentId;
 
     /**
      * 邮箱地址
@@ -45,12 +46,12 @@ public class CommonalityTO extends BaseTO {
     public String sendObject;
 
 
-    public String getDepartment() {
-        return department;
+    public String getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public String getEmail() {
