@@ -6,8 +6,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.bo.ProfitRegulationAdviceBO;
 import com.bjike.goddess.reportmanagement.dto.ProfitRegulationAdviceDTO;
-import com.bjike.goddess.reportmanagement.dto.ProfitRegulationAdviceDTO;
-import com.bjike.goddess.reportmanagement.entity.ProfitRegulationAdvice;
 import com.bjike.goddess.reportmanagement.entity.ProfitRegulationAdvice;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
@@ -38,6 +36,7 @@ public class ProfitRegulationAdviceSerImpl extends ServiceImpl<ProfitRegulationA
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+
 
     /**
      * 核对查看权限（部门级别）

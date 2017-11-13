@@ -32,6 +32,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "financeinitSerCache")
 @Service
 public class UseCommonlySerImpl extends ServiceImpl<UseCommonly, UseCommonlyDTO> implements UseCommonlySer {
+
     @Autowired
     private UserAPI userAPI;
     @Autowired

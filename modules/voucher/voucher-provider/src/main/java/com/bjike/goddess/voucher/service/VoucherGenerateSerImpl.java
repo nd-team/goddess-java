@@ -617,32 +617,48 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         Double current = 0d;
         Double year = 0d;
-//        Double profit = 0d;
-//        Double total = 0d;
-//        Double netProfits = 0d;
+//<<<<<<< Updated upstream
+////        Double profit = 0d;
+////        Double total = 0d;
+////        Double netProfits = 0d;
+//        String[] times = new String[]{startTime, endTime};
+//        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+////        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+//=======
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-//        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
         dto.getConditions().add(Restrict.between("voucherDate", times));
         List<VoucherGenerate> list = super.findByCis(dto);
         if (null != list && list.size() > 0) {
             if ("营业收入".equals(firstSubject)) {
                 current = getCurrent("主营业务收入", startTime, endTime, true);
-//                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
-//                profit += current;
+//<<<<<<< Updated upstream
+////                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+////                profit += current;
+//            } else if ("营业成本".equals(firstSubject)) {
+//                current = getCurrent("营业成本", startTime, endTime, true);
+////                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+////                profit = profit - current;
+//            } else if ("营业税金及附加".equals(firstSubject)) {
+//                current = getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true);
+////                profit = profit - current;
+//            } else if ("销售费用".equals(firstSubject)) {
+//                current = getCurrent("销售费用", startTime, endTime, true);
+////                profit = profit - current;
+//            } else if ("管理费用".equals(firstSubject)) {
+//                current = getCurrent("管理费用", startTime, endTime, true);
+////                profit = profit - current;
+//=======
             } else if ("营业成本".equals(firstSubject)) {
                 current = getCurrent("营业成本", startTime, endTime, true);
-//                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
-//                profit = profit - current;
             } else if ("营业税金及附加".equals(firstSubject)) {
-                current = getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true);
-//                profit = profit - current;
+                current = getCurrent("城建税", startTime, endTime, true) +
+                        getCurrent("教育附加", startTime, endTime, true) +
+                        getCurrent("地方教育附加", startTime, endTime, true);
             } else if ("销售费用".equals(firstSubject)) {
                 current = getCurrent("销售费用", startTime, endTime, true);
-//                profit = profit - current;
             } else if ("管理费用".equals(firstSubject)) {
                 current = getCurrent("管理费用", startTime, endTime, true);
-//                profit = profit - current;
             } else if ("财务费用".equals(firstSubject)) {
                 current = getCurrent("财务费用", startTime, endTime, true);
             } else if ("营业外收入".equals(firstSubject)) {
@@ -650,22 +666,63 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("营业外支出".equals(firstSubject)) {
                 current = getCurrent("营业外支出", startTime, endTime, false);
             } else if ("营业利润".equals(firstSubject)) {
-                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-                        getCurrent("财务费用",startTime, endTime, true);
+//<<<<<<< Updated upstream
+//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
+//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
+//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
+//                        getCurrent("财务费用",startTime, endTime, true);
+//            } else if ("净利润".equals(firstSubject)) {
+//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
+//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
+//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
+//                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
+//                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true) - getCurrent("所得税",startTime, endTime, true);
+//            }else if ("利润总额".equals(firstSubject)) {
+//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
+//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
+//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
+//                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
+//                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true);
+//=======
+                current = getCurrent("营业收入", startTime, endTime, true) -
+                        getCurrent("营业成本", startTime, endTime, true) -
+                        (getCurrent("城建税", startTime, endTime, true) +
+                                getCurrent("教育附加", startTime, endTime, true) +
+                                getCurrent("地方教育附加", startTime, endTime, true)) +
+                        getCurrent("其他业务收入", startTime, endTime, true) -
+                        getCurrent("其他业务支出", startTime, endTime, true) -
+                        getCurrent("营业费用", startTime, endTime, true) -
+                        getCurrent("管理费用", startTime, endTime, true) -
+                        getCurrent("财务费用", startTime, endTime, true);
             } else if ("净利润".equals(firstSubject)) {
-                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
-                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true) - getCurrent("所得税",startTime, endTime, true);
-            }else if ("利润总额".equals(firstSubject)) {
-                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
-                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true);
+                current = getCurrent("营业收入", startTime, endTime, true) -
+                        getCurrent("营业成本", startTime, endTime, true) -
+                        (getCurrent("城建税", startTime, endTime, true) +
+                                getCurrent("教育附加", startTime, endTime, true) +
+                                getCurrent("地方教育附加", startTime, endTime, true)) +
+                        getCurrent("其他业务收入", startTime, endTime, true) -
+                        getCurrent("其他业务支出", startTime, endTime, true) -
+                        getCurrent("营业费用", startTime, endTime, true) -
+                        getCurrent("管理费用", startTime, endTime, true) -
+                        getCurrent("财务费用", startTime, endTime, true) +
+                        getCurrent("补贴收入", startTime, endTime, true) +
+                        getCurrent("营业外收入", startTime, endTime, true) -
+                        getCurrent("营业外支出", startTime, endTime, true) -
+                        getCurrent("所得税", startTime, endTime, true);
+            } else if ("利润总额".equals(firstSubject)) {
+                current = getCurrent("营业收入", startTime, endTime, true) -
+                        getCurrent("营业成本", startTime, endTime, true) -
+                        (getCurrent("城建税", startTime, endTime, true) +
+                                getCurrent("教育附加", startTime, endTime, true) +
+                                getCurrent("地方教育附加", startTime, endTime, true)) +
+                        getCurrent("其他业务收入", startTime, endTime, true) -
+                        getCurrent("其他业务支出", startTime, endTime, true) -
+                        getCurrent("营业费用", startTime, endTime, true) -
+                        getCurrent("管理费用", startTime, endTime, true) -
+                        getCurrent("财务费用", startTime, endTime, true) +
+                        getCurrent("补贴收入", startTime, endTime, true) +
+                        getCurrent("营业外收入", startTime, endTime, true) -
+                        getCurrent("营业外支出", startTime, endTime, true);
             } else {
                 current = getCurrent(firstSubject, startTime, endTime, true);
             }
@@ -686,9 +743,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = super.findByCis(dto);
         if (null != list && list.size() > 0) {
             if (tar) {
-                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+                current = list.stream().filter(obj -> !"结转".equals(obj.getSumary().substring(obj.getSumary().length() - 2, obj.getSumary().length()))).mapToDouble(obj -> obj.getBorrowMoney()).sum() -
+                        list.stream().filter(obj -> !"结转".equals(obj.getSumary().substring(obj.getSumary().length() - 2, obj.getSumary().length()))).mapToDouble(obj -> obj.getLoanMoney()).sum();
             } else {
-                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+                current = list.stream().filter(obj -> !"结转".equals(obj.getSumary().substring(obj.getSumary().length() - 2, obj.getSumary().length()))).mapToDouble(obj -> obj.getLoanMoney()).sum() -
+                        list.stream().filter(obj -> !"结转".equals(obj.getSumary().substring(obj.getSumary().length() - 2, obj.getSumary().length()))).mapToDouble(obj -> obj.getBorrowMoney()).sum();
             }
         }
         return current;

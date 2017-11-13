@@ -1,6 +1,7 @@
 package com.bjike.goddess.dimission.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
@@ -184,5 +185,10 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     @Override
     public Long getSelfTotal() throws SerException {
         return dimissionInfoSer.getSelfTotal();
+    }
+
+    @Override
+    public DataBO findDataByName() throws SerException {
+        return dimissionInfoSer.findDataByName();
     }
 }

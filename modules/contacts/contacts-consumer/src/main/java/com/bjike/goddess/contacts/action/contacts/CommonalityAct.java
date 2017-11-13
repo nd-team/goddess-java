@@ -292,6 +292,7 @@ public class CommonalityAct extends BaseFileAction {
      *
      * @version v1
      */
+    @GetMapping("v1/findDepartment")
     public Result findDepartment() throws ActException{
         try {
             return ActResult.initialize(commonalityAPI.findDepartment());
