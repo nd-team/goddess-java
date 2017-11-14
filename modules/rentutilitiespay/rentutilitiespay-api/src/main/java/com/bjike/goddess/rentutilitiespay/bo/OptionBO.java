@@ -36,6 +36,16 @@ public class OptionBO extends BaseBO{
      */
     private SeriesBO[] series;
 
+    private ToolTipBO tooltip;
+
+    public ToolTipBO getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(ToolTipBO tooltip) {
+        this.tooltip = tooltip;
+    }
+
     public TitleBO getTitle() {
         return title;
     }

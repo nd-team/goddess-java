@@ -31,10 +31,20 @@ public class OptionVO {
      */
     private YAxisBO yAxis;
 
+    private ToolTipBO tooltip;
+
     /**
      * 柱状图数据
      */
     private SeriesBO[] series;
+
+    public ToolTipBO getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(ToolTipBO tooltip) {
+        this.tooltip = tooltip;
+    }
 
     public TitleBO getTitle() {
         return title;
