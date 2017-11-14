@@ -215,7 +215,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public AnnouncementBO save(AnnouncementTO to) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Announcement entity = BeanTransform.copyProperties(to, Announcement.class, true);
         entity.setStatus(Status.NORMAL);
         String classify = entity.getClassify().substring(0, 2);   //获取前两位
@@ -249,39 +249,41 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
         StringBuilder sb = new StringBuilder();
         String[] recipients = to.getRecipients();
         String[] mails = to.getMails();
-        if (recipients != null) {
-            String ticker = "公告消息推送";
-            String title = to.getTitle();
-            String text = null;
-            if (to.getRequired()) {
-                text = "您有一条标题为" + title + "的必读公告，请注意查收";
-            } else {
-                text = "您有一条标题为" + title + "的公告，请注意查收";
-            }
-            for (int i = 0; i < recipients.length; i++) {
-                String name = userAPI.findNameById(recipients[i]);
-                String deviceToken = pushUserInfoAPI.getToken(name);
-                try {
-                    if (44 == deviceToken.length()) {
-                        Push.androidUnicast(deviceToken, ticker, title, text);   //安卓消息推送
-                    }else if (64==deviceToken.length()){
-                        Push.iosUnicast(deviceToken,text);   //ios消息推送
-                    }
-                } catch (Exception e) {
-                    throw new SerException(e.getMessage());
-                }
-                if (i != recipients.length - 1) {
-                    sb.append(name + "、");
-                } else {
-                    sb.append(name);
-                }
-            }
-        }
+        //TODO 陈俊豪回来看
+//        if (recipients != null) {
+//            String ticker = "公告消息推送";
+//            String title = to.getTitle();
+//            String text = null;
+//            if (to.getRequired()) {
+//                text = "您有一条标题为" + title + "的必读公告，请注意查收";
+//            } else {
+//                text = "您有一条标题为" + title + "的公告，请注意查收";
+//            }
+//            for (int i = 0; i < recipients.length; i++) {
+//                String name = userAPI.findNameById(recipients[i]);
+//                String deviceToken = pushUserInfoAPI.getToken(name);
+//                try {
+//                    if (44 == deviceToken.length()) {
+//                        Push.androidUnicast(deviceToken, ticker, title, text);   //安卓消息推送
+//                    }else if (64==deviceToken.length()){
+//                        Push.iosUnicast(deviceToken,text);   //ios消息推送
+//                    }
+//                } catch (Exception e) {
+//                    throw new SerException(e.getMessage());
+//                }
+//                if (i != recipients.length - 1) {
+//                    sb.append(name + "、");
+//                } else {
+//                    sb.append(name);
+//                }
+//            }
+//        }
         List<String> userIds = null;
         String title = entity.getTitle();
         String content = entity.getPublishContent();
         if (to.getAll()) {    //是否发送全部
-            sendAll(title, content);
+            //TODO 陈俊豪回来做这里注调了
+//            sendAll(title, content);
             userIds = new ArrayList<>();
             List<UserBO> allUser = allUsers();
             for (int i = 0; i < allUser.size(); i++) {
@@ -293,20 +295,21 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
                 }
             }
         } else {
-            if (entity.getSend()) {   //发邮件
-                if (recipients != null) {
-                    List<String> list1 = Arrays.asList(recipients);
-                    String[] receivers = new String[list1.size()];     //用户id
-                    receivers = list1.toArray(receivers);
-                    sendMail(receivers, title, content);
-                }
-                if (mails != null) {
-                    List<String> list2 = Arrays.asList(mails);
-                    String[] receivers = new String[list2.size()];     //邮箱
-                    receivers = list2.toArray(receivers);
-                    sendMail(receivers, title, content);
-                }
-            }
+            //TODO 陈俊豪回来做
+//            if (entity.getSend()) {   //发邮件
+//                if (recipients != null) {
+//                    List<String> list1 = Arrays.asList(recipients);
+//                    String[] receivers = new String[list1.size()];     //用户id
+//                    receivers = list1.toArray(receivers);
+//                    sendMail(receivers, title, content);
+//                }
+//                if (mails != null) {
+//                    List<String> list2 = Arrays.asList(mails);
+//                    String[] receivers = new String[list2.size()];     //邮箱
+//                    receivers = list2.toArray(receivers);
+//                    sendMail(receivers, title, content);
+//                }
+//            }
         }
         entity.setRecipient(sb.toString());
         entity.setId(to.getUuid());
@@ -326,7 +329,8 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
         for (String recipient : recipients) {
             AnnouncementUser announcementUser = new AnnouncementUser();
             announcementUser.setUserId(recipient);
-            announcementUser.setAnnouncement(announcement);
+//            announcementUser.setAnnouncement(announcement);
+            announcementUser.setAnnouncementId(announcement.getId());
             announcementUserSer.save(announcementUser);
         }
     }
@@ -369,7 +373,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void edit(AnnouncementTO to) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Announcement entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -482,7 +486,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Announcement entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -739,7 +743,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void freeze(String id) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Announcement entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -752,7 +756,7 @@ public class AnnouncementSerImpl extends ServiceImpl<Announcement, AnnouncementD
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void thaw(String id) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Announcement entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");
