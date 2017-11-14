@@ -26,6 +26,7 @@ import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.enums.FileType;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +68,8 @@ public class AnnouncementAct extends BaseFileAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 模块设置导航权限
@@ -187,8 +190,8 @@ public class AnnouncementAct extends BaseFileAction {
     public Result announcement(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             AnnouncementBO bo = announcementAPI.findByID(id);
-            AnnouncementVO vo=BeanTransform.copyProperties(bo,AnnouncementVO.class,request);
-            List<String> photos=photos(vo.getId(),request);
+            AnnouncementVO vo = BeanTransform.copyProperties(bo, AnnouncementVO.class, request);
+            List<String> photos = photos(vo.getId(), request);
             vo.setPhotos(photos);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -569,9 +572,7 @@ public class AnnouncementAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 通过request获取上传文件
-     */
+    //通过request获取上传文件
     private List<MultipartFile> getMultipartFile(HttpServletRequest request) throws SerException {
 
         if (null != request && !isMultipartContent(request)) {
@@ -582,9 +583,7 @@ public class AnnouncementAct extends BaseFileAction {
 
     }
 
-    /**
-     * 上传是否合理
-     */
+    //上传是否合理
     private boolean isMultipartContent(HttpServletRequest request) {
         if (!"post".equals(request.getMethod().toLowerCase())) {
             return false;
@@ -639,11 +638,11 @@ public class AnnouncementAct extends BaseFileAction {
     @GetMapping("v1/phone/list")
     public Result phoneList(HttpServletRequest request) throws ActException {
         try {
-            List<AnnouncementVO> vos=new ArrayList<>();
+            List<AnnouncementVO> vos = new ArrayList<>();
             List<AnnouncementBO> list = announcementAPI.phoneList();
-            for (AnnouncementBO bo:list){
-                AnnouncementVO vo=BeanTransform.copyProperties(bo,AnnouncementVO.class,request);
-                List<String> photos=photos(vo.getId(),request);
+            for (AnnouncementBO bo : list) {
+                AnnouncementVO vo = BeanTransform.copyProperties(bo, AnnouncementVO.class, request);
+                List<String> photos = photos(vo.getId(), request);
                 vo.setPhotos(photos);
                 vos.add(vo);
             }
@@ -652,5 +651,25 @@ public class AnnouncementAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+    /**
+     * 发布对象
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     * @desc 获取用户
+     */
+    @GetMapping("v1/receipter/list")
+    public Result receipter(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> list = userAPI.findAllUser();
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

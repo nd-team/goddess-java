@@ -170,7 +170,7 @@ public class ClassSerImpl extends ServiceImpl<Class, ClassDTO> implements ClassS
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public ClassBO save(ClassTO to) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         String userName = userAPI.currentUser().getUsername();
         Class entity = BeanTransform.copyProperties(to, Class.class, true);
         entity.setCreater(userName);
@@ -181,7 +181,7 @@ public class ClassSerImpl extends ServiceImpl<Class, ClassDTO> implements ClassS
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void edit(ClassTO to) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Class entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
@@ -197,7 +197,7 @@ public class ClassSerImpl extends ServiceImpl<Class, ClassDTO> implements ClassS
 
     @Override
     public List<ClassBO> list(ClassDTO dto) throws SerException {
-        checkSeeIdentity();
+//        checkSeeIdentity();
         dto.getSorts().add("createTime=desc");
         List<Class> list = super.findByCis(dto, true);
         return BeanTransform.copyProperties(list, ClassBO.class);
@@ -206,7 +206,7 @@ public class ClassSerImpl extends ServiceImpl<Class, ClassDTO> implements ClassS
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void delete(String id) throws SerException {
-        checkAddIdentity();
+//        checkAddIdentity();
         Class entity = super.findById(id);
         if (entity == null) {
             throw new SerException("该对象不存在");

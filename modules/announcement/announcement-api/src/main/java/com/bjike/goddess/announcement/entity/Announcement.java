@@ -91,7 +91,8 @@ public class Announcement extends BaseEntity {
     /**
      * 公告对应的发布对象
      */
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "announcement")
+//    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "announcement")
+    @Transient
     private Set<AnnouncementUser> announcementUsers = new HashSet<AnnouncementUser>();
 
     public Set<AnnouncementUser> getAnnouncementUsers() {

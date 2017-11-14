@@ -40,6 +40,7 @@ dependencies {
 
     compile project(":modules:announcement:announcement-api")
     compile project(":modules:contacts:contacts-api")
+
     compile project(":modules:user:user-api")
     compile project(":modules:storage:storage-api")
     compile project(":modules:organize:organize-api")

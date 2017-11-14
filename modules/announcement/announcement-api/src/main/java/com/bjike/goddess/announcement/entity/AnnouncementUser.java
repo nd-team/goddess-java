@@ -27,15 +27,30 @@ public class AnnouncementUser extends BaseEntity {
     /**
      * 公告
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "announcement_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '公告id' ")
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
+//    @JoinColumn(name = "announcement_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '公告id' ")
+    @Transient
     private Announcement announcement;
+
+    /**
+     * 公告id
+     */
+    @JoinColumn(name = "announcement_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '公告id' ")
+    private String announcementId;
 
     /**
      * 用户信息
      */
     @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '用户id'")
     private String userId;
+
+    public String getAnnouncementId() {
+        return announcementId;
+    }
+
+    public void setAnnouncementId(String announcementId) {
+        this.announcementId = announcementId;
+    }
 
     public String getUserId() {
         return userId;
