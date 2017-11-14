@@ -335,6 +335,8 @@ public class ImageCollectSerImpl extends ServiceImpl<DispatchcarRecordCollect,Di
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
 
+        ToolTipBO toolTipBO = new ToolTipBO();
+
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
         String[] text_3 = new String[]{"项目出车数量","已有出车记录数","人工录入出车单数","有问题出车记录数","已解决出车记录问题数","负责人已审核数","预算模块核对数","账务模块核对数","资金模块核对数"};
@@ -375,6 +377,7 @@ public class ImageCollectSerImpl extends ServiceImpl<DispatchcarRecordCollect,Di
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(toolTipBO);
 
         optionBO.setSeries(text_4);
         return  optionBO;
