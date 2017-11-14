@@ -54,12 +54,12 @@ public class CollectBO extends BaseBO {
     /**
      * 晋升前（不包括各项补助）
      */
-    private Integer promotionBefore;
+    private String promotionBefore;
 
     /**
      * 晋升后（不包括各项补助）
      */
-    private Integer promotionAfter;
+    private String promotionAfter;
 
     /**
      * 幅度
@@ -125,19 +125,19 @@ public class CollectBO extends BaseBO {
         this.times = times;
     }
 
-    public Integer getPromotionBefore() {
+    public String getPromotionBefore() {
         return promotionBefore;
     }
 
-    public void setPromotionBefore(Integer promotionBefore) {
+    public void setPromotionBefore(String promotionBefore) {
         this.promotionBefore = promotionBefore;
     }
 
-    public Integer getPromotionAfter() {
+    public String getPromotionAfter() {
         return promotionAfter;
     }
 
-    public void setPromotionAfter(Integer promotionAfter) {
+    public void setPromotionAfter(String promotionAfter) {
         this.promotionAfter = promotionAfter;
     }
 

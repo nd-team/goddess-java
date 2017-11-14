@@ -1,85 +1,84 @@
-package com.bjike.goddess.managepromotion.vo;
+package com.bjike.goddess.managepromotion.excel;
 
-import com.bjike.goddess.managepromotion.enums.AuditStatus;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+
+import javax.persistence.Column;
+import java.time.LocalDate;
 
 /**
- * 员工已晋升情况表现层对象
- *
- * @Author: [ xiazhili ]
- * @Date: [ 2017-05-23 09:20 ]
- * @Description: [ 员工已晋升情况表现层对象 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [jiangzaixuan]
+ * @Date: [2017-11-11 09:56]
+ * @Description: [ ]
+ * @Version: [1.0.0]
+ * @Copy: [com.bjike]
  */
-public class EmployeePromotedVO {
-
-    /**
-     * id
-     */
-    private String id;
+public class EmployeePromotedSetExcel {
     /**
      * 部门
      */
+    @ExcelHeader(name = "部门",notNull = true)
     private String department;
 
     /**
      * 项目组
      */
+    @ExcelHeader(name = "项目组",notNull = true)
     private String projectGroup;
 
     /**
      * 姓名
      */
+    @ExcelHeader(name = "姓名",notNull = true)
     private String name;
 
     /**
      * 岗位
      */
+    @ExcelHeader(name = "岗位",notNull = true)
     private String jobs;
 
     /**
      * 渠道
      */
+    @ExcelHeader(name = "渠道",notNull = true)
     private String channel;
 
     /**
      * 时间
      */
+    @ExcelHeader(name = "时间",notNull = true)
     private String times;
 
     /**
      * 晋升前（不包括各项补助）
      */
+    @ExcelHeader(name = "晋升前",notNull = true)
     private String promotionBefore;
 
     /**
      * 晋升后（不包括各项补助）
      */
+    @ExcelHeader(name = "晋升后",notNull = true)
     private String promotionAfter;
 
     /**
      * 幅度(晋升后-晋升前)
      */
+    @ExcelHeader(name = "幅度",notNull = true)
     private Integer extent;
 
     /**
      * 总幅度
      */
+    @ExcelHeader(name = "总幅度",notNull = true)
     private Integer totalRange;
 
     /**
-     * 状态
+     * 状态（审核中/通过/不通过）
      */
+    @ExcelHeader(name = "状态",notNull = true)
     private String status;
 
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getDepartment() {
         return department;

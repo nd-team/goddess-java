@@ -126,4 +126,14 @@ public class EmployeePromotedApiImpl implements EmployeePromotedAPI {
     public List<StaffSkillCollectBO> totalStaffCollect(StaffSkillCollectTO to) throws SerException {
         return employeePromotedSer.totalStaffCollect(to);
     }
+
+    @Override
+    public void leadExcel(List<EmployeePromotedTO> toList) throws SerException {
+        employeePromotedSer.leadExcel(toList);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return employeePromotedSer.templateExport();
+    }
 }
