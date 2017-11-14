@@ -43,6 +43,11 @@ public class MonthCollectBO extends BaseBO {
      */
     private Double expenditure;
 
+    /**
+     * 本月发生额
+     */
+    private Double incurredAmount;
+
     public Integer getYear() {
         return year;
     }
@@ -89,5 +94,13 @@ public class MonthCollectBO extends BaseBO {
 
     public void setExpenditure(Double expenditure) {
         this.expenditure = expenditure;
+    }
+
+    public Double getIncurredAmount() {
+        return incurredAmount;
+    }
+
+    public void setIncurredAmount(Double incurredAmount) {
+        this.incurredAmount = incurredAmount;
     }
 }

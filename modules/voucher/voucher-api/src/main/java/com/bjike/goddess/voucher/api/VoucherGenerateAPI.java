@@ -722,4 +722,10 @@ public interface VoucherGenerateAPI {
     default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
+    /**
+     * 获取所有一级科目为现金或者银行存款的数据
+     */
+    default List<VoucherGenerateBO> findByCourseName() throws SerException {
+        return null;
+    }
 }

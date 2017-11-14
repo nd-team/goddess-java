@@ -409,4 +409,9 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
         return voucherGenerateSer.findCurrentAndYear(firstSubject, startTime, endTime);
     }
+
+    @Override
+    public List<VoucherGenerateBO> findByCourseName() throws SerException {
+        return voucherGenerateSer.findByCourseName();
+    }
 }

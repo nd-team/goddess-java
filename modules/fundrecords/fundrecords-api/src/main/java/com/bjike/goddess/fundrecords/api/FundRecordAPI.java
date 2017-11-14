@@ -124,4 +124,108 @@ public interface FundRecordAPI {
     List<SonPermissionObject> sonPermission() throws SerException;
 
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+    /**
+     * 账户来源下拉值
+     * @return
+     * @throws SerException
+     */
+    List<String> sourceAccountValue() throws SerException;
+
+    /**
+     * 导入资金流水
+     * @return
+     * @throws SerException
+     */
+    void exportFund() throws SerException;
+
+    /**
+     * 月汇总lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return 月汇总结果集
+     */
+    MonthCollectBO monthSumma(Integer year, Integer month) throws SerException;
+
+    /**
+     * 地区汇总lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param area 地区
+     * @return 地区汇总结果集
+     */
+    ConditionCollectBO areaSumma(Integer year, Integer month,String area) throws SerException;
+
+    /**
+     * 项目组汇总lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param project 项目组
+     * @return 项目组汇总结果集
+     */
+    ConditionCollectBO projectSumma(Integer year, Integer month,String project) throws SerException;
+
+    /**
+     * 项目名称汇总lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param projectName 项目名称
+     * @return 项目组汇总结果集
+     */
+    ConditionCollectBO projectNameSumma(Integer year, Integer month,String projectName) throws SerException;
+
+    /**
+     * 获取所有地区
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllArea() throws SerException{return null;}
+
+    /**
+     * 获取所有项目组
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllProjectGroup() throws SerException{return null;}
+
+    /**
+     * 获取所有项目名称
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllProjectName() throws SerException{return null;}
+
+    /**
+     * 地区分析lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param area 地区
+     * @return 地区分析结果集
+     */
+    AreaAnalyzeBO areaAnalysis(Integer year, Integer month,String area) throws SerException;
+
+    /**
+     * 项目组分析lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param project 项目组
+     * @return 项目组分析结果集
+     */
+    GroupAnalyzeBO projectAnalysis(Integer year, Integer month,String project) throws SerException;
+
+    /**
+     * 项目名称分析lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param projectName 项目名称
+     * @return 项目名称分析结果集
+     */
+    ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month,String projectName) throws SerException;
+
 }

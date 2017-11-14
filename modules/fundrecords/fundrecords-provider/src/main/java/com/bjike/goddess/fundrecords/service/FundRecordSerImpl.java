@@ -1,5 +1,6 @@
 package com.bjike.goddess.fundrecords.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -8,6 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.fundrecords.bo.*;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
 import com.bjike.goddess.fundrecords.entity.FundRecord;
@@ -22,20 +24,22 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资金流水业务实现
@@ -56,12 +60,16 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private AccountAPI accountAPI;
+    @Autowired
+    private ModuleAPI modulesAPI;
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public FundRecordBO insertModel(FundRecordTO to) throws SerException {
         FundRecord model = BeanTransform.copyProperties(to, FundRecord.class, true);
-        model.setDataSource("资金流水");
+//        model.setDataSource("资金流水");
         super.save(model);
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, FundRecordBO.class);
@@ -712,4 +720,315 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
         return boList.subList(pageHead, pageTrail);
     }
 
+    @Override
+    public List<String> sourceAccountValue() throws SerException {
+        List<VoucherGenerateBO> voucherGenerateBOS = voucherGenerateAPI.findByCourseName();
+        List<String> sourceAccounts = new ArrayList<>();
+        if (voucherGenerateBOS != null && voucherGenerateBOS.size() > 0) {
+            for (VoucherGenerateBO voucherGenerateBO : voucherGenerateBOS) {
+                String sourceAccount = voucherGenerateBO.getFirstSubject();
+                if (StringUtils.isNotBlank(voucherGenerateBO.getSecondSubject())) {
+                    sourceAccount += voucherGenerateBO.getSecondSubject();
+                }
+                if (StringUtils.isNotBlank(voucherGenerateBO.getThirdSubject())) {
+                    sourceAccount += voucherGenerateBO.getThirdSubject();
+                }
+                sourceAccounts.add(sourceAccount);
+            }
+        }
+        return sourceAccounts;
+    }
+
+    @Override
+    public void exportFund() throws SerException {
+        List<VoucherGenerateBO> voucherGenerateBOS = new ArrayList<>();
+        if(modulesAPI.isCheck("voucher")){
+            voucherGenerateBOS = voucherGenerateAPI.findByCourseName();
+        }
+        if (voucherGenerateBOS != null && voucherGenerateBOS.size() > 0) {
+            List<FundRecord> fundRecordList = new ArrayList<>();
+            for (VoucherGenerateBO voucherGenerateBO : voucherGenerateBOS) {
+                FundRecord fundRecord = new FundRecord();
+                String str = voucherGenerateBO.getFirstSubject();
+                if (StringUtils.isNotBlank(voucherGenerateBO.getSecondSubject())) {
+                    str += "-"+voucherGenerateBO.getSecondSubject();
+                }
+                if (StringUtils.isNotBlank(voucherGenerateBO.getThirdSubject())) {
+                    str += "-"+voucherGenerateBO.getThirdSubject();
+                }
+                Double amount = 0d;
+                if(modulesAPI.isCheck("financeinit")){
+                    amount = accountAPI.findTotalAmount();
+                }
+                fundRecord.setRecordDate(LocalDate.now());
+                fundRecord.setArea(voucherGenerateBO.getArea());//地区
+                fundRecord.setProjectGroup(voucherGenerateBO.getProjectGroup());//项目组
+                fundRecord.setProject(voucherGenerateBO.getProjectName());//项目名称
+                fundRecord.setDigest(voucherGenerateBO.getSumary());//摘要
+                fundRecord.setIncome(voucherGenerateBO.getBorrowMoney());//收入
+                fundRecord.setExpenditure(voucherGenerateBO.getLoanMoney());//支出
+                fundRecord.setDataSource(str);//数据来源
+                fundRecord.setAmount(amount + voucherGenerateBO.getBorrowMoney() - voucherGenerateBO.getLoanMoney());//金额
+                fundRecordList.add(fundRecord);
+            }
+            super.save(fundRecordList);
+        }
+    }
+
+    @Override
+    public MonthCollectBO monthSumma(Integer year, Integer month) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String lastStartDate = DateUtil.dateToString(DateUtil.parseDate(startDate).minusMonths(1));
+        String lastEndDate = DateUtil.dateToString(DateUtil.parseDate(endDate).minusMonths(1));
+        List<FundRecord> fundRecordList1 = findByDate(new String[]{startDate, endDate});//查询月数据
+        List<FundRecord> fundRecordList2 = findByDate(new String[]{lastStartDate, lastEndDate});//查询月上月数据
+
+        MonthCollectBO monthCollectBO = new MonthCollectBO();
+        if (fundRecordList1 != null && fundRecordList1.size() > 0) {
+            Double lastBalance = fundRecordList1.stream().mapToDouble(FundRecord::getAmount).sum();//本月余额
+            Double currentBalance = 0d;//本月余额
+            if (fundRecordList2 != null && fundRecordList2.size() > 0) {
+                currentBalance = fundRecordList2.stream().mapToDouble(FundRecord::getAmount).sum();//上月余额
+            }
+            Double income = fundRecordList1.stream().mapToDouble(FundRecord::getIncome).sum();//收入
+            Double expenditure = fundRecordList1.stream().mapToDouble(FundRecord::getExpenditure).sum();//支出
+            monthCollectBO.setYear(year);
+            monthCollectBO.setMonth(month);
+            monthCollectBO.setLastBalance(lastBalance);
+            monthCollectBO.setCurrentBalance(currentBalance);
+            monthCollectBO.setIncome(income);
+            monthCollectBO.setExpenditure(expenditure);
+            monthCollectBO.setIncurredAmount(income - expenditure);
+        }
+        return monthCollectBO;
+    }
+
+    public List<FundRecord> findByDate(String[] recordDates) throws SerException {
+        FundRecordDTO fundRecordDTO = new FundRecordDTO();
+        fundRecordDTO.getConditions().add(Restrict.between("recordDate", recordDates));
+        List<FundRecord> fundRecordList = super.findByCis(fundRecordDTO);
+        return fundRecordList;
+    }
+
+    @Override
+    public ConditionCollectBO areaSumma(Integer year, Integer month, String area) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        FundRecordDTO fundRecordDTO = new FundRecordDTO();
+        fundRecordDTO.getConditions().add(Restrict.between("recordDate", new String[]{startDate, endDate}));
+        fundRecordDTO.getConditions().add(Restrict.eq("area", area));
+        List<FundRecord> fundRecordList = super.findByCis(fundRecordDTO);
+        ConditionCollectBO conditionCollectBO = new ConditionCollectBO();
+        if (fundRecordList != null && fundRecordList.size() > 0) {
+            Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
+            Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            conditionCollectBO.setRecordDate(year + "-" + month);
+            conditionCollectBO.setArea(area);
+            conditionCollectBO.setIncome(income);
+            conditionCollectBO.setExpenditure(expenditure);
+        }
+        return conditionCollectBO;
+    }
+
+    @Override
+    public ConditionCollectBO projectSumma(Integer year, Integer month, String project) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        FundRecordDTO fundRecordDTO = new FundRecordDTO();
+        fundRecordDTO.getConditions().add(Restrict.between("recordDate", new String[]{startDate, endDate}));
+        fundRecordDTO.getConditions().add(Restrict.eq("projectGroup", project));
+        List<FundRecord> fundRecordList = super.findByCis(fundRecordDTO);
+        ConditionCollectBO conditionCollectBO = new ConditionCollectBO();
+        if (fundRecordList != null && fundRecordList.size() > 0) {
+            Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
+            Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            conditionCollectBO.setRecordDate(year + "-" + month);
+            conditionCollectBO.setProjectGroup(project);
+            conditionCollectBO.setIncome(income);
+            conditionCollectBO.setExpenditure(expenditure);
+        }
+        return conditionCollectBO;
+    }
+
+    @Override
+    public ConditionCollectBO projectNameSumma(Integer year, Integer month, String projectName) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        FundRecordDTO fundRecordDTO = new FundRecordDTO();
+        fundRecordDTO.getConditions().add(Restrict.between("recordDate", new String[]{startDate, endDate}));
+        fundRecordDTO.getConditions().add(Restrict.eq("projectGroup", projectName));
+        List<FundRecord> fundRecordList = super.findByCis(fundRecordDTO);
+        ConditionCollectBO conditionCollectBO = new ConditionCollectBO();
+        if (fundRecordList != null && fundRecordList.size() > 0) {
+            Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
+            Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            conditionCollectBO.setRecordDate(year + "-" + month);
+            conditionCollectBO.setProject(projectName);
+            conditionCollectBO.setIncome(income);
+            conditionCollectBO.setExpenditure(expenditure);
+        }
+        return conditionCollectBO;
+    }
+
+    @Override
+    public List<String> findAllArea() throws SerException {
+        List<FundRecord> fundRecordList = super.findAll();
+        if (CollectionUtils.isEmpty(fundRecordList)) {
+            return Collections.emptyList();
+        }
+        return fundRecordList.stream().distinct().map(FundRecord::getArea).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findAllProjectGroup() throws SerException {
+        List<FundRecord> fundRecordList = super.findAll();
+        if (CollectionUtils.isEmpty(fundRecordList)) {
+            return Collections.emptyList();
+        }
+        return fundRecordList.stream().distinct().map(FundRecord::getProjectGroup).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<String> findAllProjectName() throws SerException {
+        List<FundRecord> fundRecordList = super.findAll();
+        if (CollectionUtils.isEmpty(fundRecordList)) {
+            return Collections.emptyList();
+        }
+        return fundRecordList.stream().distinct().map(FundRecord::getProject).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public AreaAnalyzeBO areaAnalysis(Integer year, Integer month, String area) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String lastStartDate = DateUtil.dateToString(DateUtil.parseDate(startDate).minusMonths(1));
+        String lastEndDate = DateUtil.dateToString(DateUtil.parseDate(endDate).minusMonths(1));
+        String[] fields = new String[]{"recordDate", "area", "projectGroup", "project", "digest", "income", "expenditure", "amount", "dataSource"};
+        String sql1 = "SELECT recordDate,area,projectGroup,project,digest,income,expenditure,amount,dataSource FROM fundrecords_fundrecord where recordDate BETWEEN '" + startDate + "' and '" + endDate + "' and area = '" + area + "'";
+        List<FundRecord> fundRecordList = super.findBySql(sql1,FundRecord.class,fields);
+        String sql2 = "SELECT recordDate,area,projectGroup,project,digest,income,expenditure,amount,dataSource FROM fundrecords_fundrecord where recordDate BETWEEN '" + lastStartDate + "' and '" + lastEndDate + "' and area = '" + area + "'";
+        List<FundRecord> fundRecordList2 = super.findBySql(sql2,FundRecord.class,fields);
+        String sql3 = "SELECT ifnull(sum(income),0) as totalIncome FROM fundrecords_fundrecord where recordDate BETWEEN '" + startDate + "' and '" + endDate + "'";
+        List<Object> income_obj = super.findBySql(sql3);
+        Double totalIncome = Double.parseDouble(String.valueOf(income_obj.get(0)));
+        String sql4 = "SELECT ifnull(sum(expenditure),0) as totalExpenditure FROM fundrecords_fundrecord where recordDate BETWEEN '" + lastStartDate + "' and '" + lastEndDate + "'";
+        List<Object> totalExpenditure_obj = super.findBySql(sql4);
+        Double totalExpenditure = Double.parseDouble(String.valueOf(totalExpenditure_obj.get(0)));
+
+        AreaAnalyzeBO areaAnalyzeBO = new AreaAnalyzeBO();
+        if(fundRecordList!=null && fundRecordList.size()>0){
+            Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
+            Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            Double lastIncome = 0d;
+            Double lastExpenditure = 0d;
+            if(fundRecordList2!=null && fundRecordList2.size()>0){
+                lastIncome = fundRecordList2.stream().mapToDouble(FundRecord::getIncome).sum();
+                lastExpenditure = fundRecordList2.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            }
+            areaAnalyzeBO.setRecordDate(year+"-"+month);
+            areaAnalyzeBO.setArea(area);
+            areaAnalyzeBO.setIncome(income);
+            areaAnalyzeBO.setExpenditure(expenditure);
+            areaAnalyzeBO.setLastIncome(lastIncome);
+            areaAnalyzeBO.setLastExpenditure(lastExpenditure);
+            areaAnalyzeBO.setIncomeSubtract(income-lastIncome);
+            areaAnalyzeBO.setExpenditureSubtract(expenditure-lastExpenditure);
+            areaAnalyzeBO.setIncomeRate(totalIncome==0d?0d:income/totalIncome);
+            areaAnalyzeBO.setExpenditureRate(totalExpenditure==0d?0d:expenditure/totalExpenditure);
+            areaAnalyzeBO.setIncomeGrowRate(areaAnalyzeBO.getIncomeSubtract()==0d?0d+"%":lastIncome/areaAnalyzeBO.getIncomeSubtract()+"%");
+            areaAnalyzeBO.setExpenditureGrowRate(areaAnalyzeBO.getExpenditureSubtract()==0d?0d+"%":lastExpenditure/areaAnalyzeBO.getExpenditureSubtract()+"%");
+        }
+        return areaAnalyzeBO;
+    }
+
+    @Override
+    public GroupAnalyzeBO projectAnalysis(Integer year, Integer month, String project) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String lastStartDate = DateUtil.dateToString(DateUtil.parseDate(startDate).minusMonths(1));
+        String lastEndDate = DateUtil.dateToString(DateUtil.parseDate(endDate).minusMonths(1));
+        String[] fields = new String[]{"recordDate", "area", "projectGroup", "project", "digest", "income", "expenditure", "amount", "dataSource"};
+        String sql1 = "SELECT recordDate,area,projectGroup,project,digest,income,expenditure,amount,dataSource FROM fundrecords_fundrecord where recordDate BETWEEN '" + startDate + "' and '" + endDate + "' and projectGroup = '" + project + "'";
+        List<FundRecord> fundRecordList = super.findBySql(sql1,FundRecord.class,fields);
+        String sql2 = "SELECT recordDate,area,projectGroup,project,digest,income,expenditure,amount,dataSource FROM fundrecords_fundrecord where recordDate BETWEEN '" + lastStartDate + "' and '" + lastEndDate + "' and projectGroup = '" + project + "'";
+        List<FundRecord> fundRecordList2 = super.findBySql(sql2,FundRecord.class,fields);
+        String sql3 = "SELECT ifnull(sum(income),0) as totalIncome FROM fundrecords_fundrecord where recordDate BETWEEN '" + startDate + "' and '" + endDate + "'";
+        List<Object> income_obj = super.findBySql(sql3);
+        Double totalIncome = Double.parseDouble(String.valueOf(income_obj.get(0)));
+        String sql4 = "SELECT ifnull(sum(expenditure),0) as totalExpenditure FROM fundrecords_fundrecord where recordDate BETWEEN '" + lastStartDate + "' and '" + lastEndDate + "'";
+        List<Object> totalExpenditure_obj = super.findBySql(sql4);
+        Double totalExpenditure = Double.parseDouble(String.valueOf(totalExpenditure_obj.get(0)));
+
+        GroupAnalyzeBO groupAnalyzeBO = new GroupAnalyzeBO();
+        if(fundRecordList!=null && fundRecordList.size()>0){
+            Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
+            Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            Double lastIncome = 0d;
+            Double lastExpenditure = 0d;
+            if(fundRecordList2!=null && fundRecordList2.size()>0){
+                lastIncome = fundRecordList2.stream().mapToDouble(FundRecord::getIncome).sum();
+                lastExpenditure = fundRecordList2.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            }
+            groupAnalyzeBO.setRecordDate(year+"-"+month);
+            groupAnalyzeBO.setProjectGroup(project);
+            groupAnalyzeBO.setIncome(income);
+            groupAnalyzeBO.setExpenditure(expenditure);
+            groupAnalyzeBO.setLastIncome(lastIncome);
+            groupAnalyzeBO.setLastExpenditure(lastExpenditure);
+            groupAnalyzeBO.setIncomeSubtract(income-lastIncome);
+            groupAnalyzeBO.setExpenditureSubtract(expenditure-lastExpenditure);
+            groupAnalyzeBO.setIncomeRate(totalIncome==0d?0d:income/totalIncome);
+            groupAnalyzeBO.setExpenditureRate(totalExpenditure==0d?0d:expenditure/totalExpenditure);
+            groupAnalyzeBO.setIncomeGrowRate(groupAnalyzeBO.getIncomeSubtract()==0d?0d+"%":lastIncome/groupAnalyzeBO.getIncomeSubtract()+"%");
+            groupAnalyzeBO.setExpenditureGrowRate(groupAnalyzeBO.getExpenditureSubtract()==0d?0d+"%":lastExpenditure/groupAnalyzeBO.getExpenditureSubtract()+"%");
+        }
+        return groupAnalyzeBO;
+    }
+
+    @Override
+    public ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month, String projectName) throws SerException {
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String lastStartDate = DateUtil.dateToString(DateUtil.parseDate(startDate).minusMonths(1));
+        String lastEndDate = DateUtil.dateToString(DateUtil.parseDate(endDate).minusMonths(1));
+        String[] fields = new String[]{"recordDate", "area", "projectGroup", "project", "digest", "income", "expenditure", "amount", "dataSource"};
+        String sql1 = "SELECT recordDate,area,projectGroup,project,digest,income,expenditure,amount,dataSource FROM fundrecords_fundrecord where recordDate BETWEEN '" + startDate + "' and '" + endDate + "' and project = '" + projectName + "'";
+        List<FundRecord> fundRecordList = super.findBySql(sql1,FundRecord.class,fields);
+        String sql2 = "SELECT recordDate,area,projectGroup,project,digest,income,expenditure,amount,dataSource FROM fundrecords_fundrecord where recordDate BETWEEN '" + lastStartDate + "' and '" + lastEndDate + "' and project = '" + projectName + "'";
+        List<FundRecord> fundRecordList2 = super.findBySql(sql2,FundRecord.class,fields);
+        String sql3 = "SELECT ifnull(sum(income),0) as totalIncome FROM fundrecords_fundrecord where recordDate BETWEEN '" + startDate + "' and '" + endDate + "'";
+        List<Object> income_obj = super.findBySql(sql3);
+        Double totalIncome = Double.parseDouble(String.valueOf(income_obj.get(0)));
+        String sql4 = "SELECT ifnull(sum(expenditure),0) as totalExpenditure FROM fundrecords_fundrecord where recordDate BETWEEN '" + lastStartDate + "' and '" + lastEndDate + "'";
+        List<Object> totalExpenditure_obj = super.findBySql(sql4);
+        Double totalExpenditure = Double.parseDouble(String.valueOf(totalExpenditure_obj.get(0)));
+
+        ProjectAnalyzeBO projectAnalyzeBO = new ProjectAnalyzeBO();
+        if(fundRecordList!=null && fundRecordList.size()>0){
+            Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
+            Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            Double lastIncome = 0d;
+            Double lastExpenditure = 0d;
+            if(fundRecordList2!=null && fundRecordList2.size()>0){
+                lastIncome = fundRecordList2.stream().mapToDouble(FundRecord::getIncome).sum();
+                lastExpenditure = fundRecordList2.stream().mapToDouble(FundRecord::getExpenditure).sum();
+            }
+            projectAnalyzeBO.setRecordDate(year+"-"+month);
+            projectAnalyzeBO.setProject(projectName);
+            projectAnalyzeBO.setIncome(income);
+            projectAnalyzeBO.setExpenditure(expenditure);
+            projectAnalyzeBO.setLastIncome(lastIncome);
+            projectAnalyzeBO.setLastExpenditure(lastExpenditure);
+            projectAnalyzeBO.setIncomeSubtract(income-lastIncome);
+            projectAnalyzeBO.setExpenditureSubtract(expenditure-lastExpenditure);
+            projectAnalyzeBO.setIncomeRate(totalIncome==0d?0d:income/totalIncome);
+            projectAnalyzeBO.setExpenditureRate(totalExpenditure==0d?0d:expenditure/totalExpenditure);
+            projectAnalyzeBO.setIncomeGrowRate(projectAnalyzeBO.getIncomeSubtract()==0d?0d+"%":lastIncome/projectAnalyzeBO.getIncomeSubtract()+"%");
+            projectAnalyzeBO.setExpenditureGrowRate(projectAnalyzeBO.getExpenditureSubtract()==0d?0d+"%":lastExpenditure/projectAnalyzeBO.getExpenditureSubtract()+"%");
+        }
+        return projectAnalyzeBO;
+    }
 }

@@ -4,7 +4,6 @@ import com.bjike.goddess.businsurance.api.CasualtyPurchasingDetailAPI;
 import com.bjike.goddess.businsurance.bo.CasualtyPurchasingDetailBO;
 import com.bjike.goddess.businsurance.bo.SummaryBO;
 import com.bjike.goddess.businsurance.dto.CasualtyPurchasingDetailDTO;
-import com.bjike.goddess.businsurance.entity.CasualtyPurchasingDetail;
 import com.bjike.goddess.businsurance.excel.CasualtyPurchasingDetailExcel;
 import com.bjike.goddess.businsurance.to.CasualtyPurchasingDetailTO;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
@@ -21,12 +20,12 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,9 +43,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("casualtypurchasingdetail")
-public class CasualtyPurchasingDetailAction extends BaseFileAction{
+public class CasualtyPurchasingDetailAction extends BaseFileAction {
     @Autowired
     private CasualtyPurchasingDetailAPI casualtyPurchasingDetailAPI;
+
     /**
      * 功能导航权限
      *
@@ -69,6 +69,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 总条数
      *
@@ -232,6 +233,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 获取所有的员工编号
      *
@@ -247,8 +249,10 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据员工编号获取信息
+     *
      * @return class CasualtyPurchasingDetailBO
      * @des 根据员工编号获取信息
      * @version v1
@@ -262,6 +266,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 商业保险日汇总
      *
@@ -270,7 +275,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/day")
+    @GetMapping("v1/summarize/day")
     public Result summarizeDay(String date, javax.servlet.http.HttpServletRequest request) throws ActException {
         try {
             List<SummaryBO> boList = casualtyPurchasingDetailAPI.summaDay(date);
@@ -280,45 +285,48 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 商业保险周汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
-     * @param week 周期
+     * @param week  周期
      * @return class SummaryVO
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/week")
-    public Result summarizeDay(Integer year,Integer month,Integer week, javax.servlet.http.HttpServletRequest request) throws ActException {
+    @GetMapping("v1/summarize/week")
+    public Result summarizeDay(Integer year, Integer month, Integer week, javax.servlet.http.HttpServletRequest request) throws ActException {
         try {
-            List<SummaryBO> boList = casualtyPurchasingDetailAPI.summaWeek(year,month,week);
+            List<SummaryBO> boList = casualtyPurchasingDetailAPI.summaWeek(year, month, week);
             List<SummaryVO> voList = BeanTransform.copyProperties(boList, SummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 商业保险月汇总
      *
-     * @param year 年份
+     * @param year  年份
      * @param month 月份
      * @return class SummaryVO
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/month")
-    public Result summarizeMonth(Integer year,Integer month, javax.servlet.http.HttpServletRequest request) throws ActException {
+    @GetMapping("v1/summarize/month")
+    public Result summarizeMonth(Integer year, Integer month, javax.servlet.http.HttpServletRequest request) throws ActException {
         try {
-            List<SummaryBO> boList = casualtyPurchasingDetailAPI.summaMonth(year,month);
+            List<SummaryBO> boList = casualtyPurchasingDetailAPI.summaMonth(year, month);
             List<SummaryVO> voList = BeanTransform.copyProperties(boList, SummaryVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 商业保险累计汇总
      *
@@ -327,7 +335,7 @@ public class CasualtyPurchasingDetailAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/summarize/total")
+    @GetMapping("v1/summarize/total")
     public Result summarizeMonth(String date, javax.servlet.http.HttpServletRequest request) throws ActException {
         try {
             List<SummaryBO> boList = casualtyPurchasingDetailAPI.summaTotal(date);

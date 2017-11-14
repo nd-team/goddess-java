@@ -93,7 +93,7 @@ public class CasualtyPurchasingListImport extends BaseBO {
      * 性别
      */
     @ExcelHeader(name="性别",notNull = true)
-    private String gender;
+    private Gender gender;
 
     /**
      * 出生日期
@@ -333,11 +333,11 @@ public class CasualtyPurchasingListImport extends BaseBO {
         this.documentsPhone = documentsPhone;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
