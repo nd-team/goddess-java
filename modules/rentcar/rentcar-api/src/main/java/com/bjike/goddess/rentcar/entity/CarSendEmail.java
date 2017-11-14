@@ -24,7 +24,8 @@ public class CarSendEmail extends BaseEntity {
     /**
      * 项目组id
      */
-    @Column(name = "projectManageId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组Id'")
+    @Column(name = "pr" +
+            "ojectManageId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组Id'")
     private String projectManageId;
 
     /**
