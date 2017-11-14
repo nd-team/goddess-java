@@ -686,8 +686,8 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/antiCheckAccount/{id}")
-    public Result antiCheckAccount(@PathVariable String[] ids) throws ActException {
+    @PutMapping("v1/antiCheckAccount")
+    public Result antiCheckAccount(@RequestParam String[] ids) throws ActException {
         try {
             List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.antiCheckAccount(ids);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBOs, VoucherGenerateVO.class, true));
