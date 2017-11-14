@@ -1045,7 +1045,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
      */
     private List<Double> finds(AssetDTO dto) throws SerException {
         DebtDTO debtDTO = new DebtDTO();
-        BeanUtils.copyProperties(dto, debtDTO);
+        BeanUtils.copyProperties(dto, debtDTO, "sorts");
         List<StructureBO> list = debtSer.debtStructure(debtDTO);
         double flow = 0;
         double all = 0;

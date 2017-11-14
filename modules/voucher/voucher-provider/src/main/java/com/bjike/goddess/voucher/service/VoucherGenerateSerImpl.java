@@ -279,6 +279,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             case PAYACCOUNT:
                 flag = guideAddIdentity();
                 break;
+            case ANTIPAYACCOUNT:
+                flag = guideAddIdentity();
+                break;
             default:
                 flag = true;
                 break;
