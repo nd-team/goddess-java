@@ -19,6 +19,10 @@
 	<dubbo:reference  validation="true" id="projectContractApiImpl" interface="com.bjike.goddess.contractware.api.ProjectContractAPI" />
 	<dubbo:reference  validation="true" id="housingContractApiImpl" interface="com.bjike.goddess.contractware.api.HousingContractAPI" />
 	<dubbo:reference  validation="true" id="carRentalAgreementApiImpl" interface="com.bjike.goddess.contractware.api.CarRentalAgreementAPI" />
+	<dubbo:reference  validation="true" id="contractManagementApiImpl" interface="com.bjike.goddess.contractware.api.ContractManagementAPI" />
+	<dubbo:reference  validation="true" id="imageCollectContractApiImpl" interface="com.bjike.goddess.contractware.api.ImageCollectContractAPI" />
+	<dubbo:reference  validation="true" id="invoiceManagementApiImpl" interface="com.bjike.goddess.contractware.api.InvoiceManagementAPI" />
+	<dubbo:reference  validation="true" id="invoiceManagementCollectApiImpl" interface="com.bjike.goddess.contractware.api.InvoiceManagementCollectAPI" />
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.contractware.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.contractware.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"  />

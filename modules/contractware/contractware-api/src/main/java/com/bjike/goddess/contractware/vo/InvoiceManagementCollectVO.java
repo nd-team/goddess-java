@@ -1,5 +1,7 @@
 package com.bjike.goddess.contractware.vo;
 
+import com.bjike.goddess.contractware.enums.InvoiceType;
+
 /**
 * 发票管理汇总表现层对象
 * @Author:			[ jiangzaixuan ]
@@ -36,7 +38,7 @@ public class InvoiceManagementCollectVO {
     /**
      * 发票类型
      */
-    private String  invoiceType;
+    private InvoiceType invoiceType;
 
     /**
      * 发票金额
@@ -83,11 +85,11 @@ public class InvoiceManagementCollectVO {
         this.makeInvoiceCompany = makeInvoiceCompany;
     }
 
-    public String getInvoiceType() {
+    public InvoiceType getInvoiceType() {
         return invoiceType;
     }
 
-    public void setInvoiceType(String invoiceType) {
+    public void setInvoiceType(InvoiceType invoiceType) {
         this.invoiceType = invoiceType;
     }
 

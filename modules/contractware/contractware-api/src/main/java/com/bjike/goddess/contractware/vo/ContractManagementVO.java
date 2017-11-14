@@ -1,12 +1,13 @@
 package com.bjike.goddess.contractware.vo;
 
 import com.bjike.goddess.contractware.enums.ContractCharacter;
+import com.bjike.goddess.contractware.enums.ContractStatus;
 
 /**
-* 科目汇总表现层对象
+* 合同保管表现层对象
 * @Author:			[ jiangzaixuan ]
 * @Date:			[  2017-10-30 06:13 ]
-* @Description:	[ 科目汇总表现层对象 ]
+* @Description:	[ 合同保管表现层对象 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
@@ -19,7 +20,7 @@ public class ContractManagementVO {
     /**
      * 新增时间
      */
-    private String createTime;
+    private String addTime;
     /**
      * 内部合同编号
      */
@@ -88,7 +89,7 @@ public class ContractManagementVO {
     /**
      * 状态
      */
-    private String  status;
+    private ContractStatus status;
 
     public String getId() {
         return id;
@@ -98,12 +99,12 @@ public class ContractManagementVO {
         this.id = id;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getAddTime() {
+        return addTime;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setAddTime(String addTime) {
+        this.addTime = addTime;
     }
 
     public String getInternalContractNumber() {
@@ -210,11 +211,11 @@ public class ContractManagementVO {
         this.engineeringAwardFine = engineeringAwardFine;
     }
 
-    public String getStatus() {
+    public ContractStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ContractStatus status) {
         this.status = status;
     }
 }

@@ -1,8 +1,12 @@
 package com.bjike.goddess.contractware.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.contractware.enums.InvoiceType;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -17,67 +21,74 @@ public class InvoiceManagementTO extends BaseTO {
     /**
      * 内部合同编号
      */
+    @NotBlank(message = "内部合同编号不能为空" ,groups = {ADD.class, EDIT.class})
     private String  internalContractNumber;
 
 
     /**
      * 合作单位
      */
+    @NotBlank(message = "合作单位不能为空" ,groups = {ADD.class, EDIT.class})
     private String  cooperator;
 
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空" ,groups = {ADD.class, EDIT.class})
     private String  area;
 
     /**
      * 项目内部名称
      */
+    @NotBlank(message = "项目内部名称不能为空" ,groups = {ADD.class, EDIT.class})
     private String  innerProject;
 
     /**
      * 开票公司
      */
+    @NotBlank(message = "开票公司不能为空" ,groups = {ADD.class, EDIT.class})
     private String  makeInvoiceCompany;
 
     /**
      * 发票类型
      */
+    @NotNull(message = "发票类型不能为空" ,groups = {ADD.class, EDIT.class})
     private InvoiceType invoiceType;
 
     /**
      * 发票编号
      */
+    @NotBlank(message = "发票编号不能为空" ,groups = {ADD.class, EDIT.class})
     private String  invoiceNumber;
 
     /**
      * 发票金额
      */
+    @NotNull(message = "发票金额不能为空" ,groups = {ADD.class, EDIT.class})
     private Double  invoiceMoney;
 
     /**
      * 开票日期
      */
-    private LocalDate  makeInvoiceDate;
+    @NotBlank(message = "开票日期不能为空" ,groups = {ADD.class, EDIT.class})
+    private String  makeInvoiceDate;
 
     /**
      * 张数
      */
+    @NotNull(message = "张数不能为空" ,groups = {ADD.class, EDIT.class})
     private Integer  amount;
-
-    /**
-     * 电子版
-     */
-    private Boolean  electronicEdition;
 
     /**
      * 预计到账时间
      */
-    private LocalDate expectedTimeIntoAccount;
+    @NotBlank(message = "预计到账时间不能为空" ,groups = {ADD.class, EDIT.class})
+    private String expectedTimeIntoAccount;
 
     /**
      * 是否到账
      */
+    @NotNull(message = "是否到账不能为空" ,groups = {ADD.class, EDIT.class})
     private Boolean  ifReceiveMoney;
 
     public String getInternalContractNumber() {
@@ -136,13 +147,7 @@ public class InvoiceManagementTO extends BaseTO {
         this.invoiceMoney = invoiceMoney;
     }
 
-    public LocalDate getMakeInvoiceDate() {
-        return makeInvoiceDate;
-    }
 
-    public void setMakeInvoiceDate(LocalDate makeInvoiceDate) {
-        this.makeInvoiceDate = makeInvoiceDate;
-    }
 
     public Integer getAmount() {
         return amount;
@@ -152,19 +157,19 @@ public class InvoiceManagementTO extends BaseTO {
         this.amount = amount;
     }
 
-    public Boolean getElectronicEdition() {
-        return electronicEdition;
+    public String getMakeInvoiceDate() {
+        return makeInvoiceDate;
     }
 
-    public void setElectronicEdition(Boolean electronicEdition) {
-        this.electronicEdition = electronicEdition;
+    public void setMakeInvoiceDate(String makeInvoiceDate) {
+        this.makeInvoiceDate = makeInvoiceDate;
     }
 
-    public LocalDate getExpectedTimeIntoAccount() {
+    public String getExpectedTimeIntoAccount() {
         return expectedTimeIntoAccount;
     }
 
-    public void setExpectedTimeIntoAccount(LocalDate expectedTimeIntoAccount) {
+    public void setExpectedTimeIntoAccount(String expectedTimeIntoAccount) {
         this.expectedTimeIntoAccount = expectedTimeIntoAccount;
     }
 

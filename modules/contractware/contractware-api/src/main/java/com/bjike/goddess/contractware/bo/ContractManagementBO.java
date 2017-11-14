@@ -2,6 +2,7 @@ package com.bjike.goddess.contractware.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.contractware.enums.ContractCharacter;
+import com.bjike.goddess.contractware.enums.ContractStatus;
 
 import javax.persistence.Column;
 /**
@@ -17,7 +18,7 @@ public class ContractManagementBO extends BaseBO {
     /**
      * 新增时间
      */
-    private String createTime;
+    private String addTime;
 
     /**
      * 内部合同编号
@@ -87,14 +88,14 @@ public class ContractManagementBO extends BaseBO {
     /**
      * 状态
      */
-    private String  status;
+    private ContractStatus status;
 
-    public String getCreateTime() {
-        return createTime;
+    public String getAddTime() {
+        return addTime;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setAddTime(String addTime) {
+        this.addTime = addTime;
     }
 
     public String getInternalContractNumber() {
@@ -201,11 +202,11 @@ public class ContractManagementBO extends BaseBO {
         this.engineeringAwardFine = engineeringAwardFine;
     }
 
-    public String getStatus() {
+    public ContractStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ContractStatus status) {
         this.status = status;
     }
 }

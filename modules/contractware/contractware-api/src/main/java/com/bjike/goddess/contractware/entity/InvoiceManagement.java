@@ -1,6 +1,8 @@
 package com.bjike.goddess.contractware.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.contractware.enums.InvoiceType;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -49,8 +51,8 @@ public class InvoiceManagement extends BaseEntity {
     /**
      * 发票类型
      */
-    @Column(name = "invoiceType",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '发票类型'"  )
-    private String  invoiceType;
+    @Column(name = "invoiceType",nullable = false,columnDefinition = "TINYINT(4)  COMMENT '发票类型'"  )
+    private InvoiceType invoiceType;
 
     /**
      * 发票编号
@@ -73,13 +75,13 @@ public class InvoiceManagement extends BaseEntity {
     /**
      * 张数
      */
-    @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '张数'"  )
+    @Column(name = "",nullable = false,columnDefinition = "INTEGER   COMMENT '张数'"  )
     private Integer  amount;
 
     /**
      * 电子版
      */
-    @Column(name = "is_electronicEdition",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '电子版'"  , insertable = false  )
+    @Column(name = "is_electronicEdition",columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '电子版'"  , insertable = false  )
     private Boolean  electronicEdition;
 
     /**
@@ -134,11 +136,11 @@ public class InvoiceManagement extends BaseEntity {
         this.makeInvoiceCompany = makeInvoiceCompany;
     }
 
-    public String getInvoiceType() {
+    public InvoiceType getInvoiceType() {
         return invoiceType;
     }
 
-    public void setInvoiceType(String invoiceType) {
+    public void setInvoiceType(InvoiceType invoiceType) {
         this.invoiceType = invoiceType;
     }
 
