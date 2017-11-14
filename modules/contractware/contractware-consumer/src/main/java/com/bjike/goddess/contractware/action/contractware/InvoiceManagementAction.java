@@ -15,13 +15,16 @@ import com.bjike.goddess.contractware.bo.InvoiceManagementBO;
 import com.bjike.goddess.contractware.dto.InvoiceManagementDTO;
 import com.bjike.goddess.contractware.entity.ContractManagement;
 import com.bjike.goddess.contractware.to.ContractManagementDeleteFileTO;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.to.InvoiceManagementTO;
 import com.bjike.goddess.contractware.vo.ContractManagementVO;
 import com.bjike.goddess.contractware.vo.InvoiceManagementVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,13 +52,34 @@ public class InvoiceManagementAction extends BaseFileAction{
     private FileAPI fileAPI;
 
     /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            Boolean isHasPermission = invoiceManagementAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加
      * @param invoiceManagementTO
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(InvoiceManagementTO invoiceManagementTO) throws ActException{
+    public Result add(@Validated(ADD.class) InvoiceManagementTO invoiceManagementTO) throws ActException{
         try {
             invoiceManagementAPI.add(invoiceManagementTO);
             return new ActResult("添加成功");
@@ -147,6 +171,7 @@ public class InvoiceManagementAction extends BaseFileAction{
             String path = "/contractManagement/" + id;
             List<InputStream> inputStreams = super.getInputStreams(request, path);
             fileAPI.upload(inputStreams);
+            invoiceManagementAPI.updateElectronic(id);
             return new ActResult("上传成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -215,5 +240,39 @@ public class InvoiceManagementAction extends BaseFileAction{
             fileAPI.delFile(storageToken.toString(), contractManagementDeleteFileTO.getPaths());
         }
         return new ActResult("删除成功");
+    }
+
+    /**
+     * 列表总条数
+     * @param invoiceManagementDTO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(InvoiceManagementDTO invoiceManagementDTO) throws ActException{
+        try {
+            long number = invoiceManagementAPI.count(invoiceManagementDTO);
+            return ActResult.initialize(number);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id查询单条数据
+     * @param id
+     * @return class InvoiceManagementVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one")
+    public Result findOne(@RequestParam String id) throws ActException{
+        try {
+            InvoiceManagementBO bo = invoiceManagementAPI.findOne(id);
+            InvoiceManagementVO vo = BeanTransform.copyProperties(bo,InvoiceManagementVO.class);
+            return ActResult.initialize(vo);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
     }
  }

@@ -19,6 +19,7 @@ import com.bjike.goddess.contractware.dto.ContractManagementDTO;
 import com.bjike.goddess.contractware.dto.InvoiceManagementDTO;
 import com.bjike.goddess.contractware.entity.ContractManagement;
 import com.bjike.goddess.contractware.entity.InvoiceManagement;
+import com.bjike.goddess.contractware.enums.ContractStatus;
 import com.bjike.goddess.contractware.enums.GuideAddrStatus;
 import com.bjike.goddess.contractware.to.ContractManagementTO;
 import com.bjike.goddess.contractware.to.GuidePermissionTO;
@@ -203,8 +204,9 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
     @Override
     public void add(ContractManagementTO contractManagementTO) throws SerException {
         ContractManagement model = BeanTransform.copyProperties(contractManagementTO,ContractManagement.class,true);
-        model.setStatus(Status.THAW);
+        model.setStatus(ContractStatus.NORMAL);
         model.setIfHaveContract(false);
+        model.setAddTime(LocalDate.now());
         super.save(model);
     }
 
@@ -226,10 +228,12 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
     public void modify(ContractManagementTO contractManagementTO) throws SerException {
         ContractManagement model = super.findById(contractManagementTO.getId());
         ContractManagement contractManagement = new ContractManagement();
-        BeanTransform.copyProperties(contractManagementTO,contractManagement,"createTime","modifyTime","id","status","ifHaveContract");
+        BeanTransform.copyProperties(contractManagementTO,contractManagement,true,"createTime","modifyTime");
         contractManagement.setIfHaveContract(model.getIfHaveContract());
         contractManagement.setCreateTime(model.getCreateTime());
         contractManagement.setModifyTime(LocalDateTime.now());
+        contractManagement.setStatus(model.getStatus());
+        contractManagement.setAddTime(model.getAddTime());
         super.update(contractManagement);
     }
 
@@ -261,7 +265,7 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
         if (StringUtils.isNotBlank(contractManagementDTO.getTaskProjectName())){
             dto.getConditions().add(Restrict.eq("taskProjectName",contractManagementDTO.getTaskProjectName()));
         }
-        List<ContractManagement> contractManagements = super.findByPage(contractManagementDTO);
+        List<ContractManagement> contractManagements = super.findByPage(dto);
         List<ContractManagementBO> contractManagementBOS = BeanTransform.copyProperties(contractManagements,ContractManagementBO.class,false);
         return contractManagementBOS;
     }
@@ -278,7 +282,7 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
         if (StringUtils.isNotBlank(id)){
             ContractManagement model = super.findById(id);
             if (model != null) {
-                model.setStatus(Status.CONGEAL);
+                model.setStatus(ContractStatus.CANCELLATION);
             }else {
                 throw new SerException("数据库中没有该条数据了");
             }
@@ -293,7 +297,7 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
         if (StringUtils.isNotBlank(id)){
             ContractManagement model = super.findById(id);
             if (model != null) {
-                model.setStatus(Status.THAW);
+                model.setStatus(ContractStatus.NORMAL);
             }else {
                 throw new SerException("数据库中没有该条数据了");
             }
@@ -327,18 +331,20 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
         InvoiceManagementDTO dto = new InvoiceManagementDTO();
         ContractManagementDTO contractManagementDTO = new ContractManagementDTO();
         InvoiceBouncesBO invoiceBouncesBO = new InvoiceBouncesBO();
-        dto.getConditions().add(Restrict.eq("internalContractNumber",innerProjectNumber));
-        contractManagementDTO.getConditions().add(Restrict.eq("internalContractNumber",innerProjectNumber));
+        dto.getConditions().add(Restrict.eq("internalContractNumber", innerProjectNumber));
+        contractManagementDTO.getConditions().add(Restrict.eq("internalContractNumber", innerProjectNumber));
         List<InvoiceManagement> invoiceManagements = invoiceManagementSer.findByCis(dto);
         List<ContractManagement> contractManagements = super.findByCis(contractManagementDTO);
-        List<InvoiceManagementBO> invoiceManagementBOS = BeanTransform.copyProperties(invoiceManagements,InvoiceManagementBO.class,false);
+        List<InvoiceManagementBO> invoiceManagementBOS = BeanTransform.copyProperties(invoiceManagements, InvoiceManagementBO.class, false);
 
         Double contractInvoiceMoney = 0.0;
         Double invoiceAmount = 0.0;
         Double engineeringAward = 0.0;
 
         contractInvoiceMoney = contractManagements.stream().filter(p -> p.getContractMoney() != null).mapToDouble(p -> p.getContractMoney()).sum();
-        invoiceAmount = invoiceManagementBOS.stream().filter(p -> p.getInvoiceMoney() != null).mapToDouble(p -> p.getInvoiceMoney()).sum();
+        if (invoiceManagementBOS != null && invoiceManagementBOS.size() > 0){
+            invoiceAmount = invoiceManagementBOS.stream().filter(p -> p.getInvoiceMoney() != null).mapToDouble(p -> p.getInvoiceMoney()).sum();
+        }
         engineeringAward = contractManagements.stream().filter(p -> p.getEngineeringAwardFine() != null).mapToDouble(p -> p.getEngineeringAwardFine()).sum();
 
         Double waitMakeINvoiceMoney = invoiceAmount - contractInvoiceMoney - engineeringAward;

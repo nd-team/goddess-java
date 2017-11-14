@@ -1,6 +1,7 @@
 package com.bjike.goddess.contractware.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.contractware.enums.InvoiceType;
 
 import javax.persistence.Column;
 /**
@@ -35,7 +36,7 @@ public class InvoiceManagementCollectBO extends BaseBO {
     /**
      * 发票类型
      */
-    private String  invoiceType;
+    private InvoiceType invoiceType;
 
     /**
      * 发票金额
@@ -74,11 +75,11 @@ public class InvoiceManagementCollectBO extends BaseBO {
         this.makeInvoiceCompany = makeInvoiceCompany;
     }
 
-    public String getInvoiceType() {
+    public InvoiceType getInvoiceType() {
         return invoiceType;
     }
 
-    public void setInvoiceType(String invoiceType) {
+    public void setInvoiceType(InvoiceType invoiceType) {
         this.invoiceType = invoiceType;
     }
 

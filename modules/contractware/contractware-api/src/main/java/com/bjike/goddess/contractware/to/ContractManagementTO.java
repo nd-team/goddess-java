@@ -3,6 +3,7 @@ package com.bjike.goddess.contractware.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.contractware.enums.ContractCharacter;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 * @Copy:   		[ com.bjike ]
 */
 public class ContractManagementTO extends BaseTO {
+
     /**
      * 内部合同编号
      */
@@ -25,8 +27,8 @@ public class ContractManagementTO extends BaseTO {
     /**
      * 合同性质
      */
-    @NotBlank(message = "合同性质不能为空",groups = {ADD.class, EDIT.class})
-    private String  contractCharacter;
+    @NotNull(message = "合同性质不能为空",groups = {ADD.class, EDIT.class})
+    private ContractCharacter contractCharacter;
 
     /**
      * 运营商名称
@@ -89,20 +91,20 @@ public class ContractManagementTO extends BaseTO {
     @NotNull(message = "工程奖罚款不能为空",groups = {ADD.class, EDIT.class})
     private Integer  engineeringAwardFine;
 
+    public ContractCharacter getContractCharacter() {
+        return contractCharacter;
+    }
+
+    public void setContractCharacter(ContractCharacter contractCharacter) {
+        this.contractCharacter = contractCharacter;
+    }
+
     public String getInternalContractNumber() {
         return internalContractNumber;
     }
 
     public void setInternalContractNumber(String internalContractNumber) {
         this.internalContractNumber = internalContractNumber;
-    }
-
-    public String getContractCharacter() {
-        return contractCharacter;
-    }
-
-    public void setContractCharacter(String contractCharacter) {
-        this.contractCharacter = contractCharacter;
     }
 
     public String getOperatorName() {

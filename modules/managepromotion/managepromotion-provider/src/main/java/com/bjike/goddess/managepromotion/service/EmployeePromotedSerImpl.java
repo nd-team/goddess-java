@@ -6,11 +6,14 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.managepromotion.bo.*;
 import com.bjike.goddess.managepromotion.dto.EmployeePromotedDTO;
 import com.bjike.goddess.managepromotion.entity.EmployeePromoted;
 import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
+import com.bjike.goddess.managepromotion.excel.EmployeePromotedSetExcel;
 import com.bjike.goddess.managepromotion.to.*;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.user.api.UserAPI;
@@ -682,4 +685,37 @@ public class EmployeePromotedSerImpl extends ServiceImpl<EmployeePromoted, Emplo
         return boList;
     }
 
+    @Override
+    public void leadExcel(List<EmployeePromotedTO> toList) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        List<EmployeePromoted> list = BeanTransform.copyProperties(toList,EmployeePromoted.class);
+        list.stream().forEach(str -> {
+            str.setModifyTime(LocalDateTime.now());
+            str.setCreateTime(LocalDateTime.now());
+        });
+        super.save(list);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        List<EmployeePromotedSetExcel>  employeePromotedSetExcels = new ArrayList<>();
+        EmployeePromotedSetExcel excel = new EmployeePromotedSetExcel();
+
+        excel.setDepartment("部门");
+        excel.setProjectGroup("项目组");
+        excel.setName("姓名");
+        excel.setJobs("岗位");
+        excel.setChannel("渠道");
+        excel.setTimes("时间");
+        excel.setPromotionBefore("晋升前");
+        excel.setPromotionAfter("晋升后");
+        excel.setExtent(12);
+        excel.setStatus("状态");
+
+        employeePromotedSetExcels.add(excel);
+
+        Excel exce = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(employeePromotedSetExcels, exce);
+        return bytes;
+    }
 }

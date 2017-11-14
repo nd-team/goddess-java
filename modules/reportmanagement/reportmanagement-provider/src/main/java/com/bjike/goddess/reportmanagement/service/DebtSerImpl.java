@@ -311,7 +311,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         Long size = assetSer.count(assetDTO);
 
         if (size + 10 > boList.size() + 2) {
-            for(int i = 0; i < size + 10 - (boList.size() + 2); i++){
+            for (int i = 0; i < size + 10 - (boList.size() + 2); i++) {
                 DebtBO debtBO = new DebtBO();
                 boList.add(debtBO);
             }
@@ -343,9 +343,10 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         checkSeeIdentity();
         String userToken = RpcTransmit.getUserToken();
         FormulaDTO formulaDTO = new FormulaDTO();
-        BeanUtils.copyProperties(dto, formulaDTO);
+        BeanUtils.copyProperties(dto, formulaDTO, "sorts");
         dto.getSorts().add("debtType=ASC");
-        List<Debt> list = super.findAll();
+        dto.getSorts().add("createTime=asc");
+        List<Debt> list = super.findByCis(dto);
         List<StructureBO> boList = new ArrayList<StructureBO>();
         boolean b1 = true;
         boolean b2 = true;
@@ -372,7 +373,9 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
                 }
                 FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
                 DebtBO bo = BeanTransform.copyProperties(debt, DebtBO.class);
-                bo.setCurrent(formulaBO.getCurrent());
+//                资产期末数
+//                bo.setCurrent(formulaBO.getCurrent());
+                bo.setCurrent(formulaBO.getEnd());
                 if (Type.ADD.equals(debt.getType())) {
                     currentSum += bo.getCurrent();
                     countCurrent += bo.getCurrent();
@@ -387,7 +390,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         flowBO.setProject("流动负债合计");
         flowBO.setFee(flowSum);
         String flow = "0";
-        if(0d != countCurrent) {
+        if (0d != countCurrent) {
             flow = String.format("%.2f", (flowSum / countCurrent) * 100);
         }
         flowBO.setScale(flow + "%");
@@ -396,7 +399,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         longBO.setProject("长期负债合计");
         longBO.setFee(longSum);
         String l = "0";
-        if(0d != countCurrent) {
+        if (0d != countCurrent) {
             l = String.format("%.2f", (longSum / countCurrent) * 100);
         }
         longBO.setScale(l + "%");
@@ -405,7 +408,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         debtBO.setProject("负债合计");
         debtBO.setFee(flowSum + longSum);
         String debt = "0";
-        if(0d != countCurrent) {
+        if (0d != countCurrent) {
             debt = String.format("%.2f", (debtBO.getFee() / countCurrent) * 100);
         }
         debtBO.setScale(debt + "%");
@@ -414,7 +417,7 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         allBO.setProject("所有者权益合计");
         allBO.setFee(allSum);
         String all = "0";
-        if(0d != countCurrent) {
+        if (0d != countCurrent) {
             all = String.format("%.2f", (allSum / countCurrent) * 100);
         }
         allBO.setScale(all + "%");
@@ -422,8 +425,8 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         StructureBO sumBO = new StructureBO();
         sumBO.setProject("负债与所有者权益总计");
         sumBO.setFee(countCurrent);
-        allBO.setScale("100%");
-        boList.add(allBO);
+        sumBO.setScale("100%");
+        boList.add(sumBO);
         StructureBO rate = new StructureBO();
         rate.setFee(-1.00);
         rate.setScale("随便");

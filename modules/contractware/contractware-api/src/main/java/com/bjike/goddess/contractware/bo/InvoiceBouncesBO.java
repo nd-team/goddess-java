@@ -1,5 +1,6 @@
 package com.bjike.goddess.contractware.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.contractware.enums.InvoiceType;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class InvoiceBouncesBO {
+public class InvoiceBouncesBO extends BaseBO {
     /**
      * 已开发票金额汇总
      */

@@ -44,6 +44,18 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
     @Autowired
     private CarRentalAgreementSer carRentalAgreementSer;
 
+    @Autowired
+    private ContractManagementSer contractManagementSer;
+
+    @Autowired
+    private ImageCollectContractSer imageCollectContractSer;
+
+    @Autowired
+    private InvoiceManagementSer invoiceManagementSer;
+
+    @Autowired
+    private InvoiceManagementCollectSer invoiceManagementCollectSer;
+
     /**
      * 核对查看权限（部门级别）
      */
@@ -155,6 +167,54 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
         obj.setName("carrentalagreement");
         obj.setDescribesion("租车协议");
         if (flagSeeOpen) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagContract = contractManagementSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("contractmanagement");
+        obj.setDescribesion("合同管理");
+        if (flagContract) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagImageCollect = imageCollectContractSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("imagecollectcontract");
+        obj.setDescribesion("图形化合同管理");
+        if (flagImageCollect) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagInvoiceManagement = invoiceManagementSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("invoicemanagement");
+        obj.setDescribesion("发票管理");
+        if (flagInvoiceManagement) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        Boolean flagInvoiceManagementCollect = invoiceManagementCollectSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("invoicemanagementcollect");
+        obj.setDescribesion("发票管理汇总");
+        if (flagInvoiceManagementCollect) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

@@ -82,8 +82,8 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/upload")
-    public Result upload(HttpServletRequest request) throws ActException {
+    @PostMapping("v1/uploads")
+    public Result uploads(HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....

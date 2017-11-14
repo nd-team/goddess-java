@@ -169,8 +169,11 @@ public class ImageCollectSerImpl extends ServiceImpl<ImageCollect,ImageCollectDT
         List<String> text_list2 = new ArrayList<>();
 
 
+
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
+
+        ToolTipBO toolTipBO = new ToolTipBO();
 
         //横坐标描述
         XAxisBO xAxisBO = new XAxisBO();
@@ -209,6 +212,7 @@ public class ImageCollectSerImpl extends ServiceImpl<ImageCollect,ImageCollectDT
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(toolTipBO);
 
         optionBO.setSeries(text_4);
         return  optionBO;

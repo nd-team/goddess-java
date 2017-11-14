@@ -1,6 +1,5 @@
 package com.bjike.goddess.voucher.action.account;
 
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -8,36 +7,16 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.common.utils.excel.Excel;
-import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.organize.bo.AreaBO;
-import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
-import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
-import com.bjike.goddess.voucher.bo.AnalysisBO;
-import com.bjike.goddess.voucher.bo.OptionBO;
-import com.bjike.goddess.voucher.bo.PartBO;
-import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
-import com.bjike.goddess.voucher.enums.ExportStatus;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
-import com.bjike.goddess.voucher.excel.VoucherTemplateImportExcel;
-import com.bjike.goddess.voucher.to.AnalysisTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherFileTO;
-import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import com.bjike.goddess.voucher.vo.AccountInfoVO;
-import com.bjike.goddess.voucher.vo.AnalysisVO;
-import com.bjike.goddess.voucher.vo.OptionVO;
-import com.bjike.goddess.voucher.vo.VoucherGenerateVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -48,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -114,7 +92,7 @@ public class AccountAction extends BaseFileAction {
     public Result sonPermission() throws ActException {
         try {
 
-            List<SonPermissionObject> hasPermissionList = voucherGenerateAPI.sonPermission();
+            List<SonPermissionObject> hasPermissionList = voucherGenerateAPI.sonPermissionAccount();
             return new ActResult(0, "有权限", hasPermissionList);
 
         } catch (SerException e) {

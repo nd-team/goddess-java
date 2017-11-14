@@ -86,7 +86,12 @@ public enum GuideAddrStatus {
     /**
      * 结帐
      */
-    PAYACCOUNT(18);
+    PAYACCOUNT(18),
+
+    /**
+     * 反结账
+     */
+    ANTIPAYACCOUNT(19);
 
     private int code;
 

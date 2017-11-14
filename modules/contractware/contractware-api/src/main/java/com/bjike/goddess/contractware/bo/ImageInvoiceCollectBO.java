@@ -1,5 +1,7 @@
 package com.bjike.goddess.contractware.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
+
 /**
  * @Author: [jiangzaixuan]
  * @Date: [2017-11-02 16:28]
@@ -7,7 +9,7 @@ package com.bjike.goddess.contractware.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ImageInvoiceCollectBO {
+public class ImageInvoiceCollectBO extends BaseBO{
     /**
      * 增值税专用发票金额
      */

@@ -240,4 +240,21 @@ public interface EmployeePromotedSer extends Ser<EmployeePromoted, EmployeePromo
     default List<StaffSkillCollectBO> totalStaffCollect(StaffSkillCollectTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 导入
+     *
+     * @param toList
+     * @throws SerException
+     */
+    default void leadExcel(List<EmployeePromotedTO> toList) throws SerException {
+        return;
+    }
+
+    /**
+     * 导出Excel模板
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 }

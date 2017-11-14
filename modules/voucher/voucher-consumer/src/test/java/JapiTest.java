@@ -9,7 +9,7 @@ import java.io.IOException;
 public class JapiTest {
 
 	public static void main(String[] args) throws IOException {
-		JapiClient.setPrefixPath("/home/ike/code/goddess-java/");//路径前缀
+		JapiClient.setPrefixPath("/home/ike/goddess/goddess-java/");//路径前缀
 		JapiClient.setpostfixPath("/src/main/java");
 		JapiClient.setProjectJavaPath("modules/voucher/voucher-consumer");//主项目位置
 		JapiClient.setActionReletivePath("com/bjike/goddess/voucher/action");//主项目action位置
