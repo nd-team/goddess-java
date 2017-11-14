@@ -67,10 +67,6 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
         baseInfoManageSer.deleteBaseInfoManage(id);
     }
     @Override
-    public Double contractScale(String project) throws SerException {
-        return baseInfoManageSer.contractScale(project);
-    }
-    @Override
     public BaseInfoManageBO getInfoByInnerProjectNum(String innerProjectNum) throws SerException {
         return baseInfoManageSer.getInfoByInnerProjectNum(innerProjectNum);
     }
@@ -133,5 +129,10 @@ public class BaseInfoManageApiImpl implements BaseInfoManageAPI {
     @Override
     public List<String> getArea(String projectNane) throws SerException {
         return baseInfoManageSer.getArea(projectNane);
+    }
+
+    @Override
+    public Double contractScale(String project) throws SerException {
+        return baseInfoManageSer.contractScale(project);
     }
 }

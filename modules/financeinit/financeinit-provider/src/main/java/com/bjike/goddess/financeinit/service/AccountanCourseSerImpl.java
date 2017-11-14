@@ -172,10 +172,11 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
-    public Long countCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+    public Long countCourse(AccountanCourseDTO accountanCourseDTO, CategoryName belongCategory) throws SerException {
         searchCodi(accountanCourseDTO);
-        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
         Long count = super.count(accountanCourseDTO);
         return count;
     }
@@ -188,18 +189,20 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         AccountanCourse accountanCourse = super.findById(id);
         return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
     }
-    public void searchCodi(AccountanCourseDTO accountanCourseDTO)throws SerException{
 
-        if(StringUtils.isNotBlank(accountanCourseDTO.getAccountanName())){
-            accountanCourseDTO.getConditions().add(Restrict.eq("accountanName",accountanCourseDTO.getAccountanName()));
+    public void searchCodi(AccountanCourseDTO accountanCourseDTO) throws SerException {
+
+        if (StringUtils.isNotBlank(accountanCourseDTO.getAccountanName())) {
+            accountanCourseDTO.getConditions().add(Restrict.eq("accountanName", accountanCourseDTO.getAccountanName()));
         }
     }
+
     @Override
-    public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+    public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO, CategoryName belongCategory) throws SerException {
         checkSeeIdentity();
         searchCodi(accountanCourseDTO);
         accountanCourseDTO.getSorts().add("code=asc");
-        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
         List<AccountanCourse> list = super.findByCis(accountanCourseDTO, true);
         return BeanTransform.copyProperties(list, AccountanCourseBO.class);
     }
@@ -209,9 +212,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
         CategoryName belongCategory = null;
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
-        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName",accountanName));
+        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName", accountanName));
         AccountanCourse accountanCourse = super.findOne(accountanCourseDTO);
-        if(accountanCourse!=null){
+        if (accountanCourse != null) {
             belongCategory = accountanCourse.getBelongCategory();
         }
         return belongCategory;
@@ -221,15 +224,15 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public CourseDateBO findByCode(String code) throws SerException {
         CourseDateBO courseDateBO = new CourseDateBO();
         if (StringUtils.isNotBlank(code)) {
-            String[] field = {"belongCategory","balanceDirection"};
+            String[] field = {"belongCategory", "balanceDirection"};
             String sql = " SELECT b.belongCategory,b.balanceDirection FROM " +
                     " (SELECT substring(code,1,1) as code,id " +
                     " FROM financeinit_accountancourse)a, " +
                     " financeinit_accountancourse b " +
                     " where a.id=b.id and a.code='%s' ORDER BY a.code DESC LIMIT 0,1 ";
             sql = String.format(sql, code.substring(0, 1));
-            List<CourseDateBO> courseDateBOS = super.findBySql(sql,courseDateBO.getClass(),field);
-            if(courseDateBOS!=null&&courseDateBOS.size()>0){
+            List<CourseDateBO> courseDateBOS = super.findBySql(sql, courseDateBO.getClass(), field);
+            if (courseDateBOS != null && courseDateBOS.size() > 0) {
                 courseDateBO = courseDateBOS.get(0);
             }
         }
@@ -240,17 +243,17 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public List<String> findSendNameByCode(String code) throws SerException {
         List<String> names = new ArrayList<>();
         if (StringUtils.isNotBlank(code)) {
-            String[] field = {"code","accountanName","belongCategory","balanceDirection"};
+            String[] field = {"code", "accountanName", "belongCategory", "balanceDirection"};
             String sql = " SELECT b.code,b.accountanName,b.belongCategory,b.balanceDirection FROM " +
                     " (SELECT substring(code,1,1) as code,id " +
                     " FROM financeinit_accountancourse)a, " +
                     " financeinit_accountancourse b " +
                     " where a.id=b.id and a.code='%s' ";
             sql = String.format(sql, code.substring(0, 1));
-            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql,AccountanCourseBO.class,field);
-            if(accountanCourseBOS!=null&&accountanCourseBOS.size()>0){
-                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS){
-                    if(accountanCourseBO.getCode().length()==6){
+            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql, AccountanCourseBO.class, field);
+            if (accountanCourseBOS != null && accountanCourseBOS.size() > 0) {
+                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS) {
+                    if (accountanCourseBO.getCode().length() == 6) {
                         names.add(accountanCourseBO.getAccountanName());
                     }
                 }
@@ -263,17 +266,17 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public List<String> findThirdNameByCode(String code) throws SerException {
         List<String> names = new ArrayList<>();
         if (StringUtils.isNotBlank(code)) {
-            String[] field = {"code","accountanName","belongCategory","balanceDirection"};
+            String[] field = {"code", "accountanName", "belongCategory", "balanceDirection"};
             String sql = " SELECT b.code,b.accountanName,b.belongCategory,b.balanceDirection FROM " +
                     " (SELECT substring(code,1,1) as code,id " +
                     " FROM financeinit_accountancourse)a, " +
                     " financeinit_accountancourse b " +
                     " where a.id=b.id and a.code='%s' ";
             sql = String.format(sql, code.substring(0, 1));
-            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql,AccountanCourseBO.class,field);
-            if(accountanCourseBOS!=null&&accountanCourseBOS.size()>0){
-                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS){
-                    if(accountanCourseBO.getCode().length()==8){
+            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql, AccountanCourseBO.class, field);
+            if (accountanCourseBOS != null && accountanCourseBOS.size() > 0) {
+                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS) {
+                    if (accountanCourseBO.getCode().length() == 8) {
                         names.add(accountanCourseBO.getAccountanName());
                     }
                 }
@@ -284,10 +287,12 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
     @Override
     public List<AccountAddDateBO> findNameCode() throws SerException {
-        List<AccountanCourse> accountanCourses = super.findAll();
+        AccountanCourseDTO dto = new AccountanCourseDTO();
+        dto.getSorts().add("code=asc");
+        List<AccountanCourse> accountanCourses = super.findByCis(dto);
         List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
-        if(accountanCourses!=null&&accountanCourses.size()>0){
-            for (AccountanCourse accountanCourse : accountanCourses){
+        if (accountanCourses != null && accountanCourses.size() > 0) {
+            for (AccountanCourse accountanCourse : accountanCourses) {
                 AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
                 accountAddDateBO.setCode(accountanCourse.getCode());
                 accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
@@ -299,11 +304,13 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
     @Override
     public List<AccountAddDateBO> findFirstNameCode() throws SerException {
-        List<AccountanCourse> accountanCourses = super.findAll();
+        AccountanCourseDTO dto = new AccountanCourseDTO();
+        dto.getSorts().add("code=asc");
+        List<AccountanCourse> accountanCourses = super.findByCis(dto);
         List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
-        if(accountanCourses!=null&&accountanCourses.size()>0){
-            for (AccountanCourse accountanCourse : accountanCourses){
-                if(accountanCourse.getCode().length()==4){
+        if (accountanCourses != null && accountanCourses.size() > 0) {
+            for (AccountanCourse accountanCourse : accountanCourses) {
+                if (accountanCourse.getCode().length() == 4) {
                     AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
                     accountAddDateBO.setCode(accountanCourse.getCode());
                     accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
@@ -322,7 +329,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         accountanCourse.setCreateTime(LocalDateTime.now());
         super.save(accountanCourse);
         //如果代码是四位数(该数据是一级科目)添加到财务初始化表中
-        if(accountanCourse.getCode().length()==4){
+        if (accountanCourse.getCode().length() == 4) {
             InitDateEntry initDateEntry = new InitDateEntry();
             initDateEntry.setCode(accountanCourse.getCode());
             initDateEntry.setAccountanName(accountanCourse.getAccountanName());
@@ -338,11 +345,11 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         checkAddIdentity();
         AccountanCourse accountanCourse = super.findById(accountanCourseTO.getId());
         LocalDateTime date = accountanCourse.getCreateTime();
-        accountanCourse = BeanTransform.copyProperties(accountanCourseTO,AccountanCourse.class,true);
+        accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true);
         accountanCourse.setCreateTime(date);
         accountanCourse.setModifyTime(LocalDateTime.now());
         super.update(accountanCourse);
-        return BeanTransform.copyProperties(accountanCourse,AccountanCourseBO.class);
+        return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -356,11 +363,11 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public byte[] exportExcel(CategoryName belongCategory) throws SerException {
 //        checkAddIdentity();
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
-        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory",belongCategory));
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
         List<AccountanCourse> list = super.findByCis(accountanCourseDTO);
         List<AccountanCourseExport> accountanCourseExports = new ArrayList<>();
 
-        for (AccountanCourse accountanCourse : list){
+        for (AccountanCourse accountanCourse : list) {
             AccountanCourseExport excel = BeanTransform.copyProperties(accountanCourse, AccountanCourseExport.class);
             accountanCourseExports.add(excel);
         }
@@ -387,11 +394,11 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException {
         checkAddIdentity();
         List<AccountanCourse> accountanCourses = BeanTransform.copyProperties(accountanCourseTOS, AccountanCourse.class, true);
-        for (AccountanCourse str : accountanCourses){
+        for (AccountanCourse str : accountanCourses) {
             str.setCreateTime(LocalDateTime.now());
             str.setModifyTime(LocalDateTime.now());
             super.save(str);
-            if(str.getCode().length()==4){
+            if (str.getCode().length() == 4) {
                 InitDateEntry initDateEntry = new InitDateEntry();
                 initDateEntry.setCode(str.getCode());
                 initDateEntry.setAccountanName(str.getAccountanName());

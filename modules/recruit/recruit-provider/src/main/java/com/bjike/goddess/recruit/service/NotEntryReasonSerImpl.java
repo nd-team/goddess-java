@@ -272,7 +272,9 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
      * @throws SerException
      */
     private void updateNotEntryReason(NotEntryReasonTO to, NotEntryReason model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        LocalDateTime createTime = model.getCreateTime();
+        model = BeanTransform.copyProperties(to, NotEntryReason.class, true);
+        model.setCreateTime(createTime);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

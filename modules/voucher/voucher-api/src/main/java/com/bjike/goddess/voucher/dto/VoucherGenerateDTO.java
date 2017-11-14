@@ -69,6 +69,16 @@ public class VoucherGenerateDTO extends BaseDTO {
      */
     private String endTime;
 
+    /**
+     * 凭证日期
+     */
+    private String voucherDate;
+
+    /**
+     * 升降序
+     */
+    private String ascOrDesc;
+
     public Integer getYear() {
         return year;
     }
@@ -148,5 +158,21 @@ public class VoucherGenerateDTO extends BaseDTO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getVoucherDate() {
+        return voucherDate;
+    }
+
+    public void setVoucherDate(String voucherDate) {
+        this.voucherDate = voucherDate;
+    }
+
+    public String getAscOrDesc() {
+        return ascOrDesc;
+    }
+
+    public void setAscOrDesc(String ascOrDesc) {
+        this.ascOrDesc = ascOrDesc;
     }
 }

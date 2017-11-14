@@ -46,6 +46,9 @@ dependencies {
     }
     compile project(":modules:task:task-api")
     compile project(":modules:taskallotment:taskallotment-api")
+    compile project(":modules:businessproject:businessproject-api")
+    compile project(":modules:storage:storage-api")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
     compile("org.springframework.boot:spring-boot-starter-web"){
         exclude group: 'com.fasterxml.jackson.core'
     }

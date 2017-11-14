@@ -1,12 +1,18 @@
 package com.bjike.goddess.attendance.api;
 
+import com.bjike.goddess.attendance.bo.CaseCountBO;
 import com.bjike.goddess.attendance.bo.PunchBO;
+import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 打卡子表业务接口
@@ -18,6 +24,8 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PunchSonAPI {
+    Boolean sonPermission() throws SerException;
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
     /**
      * 打卡
      *
@@ -36,7 +44,7 @@ public interface PunchSonAPI {
      * @return
      * @throws SerException
      */
-    String string(Double longitude, Double latitude, String area) throws SerException;
+    List<String> string(Double longitude, Double latitude, String area) throws SerException;
 
     /**
      * 列表
@@ -48,6 +56,23 @@ public interface PunchSonAPI {
     List<PunchBO> list(PunchDTO dto) throws SerException;
 
     /**
+     * 移动端列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<PunchPhoneBO> phoneList(PunchDTO dto) throws SerException;
+
+    /**
+     * 考勤情况汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CaseCountBO> caseCount(PunchDTO dto) throws SerException;
+
+    /**
      * 总条数
      *
      * @param dto
@@ -55,4 +80,14 @@ public interface PunchSonAPI {
      * @throws SerException
      */
     Long count(PunchDTO dto) throws SerException;
+
+    /**
+     * 某人当前周从周一至周日请假次数或某个季度分别未打卡次数
+     * @param overTimesDTO
+     * @return
+     * @throws SerException
+     */
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+
+
 }

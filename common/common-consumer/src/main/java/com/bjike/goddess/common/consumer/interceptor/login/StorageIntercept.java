@@ -74,7 +74,7 @@ public class StorageIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if ("/v1/login".equals(request.getServletPath())){
+        if ("/v1/login".equals(request.getServletPath()) || "/v1/register".equals(request.getServletPath())){
             return true;
         }
         if (autoLogin) {

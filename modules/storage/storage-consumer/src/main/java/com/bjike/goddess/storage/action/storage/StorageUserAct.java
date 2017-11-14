@@ -39,7 +39,7 @@ public class StorageUserAct {
      * @param storageUserTO 存储用户传输对象
      * @version v1
      */
-    @PostMapping("v1/register")
+    @PostMapping("v1/storage/register")
     public Result register(@Validated(StorageUserTO.REGISTER.class) StorageUserTO storageUserTO, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             String userToken = request.getHeader(RpcCommon.USER_TOKEN);

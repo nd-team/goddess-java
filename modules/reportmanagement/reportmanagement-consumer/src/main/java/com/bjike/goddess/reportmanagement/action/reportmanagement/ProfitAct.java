@@ -268,12 +268,14 @@ public class ProfitAct {
     /**
      * 利润增减率分析列表
      *
+     * @return class ProfitFormulaVO
      * @version v1
      */
     @GetMapping("v1/formula/list")
     public Result formulaList(ProfitFormulaDTO profitFormulaDTO) throws ActException {
         try {
-            return ActResult.initialize(profitAPI.decreaseRatioList(profitFormulaDTO));
+            List<ProfitFormulaBO> bos = profitAPI.decreaseRatioList(profitFormulaDTO);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, ProfitFormulaVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -359,12 +361,14 @@ public class ProfitAct {
     /**
      * 变动情况分析列表
      *
+     * @return class ProfitFormulaVO
      * @version v1
      */
     @GetMapping("v1/analysisChanges/list")
     public Result analysisChangesList(ProfitFormulaDTO dto) throws ActException {
         try {
-            return ActResult.initialize(profitAPI.analysisChangesList(dto));
+            List<ProfitFormulaBO> bos = profitAPI.analysisChangesList(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, ProfitFormulaVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

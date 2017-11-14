@@ -8,7 +8,6 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.DepartPositionBO;
 import com.bjike.goddess.organize.bo.PhoneLoginUserInfoBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
@@ -172,9 +171,9 @@ public class PositionDetailUserAct {
      * @version v1
      */
     @GetMapping("v1/getTotal")
-    public Result getTotal() throws ActException {
+    public Result getTotal(PositionDetailUserDTO dto) throws ActException {
         try {
-            return ActResult.initialize(positionDetailUserAPI.getTotal());
+            return ActResult.initialize(positionDetailUserAPI.getTotal(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -1,7 +1,10 @@
 package com.bjike.goddess.attendance.vo;
 
+import com.bjike.goddess.attendance.bo.VacateAuditBO;
 import com.bjike.goddess.attendance.enums.AduitStatus;
 import com.bjike.goddess.attendance.enums.VacateType;
+
+import java.util.List;
 
 /**
  * 请假管理表现层对象
@@ -19,6 +22,14 @@ public class VacateVO {
      */
     private String id;
     /**
+     * 请假时间
+     */
+    private String date;
+    /**
+     * uuid
+     */
+    private String uuid;
+    /**
      * 员工编号
      */
     private String employeeNumber;
@@ -27,7 +38,10 @@ public class VacateVO {
      * 请假人
      */
     private String name;
-
+    /**
+     * 地区
+     */
+    private String area;
     /**
      * 项目组/部门
      */
@@ -92,6 +106,67 @@ public class VacateVO {
      * 审核状态
      */
     private AduitStatus aduitStatus;
+    /**
+     * 工作交接内容
+     */
+    private String handoff;
+
+    /**
+     * 子表
+     */
+    private List<VacateAuditBO> sons;
+    /**
+     * 照片下载地址
+     */
+    private List<String> photos;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getHandoff() {
+        return handoff;
+    }
+
+    public void setHandoff(String handoff) {
+        this.handoff = handoff;
+    }
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
+
+    public List<VacateAuditBO> getSons() {
+        return sons;
+    }
+
+    public void setSons(List<VacateAuditBO> sons) {
+        this.sons = sons;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public VacateType getVacateType() {
         return vacateType;

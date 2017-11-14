@@ -7,7 +7,6 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.financeinit.bo.AccountBO;
 import com.bjike.goddess.financeinit.bo.CompanyBasicInfoBO;
 import com.bjike.goddess.financeinit.dto.CompanyBasicInfoDTO;
 import com.bjike.goddess.financeinit.entity.CompanyBasicInfo;
@@ -165,6 +164,7 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countBasicInfo(CompanyBasicInfoDTO companyBasicInfoDTO) throws SerException {
         Long count = super.count(companyBasicInfoDTO);
@@ -182,31 +182,34 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
 
     @Override
     public List<CompanyBasicInfoBO> listBaseInfo(CompanyBasicInfoDTO companyBasicInfoDTO) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
         List<CompanyBasicInfo> list = super.findByCis(companyBasicInfoDTO, true);
         return BeanTransform.copyProperties(list, CompanyBasicInfoBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public CompanyBasicInfoBO addBaseInfo(CompanyBasicInfoTO companyBasicInfoTO) throws SerException {
         checkAddIdentity();
-        CompanyBasicInfo companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO,CompanyBasicInfo.class,true);
+        CompanyBasicInfo companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO, CompanyBasicInfo.class, true);
         companyBasicInfo.setCreateTime(LocalDateTime.now());
         super.save(companyBasicInfo);
-        return BeanTransform.copyProperties(companyBasicInfo,CompanyBasicInfoBO.class);
+        return BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public CompanyBasicInfoBO editBaseInfo(CompanyBasicInfoTO companyBasicInfoTO) throws SerException {
         checkAddIdentity();
         CompanyBasicInfo companyBasicInfo = super.findById(companyBasicInfoTO.getId());
         LocalDateTime date = companyBasicInfo.getCreateTime();
-        companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO,CompanyBasicInfo.class);
+        companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO, CompanyBasicInfo.class);
         companyBasicInfo.setCreateTime(date);
         companyBasicInfo.setModifyTime(LocalDateTime.now());
         super.update(companyBasicInfo);
-        return BeanTransform.copyProperties(companyBasicInfo,CompanyBasicInfoBO.class);
+        return BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void deleteBaseInfo(String id) throws SerException {
@@ -216,11 +219,11 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
 
     @Override
     public byte[] exportExcel() throws SerException {
-       checkAddIdentity();
+        checkAddIdentity();
         List<CompanyBasicInfo> list = super.findAll();
         List<CompanyBasicInfoExport> companyBasicInfoExports = new ArrayList<>();
 
-        for (CompanyBasicInfo companyBasicInfo : list){
+        for (CompanyBasicInfo companyBasicInfo : list) {
             CompanyBasicInfoExport excel = BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoExport.class);
             companyBasicInfoExports.add(excel);
         }
@@ -233,8 +236,8 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     public List<String> findCompanyName() throws SerException {
         List<CompanyBasicInfo> companyBasicInfos = super.findAll();
         List<String> CompanyNames = new ArrayList<>();
-        if(companyBasicInfos!=null && companyBasicInfos.size()>0){
-            for (CompanyBasicInfo companyBasicInfo : companyBasicInfos){
+        if (companyBasicInfos != null && companyBasicInfos.size() > 0) {
+            for (CompanyBasicInfo companyBasicInfo : companyBasicInfos) {
                 CompanyNames.add(companyBasicInfo.getCompanyName());
             }
         }
@@ -244,8 +247,8 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     @Override
     public CompanyBasicInfoBO findByCompanyName(String companyName) throws SerException {
         CompanyBasicInfoDTO companyBasicInfoDTO = new CompanyBasicInfoDTO();
-        companyBasicInfoDTO.getConditions().add(Restrict.eq("companyName",companyName));
+        companyBasicInfoDTO.getConditions().add(Restrict.eq("companyName", companyName));
         CompanyBasicInfo companyBasicInfo = super.findOne(companyBasicInfoDTO);
-        return BeanTransform.copyProperties(companyBasicInfo,CompanyBasicInfoBO.class);
+        return BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoBO.class);
     }
 }

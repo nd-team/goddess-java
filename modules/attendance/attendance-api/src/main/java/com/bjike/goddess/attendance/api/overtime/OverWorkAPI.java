@@ -2,12 +2,15 @@ package com.bjike.goddess.attendance.api.overtime;
 
 import com.bjike.goddess.attendance.bo.overtime.AreaBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
+import com.bjike.goddess.attendance.bo.overtime.OverWorkCountBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.*;
-import com.bjike.goddess.attendance.to.overtime.OverWorkAuditTO;
-import com.bjike.goddess.attendance.to.overtime.OverWorkTO;
-import com.bjike.goddess.attendance.vo.overtime.OverLongAndRelaxDayVO;
-import com.bjike.goddess.attendance.vo.overtime.PositionAndDepartVO;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
+import com.bjike.goddess.attendance.to.OverWorkAuditTO;
+import com.bjike.goddess.attendance.to.OverWorkTO;
+import com.bjike.goddess.attendance.vo.OverLongAndRelaxDayVO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
+import com.bjike.goddess.attendance.vo.PositionAndDepartVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -22,6 +25,9 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface OverWorkAPI {
+    Boolean sonPermission() throws SerException;
+
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 加班列表总条数
@@ -142,7 +148,6 @@ public interface OverWorkAPI {
     }
 
 
-
     /**
      * 我的加班列表
      *
@@ -151,6 +156,7 @@ public interface OverWorkAPI {
     default List<OverWorkBO> myListOverWork(PhoneMyOverWorkDTO phoneMyOverWorkDTO) throws SerException {
         return null;
     }
+
     /**
      * 我录入的加班列表
      *
@@ -179,6 +185,16 @@ public interface OverWorkAPI {
         return null;
     }
 
+    /**
+     * 加班汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    OverWorkCountBO outWorkCount(OverWorkDTO dto) throws SerException;
 
+    //某人当前周从周一至周五加班次数
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
 
 }

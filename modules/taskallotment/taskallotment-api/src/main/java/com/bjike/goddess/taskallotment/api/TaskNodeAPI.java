@@ -4,10 +4,16 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
-import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
+import com.bjike.goddess.taskallotment.bo.figure.DataBO;
+import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 
 import java.util.List;
 
@@ -42,7 +48,16 @@ public interface TaskNodeAPI {
      * @return
      * @throws SerException
      */
-    List<ProjectBO> list(ProjectDTO dto) throws SerException;
+    List<TableBO> list(TableDTO dto) throws SerException;
+
+    /**
+     * 总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long count(TableDTO dto) throws SerException;
 
     /**
      * 添加
@@ -258,6 +273,15 @@ public interface TaskNodeAPI {
     List<PersonCountBO> personCount(TaskNodeDTO dto) throws SerException;
 
     /**
+     * 个人汇总图形化
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    OptionBO personCountFigure(TaskNodeDTO dto) throws SerException;
+
+    /**
      * 人员标准工时汇总
      *
      * @param dto
@@ -265,6 +289,15 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     List<TimeCountBO> timeCount(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 人员标准工时汇总图形化
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    OptionBO timeCountFigure(TaskNodeDTO dto) throws SerException;
 
     /**
      * 分配及确认汇总
@@ -276,6 +309,15 @@ public interface TaskNodeAPI {
     List<ConfirmCountBO> confirmCount(TaskNodeDTO dto) throws SerException;
 
     /**
+     * 分配及确认汇总图形化
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    OptionBO confirmCountFigure(TaskNodeDTO dto) throws SerException;
+
+    /**
      * 完成情况汇总
      *
      * @param dto
@@ -283,6 +325,15 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     List<FinishCaseBO> finishCount(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 完成情况汇总图形化
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    OptionBO finishCountFigure(TaskNodeDTO dto) throws SerException;
 
     /**
      * 日报
@@ -306,6 +357,16 @@ public interface TaskNodeAPI {
     DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException;
 
     /**
+     * 日报汇总邮件
+     * @param startTime
+     * @param endTime
+     * @param departIds
+     * @return
+     * @throws SerException
+     */
+    List<DayReportMailBO> dayCountMail(String startTime, String endTime, String[] departIds) throws SerException;
+
+    /**
      * 获取某人当天的任务完成天数
      *
      * @param date
@@ -316,10 +377,57 @@ public interface TaskNodeAPI {
 
     /**
      * 获取某些人某天的任务完成情况
+     *
      * @param names
      * @param date
      * @return
      * @throws SerException
      */
     List<ObjectBO> taskSituation(String[] names, String date) throws SerException;
+
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 导入excel
+     *
+     * @param toList
+     * @param tableId
+     * @throws SerException
+     */
+    void leadExcel(List<TaskNodeLeadTO> toList, String tableId) throws SerException;
+
+    /**
+     * 根据项目表id获取任务名称
+     *
+     * @param tableID
+     * @return
+     * @throws SerException
+     */
+    List<String> taskNames(String tableID) throws SerException;
+
+    /**
+     * 分配及确认汇总饼状图
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    DataBO personBing(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 个人项目汇总
+     * @param collectDataTO
+     * @return
+     * @throws SerException
+     * @desc 根据某个用户名汇总返回用户和参与的项目名称
+     * @author tanghaixiang
+     */
+     default CollectDataVO personProjectCollect (CollectDataTO collectDataTO) throws SerException{return null;};
 }

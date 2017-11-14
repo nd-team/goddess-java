@@ -59,4 +59,42 @@ public enum VacateType {
     public int getCode() {
         return this.code;
     }
+
+    @Override
+    public String toString() {
+        String s="";
+        switch (code){
+            case 0:
+                s="年假";
+                break;
+            case 1:
+                s="事假";
+                break;
+            case 2:
+                s="病假";
+                break;
+            case 3:
+                s="调休";
+                break;
+            case 4:
+                s="婚假";
+                break;
+            case 5:
+                s="产假";
+                break;
+            case 6:
+                s="陪产假";
+                break;
+            case 7:
+                s="产检假";
+                break;
+            case 8:
+                s="丧假";
+                break;
+            case 9:
+                s="其他";
+                break;
+        }
+        return s;
+    }
 }

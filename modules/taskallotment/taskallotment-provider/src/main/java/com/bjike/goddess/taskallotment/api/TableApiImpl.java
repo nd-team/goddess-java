@@ -1,6 +1,7 @@
 package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.entity.Table;
 import com.bjike.goddess.taskallotment.service.TableSer;
@@ -40,5 +41,10 @@ public class TableApiImpl implements TableAPI {
         String[] strings=new String[list.size()];
         strings=list.toArray(strings);
         return strings;
+    }
+
+    @Override
+    public List<TableBO> tableNames() throws SerException {
+        return tableSer.tableNames();
     }
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.reportmanagement.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -7,6 +8,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
@@ -21,6 +24,7 @@ import com.bjike.goddess.reportmanagement.utils.Static;
 import com.bjike.goddess.reportmanagement.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资产表业务实现
@@ -64,6 +69,14 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     private ProfitSer profitSer;
     @Autowired
     private RepayAnalyzeAdviceSer repayAnalyzeAdviceSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+    @Autowired
+    private AccountanCourseAPI accountanCourseAPI;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
+
+
 
     /**
      * 核对查看权限（部门级别）
@@ -360,10 +373,10 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         boolean b4 = true;
         boolean b5 = true;
         double beginSum = 0;
-        double currentSum = 0;
+//        double currentSum = 0;
         double endSum = 0;
         double countBegin = 0;
-        double countCurrent = 0;
+//        double countCurrent = 0;
         double countEnd = 0;       //总资产
         int num = 1;
         for (Asset asset : list) {
@@ -377,13 +390,13 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 AssetBO sumBO = new AssetBO();
                 sumBO.setAsset("流动资产合计");
                 sumBO.setBeginAsset(beginSum);
-                sumBO.setCurrent(currentSum);
+//                sumBO.setCurrent(currentSum);
                 sumBO.setEndAsset(endSum);
                 sumBO.setAssetNum(num);
                 num++;
                 boList.add(sumBO);
                 beginSum = 0;
-                currentSum = 0;
+//                currentSum = 0;
                 endSum = 0;    //置为0
                 AssetBO assetBO = new AssetBO();
                 assetBO.setAsset("长期资产：");
@@ -393,13 +406,13 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 AssetBO sumBO = new AssetBO();
                 sumBO.setAsset("长期资产合计");
                 sumBO.setBeginAsset(beginSum);
-                sumBO.setCurrent(currentSum);
+//                sumBO.setCurrent(currentSum);
                 sumBO.setEndAsset(endSum);
                 sumBO.setAssetNum(num);
                 num++;
                 boList.add(sumBO);
                 beginSum = 0;
-                currentSum = 0;
+//                currentSum = 0;
                 endSum = 0;    //置为0
                 AssetBO assetBO = new AssetBO();
                 assetBO.setAsset("固定资产：");
@@ -409,13 +422,13 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 AssetBO sumBO = new AssetBO();
                 sumBO.setAsset("固定资产合计");
                 sumBO.setBeginAsset(beginSum);
-                sumBO.setCurrent(currentSum);
+//                sumBO.setCurrent(currentSum);
                 sumBO.setEndAsset(endSum);
                 sumBO.setAssetNum(num);
                 num++;
                 boList.add(sumBO);
                 beginSum = 0;
-                currentSum = 0;
+//                currentSum = 0;
                 endSum = 0;    //置为0
                 AssetBO assetBO = new AssetBO();
                 assetBO.setAsset("无形资产及其他资产：");
@@ -425,13 +438,13 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 AssetBO sumBO = new AssetBO();
                 sumBO.setAsset("无形资产及其他资产合计");
                 sumBO.setBeginAsset(beginSum);
-                sumBO.setCurrent(currentSum);
+//                sumBO.setCurrent(currentSum);
                 sumBO.setEndAsset(endSum);
                 sumBO.setAssetNum(num);
                 num++;
                 boList.add(sumBO);
                 beginSum = 0;
-                currentSum = 0;
+//                currentSum = 0;
                 endSum = 0;    //置为0
                 AssetBO assetBO = new AssetBO();
                 assetBO.setAsset("递延税款：");
@@ -446,18 +459,18 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 bo.setEndAsset(formulaBO.getEnd());
                 if (Type.ADD.equals(asset.getType())) {
                     beginSum += bo.getBeginAsset();
-                    currentSum += bo.getCurrent();
+//                    currentSum += bo.getCurrent();
                     endSum += bo.getEndAsset();
                     countBegin += bo.getBeginAsset();
-                    countCurrent += bo.getCurrent();
+//                    countCurrent += bo.getCurrent();
                     countEnd += bo.getEndAsset();
                 } else if (Type.REMOVE.equals(asset.getType())) {
                     bo.setAsset("减：" + asset.getAsset());
                     beginSum = beginSum - bo.getBeginAsset();
-                    currentSum -= bo.getCurrent();
+//                    currentSum -= bo.getCurrent();
                     endSum = endSum - bo.getEndAsset();
                     countBegin = countBegin - bo.getBeginAsset();
-                    countCurrent -= bo.getCurrent();
+//                    countCurrent -= bo.getCurrent();
                     countEnd = countEnd - bo.getEndAsset();
                 }
                 bo.setAssetNum(num);
@@ -485,7 +498,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         AssetBO lastBO = new AssetBO();
         lastBO.setAsset("资产总计");
         lastBO.setBeginAsset(countBegin);
-        lastBO.setCurrent(countCurrent);
+//        lastBO.setCurrent(countCurrent);
         lastBO.setEndAsset(countEnd);
         lastBO.setAssetNum(num);
         num++;
@@ -870,7 +883,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RepayAnalyzeBO flowBO = new RepayAnalyzeBO();
         flowBO.setProject("流动比率");
         String flow = "0";
-        if(0d != flowDebt) {
+        if (0d != flowDebt) {
             flow = String.format("%.2f", (flowAsset / flowDebt) * 100);
         }
         flowBO.setScale(flow + "%");
@@ -881,7 +894,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RepayAnalyzeBO rateBO = new RepayAnalyzeBO();
         rateBO.setProject("速动比率");
         String rate = "0";
-        if(0d != flowDebt) {
+        if (0d != flowDebt) {
             rate = String.format("%.2f", ((flowAsset - stock) / flowDebt) * 100);
         }
         rateBO.setScale(rate + "%");
@@ -892,7 +905,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RepayAnalyzeBO cashBO = new RepayAnalyzeBO();
         cashBO.setProject("现金比率");
         String cash = "0";
-        if(0d != flowDebt) {
+        if (0d != flowDebt) {
             cash = String.format("%.2f", (fund / flowDebt) * 100);
         }
         cashBO.setScale(cash + "%");
@@ -906,7 +919,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RepayAnalyzeBO assetdebtBO = new RepayAnalyzeBO();
         assetdebtBO.setProject("资产负债率");
         String assetdebt = "0";
-        if(0d != asset) {
+        if (0d != asset) {
             assetdebt = String.format("%.2f", (debt / asset) * 100);
         }
         assetdebtBO.setScale(assetdebt + "%");
@@ -917,7 +930,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         RepayAnalyzeBO equityBO = new RepayAnalyzeBO();
         equityBO.setProject("产权比率");
         String equity = "0";
-        if(0d != all) {
+        if (0d != all) {
             equity = String.format("%.2f", (debt / all) * 100);
         }
         equityBO.setScale(equity + "%");
@@ -1092,6 +1105,28 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> allFirstSubjects() throws SerException {
+//        if (moduleAPI.isCheck("financeinit")) {
+        List<AccountAddDateBO> bos = accountanCourseAPI.findNameCode();
+        if (null != bos && bos.size() > 0) {
+            List<String> list = bos.stream().map(AccountAddDateBO::getAccountanName).distinct().collect(Collectors.toList());
+            return list;
+        }
+//        }
+        return null;
+    }
+
+    @Override
+    public List<String> allProjectNames() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        String userToken = RpcTransmit.getUserToken();
+        if (moduleAPI.isCheck("voucher")) {
+            list = voucherGenerateAPI.findProjectName();
+        }
+        return list;
     }
 
     @Override

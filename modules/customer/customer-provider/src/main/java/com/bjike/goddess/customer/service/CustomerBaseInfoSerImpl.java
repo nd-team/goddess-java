@@ -1966,6 +1966,6 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         int limit = customerBaseInfoDTO.getLimit();
         int start = limit * customerBaseInfoDTO.getPage();
         List<CustomerBaseInfo> customerBaseInfoList = customerBaseInfos.stream().skip(start).limit(limit).collect(Collectors.toList());
-        return BeanTransform.copyProperties(customerBaseInfoList, CustomerBaseInfo.class);
+        return BeanTransform.copyProperties(customerBaseInfoList, CustomerBaseInfoBO.class);
     }
 }

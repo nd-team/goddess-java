@@ -1,15 +1,21 @@
 package com.bjike.goddess.attendance.api;
 
+import com.bjike.goddess.attendance.bo.CaseCountBO;
 import com.bjike.goddess.attendance.bo.PunchBO;
+import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.service.PunchSonSer;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 打卡子表业务接口实现
@@ -31,7 +37,7 @@ public class PunchSonApiImpl implements PunchSonAPI {
     }
 
     @Override
-    public String string(Double longitude, Double latitude, String area) throws SerException {
+    public List<String> string(Double longitude, Double latitude, String area) throws SerException {
         return punchSonSer.string(longitude, latitude, area);
     }
 
@@ -43,5 +49,30 @@ public class PunchSonApiImpl implements PunchSonAPI {
     @Override
     public Long count(PunchDTO dto) throws SerException {
         return punchSonSer.count(dto);
+    }
+
+    @Override
+    public List<PunchPhoneBO> phoneList(PunchDTO dto) throws SerException {
+        return punchSonSer.phoneList(dto);
+    }
+
+    @Override
+    public List<CaseCountBO> caseCount(PunchDTO dto) throws SerException {
+        return punchSonSer.caseCount(dto);
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return punchSonSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return punchSonSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return punchSonSer.userOverTimeCollect(overTimesDTO) ;
     }
 }

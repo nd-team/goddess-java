@@ -2,6 +2,7 @@ package com.bjike.goddess.dimission.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.dimission.bo.DataBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.bo.DimissionInfoCollectBO;
 import com.bjike.goddess.dimission.bo.DimissionReasonBO;
@@ -338,4 +339,13 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
         return null;
     }
 
+    /**
+     * 根据当前登陆用户获取地区,部门,员工编号,岗位,岗位层级,学历,联系电话，入职时间,在司工龄
+     *
+     * @return
+     * @throws SerException
+     */
+    default DataBO findDataByName() throws SerException {
+        return null;
+    }
 }

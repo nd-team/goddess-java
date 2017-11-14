@@ -60,6 +60,12 @@ public class Account extends BaseEntity {
     @Column(name = "thirdSubject",  columnDefinition = "VARCHAR(255)   COMMENT '三级科目'")
     private String thirdSubject;
 
+    /**
+     * 金额
+     */
+    @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
+    private Double amount;
+
 
 
 
@@ -120,5 +126,11 @@ public class Account extends BaseEntity {
         this.firstSubject = firstSubject;
     }
 
+    public Double getAmount() {
+        return amount;
+    }
 
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
 }

@@ -54,6 +54,10 @@ public class FundRecordVO {
      * 数据来源
      */
     private String dataSource;
+    /**
+     * 金额
+     */
+    private Double amount;
 
     public String getId() {
         return id;
@@ -125,5 +129,13 @@ public class FundRecordVO {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.taskallotment.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 任务类型
  *
@@ -13,14 +15,17 @@ public enum TaskType {
     /**
      * 行政任务
      */
+    @ExcelValue(name = "行政任务")
     ADMININSTRATION(0),
     /**
      * 工程任务
      */
+    @ExcelValue(name = "工程任务")
     ENGINEERING(1),
     /**
      * 培训任务
      */
+    @ExcelValue(name = "培训任务")
     TRAINING(2);
 
     private int code;

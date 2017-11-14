@@ -179,20 +179,13 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
             if ("执行层".equals(arrangement)) {
                 String sql = "SELECT name " +
                         "FROM organize_position_detail_user " +
-                        "WHERE id IN (" +
-                        "  SELECT user_id" +
-                        "  FROM organize_position_detail_user_table" +
-                        "  WHERE position_id IN (" +
-                        "    SELECT id" +
-                        "    FROM organize_position_detail" +
-                        "    WHERE arrangement_id IN (" +
-                        "      (SELECT id" +
-                        "       FROM organize_arrangement" +
-                        "       WHERE id IN (" +
-                        "         SELECT arrangement_id" +
-                        "         FROM organize_position_detail" +
-                        "         WHERE department_id = '" + departId + "') AND" +
-                        "             arrangement IN ('管理层','决策层')))))";
+                        "WHERE id IN (SELECT user_id " +
+                        "             FROM organize_position_detail_user_table " +
+                        "             WHERE position_id IN (SELECT id " +
+                        "                                   FROM organize_position_detail " +
+                        "                                   WHERE arrangement_id IN ((SELECT id " +
+                        "                                                             FROM organize_arrangement " +
+                        "                                                             WHERE arrangement IN ('管理层','决策层')))and department_id='" + departId + "'))";
                 List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
                 if (null != list) {
                     set = list.stream().map(positionDetailUserBO -> positionDetailUserBO.getName()).collect(Collectors.toSet());
@@ -200,20 +193,13 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
             } else if ("管理层".equals(arrangement) || "决策层".equals(arrangement)) {
                 String sql = "SELECT name " +
                         "FROM organize_position_detail_user " +
-                        "WHERE id IN (" +
-                        "  SELECT user_id" +
-                        "  FROM organize_position_detail_user_table" +
-                        "  WHERE position_id IN (" +
-                        "    SELECT id" +
-                        "    FROM organize_position_detail" +
-                        "    WHERE arrangement_id IN (" +
-                        "      (SELECT id" +
-                        "       FROM organize_arrangement" +
-                        "       WHERE id IN (" +
-                        "         SELECT arrangement_id" +
-                        "         FROM organize_position_detail" +
-                        "         WHERE department_id = '" + departId + "') AND" +
-                        "             arrangement IN ('决策层')))))";
+                        "WHERE id IN (SELECT user_id " +
+                        "             FROM organize_position_detail_user_table " +
+                        "             WHERE position_id IN (SELECT id " +
+                        "                                   FROM organize_position_detail " +
+                        "                                   WHERE arrangement_id IN ((SELECT id " +
+                        "                                                             FROM organize_arrangement " +
+                        "                                                             WHERE arrangement IN ('决策层')))and department_id='" + departId + "'))";
                 List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
                 if (null != list) {
                     set = list.stream().map(positionDetailUserBO -> positionDetailUserBO.getName()).collect(Collectors.toSet());
@@ -265,5 +251,46 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
                 "                       WHERE position = '总经理'))";     //查找总经理
         List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
         return list;
+    }
+
+    @Override
+    public List<String> findCharge() throws SerException {
+        String[] fields = new String[]{"name"};
+        String sql = "SELECT name " +
+                "FROM organize_position_detail_user " +
+                "WHERE id IN (" +
+                "  SELECT user_id" +
+                "  FROM organize_position_detail_user_table" +
+                "  WHERE position_id IN (" +
+                "    SELECT id" +
+                "      FROM organize_position_detail" +
+                "    WHERE arrangement_id IN (" +
+                "     SELECT id" +
+                "      FROM organize_arrangement" +
+                "      WHERE arrangement in ('管理层','决策层'))))";
+        List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
+        if (null != list) {
+            return list.stream().map(PositionDetailUserBO::getName).distinct().collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> projectManager() throws SerException {
+        String[] fields = new String[]{"name"};
+        String sql = "SELECT name " +
+                "FROM organize_position_detail_user " +
+                "WHERE id IN (" +
+                "  SELECT user_id" +
+                "  FROM organize_position_detail_user_table" +
+                "  WHERE position_id IN (" +
+                "    SELECT id" +
+                "    FROM organize_position_detail" +
+                "    WHERE position LIKE '项目经理'))";
+        List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
+        if (null != list) {
+            return list.stream().map(PositionDetailUserBO::getName).distinct().collect(Collectors.toList());
+        }
+        return null;
     }
 }

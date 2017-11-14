@@ -13,15 +13,22 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.dto.FinishCountEmailDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.entity.FinishCountEmail;
+import com.bjike.goddess.taskallotment.entity.Project;
+import com.bjike.goddess.taskallotment.entity.Table;
 import com.bjike.goddess.taskallotment.enums.*;
 import com.bjike.goddess.taskallotment.to.FinishCountEmailTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -58,6 +65,12 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
     private CommonalityAPI commonalityAPI;
     @Autowired
     private MessageAPI messageAPI;
+    @Autowired
+    private ProjectSer projectSer;
+    @Autowired
+    private TableSer tableSer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -67,9 +80,11 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
         long mis = DateUtil.mis(entity.getSetTime(), LocalDateTime.now());
         if (mis < 0) {
             throw new SerException("设置时间必须大于当前时间");
-        }if (null==to.getCountFrequency()&&null==to.getStartTime()&&null==to.getEndTime()){
+        }
+        if (null == to.getCountFrequency() && StringUtils.isBlank(to.getStartTime()) && StringUtils.isBlank(to.getEndTime())) {
             throw new SerException("汇总频率和汇总时间区间必须选一个，且只能有一个");
-        }if (null!=to.getCountFrequency()&&null!=to.getStartTime()&&null!=to.getEndTime()){
+        }
+        if (null != to.getCountFrequency() && StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getStartTime())) {
             throw new SerException("汇总频率和汇总时间区间只能有一个");
         }
         entity.setCreater(name);
@@ -148,9 +163,11 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
         long mis = DateUtil.mis(entity.getSetTime(), LocalDateTime.now());
         if (mis < 0) {
             throw new SerException("设置时间必须大于当前时间");
-        }if (null==to.getCountFrequency()&&null==to.getStartTime()&&null==to.getEndTime()){
+        }
+        if (null == to.getCountFrequency() && StringUtils.isBlank(to.getStartTime()) && StringUtils.isBlank(to.getEndTime())) {
             throw new SerException("汇总频率和汇总时间区间必须选一个，且只能有一个");
-        }if (null!=to.getCountFrequency()&&null!=to.getStartTime()&&null!=to.getEndTime()){
+        }
+        if (null != to.getCountFrequency() && StringUtils.isNotBlank(to.getStartTime()) && StringUtils.isNotBlank(to.getStartTime())) {
             throw new SerException("汇总频率和汇总时间区间只能有一个");
         }
         String[] countPersonss = to.getCountPersonss();
@@ -230,7 +247,58 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        return BeanTransform.copyProperties(entity, FinishCountEmailBO.class);
+        String[] departs = null;
+        String[] projects = null;
+        String[] tables = null;
+        String[] forDepart = null;
+        if (null != entity.getForDeparts()) {
+            forDepart = entity.getForDeparts().split(",");
+        }
+        if (null != entity.getDepart()) {
+            departs = entity.getDepart().split(",");
+        }
+        if (null != entity.getProject()) {
+            projects = entity.getProject().split(",");
+        }
+        if (null != entity.getTable()) {
+            tables = entity.getTable().split(",");
+        }
+        List<ProjectBO> projectBOS = new ArrayList<>();
+        List<TableBO> tableBOS = new ArrayList<>();
+        if (null != projects) {
+            for (String project : projects) {
+                ProjectDTO projectDTO = new ProjectDTO();
+                projectDTO.getConditions().add(Restrict.eq("project", project));
+                List<Project> projects1 = projectSer.findByCis(projectDTO);
+                if (!projects1.isEmpty()) {
+                    projectBOS.add(BeanTransform.copyProperties(projects1.get(0), ProjectBO.class));
+                }
+            }
+        }
+        if (null != tables) {
+            for (String project : tables) {
+                TableDTO projectDTO = new TableDTO();
+                projectDTO.getConditions().add(Restrict.eq("name", project));
+                List<Table> projects1 = tableSer.findByCis(projectDTO);
+                if (!projects1.isEmpty()) {
+                    tableBOS.add(BeanTransform.copyProperties(projects1.get(0), TableBO.class));
+                }
+            }
+        }
+        List<DepartmentDetailBO> detailBOS = new ArrayList<>();
+        List<DepartmentDetailBO> forDetailBOS = new ArrayList<>();
+        if (null != departs) {
+            detailBOS = departmentDetailAPI.departByName(departs);
+        }
+        if (null != forDepart) {
+            forDetailBOS = departmentDetailAPI.departByName(forDepart);
+        }
+        FinishCountEmailBO bo = BeanTransform.copyProperties(entity, FinishCountEmailBO.class);
+        bo.setDeparts(detailBOS);
+        bo.setProjects(projectBOS);
+        bo.setTables(tableBOS);
+        bo.setForDepart(forDetailBOS);
+        return bo;
     }
 
     @Override
@@ -491,7 +559,7 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
                             }
                             if (null != last.getTaskType()) {
                                 sb.append("<td>" + last.getTaskType() + "</td>");
-                            }else {
+                            } else {
                                 sb.append("<td> </td>");
                             }
                             sb.append("<td>" + last.getPlanNum() + "</td>");
@@ -521,7 +589,7 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
                 List<CaseGrandSonBO> grandSonS = table.getGrandSonS();
                 for (CaseGrandSonBO grandSonBO : grandSonS) {
                     List<CaseLastBO> caseLastS = grandSonBO.getCaseLastS();
-                    num+=caseLastS.size();
+                    num += caseLastS.size();
                 }
             }
         }

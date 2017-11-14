@@ -35,6 +35,12 @@ public class StaffRecords extends BaseEntity {
     private String serialNumber;
 
     /**
+     * 地区
+     */
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
+
+    /**
      * 项目组
      */
     @Column(name = "project", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目组'")
@@ -45,6 +51,32 @@ public class StaffRecords extends BaseEntity {
      */
     @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职位'")
     private String position;
+
+
+    /**
+     * 资质/认证证书
+     */
+    @Column(name = "litterae",  columnDefinition = "VARCHAR(255)   COMMENT '资质/认证证书'")
+    private String litterae;
+
+    /**
+     * 是否购买社保
+     */
+    @Column(name = "buySecurity",  columnDefinition = "TINYINT(2)   COMMENT '是否购买社保'")
+    private Boolean buySecurity;
+
+    /**
+     * 社保购买类型
+     */
+    @Column(name = "securityType",  columnDefinition = "VARCHAR(255)   COMMENT '社保购买类型'")
+    private String securityType;
+
+    /**
+     * 购买社保所属公司
+     */
+    @Column(name = "company",  columnDefinition = "VARCHAR(255)   COMMENT '购买社保所属公司'")
+    private String company;
+
 
     /**
      * 学历
@@ -89,6 +121,18 @@ public class StaffRecords extends BaseEntity {
     private String telephone;
 
     /**
+     * qq号
+     */
+    @Column(name = "QQ", columnDefinition = "VARCHAR(255)   COMMENT 'qq号'")
+    private String QQ;
+
+    /**
+     * 个人邮箱账号
+     */
+    @Column(name = "selfEmail", columnDefinition = "VARCHAR(255)   COMMENT '个人邮箱账号'")
+    private String selfEmail;
+
+    /**
      * 出生日期
      */
     @Column(name = "birth", nullable = false, columnDefinition = "DATE   COMMENT '出生日期'")
@@ -99,6 +143,12 @@ public class StaffRecords extends BaseEntity {
      */
     @Column(name = "address", columnDefinition = "VARCHAR(255)   COMMENT '户籍地址'")
     private String address;
+
+    /**
+     * 目前住宿地址
+     */
+    @Column(name = "nowAddress", columnDefinition = "VARCHAR(255)   COMMENT '目前住宿地址'")
+    private String nowAddress;
 
     /**
      * 身份证号码
@@ -153,6 +203,14 @@ public class StaffRecords extends BaseEntity {
         this.serialNumber = serialNumber;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getProject() {
         return project;
     }
@@ -167,6 +225,38 @@ public class StaffRecords extends BaseEntity {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getLitterae() {
+        return litterae;
+    }
+
+    public void setLitterae(String litterae) {
+        this.litterae = litterae;
+    }
+
+    public Boolean getBuySecurity() {
+        return buySecurity;
+    }
+
+    public void setBuySecurity(Boolean buySecurity) {
+        this.buySecurity = buySecurity;
+    }
+
+    public String getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(String securityType) {
+        this.securityType = securityType;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getEducation() {
@@ -225,6 +315,22 @@ public class StaffRecords extends BaseEntity {
         this.telephone = telephone;
     }
 
+    public String getQQ() {
+        return QQ;
+    }
+
+    public void setQQ(String QQ) {
+        this.QQ = QQ;
+    }
+
+    public String getSelfEmail() {
+        return selfEmail;
+    }
+
+    public void setSelfEmail(String selfEmail) {
+        this.selfEmail = selfEmail;
+    }
+
     public LocalDate getBirth() {
         return birth;
     }
@@ -239,6 +345,14 @@ public class StaffRecords extends BaseEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getNowAddress() {
+        return nowAddress;
+    }
+
+    public void setNowAddress(String nowAddress) {
+        this.nowAddress = nowAddress;
     }
 
     public String getIdentityCard() {
@@ -265,6 +379,14 @@ public class StaffRecords extends BaseEntity {
         this.bank = bank;
     }
 
+    public LocalDate getDimissionTime() {
+        return dimissionTime;
+    }
+
+    public void setDimissionTime(LocalDate dimissionTime) {
+        this.dimissionTime = dimissionTime;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -279,13 +401,5 @@ public class StaffRecords extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public LocalDate getDimissionTime() {
-        return dimissionTime;
-    }
-
-    public void setDimissionTime(LocalDate dimissionTime) {
-        this.dimissionTime = dimissionTime;
     }
 }

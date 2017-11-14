@@ -33,7 +33,13 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.InnerTemplateAPI" id="innerTemplateApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.RecordAPI" id="recordApiImpl"/>
 
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" id="baseInfoManageApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" id="siginManageApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" id="dispatchSheetApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.ProjectAPI" id="projectApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TableAPI" id="tableApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" id="taskNodeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>

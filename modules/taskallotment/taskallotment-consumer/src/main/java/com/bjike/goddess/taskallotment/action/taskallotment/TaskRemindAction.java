@@ -207,7 +207,7 @@ public class TaskRemindAction {
     @GetMapping("v1/task/names/{tableId}")
     public Result taskNames(@PathVariable String tableId) throws ActException {
         try {
-            return ActResult.initialize(projectAPI.tables(tableId));
+            return ActResult.initialize(projectAPI.taskNames(tableId));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

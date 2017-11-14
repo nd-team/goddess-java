@@ -5,22 +5,23 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
-import com.bjike.goddess.taskallotment.dto.ProjectDTO;
-import com.bjike.goddess.taskallotment.dto.TableDTO;
-import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
-import com.bjike.goddess.taskallotment.entity.Project;
-import com.bjike.goddess.taskallotment.entity.Table;
-import com.bjike.goddess.taskallotment.entity.TaskNode;
+import com.bjike.goddess.taskallotment.dto.*;
+import com.bjike.goddess.taskallotment.entity.*;
 import com.bjike.goddess.taskallotment.enums.GuideAddrStatus;
 import com.bjike.goddess.taskallotment.enums.Status;
+import com.bjike.goddess.taskallotment.excel.ProjectExcel;
+import com.bjike.goddess.taskallotment.excel.TableExcel;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
 import com.bjike.goddess.taskallotment.to.TableTO;
 import com.bjike.goddess.taskallotment.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,10 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private TaskNodeSer taskNodeSer;
+    @Autowired
+    private QuestionSer questionSer;
+    @Autowired
+    private CustomTitleSer customTitleSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -202,15 +207,16 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         entity.setName(name);
         List<Table> tables = new ArrayList<>();
         List<TableTO> tableTOSs = to.getTables();
+        super.save(entity);
         if (null != tableTOSs) {
             for (TableTO tableTO : tableTOSs) {
                 Table table = BeanTransform.copyProperties(tableTO, Table.class, true);
-                table.setProject(entity);
+                table.setProjectId(entity.getId());
+                table.setCreater(name);
                 tables.add(table);
             }
+            tableSer.save(tables);
         }
-        entity.setTables(tables);
-        super.save(entity);
     }
 
     @Override
@@ -220,26 +226,23 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         Project entity = super.findById(to.getId());
         String name = entity.getName();
         LocalDateTime a = entity.getCreateTime();
-        List<Table> tables = entity.getTables();
-        if (null != tables && !tables.isEmpty()) {
-            tableSer.remove(tables);
-        }
         entity = BeanTransform.copyProperties(to, Project.class, true);
         entity.setCreateTime(a);
         entity.setName(name);
-        List<Table> tables1 = new ArrayList<>();
-        List<TableTO> tableTOSs = to.getTables();
-        if (null != tableTOSs) {
-            for (TableTO tableTO : tableTOSs) {
-                Table table = BeanTransform.copyProperties(tableTO, Table.class, true);
-                table.setProject(entity);
-                tableSer.save(table);
-                tables1.add(table);
-            }
-        }
-        entity.setTables(tables1);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
+//        TableDTO tableDTO = new TableDTO();
+//        tableDTO.getConditions().add(Restrict.eq("projectId", entity.getId()));
+//        List<Table> tableList = tableSer.findByCis(tableDTO);
+//        if (!tableList.isEmpty()) {
+//            tableSer.remove(tableList);
+//        }
+//        List<TableTO> tableTOS = to.getTables();
+//        List<Table> tables = BeanTransform.copyProperties(tableTOS, Table.class, true);
+//        for (Table table:tables){
+//            table.setProjectId(entity.getId());
+//            tableSer.save(table);
+//        }
     }
 
     @Override
@@ -249,8 +252,11 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         List<Project> list = super.findByCis(dto, true);
         List<ProjectBO> bos = new ArrayList<>();
         for (Project p : list) {
-            List<TableBO> tableBOS = BeanTransform.copyProperties(p.getTables(), TableBO.class);
-            ProjectBO bo = BeanTransform.copyProperties(p, ProjectBO.class, "tables");
+            TableDTO tableDTO = new TableDTO();
+            tableDTO.getConditions().add(Restrict.eq("projectId", p.getId()));
+            List<Table> tableList = tableSer.findByCis(tableDTO);
+            List<TableBO> tableBOS = BeanTransform.copyProperties(tableList, TableBO.class);
+            ProjectBO bo = BeanTransform.copyProperties(p, ProjectBO.class);
             bo.setTables(tableBOS);
             bos.add(bo);
         }
@@ -263,8 +269,11 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         List<Project> list = super.findByCis(dto, true);
         List<ProjectBO> bos = new ArrayList<>();
         for (Project p : list) {
-            List<TableBO> tableBOS = BeanTransform.copyProperties(p.getTables(), TableBO.class);
-            ProjectBO bo = BeanTransform.copyProperties(p, ProjectBO.class, "tables");
+            TableDTO tableDTO = new TableDTO();
+            tableDTO.getConditions().add(Restrict.eq("projectId", p.getId()));
+            List<Table> tableList = tableSer.findByCis(tableDTO);
+            List<TableBO> tableBOS = BeanTransform.copyProperties(tableList, TableBO.class);
+            ProjectBO bo = BeanTransform.copyProperties(p, ProjectBO.class);
             bo.setTables(tableBOS);
             bos.add(bo);
         }
@@ -279,6 +288,26 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.getConditions().add(Restrict.eq("projectId", entity.getId()));
+        List<Table> tableList = tableSer.findByCis(tableDTO);
+        for (Table table : tableList) {
+            TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+            taskNodeDTO.getConditions().add(Restrict.eq("tableId", table.getId()));
+            List<TaskNode> taskNodes = taskNodeSer.findByCis(taskNodeDTO);
+            for (TaskNode taskNode : taskNodes) {
+                QuestionDTO questionDTO = new QuestionDTO();
+                questionDTO.getConditions().add(Restrict.eq("taskNodeId", taskNode.getId()));
+                List<Question> questions = questionSer.findByCis(questionDTO);
+                questionSer.remove(questions);
+                CustomTitleDTO customTitleDTO = new CustomTitleDTO();
+                customTitleDTO.getConditions().add(Restrict.eq("taskNodeId", taskNode.getId()));
+                List<CustomTitle> customTitles = customTitleSer.findByCis(customTitleDTO);
+                customTitleSer.remove(customTitles);
+            }
+            taskNodeSer.remove(taskNodes);
+        }
+        tableSer.remove(tableList);
         super.remove(id);
     }
 
@@ -288,7 +317,13 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
-        return BeanTransform.copyProperties(entity, ProjectBO.class, "tables");
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.getConditions().add(Restrict.eq("projectId", entity.getId()));
+        List<Table> tableList = tableSer.findByCis(tableDTO);
+        List<TableBO> tableBOS = BeanTransform.copyProperties(tableList, TableBO.class);
+        ProjectBO bo = BeanTransform.copyProperties(entity, ProjectBO.class);
+        bo.setTables(tableBOS);
+        return bo;
     }
 
     @Override
@@ -300,6 +335,9 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     public void editTable(TableTO tableTO) throws SerException {
         checkAddIdentity();
         Table entity = tableSer.findById(tableTO.getId());
+        if (null == entity) {
+            throw new SerException("该对象不存在");
+        }
         entity.setName(tableTO.getName());
         entity.setStatus(tableTO.getStatus());
         entity.setModifyTime(LocalDateTime.now());
@@ -327,7 +365,7 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         dto.getConditions().add(Restrict.eq("status", Status.START));
         dto.getConditions().add(Restrict.in("depart", dto.getDeparts()));
         List<Project> list = super.findByCis(dto);
-        return BeanTransform.copyProperties(list, ProjectBO.class,"tables");
+        return BeanTransform.copyProperties(list, ProjectBO.class, "tables");
     }
 
     @Override
@@ -350,7 +388,7 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     @Override
     public List<TableBO> tables(String projectId) throws SerException {
         TableDTO dto = new TableDTO();
-        dto.getConditions().add(Restrict.eq("project.id", projectId));
+        dto.getConditions().add(Restrict.eq("projectId", projectId));
         dto.getConditions().add(Restrict.eq("status", Status.START));
         List<Table> list = tableSer.findByCis(dto);
         return BeanTransform.copyProperties(list, TableBO.class);
@@ -359,7 +397,60 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     @Override
     public Set<String> taskNames(String tableId) throws SerException {
         TaskNodeDTO dto = new TaskNodeDTO();
-        dto.getConditions().add(Restrict.eq("table.id", tableId));
+        dto.getConditions().add(Restrict.eq("tableId", tableId));
         return taskNodeSer.findByCis(dto).stream().map(TaskNode::getTaskName).collect(Collectors.toSet());
     }
+
+    @Override
+    public void addTable(TableTO to) throws SerException {
+        Project project = super.findById(to.getProjectId());
+        if (null == project) {
+            throw new SerException("该对象不存在");
+        }
+        Table table = new Table();
+        table.setProjectId(project.getId());
+        table.setName(to.getName());
+        table.setCreater(userAPI.currentUser().getUsername());
+        table.setStatus(to.getStatus());
+        tableSer.save(table);
+    }
+
+    @Override
+    public byte[] exportProjectExcel(ProjectDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.in("project",dto.getProjects()));
+        List<Project> list=super.findByCis(dto);
+        List<ProjectExcel> toList=BeanTransform.copyProperties(list,ProjectExcel.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void leadProjectExcel(List<ProjectExcel> toList) throws SerException {
+        List<Project> list=BeanTransform.copyProperties(toList,Project.class,true);
+        super.save(list);
+    }
+
+    @Override
+    public byte[] exportTableExcel(TableDTO dto) throws SerException {
+        dto.getConditions().add(Restrict.in("name",dto.getTables()));
+        List<Table> list=tableSer.findByCis(dto);
+        List<TableExcel> toList=BeanTransform.copyProperties(list,TableExcel.class);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
+        return bytes;
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void leadTableExcel(List<TableExcel> toList,String projectId) throws SerException {
+        List<Table> list=BeanTransform.copyProperties(toList,Table.class,true);
+        for (Table table:list){
+            table.setProjectId(projectId);
+        }
+        tableSer.save(list);
+    }
+
+
 }

@@ -47,7 +47,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("asset")
-public class AssetAct extends BaseFileAction{
+public class AssetAct extends BaseFileAction {
     @Autowired
     private AssetAPI assetAPI;
     @Autowired
@@ -348,6 +348,37 @@ public class AssetAct extends BaseFileAction{
         }
     }
 
+
+//    /**
+//     * 获取所有科目
+//     *
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/allFirstSubjects")
+//    public Result allFirstSubjects() throws ActException {
+//        try {
+//            return ActResult.initialize(subjectCollectAPI.allFirstSubjects());
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
+//    /**
+//     * 获取所有项目名称
+//     *
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/allProjectNames")
+//    public Result allProjectNames() throws ActException {
+//        try {
+//            return ActResult.initialize(subjectCollectAPI.allProjectNames());
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 获取所有科目
      *
@@ -357,7 +388,7 @@ public class AssetAct extends BaseFileAction{
     @GetMapping("v1/allFirstSubjects")
     public Result allFirstSubjects() throws ActException {
         try {
-            return ActResult.initialize(subjectCollectAPI.allFirstSubjects());
+            return ActResult.initialize(assetAPI.allFirstSubjects());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -372,11 +403,13 @@ public class AssetAct extends BaseFileAction{
     @GetMapping("v1/allProjectNames")
     public Result allProjectNames() throws ActException {
         try {
-            return ActResult.initialize(subjectCollectAPI.allProjectNames());
+//            return ActResult.initialize(subjectCollectAPI.allProjectNames());
+            return ActResult.initialize(assetAPI.allProjectNames());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
 
     /**
      * 获取所有项目组，部门

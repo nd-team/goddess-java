@@ -5,8 +5,10 @@ import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.businessproject.api.BusinessContractAPI;
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
+import com.bjike.goddess.businessproject.entity.CollectUpdate;
 import com.bjike.goddess.businessproject.excel.BusinessContractExcel;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
+import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.vo.BusinessContractADetailVO;
 import com.bjike.goddess.businessproject.vo.BusinessContractVO;
@@ -37,6 +39,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * 商务项目合同
@@ -337,20 +340,39 @@ public class BusinessContractAction extends BaseFileAction {
     /**
      * 根据地区汇总商务合同管理明细汇总
      *
-     * @param areas areas
      * @return class BusinessContractADetailVO
      * @des 根据地区汇总商务合同管理明细汇总
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(String[] areas) throws ActException {
+    public Result collect() throws ActException {
         try {
-            List<BusinessContractADetailVO> voList = BeanTransform.copyProperties(businessContractAPI.collect(areas), BusinessContractADetailVO.class);
+            List<BusinessContractADetailBO> voList = businessContractAPI.collect();
+//            for(BusinessContractADetailBO bo:voList){
+//                bo.setId(UUID.randomUUID().toString());
+//            }
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 根据地区汇总商务合同管理明细汇总
+     *
+     * @return class BusinessContractADetailVO
+     * @des 根据地区汇总商务合同管理明细汇总
+     * @version v1
+     */
+    @GetMapping("v1/collectUpdate")
+    public Result collectUpdate(CollectUpdateTO to) throws ActException {
+        try {
+            List<BusinessContractADetailBO> voList = businessContractAPI.collectUpdate( to);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 查询地区
@@ -561,6 +583,25 @@ public class BusinessContractAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 个人图表周汇总
+     *
+     * @param user
+     * @param year
+     * @param month
+     * @param week
+     * @des 个人图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/weekPersonFigure")
+    public Result weekPersonFigure(String user,Integer year, Integer month, Integer week) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.weekPersonFigure(user,year, month, week);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

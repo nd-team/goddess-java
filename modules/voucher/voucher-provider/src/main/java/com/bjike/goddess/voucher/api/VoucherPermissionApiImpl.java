@@ -37,6 +37,16 @@ public class VoucherPermissionApiImpl implements VoucherPermissionAPI {
     }
 
     @Override
+    public Long countAccountPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return cusPermissionSer.countAccountPermission(cusPermissionDTO);
+    }
+
+    @Override
+    public List<VoucherPermissionBO> listAccount(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return cusPermissionSer.listAccount(cusPermissionDTO);
+    }
+
+    @Override
     public VoucherPermissionBO getOneById(String id) throws SerException {
         return cusPermissionSer.getOneById(id);
     }
@@ -64,9 +74,5 @@ public class VoucherPermissionApiImpl implements VoucherPermissionAPI {
     @Override
     public Boolean busCusPermission(String idFlag) throws SerException {
         return cusPermissionSer.busCusPermission(idFlag);
-    }
-    @Override
-    public Boolean accCusPermission(String idFlag) throws SerException {
-        return cusPermissionSer.accCusPermission(idFlag);
     }
 }

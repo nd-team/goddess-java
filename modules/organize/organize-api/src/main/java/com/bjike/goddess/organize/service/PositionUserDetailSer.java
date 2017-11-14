@@ -108,4 +108,20 @@ public interface PositionUserDetailSer extends Ser<PositionUserDetail, PositionU
      * @throws SerException
      */
     List<PositionDetailUserBO> findManager() throws SerException;
+
+    /**
+     * chenjunhao
+     * 查找负责人（管理层,决策层）
+     * @return
+     * @throws SerException
+     */
+    List<String> findCharge() throws SerException;
+
+    /**
+     * chenjunhao
+     * 查找项目经理
+     * @return
+     * @throws SerException
+     */
+    List<String> projectManager() throws SerException;
 }

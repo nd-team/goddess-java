@@ -1,9 +1,7 @@
 package com.bjike.goddess.subjectcollect.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.subjectcollect.bo.AreaSubjectBO;
 import com.bjike.goddess.subjectcollect.bo.FirstSubjectBO;
-import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
 import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
 import com.bjike.goddess.subjectcollect.service.SubjectCollectSer;
 import com.bjike.goddess.subjectcollect.to.ExportSubjectCollectTO;

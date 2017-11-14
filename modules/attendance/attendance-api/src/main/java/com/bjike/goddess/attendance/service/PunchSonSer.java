@@ -1,11 +1,13 @@
 package com.bjike.goddess.attendance.service;
 
-import com.bjike.goddess.attendance.bo.PunchBO;
-import com.bjike.goddess.attendance.bo.PunchSonBO;
+import com.bjike.goddess.attendance.bo.*;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.dto.PunchSonDTO;
+import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.PunchSon;
+import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
+import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -21,6 +23,8 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
+    Boolean sonPermission() throws SerException;
+    Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
      * 打卡
@@ -40,7 +44,7 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
      * @return
      * @throws SerException
      */
-    String string(Double longitude, Double latitude, String area) throws SerException;
+    List<String> string(Double longitude, Double latitude, String area) throws SerException;
 
     /**
      * 列表
@@ -52,6 +56,15 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
     List<PunchBO> list(PunchDTO dto) throws SerException;
 
     /**
+     * 移动端列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<PunchPhoneBO> phoneList(PunchDTO dto) throws SerException;
+
+    /**
      * 总条数
      *
      * @param dto
@@ -59,4 +72,57 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
      * @throws SerException
      */
     Long count(PunchDTO dto) throws SerException;
+
+    /**
+     * 考勤情况汇总明细
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CaseCountMailBO> caseCountMail(PunchDTO dto) throws SerException;
+
+    /**
+     * 考勤情况汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<CaseCountBO> caseCount(PunchDTO dto) throws SerException;
+
+    /**
+     * 获取某天的补班天数
+     *
+     * @param date
+     * @return
+     * @throws SerException
+     */
+    Double extralWork(String date) throws SerException;
+
+    /**
+     * 判断当天是否为节假日
+     *
+     * @param date
+     * @return
+     * @throws SerException
+     */
+    Boolean festival(String date) throws SerException;
+
+    /**
+     * 查询某人某一天的加班天数
+     *
+     * @return
+     * @throws SerException
+     */
+    Double outWorkTime(String name, String date) throws SerException;
+
+    /**
+     * 某人当前周从周一至周日请假次数或某个季度分别未打卡次数
+     * @param overTimesDTO
+     * @return
+     * @throws SerException
+     */
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+
+
 }

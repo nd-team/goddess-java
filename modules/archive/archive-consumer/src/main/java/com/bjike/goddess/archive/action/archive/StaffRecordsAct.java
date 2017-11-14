@@ -1,15 +1,19 @@
 package com.bjike.goddess.archive.action.archive;
 
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords1Excel;
 import com.bjike.goddess.archive.entity.StaffRecordsExcel;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
+import com.bjike.goddess.archive.to.StaffRecordsTO;
 import com.bjike.goddess.archive.vo.StaffNameVO;
 import com.bjike.goddess.archive.vo.StaffRecords1VO;
 import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -80,6 +84,88 @@ public class StaffRecordsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 添加
+     *
+     * @version v1
+     */
+    @PostMapping("v1/add")
+    public Result add(@Validated(ADD.class) StaffRecordsTO to, BindingResult bindingResult) throws ActException {
+        try {
+            staffRecordsAPI.add(to);
+            return ActResult.initialize("ADD SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @version v1
+     */
+    @PutMapping("v1/edit/{id}")
+    public Result edit(@Validated(EDIT.class) StaffRecordsTO to, BindingResult bindingResult) throws ActException {
+        try {
+            staffRecordsAPI.edit(to);
+            return ActResult.initialize("EDIT SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id获取对象
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findEntity/{id}")
+    public Result findEntity(@PathVariable String id, BindingResult bindingResult) throws ActException {
+        try {
+            StaffRecordsBO bo = staffRecordsAPI.findEntity(id);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, StaffRecordsVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id, BindingResult bindingResult) throws ActException {
+        try {
+            staffRecordsAPI.delete(id);
+            return ActResult.initialize("DELETE SUCCESS");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto 员工档案
+     * @des 导出员工档案
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(StaffRecordsDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "员工档案.xlsx";
+            super.writeOutFile(response, staffRecordsAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 
     /**
      * 导入

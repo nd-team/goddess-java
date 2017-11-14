@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.enums.TaskType;
+import com.bjike.goddess.taskallotment.enums.TimeType;
 
 import java.util.List;
 
@@ -17,6 +18,10 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class TaskNodeBO extends BaseBO {
+    /**
+     * 地区
+     */
+    private String area;
     /**
      * 项目表id
      */
@@ -89,7 +94,14 @@ public class TaskNodeBO extends BaseBO {
      * 所需时长
      */
     private String needTime;
-
+    /**
+     * 所需时长
+     */
+    private Double needTime1;
+    /**
+     * 所需时长时间类型
+     */
+    private TimeType needType;
     /**
      * 任务开始时间
      */
@@ -116,6 +128,15 @@ public class TaskNodeBO extends BaseBO {
     /**
      * 执行时长
      */
+    private Double executeTime1;
+
+    /**
+     * 执行时长时间类型
+     */
+    private TimeType executeType;
+    /**
+     * 执行时长
+     */
     private String executeTime;
 
     /**
@@ -126,6 +147,22 @@ public class TaskNodeBO extends BaseBO {
      * 结束执行时间
      */
     private String endExecute;
+    /**
+     * 实际时长
+     */
+    private Double actualTime1;
+    /**
+     * 实际时长时间类型
+     */
+    private TimeType actualType;
+    /**
+     * 未完成时长
+     */
+    private Double undoneTime1;
+    /**
+     * 未完成时长时间类型
+     */
+    private TimeType undoneType;
     /**
      * 实际时长
      */
@@ -186,6 +223,14 @@ public class TaskNodeBO extends BaseBO {
      */
     private String delayTime;
     /**
+     * 延期时长
+     */
+    private Double delayTime1;
+    /**
+     * 延期时长时间类型
+     */
+    private TimeType delayType;
+    /**
      * 上报原因
      */
     private String reportReason;
@@ -214,6 +259,94 @@ public class TaskNodeBO extends BaseBO {
      * 问题信息
      */
     private List<QuestionBO> questions;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public Double getDelayTime1() {
+        return delayTime1;
+    }
+
+    public void setDelayTime1(Double delayTime1) {
+        this.delayTime1 = delayTime1;
+    }
+
+    public TimeType getDelayType() {
+        return delayType;
+    }
+
+    public void setDelayType(TimeType delayType) {
+        this.delayType = delayType;
+    }
+
+    public Double getNeedTime1() {
+        return needTime1;
+    }
+
+    public void setNeedTime1(Double needTime1) {
+        this.needTime1 = needTime1;
+    }
+
+    public TimeType getNeedType() {
+        return needType;
+    }
+
+    public void setNeedType(TimeType needType) {
+        this.needType = needType;
+    }
+
+    public Double getExecuteTime1() {
+        return executeTime1;
+    }
+
+    public void setExecuteTime1(Double executeTime1) {
+        this.executeTime1 = executeTime1;
+    }
+
+    public TimeType getExecuteType() {
+        return executeType;
+    }
+
+    public void setExecuteType(TimeType executeType) {
+        this.executeType = executeType;
+    }
+
+    public Double getActualTime1() {
+        return actualTime1;
+    }
+
+    public void setActualTime1(Double actualTime1) {
+        this.actualTime1 = actualTime1;
+    }
+
+    public TimeType getActualType() {
+        return actualType;
+    }
+
+    public void setActualType(TimeType actualType) {
+        this.actualType = actualType;
+    }
+
+    public Double getUndoneTime1() {
+        return undoneTime1;
+    }
+
+    public void setUndoneTime1(Double undoneTime1) {
+        this.undoneTime1 = undoneTime1;
+    }
+
+    public TimeType getUndoneType() {
+        return undoneType;
+    }
+
+    public void setUndoneType(TimeType undoneType) {
+        this.undoneType = undoneType;
+    }
 
     public String getDepart() {
         return depart;

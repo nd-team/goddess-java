@@ -68,7 +68,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busRotainCusPermission("2");
+            flag = cusPermissionSer.getRotainCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -87,7 +87,7 @@ public class LaborRelationSerImpl extends ServiceImpl<LaborRelation, LaborRelati
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busRotainCusPermission("2");
+            flag = cusPermissionSer.getRotainCusPermission("2");
         } else {
             flag = true;
         }

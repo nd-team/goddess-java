@@ -1,9 +1,10 @@
 package com.bjike.goddess.businessproject.api;
 
+import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.service.BusinessContractSer;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
-import com.bjike.goddess.businessproject.bo.*;
+import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,10 +113,13 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     }
 
     @Override
-    public List<BusinessContractADetailBO> collect(String[] areas) throws SerException {
-        return businessContractSer.collect(areas);
+    public List<BusinessContractADetailBO> collect() throws SerException {
+        return businessContractSer.collect();
     }
-
+    @Override
+    public List<BusinessContractADetailBO> collectUpdate(CollectUpdateTO to) throws SerException {
+        return businessContractSer.collectUpdate(to);
+    }
     @Override
     public List<BusinessContractProgressBO> dayCollect(String time) throws SerException {
         return businessContractSer.dayCollect(time);
@@ -535,6 +539,26 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     @Override
     public byte[] templateExport() throws SerException {
         return businessContractSer.templateExport();
+    }
+
+    @Override
+    public OptionMakeBO weekPersonFigure(String user, Integer year, Integer month, Integer week) throws SerException {
+        return businessContractSer.weekPersonFigure(user, year, month, week);
+    }
+
+    @Override
+    public OptionMakeBO monthPersonFigure(Integer year, Integer month) throws SerException {
+        return businessContractSer.monthPersonFigure(year, month);
+    }
+
+    @Override
+    public OptionMakeBO quarterPersonFigure(Integer year, Integer quarter) throws SerException {
+        return businessContractSer.quarterPersonFigure(year, quarter);
+    }
+
+    @Override
+    public OptionMakeBO yearPersonFigure(Integer year) throws SerException {
+        return businessContractSer.yearPersonFigure(year);
     }
 
 }

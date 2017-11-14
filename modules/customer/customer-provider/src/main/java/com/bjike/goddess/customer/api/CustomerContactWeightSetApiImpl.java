@@ -70,4 +70,9 @@ public class CustomerContactWeightSetApiImpl implements CustomerContactWeightSet
     public CustomerContactWeightSetBO findByCustomerType(String customerContactType) throws SerException {
         return customerContactWeightSetSer.findByCustomerType(customerContactType);
     }
+
+    @Override
+    public List<String> findName() throws SerException {
+        return customerContactWeightSetSer.findName();
+    }
 }

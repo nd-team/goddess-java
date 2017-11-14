@@ -10,13 +10,17 @@ package com.bjike.goddess.attendance.enums;
  */
 public enum AduitStatus {
     /**
-     * 同意
+     * 审核中
      */
-    AGREE(0),
+    DOING(0),
     /**
-     * 不同意
+     * 通过
      */
-    REJECT(1);
+    AGREE(1),
+    /**
+     * 不通过
+     */
+    REJECT(2);
     private int code;
 
     AduitStatus(int code) {
@@ -26,4 +30,22 @@ public enum AduitStatus {
     public int getCode() {
         return this.code;
     }
+    @Override
+    public String toString() {
+        String s="";
+        switch (code){
+            case 0:
+                s="未处理";
+                break;
+            case 1:
+                s="通过";
+                break;
+            case 2:
+                s="不通过";
+                break;
+        }
+        return s;
+    }
+
+    
 }

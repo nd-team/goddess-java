@@ -21,6 +21,7 @@
 
 	<dubbo:service  ref="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
 	<dubbo:service  ref="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
+	<dubbo:service  ref="collectUpdateApiImpl" interface="com.bjike.goddess.businessproject.api.CollectUpdateAPI" />
 	<dubbo:service  ref="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
 	<dubbo:service  ref="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
 	<dubbo:service  ref="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />

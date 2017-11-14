@@ -31,19 +31,19 @@ public class VisitSchedule extends BaseEntity {
     /**
      * 年度
      */
-    @Column(name = "year", nullable = false, columnDefinition = "TINYINT(11)   COMMENT '年度'")
+    @Column(name = "year", nullable = false, columnDefinition = "INT(11)   COMMENT '年度'")
     private Integer year;
 
     /**
      * 月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '月份'")
+    @Column(name = "month", nullable = false, columnDefinition = "INT(2)   COMMENT '月份'")
     private Integer month;
 
     /**
      * 周期
      */
-    @Column(name = "week", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '周期'")
+    @Column(name = "week", nullable = false, columnDefinition = "INT(2)   COMMENT '周期'")
     private Integer week;
 
     /**
