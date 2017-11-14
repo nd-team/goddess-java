@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -196,6 +198,26 @@ public class BankRecordCollectAct extends BaseFileAction {
             BankRecordCompareVO vo = BeanTransform.copyProperties(bankRecordAPI.compare(year, month), BankRecordCompareVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 年份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/year")
+    public Result year() throws ActException {
+        try {
+            List<Integer> list = new ArrayList<>();
+            Integer year = LocalDate.now().getYear();
+            for (int i = year - 5; i < year + 5; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

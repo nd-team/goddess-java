@@ -17,12 +17,14 @@ import com.bjike.goddess.contractware.bo.InvoiceBouncesBO;
 import com.bjike.goddess.contractware.dto.ContractManagementDTO;
 import com.bjike.goddess.contractware.to.ContractManagementDeleteFileTO;
 import com.bjike.goddess.contractware.to.ContractManagementTO;
+import com.bjike.goddess.contractware.to.GuidePermissionTO;
 import com.bjike.goddess.contractware.vo.ContractManagementVO;
 import com.bjike.goddess.contractware.vo.InvoiceBouncesVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,10 +52,32 @@ public class ContractManagementAction extends BaseFileAction{
     private FileAPI fileAPI;
 
     /**
+     * 功能导航权限
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = contractManagementAPI.guidePermission(guidePermissionTO);
+            if(! isHasPermission ){
+                //int code, String msg
+                return new ActResult(0,"没有权限",false );
+            }else{
+                return new ActResult(0,"有权限",true );
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 新增
      * @param contractManagementTO
      * @throws ActException
-     * @versino v1
+     * @version v1
      */
     @PostMapping("v1/add")
     public Result add(@Validated(ADD.class) ContractManagementTO contractManagementTO) throws ActException{
@@ -278,11 +302,27 @@ public class ContractManagementAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/find/number")
-    public Result findByNumber(String innerProjectNumber) throws ActException{
+    public Result findByNumber(@RequestParam String innerProjectNumber) throws ActException{
         try {
             InvoiceBouncesBO invoiceBouncesBO = contractManagementAPI.findByNumber(innerProjectNumber);
             InvoiceBouncesVO invoiceBouncesVO = BeanTransform.copyProperties(invoiceBouncesBO,InvoiceBouncesVO.class);
             return ActResult.initialize(invoiceBouncesVO);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表总条数
+     * @param contractManagementDTO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result count(ContractManagementDTO contractManagementDTO) throws ActException{
+        try {
+            Long number = contractManagementAPI.count(contractManagementDTO);
+            return ActResult.initialize(number);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }

@@ -206,8 +206,11 @@ public class ImageCollectContractSerImpl extends ServiceImpl<ImageCollectContrac
         LegendBO legendBO = new LegendBO();
         String orient = "vertical";
         String left = "left";
+        String[] data = new String[]{"业务合同","财务合同","外包合同"};
         legendBO.setOrient(orient);
         legendBO.setLeft(left);
+        legendBO.setData(data);
+
 
         SeriesContractBO seriesContractBO = new SeriesContractBO();
         seriesContractBO.setName("合同");
@@ -230,6 +233,8 @@ public class ImageCollectContractSerImpl extends ServiceImpl<ImageCollectContrac
         dataBOS.add(dataBO);
         dataBOS.add(dataBO1);
         dataBOS.add(dataBO2);
+
+        seriesContractBO.setData(dataBOS);
 
         optionBO.setLegend(legendBO);
         optionBO.setSeries(seriesContractBO);

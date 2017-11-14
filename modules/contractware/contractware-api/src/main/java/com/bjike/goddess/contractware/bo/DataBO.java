@@ -1,5 +1,7 @@
 package com.bjike.goddess.contractware.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
+
 /**
  * @Author: [jiangzaixuan]
  * @Date: [2017-11-03 15:59]
@@ -7,7 +9,7 @@ package com.bjike.goddess.contractware.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DataBO {
+public class DataBO extends BaseBO{
     private Integer value;
 
     private String name;

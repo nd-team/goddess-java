@@ -24,6 +24,10 @@
 	<dubbo:service interface="com.bjike.goddess.contractware.api.CarRentalAgreementAPI" ref="carRentalAgreementApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.contractware.api.CusPermissionAPI" ref="cusPermissionApiImpl" />
 	<dubbo:service interface="com.bjike.goddess.contractware.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.contractware.api.ContractManagementAPI" ref="contractManagementApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.contractware.api.ImageCollectContractAPI" ref="imageCollectContractApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.contractware.api.InvoiceManagementAPI" ref="invoiceManagementApiImpl" />
+	<dubbo:service interface="com.bjike.goddess.contractware.api.InvoiceManagementCollectAPI" ref="invoiceManagementCollectApiImpl" />
 	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
 	否则不需要配置-->
 
@@ -35,6 +39,8 @@
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
+	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />

@@ -403,6 +403,8 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
         //纵坐标
         YAxisBO yAxisBO = new YAxisBO();
 
+        ToolTipBO toolTipBO = new ToolTipBO();
+
         //横坐标
         XAxisBO xAxisBO = new XAxisBO();
         String[] text_3 = new String[]{"商务需求","项目需求","可用司机","还需司机数","待签订协议数","司机信息收集数","司机已联系数","待联系司机数"};
@@ -446,6 +448,7 @@ public class CollectCarinfoSerImpl extends ServiceImpl<CollectCarinfo, CollectCa
         optionBO.setLegend(legendBO);
         optionBO.setxAxis(xAxisBO);
         optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(toolTipBO);
 
         optionBO.setSeries(text_4);
         return optionBO;

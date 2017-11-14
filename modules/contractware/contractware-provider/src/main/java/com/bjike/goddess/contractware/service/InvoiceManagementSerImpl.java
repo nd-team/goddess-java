@@ -187,7 +187,7 @@ public class InvoiceManagementSerImpl extends ServiceImpl<InvoiceManagement, Inv
 
     @Override
     public void add(InvoiceManagementTO invoiceManagementTO) throws SerException {
-        InvoiceManagement model = BeanTransform.copyProperties(invoiceManagementTO,InvoiceManagement.class);
+        InvoiceManagement model = BeanTransform.copyProperties(invoiceManagementTO,InvoiceManagement.class,true);
         model.setElectronicEdition(false);
         super.save(model);
     }
@@ -239,7 +239,10 @@ public class InvoiceManagementSerImpl extends ServiceImpl<InvoiceManagement, Inv
         ContractManagementDTO dto = new ContractManagementDTO();
         dto.getConditions().add(Restrict.eq("internalContractNumber",number));
         List<ContractManagement> contractManagementBOList = contractManagementSer.findByCis(dto);
-        ContractManagementBO contractManagementBO = BeanTransform.copyProperties(contractManagementBOList.get(0),ContractManagementBO.class,false);
+        ContractManagementBO contractManagementBO = new ContractManagementBO();
+        if (contractManagementBOList != null && contractManagementBOList.size() > 0) {
+            contractManagementBO = BeanTransform.copyProperties(contractManagementBOList.get(0), ContractManagementBO.class, false);
+        }
         return contractManagementBO;
     }
 

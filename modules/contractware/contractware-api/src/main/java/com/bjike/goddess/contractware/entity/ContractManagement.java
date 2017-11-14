@@ -3,8 +3,10 @@ package com.bjike.goddess.contractware.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.contractware.enums.ContractCharacter;
+import com.bjike.goddess.contractware.enums.ContractStatus;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -18,6 +20,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "contractware_contractmanagement")
 public class ContractManagement extends BaseEntity {
+
+    /**
+     * 新增时间
+     */
+    @Column(name = "addTime",nullable = false,columnDefinition = "DATE   COMMENT '新增时间'"  )
+    private LocalDate addTime;
+
     /**
      * 内部合同编号
      */
@@ -27,7 +36,7 @@ public class ContractManagement extends BaseEntity {
     /**
      * 合同性质
      */
-    @Column(name = "contractCharacter",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '合同性质'"  )
+    @Column(name = "contractCharacter",nullable = false,columnDefinition = "TINYINT(3)   COMMENT '合同性质'"  )
     private ContractCharacter contractCharacter;
 
     /**
@@ -87,20 +96,20 @@ public class ContractManagement extends BaseEntity {
     /**
      * 合同金额
      */
-    @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '合同金额'"  )
+    @Column(name = "",nullable = false,columnDefinition = "INTEGER   COMMENT '合同金额'"  )
     private Integer  contractMoney;
 
     /**
      * 工程奖罚款
      */
-    @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '工程奖罚款'"  )
+    @Column(name = "",nullable = false,columnDefinition = "INTEGER  COMMENT '工程奖罚款'"  )
     private Integer  engineeringAwardFine;
 
     /**
      * 状态
      */
-    @Column(name = "status",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '状态'"  )
-    private Status status;
+    @Column(name = "status",nullable = false,columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态'"  )
+    private ContractStatus status;
 
     public String getInternalContractNumber() {
         return internalContractNumber;
@@ -206,11 +215,19 @@ public class ContractManagement extends BaseEntity {
         this.engineeringAwardFine = engineeringAwardFine;
     }
 
-    public Status getStatus() {
+    public ContractStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ContractStatus status) {
         this.status = status;
+    }
+
+    public LocalDate getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(LocalDate addTime) {
+        this.addTime = addTime;
     }
 }
