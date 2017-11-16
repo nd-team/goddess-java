@@ -151,13 +151,12 @@ public interface AccountSer extends Ser<Account, AccountDTO> {
 
     /**
      * ljt
-     * 通过一级科目二级科目三级科目查询余额
+     * 获取所有余额的总额
      *
-     * @param courseName 科目名
      * @return
      * @throws SerException
      */
-    Double findByCourseName(String courseName) throws SerException;
+    Double findTotalAmount() throws SerException;
 
 
 }

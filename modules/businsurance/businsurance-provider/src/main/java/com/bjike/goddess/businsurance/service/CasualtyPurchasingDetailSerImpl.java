@@ -8,6 +8,7 @@ import com.bjike.goddess.businsurance.entity.CasualtyPurchasingDetail;
 import com.bjike.goddess.businsurance.enums.BuyCasualtyStatus;
 import com.bjike.goddess.businsurance.enums.GuideAddrStatus;
 import com.bjike.goddess.businsurance.excel.CasualtyPurchasingDetailImport;
+import com.bjike.goddess.businsurance.excel.CasualtyPurchasingDetailImportTemple;
 import com.bjike.goddess.businsurance.to.CasualtyPurchasingDetailTO;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -355,8 +356,8 @@ public class CasualtyPurchasingDetailSerImpl extends ServiceImpl<CasualtyPurchas
 
     @Override
     public byte[] templateExport() throws SerException {
-        List<CasualtyPurchasingDetailImport> casualtyPurchasingDetailImports = new ArrayList<>();
-        CasualtyPurchasingDetailImport excel = new CasualtyPurchasingDetailImport();
+        List<CasualtyPurchasingDetailImportTemple> casualtyPurchasingDetailImportTemples = new ArrayList<>();
+        CasualtyPurchasingDetailImportTemple excel = new CasualtyPurchasingDetailImportTemple();
         excel.setBeApplicantName("张三");
         excel.setEmployeeNo("ike001216");
         excel.setArea("广州");
@@ -364,21 +365,26 @@ public class CasualtyPurchasingDetailSerImpl extends ServiceImpl<CasualtyPurchas
         excel.setJobs("项目负责人");
         excel.setEntryDate("2017-09-12");
         excel.setStopBuyTime("2017-12-12");
-        casualtyPurchasingDetailImports.add(excel);
+        casualtyPurchasingDetailImportTemples.add(excel);
         Excel exce = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(casualtyPurchasingDetailImports, exce);
+        byte[] bytes = ExcelUtil.clazzToExcel(casualtyPurchasingDetailImportTemples, exce);
         return bytes;
     }
 
     @Override
     public void importExcel(List<CasualtyPurchasingDetailTO> casualtyPurchasingDetailTOS) throws SerException {
         checkPermission();
-        List<CasualtyPurchasingDetail> casualtyPurchasingDetails = BeanTransform.copyProperties(casualtyPurchasingDetailTOS, CasualtyPurchasingDetail.class, true);
-        casualtyPurchasingDetails.stream().forEach(str -> {
-            str.setCreateTime(LocalDateTime.now());
-            str.setModifyTime(LocalDateTime.now());
-        });
-        super.save(casualtyPurchasingDetails);
+        if(casualtyPurchasingDetailTOS!=null&& casualtyPurchasingDetailTOS.size()>0){
+            for(CasualtyPurchasingDetailTO casualtyPurchasingDetailTO : casualtyPurchasingDetailTOS){
+                addDetail(casualtyPurchasingDetailTO);
+            }
+        }
+//        List<CasualtyPurchasingDetail> casualtyPurchasingDetails = BeanTransform.copyProperties(casualtyPurchasingDetailTOS, CasualtyPurchasingDetail.class, true);
+//        casualtyPurchasingDetails.stream().forEach(str -> {
+//            str.setCreateTime(LocalDateTime.now());
+//            str.setModifyTime(LocalDateTime.now());
+//        });
+//        super.save(casualtyPurchasingDetails);
     }
 
     @Override
@@ -568,8 +574,7 @@ public class CasualtyPurchasingDetailSerImpl extends ServiceImpl<CasualtyPurchas
                             entryNum = entryRegisterAPI.findNumByEntryDate(date, area, department);
                         }
                         if (moduleAPI.isCheck("secure")) {
-                            givingBuyNum = abandonAPI.findALL().size();
-                            givingBuyNum = givingBuyNum == null ? 0 : givingBuyNum;
+                            givingBuyNum = abandonAPI.findALL() == null ? 0 : abandonAPI.findALL().size();
                         }
                         Integer casualtyIncreaseNum = casualtyPurchasingListSer.findCasualtyIncreaseNum(date);
                         //TODO 由于离职模块还未修改他的新功能 所有到离职模块中拿离职人数未做
@@ -653,16 +658,9 @@ public class CasualtyPurchasingDetailSerImpl extends ServiceImpl<CasualtyPurchas
 
     //未购买意外险人数
     public Integer noBuyCasualtyNum(String area, String department) throws SerException {
-        Integer num = 0;
-        CasualtyPurchasingDetailDTO casualtyPurchasingDetailDTO = new CasualtyPurchasingDetailDTO();
-        casualtyPurchasingDetailDTO.getConditions().add(Restrict.eq("area", area));
-        casualtyPurchasingDetailDTO.getConditions().add(Restrict.eq("department", department));
-        casualtyPurchasingDetailDTO.getConditions().add(Restrict.or("buyCasualtyStatus", BuyCasualtyStatus.WORKERSTOSTAY));
-        casualtyPurchasingDetailDTO.getConditions().add(Restrict.or("buyCasualtyStatus", BuyCasualtyStatus.NOTTOBUY));
-        List<CasualtyPurchasingDetail> casualtyPurchasingDetails = super.findByCis(casualtyPurchasingDetailDTO);
-        if (casualtyPurchasingDetails != null && casualtyPurchasingDetails.size() > 0) {
-            num = casualtyPurchasingDetails.size();
-        }
+        String sql = "SELECT count(*) from businsurance_casualtypurchasingdetail where area = '"+area+"' and department = '"+department+"' and buyCasualtyStatus = 1 or buyCasualtyStatus = 2";
+        List<Object> num_list = super.findBySql(sql);
+        Integer num = Integer.parseInt(String.valueOf(num_list.get(0)));
         return num;
     }
 

@@ -52,14 +52,25 @@ public class FundRecordExcel extends BaseTO {
     /**
      * 收入
      */
-    @ExcelHeader(name = "收入", notNull = true)
+    @ExcelHeader(name = "收入(借方)", notNull = true)
     private Double income;
 
     /**
      * 支出
      */
-    @ExcelHeader(name = "支出", notNull = true)
+    @ExcelHeader(name = "支出(贷方)", notNull = true)
     private Double expenditure;
+    /**
+     * 金额
+     */
+    @ExcelHeader(name = "金额", notNull = true)
+    private Double amount;
+
+    /**
+     * 数据来源
+     */
+    @ExcelHeader(name = "数据来源", notNull = true)
+    private String dataSource;
 
     public String getRecordDate() {
         return recordDate;
@@ -117,4 +128,19 @@ public class FundRecordExcel extends BaseTO {
         this.expenditure = expenditure;
     }
 
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
 }

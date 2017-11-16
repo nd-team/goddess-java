@@ -290,7 +290,7 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         List<Account> list = super.findAll();
         List<AccountExport> accountExports = new ArrayList<>();
 
-        for (Account account : list){
+        for (Account account : list) {
             AccountExport excel = BeanTransform.copyProperties(account, AccountExport.class);
             accountExports.add(excel);
         }
@@ -299,27 +299,13 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         return bytes;
     }
 
+
     @Override
-    public Double findByCourseName(String courseName) throws SerException {
+    public Double findTotalAmount() throws SerException {
         Double amount = 0d;
-        AccountDTO accountDTO = new AccountDTO();
-        String[] str = courseName.split("-");
-        if(str.length==1){
-            accountDTO.getConditions().add(Restrict.eq("firstSubject",str[0]));
-            accountDTO.getConditions().add(Restrict.eq("secondSubject",null));
-            accountDTO.getConditions().add(Restrict.eq("thirdSubject",null));
-        }else if(str.length==2){
-            accountDTO.getConditions().add(Restrict.eq("firstSubject",str[0]));
-            accountDTO.getConditions().add(Restrict.eq("secondSubject",str[1]));
-            accountDTO.getConditions().add(Restrict.eq("thirdSubject",null));
-        }else if(str.length==3){
-            accountDTO.getConditions().add(Restrict.eq("firstSubject",str[0]));
-            accountDTO.getConditions().add(Restrict.eq("secondSubject",str[1]));
-            accountDTO.getConditions().add(Restrict.eq("thirdSubject",str[2]));
-        }
-        List<Account> accounts = super.findByCis(accountDTO);
-        if(accounts!=null && accounts.size()>0){
-            amount = accounts.get(0).getAmount();
+        List<Account> accountList = super.findAll();
+        if (accountList != null && accountList.size() > 0) {
+            amount = accountList.stream().mapToDouble(Account::getAmount).sum();
         }
         return amount;
     }

@@ -112,4 +112,63 @@ public class FundRecordApiImpl implements FundRecordAPI {
         return fundRecordSer.guidePermission(to);
     }
 
+    @Override
+    public List<String> sourceAccountValue() throws SerException {
+        return fundRecordSer.sourceAccountValue();
+    }
+
+    @Override
+    public void exportFund() throws SerException {
+        fundRecordSer.exportFund();
+    }
+
+    @Override
+    public MonthCollectBO monthSumma(Integer year, Integer month) throws SerException {
+        return fundRecordSer.monthSumma(year,month);
+    }
+
+    @Override
+    public ConditionCollectBO areaSumma(Integer year, Integer month, String area) throws SerException {
+        return fundRecordSer.areaSumma(year,month,area);
+    }
+
+    @Override
+    public ConditionCollectBO projectSumma(Integer year, Integer month, String project) throws SerException {
+        return fundRecordSer.projectSumma(year,month,project);
+    }
+
+    @Override
+    public ConditionCollectBO projectNameSumma(Integer year, Integer month, String projectName) throws SerException {
+        return fundRecordSer.projectNameSumma(year,month,projectName);
+    }
+
+    @Override
+    public List<String> findAllArea() throws SerException {
+        return fundRecordSer.findAllArea();
+    }
+
+    @Override
+    public List<String> findAllProjectGroup() throws SerException {
+        return fundRecordSer.findAllProjectGroup();
+    }
+
+    @Override
+    public List<String> findAllProjectName() throws SerException {
+        return fundRecordSer.findAllProjectName();
+    }
+
+    @Override
+    public AreaAnalyzeBO areaAnalysis(Integer year, Integer month, String area) throws SerException {
+        return fundRecordSer.areaAnalysis(year, month, area);
+    }
+
+    @Override
+    public GroupAnalyzeBO projectAnalysis(Integer year, Integer month, String project) throws SerException {
+        return fundRecordSer.projectAnalysis(year, month, project);
+    }
+
+    @Override
+    public ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month, String projectName) throws SerException {
+        return fundRecordSer.projectNameAnalysis(year,month,projectName);
+    }
 }

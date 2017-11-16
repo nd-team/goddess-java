@@ -12,7 +12,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.fundrecords.api.FundRecordAPI;
+import com.bjike.goddess.fundrecords.bo.FundRecordBO;
 import com.bjike.goddess.fundrecords.dto.FundRecordDTO;
+import com.bjike.goddess.fundrecords.entity.FundRecord;
 import com.bjike.goddess.fundrecords.excel.FundRecordExcel;
 import com.bjike.goddess.fundrecords.excel.SonPermissionObject;
 import com.bjike.goddess.fundrecords.to.CollectTO;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.geom.Area;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -519,4 +522,204 @@ public class FundRecordAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 账户来源下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/sourceAcount")
+    public Result sourceAcount( HttpServletRequest request) throws ActException {
+        try {
+            List<String> sourceAcount = fundRecordAPI.sourceAccountValue();
+            return ActResult.initialize(sourceAcount);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 地区下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/areaValue")
+    public Result areaValue( HttpServletRequest request) throws ActException {
+        try {
+            List<String> areas = fundRecordAPI.findAllArea();
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 项目组下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/projectGroup/value")
+    public Result projectGroupVa( HttpServletRequest request) throws ActException {
+        try {
+            List<String> projectGroups = fundRecordAPI.findAllProjectGroup();
+            return ActResult.initialize(projectGroups);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 项目名称下拉值
+     *
+     * @version v1
+     */
+    @GetMapping("v1/projectName/value")
+    public Result projectNameVa( HttpServletRequest request) throws ActException {
+        try {
+            List<String> projectNames = fundRecordAPI.findAllProjectName();
+            return ActResult.initialize(projectNames);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 月汇总lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class MonthCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/monthColl")
+    public Result monthColl(@RequestParam Integer year, @RequestParam Integer month) throws ActException {
+        try {
+            MonthCollectVO vo = BeanTransform.copyProperties(fundRecordAPI.monthSumma(year, month), MonthCollectVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地区汇总lijuntao
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param area 地区
+     * @return class ConditionCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/areaSumma")
+    public Result areaSumma(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String area) throws ActException {
+        try {
+            ConditionCollectVO vo = BeanTransform.copyProperties(fundRecordAPI.areaSumma(year,month,area), ConditionCollectVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目组汇总lijuntao
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param projectGroup 项目组
+     * @return class ConditionCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/projectSumma")
+    public Result projectSumma(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String projectGroup) throws ActException {
+        try {
+            ConditionCollectVO vo = BeanTransform.copyProperties(fundRecordAPI.projectSumma(year,month,projectGroup), ConditionCollectVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 项目名称汇总lijuntao
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param projectName 项目名称
+     * @return class ConditionCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/projectNameSumma")
+    public Result projectNameSumma(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String projectName) throws ActException {
+        try {
+            ConditionCollectVO vo = BeanTransform.copyProperties(fundRecordAPI.projectNameSumma(year,month,projectName), ConditionCollectVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 地区分析lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param area  地区
+     * @return class AreaAnalyzeVO
+     * @version v1
+     */
+    @GetMapping("v1/areaAnalysis")
+    public Result areaAnalysis(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String area, HttpServletRequest request) throws ActException {
+        try {
+            AreaAnalyzeVO voList = BeanTransform.copyProperties(fundRecordAPI.areaAnalysis(year, month, area), AreaAnalyzeVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 项目组分析lijuntao
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param group 项目组
+     * @return class GroupAnalyzeVO
+     * @version v1
+     */
+    @GetMapping("v1/projectAnalysis")
+    public Result projectAnalysis(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String group, HttpServletRequest request) throws ActException {
+        try {
+            GroupAnalyzeVO vo = BeanTransform.copyProperties(fundRecordAPI.projectAnalysis(year, month, group), GroupAnalyzeVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目名称分析lijuntao
+     *
+     * @param year    年份
+     * @param month   月份
+     * @param project 项目名称
+     * @return class ProjectAnalyzeVO
+     * @version v1
+     */
+    @GetMapping("v1/projectNameAnalysis")
+    public Result projectNameAnalysis(@RequestParam Integer year, @RequestParam Integer month, @RequestParam String project, HttpServletRequest request) throws ActException {
+        try {
+            ProjectAnalyzeVO vo = BeanTransform.copyProperties(fundRecordAPI.projectNameAnalysis(year, month, project), ProjectAnalyzeVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导入资金流水lijuntao
+     *
+     * @version v1
+     */
+    @GetMapping("v1/exportFund")
+    public Result exportFund(HttpServletRequest request) throws ActException {
+        try {
+             fundRecordAPI.exportFund();
+            return new ActResult("export success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

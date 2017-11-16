@@ -39,9 +39,11 @@
     <dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 
     <dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+    <dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
     <!-- 记账凭证API -->
     <dubbo:reference interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" id="voucherGenerateApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.financeinit.api.AccountAPI" id="accountApiImpl"/>
 
     <!-- userAPI -->
     <dubbo:reference interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>

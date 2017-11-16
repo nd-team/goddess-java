@@ -1,215 +1,241 @@
-package com.bjike.goddess.businsurance.to;
+package com.bjike.goddess.businsurance.excel;
 
 import com.bjike.goddess.businsurance.enums.Gender;
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
-import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
-import javax.validation.constraints.NotNull;
 
 /**
- * 团体意外险购买名单
+ * 团体意外险购买名单导出
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-09-26 10:24 ]
- * @Description: [ 团体意外险购买名单 ]
+ * @Description: [ 团体意外险购买名单导出 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CasualtyPurchasingListTO extends BaseTO {
+public class CasualtyPurchasingListImportTemple extends BaseBO {
 
     /**
      * 保单号
      */
-    @NotBlank(message = "保单号不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="保单号",notNull = true)
     private String insurancePolicyNo;
 
     /**
      * 部门号
      */
+    @ExcelHeader(name="部门号")
     private String unitNo;
 
     /**
      * 分单号
      */
+    @ExcelHeader(name="分单号")
     private String singleNo;
 
     /**
      * 分单状态
      */
+    @ExcelHeader(name="分单状态")
     private String singleStatus;
 
     /**
      * 生效日期
      */
-    @NotBlank(message = "生效日期不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="生效日期", notNull = true)
     private String effectiveDate;
 
     /**
      * 退保申请日期
      */
+    @ExcelHeader(name="退保申请日期")
     private String surrInsurApplyDate;
 
     /**
      * 保障层级
      */
+    @ExcelHeader(name="保障层级")
     private String securityLeve;
 
     /**
      * 客户号码
      */
+    @ExcelHeader(name="客户号码")
     private String clientPhone;
 
     /**
      * 被保人姓名
      */
-    @NotBlank(message = "被保人姓名不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="被保人姓名",notNull = true)
     private String beApplicantName;
 
     /**
      * 证件类型
      */
-    @NotBlank(message = "证件类型不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="证件类型",notNull = true)
     private String documentsType;
 
     /**
      * 证件号码
      */
-    @NotBlank(message = "证件号码不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="证件号码",notNull = true)
     private String documentsPhone;
 
     /**
      * 性别
      */
-    @NotNull(message = "性别不能为空",groups = {ADD.class, EDIT.class})
-    private Gender gender;
+    @ExcelHeader(name="性别",notNull = true)
+    private String gender;
 
     /**
      * 出生日期
      */
-    @NotBlank(message = "出生日期不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="出生日期",notNull = true)
     private String birthDate;
 
     /**
      * 投保年龄
      */
+    @ExcelHeader(name="投保年龄")
     private Integer insuredAge;
 
     /**
      * 被保人类型
      */
-    @NotBlank(message = "被保人类型不能为空",groups = {ADD.class, EDIT.class})
+    @ExcelHeader(name="被保人类型",notNull = true)
     private String beApplicantType;
 
     /**
      * 与主被保人关系
      */
+    @ExcelHeader(name="与主被保人关系")
     private String mainWithBeAppliRela;
 
     /**
      * 主被保险人姓名
      */
+    @ExcelHeader(name="主被保险人姓名")
     private String mainBeAppliName;
 
     /**
      * 职业代码
      */
+    @ExcelHeader(name="职业代码")
     private String occupationCode;
 
     /**
      * 职业名称
      */
+    @ExcelHeader(name="职业名称")
     private String occupationName;
 
     /**
      * 员工号
      */
+    @ExcelHeader(name="员工号")
     private String employeeNum;
 
     /**
      * 所属部门
      */
+    @ExcelHeader(name="所属部门")
     private String department;
 
     /**
      * 月薪
      */
+    @ExcelHeader(name="月薪")
     private String salaryMonth;
 
     /**
      * email邮箱
      */
+    @ExcelHeader(name="email邮箱")
     private String email;
 
     /**
      * 移动电话
      */
+    @ExcelHeader(name="移动电话")
     private String mobilePhone;
 
     /**
      * 联系电话
      */
+    @ExcelHeader(name="联系电话")
     private String contactPhone;
 
     /**
      * 联系地址
      */
+    @ExcelHeader(name="联系地址")
     private String contactAddress;
 
     /**
      * 联系邮编
      */
+    @ExcelHeader(name="联系邮编")
     private String contactZipcode;
 
     /**
      * 社保所在地
      */
+    @ExcelHeader(name="社保所在地")
     private String socialSecurityArea;
 
     /**
      * 社保卡号
      */
+    @ExcelHeader(name="社保卡号")
     private String socialSecurityCard;
 
     /**
      * 保险卡号
      */
+    @ExcelHeader(name="保险卡号")
     private String insuranceCard;
 
     /**
      * 银行账号用途
      */
+    @ExcelHeader(name="银行账号用途")
     private String bankAccount;
 
     /**
      * 开户人姓名
      */
+    @ExcelHeader(name="开户人姓名")
     private String openAccountName;
 
     /**
      * 开户人证件类型
      */
+    @ExcelHeader(name="开户人证件类型")
     private String openIdType;
 
     /**
      * 开户人证件号码
      */
+    @ExcelHeader(name="开户人证件号码")
     private String openIdNo;
 
     /**
      * 开户银行代码
      */
+    @ExcelHeader(name="开户银行代码")
     private String openBankCode;
 
     /**
      * 开户行全称
      */
+    @ExcelHeader(name="开户行全称")
     private String openFullName;
 
     /**
      * 开户银行账号
      */
+    @ExcelHeader(name="开户银行账号")
     private String openBankAccountNum;
 
     public String getInsurancePolicyNo() {
@@ -300,11 +326,11 @@ public class CasualtyPurchasingListTO extends BaseTO {
         this.documentsPhone = documentsPhone;
     }
 
-    public Gender getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 

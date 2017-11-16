@@ -101,7 +101,7 @@ public class AccountApiImpl implements AccountAPI {
     }
 
     @Override
-    public Double findByCourseName(String courseName) throws SerException {
-        return accountSer.findByCourseName(courseName);
+    public Double findTotalAmount( ) throws SerException {
+        return accountSer.findTotalAmount();
     }
 }

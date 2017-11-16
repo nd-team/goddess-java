@@ -1,10 +1,8 @@
 package com.bjike.goddess.businsurance.action.businsurance;
 
-import com.bjike.goddess.businsurance.api.CarInsureAPI;
 import com.bjike.goddess.businsurance.api.CasualtyPurchasingListAPI;
 import com.bjike.goddess.businsurance.bo.CasualtyPurchasingListBO;
 import com.bjike.goddess.businsurance.dto.CasualtyPurchasingListDTO;
-import com.bjike.goddess.businsurance.entity.CasualtyPurchasingList;
 import com.bjike.goddess.businsurance.excel.CasualtyPurchasingListExcel;
 import com.bjike.goddess.businsurance.to.CasualtyPurchasingListTO;
 import com.bjike.goddess.businsurance.to.GuidePermissionTO;
@@ -24,13 +22,13 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,11 +46,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("casualtypurchasinglist")
-public class CasualtyPurchasingListAction extends BaseFileAction{
+public class CasualtyPurchasingListAction extends BaseFileAction {
     @Autowired
     private CasualtyPurchasingListAPI casualtyPurchasingListAPI;
     @Autowired
     private FileAPI fileAPI;
+
     /**
      * 功能导航权限
      *
@@ -75,6 +74,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 总条数
      *
@@ -94,6 +94,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
 
     /**
      * 一个团体意外险购买名单
+     *
      * @param id id
      * @return class CasualtyPurchasingListVO
      * @version v1
@@ -102,7 +103,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     @GetMapping("v1/casualty/{id}")
     public Result findById(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-           CasualtyPurchasingListBO bo = casualtyPurchasingListAPI.getOneCasualty(id);
+            CasualtyPurchasingListBO bo = casualtyPurchasingListAPI.getOneCasualty(id);
             CasualtyPurchasingListVO vo = BeanTransform.copyProperties(bo, CasualtyPurchasingListVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
@@ -111,7 +112,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     }
 
     /**
-     *  团体意外险购买名单列表
+     * 团体意外险购买名单列表
      *
      * @param casualtyPurchasingListDTO 团体意外险购买名单dto
      * @return class CasualtyPurchasingListVO
@@ -132,7 +133,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     /**
      * 添加
      *
-     * @param casualtyPurchasingListTO  团体意外险购买名单数据to
+     * @param casualtyPurchasingListTO 团体意外险购买名单数据to
      * @return class CasualtyPurchasingListVO
      * @des 添加 团体意外险购买名单
      * @version v1
@@ -152,7 +153,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
     /**
      * 编辑
      *
-     * @param casualtyPurchasingListTO  团体意外险购买名单数据bo
+     * @param casualtyPurchasingListTO 团体意外险购买名单数据bo
      * @return class CasualtyPurchasingListVO
      * @des 编辑团体意外险购买名单
      * @version v1
@@ -185,6 +186,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
+
     /**
      * 导入Excel
      *
@@ -201,7 +203,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
             List<CasualtyPurchasingListExcel> tos = ExcelUtil.excelToClazz(is, CasualtyPurchasingListExcel.class, excel);
             List<CasualtyPurchasingListTO> tocs = new ArrayList<>();
             for (CasualtyPurchasingListExcel str : tos) {
-                CasualtyPurchasingListTO casualtyPurchasingListTO = BeanTransform.copyProperties(str, CasualtyPurchasingListTO.class, "effectiveDate", "surrInsurApplyDate","birthDate");
+                CasualtyPurchasingListTO casualtyPurchasingListTO = BeanTransform.copyProperties(str, CasualtyPurchasingListTO.class, "effectiveDate", "surrInsurApplyDate", "birthDate");
                 casualtyPurchasingListTO.setEffectiveDate(String.valueOf(str.getEffectiveDate()));
                 casualtyPurchasingListTO.setSurrInsurApplyDate(String.valueOf(str.getEffectiveDate()));
                 casualtyPurchasingListTO.setBirthDate(String.valueOf(str.getBirthDate()));
@@ -255,6 +257,7 @@ public class CasualtyPurchasingListAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 上传附件
      *
