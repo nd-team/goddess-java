@@ -80,6 +80,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private TimeSetSer timeSetSer;
 
     /**
      * 再次分发权限（层级级别）
@@ -509,6 +511,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return taskNodes;
     }
 
+
     @Transactional(rollbackFor = {SerException.class})
     public void priority(TaskNode taskNode) throws SerException {
         String execute = taskNode.getExecute();
@@ -800,6 +803,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             dto.getConditions().add(Restrict.in("tableId", tableIds));
         }
         String name = userAPI.currentUser().getUsername();
+        dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("charge", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
         dto.getSorts().add("time=desc");
@@ -826,6 +830,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             dto.getConditions().add(Restrict.in("tableId", tableIds));
         }
         String name = userAPI.currentUser().getUsername();
+        dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("charge", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
         return super.count(dto);
@@ -866,6 +871,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             dto.getConditions().add(Restrict.in("tableId", tableIds));
         }
         String name = userAPI.currentUser().getUsername();
+        dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("execute", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
         dto.getSorts().add("time=desc");
@@ -892,6 +898,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
             dto.getConditions().add(Restrict.in("tableId", tableIds));
         }
+        dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("execute", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
         return super.count(dto);
@@ -1010,30 +1017,47 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return pCount(dto, areas, departs, names);
     }
 
-    private List<TaskNode> taskNodes(TaskNodeDTO dto) throws SerException {
-        ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.getConditions().add(Restrict.in("area", dto.getArea()));
-//        projectDTO.getConditions().add(Restrict.in("depart", dto.getDepart()));
-        List<String> projectIds = projectSer.findByCis(projectDTO).stream().map(Project::getId).distinct().collect(Collectors.toList());
-        TableDTO tableDTO = new TableDTO();
-        tableDTO.getConditions().add(Restrict.in("projectId", projectIds));
-        Set<String> tableIds = tableSer.findByCis(tableDTO).stream().map(Table::getId).collect(Collectors.toSet());
-        List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
-        return taskNodes;
-    }
-
     @Override
     public OptionBO personCountFigure(TaskNodeDTO dto) throws SerException {
-        List<TaskNode> taskNodes = taskNodes(dto);
-        String[] names = dto.getName();
+
+        String[] areas = dto.getArea();
+        String[] departs = dto.getDepart();
+        String[] usernames = dto.getName();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.getConditions().add(Restrict.in("area", areas));
+        projectDTO.getConditions().add(Restrict.in("depart", departs));
+        List<Project> projects = projectSer.findByCis(projectDTO);
         List<String> strings = new ArrayList<>();
         List<Double> datas = new ArrayList<>();
         double sum = 0;   //合计
-        for (String s : names) {
-            strings.add(s);
-            PersonLastBO personLastBO = getPerson(taskNodes, s);
-            datas.add(personLastBO.getDiffer());
-            sum += personLastBO.getDiffer();
+        for (String area : areas) {
+            for (String depart : departs) {
+                Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
+                TableDTO tableDTO = new TableDTO();
+                if (!projectIds.isEmpty()) {
+                    tableDTO.getConditions().add(Restrict.in("projectId", projectIds));
+                    List<Table> tables = tableSer.findByCis(tableDTO);
+                    Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+                    List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
+                    for (String name : usernames) {
+                        if (taskNodes.stream().map(TaskNode::getExecute).distinct().collect(Collectors.toList()).contains(name)) {
+                            //根据地区部门获取标准工时，如若获取不到就默认8小时
+                            TimeSetDTO timeSetDTO = new TimeSetDTO();
+                            timeSetDTO.getConditions().add(Restrict.eq("area", area));
+                            timeSetDTO.getConditions().add(Restrict.eq("depart", depart));
+                            List<TimeSet> timeSetList = timeSetSer.findByCis(timeSetDTO);
+                            Double standardTime = 8d;//默认8小时
+                            if (timeSetList != null && timeSetList.size() > 0) {
+                                standardTime = timeSetList.get(0).getHour();
+                            }
+                            strings.add(name);
+                            PersonLastBO personLastBO = getPerson(taskNodes, name, standardTime);
+                            datas.add(personLastBO.getDiffer());
+                            sum += personLastBO.getDiffer();
+                        }
+                    }
+                }
+            }
         }
         datas.add(sum);
         strings.add("合计");
@@ -1063,7 +1087,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return optionBO;
     }
 
-    private List<PersonCountBO> pCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names) throws SerException {
+    private List<PersonCountBO> pCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names) throws
+            SerException {
+
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.getConditions().add(Restrict.in("area", areas));
         projectDTO.getConditions().add(Restrict.in("depart", departs));
@@ -1089,8 +1115,19 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //                    dto.getConditions().add(Restrict.in("tableId", tableIds));
                     List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
                     for (String name : names) {
-                        PersonLastBO personLastBO = getPerson(taskNodes, name);
-                        personLastBOS.add(personLastBO);
+                        if (taskNodes.stream().map(TaskNode::getExecute).distinct().collect(Collectors.toList()).contains(name)) {
+                            //根据地区部门获取标准工时，如若获取不到就默认8小时
+                            TimeSetDTO timeSetDTO = new TimeSetDTO();
+                            timeSetDTO.getConditions().add(Restrict.eq("area", area));
+                            timeSetDTO.getConditions().add(Restrict.eq("depart", depart));
+                            List<TimeSet> timeSetList = timeSetSer.findByCis(timeSetDTO);
+                            Double standardTime = 8d;//默认8小时
+                            if (timeSetList != null && timeSetList.size() > 0) {
+                                standardTime = timeSetList.get(0).getHour();
+                            }
+                            PersonLastBO personLastBO = getPerson(taskNodes, name, standardTime);
+                            personLastBOS.add(personLastBO);
+                        }
                     }
                     differDepart += personLastBOS.stream().mapToDouble(PersonLastBO::getDiffer).sum();
                     differArea += personLastBOS.stream().mapToDouble(PersonLastBO::getDiffer).sum();
@@ -1151,9 +1188,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return sum;
     }
 
-    private PersonLastBO getPerson(List<TaskNode> taskNodes, String name) throws SerException {
+    private PersonLastBO getPerson(List<TaskNode> taskNodes, String name, Double standardTime) throws
+            SerException {
         List<TaskNode> list = taskNodes.stream().filter(taskNode -> FinishStatus.FINISH.equals(taskNode.getFinishStatus()) && name.equals(taskNode.getExecute())).collect(Collectors.toList());
         double differ = 0;
+        double actual = 0;
+        double stand = 0;
         for (TaskNode t : list) {
             TimeType needType = t.getNeedType();
             double needTime = t.getNeedTime();
@@ -1164,7 +1204,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 case HOUR:
                     break;
                 case DAY:
-                    needTime = needTime * 8;
+                    needTime = needTime * standardTime;
                     break;
             }
             TimeType actualType = t.getActualType();
@@ -1176,13 +1216,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 case HOUR:
                     break;
                 case DAY:
-                    actualTime = actualTime * 8;
+                    actualTime = actualTime * standardTime;
                     break;
             }
+            stand = stand + needTime;
+            actual = actual + actualTime;
             differ = differ + (actualTime - needTime);
         }
         PersonLastBO personLastBO = new PersonLastBO();
         personLastBO.setName(name);
+        personLastBO.setStandardHour(stand);
+        personLastBO.setActualHour(actual);
+
         personLastBO.setDiffer(differ);
         return personLastBO;
     }
@@ -1456,7 +1501,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
     }
 
-    private OptionBO confirmCountFigure(String[] area, String[] depart, String startTime, String endTime, TitleBO titleBO, LegendBO legendBO, String[] ts) throws SerException {
+    private OptionBO confirmCountFigure(String[] area, String[] depart, String startTime, String endTime, TitleBO
+            titleBO, LegendBO legendBO, String[] ts) throws SerException {
         if (null == area) {
             throw new SerException("不是整体汇总必须选择地区");
         }
@@ -1590,7 +1636,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return dataBO;
     }
 
-    private OptionBO confirmCountPersonFigure(TaskNodeDTO dto, TitleBO titleBO, LegendBO legendBO) throws SerException {
+    private OptionBO confirmCountPersonFigure(TaskNodeDTO dto, TitleBO titleBO, LegendBO legendBO) throws
+            SerException {
         List<String> names = new ArrayList<>();
         List<Double> haveInitiates = new ArrayList<>();
         List<Double> noInitiates = new ArrayList<>();
@@ -1738,7 +1785,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return null;
     }
 
-    private List<ConfirmCountBO> cCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] ps, String[] names, String[] ts) throws
+    private List<ConfirmCountBO> cCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] ps, String[]
+            names, String[] ts) throws
             SerException {
         if (null == areas) {
             throw new SerException("不是整体汇总必须选择地区");
@@ -1968,7 +2016,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return confirmCountBO;
     }
 
-    private ConfirmLastBO getConfirm(List<TaskNode> taskNodes, TaskType taskType, String tableId) throws SerException {
+    private ConfirmLastBO getConfirm(List<TaskNode> taskNodes, TaskType taskType, String tableId) throws
+            SerException {
         long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && tableId.equals(taskNode.getTableId())).count();
         long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && tableId.equals(taskNode.getTableId())).count();
         long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && tableId.equals(taskNode.getTableId())).count();
@@ -1984,7 +2033,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return confirmLastBO;
     }
 
-    private ConfirmLastBO getConfirm1(List<TaskNode> taskNodes, TaskType taskType, String name, String tableId) throws SerException {
+    private ConfirmLastBO getConfirm1(List<TaskNode> taskNodes, TaskType taskType, String name, String
+            tableId) throws SerException {
         long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTableId())).count();
         long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTableId())).count();
         long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTableId())).count();
@@ -2000,7 +2050,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return confirmLastBO;
     }
 
-    private ConfirmLastBO getConfirmFigure(List<TaskNode> taskNodes, TaskType taskType, String name) throws SerException {
+    private ConfirmLastBO getConfirmFigure(List<TaskNode> taskNodes, TaskType taskType, String name) throws
+            SerException {
         long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && name.equals(taskNode.getExecute())).count();
         long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && name.equals(taskNode.getExecute())).count();
         long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && name.equals(taskNode.getExecute())).count();
@@ -2016,7 +2067,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return confirmLastBO;
     }
 
-    private ConfirmLastBO getConfirmFigure1(List<TaskNode> taskNodes, TaskType taskType, String tableID) throws SerException {
+    private ConfirmLastBO getConfirmFigure1(List<TaskNode> taskNodes, TaskType taskType, String tableID) throws
+            SerException {
         long haveInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getInitiate()) && tableID.equals(taskNode.getTableId())).count();
         long noInitiate = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null == taskNode.getInitiate()) && tableID.equals(taskNode.getTableId())).count();
         long confirm = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && (null != taskNode.getConfirm()) && taskNode.getConfirm() && tableID.equals(taskNode.getTableId())).count();
@@ -2242,7 +2294,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return null;
     }
 
-    private List<FinishCaseBO> fCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] ps, String[] names, String[] ts) throws SerException {
+    private List<FinishCaseBO> fCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] ps, String[]
+            names, String[] ts) throws SerException {
         ProjectDTO projectDTO = new ProjectDTO();
         if (null != areas && areas.length > 0) {
             projectDTO.getConditions().add(Restrict.in("area", areas));
@@ -2411,13 +2464,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                         if (!tableBOS.isEmpty()) {
                             caseProBO.setCaseTableBOS(tableBOS);
                             caseProBOS.add(caseProBO);
-                            //
-//                            caseSonBO.setCaseProBOS( caseProBOS );
-//                            caseSonBOS.add(caseSonBO);
                         }
                     }
                     if (!caseProBOS.isEmpty()) {
-//                        caseSonBO.setCaseTableS(tableBOS);
                         caseSonBO.setCaseProBOS(caseProBOS);
                         caseSonBOS.add(caseSonBO);
                     }
@@ -2426,7 +2475,6 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                         caseSonBOS.add(departCount);
                     }
                 }
-//                }
             }
             if (!caseSonBOS.isEmpty()) {
                 finishCaseBO.setCaseSonS(caseSonBOS);
@@ -2444,7 +2492,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
 
     //部门合计
-    private CaseSonBO departCount(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish) throws SerException {
+    private CaseSonBO departCount(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double
+            actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish) throws SerException {
         CaseLastBO lastBO = new CaseLastBO(planNum, actualNum, unFinishNum, planTime, actualTime, unFinishTime, reportUnFinish, unReportUnFinish);
         CaseSonBO depart = new CaseSonBO();
         depart.setDepart("合计");
@@ -2463,12 +2512,13 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         caseProBO.setCaseTableBOS(caseTableS);
         caseProS.add(caseProBO);
         depart.setCaseProBOS(caseProS);
-//        depart.setCaseTableS(caseTableS);
         return depart;
     }
 
     //合计
-    private FinishCaseBO sum(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish, String type) throws SerException {
+    private FinishCaseBO sum(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double
+            actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish, String type) throws
+            SerException {
         CaseLastBO lastBO = new CaseLastBO(planNum, actualNum, unFinishNum, planTime, actualTime, unFinishTime, reportUnFinish, unReportUnFinish);
         CaseSonBO depart = new CaseSonBO();
         List<CaseTableBO> caseTableS = new ArrayList<>();
@@ -2486,7 +2536,6 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         proBO.setCaseTableBOS(caseTableS);
         caseProS.add(proBO);
         depart.setCaseProBOS(caseProS);
-//        depart.setCaseTableS(caseTableS);
         List<CaseSonBO> caseSonBOS = new ArrayList<>();
         caseSonBOS.add(depart);
         FinishCaseBO finishCaseBO = new FinishCaseBO();
@@ -2606,7 +2655,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return caseLastBO;
     }
 
-    private CaseLastBO get1(List<TaskNode> taskNodes, TaskType taskType, String name, String tableId) throws SerException {
+    private CaseLastBO get1(List<TaskNode> taskNodes, TaskType taskType, String name, String tableId) throws
+            SerException {
         double planNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && tableId.equals(taskNode.getTableId())).mapToDouble(TaskNode::getPlanNum).sum();
         double actualNum = taskNodes.stream().filter(taskNode -> taskType.equals(taskNode.getTaskType()) && name.equals(taskNode.getExecute()) && (null != taskNode.getActualNum()) && tableId.equals(taskNode.getTableId())).mapToDouble(TaskNode::getActualNum).sum();
         double unFinishNum = planNum - actualNum;
@@ -2835,7 +2885,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public List<DayReportMailBO> dayCountMail(String startTime, String endTime, String[] departIds) throws SerException {
+    public List<DayReportMailBO> dayCountMail(String startTime, String endTime, String[] departIds) throws
+            SerException {
         List<DayCountBO> dayCountBOS = get(startTime, endTime, departIds);
         Set<String> departs = dayCountBOS.stream().filter(dayCountBO -> null != dayCountBO.getDepart()).map(DayCountBO::getDepart).collect(Collectors.toSet());
         DayReportCountBO dayReportCountBO = new DayReportCountBO();
@@ -2897,7 +2948,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return bos;
     }
 
-    private DayBBO count(int num, double planNum, double actualNum, double taskTime, double actualTime, double outTime, String type) throws SerException {
+    private DayBBO count(int num, double planNum, double actualNum, double taskTime, double actualTime,
+                         double outTime, String type) throws SerException {
         DayBBO count = new DayBBO();
         List<DayCBO> cbos = new ArrayList<>();
         if ("总合计".equals(type)) {
@@ -3123,7 +3175,6 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         tableDTO.getConditions().add(Restrict.eq("projectId", projectId));
         List<Table> tableList = tableSer.findByCis(tableDTO);
         if (tableList == null) {
-            //TODO
             exportExcelList.add(new WholeTaskExportExcel());
 
         } else {

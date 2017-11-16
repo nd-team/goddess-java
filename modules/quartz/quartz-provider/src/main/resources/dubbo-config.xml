@@ -28,8 +28,7 @@
     <!-- 薪资确认-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI"
                      id="salaryConfirmAPI"/>
-    <!-- 市场信息-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.market.api.CollectEmailAPI" id="marketEmailAPI"/>
+
     <!-- 项目中问题受理和处理-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI"
                      id="projectEmailAPI"/>

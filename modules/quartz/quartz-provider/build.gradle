@@ -33,7 +33,6 @@ dependencies {
     compile project(":modules:user:user-api")
 
     compile project(":modules:salaryconfirm:salaryconfirm-api")
-    compile project(":modules:market:market-api")
     compile project(":modules:projectissuehandle:projectissuehandle-api")
     compile project(":modules:customer:customer-api")
     compile project(":modules:businessproject:businessproject-api")
