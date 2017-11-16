@@ -84,6 +84,11 @@ public class StaffRecords1BO extends BaseBO {
      */
     private String identityCard;
 
+    /**
+     * 目前住宿地址
+     */
+    private String nowAddress;
+
 
     /**
      * 银行卡号码
@@ -108,6 +113,12 @@ public class StaffRecords1BO extends BaseBO {
      * 状态
      */
     private Status status;
+
+    /**
+     * qq
+     * @return
+     */
+    private String qq;
 
 
     public String getUsername() {
@@ -260,5 +271,21 @@ public class StaffRecords1BO extends BaseBO {
 
     public void setDimissionTime(String dimissionTime) {
         this.dimissionTime = dimissionTime;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getNowAddress() {
+        return nowAddress;
+    }
+
+    public void setNowAddress(String nowAddress) {
+        this.nowAddress = nowAddress;
     }
 }

@@ -94,7 +94,7 @@ public interface StaffRecordsAPI {
      * @return
      * @throws SerException
      */
-    default Long getTotal() throws SerException {
+    default Long getTotal(StaffRecordsDTO dto) throws SerException {
         return null;
     }
 
@@ -142,7 +142,7 @@ public interface StaffRecordsAPI {
     /**
      * 获取离职人员总条数
      */
-    default Long count() throws SerException {
+    default Long count(StaffRecordsDTO dto) throws SerException {
         return null;
     }
 
@@ -225,6 +225,127 @@ public interface StaffRecordsAPI {
      * @throws SerException
      */
     default byte[] exportExcel(StaffRecordsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 冻结
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void freeze(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 解冻
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void thaw(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 员工信息管理进度汇总
+     *
+     * @param day
+     * @return
+     * @throws SerException
+     */
+    default List<StaffRecordsCollectBO> dayCollect(String day) throws SerException {
+        return null;
+    }
+
+    /**
+     * 周员工信息管理汇总
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return
+     * @throws SerException
+     */
+    default List<StaffRecordsCollectBO> weekCollect(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 月员工信息管理汇总
+     *
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default List<StaffRecordsCollectBO> monthCollect(String month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 累计员工信息管理汇总
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<StaffRecordsCollectBO> totalCollect() throws SerException {
+        return null;
+    }
+
+    /**
+     * 员工信息管理日汇总柱状图
+     *
+     * @param day
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowDay(String day) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 员工信息管理周汇总柱状图
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+    /**
+     * 员工信息管理月汇总图形化
+     *
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(String month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 员工信息管理累计汇总柱状图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShowAll() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据名字获取数据
+     *
+     * @param name
+     * @throws SerException
+     */
+    default StaffRecordsDataBO findDataByName(String name) throws SerException {
         return null;
     }
 }

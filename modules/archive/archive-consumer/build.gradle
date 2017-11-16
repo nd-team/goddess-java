@@ -38,10 +38,9 @@ dependencies {
     }
 
     compile project(":modules:archive:archive-api")
-    compile project(":modules:user:user-api")
-    compile project(":modules:storage:storage-api")
+    compile project(":modules:qualifications:qualifications-api")
+    compile project(":modules:secure:secure-api")
     compile project(":modules:staffentry:staffentry-api")
-    compile project(":modules:assemble:assemble-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
     compile("org.springframework.boot:spring-boot-starter-web")

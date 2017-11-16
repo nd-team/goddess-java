@@ -122,7 +122,7 @@ public class StaffRecordsTO extends BaseTO {
      * qq号
      */
     @NotBlank(message = "qq号不能为空", groups = {ADD.class, EDIT.class})
-    private String QQ;
+    private String qq;
 
     /**
      * 个人邮箱账号
@@ -311,12 +311,12 @@ public class StaffRecordsTO extends BaseTO {
         this.telephone = telephone;
     }
 
-    public String getQQ() {
-        return QQ;
+    public String getQq() {
+        return qq;
     }
 
-    public void setQQ(String QQ) {
-        this.QQ = QQ;
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 
     public String getSelfEmail() {

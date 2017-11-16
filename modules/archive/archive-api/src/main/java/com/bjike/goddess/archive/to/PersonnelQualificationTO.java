@@ -24,6 +24,18 @@ public class PersonnelQualificationTO extends BaseTO {
     private String username;
 
     /**
+     * 性别
+     */
+    @NotNull(message = "性别不能为空", groups = {ADD.class, EDIT.class})
+    private String sex;
+
+    /**
+     * 身份证号码
+     */
+    @NotNull(message = "身份证号码不能为空", groups = {ADD.class, EDIT.class})
+    private String identityCard;
+
+    /**
      * 劳动关系类型
      */
     @NotNull(message = "劳动关系类型不能为空", groups = {ADD.class, EDIT.class})
@@ -152,5 +164,21 @@ public class PersonnelQualificationTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getIdentityCard() {
+        return identityCard;
+    }
+
+    public void setIdentityCard(String identityCard) {
+        this.identityCard = identityCard;
     }
 }

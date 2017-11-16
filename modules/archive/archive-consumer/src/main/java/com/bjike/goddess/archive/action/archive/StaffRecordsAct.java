@@ -1,7 +1,10 @@
 package com.bjike.goddess.archive.action.archive;
 
 import com.bjike.goddess.archive.api.StaffRecordsAPI;
+import com.bjike.goddess.archive.bo.OptionBO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
+import com.bjike.goddess.archive.bo.StaffRecordsCollectBO;
+import com.bjike.goddess.archive.bo.StaffRecordsDataBO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.StaffRecords1Excel;
 import com.bjike.goddess.archive.entity.StaffRecordsExcel;
@@ -9,9 +12,8 @@ import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsTO;
-import com.bjike.goddess.archive.vo.StaffNameVO;
-import com.bjike.goddess.archive.vo.StaffRecords1VO;
-import com.bjike.goddess.archive.vo.StaffRecordsVO;
+import com.bjike.goddess.archive.vo.*;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -23,6 +25,9 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.qualifications.api.QualificationsCollectAPI;
+import com.bjike.goddess.secure.api.EmployeeSecureAPI;
+import com.bjike.goddess.secure.vo.SecureVO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
@@ -60,7 +65,10 @@ public class StaffRecordsAct extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
-
+    @Autowired
+    private QualificationsCollectAPI qualificationsCollectAPI;
+    @Autowired
+    private EmployeeSecureAPI employeeSecureAPI;
 
     /**
      * 功能导航权限
@@ -91,8 +99,9 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) StaffRecordsTO to, BindingResult bindingResult) throws ActException {
+    public Result add(@Validated(ADD.class) StaffRecordsTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
+            String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
             staffRecordsAPI.add(to);
             return ActResult.initialize("ADD SUCCESS");
         } catch (SerException e) {
@@ -308,9 +317,9 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/getTotal")
-    public Result getTotal() throws ActException {
+    public Result getTotal(StaffRecordsDTO dto) throws ActException {
         try {
-            return ActResult.initialize(staffRecordsAPI.getTotal());
+            return ActResult.initialize(staffRecordsAPI.getTotal(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -340,7 +349,7 @@ public class StaffRecordsAct extends BaseFileAction {
     @GetMapping("v1/employee/list")
     public Result listEmployee() throws ActException {
         try {
-            staffRecordsAPI.listEmployee();
+//            staffRecordsAPI.listEmployee(dto);
             List<EntryRegisterBO> entryBasicInfoBOList = entryRegisterAPI.list();
             return ActResult.initialize(BeanTransform.copyProperties(entryBasicInfoBOList, EntryRegisterVO.class));
         } catch (SerException e) {
@@ -409,9 +418,9 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/dimission/count")
-    public Result count() throws ActException {
+    public Result count(StaffRecordsDTO dto) throws ActException {
         try {
-            return ActResult.initialize(staffRecordsAPI.count());
+            return ActResult.initialize(staffRecordsAPI.count(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -435,5 +444,220 @@ public class StaffRecordsAct extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+    /**
+     * 冻结
+     *
+     * @version v1
+     */
+    @PutMapping("v1/freeze/{id}")
+    public Result freeze(@PathVariable String id) throws ActException {
+        try {
+            staffRecordsAPI.freeze(id);
+            return ActResult.initialize("冻结成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 解冻
+     *
+     * @version v1
+     */
+    @PutMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable String id) throws ActException {
+        try {
+            staffRecordsAPI.thaw(id);
+            return ActResult.initialize("解冻成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取资质认证证书
+     *
+     * @version v1
+     */
+    @GetMapping("v1/find/qualifications")
+    public Result findAllQualifications() throws ActException {
+        try {
+            return ActResult.initialize(qualificationsCollectAPI.findAllQualifications());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取是否购买社保社保所属类型社保所属公司
+     *
+     * @return class SecureVO
+     * @version v1
+     */
+    @GetMapping("v1/findSecureBO")
+    public Result findSecureBO(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(employeeSecureAPI.findSecureBO(name), SecureVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 员工信息管理进度日汇总
+     *
+     * @return class StaffRecordsCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/day/collect")
+    public Result dayCollect(@RequestParam String day, HttpServletRequest request) throws ActException {
+        try {
+            List<StaffRecordsCollectBO> bos = staffRecordsAPI.dayCollect(day);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, StaffRecordsCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 周员工信息管理汇总
+     *
+     * @return class StaffRecordsCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/week/collect")
+    public Result weekCollect(Integer year, Integer month, Integer week) throws ActException {
+        try {
+            List<StaffRecordsCollectBO> bos = staffRecordsAPI.weekCollect(year, month, week);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, StaffRecordsCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 月员工信息管理汇总
+     *
+     * @return class StaffRecordsCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/month/collect")
+    public Result monthCollect(String month) throws ActException {
+        try {
+            List<StaffRecordsCollectBO> bos = staffRecordsAPI.monthCollect(month);
+            return ActResult.initialize(BeanTransform.copyProperties(bos, StaffRecordsCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 累计员工信息管理汇总
+     *
+     * @return class StaffRecordsCollectVO
+     * @version v1
+     */
+    @GetMapping("v1/totalCollect")
+    public Result totalCollect() throws ActException {
+        try {
+            List<StaffRecordsCollectBO> bos = staffRecordsAPI.totalCollect();
+            return ActResult.initialize(BeanTransform.copyProperties(bos, StaffRecordsCollectVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 员工信息管理日汇总柱状图
+     *
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String day, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffRecordsAPI.figureShowDay(day);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 员工信息管理周汇总柱状图
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffRecordsAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 员工信息管理月汇总图形化
+     *
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/month")
+    public Result figureShowMonth(String month, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = staffRecordsAPI.figureShowMonth(month);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 员工信息管理累计汇总柱状图
+     *
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/all")
+    public Result figureShowAll() throws ActException {
+        try {
+            OptionBO optionBO = staffRecordsAPI.figureShowAll();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据名字获取数据
+     *
+     * @return class StaffRecordsDataVO
+     * @version v1
+     */
+    @GetMapping("v1/findDataByName")
+    public Result findDataByName(@RequestParam String name) throws ActException {
+        try {
+            StaffRecordsDataBO bo = staffRecordsAPI.findDataByName(name);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, StaffRecordsDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

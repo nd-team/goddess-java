@@ -30,6 +30,7 @@
                    ref="personnelQualificationApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.archive.api.SocialSecurityTypeAPI" ref="socialSecurityTypeApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.archive.api.StaffRecordsAPI" ref="staffRecordsApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.archive.api.ResumeInfoAPI" ref="resumeInfoApiImpl"/>
 
 
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
@@ -50,6 +51,7 @@
     <dubbo:reference interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levelShowApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" id="disciplineRecordApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" id="dimissionInfoApiImpl"/>
 
     <dubbo:service  ref="rotainCusPermissionApiImpl" interface="com.bjike.goddess.archive.api.RotainCusPermissionAPI" />
     <dubbo:service  ref="rotainPermissionOperateApiImpl" interface="com.bjike.goddess.archive.api.RotainPermissionOperateAPI" />

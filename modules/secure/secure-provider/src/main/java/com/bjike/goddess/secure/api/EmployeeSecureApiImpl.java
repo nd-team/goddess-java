@@ -2,6 +2,7 @@ package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
+import com.bjike.goddess.secure.bo.SecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.service.EmployeeSecureSer;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
@@ -85,5 +86,10 @@ public class EmployeeSecureApiImpl implements EmployeeSecureAPI {
     @Override
     public Set<String> allName() throws SerException {
         return employeeSecureSer.allName();
+    }
+
+    @Override
+    public SecureBO findSecureBO(String name) throws SerException {
+        return employeeSecureSer.findSecureBo(name);
     }
 }

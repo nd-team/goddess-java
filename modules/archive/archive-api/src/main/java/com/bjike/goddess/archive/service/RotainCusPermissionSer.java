@@ -89,5 +89,11 @@ public interface RotainCusPermissionSer extends Ser<RotainCusPermission, RotainC
         return null;
     }
 
+    /**
+     * 查询是否可以查看所有信息(岗位级别)
+     */
+    default Boolean guideSeePositionIdentity() throws SerException{
+        return null;
+    }
 
 }

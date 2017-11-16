@@ -1,6 +1,6 @@
 package com.bjike.goddess.archive.to;
 
-import com.bjike.goddess.annual.enums.AuditType;
+import com.bjike.goddess.archive.enums.AuditType;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;

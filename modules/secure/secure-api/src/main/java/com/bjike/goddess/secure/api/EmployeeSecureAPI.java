@@ -1,11 +1,9 @@
 package com.bjike.goddess.secure.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.secure.bo.AttachedEndBO;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
-import com.bjike.goddess.secure.dto.AttachedEndDTO;
+import com.bjike.goddess.secure.bo.SecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
-import com.bjike.goddess.secure.to.AttachedEndTO;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
 import com.bjike.goddess.secure.to.NameTO;
@@ -32,6 +30,7 @@ public interface EmployeeSecureAPI {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 添加
      *
@@ -115,6 +114,7 @@ public interface EmployeeSecureAPI {
      * @throws SerException
      */
     Long count(EmployeeSecureDTO dto) throws SerException;
+
     /**
      * 根据姓名查找
      *
@@ -123,10 +123,18 @@ public interface EmployeeSecureAPI {
      * @throws SerException
      */
     List<EmployeeSecureBO> byName(NameTO to) throws SerException;
+
     /**
      * 获取所有姓名
      *
      * @throws SerException
      */
     Set<String> allName() throws SerException;
+
+    /**
+     * 根据员工姓名获取参保单位,社保购买类型,是否购买社保
+     */
+    default SecureBO findSecureBO(String name) throws SerException {
+        return null;
+    }
 }

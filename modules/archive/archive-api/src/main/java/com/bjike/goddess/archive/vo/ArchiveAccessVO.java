@@ -1,6 +1,6 @@
 package com.bjike.goddess.archive.vo;
 
-import com.bjike.goddess.annual.enums.AuditType;
+import com.bjike.goddess.archive.enums.AuditType;
 
 /**
  * 档案调阅表现层对象

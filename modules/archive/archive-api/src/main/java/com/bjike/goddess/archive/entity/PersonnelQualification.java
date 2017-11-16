@@ -25,6 +25,18 @@ public class PersonnelQualification extends BaseEntity {
     private String username;
 
     /**
+     * 性别
+     */
+    @Column(name = "sex", columnDefinition = "VARCHAR(255)   COMMENT '性别'")
+    private String sex;
+
+    /**
+     * 身份证号码
+     */
+    @Column(name = "identityCard", columnDefinition = "VARCHAR(255)   COMMENT '身份证号码'")
+    private String identityCard;
+
+    /**
      * 劳动关系类型
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
@@ -159,5 +171,21 @@ public class PersonnelQualification extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getIdentityCard() {
+        return identityCard;
+    }
+
+    public void setIdentityCard(String identityCard) {
+        this.identityCard = identityCard;
     }
 }

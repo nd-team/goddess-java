@@ -409,4 +409,46 @@ public class RotainCusPermissionSerImpl extends ServiceImpl<RotainCusPermission,
         String aa = RpcTransmit.getUserToken();
         return flag;
     }
+
+    @Override
+    public Boolean guideSeePositionIdentity() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flag = false;
+        //但前用户
+        UserBO userBO = userAPI.currentUser();
+        String userId = userBO.getId();
+        RotainCusPermissionDTO dto = new RotainCusPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag", "3"));
+        RotainCusPermission cusPermission = super.findOne(dto);
+
+
+        //先查询操作对象
+        List<String> idList = new ArrayList<>();
+        RotainPermissionOperateDTO cpoDTO = new RotainPermissionOperateDTO();
+        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        List<RotainPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        if (operateList != null && operateList.size() > 0) {
+            operateList.stream().forEach(op -> {
+                idList.add(op.getOperator());
+            });
+        }
+        String[] operateIds = null;
+        if (null != idList && idList.size() > 0) {
+            operateIds = new String[idList.size()];
+            for (int i = 0; i < idList.size(); i++) {
+                operateIds[i] = idList.get(i);
+            }
+
+        }
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+
+        if (positionFlag) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        String aa = RpcTransmit.getUserToken();
+        return flag;
+    }
 }

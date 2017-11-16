@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.service;
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
 import com.bjike.goddess.archive.entity.ArchiveAccess;
+import com.bjike.goddess.archive.excel.ArchiveAccessImportExcel;
 import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.to.AccessAuditTO;
 import com.bjike.goddess.archive.to.ArchiveAccessTO;
@@ -109,8 +110,38 @@ public interface ArchiveAccessSer extends Ser<ArchiveAccess, ArchiveAccessDTO> {
      * @return
      * @throws SerException
      */
-    default Long getTotal() throws SerException {
+    default Long getTotal(ArchiveAccessDTO dto) throws SerException {
         return null;
     }
 
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(ArchiveAccessDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<ArchiveAccessImportExcel> tos) throws SerException {
+        return;
+    }
 }

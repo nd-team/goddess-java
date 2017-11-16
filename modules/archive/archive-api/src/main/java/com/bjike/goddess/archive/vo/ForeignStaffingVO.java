@@ -19,6 +19,11 @@ public class ForeignStaffingVO {
     private String id;
 
     /**
+     * 更新时间
+     */
+    protected String modifyTime;
+
+    /**
      * 使用类型id
      */
     private String typeId;
@@ -52,6 +57,26 @@ public class ForeignStaffingVO {
      * 学历
      */
     private String education;
+
+    /**
+     * 资质/认证证书
+     */
+    private String litterae;
+
+    /**
+     * 是否购买社保
+     */
+    private Boolean buySecurity;
+
+    /**
+     * 社保购买类型
+     */
+    private String securityType;
+
+    /**
+     * 购买社保所属公司
+     */
+    private String company;
 
     /**
      * 专业
@@ -285,5 +310,45 @@ public class ForeignStaffingVO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getLitterae() {
+        return litterae;
+    }
+
+    public void setLitterae(String litterae) {
+        this.litterae = litterae;
+    }
+
+    public Boolean getBuySecurity() {
+        return buySecurity;
+    }
+
+    public void setBuySecurity(Boolean buySecurity) {
+        this.buySecurity = buySecurity;
+    }
+
+    public String getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(String securityType) {
+        this.securityType = securityType;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

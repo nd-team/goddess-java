@@ -1,4 +1,4 @@
-package com.bjike.goddess.bidding.config;
+package com.bjike.goddess.recruit.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;

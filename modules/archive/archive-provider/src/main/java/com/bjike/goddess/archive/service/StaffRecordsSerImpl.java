@@ -1,7 +1,9 @@
 package com.bjike.goddess.archive.service;
 
 import com.bjike.goddess.archive.bo.*;
+import com.bjike.goddess.archive.dto.ForeignStaffingSetDTO;
 import com.bjike.goddess.archive.dto.StaffRecordsDTO;
+import com.bjike.goddess.archive.entity.ForeignStaffingSet;
 import com.bjike.goddess.archive.entity.StaffRecords;
 import com.bjike.goddess.archive.entity.StaffRecords1Excel;
 import com.bjike.goddess.archive.entity.StaffRecordsExcel;
@@ -20,6 +22,10 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.dimission.api.DimissionInfoAPI;
+import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
+import com.bjike.goddess.dimission.entity.DimissionInfo;
+import com.bjike.goddess.dimission.enums.DimissionStatus;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
@@ -33,11 +39,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 员工档案业务实现
@@ -62,6 +69,10 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     private ModuleAPI moduleAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private ForeignStaffingSetSer foreignStaffingSetSer;
+    @Autowired
+    private DimissionInfoAPI dimissionInfoAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -116,22 +127,24 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         }
         return flag;
     }
+
     /**
      * 员工档案列表层级查看权限（层级级别）
      */
-    private Boolean guideSeeLevelIdentity(String flagId ) throws SerException {
+    private Boolean guideSeeLevelIdentity(String flagId) throws SerException {
         Boolean flag = false;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busRotainCusPermission(flagId );
+            flag = cusPermissionSer.busRotainCusPermission(flagId);
         } else {
             flag = true;
         }
         return flag;
     }
+
 
     @Override
     public Boolean sonPermission() throws SerException {
@@ -273,6 +286,8 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecordsBO> maps(StaffRecordsDTO dto) throws SerException {
+        dto = findData(dto);
+        searchCondition(dto);
         dto.getSorts().add("serialNumber=desc");
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
         return BeanTransform.copyProperties(super.findByPage(dto), StaffRecordsBO.class);
@@ -287,8 +302,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     }
 
     @Override
-    public Long getTotal() throws SerException {
-        StaffRecordsDTO dto = new StaffRecordsDTO();
+    public Long getTotal(StaffRecordsDTO dto) throws SerException {
+        dto = findData(dto);
+        searchCondition(dto);
         dto.getConditions().add(Restrict.eq("status", Status.THAW));
         return super.count(dto);
     }
@@ -417,14 +433,17 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public List<StaffRecords1BO> dimissionMaps(StaffRecordsDTO dto) throws SerException {
+        dto = findData(dto);
+        searchCondition(dto);
         dto.getSorts().add("serialNumber=desc");
         dto.getConditions().add(Restrict.eq("status", Status.CONGEAL));
         return BeanTransform.copyProperties(super.findByPage(dto), StaffRecords1BO.class);
     }
 
     @Override
-    public Long count() throws SerException {
-        StaffRecordsDTO dto = new StaffRecordsDTO();
+    public Long count(StaffRecordsDTO dto) throws SerException {
+        dto = findData(dto);
+        searchCondition(dto);
         dto.getConditions().add(Restrict.eq("status", Status.CONGEAL));
         return super.count(dto);
     }
@@ -536,6 +555,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public byte[] exportExcel(StaffRecordsDTO dto) throws SerException {
+        dto = findData(dto);
         searchCondition(dto);
         List<StaffRecords> list = super.findByCis(dto);
         Excel excel = new Excel(0, 2);
@@ -543,13 +563,280 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         List<StaffRecordsExcel> staffRecordsExcels = new ArrayList<>(0);
         if (null != list && list.size() > 0) {
             list.stream().forEach(obj -> {
-                staffRecordsExcels.add(BeanTransform.copyProperties(obj, StaffRecordsExcel.class));
+                StaffRecordsExcel staffRecordsExcel = BeanTransform.copyProperties(obj, StaffRecordsExcel.class, false);
+                staffRecordsExcels.add(staffRecordsExcel);
             });
         }
 
         byte[] bytes = ExcelUtil.clazzToExcel(staffRecordsExcels, excel);
         return bytes;
     }
+
+    @Override
+    public void freeze(String id) throws SerException {
+        StaffRecords entity = super.findById(id);
+        if (null == entity) {
+            throw new SerException("目标数据队形不能为空");
+        }
+        entity.setStatus(Status.CONGEAL);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public void thaw(String id) throws SerException {
+        StaffRecords entity = super.findById(id);
+        if (null == entity) {
+            throw new SerException("目标数据队形不能为空");
+        }
+        entity.setStatus(Status.THAW);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> dayCollect(String day) throws SerException {
+        String startTime = "";
+        String endTime = "";
+        if (StringUtils.isNotBlank(day)) {
+            startTime = day;
+            endTime = getAfterDay(day);
+        }
+        List<StaffRecordsCollectBO> list = findCollect(startTime, endTime, true);
+        return list;
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> weekCollect(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        String[] date = getTimes(year, month, week);
+        String startTime = date[0];
+        String endTime = date[1];
+        List<StaffRecordsCollectBO> list = findCollect(startTime, endTime, true);
+        return list;
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> monthCollect(String month) throws SerException {
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
+        }
+        month = month + "-01";
+        String startTime = findFirstDayOfMonth(month);
+        String endTime = findEndDayOfMonth(month);
+        List<StaffRecordsCollectBO> list = findCollect(startTime, endTime, true);
+        return list;
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> totalCollect() throws SerException {
+        String startTime = "";
+        String endTime = "";
+        List<StaffRecordsCollectBO> list = findCollect(startTime, endTime, true);
+        return list;
+    }
+
+    @Override
+    public OptionBO figureShowDay(String day) throws SerException {
+        if (StringUtils.isBlank(day)) {
+            day = DateUtil.dateToString(LocalDate.now());
+        }
+        String startTime = day;
+        String endTime = getAfterDay(day);
+        //获得部门汇总数据
+        List<StaffRecordsCollectBO> staffRecordsCollectBOs = findCollect(startTime, endTime, false);
+        List<StaffRecordsGraphicalBO> list = BeanTransform.copyProperties(staffRecordsCollectBOs, StaffRecordsGraphicalBO.class);
+
+        String text_1 = "员工信息管理日汇总" + "(" + startTime + "-" + endTime + ")";
+        return getOptionBO(text_1, list);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        if (year == null || month == null || week == null) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+        }
+        String[] date = getTimes(year, month, week);
+        String startTime = date[0];
+        String endTime = date[1];
+
+        //获得部门汇总数据
+        List<StaffRecordsCollectBO> staffRecordsCollectBOs = findCollect(startTime, endTime, false);
+        List<StaffRecordsGraphicalBO> list = BeanTransform.copyProperties(staffRecordsCollectBOs, StaffRecordsGraphicalBO.class);
+
+        String text_1 = "员工信息管理周汇总柱状图" + "(" + startTime + "-" + endTime + ")";
+        return getOptionBO(text_1, list);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(String month) throws SerException {
+        if (StringUtils.isBlank(month)) {
+            month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
+        }
+        month = month + "-01";
+        String startTime = findFirstDayOfMonth(month);
+        String endTime = findEndDayOfMonth(month);
+        //获得部门汇总数据
+        List<StaffRecordsCollectBO> staffRecordsCollectBOs = findCollect(startTime, endTime, false);
+        List<StaffRecordsGraphicalBO> list = BeanTransform.copyProperties(staffRecordsCollectBOs, StaffRecordsGraphicalBO.class);
+
+        String text_1 = "员工信息管理月汇总图形化" + "(" + startTime + "-" + endTime + ")";
+        return getOptionBO(text_1, list);
+    }
+
+    @Override
+    public OptionBO figureShowAll() throws SerException {
+        String startTime = "";
+        String endTime = "";
+
+        //获得部门汇总数据
+        List<StaffRecordsCollectBO> staffRecordsCollectBOs = findCollect(startTime, endTime, false);
+        List<StaffRecordsGraphicalBO> list = BeanTransform.copyProperties(staffRecordsCollectBOs, StaffRecordsGraphicalBO.class);
+
+        String text_1 = "员工信息管理累计汇总柱状图";
+        return getOptionBO(text_1, list);
+    }
+
+    @Override
+    public StaffRecordsDataBO findDataByName(String name) throws SerException {
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
+        if (moduleAPI.isCheck("staffentry")) {
+            List<EntryRegisterBO> entryRegisterBOs = entryRegisterAPI.getEntryRegisterByName(name);
+            if (null != entryRegisterBOs && entryRegisterBOs.size() > 0) {
+                EntryRegisterBO entryRegisterBO = entryRegisterBOs.get(0);
+                StaffRecordsDataBO bo = BeanTransform.copyProperties(entryRegisterBO, StaffRecordsBO.class);
+                bo.setSerialNumber(entryRegisterBO.getEmpNumber());
+                bo.setProject(entryRegisterBO.getDepartment());
+                bo.setMajor(entryRegisterBO.getProfession());
+                bo.setSchool(entryRegisterBO.getSchoolTag());
+                bo.setGraduate(entryRegisterBO.getGraduationDate());
+                bo.setTelephone(entryRegisterBO.getPhone());
+                bo.setEntryTime(entryRegisterBO.getInductionDate());
+                bo.setSeniority(findSeniority(bo.getEntryTime(), bo.getUsername()));
+                bo.setBirth(entryRegisterBO.getBirthday());
+                bo.setAddress(entryRegisterBO.getRegisteredAddress());
+                bo.setIdentityCard(entryRegisterBO.getIdCard());
+                bo.setNowAddress(entryRegisterBO.getLocation());
+                return bo;
+            }
+        }
+        return null;
+    }
+
+    //tar false:柱状图
+    private List<StaffRecordsCollectBO> findCollect(String startTime, String endTime, Boolean tar) throws SerException {
+        List<StaffRecordsConditionBO> list = this.findAreaAndProject(tar);
+        List<StaffRecordsCollectBO> staffRecordsCollectBOs = new ArrayList<>(0);
+        if (null != list && list.size() > 0) {
+            for (StaffRecordsConditionBO bo : list) {
+                StaffRecordsCollectBO staffRecordsCollectBO = BeanTransform.copyProperties(bo, StaffRecordsCollectBO.class);
+                staffRecordsCollectBO.setEntryNum(getData(startTime, endTime, "entryTime", bo, false, tar));
+                staffRecordsCollectBO.setStaffFilesNum(getData(startTime, endTime, "modifyTime", bo, false, tar));
+                staffRecordsCollectBO.setInformationNum(getData(startTime, endTime, "modifyTime", bo, false, tar));
+                staffRecordsCollectBO.setDimissionNum(getData(startTime, endTime, "dimissionTime", bo, false, tar));
+                staffRecordsCollectBO.setFreeNum(getData(startTime, endTime, "dimissionTime", bo, true, tar));
+                staffRecordsCollectBO.setBiddingNum(getForeignData(startTime, endTime, "招投标", bo, tar));
+                staffRecordsCollectBO.setExternalNum(getForeignData(startTime, endTime, "对外宣传", bo, tar));
+                staffRecordsCollectBO.setProjectNum(getForeignData(startTime, endTime, "项目人员信息", bo, tar));
+                staffRecordsCollectBOs.add(staffRecordsCollectBO);
+            }
+        }
+        return staffRecordsCollectBOs;
+    }
+
+    //tar1 false:柱状图
+    private Integer getData(String startTime, String endTime, String str, StaffRecordsConditionBO bo, Boolean tar, Boolean tar1) throws SerException {
+        String[] files = new String[]{"entryNum"};
+        String area = bo.getArea();
+        String project = bo.getProject();
+        StringBuilder sql = new StringBuilder("select count(" + str + ") as entryNum ");
+        sql.append(" from archive_staff_records ");
+        sql.append(" where project = '" + project + "' ");
+        if (tar1) {
+            sql.append(" and area = '" + area + "' ");
+        }
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" and " + str + " between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "'");
+        }
+        if (tar) {
+            sql.append(" and status = 1 ");
+        }
+        List<StaffRecordsCollectBO> bos = super.findBySql(sql.toString(), StaffRecordsCollectBO.class, files);
+        if (null != bos && bos.size() > 0) {
+            return bos.get(0).getEntryNum();
+        }
+        return 0;
+    }
+
+    //tar false:柱状图
+    private Integer getForeignData(String startTime, String endTime, String str, StaffRecordsConditionBO bo, Boolean tar) throws SerException {
+        String[] files = new String[]{"biddingNum"};
+        String type_id = findTypeId(str);
+        if (StringUtils.isBlank(type_id)) {
+            return 0;
+        }
+        String area = bo.getArea();
+        String project = bo.getProject();
+        StringBuilder sql = new StringBuilder("select count(modifyTime) as biddingNum ");
+        sql.append(" from archive_foreign_staffing ");
+        sql.append(" where project = '" + project + "' ");
+        if (tar) {
+            sql.append(" and area = '" + area + "' ");
+        }
+        sql.append(" and type_id = '" + type_id + "' ");
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            sql.append(" and modifyTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "'");
+        }
+        List<StaffRecordsCollectBO> bos = super.findBySql(sql.toString(), StaffRecordsCollectBO.class, files);
+        if (null != bos && bos.size() > 0) {
+            return bos.get(0).getBiddingNum();
+        }
+        return 0;
+    }
+
+    private String findTypeId(String str) throws SerException {
+        ForeignStaffingSetDTO foreignStaffingSetDTO = new ForeignStaffingSetDTO();
+        foreignStaffingSetDTO.getConditions().add(Restrict.eq("name", str));
+        List<ForeignStaffingSet> list = foreignStaffingSetSer.findByCis(foreignStaffingSetDTO);
+        if (null != list && list.size() > 0) {
+            return list.get(0).getId();
+        }
+        return null;
+    }
+
+    //tar false:柱状图
+    private List<StaffRecordsConditionBO> findAreaAndProject(Boolean tar) throws SerException {
+        String[] files = null;
+        if (tar) {
+            files = new String[]{"project", "area"};
+        } else {
+            files = new String[]{"project"};
+        }
+        StringBuilder sql = new StringBuilder("select project as project ");
+        if (tar) {
+            sql.append(" , area as area ");
+        }
+        sql.append(" from archive_staff_records ");
+        List<StaffRecordsConditionBO> list = super.findBySql(sql.toString(), StaffRecordsConditionBO.class, files);
+        Set<StaffRecordsConditionBO> set = new HashSet<>(0);
+        set.addAll(list);
+        List<StaffRecordsConditionBO> staffRecordsConditionBOs = new ArrayList<>(0);
+        staffRecordsConditionBOs.addAll(set);
+        return staffRecordsConditionBOs;
+    }
+
 
     private void searchCondition(StaffRecordsDTO dto) throws SerException {
         if (StringUtils.isNotBlank(dto.getUsername())) {
@@ -558,5 +845,229 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         if (StringUtils.isNotBlank(dto.getProject())) {
             dto.getConditions().add(Restrict.eq("project", dto.getProject()));
         }
+    }
+
+    //获取指定日期的后一天
+    private String getAfterDay(String day) throws SerException {
+        Calendar c = Calendar.getInstance();
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(day);
+            c.setTime(date);
+            int day1 = c.get(Calendar.DATE);
+            c.set(Calendar.DATE, day1 + 1);
+            String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+            return dayAfter;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    //获取某一个月的第一天
+    private String findFirstDayOfMonth(String month) throws SerException {
+        Date date = null;
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = fmt.parse(month);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstDayOfMonth = calendar.getTime();
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayOfMonth = calendar.getTime();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startTime = sdf.format(firstDayOfMonth);
+        return startTime;
+    }
+
+    //获取某一个月的最后一天
+    private String findEndDayOfMonth(String month) throws SerException {
+        Date date = null;
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = fmt.parse(month);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstDayOfMonth = calendar.getTime();
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayOfMonth = calendar.getTime();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String endTime = sdf.format(lastDayOfMonth);
+        return endTime;
+    }
+
+    //转换周期
+    private String[] getTimes(int year, int month, int week) throws SerException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        calendar.set(Calendar.WEEK_OF_MONTH, week);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String start = dateFormat.format(calendar.getTime());
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        String end = dateFormat.format(calendar.getTime());
+        LocalDate e = DateUtil.parseDate(end);
+        if (week == 1) {
+            if (String.valueOf(month).length() == 1) {
+                start = year + "-0" + month + "-01";
+            } else {
+                start = year + "-" + month + "-01";
+            }
+        }
+        if (week == weekNum) {
+            if (month != e.getMonthValue()) {
+                e = DateUtil.parseDate(end);
+                e = e.minusDays(e.getDayOfMonth());
+            }
+        }
+        String endTime = e.toString();
+        String[] time = new String[]{start, endTime};
+        return time;
+    }
+
+    //柱状图数据
+    private OptionBO getOptionBO(String text_1, List<StaffRecordsGraphicalBO> list) throws SerException {
+        List<String> projectList = list.stream().map(StaffRecordsGraphicalBO::getProject).distinct().collect(Collectors.toList());
+        String[] text_2 = projectList.toArray(new String[projectList.size()]);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list3 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_3 = new String[]{"入职人数", "建立员工档案数",
+                "录入员工信息数", "离职人数", "冻结员工信息数", "更新招投标人员信息数", "更新对外宣传人员信息数", "更新项目人员信息数"};
+        text_list3 = Arrays.stream(text_2).collect(Collectors.toList());
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (list != null && list.size() > 0) {
+            for (String str : text_list3) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(str);
+                seriesBO.setType("bar");
+                List<Integer> number = new ArrayList<>(0);
+                for (StaffRecordsGraphicalBO bo : list) {
+                    Integer i = 0;
+                    if (str.equals(bo.getProject())) {
+                        number.add(bo.getEntryNum());
+                        number.add(bo.getStaffFilesNum());
+                        number.add(bo.getInformationNum());
+                        number.add(bo.getDimissionNum());
+                        number.add(bo.getFreeNum());
+                        number.add(bo.getBiddingNum());
+                        number.add(bo.getExternalNum());
+                        number.add(bo.getProjectNum());
+                    }
+                }
+                //柱状图数据
+                Integer[] numbers = number.toArray(new Integer[number.size()]);
+                seriesBO.setData(numbers);
+                seriesBOList.add(seriesBO);
+            }
+        }
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        TooltipBO tooltipBO = new TooltipBO();
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+
+    /**
+     * 得到在职时间(月)
+     */
+    private Integer findSeniority(String time, String name) throws SerException {
+        try {
+            if (StringUtils.isBlank(time)) {
+                return 0;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar c = Calendar.getInstance();
+            Calendar c1 = Calendar.getInstance();
+            c.setTime(sdf.parse(time));
+
+            String time1 = DateUtil.dateToString(LocalDate.now());
+            //判断员工是否离职
+            if (moduleAPI.isCheck("dimission")) {
+                DimissionInfoDTO dimissionInfoDTO = new DimissionInfoDTO();
+                List<DimissionInfo> dimissionInfos = dimissionInfoAPI.findByName(name);
+                if (null != dimissionInfos && dimissionInfos.size() > 0) {
+                    DimissionInfo dimissionInfo = dimissionInfos.get(0);
+                    if (DimissionStatus.SUCCESS.equals(dimissionInfo.getDimission())) {
+                        time1 = DateUtil.dateToString(dimissionInfo.getDimissionDate());
+                    }
+                }
+            }
+            c1.setTime(sdf.parse(time1));
+            int result = c1.get(Calendar.MONTH) - c.get(Calendar.MONTH);
+            return result == 0 ? 1 : Math.abs(result);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    /**
+     * 是否有权限查看所有人的信息(岗位级别)
+     */
+    private Boolean guideSeePositionIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.guideSeePositionIdentity();
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 根据岗位查看所有信息或个人信息
+     */
+    private StaffRecordsDTO findData(StaffRecordsDTO dto) throws SerException {
+        if (!guideSeePositionIdentity()) {
+            dto = new StaffRecordsDTO();
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            dto.getConditions().add(Restrict.eq("username", userBO.getUsername()));
+        }
+        return dto;
     }
 }

@@ -382,7 +382,7 @@ public class SituationSerImpl extends ServiceImpl<Situation, SituationDTO> imple
         //获得部门汇总数据
         List<DimissionCollectBO> dimissionCollectBOs = findDataByDepartment(startTime, endTime);
 
-        String text_1 = "离职管理周汇总" + "(" + startTime + "-" + endTime + ")";
+        String text_1 = "离职管理累计汇总柱状图" + "(" + startTime + "-" + endTime + ")";
         return getOptionBO(text_1, dimissionCollectBOs);
     }
 

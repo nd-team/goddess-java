@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资质办理进度汇总业务实现
@@ -388,7 +389,15 @@ public class QualificationsCollectSerImpl extends ServiceImpl<QualificationsColl
         return flag;
     }
 
-
+    @Override
+    public List<String> findAllQualifications() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<QualificationsCollect> qualificationsCollects = super.findAll();
+        if(null != qualificationsCollects && qualificationsCollects.size() > 0){
+            list = qualificationsCollects.stream().map(QualificationsCollect::getQualifications).distinct().collect(Collectors.toList());
+        }
+        return list;
+    }
 
 
 }

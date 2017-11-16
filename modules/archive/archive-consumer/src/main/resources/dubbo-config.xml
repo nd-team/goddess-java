@@ -20,6 +20,8 @@
                      id="archiveAccessApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ArchiveDetailAPI"
                      id="archiveDetailApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ResumeInfoAPI"
+                     id="resumeInfoApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.ArchiveGatherAPI"
                      id="archiveGatherApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.archive.api.EnclosureTypeAPI"
@@ -63,5 +65,7 @@
                      interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
     <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
     <dubbo:reference validation="true" id="entryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI"/>
+    <dubbo:reference validation="true" id="qualificationsCollectApiImpl" interface="com.bjike.goddess.qualifications.api.QualificationsCollectAPI"/>
+    <dubbo:reference validation="true" id="employeeSecureApiImpl" interface="com.bjike.goddess.secure.api.EmployeeSecureAPI"/>
 
 </beans>
