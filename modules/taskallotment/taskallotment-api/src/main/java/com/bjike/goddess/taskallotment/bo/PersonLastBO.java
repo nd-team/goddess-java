@@ -18,6 +18,14 @@ public class PersonLastBO extends BaseBO {
     private String name;
 
     /**
+     * 标准工时（小时）
+     */
+    private Double standardHour;
+    /**
+     * 实际工时（小时）
+     */
+    private Double actualHour;
+    /**
      * 工时差异（小时）
      */
     private Double differ;
@@ -28,6 +36,22 @@ public class PersonLastBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getStandardHour() {
+        return standardHour;
+    }
+
+    public void setStandardHour(Double standardHour) {
+        this.standardHour = standardHour;
+    }
+
+    public Double getActualHour() {
+        return actualHour;
+    }
+
+    public void setActualHour(Double actualHour) {
+        this.actualHour = actualHour;
     }
 
     public Double getDiffer() {
