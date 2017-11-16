@@ -35,4 +35,11 @@ public interface TableSer extends Ser<Table, TableDTO> {
      * @throws SerException
      */
     List<TableBO> tableNames() throws SerException;
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
 }

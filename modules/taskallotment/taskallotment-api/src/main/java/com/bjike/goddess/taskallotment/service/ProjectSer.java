@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
 import com.bjike.goddess.taskallotment.excel.ProjectExcel;
@@ -158,6 +159,22 @@ public interface ProjectSer extends Ser<Project, ProjectDTO> {
      * @throws SerException
      */
     List<TableBO> tables(String projectId) throws SerException;
+    /**
+     * 根据地区部门获取项目名
+     * @param projectNameDTO
+     * @return
+     * @throws SerException
+     */
+    List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException;
+
+    /**
+     * 根据项目获取所有项目表
+     *
+     * @param projectNameDTO
+     * @return
+     * @throws SerException
+     */
+    List<String> tableNamesBypname(ProjectNameDTO projectNameDTO) throws SerException;
 
     /**
      * 根据项目表获取任务名

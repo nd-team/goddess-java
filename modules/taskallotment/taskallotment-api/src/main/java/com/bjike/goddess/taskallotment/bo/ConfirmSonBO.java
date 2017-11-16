@@ -19,9 +19,9 @@ public class ConfirmSonBO extends BaseBO {
      */
     private String depart;
     /**
-     * 子表信息
+     * 项目表信息
      */
-    private List<ConfirmTableBO> tableS;
+    private List<ConfirmProBO> confirmProBOS;
 
     public String getDepart() {
         return depart;
@@ -31,11 +31,11 @@ public class ConfirmSonBO extends BaseBO {
         this.depart = depart;
     }
 
-    public List<ConfirmTableBO> getTableS() {
-        return tableS;
+    public List<ConfirmProBO> getConfirmProBOS() {
+        return confirmProBOS;
     }
 
-    public void setTableS(List<ConfirmTableBO> tableS) {
-        this.tableS = tableS;
+    public void setConfirmProBOS(List<ConfirmProBO> confirmProBOS) {
+        this.confirmProBOS = confirmProBOS;
     }
 }

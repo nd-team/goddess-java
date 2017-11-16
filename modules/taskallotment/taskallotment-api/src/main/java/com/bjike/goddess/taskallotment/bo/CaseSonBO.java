@@ -18,10 +18,11 @@ public class CaseSonBO extends BaseBO {
      * 项目组/部门
      */
     private String depart;
+
     /**
-     * 子对象
+     * 项目表
      */
-    private List<CaseTableBO> caseTableS;
+    private List<CaseProBO> caseProBOS;
 
     public String getDepart() {
         return depart;
@@ -31,11 +32,12 @@ public class CaseSonBO extends BaseBO {
         this.depart = depart;
     }
 
-    public List<CaseTableBO> getCaseTableS() {
-        return caseTableS;
+    public List<CaseProBO> getCaseProBOS() {
+        return caseProBOS;
     }
 
-    public void setCaseTableS(List<CaseTableBO> caseTableS) {
-        this.caseTableS = caseTableS;
+    public void setCaseProBOS(List<CaseProBO> caseProBOS) {
+        this.caseProBOS = caseProBOS;
     }
+
 }

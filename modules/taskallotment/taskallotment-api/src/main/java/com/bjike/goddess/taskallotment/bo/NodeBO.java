@@ -1,6 +1,7 @@
 package com.bjike.goddess.taskallotment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.TaskType;
 import com.bjike.goddess.taskallotment.enums.TimeType;
 
@@ -47,6 +48,10 @@ public class NodeBO extends BaseBO {
      * 备注
      */
     private String remark;
+    /**
+     * 节点完成状态
+     */
+    private FinishStatus finishStatus;
 
     public String getExecute() {
         return execute;
@@ -110,5 +115,13 @@ public class NodeBO extends BaseBO {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    public FinishStatus getFinishStatus() {
+        return finishStatus;
+    }
+
+    public void setFinishStatus(FinishStatus finishStatus) {
+        this.finishStatus = finishStatus;
     }
 }

@@ -6,6 +6,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
 import com.bjike.goddess.taskallotment.enums.Status;
@@ -160,6 +161,16 @@ public class ProjectApiImpl implements ProjectAPI {
         dto.getConditions().add(Restrict.eq("status", Status.START));
         dto.getConditions().add(Restrict.eq("area",area));
         return projectSer.findByCis(dto).stream().map(Project::getDepart).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException {
+        return projectSer.projectByAreaAndGroup(projectNameDTO) ;
+    }
+
+    @Override
+    public List<String> tableNamesBypname(ProjectNameDTO projectNameDTO) throws SerException {
+        return projectSer.tableNamesBypname(projectNameDTO) ;
     }
 
     @Override

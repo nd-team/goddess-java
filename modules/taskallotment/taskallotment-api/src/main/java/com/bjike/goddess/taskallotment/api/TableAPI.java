@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.TableBO;
+import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 
 import java.util.List;
@@ -41,4 +42,12 @@ public interface TableAPI {
      * @throws SerException
      */
     List<TableBO> tableNames() throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
 }

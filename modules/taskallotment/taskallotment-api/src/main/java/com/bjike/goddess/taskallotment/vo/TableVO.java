@@ -1,6 +1,7 @@
 package com.bjike.goddess.taskallotment.vo;
 
 import com.bjike.goddess.taskallotment.bo.NodeBO;
+import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.Status;
 
 import java.util.List;
@@ -32,6 +33,10 @@ public class TableVO {
      * 状态
      */
     private Status status;
+    /**
+     * 任务完成状态
+     */
+    private FinishStatus finishStatus;
 
     /**
      * 任务节点名称集合
@@ -76,5 +81,13 @@ public class TableVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public FinishStatus getFinishStatus() {
+        return finishStatus;
+    }
+
+    public void setFinishStatus(FinishStatus finishStatus) {
+        this.finishStatus = finishStatus;
     }
 }

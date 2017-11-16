@@ -2,7 +2,7 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
-import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
 import com.bjike.goddess.taskallotment.bo.figure.DataBO;
@@ -10,6 +10,7 @@ import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
+import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
@@ -343,7 +344,7 @@ public interface TaskNodeAPI {
      * @return
      * @throws SerException
      */
-    List<DayBO> dayReport(String time, String[] names) throws SerException;
+    List<DaysBO> dayReport(String time, String[] names) throws SerException;
 
     /**
      * 日报汇总
@@ -402,6 +403,21 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     void leadExcel(List<TaskNodeLeadTO> toList, String tableId) throws SerException;
+    /**
+     * 整体进度导入任务excel
+     *
+     * @param toList
+     * @throws SerException
+     */
+    void leadWholeTableExcel(List<WholeTaskLeadTO> toList, String projectId) throws SerException;
+
+    /**
+     * 整体进度导出任务excel
+     *
+     * @param projectId
+     * @throws SerException
+     */
+    byte[] wholeExportExcel( String projectId) throws SerException;
 
     /**
      * 根据项目表id获取任务名称

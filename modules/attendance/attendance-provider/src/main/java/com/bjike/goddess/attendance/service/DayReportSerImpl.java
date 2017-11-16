@@ -13,7 +13,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
-import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -118,7 +118,7 @@ public class DayReportSerImpl extends ServiceImpl<DayReport, DayReportDTO> imple
         if (null == time) {
             time = DateUtil.dateToString(LocalDate.now());
         }
-        List<DayBO> list = taskNodeAPI.dayReport(time, names);
+        List<DaysBO> list = taskNodeAPI.dayReport(time, names);
         return BeanTransform.copyProperties(list, DayReportBO.class);
     }
 

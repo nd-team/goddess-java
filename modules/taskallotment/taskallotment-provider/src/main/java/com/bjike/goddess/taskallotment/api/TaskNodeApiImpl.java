@@ -2,15 +2,15 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
-import com.bjike.goddess.taskallotment.bo.DayReport.DayBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
 import com.bjike.goddess.taskallotment.bo.figure.DataBO;
 import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
-import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
+import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.service.TaskNodeSer;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
@@ -202,7 +202,7 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
-    public List<DayBO> dayReport(String time, String[] names) throws SerException {
+    public List<DaysBO> dayReport(String time, String[] names) throws SerException {
         return taskNodeSer.dayReport(time, names);
     }
 
@@ -234,6 +234,16 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     @Override
     public void leadExcel(List<TaskNodeLeadTO> toList, String tableId) throws SerException {
         taskNodeSer.leadExcel(toList, tableId);
+    }
+
+    @Override
+    public void leadWholeTableExcel(List<WholeTaskLeadTO> toList, String projectId) throws SerException {
+        taskNodeSer.leadWholeTableExcel( toList ,projectId);
+    }
+
+    @Override
+    public byte[] wholeExportExcel(String projectId) throws SerException {
+        return taskNodeSer.wholeExportExcel( projectId );
     }
 
     @Override
