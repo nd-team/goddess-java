@@ -12,7 +12,7 @@ import com.bjike.goddess.taskallotment.enums.TaskType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DayBO extends BaseBO {
+public class DaysBO extends BaseBO {
     /**
      * 姓名
      */

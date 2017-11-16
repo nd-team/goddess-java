@@ -552,7 +552,9 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
                         sb.append("<td> </td>");
                     }
                 }
-                List<ConfirmTableBO> caseTableS = sons.get(a).getTableS();
+                //TODO 待改mm
+                List<ConfirmTableBO> caseTableS = null;
+//                List<ConfirmTableBO> caseTableS = sons.get(a).getTableS();
                 int threeSize = twoSize / caseTableS.size();
                 for (int b = 0; b < caseTableS.size(); b++) {
                     if (b != 0) {
@@ -620,7 +622,9 @@ public class ConfirmCountEmailSerImpl extends ServiceImpl<ConfirmCountEmail, Con
         int num = 0;
         List<ConfirmSonBO> sons = finishCaseBO.getConfirmSonS();
         for (ConfirmSonBO sonBO : sons) {
-            List<ConfirmTableBO> caseTableS = sonBO.getTableS();
+            //TODO 待改mm
+            List<ConfirmTableBO> caseTableS = null;
+//            List<ConfirmTableBO> caseTableS = sonBO.getTableS();
             for (ConfirmTableBO table : caseTableS) {
                 List<ConfirmGrandSonBO> grandSonS = table.getGrandSonS();
                 for (ConfirmGrandSonBO grandSonBO : grandSonS) {

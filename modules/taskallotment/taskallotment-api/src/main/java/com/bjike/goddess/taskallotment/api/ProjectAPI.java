@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.entity.Project;
 import com.bjike.goddess.taskallotment.excel.ProjectExcel;
@@ -218,6 +219,22 @@ public interface ProjectAPI {
      * @throws SerException
      */
     List<String> departs(String area) throws SerException;
+    /**
+     * 根据地区部门获取项目名
+     * @param projectNameDTO
+     * @return
+     * @throws SerException
+     */
+    List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException;
+
+    /**
+     * 根据项目获取所有项目表
+     *
+     * @param projectNameDTO
+     * @return
+     * @throws SerException
+     */
+    List<String> tableNamesBypname(ProjectNameDTO projectNameDTO) throws SerException;
 
     /**
      * 根据地区和部门获取立项情况

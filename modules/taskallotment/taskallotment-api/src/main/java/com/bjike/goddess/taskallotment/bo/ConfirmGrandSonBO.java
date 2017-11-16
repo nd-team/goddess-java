@@ -19,6 +19,11 @@ public class ConfirmGrandSonBO extends BaseBO {
      */
     private String name;
     /**
+     * 工作内容
+     */
+    private String taskContent;
+
+    /**
      * 子表
      */
     private List<ConfirmLastBO> confirmLastS;
@@ -29,6 +34,14 @@ public class ConfirmGrandSonBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTaskContent() {
+        return taskContent;
+    }
+
+    public void setTaskContent(String taskContent) {
+        this.taskContent = taskContent;
     }
 
     public List<ConfirmLastBO> getConfirmLastS() {

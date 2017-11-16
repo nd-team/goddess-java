@@ -55,6 +55,11 @@ public class TaskNodeDTO extends BaseDTO {
     @NotNull(groups = {TaskNodeDTO.PERSON.class}, message = "项目组/部门不能为空")
     private String[] depart;
     /**
+     * 项目名称
+     */
+    @NotNull(groups = {TaskNodeDTO.PERSON.class}, message = "项目名称不能为空")
+    private String[] projects;
+    /**
      * 员工
      */
     @NotNull(groups = {TaskNodeDTO.PERSON.class}, message = "员工不能为空")
@@ -130,6 +135,14 @@ public class TaskNodeDTO extends BaseDTO {
 
     public void setDepart(String[] depart) {
         this.depart = depart;
+    }
+
+    public String[] getProjects() {
+        return projects;
+    }
+
+    public void setProjects(String[] projects) {
+        this.projects = projects;
     }
 
     public String[] getName() {

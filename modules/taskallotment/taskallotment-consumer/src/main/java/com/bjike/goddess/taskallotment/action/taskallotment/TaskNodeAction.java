@@ -25,6 +25,9 @@ import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.excel.TaskNodeExcel;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
+import com.bjike.goddess.taskallotment.excel.WholeTaskExcel;
+import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.DeleteFileTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
@@ -947,6 +950,50 @@ public class TaskNodeAction extends BaseFileAction {
 
 
     /**
+     * 整体进度导入任务excel
+     *
+     * @param projectId 项目表id
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/whole/lead/excel/{projectId}")
+    public Result leadWholeTableExcel(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<WholeTaskExcel> toList = ExcelUtil.mergeExcelToClazz(is, WholeTaskExcel.class, excel);
+            List<WholeTaskLeadTO> tos = BeanTransform.copyProperties(toList, WholeTaskLeadTO.class);
+            taskNodeAPI.leadWholeTableExcel(tos, projectId);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 整体进度导出任务excel
+     *
+     * @param projectId 项目表id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/whole/export/excel/{projectId}")
+    public Result wholeExportExcel(@PathVariable  String projectId, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "整体任务节点.xlsx";
+            super.writeOutFile(response, taskNodeAPI.wholeExportExcel(projectId), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+    /**
      * 根据项目表id获取任务名称
      *
      * @param tableId 项目表id
@@ -1044,4 +1091,23 @@ public class TaskNodeAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+
+    /**
+     * 根据项目表id获取任务名称
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/test")
+    public Result test(CollectDataTO collectDataTO) throws ActException {
+        try {
+            CollectDataVO ss = taskNodeAPI.personProjectCollect(collectDataTO);
+            return ActResult.initialize( ss );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

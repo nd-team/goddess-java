@@ -22,22 +22,27 @@ import com.bjike.goddess.taskallotment.entity.*;
 import com.bjike.goddess.taskallotment.enums.*;
 import com.bjike.goddess.taskallotment.excel.TaskNodeExcel;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
+import com.bjike.goddess.taskallotment.excel.WholeTaskExportExcel;
+import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.*;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -1704,6 +1709,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        LocalDate end = DateUtil.parseDate(dto.getEndTime());
         String[] areas = dto.getArea();
         String[] departs = dto.getDepart();
+        String[] projects = dto.getProjects();
         String[] names = dto.getName();
         String[] tables = dto.getTables();
         CountType countType = dto.getCountType();
@@ -1711,7 +1717,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
 //        dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
         if (null == countType) {
-            return cCount(dto, areas, departs, null, tables);
+            return cCount(dto, areas, departs, projects, null, tables);
         } else if (CountType.WHOLE.equals(countType)) {
             List<String> as = areas();
             String[] area = new String[as.size()];
@@ -1723,16 +1729,16 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (!ds.isEmpty()) {
                 depart = ds.toArray(depart);
             }
-            return cCount(dto, area, depart, null, tables);
+            return cCount(dto, area, depart, projects, null, tables);
         } else if (CountType.DEPART.equals(countType)) {
-            return cCount(dto, areas, departs, null, tables);
+            return cCount(dto, areas, departs, projects, null, tables);
         } else if (CountType.PERSON.equals(countType)) {
-            return cCount(dto, areas, departs, names, tables);
+            return cCount(dto, areas, departs, projects, names, tables);
         }
         return null;
     }
 
-    private List<ConfirmCountBO> cCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names, String[] ts) throws
+    private List<ConfirmCountBO> cCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] ps, String[] names, String[] ts) throws
             SerException {
         if (null == areas) {
             throw new SerException("不是整体汇总必须选择地区");
@@ -1743,6 +1749,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.getConditions().add(Restrict.in("area", areas));
         projectDTO.getConditions().add(Restrict.in("depart", departs));
+        projectDTO.getConditions().add(Restrict.in("project", ps));
         List<Project> projects = projectSer.findByCis(projectDTO);
         List<ConfirmCountBO> confirmCountBOS = new ArrayList<>();
         long haveInitiateSum = 0;
@@ -1758,39 +1765,87 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             long toConfirmArea = 0;     //地区合计
             ConfirmCountBO confirmCountBO = new ConfirmCountBO();
             List<ConfirmSonBO> confirmSonBOS = new ArrayList<>();
+
             for (String depart : departs) {   //子层
-                List<ConfirmTableBO> confirmTableBOS = new ArrayList<>();
+                long haveInitiateDepart = 0;
+                long noInitiateDepart = 0;
+                long confirmDepart = 0;
+                long unConfirmDepart = 0;
+                long toConfirmDepart = 0;     //部门合计
+
+                List<ConfirmProBO> caseSonBOS = new ArrayList<>();
+//                List<ConfirmTableBO> confirmTableBOS = new ArrayList<>();
                 Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
                 TableDTO tableDTO = new TableDTO();
                 if (!projectIds.isEmpty()) {
                     ConfirmSonBO confirmSonBO = new ConfirmSonBO();
                     confirmCountBO.setArea(area);
                     confirmSonBO.setDepart(depart);
-                    tableDTO.getConditions().add(Restrict.in("projectId", projectIds));
-                    if (null != ts) {
-                        tableDTO.getConditions().add(Restrict.in("name", ts));
-                    }
-                    List<Table> tables = tableSer.findByCis(tableDTO);
-                    Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+
+                    for (String pro : ps) {
+                        ConfirmProBO caseProBO = new ConfirmProBO();
+                        caseProBO.setProject(pro);
+                        List<ConfirmTableBO> confirmTableBOS = new ArrayList<>();
+                        tableDTO.getConditions().add(Restrict.in("projectId", projectIds));
+                        if (null != ts) {
+                            tableDTO.getConditions().add(Restrict.in("name", ts));
+                        }
+                        List<Table> tables = tableSer.findByCis(tableDTO);
+                        Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
 //                    dto.getConditions().add(Restrict.in("tableId", tableIds));
-                    List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
-                    long haveInitiateDepart = 0;
-                    long noInitiateDepart = 0;
-                    long confirmDepart = 0;
-                    long unConfirmDepart = 0;
-                    long toConfirmDepart = 0;     //部门合计
-                    for (String table : tableIds) {   //孙子
-                        List<ConfirmGrandSonBO> confirmGrandSonBOS = new ArrayList<>();
-                        ConfirmTableBO tableBO = new ConfirmTableBO();
-                        tableBO.setTableName(tableSer.findById(table).getName());
-                        //最底层
-                        if (null != names) {
-                            for (String name : names) {
+                        List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
+
+                        for (String table : tableIds) {   //孙子
+                            List<ConfirmGrandSonBO> confirmGrandSonBOS = new ArrayList<>();
+                            ConfirmTableBO tableBO = new ConfirmTableBO();
+                            tableBO.setTableName(tableSer.findById(table).getName());
+                            //最底层
+                            if (null != names) {
+                                for (String name : names) {
+                                    List<ConfirmLastBO> confirmLastBOS = new ArrayList<>();
+                                    ConfirmGrandSonBO confirmGrandSonBO = new ConfirmGrandSonBO();
+                                    confirmGrandSonBO.setName(name);
+                                    //TODO 任务内容 该员工在该任务表里面的任务内容
+                                    TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                                    taskNodeDTO.getConditions().add(Restrict.eq("tableId", tableIds));
+                                    taskNodeDTO.getConditions().add(Restrict.eq("execute", name));
+                                    List<TaskNode> taskContents = super.findByCis(taskNodeDTO);
+                                    if (taskContents != null && taskContents.size() > 0) {
+                                        List<String> temp_content = taskContents.stream().map(TaskNode::getContent).collect(Collectors.toList());
+                                        confirmGrandSonBO.setTaskContent(String.join(",", temp_content));
+                                    } else {
+                                        confirmGrandSonBO.setTaskContent("");
+                                    }
+                                    for (TaskType taskType : taskTypes()) {
+                                        ConfirmLastBO confirmLastBO = getConfirm1(taskNodes, taskType, name, table);
+                                        confirmLastBOS.add(confirmLastBO);
+                                    }
+                                    confirmGrandSonBO.setConfirmLastS(confirmLastBOS);
+                                    confirmGrandSonBOS.add(confirmGrandSonBO);
+                                    //部门合计
+                                    haveInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                                    noInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                                    confirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                                    unConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                                    toConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                                    //地区合计
+                                    haveInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                                    noInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                                    confirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                                    unConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                                    toConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                                    //总合计
+                                    haveInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
+                                    noInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
+                                    confirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
+                                    unConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
+                                    toConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                                }
+                            } else {
                                 List<ConfirmLastBO> confirmLastBOS = new ArrayList<>();
                                 ConfirmGrandSonBO confirmGrandSonBO = new ConfirmGrandSonBO();
-                                confirmGrandSonBO.setName(name);
                                 for (TaskType taskType : taskTypes()) {
-                                    ConfirmLastBO confirmLastBO = getConfirm1(taskNodes, taskType, name, table);
+                                    ConfirmLastBO confirmLastBO = getConfirm(taskNodes, taskType, table);
                                     confirmLastBOS.add(confirmLastBO);
                                 }
                                 confirmGrandSonBO.setConfirmLastS(confirmLastBOS);
@@ -1814,39 +1869,19 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                                 unConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
                                 toConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
                             }
-                        } else {
-                            List<ConfirmLastBO> confirmLastBOS = new ArrayList<>();
-                            ConfirmGrandSonBO confirmGrandSonBO = new ConfirmGrandSonBO();
-                            for (TaskType taskType : taskTypes()) {
-                                ConfirmLastBO confirmLastBO = getConfirm(taskNodes, taskType, table);
-                                confirmLastBOS.add(confirmLastBO);
-                            }
-                            confirmGrandSonBO.setConfirmLastS(confirmLastBOS);
-                            confirmGrandSonBOS.add(confirmGrandSonBO);
-                            //部门合计
-                            haveInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
-                            noInitiateDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
-                            confirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
-                            unConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
-                            toConfirmDepart += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
-                            //地区合计
-                            haveInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
-                            noInitiateArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
-                            confirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
-                            unConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
-                            toConfirmArea += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
-                            //总合计
-                            haveInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getHaveInitiate()).sum();
-                            noInitiateSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getNoInitiate()).sum();
-                            confirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getConfirm()).sum();
-                            unConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getUnConfirm()).sum();
-                            toConfirmSum += confirmLastBOS.stream().mapToLong(confirmLastBO -> confirmLastBO.getToConfirm()).sum();
+                            tableBO.setGrandSonS(confirmGrandSonBOS);
+                            confirmTableBOS.add(tableBO);
                         }
-                        tableBO.setGrandSonS(confirmGrandSonBOS);
-                        confirmTableBOS.add(tableBO);
+//
+                        if (!confirmTableBOS.isEmpty()) {
+                            caseProBO.setTableS(confirmTableBOS);
+                            caseSonBOS.add(caseProBO);
+                        }
+
+
                     }
-                    if (!confirmTableBOS.isEmpty()) {
-                        confirmSonBO.setTableS(confirmTableBOS);
+                    if (!caseSonBOS.isEmpty()) {
+                        confirmSonBO.setConfirmProBOS(caseSonBOS);
                         confirmSonBOS.add(confirmSonBO);
                     }
                     if (!(haveInitiateDepart == 0 && noInitiateDepart == 0 && confirmDepart == 0 && unConfirmDepart == 0 && toConfirmDepart == 0)) {
@@ -1881,6 +1916,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         confirmLastS.add(lastBO);
         List<ConfirmGrandSonBO> grandSonS = new ArrayList<>();
         ConfirmGrandSonBO grandSonBO = new ConfirmGrandSonBO();
+        List<ConfirmProBO> proS = new ArrayList<>();
+        ConfirmProBO confirmProBO = new ConfirmProBO();
         grandSonBO.setConfirmLastS(confirmLastS);
         grandSonS.add(grandSonBO);
         List<ConfirmTableBO> tableS = new ArrayList<>();
@@ -1888,7 +1925,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         confirmTableBO.setGrandSonS(grandSonS);
         tableS.add(confirmTableBO);
         ConfirmSonBO departCount = new ConfirmSonBO();
-        departCount.setTableS(tableS);
+        confirmProBO.setTableS(tableS);
+        proS.add(confirmProBO);
+        departCount.setConfirmProBOS(proS);
+//        departCount.setTableS(tableS);
         departCount.setDepart("合计");
         return departCount;
     }
@@ -1904,6 +1944,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         confirmLastS.add(lastBO);
         List<ConfirmGrandSonBO> grandSonS = new ArrayList<>();
         ConfirmGrandSonBO grandSonBO = new ConfirmGrandSonBO();
+        List<ConfirmProBO> proS = new ArrayList<>();
+        ConfirmProBO confirmProBO = new ConfirmProBO();
         grandSonBO.setConfirmLastS(confirmLastS);
         grandSonS.add(grandSonBO);
         List<ConfirmTableBO> tableS = new ArrayList<>();
@@ -1911,7 +1953,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         confirmTableBO.setGrandSonS(grandSonS);
         tableS.add(confirmTableBO);
         ConfirmSonBO departCount = new ConfirmSonBO();
-        departCount.setTableS(tableS);
+        confirmProBO.setTableS(tableS);
+        departCount.setConfirmProBOS(proS);
+//        departCount.setTableS(tableS);
         List<ConfirmSonBO> sonBOS = new ArrayList<>();
         sonBOS.add(departCount);
         ConfirmCountBO confirmCountBO = new ConfirmCountBO();
@@ -2169,6 +2213,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        LocalDate end = DateUtil.parseDate(dto.getEndTime());
         String[] areas = dto.getArea();
         String[] departs = dto.getDepart();
+        String[] ps = dto.getProjects();
         String[] names = dto.getName();
         String[] tables = dto.getTables();
         CountType countType = dto.getCountType();
@@ -2176,7 +2221,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        dto.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
 //        dto.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
         if (null == countType) {
-            return fCount(dto, areas, departs, null, tables);
+            return fCount(dto, areas, departs, ps, null, tables);
         } else if (CountType.WHOLE.equals(countType)) {
             List<String> as = areas();
             String[] area = new String[as.size()];
@@ -2188,22 +2233,25 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (!ds.isEmpty()) {
                 depart = ds.toArray(depart);
             }
-            return fCount(dto, area, depart, null, tables);
+            return fCount(dto, area, depart, ps, null, tables);
         } else if (CountType.DEPART.equals(countType)) {
-            return fCount(dto, areas, departs, null, tables);
+            return fCount(dto, areas, departs, ps, null, tables);
         } else if (CountType.PERSON.equals(countType)) {
-            return fCount(dto, areas, departs, names, tables);
+            return fCount(dto, areas, departs, ps, names, tables);
         }
         return null;
     }
 
-    private List<FinishCaseBO> fCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names, String[] ts) throws SerException {
+    private List<FinishCaseBO> fCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] ps, String[] names, String[] ts) throws SerException {
         ProjectDTO projectDTO = new ProjectDTO();
         if (null != areas && areas.length > 0) {
             projectDTO.getConditions().add(Restrict.in("area", areas));
         }
         if (null != departs && departs.length > 0) {
             projectDTO.getConditions().add(Restrict.in("depart", departs));
+        }
+        if (null != ps && ps.length > 0) {
+            projectDTO.getConditions().add(Restrict.in("project", ps));
         }
         List<Project> projects = projectSer.findByCis(projectDTO);
         List<FinishCaseBO> finishCaseBOS = new ArrayList<>();
@@ -2227,6 +2275,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             FinishCaseBO finishCaseBO = new FinishCaseBO();
             List<CaseSonBO> caseSonBOS = new ArrayList<>();
             for (String depart : departs) {
+//                List<CaseProBO> caseProBOS = new ArrayList<>();
+//                for (String pro : ps) {
                 double planNumDepart = 0;
                 double actualNumDepart = 0;
                 double unFinishNumDepart = 0;
@@ -2235,32 +2285,90 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 double unFinishTimeDepart = 0;
                 double reportUnFinishDepart = 0;
                 double unReportUnFinishDepart = 0;   //部门合计
-                List<CaseTableBO> tableBOS = new ArrayList<>();
+//                List<CaseTableBO> tableBOS = new ArrayList<>();
+                List<CaseProBO> caseProBOS = new ArrayList<>();
                 Set<String> projectIds = projects.stream().filter(project -> area.equals(project.getArea()) && depart.equals(project.getDepart())).map(project -> project.getId()).collect(Collectors.toSet());
                 TableDTO tableDTO = new TableDTO();
                 if (!projectIds.isEmpty()) {
                     CaseSonBO caseSonBO = new CaseSonBO();
                     finishCaseBO.setArea(area);
                     caseSonBO.setDepart(depart);
-                    tableDTO.getConditions().add(Restrict.in("projectId", projectIds));
-                    if (null != ts) {
-                        tableDTO.getConditions().add(Restrict.in("name", ts));
-                    }
-                    List<Table> tables = tableSer.findByCis(tableDTO);
-                    Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
+
+                    for (String pro : ps) {
+                        CaseProBO caseProBO = new CaseProBO();
+                        caseProBO.setProName(pro);
+                        List<CaseTableBO> tableBOS = new ArrayList<>();
+                        tableDTO.getConditions().add(Restrict.in("projectId", projectIds));
+                        if (null != ts) {
+                            tableDTO.getConditions().add(Restrict.in("name", ts));
+                        }
+                        List<Table> tables = tableSer.findByCis(tableDTO);
+                        Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
 //                    dto.getConditions().add(Restrict.in("tableId", tableIds));
-                    List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
-                    for (String table : tableIds) {
-                        CaseTableBO tableBO = new CaseTableBO();
-                        List<CaseGrandSonBO> grandSonBOS = new ArrayList<>();
-                        tableBO.setTableName(tableSer.findById(table).getName());
-                        if (null != names) {
-                            for (String name : names) {
+                        List<TaskNode> taskNodes = find(dto.getStartTime(), dto.getEndTime(), tableIds);
+                        for (String table : tableIds) {
+                            CaseTableBO tableBO = new CaseTableBO();
+                            List<CaseGrandSonBO> grandSonBOS = new ArrayList<>();
+                            tableBO.setTableName(tableSer.findById(table).getName());
+                            if (null != names) {
+                                //说明是个人汇总
+                                for (String name : names) {
+                                    List<CaseLastBO> caseLastBOS = new ArrayList<>();
+                                    CaseGrandSonBO caseGrandSonBO = new CaseGrandSonBO();
+                                    //人名
+                                    caseGrandSonBO.setName(name);
+                                    //TODO 任务内容 该员工在该任务表里面的任务内容
+                                    TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                                    taskNodeDTO.getConditions().add(Restrict.eq("tableId", tableIds));
+                                    taskNodeDTO.getConditions().add(Restrict.eq("execute", name));
+                                    List<TaskNode> taskContents = super.findByCis(taskNodeDTO);
+                                    if (taskContents != null && taskContents.size() > 0) {
+                                        List<String> temp_content = taskContents.stream().map(TaskNode::getContent).collect(Collectors.toList());
+                                        caseGrandSonBO.setTaskContent(String.join(",", temp_content));
+                                    } else {
+                                        caseGrandSonBO.setTaskContent("");
+                                    }
+                                    for (TaskType taskType : taskTypes()) {
+                                        CaseLastBO caseLastBO = get1(taskNodes, taskType, name, table);
+                                        caseLastBOS.add(caseLastBO);
+                                    }
+                                    if (!caseLastBOS.isEmpty()) {
+                                        caseGrandSonBO.setCaseLastS(caseLastBOS);
+                                        grandSonBOS.add(caseGrandSonBO);
+                                    }
+                                    //部门合计
+                                    planNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                                    actualNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                                    unFinishNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                                    planTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                                    actualTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                                    unFinishTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                                    reportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                                    unReportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                                    //地区合计
+                                    planNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                                    actualNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                                    unFinishNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                                    planTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                                    actualTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                                    unFinishTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                                    reportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                                    unReportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                                    //总合计
+                                    planNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
+                                    actualNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
+                                    unFinishNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
+                                    planTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
+                                    actualTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
+                                    unFinishTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
+                                    reportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
+                                    unReportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
+                                }
+                            } else {
                                 List<CaseLastBO> caseLastBOS = new ArrayList<>();
                                 CaseGrandSonBO caseGrandSonBO = new CaseGrandSonBO();
-                                caseGrandSonBO.setName(name);
                                 for (TaskType taskType : taskTypes()) {
-                                    CaseLastBO caseLastBO = get1(taskNodes, taskType, name, table);
+                                    CaseLastBO caseLastBO = get(taskNodes, taskType, table);
                                     caseLastBOS.add(caseLastBO);
                                 }
                                 if (!caseLastBOS.isEmpty()) {
@@ -2295,52 +2403,22 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                                 reportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
                                 unReportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
                             }
-                        } else {
-                            List<CaseLastBO> caseLastBOS = new ArrayList<>();
-                            CaseGrandSonBO caseGrandSonBO = new CaseGrandSonBO();
-                            for (TaskType taskType : taskTypes()) {
-                                CaseLastBO caseLastBO = get(taskNodes, taskType, table);
-                                caseLastBOS.add(caseLastBO);
+                            if (!grandSonBOS.isEmpty()) {
+                                tableBO.setGrandSonS(grandSonBOS);
+                                tableBOS.add(tableBO);
                             }
-                            if (!caseLastBOS.isEmpty()) {
-                                caseGrandSonBO.setCaseLastS(caseLastBOS);
-                                grandSonBOS.add(caseGrandSonBO);
-                            }
-                            //部门合计
-                            planNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
-                            actualNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
-                            unFinishNumDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
-                            planTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
-                            actualTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
-                            unFinishTimeDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
-                            reportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
-                            unReportUnFinishDepart += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
-                            //地区合计
-                            planNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
-                            actualNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
-                            unFinishNumArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
-                            planTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
-                            actualTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
-                            unFinishTimeArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
-                            reportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
-                            unReportUnFinishArea += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
-                            //总合计
-                            planNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanNum).sum();
-                            actualNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualNum).sum();
-                            unFinishNumSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishNum).sum();
-                            planTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getPlanTime).sum();
-                            actualTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getActualTime).sum();
-                            unFinishTimeSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnFinishTime).sum();
-                            reportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getReportUnFinish).sum();
-                            unReportUnFinishSum += caseLastBOS.stream().mapToDouble(CaseLastBO::getUnReportUnFinish).sum();
                         }
-                        if (!grandSonBOS.isEmpty()) {
-                            tableBO.setGrandSonS(grandSonBOS);
-                            tableBOS.add(tableBO);
+                        if (!tableBOS.isEmpty()) {
+                            caseProBO.setCaseTableBOS(tableBOS);
+                            caseProBOS.add(caseProBO);
+                            //
+//                            caseSonBO.setCaseProBOS( caseProBOS );
+//                            caseSonBOS.add(caseSonBO);
                         }
                     }
-                    if (!tableBOS.isEmpty()) {
-                        caseSonBO.setCaseTableS(tableBOS);
+                    if (!caseProBOS.isEmpty()) {
+//                        caseSonBO.setCaseTableS(tableBOS);
+                        caseSonBO.setCaseProBOS(caseProBOS);
                         caseSonBOS.add(caseSonBO);
                     }
                     if (!(planNumDepart == 0 && actualNumDepart == 0 && unFinishNumDepart == 0 && planTimeDepart == 0 && actualTimeDepart == 0 && unFinishTimeDepart == 0 && reportUnFinishDepart == 0 && unReportUnFinishDepart == 0)) {
@@ -2348,6 +2426,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                         caseSonBOS.add(departCount);
                     }
                 }
+//                }
             }
             if (!caseSonBOS.isEmpty()) {
                 finishCaseBO.setCaseSonS(caseSonBOS);
@@ -2363,12 +2442,15 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return finishCaseBOS;
     }
 
+
     //部门合计
     private CaseSonBO departCount(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish) throws SerException {
         CaseLastBO lastBO = new CaseLastBO(planNum, actualNum, unFinishNum, planTime, actualTime, unFinishTime, reportUnFinish, unReportUnFinish);
         CaseSonBO depart = new CaseSonBO();
         depart.setDepart("合计");
         List<CaseTableBO> caseTableS = new ArrayList<>();
+        List<CaseProBO> caseProS = new ArrayList<>();
+        CaseProBO caseProBO = new CaseProBO();
         CaseTableBO tableBO = new CaseTableBO();
         List<CaseGrandSonBO> grandSonS = new ArrayList<>();
         CaseGrandSonBO grandSonBO = new CaseGrandSonBO();
@@ -2378,7 +2460,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         grandSonS.add(grandSonBO);
         tableBO.setGrandSonS(grandSonS);
         caseTableS.add(tableBO);
-        depart.setCaseTableS(caseTableS);
+        caseProBO.setCaseTableBOS(caseTableS);
+        caseProS.add(caseProBO);
+        depart.setCaseProBOS(caseProS);
+//        depart.setCaseTableS(caseTableS);
         return depart;
     }
 
@@ -2388,6 +2473,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         CaseSonBO depart = new CaseSonBO();
         List<CaseTableBO> caseTableS = new ArrayList<>();
         CaseTableBO tableBO = new CaseTableBO();
+        List<CaseProBO> caseProS = new ArrayList<>();
+        CaseProBO proBO = new CaseProBO();
         List<CaseGrandSonBO> grandSonS = new ArrayList<>();
         CaseGrandSonBO grandSonBO = new CaseGrandSonBO();
         List<CaseLastBO> caseLastS = new ArrayList<>();
@@ -2396,7 +2483,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         grandSonS.add(grandSonBO);
         tableBO.setGrandSonS(grandSonS);
         caseTableS.add(tableBO);
-        depart.setCaseTableS(caseTableS);
+        proBO.setCaseTableBOS(caseTableS);
+        caseProS.add(proBO);
+        depart.setCaseProBOS(caseProS);
+//        depart.setCaseTableS(caseTableS);
         List<CaseSonBO> caseSonBOS = new ArrayList<>();
         caseSonBOS.add(depart);
         FinishCaseBO finishCaseBO = new FinishCaseBO();
@@ -2599,9 +2689,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public List<DayBO> dayReport(String time, String[] names) throws SerException {
+    public List<DaysBO> dayReport(String time, String[] names) throws SerException {
         LocalDate date = DateUtil.parseDate(time);
-        List<DayBO> bos = new ArrayList<>();
+        List<DaysBO> bos = new ArrayList<>();
         for (String string : names) {
             String depart = null;
             String position = null;
@@ -2621,7 +2711,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             List<TaskNode> nexts = super.findByCis(next);
             for (TaskNode current : currents) {
                 String name = current.getExecute();
-                DayBO bo = BeanTransform.copyProperties(current, DayBO.class);
+                DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class);
                 bo.setName(name);
                 bo.setTime(time);
                 double taskTime = time(current.getNeedTime(), current.getNeedType());
@@ -2633,7 +2723,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             for (int i = 0; i < bos.size(); i++) {
                 if (i < nexts.size()) {
                     TaskNode taskNode = nexts.get(i);
-                    DayBO bo = bos.get(i);
+                    DaysBO bo = bos.get(i);
                     bo.setPlan(taskNode.getContent());
                     bo.setPlanTime(time(taskNode.getNeedTime(), taskNode.getNeedType()));
                 }
@@ -2641,7 +2731,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (nexts.size() > currents.size()) {    //明天任务条数比当天多的情况
                 int i = currents.size();
                 while (i < nexts.size()) {
-                    DayBO bo = new DayBO();
+                    DaysBO bo = new DaysBO();
                     bo.setTime(time);
                     bo.setName(string);
                     bo.setDepart(depart);
@@ -2856,7 +2946,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 sb.append("execute in (" + executeStr + ") AND ");
             }
         }
-        sb.append("(DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '"+startTime+"' AND '"+endTime+"')  and (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '"+startTime+"' AND '"+endTime+"') and haveSon is null");
+        sb.append("(DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "')  and (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "') and haveSon is null");
         List<TaskNode> ids = super.findBySql(sb.toString(), TaskNode.class, new String[]{"id"});
         List<TaskNode> list = new ArrayList<>();
         if (null != ids) {
@@ -2903,14 +2993,14 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     //查询某人某段时间的加班时长，注意，考勤数据库与任务分配数据库必须为同一个，不考虑分库
     private Double outTime(String name, String startTime, String endTime) throws SerException {
-        String sql="SELECT sum(overLong) time " +
+        String sql = "SELECT sum(overLong) time " +
                 "FROM attendance_overwork " +
-                "WHERE overWorker = '"+name+"' AND " +
-                "      (DATE_FORMAT(overStartTime, '%Y-%m-%d') BETWEEN '"+startTime+"' AND '"+endTime+"') OR " +
-                "      (DATE_FORMAT(overEndTime, '%Y-%m-%d') BETWEEN '"+startTime+"' AND '"+endTime+"')";
+                "WHERE overWorker = '" + name + "' AND " +
+                "      (DATE_FORMAT(overStartTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "') OR " +
+                "      (DATE_FORMAT(overEndTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "')";
         List<ObjectBO> list = super.findBySql(sql, ObjectBO.class, new String[]{"time"});
         if (null != list) {
-            return list.stream().filter(objectBO -> null!=objectBO.getTime()).mapToDouble(ObjectBO::getTime).sum();
+            return list.stream().filter(objectBO -> null != objectBO.getTime()).mapToDouble(ObjectBO::getTime).sum();
         }
         return 0d;
     }
@@ -2982,6 +3072,217 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
+    public void leadWholeTableExcel(List<WholeTaskLeadTO> toList, String projectId) throws SerException {
+        if (StringUtils.isBlank(projectId)) {
+            throw new SerException("项目表id不能为空");
+        }
+        List<TaskNode> list = new ArrayList<>();
+        String tableName = "";
+        String tableId = "";
+        String temp_tableId = "";
+        Table table = new Table();
+        for (WholeTaskLeadTO wholeTask : toList) {
+            if (!tableName.equals(wholeTask.getName())) {
+                table.setCreater(wholeTask.getCreater());
+                table.setName(wholeTask.getName());
+                table.setStatus(Status.START);
+//                table.setFinishStatus(FinishStatus.UNFINISHED);
+                table.setProjectId(projectId);
+                table = tableSer.save(table);
+
+                tableName = wholeTask.getName();
+                temp_tableId = table.getId();
+                tableId = table.getId();
+            } else {
+                tableId = temp_tableId;
+            }
+
+            TaskNode taskNode = BeanTransform.copyProperties(wholeTask, TaskNode.class, true, "name", "status", "creater");
+            taskNode.setTableId(tableId);
+            System.out.println(tableId);
+            list.add(taskNode);
+            table = new Table();
+        }
+        super.save(list);
+    }
+
+    @Override
+    public byte[] wholeExportExcel(String projectId) throws SerException {
+        List<WholeTaskExportExcel> exportExcelList = new ArrayList<>();
+
+        if (StringUtils.isBlank(projectId)) {
+            throw new SerException("项目id不能为空");
+        }
+        Project project = projectSer.findById(projectId);
+        if (null == project) {
+            throw new SerException("该项目id不存在");
+        }
+
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.getSorts().add("createTime=desc");
+        tableDTO.getConditions().add(Restrict.eq("projectId", projectId));
+        List<Table> tableList = tableSer.findByCis(tableDTO);
+        if (tableList == null) {
+            //TODO
+            exportExcelList.add(new WholeTaskExportExcel());
+
+        } else {
+            for (Table table : tableList) {
+                TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                taskNodeDTO.getConditions().add(Restrict.eq("tableId", table.getId()));
+                List<TaskNode> taskNodeList = super.findByCis(taskNodeDTO);
+                if (taskNodeList != null) {
+                    List<WholeTaskExportExcel> temp = new ArrayList<>();
+                    for (TaskNode nodeTask : taskNodeList) {
+                        WholeTaskExportExcel wholeTask = BeanTransform.copyProperties(nodeTask, WholeTaskExportExcel.class, "planTime", "startTime", "endTime");
+                        wholeTask.setPlanTime(DateUtil.dateToString(nodeTask.getPlanTime()).replaceAll("T", " "));
+                        if (null != nodeTask.getStartTime()) {
+                            wholeTask.setStartTime(nodeTask.getStartTime());
+                        }
+                        if (null != wholeTask.getEndTime()) {
+                            wholeTask.setEndTime(nodeTask.getEndTime());
+                        }
+                        wholeTask.setTableId(table.getId());
+                        wholeTask.setStatus(table.getStatus());
+                        wholeTask.setCreater(table.getCreater());
+                        wholeTask.setName(table.getName());
+
+                        temp.add(wholeTask);
+                    }
+                    exportExcelList.addAll(temp);
+                }
+            }
+
+        }
+        Excel excel = new Excel(0, 2);
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet(excel.getSheetName());
+        XSSFCellStyle contentStyle = ExcelUtil.getStyle(wb, excel.getContentBGColor());
+        // 设置execl工作簿中的列名
+        String[] excelHeader = EXCELHEAD;//Excel表头
+        XSSFRow row = sheet.createRow(0);//创建第一行
+        row.setHeight((short) 400);//设置第一行单元格的高度
+
+        for (int i = 0, length = excelHeader.length; i < length; i++) {
+            XSSFCell cell = row.createCell(i);
+            if (i == 0 || i == 4 || i == 8) {
+                sheet.setColumnWidth(i, 2000); //设置单元格的宽
+            } else if (i == 18) {
+                sheet.setColumnWidth(i, 5000);
+            } else {
+                sheet.setColumnWidth(i, 4000);
+            }
+            cell.setCellValue(excelHeader[i]);//设置单元格的值
+            cell.setCellStyle(ExcelUtil.getStyle(wb, excel.getHeaderBGColor()));   //设置样式
+        }
+
+        if (exportExcelList != null && exportExcelList.size() > 0) {
+            createRowDetail(exportExcelList, row, sheet);//填充数据
+
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
+
+
+    }
+
+    /**
+     * @param list  整体任务数据信息集合
+     * @param row
+     * @param sheet Excel表单
+     * @description 创建数据行
+     */
+    public void createRowDetail(List<WholeTaskExportExcel> list, XSSFRow row, XSSFSheet sheet) {
+        int firstRow = 0;
+        int lastRow = 0;
+        int firstCol = 0;
+        int lastCol = 0;
+        String tableId = list.get(0).getTableId();
+        if (list != null && list.size() > 0) {
+            firstRow = 1;
+            lastRow = 1;
+            firstCol = 0;
+            lastCol = 0;
+        }
+        int index = 0;
+        int showFlag = 0;
+        for (WholeTaskExportExcel exportEntity : list) {
+            lastRow = index;
+
+            if (!exportEntity.getTableId().equals(tableId) && firstRow == lastRow) {
+                //不合并
+                firstRow++;
+                showFlag = 1;
+            } else if (exportEntity.getTableId().equals(tableId) && firstRow == lastRow) {
+                //合并
+                if (index != 0 && index < list.size() - 1 && !tableId.equals(list.get(index + 1).getTableId())) {
+//                    sheet = assiableMergeData(sheet, firstRow - showFlag, lastRow);
+                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+
+                }
+                if (index == list.size() - 1) {
+                    sheet = assiableMergeData(sheet, lastRow + 1 - showFlag, lastRow + 1);
+                }
+                firstRow++;
+                tableId = exportEntity.getTableId();
+            }
+
+            if (exportEntity.getTableId().equals(tableId)) {
+                showFlag++;
+            } else if (!exportEntity.getTableId().equals(tableId)) {
+                tableId = exportEntity.getTableId();
+            }
+
+            ++index;
+            row = sheet.createRow(index);    // 每循环一次创建一行
+            int callIndex = 0;
+//            row.createCell(callIndex++).setCellValue(index);//设置行的索引
+            row.createCell(callIndex++).setCellValue(exportEntity.getName());
+            row.createCell(callIndex++).setCellValue(Status.START.equals(exportEntity.getStatus()) ? "启用" : "禁用");
+            row.createCell(callIndex++).setCellValue(exportEntity.getCreater());
+            row.createCell(callIndex++).setCellValue(exportEntity.getInitiate());
+            row.createCell(callIndex++).setCellValue(exportEntity.getTaskName());
+            row.createCell(callIndex++).setCellValue(exportEntity.getCharge());
+            row.createCell(callIndex++).setCellValue(exportEntity.getExecute());
+            row.createCell(callIndex++).setCellValue("" + exportEntity.getPlanTime());
+            row.createCell(callIndex++).setCellValue(TaskType.ADMININSTRATION.equals(exportEntity.getTaskType()) ? "行政任务" : TaskType.ENGINEERING.equals(exportEntity.getTaskType()) ? "工程任务" : "培训任务");
+            row.createCell(callIndex++).setCellValue(exportEntity.getType());
+            row.createCell(callIndex++).setCellValue(exportEntity.getContent());
+            row.createCell(callIndex++).setCellValue(exportEntity.getPlanNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getActualNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getNeedTime());
+            row.createCell(callIndex++).setCellValue(TimeType.DAY.equals(exportEntity.getNeedType()) ? "天" : TimeType.HOUR.equals(exportEntity.getNeedType()) ? "小时" : "分钟");
+            row.createCell(callIndex++).setCellValue(null == exportEntity.getStartTime() ? "" : "" + exportEntity.getStartTime());
+            row.createCell(callIndex++).setCellValue(null == exportEntity.getEndTime() ? "" : "" + exportEntity.getEndTime());
+            row.createCell(callIndex++).setCellValue(exportEntity.getRemark());
+        }
+
+    }
+
+    private XSSFSheet assiableMergeData(XSSFSheet sheet, int firstRow, int lastRow) {
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 0, 0);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 1, 1);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 2, 2);
+        sheet.addMergedRegion(cellRangeAddress);
+        cellRangeAddress = new CellRangeAddress(firstRow, lastRow, 3, 3);
+        sheet.addMergedRegion(cellRangeAddress);
+        return sheet;
+    }
+
+    public static final String[] EXCELHEAD = {"表名称", "状态", "创建人", "发起人",
+            "任务名称", "负责人", "执行人", "计划执行时间", "任务类型", "类型", "任务内容", "计划任务量", "完成任务量", "所需时长", "所需时长时间类型",
+            "任务开始时间", "任务结束时间", "备注"};
+
+    @Override
     public List<String> taskNames(String tableID) throws SerException {
         TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.eq("tableId", tableID));
@@ -2992,10 +3293,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     public CollectDataVO personProjectCollect(CollectDataTO collectDataTO) throws SerException {
         TimeStatus timeStatus = collectDataTO.getTimeStatus();
         String userName = collectDataTO.getUserName();
-        if( StringUtils.isBlank(userName) ){
+        if (StringUtils.isBlank(userName)) {
             throw new SerException("用户名不能为空");
         }
-        if( null == timeStatus ){
+        if (null == timeStatus) {
             throw new SerException("时间汇总类型不能为空");
         }
 
@@ -3005,73 +3306,76 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         List<String> tableId = new ArrayList<>();
         switch (collectDataTO.getTimeStatus()) {
             case YEAR:
-                if (StringUtils.isBlank("" + collectDataTO.getYear())) {
-                    throw new SerException("年份不能为空");
+                if (StringUtils.isBlank("" + collectDataTO.getYear()) || collectDataTO.getYear() < 1900) {
+                    throw new SerException("年份不能为空且请输入正确年份");
                 }
-                start = DateUtil.parseDateTime(collectDataTO.getYear() + "-01-01 00:00:01") ;
+                start = DateUtil.parseDateTime(collectDataTO.getYear() + "-01-01 00:00:01");
                 end = DateUtil.parseDateTime(collectDataTO.getYear() + "-12-31 12:59:59");
 
                 break;
             case MONTH:
-                if (StringUtils.isBlank("" + collectDataTO.getYear()) || StringUtils.isBlank("" + collectDataTO.getMonth())) {
-                    throw new SerException("年份或月份不能为空");
+                if (StringUtils.isBlank("" + collectDataTO.getYear()) || collectDataTO.getYear() < 1900
+                        || StringUtils.isBlank("" + collectDataTO.getMonth()) || collectDataTO.getMonth() < 1 || collectDataTO.getMonth() > 12) {
+                    throw new SerException("年份或月份不能为空且请输入正确年份和月份");
                 }
-                start = LocalDateTime.of(collectDataTO.getYear(),collectDataTO.getMonth(),1,0,0,1) ;
+                start = LocalDateTime.of(collectDataTO.getYear(), collectDataTO.getMonth(), 1, 0, 0, 1);
                 end = start.with(TemporalAdjusters.lastDayOfMonth());
                 break;
             case WEEK:
-                if (StringUtils.isBlank("" + collectDataTO.getYear()) || StringUtils.isBlank("" + collectDataTO.getMonth()) || StringUtils.isBlank("" + collectDataTO.getWeek())) {
+                if (StringUtils.isBlank("" + collectDataTO.getYear()) || collectDataTO.getYear() < 1900
+                        || StringUtils.isBlank("" + collectDataTO.getMonth()) || collectDataTO.getMonth() < 1 || collectDataTO.getMonth() > 12
+                        || StringUtils.isBlank("" + collectDataTO.getWeek())) {
                     throw new SerException("年份或月份或周数不能为空");
                 }
                 LocalDate[] dateDuring = DateUtil.getWeekTimes(collectDataTO.getYear(), collectDataTO.getMonth(), collectDataTO.getWeek());
-                start = LocalDateTime.of(dateDuring[0].getYear(),dateDuring[0].getMonth(),dateDuring[0].getDayOfMonth(),0,0,1) ;
-                end = LocalDateTime.of(dateDuring[1].getYear(),dateDuring[1].getMonth(),dateDuring[1].getDayOfMonth(),12,59,59) ;
+                start = LocalDateTime.of(dateDuring[0].getYear(), dateDuring[0].getMonth(), dateDuring[0].getDayOfMonth(), 0, 0, 1);
+                end = LocalDateTime.of(dateDuring[1].getYear(), dateDuring[1].getMonth(), dateDuring[1].getDayOfMonth(), 12, 59, 59);
                 break;
             default:
                 return null;
         }
 
 
-
         //获取当前用户该时间段内参与的任务
         TaskNodeDTO dto = new TaskNodeDTO();
-        dto.getConditions().add(Restrict.eq("execute",userName));
-        dto.getConditions().add(Restrict.isNull("haveSon" ));
-        dto.getConditions().add(Restrict.between("planTime",new LocalDateTime[]{start,end}));
+        dto.getConditions().add(Restrict.eq("execute", userName));
+        dto.getConditions().add(Restrict.isNull("haveSon"));
+        dto.getConditions().add(Restrict.between("planTime", new LocalDateTime[]{start, end}));
         //没有父节点
-        dto.getConditions().add(Restrict.isNull("father_id"));
-        List<TaskNode> listNoFather = super.findByCis( dto );
-        if (listNoFather != null && listNoFather.size()>0 ){
-            tableId.addAll( listNoFather.stream().map(TaskNode::getTableId).collect(Collectors.toList()) );
+        dto.getConditions().add(Restrict.isNull("fatherId"));
+        List<TaskNode> listNoFather = super.findByCis(dto);
+        if (listNoFather != null && listNoFather.size() > 0) {
+            tableId.addAll(listNoFather.stream().map(TaskNode::getTableId).collect(Collectors.toList()));
         }
 
         //有父节点
-        String []filed = new String[]{"execute","tableId"};
+        String[] filed = new String[]{"execute", "tableId"};
         StringBuffer sql = new StringBuffer("");
         sql.append(" select b.execute as execute , b.table_id as tableId from taskallotment_tasknode b where b.id in ( ")
-                .append( " select a.father_id from taskallotment_tasknode a  where a.haveSon IS NULL and father_id IS NOT NULL " )
-                .append( " and execute = '"+userName+"' and planTime BETWEEN '"+start+"' and '"+end+"' " )
-                .append( " ) and b.haveSon IS  NULL and b.father_id IS NULL " )
-                ;
-        listNoFather = super.findBySql( sql.toString() , TaskNode.class , filed );
-        if (listNoFather != null && listNoFather.size()>0 ){
-            tableId.addAll( listNoFather.stream().map(TaskNode::getTableId).collect(Collectors.toList()) );
+                .append(" select a.father_id from taskallotment_tasknode a  where a.haveSon IS NULL and father_id IS NOT NULL ")
+                .append(" and execute = '" + userName + "' and planTime BETWEEN '" + start + "' and '" + end + "' ")
+                .append(" ) and b.haveSon IS  NULL and b.father_id IS NULL ")
+        ;
+        listNoFather = super.findBySql(sql.toString(), TaskNode.class, filed);
+        if (listNoFather != null && listNoFather.size() > 0) {
+            tableId.addAll(listNoFather.stream().map(TaskNode::getTableId).collect(Collectors.toList()));
         }
-        if( tableId == null || tableId.size()<=0 ){
+        if (tableId == null || tableId.size() <= 0) {
             return null;
         }
         //根据任务获取参与的内部项目名称
         TableDTO tableDTO = new TableDTO();
-        tableDTO.getConditions().add(Restrict.in("id", tableId ));
-        List<Table> tables = tableSer.findByCis( tableDTO );
+        tableDTO.getConditions().add(Restrict.in("id", tableId));
+        List<Table> tables = tableSer.findByCis(tableDTO);
         List<String> projectId = tables.stream().map(Table::getProjectId).collect(Collectors.toList());
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.getConditions().add(Restrict.in("id", projectId ));
-        List<Project> projectList = projectSer.findByCis( projectDTO );
+        projectDTO.getConditions().add(Restrict.in("id", projectId));
+        List<Project> projectList = projectSer.findByCis(projectDTO);
+        List<String> innerProjectName = projectList.stream().map(Project::getInnerProject).collect(Collectors.toList());
 
         CollectDataVO collectDataVO = new CollectDataVO();
-        collectDataVO.setPersonName( userName );
-        collectDataVO.setProjectName( projectId );
+        collectDataVO.setPersonName(userName);
+        collectDataVO.setProjectName(innerProjectName);
 
         return collectDataVO;
     }

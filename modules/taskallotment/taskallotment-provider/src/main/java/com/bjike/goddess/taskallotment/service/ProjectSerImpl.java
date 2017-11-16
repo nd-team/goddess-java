@@ -395,6 +395,36 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     }
 
     @Override
+    public List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException {
+        ProjectDTO dto = new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+//        dto.getConditions().add(Restrict.in("area", projectNameDTO.getAreas()));
+        dto.getConditions().add(Restrict.in("depart", projectNameDTO.getDeparts()));
+        List<Project> list = super.findByCis(dto);
+        List<String> projectNames = new ArrayList<>();
+        projectNames.addAll(list.stream().map(Project::getProject).collect(Collectors.toList()));
+        return projectNames;
+    }
+
+    @Override
+    public List<String> tableNamesBypname(ProjectNameDTO projectNameDTO) throws SerException {
+        ProjectDTO dto = new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        dto.getConditions().add(Restrict.in("project", projectNameDTO.getProjects()));
+        List<Project> list = super.findByCis(dto);
+        List<String> projectIds = new ArrayList<>();
+        projectIds.addAll( list.stream().map(Project::getId).collect(Collectors.toList()) );
+
+        TableDTO tdto = new TableDTO();
+        tdto.getConditions().add(Restrict.in("projectId", projectIds));
+        tdto.getConditions().add(Restrict.eq("status", Status.START));
+        List<Table> tableList = tableSer.findByCis(tdto);
+        List<String> tableNames = new ArrayList<>();
+        tableNames = tableList.stream().map(Table::getName).distinct().collect(Collectors.toList());
+        return tableNames;
+    }
+
+    @Override
     public Set<String> taskNames(String tableId) throws SerException {
         TaskNodeDTO dto = new TaskNodeDTO();
         dto.getConditions().add(Restrict.eq("tableId", tableId));

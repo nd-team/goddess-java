@@ -513,7 +513,9 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
                         sb.append("<td> </td>");
                     }
                 }
-                List<CaseTableBO> caseTableS = sons.get(a).getCaseTableS();
+                //mm
+                List<CaseTableBO> caseTableS = null;
+//                List<CaseTableBO> caseTableS = sons.get(a).getCaseTableS();
                 int threeSize = twoSize / caseTableS.size();
                 for (int b = 0; b < caseTableS.size(); b++) {
                     if (b != 0) {
@@ -584,7 +586,9 @@ public class FinishCountEmailSerImpl extends ServiceImpl<FinishCountEmail, Finis
         int num = 0;
         List<CaseSonBO> sons = finishCaseBO.getCaseSonS();
         for (CaseSonBO sonBO : sons) {
-            List<CaseTableBO> caseTableS = sonBO.getCaseTableS();
+            //mm
+            List<CaseTableBO> caseTableS = null;
+//            List<CaseTableBO> caseTableS = sonBO.getCaseTableS();
             for (CaseTableBO table : caseTableS) {
                 List<CaseGrandSonBO> grandSonS = table.getGrandSonS();
                 for (CaseGrandSonBO grandSonBO : grandSonS) {

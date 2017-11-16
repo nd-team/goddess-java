@@ -19,6 +19,10 @@ public class CaseGrandSonBO extends BaseBO {
      */
     private String name;
     /**
+     * 任务内容
+     */
+    private String taskContent;
+    /**
      * 子对象
      */
     private List<CaseLastBO> caseLastS;
@@ -29,6 +33,14 @@ public class CaseGrandSonBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTaskContent() {
+        return taskContent;
+    }
+
+    public void setTaskContent(String taskContent) {
+        this.taskContent = taskContent;
     }
 
     public List<CaseLastBO> getCaseLastS() {

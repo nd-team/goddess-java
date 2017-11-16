@@ -25,6 +25,7 @@ import com.bjike.goddess.taskallotment.api.TableAPI;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.excel.ProjectExcel;
 import com.bjike.goddess.taskallotment.excel.TableExcel;
@@ -546,6 +547,38 @@ public class ProjectAction extends BaseFileAction {
     public Result tableNames() throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(tableAPI.tableNames(), TableVO.class));
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目组获取所有项目
+     *
+     * @param projectNameDTO 条件
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/namesBy/group")
+    public Result projectByAreaAndGroup(@Validated(ProjectNameDTO.QUEARY.class) ProjectNameDTO projectNameDTO,BindingResult bindingResult) throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.projectByAreaAndGroup( projectNameDTO));
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目获取所有项目表
+     *
+     * @param projectNameDTO 条件
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/tablesBy/pname")
+    public Result tableNamesBypname(@Validated(ProjectNameDTO.QUEARYTABLES.class) ProjectNameDTO projectNameDTO,BindingResult bindingResult) throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.tableNamesBypname( projectNameDTO));
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
