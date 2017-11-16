@@ -1,7 +1,9 @@
 package com.bjike.goddess.archive.api;
 
+import com.bjike.goddess.archive.bo.PersonnelQuaDataBO;
 import com.bjike.goddess.archive.bo.PersonnelQualificationBO;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
+import com.bjike.goddess.archive.excel.PersonnelQualificationImportExcel;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -93,7 +95,7 @@ public interface PersonnelQualificationAPI {
      * @return
      * @throws SerException
      */
-    default Long getTotal() throws SerException {
+    default Long getTotal(PersonnelQualificationDTO dto) throws SerException {
         return null;
     }
 
@@ -102,5 +104,47 @@ public interface PersonnelQualificationAPI {
      */
     default List<String> getName() throws SerException {
         return null;
+    }
+
+    /**
+     * 根据名字获取性别和身份证号码
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default PersonnelQuaDataBO findByName(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(PersonnelQualificationDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<PersonnelQualificationImportExcel> tos) throws SerException {
+        return;
     }
 }

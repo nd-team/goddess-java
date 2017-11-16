@@ -1,19 +1,22 @@
-模块名:dimission
-类名:Interview
+模块名:archive
+类名:ResumeInfo
 作者:zhuangkaiqin
-描述:离职管理面谈
+描述:人员简历信息
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
+String username 姓名;
+String serialNumber 员工编号;
 String area 地区;
-String department 项目组/部门;
-String position 岗位;
-String positionLever 岗位层级;
-String name 姓名;
-LocalDate applyTime 申请离职离职时间;
-LocalDate dismissTime 正式离职时间;
-Boolean managerInterview 是否需项目经理信息离职面谈;
-Boolean principalInterview 是否需模块负责人离职面谈;
-Boolean welfareInterview 是否需福利模块离职面谈;
-Boolean officeInterview 是否需要总经办离职面谈;
+String project 项目组;
+String position 职位;
+String education 学历;
+String major 专业;
+String school 毕业学校;
+LocalDate graduate 毕业时间;
+LocalDate entryTime 入职时间;
+String hobby 兴趣爱好;
+String description 工作经历描述;
+String industry 行业;
+Status status 状态;
 )

@@ -312,6 +312,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
 
     @Override
     public List<ArchiveDetailBO> maps(ArchiveDetailDTO dto) throws SerException {
+//        dto = findData(dto);
         return this.transformBOList(super.findByPage(dto));
     }
 
@@ -327,5 +328,36 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     public Long getTotal() throws SerException {
         ArchiveDetailDTO dto = new ArchiveDetailDTO();
         return super.count(dto);
+    }
+
+    /**
+     * 是否有权限查看所有人的信息(岗位级别)
+     */
+    private Boolean guideSeePositionIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.guideSeePositionIdentity();
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 根据岗位查看所有信息或个人信息
+     */
+    private ArchiveDetailDTO findData(ArchiveDetailDTO dto) throws SerException {
+        if (!guideSeePositionIdentity()) {
+            dto = new ArchiveDetailDTO();
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            dto.getConditions().add(Restrict.eq("username", userBO.getUsername()));
+        }
+        return dto;
     }
 }

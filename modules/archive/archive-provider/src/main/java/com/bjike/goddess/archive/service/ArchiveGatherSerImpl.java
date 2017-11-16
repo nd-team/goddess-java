@@ -6,6 +6,7 @@ import com.bjike.goddess.archive.entity.ArchiveGather;
 import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.ArchiveGatherTO;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -289,5 +290,36 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
     public Long getTotal() throws SerException {
         ArchiveGatherDTO dto = new ArchiveGatherDTO();
         return super.count(dto);
+    }
+
+    /**
+     * 是否有权限查看所有人的信息(岗位级别)
+     */
+    private Boolean guideSeePositionIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.guideSeePositionIdentity();
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 根据岗位查看所有信息或个人信息
+     */
+    private ArchiveGatherDTO findData(ArchiveGatherDTO dto) throws SerException {
+        if (!guideSeePositionIdentity()) {
+            dto = new ArchiveGatherDTO();
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            dto.getConditions().add(Restrict.eq("username", userBO.getUsername()));
+        }
+        return dto;
     }
 }

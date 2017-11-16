@@ -15,6 +15,12 @@ public class PersonnelQualificationVO {
      * id
      */
     private String id;
+
+    /**
+     * 更新时间
+     */
+    private String modifyTime;
+
     /**
      * 姓名
      */
@@ -204,5 +210,13 @@ public class PersonnelQualificationVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

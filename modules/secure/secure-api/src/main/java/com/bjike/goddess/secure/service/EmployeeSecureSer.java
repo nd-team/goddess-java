@@ -3,6 +3,7 @@ package com.bjike.goddess.secure.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
+import com.bjike.goddess.secure.bo.SecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
@@ -127,4 +128,11 @@ public interface EmployeeSecureSer extends Ser<EmployeeSecure, EmployeeSecureDTO
      * @throws SerException
      */
     Set<String> allName() throws SerException;
+
+    /**
+     * 根据员工姓名获取参保单位,社保购买类型,是否购买社保
+     */
+    default SecureBO findSecureBo(String name) throws SerException {
+        return null;
+    }
 }

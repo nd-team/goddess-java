@@ -72,4 +72,9 @@ public class QualificationsCollectApiImpl implements QualificationsCollectAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return qualificationsCollectSer.guidePermission( guidePermissionTO );
     }
+
+    @Override
+    public List<String> findAllQualifications() throws SerException {
+        return qualificationsCollectSer.findAllQualifications();
+    }
 }

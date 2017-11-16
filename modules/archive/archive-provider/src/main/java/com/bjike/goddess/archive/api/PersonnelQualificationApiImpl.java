@@ -1,7 +1,10 @@
 package com.bjike.goddess.archive.api;
 
+import com.bjike.goddess.archive.bo.PersonnelQuaDataBO;
 import com.bjike.goddess.archive.bo.PersonnelQualificationBO;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
+import com.bjike.goddess.archive.excel.PersonnelQualificationImportExcel;
+import com.bjike.goddess.archive.excel.ResumeInfoImportExcel;
 import com.bjike.goddess.archive.service.PersonnelQualificationSer;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
@@ -62,12 +65,33 @@ public class PersonnelQualificationApiImpl implements PersonnelQualificationAPI 
     }
 
     @Override
-    public Long getTotal() throws SerException {
-        return personnelQualificationSer.getTotal();
+    public Long getTotal(PersonnelQualificationDTO dto) throws SerException {
+        return personnelQualificationSer.getTotal(dto);
     }
 
     @Override
     public List<String> getName() throws SerException {
         return personnelQualificationSer.getName();
     }
+
+    @Override
+    public PersonnelQuaDataBO findByName(String name) throws SerException {
+        return personnelQualificationSer.findByName(name);
+    }
+
+    @Override
+    public byte[] exportExcel(PersonnelQualificationDTO dto) throws SerException {
+        return personnelQualificationSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return personnelQualificationSer.templateExcel();
+    }
+
+    @Override
+    public void upload(List<PersonnelQualificationImportExcel> tos) throws SerException {
+        personnelQualificationSer.upload(tos);
+    }
+
 }

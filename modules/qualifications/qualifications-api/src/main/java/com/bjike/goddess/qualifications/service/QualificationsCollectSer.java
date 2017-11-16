@@ -2,7 +2,6 @@ package com.bjike.goddess.qualifications.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.qualifications.bo.AuditMaterialBO;
 import com.bjike.goddess.qualifications.bo.QualificationsCollectBO;
 import com.bjike.goddess.qualifications.dto.QualificationsCollectDTO;
 import com.bjike.goddess.qualifications.entity.QualificationsCollect;
@@ -111,6 +110,13 @@ public interface QualificationsCollectSer extends Ser<QualificationsCollect, Qua
      * 工能导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的资质名称
+     */
+    default List<String> findAllQualifications() throws SerException {
         return null;
     }
 }

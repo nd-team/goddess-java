@@ -123,8 +123,8 @@ public class StaffRecords extends BaseEntity {
     /**
      * qq号
      */
-    @Column(name = "QQ", columnDefinition = "VARCHAR(255)   COMMENT 'qq号'")
-    private String QQ;
+    @Column(name = "qq", columnDefinition = "VARCHAR(255)   COMMENT 'qq号'")
+    private String qq;
 
     /**
      * 个人邮箱账号
@@ -315,12 +315,12 @@ public class StaffRecords extends BaseEntity {
         this.telephone = telephone;
     }
 
-    public String getQQ() {
-        return QQ;
+    public String getQq() {
+        return qq;
     }
 
-    public void setQQ(String QQ) {
-        this.QQ = QQ;
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 
     public String getSelfEmail() {

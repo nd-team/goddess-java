@@ -2,6 +2,7 @@ package com.bjike.goddess.archive.api;
 
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
+import com.bjike.goddess.archive.excel.ArchiveAccessImportExcel;
 import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.service.ArchiveAccessSer;
 import com.bjike.goddess.archive.to.AccessAuditTO;
@@ -39,6 +40,21 @@ public class ArchiveAccessApiImpl implements ArchiveAccessAPI {
     }
 
     @Override
+    public byte[] exportExcel(ArchiveAccessDTO dto) throws SerException {
+        return archiveAccessSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return archiveAccessSer.templateExcel();
+    }
+
+    @Override
+    public void upload(List<ArchiveAccessImportExcel> tos) throws SerException {
+        archiveAccessSer.upload(tos);
+    }
+
+    @Override
     public ArchiveAccessBO save(ArchiveAccessTO to) throws SerException {
         return archiveAccessSer.save(to);
     }
@@ -69,7 +85,7 @@ public class ArchiveAccessApiImpl implements ArchiveAccessAPI {
     }
 
     @Override
-    public Long getTotal() throws SerException {
-        return archiveAccessSer.getTotal();
+    public Long getTotal(ArchiveAccessDTO dto) throws SerException {
+        return archiveAccessSer.getTotal(dto);
     }
 }

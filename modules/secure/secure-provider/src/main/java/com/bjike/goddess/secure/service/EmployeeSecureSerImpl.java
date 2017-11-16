@@ -7,8 +7,11 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.secure.bo.EmployeeSecureBO;
+import com.bjike.goddess.secure.bo.SecureBO;
 import com.bjike.goddess.secure.dto.EmployeeSecureDTO;
+import com.bjike.goddess.secure.dto.SecureCaseDTO;
 import com.bjike.goddess.secure.entity.EmployeeSecure;
+import com.bjike.goddess.secure.entity.SecureCase;
 import com.bjike.goddess.secure.enums.GuideAddrStatus;
 import com.bjike.goddess.secure.to.EmployeeSecureTO;
 import com.bjike.goddess.secure.to.GuidePermissionTO;
@@ -16,7 +19,6 @@ import com.bjike.goddess.secure.to.NameTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,8 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private SecureCaseSer secureCaseSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -217,12 +221,12 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
             throw new SerException("该对象不存在");
         }
         LocalDateTime a = employeeSecure.getCreateTime();
-        employeeSecure = BeanTransform.copyProperties(to, EmployeeSecure.class,true);
+        employeeSecure = BeanTransform.copyProperties(to, EmployeeSecure.class, true);
         employeeSecure.setCreateTime(a);
-        LocalDate time=null;
+        LocalDate time = null;
         try {
-            time= DateUtil.parseDate(to.getStartTime());
-        }catch (Exception e){
+            time = DateUtil.parseDate(to.getStartTime());
+        } catch (Exception e) {
             throw new SerException("日期格式不正确");
         }
         employeeSecure.setStartTime(time);
@@ -295,22 +299,48 @@ public class EmployeeSecureSerImpl extends ServiceImpl<EmployeeSecure, EmployeeS
     @Override
     public List<EmployeeSecureBO> byName(NameTO to) throws SerException {
         List<EmployeeSecure> employeeSecures = new ArrayList<>();
-        if(to.getNames()!=null){
+        if (to.getNames() != null) {
             EmployeeSecureDTO dto = new EmployeeSecureDTO();
-            dto.getConditions().add(Restrict.eq("name",to.getNames()));
+            dto.getConditions().add(Restrict.eq("name", to.getNames()));
             employeeSecures = super.findAll();
         }
-        List<EmployeeSecureBO> boList = BeanTransform.copyProperties(employeeSecures,EmployeeSecureBO.class);
+        List<EmployeeSecureBO> boList = BeanTransform.copyProperties(employeeSecures, EmployeeSecureBO.class);
         return boList;
     }
 
     @Override
     public Set<String> allName() throws SerException {
-        Set<String> set =new HashSet<>();
+        Set<String> set = new HashSet<>();
         List<EmployeeSecure> list = super.findAll();
-        for(EmployeeSecure employeeSecure:list){
+        for (EmployeeSecure employeeSecure : list) {
             set.add(employeeSecure.getName());
         }
         return set;
+    }
+
+    @Override
+    public SecureBO findSecureBo(String name) throws SerException {
+        if (StringUtils.isBlank(name)) {
+            return null;
+        }
+        EmployeeSecureDTO employeeSecureDTO = new EmployeeSecureDTO();
+        employeeSecureDTO.getConditions().add(Restrict.eq("name", name));
+        List<EmployeeSecure> employeeSecures = super.findByCis(employeeSecureDTO);
+        if (null != employeeSecures && employeeSecures.size() > 0) {
+            EmployeeSecure entity = employeeSecures.get(0);
+            SecureBO bo = new SecureBO();
+            bo.setCompany(entity.getCompany());
+            bo.setType(entity.getType());
+
+            SecureCaseDTO secureCaseDTO = new SecureCaseDTO();
+            secureCaseDTO.getConditions().add(Restrict.eq("name", name));
+            List<SecureCase> secureCases = secureCaseSer.findByCis(secureCaseDTO);
+            if (null != secureCases && secureCases.size() > 0) {
+                SecureCase secureCase = secureCases.get(0);
+                bo.setBuySecure(secureCase.getBuySecure());
+            }
+            return bo;
+        }
+        return null;
     }
 }

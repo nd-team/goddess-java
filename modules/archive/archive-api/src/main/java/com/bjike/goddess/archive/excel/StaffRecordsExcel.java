@@ -23,94 +23,109 @@ public class StaffRecordsExcel extends BaseTO{
     /**
      * 员工编号
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "员工编号")
     private String serialNumber;
 
     /**
      * 项目组
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "项目组")
     private String project;
 
     /**
      * 职位
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "职位")
     private String position;
 
     /**
      * 学历
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "学历")
     private String education;
 
     /**
      * 专业
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "专业")
     private String major;
 
     /**
      * 毕业学校
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "毕业学校")
     private String school;
 
     /**
      * 毕业时间
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "毕业时间")
     private String graduate;
 
     /**
      * 入职时间
      */
-    @ExcelHeader(name = "姓名")
+    @ExcelHeader(name = "入职时间")
     private String entryTime;
 
     /**
      * 在职时间(月)
      */
+    @ExcelHeader(name = "在职时间(月)")
     private Integer seniority;
 
     /**
      * 电话号码
      */
+    @ExcelHeader(name = "电话号码")
     private String telephone;
+
+    /**
+     * qq
+     */
+    @ExcelHeader(name = "qq")
+    private String qq;
 
     /**
      * 出生日期
      */
+    @ExcelHeader(name = "出生日期")
     private String birth;
 
     /**
      * 户籍地址
      */
+    @ExcelHeader(name = "户籍地址")
     private String address;
 
     /**
      * 身份证号码
      */
+    @ExcelHeader(name = "身份证号码")
     private String identityCard;
 
     /**
      * 银行卡号码
      */
+    @ExcelHeader(name = "银行卡号码")
     private String bankCard;
 
     /**
      * 开户行
      */
+    @ExcelHeader(name = "开户行")
     private String bank;
 
     /**
      * 邮箱
      */
+    @ExcelHeader(name = "邮箱")
     private String email;
 
     /**
      * 状态
      */
+    @ExcelHeader(name = "状态")
     private Status status;
 
 
@@ -264,5 +279,13 @@ public class StaffRecordsExcel extends BaseTO{
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 }

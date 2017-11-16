@@ -6,13 +6,13 @@ import com.bjike.goddess.archive.entity.ForeignStaffing;
 import com.bjike.goddess.archive.enums.GuideAddrStatus;
 import com.bjike.goddess.archive.to.ForeignStaffingTO;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -192,7 +191,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
     }
 
     private ForeignStaffingBO transformBO(ForeignStaffing entity) throws SerException {
-        ForeignStaffingBO bo = BeanTransform.copyProperties(entity, ForeignStaffingBO.class);
+        ForeignStaffingBO bo = BeanTransform.copyProperties(entity, ForeignStaffingBO.class, false);
         bo.setTypeId(entity.getType().getId());
         bo.setTypeName(entity.getType().getName());
         return bo;
@@ -256,7 +255,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
         if (null == entity)
             throw new SerException("该数据不存在");
 
-        ForeignStaffingBO foreignStaffingBO = BeanTransform.copyProperties(entity, ForeignStaffingBO.class);
+        ForeignStaffingBO foreignStaffingBO = BeanTransform.copyProperties(entity, ForeignStaffingBO.class, false);
         foreignStaffingBO.setTypeName(entity.getType().getName());
         return foreignStaffingBO;
     }
@@ -295,5 +294,36 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
             return list;
         }
         return null;
+    }
+
+    /**
+     * 是否有权限查看所有人的信息(岗位级别)
+     */
+    private Boolean guideSeePositionIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.guideSeePositionIdentity();
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 根据岗位查看所有信息或个人信息
+     */
+    private ForeignStaffingDTO findData(ForeignStaffingDTO dto) throws SerException {
+        if (!guideSeePositionIdentity()) {
+            dto = new ForeignStaffingDTO();
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            dto.getConditions().add(Restrict.eq("username", userBO.getUsername()));
+        }
+        return dto;
     }
 }

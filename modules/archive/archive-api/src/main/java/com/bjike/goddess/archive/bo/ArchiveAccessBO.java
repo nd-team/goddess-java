@@ -1,6 +1,6 @@
 package com.bjike.goddess.archive.bo;
 
-import com.bjike.goddess.annual.enums.AuditType;
+import com.bjike.goddess.archive.enums.AuditType;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**

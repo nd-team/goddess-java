@@ -15,6 +15,11 @@ import com.bjike.goddess.common.api.type.Status;
 public class StaffRecordsBO extends BaseBO {
 
     /**
+     * 更新时间
+     */
+    private String modifyTime;
+
+    /**
      * 姓名
      */
     private String username;
@@ -30,9 +35,34 @@ public class StaffRecordsBO extends BaseBO {
     private String project;
 
     /**
+     * 地区
+     */
+    private String area;
+
+    /**
      * 职位
      */
     private String position;
+
+    /**
+     * 资质/认证证书
+     */
+    private String litterae;
+
+    /**
+     * 是否购买社保
+     */
+    private Boolean buySecurity;
+
+    /**
+     * 社保购买类型
+     */
+    private String securityType;
+
+    /**
+     * 购买社保所属公司
+     */
+    private String company;
 
     /**
      * 学历
@@ -85,6 +115,11 @@ public class StaffRecordsBO extends BaseBO {
     private String identityCard;
 
     /**
+     * 目前住宿地址
+     */
+    private String nowAddress;
+
+    /**
      * 银行卡号码
      */
     private String bankCard;
@@ -103,6 +138,11 @@ public class StaffRecordsBO extends BaseBO {
      * 状态
      */
     private Status status;
+
+    /**
+     * qq
+     */
+    private String qq;
 
 
     public String getUsername() {
@@ -247,5 +287,69 @@ public class StaffRecordsBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getLitterae() {
+        return litterae;
+    }
+
+    public String getNowAddress() {
+        return nowAddress;
+    }
+
+    public void setNowAddress(String nowAddress) {
+        this.nowAddress = nowAddress;
+    }
+
+    public void setLitterae(String litterae) {
+        this.litterae = litterae;
+    }
+
+    public Boolean getBuySecurity() {
+        return buySecurity;
+    }
+
+    public void setBuySecurity(Boolean buySecurity) {
+        this.buySecurity = buySecurity;
+    }
+
+    public String getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(String securityType) {
+        this.securityType = securityType;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 }

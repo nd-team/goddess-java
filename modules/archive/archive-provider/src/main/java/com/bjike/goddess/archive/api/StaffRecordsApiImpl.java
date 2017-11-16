@@ -64,8 +64,8 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     }
 
     @Override
-    public Long getTotal() throws SerException {
-        return staffRecordsSer.getTotal();
+    public Long getTotal(StaffRecordsDTO dto) throws SerException {
+        return staffRecordsSer.getTotal(dto);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     }
 
     @Override
-    public Long count() throws SerException {
-        return staffRecordsSer.count();
+    public Long count(StaffRecordsDTO dto) throws SerException {
+        return staffRecordsSer.count(dto);
     }
 
     @Override
@@ -146,5 +146,60 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     @Override
     public byte[] exportExcel(StaffRecordsDTO dto) throws SerException {
         return staffRecordsSer.exportExcel(dto);
+    }
+
+    @Override
+    public void freeze(String id) throws SerException {
+        staffRecordsSer.freeze(id);
+    }
+
+    @Override
+    public void thaw(String id) throws SerException {
+        staffRecordsSer.thaw(id);
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> dayCollect(String day) throws SerException {
+        return staffRecordsSer.dayCollect(day);
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> weekCollect(Integer year, Integer month, Integer week) throws SerException {
+        return staffRecordsSer.weekCollect(year, month, week);
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> monthCollect(String month) throws SerException {
+        return staffRecordsSer.monthCollect(month);
+    }
+
+    @Override
+    public List<StaffRecordsCollectBO> totalCollect() throws SerException {
+        return staffRecordsSer.totalCollect();
+    }
+
+    @Override
+    public OptionBO figureShowDay(String day) throws SerException {
+        return staffRecordsSer.figureShowDay(day);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        return staffRecordsSer.figureShowWeek(year, month, week);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(String month) throws SerException {
+        return staffRecordsSer.figureShowMonth(month);
+    }
+
+    @Override
+    public OptionBO figureShowAll() throws SerException {
+        return staffRecordsSer.figureShowAll();
+    }
+
+    @Override
+    public StaffRecordsDataBO findDataByName(String name) throws SerException {
+        return staffRecordsSer.findDataByName(name);
     }
 }

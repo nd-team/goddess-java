@@ -81,6 +81,12 @@ public class StaffRecords1Excel implements Serializable {
     private String telephone;
 
     /**
+     * qq
+     */
+    @ExcelHeader(name = "qq", notNull = true)
+    private String qq;
+
+    /**
      * 出生日期
      */
     @ExcelHeader(name = "出生日期", notNull = true)
@@ -264,5 +270,13 @@ public class StaffRecords1Excel implements Serializable {
 
     public void setDimissionTime(LocalDate dimissionTime) {
         this.dimissionTime = dimissionTime;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
     }
 }
