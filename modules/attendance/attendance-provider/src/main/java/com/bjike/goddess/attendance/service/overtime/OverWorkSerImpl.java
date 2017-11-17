@@ -11,6 +11,8 @@ import com.bjike.goddess.attendance.enums.AuditStatus;
 import com.bjike.goddess.attendance.enums.CountType;
 import com.bjike.goddess.attendance.enums.GuideAddrStatus;
 import com.bjike.goddess.attendance.enums.OverTimesType;
+import com.bjike.goddess.attendance.excel.OverWorkExportExcel;
+import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
 import com.bjike.goddess.attendance.service.CusPermissionSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
@@ -24,6 +26,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
@@ -42,7 +46,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -782,10 +785,10 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
         String userName = overTimesDTO.getOverWorker();
         OverTimesType overTimesType = overTimesDTO.getOverTimesType();
-        if (StringUtils.isBlank( userName )){
+        if (StringUtils.isBlank(userName)) {
             throw new SerException("加班人员不能为空");
         }
-        if( null == overTimesType ){
+        if (null == overTimesType) {
             throw new SerException("汇总时间类型不能为空");
         }
 
@@ -828,39 +831,39 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             default:
                 return null;
         }
-        if( overTimesType.equals( OverTimesType.WEEK) ){
+        if (overTimesType.equals(OverTimesType.WEEK)) {
             while (timeBegan.isBefore(timeEnd) || timeBegan.isEqual(timeEnd)) {
                 DayOfWeek week = timeBegan.getDayOfWeek();
-                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
-                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),12,59,59);
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 0, 0, 1);
+                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 12, 59, 59);
 
                 OverWorkDTO overWorkDTO = new OverWorkDTO();
                 overWorkDTO.getConditions().add(Restrict.eq("overWorker", userName));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("overStartTime", start));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("overEndTime", end));
-                Long count = super.count( overWorkDTO );
+                Long count = super.count(overWorkDTO);
 
                 switch (week) {
                     case MONDAY:
-                        overWorkTimesVO.setFirst(""+count);
+                        overWorkTimesVO.setFirst("" + count);
                         break;
                     case TUESDAY:
-                        overWorkTimesVO.setSecond(""+count);
+                        overWorkTimesVO.setSecond("" + count);
                         break;
                     case WEDNESDAY:
-                        overWorkTimesVO.setThird(""+count);
+                        overWorkTimesVO.setThird("" + count);
                         break;
                     case THURSDAY:
-                        overWorkTimesVO.setFour(""+count);
+                        overWorkTimesVO.setFour("" + count);
                         break;
                     case FRIDAY:
-                        overWorkTimesVO.setFive(""+count);
+                        overWorkTimesVO.setFive("" + count);
                         break;
                     case SATURDAY:
-                        overWorkTimesVO.setSix(""+count);
+                        overWorkTimesVO.setSix("" + count);
                         break;
                     case SUNDAY:
-                        overWorkTimesVO.setSeven(""+count);
+                        overWorkTimesVO.setSeven("" + count);
                         break;
                     default:
                         break;
@@ -868,35 +871,35 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
                 }
                 timeBegan = timeBegan.plusDays(1);
             }
-            overWorkTimesVO.setFirst( StringUtils.isBlank(overWorkTimesVO.getFirst())?0+"": overWorkTimesVO.getFirst());
-            overWorkTimesVO.setSecond( StringUtils.isBlank(overWorkTimesVO.getSecond())?0+"": overWorkTimesVO.getSecond());
-            overWorkTimesVO.setThird( StringUtils.isBlank(overWorkTimesVO.getThird())?0+"": overWorkTimesVO.getThird());
-            overWorkTimesVO.setFour( StringUtils.isBlank(overWorkTimesVO.getFour())?0+"": overWorkTimesVO.getFour());
-            overWorkTimesVO.setFive( StringUtils.isBlank(overWorkTimesVO.getFive())?0+"": overWorkTimesVO.getFive());
-            overWorkTimesVO.setSix( StringUtils.isBlank(overWorkTimesVO.getSix())?0+"": overWorkTimesVO.getSix());
-            overWorkTimesVO.setSeven( StringUtils.isBlank(overWorkTimesVO.getSeven())?0+"": overWorkTimesVO.getSeven());
+            overWorkTimesVO.setFirst(StringUtils.isBlank(overWorkTimesVO.getFirst()) ? 0 + "" : overWorkTimesVO.getFirst());
+            overWorkTimesVO.setSecond(StringUtils.isBlank(overWorkTimesVO.getSecond()) ? 0 + "" : overWorkTimesVO.getSecond());
+            overWorkTimesVO.setThird(StringUtils.isBlank(overWorkTimesVO.getThird()) ? 0 + "" : overWorkTimesVO.getThird());
+            overWorkTimesVO.setFour(StringUtils.isBlank(overWorkTimesVO.getFour()) ? 0 + "" : overWorkTimesVO.getFour());
+            overWorkTimesVO.setFive(StringUtils.isBlank(overWorkTimesVO.getFive()) ? 0 + "" : overWorkTimesVO.getFive());
+            overWorkTimesVO.setSix(StringUtils.isBlank(overWorkTimesVO.getSix()) ? 0 + "" : overWorkTimesVO.getSix());
+            overWorkTimesVO.setSeven(StringUtils.isBlank(overWorkTimesVO.getSeven()) ? 0 + "" : overWorkTimesVO.getSeven());
 
-        }else if ( overTimesType.equals( OverTimesType.QUART)){
-            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue()-timeBegan.getMonthValue()<=2 && timeEnd.getMonthValue()-timeBegan.getMonthValue()>=0  ) {
-                int monthMinus = timeEnd.getMonthValue()-timeBegan.getMonthValue();
-                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
+        } else if (overTimesType.equals(OverTimesType.QUART)) {
+            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue() - timeBegan.getMonthValue() <= 2 && timeEnd.getMonthValue() - timeBegan.getMonthValue() >= 0) {
+                int monthMinus = timeEnd.getMonthValue() - timeBegan.getMonthValue();
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 0, 0, 1);
                 LocalDateTime end = start.with(TemporalAdjusters.lastDayOfMonth());
 
                 OverWorkDTO overWorkDTO = new OverWorkDTO();
                 overWorkDTO.getConditions().add(Restrict.eq("overWorker", userName));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("overStartTime", start));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("overEndTime", end));
-                Long count = super.count( overWorkDTO );
+                Long count = super.count(overWorkDTO);
 
                 switch (monthMinus) {
                     case 2:
-                        overWorkTimesVO.setFirstMonth(start+"月-"+count);
+                        overWorkTimesVO.setFirstMonth(start + "月-" + count);
                         break;
                     case 1:
-                        overWorkTimesVO.setSecndMonth(start+"月-"+count);
+                        overWorkTimesVO.setSecndMonth(start + "月-" + count);
                         break;
                     case 0:
-                        overWorkTimesVO.setThirdMonth(start+"月-"+count);
+                        overWorkTimesVO.setThirdMonth(start + "月-" + count);
                         break;
                     default:
                         break;
@@ -905,16 +908,116 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
                 timeBegan = timeBegan.plusMonths(1);
             }
-            overWorkTimesVO.setFirstMonth( StringUtils.isBlank(overWorkTimesVO.getFirstMonth())?0+"": overWorkTimesVO.getFirstMonth());
-            overWorkTimesVO.setSecndMonth( StringUtils.isBlank(overWorkTimesVO.getSecndMonth())?0+"": overWorkTimesVO.getSecndMonth());
-            overWorkTimesVO.setThirdMonth( StringUtils.isBlank(overWorkTimesVO.getThirdMonth())?0+"": overWorkTimesVO.getThirdMonth());
+            overWorkTimesVO.setFirstMonth(StringUtils.isBlank(overWorkTimesVO.getFirstMonth()) ? 0 + "" : overWorkTimesVO.getFirstMonth());
+            overWorkTimesVO.setSecndMonth(StringUtils.isBlank(overWorkTimesVO.getSecndMonth()) ? 0 + "" : overWorkTimesVO.getSecndMonth());
+            overWorkTimesVO.setThirdMonth(StringUtils.isBlank(overWorkTimesVO.getThirdMonth()) ? 0 + "" : overWorkTimesVO.getThirdMonth());
         }
 
-        overWorkTimesVO.setOverTimesType( overTimesType );
-        overWorkTimesVO.setUserName( userName );
+        overWorkTimesVO.setOverTimesType(overTimesType);
+        overWorkTimesVO.setUserName(userName);
 
 
         return overWorkTimesVO;
+    }
+
+    @Override
+    public byte[] exportExcel(OverWorkDTO dto) throws SerException {
+        List<OverWork> overWorks = super.findByCis(dto);
+        List<OverWorkBO> overWorkBOs = BeanTransform.copyProperties(overWorks, OverWorkBO.class, false);
+        List<OverWorkExportExcel> overWorkExportExcels = BeanTransform.copyProperties(overWorkBOs, OverWorkExportExcel.class, "noonBreakOr", "auditStatus");
+        List<AuditStatus> auditStatuses = overWorkBOs.stream().map(OverWorkBO::getAuditStatus).collect(Collectors.toList());
+        List<Boolean> noonBreakOrs = overWorkBOs.stream().map(OverWorkBO::getNoonBreakOr).collect(Collectors.toList());
+
+        if (null != overWorkExportExcels && overWorkExportExcels.size() > 0 && auditStatuses.size() == noonBreakOrs.size() && overWorkExportExcels.size() == noonBreakOrs.size()) {
+            for (int i = 0; i < overWorkBOs.size(); i++) {
+                overWorkExportExcels.get(i).setAuditStatus(transFormAuditStatus(auditStatuses.get(i)));
+                overWorkExportExcels.get(i).setNoonBreakOr(transFormNoonBreakOr(noonBreakOrs.get(i)));
+            }
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(overWorkExportExcels, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        OverWorkImportExcel overWorkImportExcel = new OverWorkImportExcel();
+        List<OverWorkImportExcel> overWorkImportExcels = new ArrayList<>(0);
+        overWorkImportExcels.add(overWorkImportExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(overWorkImportExcels, excel);
+        return bytes;
+    }
+
+    @Transactional
+    @Override
+    public void upload(List<OverWorkImportExcel> tos) throws SerException {
+        List<OverWorkBO> overWorkBOs = BeanTransform.copyProperties(tos, OverWorkBO.class, "noonBreakOr", "auditStatus");
+        List<String> auditStatus = tos.stream().map(OverWorkImportExcel::getAuditStatus).collect(Collectors.toList());
+        List<String> noonBreakOrs = tos.stream().map(OverWorkImportExcel::getNoonBreakOr).collect(Collectors.toList());
+//        if(overWorkBOs.size() == auditStatus.size() && overWorkBOs.size() == noonBreakOrs.size()){
+        for (int i = 0; i < overWorkBOs.size(); i++) {
+            overWorkBOs.get(i).setAuditStatus(transFormString(auditStatus.get(i)));
+            overWorkBOs.get(i).setNoonBreakOr(transFormNoonBreakOr(noonBreakOrs.get(i)));
+        }
+        List<OverWork> overWorks = BeanTransform.copyProperties(overWorkBOs, OverWork.class, true);
+        super.save(overWorks);
+    }
+
+    private String transFormNoonBreakOr(Boolean tar) throws SerException {
+        String str = "";
+        if (tar) {
+            str = "是";
+        } else {
+            str = "否";
+        }
+        return str;
+    }
+
+    private Boolean transFormNoonBreakOr(String string) throws SerException {
+        Boolean tar = false;
+        if ("是".equals(string)) {
+            tar = true;
+        }
+        return tar;
+    }
+
+    private String transFormAuditStatus(AuditStatus auditStatus) throws SerException {
+        String string = "";
+        switch (auditStatus) {
+            case NONE:
+                string = "未处理";
+                break;
+            case AGREE:
+                string = "通过";
+                break;
+            case REJECT:
+                string = "不通过";
+                break;
+            default:
+                string = "";
+                break;
+        }
+        return string;
+    }
+
+    private AuditStatus transFormString(String string) throws SerException {
+        AuditStatus auditStatus = null;
+        switch (string) {
+            case "未处理":
+                auditStatus = AuditStatus.NONE;
+                break;
+            case "通过":
+                auditStatus = AuditStatus.AGREE;
+                break;
+            case "不通过":
+                auditStatus = AuditStatus.REJECT;
+                break;
+            default:
+                auditStatus = AuditStatus.NONE;
+                break;
+        }
+        return auditStatus;
     }
 
 

@@ -312,16 +312,16 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, name));
         UserBO userBO = userAPI.findOne(userDTO);
-        logger.info("开始给user"+ JSON.toJSONString( userBO));
+        logger.info("开始给user" + JSON.toJSONString(userBO));
         if (userBO != null) {
             PositionDetailUserDTO dto = new PositionDetailUserDTO();
             dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
             PositionDetailUser entity1 = super.findOne(dto);
-            logger.info("开始给position"+JSON.toJSONString( position_ids));
-            logger.info("开始给entity"+JSON.toJSONString( entity1));
-            logger.info("开始给"+JSON.toJSONString( entity1.getPositionSet()));
+            logger.info("开始给position" + JSON.toJSONString(position_ids));
+            logger.info("开始给entity" + JSON.toJSONString(entity1));
+            logger.info("开始给" + JSON.toJSONString(entity1.getPositionSet()));
             if (null != entity1 && null != entity1.getPositionSet() && null != position_ids) {
-                logger.info("传进来的positionids"+JSON.toJSONString( entity1.getPositionSet()));
+                logger.info("传进来的positionids" + JSON.toJSONString(entity1.getPositionSet()));
                 for (PositionDetail detail : entity1.getPositionSet())
                     for (String id : position_ids)
                         if (detail.getId().equals(id))
@@ -382,8 +382,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public List<PositionDetailUserBO> maps(PositionDetailUserDTO dto) throws SerException {
-        if (StringUtils.isNotBlank(dto.getName())){
-            dto.getConditions().add(Restrict.eq("name",dto.getName()));
+        if (StringUtils.isNotBlank(dto.getName())) {
+            dto.getConditions().add(Restrict.eq("name", dto.getName()));
         }
         dto.getSorts().add("createTime=desc");
         return this.transformBOList(super.findByPage(dto));
@@ -432,11 +432,16 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     @Override
     public List<UserBO> findUserListInOrgan() throws SerException {
         PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        dto.getConditions().add(Restrict.ne("staffStatus", StaffStatus.HAVELEAVE));
         List<PositionDetailUser> list = super.findByCis(dto);
         List<UserBO> bos = new ArrayList<>();
         for (PositionDetailUser p : list) {
             UserBO userBO = new UserBO();
             userBO.setUsername(p.getName());
+            UserBO user = userAPI.findByUsername(p.getName());
+            if (null != user) {
+                userBO.setId(user.getId());
+            }
             userBO.setEmployeeNumber(p.getNumber());
             bos.add(userBO);
         }
@@ -798,42 +803,46 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     public String customRepPerson() throws SerException {
         String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')))";
         List<Object> objs = arrangementSer.findBySql(sql);
-        if(objs!=null && objs.size()>0){
+        if (objs != null && objs.size() > 0) {
             String name = String.valueOf(objs.get(0));
             return name;
         }
         return null;
     }
+
     @Override
-    public String[] budgetPerson() throws SerException{
+    public String[] budgetPerson() throws SerException {
         String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '预算模块'))) ";
         List<Object> nameBOS = super.findBySql(sql);
-        String[] strings=new String[nameBOS.size()];
-        strings=nameBOS.toArray(strings);
+        String[] strings = new String[nameBOS.size()];
+        strings = nameBOS.toArray(strings);
         return strings;
     }
+
     @Override
-    public String[] planPerson() throws SerException{
+    public String[] planPerson() throws SerException {
         String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '规划模块'))) ";
         List<Object> nameBOS = super.findBySql(sql);
-        String[] strings=new String[nameBOS.size()];
-        strings=nameBOS.toArray(strings);
+        String[] strings = new String[nameBOS.size()];
+        strings = nameBOS.toArray(strings);
         return strings;
     }
+
     @Override
-    public String[] managerPerson() throws SerException{
+    public String[] managerPerson() throws SerException {
         String sql = " SELECT a.name AS name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c WHERE c.position like '项目经理%')) ";
         List<Object> nameBOS = super.findBySql(sql);
-        String[] strings=new String[nameBOS.size()];
-        strings=nameBOS.toArray(strings);
+        String[] strings = new String[nameBOS.size()];
+        strings = nameBOS.toArray(strings);
         return strings;
     }
+
     @Override
-    public String[] generPerson() throws SerException{
+    public String[] generPerson() throws SerException {
         String sql = " SELECT a.name AS name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c WHERE c.position like '总经理')) ";
         List<Object> nameBOS = super.findBySql(sql);
-        String[] strings=new String[nameBOS.size()];
-        strings=nameBOS.toArray(strings);
+        String[] strings = new String[nameBOS.size()];
+        strings = nameBOS.toArray(strings);
         return strings;
     }
 }

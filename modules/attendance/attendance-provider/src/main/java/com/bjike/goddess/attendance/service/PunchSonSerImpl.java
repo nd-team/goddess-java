@@ -1,11 +1,16 @@
 package com.bjike.goddess.attendance.service;
 
 import com.bjike.goddess.attendance.bo.*;
-import com.bjike.goddess.attendance.dto.*;
+import com.bjike.goddess.attendance.dto.ArrestPointDTO;
+import com.bjike.goddess.attendance.dto.PunchDTO;
+import com.bjike.goddess.attendance.dto.PunchGrandSonDTO;
+import com.bjike.goddess.attendance.dto.PunchSonDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.*;
 import com.bjike.goddess.attendance.entity.overtime.OverWork;
 import com.bjike.goddess.attendance.enums.*;
+import com.bjike.goddess.attendance.excel.PunchExportExcel;
+import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
@@ -16,6 +21,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
@@ -24,6 +31,7 @@ import com.bjike.goddess.taskallotment.bo.ObjectBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -999,10 +1007,10 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
 
         String userName = overTimesDTO.getOverWorker();
         OverTimesType overTimesType = overTimesDTO.getOverTimesType();
-        if (StringUtils.isBlank( userName )){
+        if (StringUtils.isBlank(userName)) {
             throw new SerException("打卡人员不能为空");
         }
-        if( null == overTimesType ){
+        if (null == overTimesType) {
             throw new SerException("汇总时间类型不能为空");
         }
 
@@ -1045,53 +1053,53 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             default:
                 return null;
         }
-        if( overTimesType.equals( OverTimesType.WEEK) ){
+        if (overTimesType.equals(OverTimesType.WEEK)) {
             while (timeBegan.isBefore(timeEnd) || timeBegan.isEqual(timeEnd)) {
                 DayOfWeek week = timeBegan.getDayOfWeek();
-                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
-                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),12,59,59);
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 0, 0, 1);
+                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 12, 59, 59);
 
                 PunchDTO punch = new PunchDTO();
-                punch.getConditions().add(Restrict.eq("name", userName ));
-                punch.getConditions().add(Restrict.eq("date", timeBegan ));
-                Punch p = punchSer.findOne( punch );
+                punch.getConditions().add(Restrict.eq("name", userName));
+                punch.getConditions().add(Restrict.eq("date", timeBegan));
+                Punch p = punchSer.findOne(punch);
 
                 PunchSonDTO overWorkDTO = new PunchSonDTO();
                 overWorkDTO.getConditions().add(Restrict.eq("punch_id", p.getId()));
-                overWorkDTO.getConditions().add(Restrict.between("punchTime", new LocalDateTime[]{start,end}));
-                Long count = super.count( overWorkDTO );
-                if( count ==1  ){
+                overWorkDTO.getConditions().add(Restrict.between("punchTime", new LocalDateTime[]{start, end}));
+                Long count = super.count(overWorkDTO);
+                if (count == 1) {
                     //说明上班或下班没有打卡
                     count = 1L;
-                }else if( count == 0){
+                } else if (count == 0) {
                     //说明上班和下班都没有打卡
                     count = 2L;
-                }else if( count == 2){
+                } else if (count == 2) {
                     //说明都打了卡
                     count = 0L;
                 }
 
                 switch (week) {
                     case MONDAY:
-                        overWorkTimesVO.setFirst(""+count);
+                        overWorkTimesVO.setFirst("" + count);
                         break;
                     case TUESDAY:
-                        overWorkTimesVO.setSecond(""+count);
+                        overWorkTimesVO.setSecond("" + count);
                         break;
                     case WEDNESDAY:
-                        overWorkTimesVO.setThird(""+count);
+                        overWorkTimesVO.setThird("" + count);
                         break;
                     case THURSDAY:
-                        overWorkTimesVO.setFour(""+count);
+                        overWorkTimesVO.setFour("" + count);
                         break;
                     case FRIDAY:
-                        overWorkTimesVO.setFive(""+count);
+                        overWorkTimesVO.setFive("" + count);
                         break;
                     case SATURDAY:
-                        overWorkTimesVO.setSix(""+count);
+                        overWorkTimesVO.setSix("" + count);
                         break;
                     case SUNDAY:
-                        overWorkTimesVO.setSeven(""+count);
+                        overWorkTimesVO.setSeven("" + count);
                         break;
                     default:
                         break;
@@ -1099,47 +1107,47 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
                 }
                 timeBegan = timeBegan.plusDays(1);
             }
-            overWorkTimesVO.setFirst( StringUtils.isBlank(overWorkTimesVO.getFirst())?0+"": overWorkTimesVO.getFirst());
-            overWorkTimesVO.setSecond( StringUtils.isBlank(overWorkTimesVO.getSecond())?0+"": overWorkTimesVO.getSecond());
-            overWorkTimesVO.setThird( StringUtils.isBlank(overWorkTimesVO.getThird())?0+"": overWorkTimesVO.getThird());
-            overWorkTimesVO.setFour( StringUtils.isBlank(overWorkTimesVO.getFour())?0+"": overWorkTimesVO.getFour());
-            overWorkTimesVO.setFive( StringUtils.isBlank(overWorkTimesVO.getFive())?0+"": overWorkTimesVO.getFive());
-            overWorkTimesVO.setSix( StringUtils.isBlank(overWorkTimesVO.getSix())?0+"": overWorkTimesVO.getSix());
-            overWorkTimesVO.setSeven( StringUtils.isBlank(overWorkTimesVO.getSeven())?0+"": overWorkTimesVO.getSeven());
+            overWorkTimesVO.setFirst(StringUtils.isBlank(overWorkTimesVO.getFirst()) ? 0 + "" : overWorkTimesVO.getFirst());
+            overWorkTimesVO.setSecond(StringUtils.isBlank(overWorkTimesVO.getSecond()) ? 0 + "" : overWorkTimesVO.getSecond());
+            overWorkTimesVO.setThird(StringUtils.isBlank(overWorkTimesVO.getThird()) ? 0 + "" : overWorkTimesVO.getThird());
+            overWorkTimesVO.setFour(StringUtils.isBlank(overWorkTimesVO.getFour()) ? 0 + "" : overWorkTimesVO.getFour());
+            overWorkTimesVO.setFive(StringUtils.isBlank(overWorkTimesVO.getFive()) ? 0 + "" : overWorkTimesVO.getFive());
+            overWorkTimesVO.setSix(StringUtils.isBlank(overWorkTimesVO.getSix()) ? 0 + "" : overWorkTimesVO.getSix());
+            overWorkTimesVO.setSeven(StringUtils.isBlank(overWorkTimesVO.getSeven()) ? 0 + "" : overWorkTimesVO.getSeven());
 
-        }else if ( overTimesType.equals( OverTimesType.QUART)){
-            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue()-timeBegan.getMonthValue()<=2 && timeEnd.getMonthValue()-timeBegan.getMonthValue()>=0  ) {
-                int monthMinus = timeEnd.getMonthValue()-timeBegan.getMonthValue();
-                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
+        } else if (overTimesType.equals(OverTimesType.QUART)) {
+            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue() - timeBegan.getMonthValue() <= 2 && timeEnd.getMonthValue() - timeBegan.getMonthValue() >= 0) {
+                int monthMinus = timeEnd.getMonthValue() - timeBegan.getMonthValue();
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 0, 0, 1);
                 LocalDateTime end = start.with(TemporalAdjusters.lastDayOfMonth());
-                LocalDate startDate = LocalDate.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth());
+                LocalDate startDate = LocalDate.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth());
                 LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
-                int totalDay = end.getDayOfMonth()-start.getDayOfMonth();
+                int totalDay = end.getDayOfMonth() - start.getDayOfMonth();
 
                 PunchDTO punch = new PunchDTO();
-                punch.getConditions().add(Restrict.eq("name", userName ));
-                punch.getConditions().add(Restrict.between("date", new LocalDate[]{startDate,endDate} ));
-                List<Punch> pList = punchSer.findByCis( punch );
+                punch.getConditions().add(Restrict.eq("name", userName));
+                punch.getConditions().add(Restrict.between("date", new LocalDate[]{startDate, endDate}));
+                List<Punch> pList = punchSer.findByCis(punch);
                 List<String> pid = pList.stream().map(Punch::getId).collect(Collectors.toList());
 
                 PunchSonDTO overWorkDTO = new PunchSonDTO();
-                overWorkDTO.getConditions().add(Restrict.in("punch_id", pid ));
-                overWorkDTO.getConditions().add(Restrict.between("punchTime", new LocalDateTime[]{start,end}));
+                overWorkDTO.getConditions().add(Restrict.in("punch_id", pid));
+                overWorkDTO.getConditions().add(Restrict.between("punchTime", new LocalDateTime[]{start, end}));
                 //数据库里面的打卡次数
-                Long count = super.count( overWorkDTO );
+                Long count = super.count(overWorkDTO);
                 //本月应该要打卡的次数
-                Long punchCount = totalDay*2L;
-                count = punchCount-count;
+                Long punchCount = totalDay * 2L;
+                count = punchCount - count;
 
                 switch (monthMinus) {
                     case 2:
-                        overWorkTimesVO.setFirstMonth(start+"月-"+count);
+                        overWorkTimesVO.setFirstMonth(start + "月-" + count);
                         break;
                     case 1:
-                        overWorkTimesVO.setSecndMonth(start+"月-"+count);
+                        overWorkTimesVO.setSecndMonth(start + "月-" + count);
                         break;
                     case 0:
-                        overWorkTimesVO.setThirdMonth(start+"月-"+count);
+                        overWorkTimesVO.setThirdMonth(start + "月-" + count);
                         break;
                     default:
                         break;
@@ -1148,15 +1156,227 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
 
                 timeBegan = timeBegan.plusMonths(1);
             }
-            overWorkTimesVO.setFirstMonth( StringUtils.isBlank(overWorkTimesVO.getFirstMonth())?0+"": overWorkTimesVO.getFirstMonth());
-            overWorkTimesVO.setSecndMonth( StringUtils.isBlank(overWorkTimesVO.getSecndMonth())?0+"": overWorkTimesVO.getSecndMonth());
-            overWorkTimesVO.setThirdMonth( StringUtils.isBlank(overWorkTimesVO.getThirdMonth())?0+"": overWorkTimesVO.getThirdMonth());
+            overWorkTimesVO.setFirstMonth(StringUtils.isBlank(overWorkTimesVO.getFirstMonth()) ? 0 + "" : overWorkTimesVO.getFirstMonth());
+            overWorkTimesVO.setSecndMonth(StringUtils.isBlank(overWorkTimesVO.getSecndMonth()) ? 0 + "" : overWorkTimesVO.getSecndMonth());
+            overWorkTimesVO.setThirdMonth(StringUtils.isBlank(overWorkTimesVO.getThirdMonth()) ? 0 + "" : overWorkTimesVO.getThirdMonth());
         }
 
-        overWorkTimesVO.setOverTimesType( overTimesType );
-        overWorkTimesVO.setUserName( userName );
+        overWorkTimesVO.setOverTimesType(overTimesType);
+        overWorkTimesVO.setUserName(userName);
 
 
         return overWorkTimesVO;
+    }
+
+    @Override
+    public byte[] exportExcel(PunchDTO dto) throws SerException {
+        List<PunchExportBO> punchExportBOs = new ArrayList<>(0);
+        String startTime = dto.getStartTime();
+        String endTime = dto.getEndTime();
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            LocalDate s = DateUtil.parseDate(startTime);
+            LocalDate e = DateUtil.parseDate(endTime);
+            LocalDate[] date = new LocalDate[]{s, e};
+            dto.getConditions().add(Restrict.between("date", date));
+        }
+        dto.getSorts().add("date=desc");
+        List<Punch> punches = punchSer.findByCis(dto, false);
+        List<PunchPhoneBO> bos = new ArrayList<>();
+        for (Punch punch : punches) {
+            PunchExportBO punchExportBO = BeanTransform.copyProperties(punch, PunchExportBO.class);
+
+            PunchSonDTO punchSonDTO = new PunchSonDTO();
+            punchSonDTO.getConditions().add(Restrict.eq("punchId", punch.getId()));
+            punchSonDTO.getConditions().add(Restrict.eq("punchType", PunchType.GO));
+            PunchSon go = super.findOne(punchSonDTO);   //上班
+            if (null != go) {
+                BeanTransform.copyProperties(go, punchExportBO, false, "punchStatus", "punchSource", "punchType");
+                punchExportBO.setPunchSource(transPunchSource(go.getPunchSource()));
+                punchExportBO.setPunchStatus(phonePunchStatus1(go));
+                punchExportBO.setPunchType("上班");
+            }
+            punchExportBOs.add(punchExportBO);
+
+            PunchExportBO punchExportBO1 = BeanTransform.copyProperties(punch, PunchExportBO.class);
+            PunchSonDTO punchSonDTO1 = new PunchSonDTO();
+            punchSonDTO1.getConditions().add(Restrict.eq("punchId", punch.getId()));
+            punchSonDTO1.getConditions().add(Restrict.eq("punchType", PunchType.AFTER));
+            PunchSon afters = super.findOne(punchSonDTO1);   //下班
+            if (null != afters) {
+                BeanTransform.copyProperties(afters, punchExportBO1, false, "punchStatus", "punchSource", "punchType");
+                punchExportBO1.setPunchSource(transPunchSource(afters.getPunchSource()));
+                punchExportBO1.setPunchStatus(phonePunchStatus1(afters));
+                punchExportBO1.setPunchType("下班");
+            }
+            punchExportBOs.add(punchExportBO1);
+        }
+        List<PunchExportExcel> punchExportExcels = BeanTransform.copyProperties(punchExportBOs,PunchExportExcel.class,"serialVersionUID" );
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(punchExportExcels, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        PunchImportExcel punchImportExcel = new PunchImportExcel();
+        List<PunchImportExcel> list = new ArrayList<>(0);
+        list.add(punchImportExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
+        return bytes;
+    }
+
+    @Transactional
+    @Override
+    public void upload(List<PunchImportExcel> tos) throws SerException {
+        for (PunchImportExcel excel : tos) {
+            Punch punch = BeanTransform.copyProperties(excel, Punch.class, true);
+            PunchDTO punchDTO = new PunchDTO();
+            punchDTO.getConditions().add(Restrict.eq("name", punch.getName()));
+            punchDTO.getConditions().add(Restrict.eq("date", punch.getDate()));
+            List<Punch> punches = punchSer.findByCis(punchDTO);
+            if (null == punches || punches.size() < 1) {
+                punch = punchSer.save(punch);
+            }
+            PunchSonImportBO punchSonImportBO = BeanTransform.copyProperties(excel, PunchSonImportBO.class, true);
+
+            PunchDTO punchDTO1 = new PunchDTO();
+            punchDTO1.getConditions().add(Restrict.eq("name", punchSonImportBO.getName()));
+            punchDTO1.getConditions().add(Restrict.eq("date", punchSonImportBO.getDate()));
+            List<Punch> punches1 = punchSer.findByCis(punchDTO1);
+            if(null != punches1 && punches1.size() > 0){
+                PunchSon punchSon = BeanTransform.copyProperties(punchSonImportBO, PunchSon.class, true, "punchSource", "punchType");
+                punchSon.setPunchSource(transPunchSource1(punchSonImportBO.getPunchSource()));
+                punchSon.setPunchType(transPunchType(punchSonImportBO.getPunchType()));
+                punchSon.setPunchId(punches1.get(0).getId());
+                punchSon  = punchSonSer.save(punchSon);
+
+                String[] punchStatus = punchSonImportBO.getPunchStatus().split(",");
+                for(String str : punchStatus){
+                    PunchGrandSon punchGrandSon = BeanTransform.copyProperties(punchSonImportBO, PunchGrandSon.class, true, "punchStatus");
+                    punchGrandSon.setPunchSonId(punchSon.getId());
+                    punchGrandSon.setPunchStatus(transPunchStatus1(str));
+                    punchGrandSonSer.save(punchGrandSon);
+                }
+            }
+        }
+    }
+
+    private String transPunchStatus(PunchStatus punchStatus) throws SerException {
+        String str = "";
+        switch (punchStatus) {
+            case NORMAL:
+                str = "正常";
+                break;
+            case LATE:
+                str = "迟到";
+                break;
+            case OUTSIDE:
+                str = "外勤";
+                break;
+            case FEE:
+                str = "免扣";
+                break;
+            default:
+                str = "外勤";
+                break;
+        }
+        return str;
+    }
+
+    private PunchStatus transPunchStatus1(String string) throws SerException {
+        PunchStatus punchStatus = null;
+        switch (string) {
+            case "正常":
+                punchStatus = PunchStatus.NORMAL;
+                break;
+            case "迟到":
+                punchStatus = PunchStatus.LATE;
+                break;
+            case "外勤":
+                punchStatus = PunchStatus.OUTSIDE;
+                break;
+            case "免扣":
+                punchStatus = PunchStatus.FEE;
+                break;
+            default:
+                punchStatus = PunchStatus.OUTSIDE;
+        }
+        return punchStatus;
+    }
+
+    private String transPunchSource(PunchSource punchSource) throws SerException {
+        String str = "";
+        switch (punchSource) {
+            case PC:
+                str = "PC端";
+                break;
+            case MOBILE:
+                str = "移动端";
+                break;
+            default:
+                str = "移动端";
+                break;
+        }
+        return str;
+    }
+
+    private PunchSource transPunchSource1(String string) throws SerException {
+        PunchSource punchSource = null;
+        switch (string) {
+            case "PC端":
+                punchSource = PunchSource.PC;
+                break;
+            case "移动端":
+                punchSource = PunchSource.MOBILE;
+                break;
+            default:
+                punchSource = PunchSource.MOBILE;
+                break;
+        }
+        return punchSource;
+    }
+
+    private PunchType transPunchType(String string) throws SerException{
+        PunchType punchType = null;
+        switch (string) {
+            case "上班":
+                punchType = PunchType.GO;
+                break;
+            case "下班":
+                punchType = PunchType.AFTER;
+                break;
+            default:
+                punchType = PunchType.AFTER;
+                break;
+        }
+        return punchType;
+
+    }
+
+    private String phonePunchStatus1(PunchSon punchSon) throws SerException {
+        List<PunchGrandSonBO> list = new ArrayList<>();
+        PunchGrandSonDTO dto = new PunchGrandSonDTO();
+        dto.getConditions().add(Restrict.eq("punchSonId", punchSon.getId()));
+        List<PunchGrandSon> sons = punchGrandSonSer.findByCis(dto);   //查看打卡状态
+        StringBuilder sb = new StringBuilder();
+        for (PunchGrandSon son : sons) {
+            sb.append(transPunchStatus(son.getPunchStatus()));
+            sb.append(",");
+        }
+        String str = sb.toString().substring(0, sb.toString().length() - 1);
+        return str;
+    }
+
+    public static void main(String sfsd[]) {
+        PunchSon punchSon = new PunchSon();
+        punchSon.setArea("nu");
+        PunchExportBO bo = new PunchExportBO();
+//        bo.setArea("GUAF");
+        bo.setName("fdsfdsfd");
+        BeanUtils.copyProperties(punchSon, bo);
+        System.out.println(bo.getArea());
+        System.out.println(bo.getName());
+
     }
 }

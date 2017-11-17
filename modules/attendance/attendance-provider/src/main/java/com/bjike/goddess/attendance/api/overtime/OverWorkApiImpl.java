@@ -5,6 +5,7 @@ import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkCountBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.*;
+import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
@@ -143,5 +144,20 @@ public class OverWorkApiImpl implements OverWorkAPI {
     @Override
     public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException {
         return overWorkSer.userOverTimeCollect( overTimesDTO ) ;
+    }
+
+    @Override
+    public byte[] exportExcel(OverWorkDTO dto) throws SerException {
+        return overWorkSer.exportExcel(dto) ;
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return overWorkSer.templateExcel();
+    }
+
+    @Override
+    public void upload(List<OverWorkImportExcel> tos) throws SerException {
+        overWorkSer.upload(tos);
     }
 }
