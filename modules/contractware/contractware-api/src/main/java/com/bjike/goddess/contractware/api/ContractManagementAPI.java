@@ -86,4 +86,13 @@ public interface ContractManagementAPI  {
      */
     InvoiceBouncesBO findByNumber(String innerProjectNumber) throws SerException;
 
+    /**
+     * 获取内部合同编号
+     * @return
+     * @throws SerException
+     */
+    default List<String> findInternalContractNumber() throws SerException {
+        return null;
+    }
+
 }

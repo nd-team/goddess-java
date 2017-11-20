@@ -72,4 +72,5 @@ public interface InvoiceManagementSer extends Ser<InvoiceManagement, InvoiceMana
      * 上传附件更新电子版这个字段为有
      */
     void updateElectronic(String id) throws SerException;
+    
  }

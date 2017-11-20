@@ -74,4 +74,5 @@ public class InvoiceManagementApiImpl implements InvoiceManagementAPI  {
     public void updateElectronic(String id) throws SerException {
         invoiceManagementSer.updateElectronic(id);
     }
+
 }

@@ -90,4 +90,9 @@ public class ContractManagementApiImpl implements ContractManagementAPI  {
     public InvoiceBouncesBO findByNumber(String innerProjectNumber) throws SerException {
         return contractManagementSer.findByNumber(innerProjectNumber);
     }
+
+    @Override
+    public List<String> findInternalContractNumber() throws SerException {
+        return contractManagementSer.findInternalContractNumber ();
+    }
 }

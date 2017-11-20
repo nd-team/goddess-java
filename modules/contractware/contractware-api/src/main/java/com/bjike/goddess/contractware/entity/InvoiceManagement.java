@@ -75,7 +75,7 @@ public class InvoiceManagement extends BaseEntity {
     /**
      * 张数
      */
-    @Column(name = "",nullable = false,columnDefinition = "INTEGER   COMMENT '张数'"  )
+    @Column(nullable = false,columnDefinition = "INTEGER   COMMENT '张数'"  )
     private Integer  amount;
 
     /**
@@ -93,7 +93,7 @@ public class InvoiceManagement extends BaseEntity {
     /**
      * 是否到账
      */
-    @Column(name = "is_ifReceiveMoney",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否到账'"  , insertable = false  )
+    @Column(name = "is_ifReceiveMoney",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否到账'"  )
     private Boolean  ifReceiveMoney;
 
     public String getInternalContractNumber() {
