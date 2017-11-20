@@ -16,7 +16,10 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class OtherContactsTO extends BaseTO {
-
+    /**
+     * 更新时间
+     */
+    private String updateTime;
     /**
      * 服务类别
      */
@@ -70,6 +73,13 @@ public class OtherContactsTO extends BaseTO {
      */
     public String sendObject;
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getType() {
         return type;

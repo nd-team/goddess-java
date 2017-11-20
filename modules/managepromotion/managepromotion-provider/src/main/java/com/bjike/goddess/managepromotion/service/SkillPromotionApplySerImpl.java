@@ -14,7 +14,6 @@ import com.bjike.goddess.managepromotion.bo.SkillLevelCollectBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionDetailCollectABO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
-import com.bjike.goddess.managepromotion.entity.OverviewSkillLevel;
 import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
 import com.bjike.goddess.managepromotion.enums.GuideAddrStatus;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
@@ -25,7 +24,6 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.lang3.text.StrBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -546,28 +544,28 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         sb.append(" max(CASE WHEN dealStatus=1 THEN dealStatusCount END )AS untreated, ");
         sb.append(" max(CASE WHEN dealStatus=2 THEN dealStatusCount END )AS completedProcessing FROM ");
         sb.append(" (SELECT count(*) as dealStatusCount, dealStatus as dealStatus, area as area,department AS department ");
-        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='"+time+"' ");
+        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='" + time + "' ");
         sb.append(" GROUP BY area,department,dealStatus)a ");
         sb.append(" GROUP BY area,department)A, ");
         sb.append(" (SELECT area,department, ");
         sb.append(" max(CASE WHEN pass=0 THEN passCount END )AS unpass, ");
         sb.append(" max(CASE WHEN pass=1 THEN passCount END )AS pass FROM ");
         sb.append(" (SELECT count(*) as passCount, is_pass as pass, area as area,department AS department ");
-        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='"+time+"' ");
+        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='" + time + "' ");
         sb.append(" GROUP BY area,department,is_pass)a ");
         sb.append(" GROUP BY area,department)B, ");
         sb.append(" (SELECT area,department, ");
         sb.append(" max(CASE WHEN result=0 THEN resultCount END )AS unresult, ");
         sb.append(" max(CASE WHEN result=1 THEN resultCount END )AS result FROM ");
         sb.append(" (SELECT count(*) as resultCount, is_result as result , area as area,department AS department ");
-        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='"+time+"' ");
+        sb.append(" FROM managepromotion_skillpromotionapply a WHERE acquisitionTime='" + time + "' ");
         sb.append(" GROUP BY area,department,is_result)a ");
         sb.append(" GROUP BY area,department)C ");
         sb.append(" WHERE A.area = B.area AND A.area = C.area AND A.department = B.department AND A.department = C.department)D ");
         String sql = sb.toString();
-        String[] fields = new String[]{"area","department","receving","untreated","completedProcessing",
-        "pass","unpass","result","unresult"};
-        List<SkillLevelCollectBO> skillLevelCollectBOS = super.findBySql(sql,SkillLevelCollectBO.class,fields);
+        String[] fields = new String[]{"area", "department", "receving", "untreated", "completedProcessing",
+                "pass", "unpass", "result", "unresult"};
+        List<SkillLevelCollectBO> skillLevelCollectBOS = super.findBySql(sql, SkillLevelCollectBO.class, fields);
         //todo 以下表头需求方只说了大的模块，没有具体到哪个模块哪张表，要等到时候再问需求方
         //todo 公司发展需求人数 （人员编制）
         //todo 月收入（元） (财务运营部预算模块)
@@ -629,6 +627,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         }
         return null;
     }
+
     //获取所有地区
     private List<String> levelAreas() throws SerException {
         String[] fields = new String[]{"area"};
@@ -646,4 +645,85 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         List<String> departments = skillPromotionApplies.stream().map(SkillPromotionApply::getDepartment).collect(Collectors.toList());
         return departments;
     }
+
+    @Override
+    public Integer monthPromotedNum(SkillLevelCollectTO to) throws SerException {
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        if (null == year && null == month) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        return promotedNum(startDate, endDate);
+    }
+
+    @Override
+    public Integer quartPromotedNum(SkillLevelCollectTO to) throws SerException {
+        Integer year = to.getYear();
+        Integer quart = to.getQuart();
+        if (year == null && quart == null) {
+            year = LocalDate.now().getYear();
+            quart = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quart);
+        String startDate = date[0];
+        String endDate = date[1];
+        return promotedNum(startDate, endDate);
+    }
+
+    @Override
+    public Integer yearPromotedNum(SkillLevelCollectTO to) throws SerException {
+        Integer year = to.getYear();
+        if (null == year) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        return promotedNum(startDate, endDate);
+    }
+
+    private Integer promotedNum(String startDate, String endDate) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        String sql = " SELECT ifnull(sum(promotedNumber),0) AS promotedNumber FROM managepromotion_skillpromotionapply WHERE name='" + userBO.getUsername() + "' AND promotionTime BETWEEN '" + startDate + "' AND '" + endDate + "'";
+        List<Object> objects = super.findBySql(sql);
+        Integer nums = 0;
+        if (objects != null && objects.size() > 0) {
+            nums = Integer.valueOf(String.valueOf(objects.get(0)));
+        }
+        return nums;
+    }
+
+    //季度
+    private String[] quarter(Integer year, Integer quarter) throws SerException {
+        String startDate = null;
+        String endDate = null;
+        switch (quarter) {
+            case 1:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 3, DateUtil.getDayByDate(year, 3)));
+                break;
+            case 2:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 4, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 6, DateUtil.getDayByDate(year, 6)));
+                break;
+            case 3:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 7, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 9, DateUtil.getDayByDate(year, 9)));
+                break;
+            case 4:
+                startDate = DateUtil.dateToString(LocalDate.of(year, 10, 1));
+                endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+                break;
+            default:
+                startDate = DateUtil.dateToString(LocalDate.now());
+                endDate = DateUtil.dateToString(LocalDate.now());
+                break;
+        }
+
+        return new String[]{startDate, endDate};
+    }
+
+
 }

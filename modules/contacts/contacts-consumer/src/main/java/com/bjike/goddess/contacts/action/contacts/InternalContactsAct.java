@@ -381,4 +381,18 @@ public class InternalContactsAct extends BaseFileAction {
         }
     }
 
+    /**
+     *
+     *
+     * @version v1
+     */
+    @GetMapping("v1/checkEmail")
+    public Result checkEmail() throws ActException {
+        try {
+            internalContactsAPI.checkEmail();
+            return ActResult.initialize("成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

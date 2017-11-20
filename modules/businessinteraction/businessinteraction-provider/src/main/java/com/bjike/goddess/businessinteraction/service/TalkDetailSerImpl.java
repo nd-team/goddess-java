@@ -17,8 +17,6 @@ import com.bjike.goddess.competitormanage.api.CompetitorAPI;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.market.api.MarketInfoAPI;
-import com.bjike.goddess.market.bo.MarketInfoBO;
 import com.bjike.goddess.supplier.api.SupplierInformationAPI;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -55,8 +53,8 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     private SupplierInformationAPI supplierInformationAPI;
     @Autowired
     private CustomerBaseInfoAPI customerBaseInfoAPI;
-    @Autowired
-    private MarketInfoAPI marketInfoAPI;
+//    @Autowired
+//    private MarketInfoAPI marketInfoAPI;
     @Autowired
     private CompetitorAPI competitorAPI;
     @Autowired
@@ -339,15 +337,15 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
             }
         }
         //从市场信息管理处获取
-        List<MarketInfoBO> marketInfoBOs = marketInfoAPI.findByOriganizion(companyName);
-        if ((marketInfoBOs != null) && (!marketInfoBOs.isEmpty())) {
-            for (MarketInfoBO marketInfoBO : marketInfoBOs) {
-                ContactObjectBO contactObjectBO = new ContactObjectBO();
-                contactObjectBO.setCompanyName(marketInfoBO.getOriganizion());
-                contactObjectBO.setContactName(marketInfoBO.getCustomerName());
-                list.add(contactObjectBO);
-            }
-        }
+//        List<MarketInfoBO> marketInfoBOs = marketInfoAPI.findByOriganizion(companyName);
+//        if ((marketInfoBOs != null) && (!marketInfoBOs.isEmpty())) {
+//            for (MarketInfoBO marketInfoBO : marketInfoBOs) {
+//                ContactObjectBO contactObjectBO = new ContactObjectBO();
+//                contactObjectBO.setCompanyName(marketInfoBO.getOriganizion());
+//                contactObjectBO.setContactName(marketInfoBO.getCustomerName());
+//                list.add(contactObjectBO);
+//            }
+//        }
         //从竞争对手管理处获取
         List<CompetitorBO> competitorBOs = competitorAPI.findByOrganization(companyName);
         if ((competitorBOs != null) && (!competitorBOs.isEmpty())) {

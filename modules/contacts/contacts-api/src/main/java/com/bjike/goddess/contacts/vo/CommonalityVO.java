@@ -18,6 +18,15 @@ public class CommonalityVO {
      */
     private String id;
     /**
+     * 更新时间
+     */
+    private String updateTime;
+
+    /**
+     * 地区
+     */
+    private String area;
+    /**
      * 项目组/部门ID
      */
     private String departmentId;
@@ -55,6 +64,22 @@ public class CommonalityVO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public Status getStatus() {

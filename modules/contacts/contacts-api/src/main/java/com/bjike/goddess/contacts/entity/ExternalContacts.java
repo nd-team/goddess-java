@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -20,7 +21,16 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "contacts_external_contacts")
 public class ExternalContacts extends BaseEntity {
-
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
+    /**
+     * 录入人
+     */
+    @Column(name = "input", columnDefinition = "VARCHAR(255)   COMMENT '录入人'")
+    private String input;
     /**
      * 地区
      */
@@ -111,6 +121,21 @@ public class ExternalContacts extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
 
     public String getArea() {
         return area;

@@ -16,6 +16,10 @@ public class OtherContactsVO {
      */
     private String id;
     /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
      * 服务类别
      */
     private String type;
@@ -62,6 +66,14 @@ public class OtherContactsVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getType() {

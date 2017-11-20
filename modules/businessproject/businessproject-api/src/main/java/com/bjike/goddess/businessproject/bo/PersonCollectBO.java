@@ -13,18 +13,18 @@ public class PersonCollectBO extends BaseBO {
     /**
      * 内部项目名称
      */
-    private String innerName;
+    private String innerProject;
     /**
      * 总金额
      */
     private Double totalMoney;
 
-    public String getInnerName() {
-        return innerName;
+    public String getInnerProject() {
+        return innerProject;
     }
 
-    public void setInnerName(String innerName) {
-        this.innerName = innerName;
+    public void setInnerProject(String innerProject) {
+        this.innerProject = innerProject;
     }
 
     public Double getTotalMoney() {

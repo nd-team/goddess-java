@@ -29,6 +29,19 @@ public class SkillLevelCollectTO extends BaseTO {
      */
     private Integer week;
 
+    /**
+     * 季度
+     */
+    private Integer quart;
+
+    public Integer getQuart() {
+        return quart;
+    }
+
+    public void setQuart(Integer quart) {
+        this.quart = quart;
+    }
+
     public String getTime() {
         return time;
     }

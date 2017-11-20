@@ -1,7 +1,6 @@
 package com.bjike.goddess.managepromotion.action.managepromotion;
 
 import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -12,8 +11,8 @@ import com.bjike.goddess.managepromotion.api.SkillGradingAPI;
 import com.bjike.goddess.managepromotion.api.SkillPromotionApplyAPI;
 import com.bjike.goddess.managepromotion.bo.SkillPromotionApplyBO;
 import com.bjike.goddess.managepromotion.dto.SkillPromotionApplyDTO;
-import com.bjike.goddess.managepromotion.entity.SkillPromotionApply;
 import com.bjike.goddess.managepromotion.to.GuidePermissionTO;
+import com.bjike.goddess.managepromotion.to.SkillLevelCollectTO;
 import com.bjike.goddess.managepromotion.to.SkillPromotionApplyTO;
 import com.bjike.goddess.managepromotion.vo.SkillPromotionApplyVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,6 +253,57 @@ public class SkillPromotionApplyAction {
         try {
             List<String> skillLevel = skillGradingAPI.getSkillLevel();
             return ActResult.initialize(skillLevel);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取已晋升次数月汇总
+     *
+     * @param to to
+     * @des 获取已晋升次数月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthPromotedNum")
+    public Result monthPromotedNum(SkillLevelCollectTO to) throws ActException {
+        try {
+            Integer promotedNum = skillPromotionApplyAPI.monthPromotedNum(to);
+            return ActResult.initialize(promotedNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取已晋升次数季度汇总
+     *
+     * @param to to
+     * @des 获取已晋升次数季度汇总
+     * @version v1
+     */
+    @GetMapping("v1/quartPromotedNum")
+    public Result quartPromotedNum(SkillLevelCollectTO to) throws ActException {
+        try {
+            Integer promotedNum = skillPromotionApplyAPI.quartPromotedNum(to);
+            return ActResult.initialize(promotedNum);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取已晋升次数年汇总
+     *
+     * @param to to
+     * @des 获取已晋升次数年汇总
+     * @version v1
+     */
+    @GetMapping("v1/yearPromotedNum")
+    public Result yearPromotedNum(SkillLevelCollectTO to) throws ActException {
+        try {
+            Integer promotedNum = skillPromotionApplyAPI.yearPromotedNum(to);
+            return ActResult.initialize(promotedNum);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

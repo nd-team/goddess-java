@@ -196,21 +196,22 @@ public class RecruitDemandPlanSerImpl extends ServiceImpl<RecruitDemandPlan, Rec
         List<RecruitDemandPlanBO> recruitDemandPlanBOS = BeanTransform.copyProperties(recruitDemandPlans, RecruitDemandPlanBO.class);
         return recruitDemandPlanBOS;
     }
-    private List<RecruitDemandPlanBO> search(RecruitDemandPlanDTO dto) throws SerException{
-        if(StringUtils.isNotBlank(dto.getArea())){
-            dto.getConditions().add(Restrict.like("area",dto.getArea()));
+
+    private List<RecruitDemandPlanBO> search(RecruitDemandPlanDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.like("area", dto.getArea()));
         }
-        if(StringUtils.isNotBlank(dto.getProjectGroup())){
-            dto.getConditions().add(Restrict.like("projectGroup",dto.getProjectGroup()));
+        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
+            dto.getConditions().add(Restrict.like("projectGroup", dto.getProjectGroup()));
         }
-        if(StringUtils.isNotBlank(dto.getPosition())){
-            dto.getConditions().add(Restrict.like("position",dto.getPosition()));
+        if (StringUtils.isNotBlank(dto.getPosition())) {
+            dto.getConditions().add(Restrict.like("position", dto.getPosition()));
         }
-        if(null != dto.getPriority()){
-            dto.getConditions().add(Restrict.eq("priority",dto.getPriority()));
+        if (null != dto.getPriority()) {
+            dto.getConditions().add(Restrict.eq("priority", dto.getPriority()));
         }
-        if(null != dto.getCompleteRecruit()){
-            dto.getConditions().add(Restrict.eq("completeRecruit",dto.getCompleteRecruit()));
+        if (null != dto.getCompleteRecruit()) {
+            dto.getConditions().add(Restrict.eq("completeRecruit", dto.getCompleteRecruit()));
         }
         List<RecruitDemandPlan> recruitDemandPlans = super.findByCis(dto);
         List<RecruitDemandPlanBO> recruitDemandPlanBOS = BeanTransform.copyProperties(recruitDemandPlans, RecruitDemandPlanBO.class);
@@ -249,6 +250,7 @@ public class RecruitDemandPlanSerImpl extends ServiceImpl<RecruitDemandPlan, Rec
             recruitDemandPlan = BeanTransform.copyProperties(to, RecruitDemandPlan.class, true);
             recruitDemandPlan.setCreateTime(createTime);
             recruitDemandPlan.setModifyTime(LocalDateTime.now());
+            super.update(recruitDemandPlan);
             RecruitDemandPlanBO bo = BeanTransform.copyProperties(recruitDemandPlan, RecruitDemandPlanBO.class);
             return bo;
         } else {
@@ -266,6 +268,7 @@ public class RecruitDemandPlanSerImpl extends ServiceImpl<RecruitDemandPlan, Rec
             recruitDemandPlan = BeanTransform.copyProperties(to, RecruitDemandPlan.class, true);
             recruitDemandPlan.setCreateTime(createTime);
             recruitDemandPlan.setModifyTime(LocalDateTime.now());
+            super.update(recruitDemandPlan);
             RecruitDemandPlanBO bo = BeanTransform.copyProperties(recruitDemandPlan, RecruitDemandPlanBO.class);
             return bo;
         } else {
@@ -891,11 +894,21 @@ public class RecruitDemandPlanSerImpl extends ServiceImpl<RecruitDemandPlan, Rec
                 Integer entryNum = entryRegisterAPI.findNumByEntryDate(progressBO.getProjectGroup());
                 progressBO.setEntryNum(entryNum);
                 //面试率(初试面试量/邀约面试量*100%)
-                Double interviewRate = progressBO.getFirstInterviewNum() / progressBO.getInviteNum() * 0.1;
-                progressBO.setInterviewRate(interviewRate);
+                if (null == progressBO.getFirstInterviewNum() || null == progressBO.getInviteNum()) {
+                    progressBO.setInterviewRate(0.0);
+
+                } else {
+                    Double interviewRate = progressBO.getFirstInterviewNum() / progressBO.getInviteNum() * 0.1;
+                    progressBO.setInterviewRate(interviewRate);
+                }
                 //入职率(成功通过面试量/入职量*100%)
-                Double inductionRate = progressBO.getSuccessPassNum() / progressBO.getEntryNum() * 0.1;
-                progressBO.setInductionRate(inductionRate);
+                if (progressBO.getEntryNum() == 0) {
+                    progressBO.setInductionRate(0.0);
+
+                } else {
+                    Double inductionRate = progressBO.getSuccessPassNum() / progressBO.getEntryNum() * 0.1;
+                    progressBO.setInductionRate(inductionRate);
+                }
                 boList.add(progressBO);
             }
         }

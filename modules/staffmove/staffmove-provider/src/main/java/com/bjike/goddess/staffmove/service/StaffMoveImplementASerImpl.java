@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 人员调动实施业务实现
@@ -308,26 +307,30 @@ public class StaffMoveImplementASerImpl extends ServiceImpl<StaffMoveImplementA,
         checkSeeIdentity();
         List<StaffMoveImplementA> staffMoveImplementAS = super.findByCis(dto);
         List<StaffMoveImplementABO> staffMoveImplementABOS = BeanTransform.copyProperties(staffMoveImplementAS, StaffMoveImplementABO.class);
-        for (StaffMoveImplementABO abo : staffMoveImplementABOS) {
-            StaffMoveImplementBDTO bdto = new StaffMoveImplementBDTO();
-            bdto.getConditions().add(Restrict.eq("staffMoveImplementA.id", abo.getId()));
+        if (staffMoveImplementABOS != null) {
+            for (StaffMoveImplementABO abo : staffMoveImplementABOS) {
+                StaffMoveImplementBDTO bdto = new StaffMoveImplementBDTO();
+                bdto.getConditions().add(Restrict.eq("staffMoveImplementA.id", abo.getId()));
 
-            List<StaffMoveImplementB> staffMoveImplementBS = staffMoveImplementBSer.findByCis(bdto);
-            List<StaffMoveImplementBBO> staffMoveImplementBBOS = BeanTransform.copyProperties(staffMoveImplementBS, StaffMoveImplementBBO.class);
-            for(StaffMoveImplementBBO bbo:staffMoveImplementBBOS){
+                List<StaffMoveImplementB> staffMoveImplementBS = staffMoveImplementBSer.findByCis(bdto);
+                List<StaffMoveImplementBBO> staffMoveImplementBBOS = BeanTransform.copyProperties(staffMoveImplementBS, StaffMoveImplementBBO.class);
+                if (staffMoveImplementBBOS != null) {
+                    for (StaffMoveImplementBBO bbo : staffMoveImplementBBOS) {
 //                String area = bbo.getMobilizedArea();
 //                String department = bbo.getMobilizedProjectGroup();
-                for(String area:areas()){
-                    for(String department:departments()){
-                        String sql =" SELECT count(*) FROM staffmove_staffmoveimplementb where mobilizedArea='"+area+"' and mobilizedProjectGroup = '"+department+"'";
-                        List<Object> objects = staffMoveImplementBSer.findBySql(sql);
-                        if(objects != null && objects.size()>0){
-                            bbo.setTransferNum(Integer.valueOf(String.valueOf(objects.get(0))));
+                        for (String area : areas()) {
+                            for (String department : departments()) {
+                                String sql = " SELECT count(*) FROM staffmove_staffmoveimplementb where mobilizedArea='" + area + "' and mobilizedProjectGroup = '" + department + "'";
+                                List<Object> objects = staffMoveImplementBSer.findBySql(sql);
+                                if (objects != null && objects.size() > 0) {
+                                    bbo.setTransferNum(Integer.valueOf(String.valueOf(objects.get(0))));
+                                }
+                            }
                         }
                     }
                 }
+                abo.setStaffMoveImplementBBOS(staffMoveImplementBBOS);
             }
-            abo.setStaffMoveImplementBBOS(staffMoveImplementBBOS);
         }
         return staffMoveImplementABOS;
     }
@@ -360,7 +363,6 @@ public class StaffMoveImplementASerImpl extends ServiceImpl<StaffMoveImplementA,
         if (StringUtils.isNotBlank(to.getId())) {
             //修改B表
             StaffMoveImplementA staffMoveImplementA = super.findById(to.getId());
-
             List<StaffMoveImplementBTO> staffMoveImplementBTOS = to.getStaffMoveImplementBTOS();
             if (null != staffMoveImplementBTOS) {
                 for (StaffMoveImplementBTO bto : staffMoveImplementBTOS) {
@@ -500,7 +502,7 @@ public class StaffMoveImplementASerImpl extends ServiceImpl<StaffMoveImplementA,
     public List<StaffMoveCollectBO> totalStaff(String time) throws SerException {
         String startDate = "";
         String endDate = time;
-        String sql = "select realityWorkTime as realityWorkTime from " + getTableName(StaffMoveImplementB.class) + "realityWorkTime <= '" + endDate + "'";
+        String sql = "select realityWorkTime as realityWorkTime from " + getTableName(StaffMoveImplementB.class) + " where realityWorkTime <= '" + endDate + "'";
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
             startDate = String.valueOf(objects.get(0));
@@ -628,7 +630,7 @@ public class StaffMoveImplementASerImpl extends ServiceImpl<StaffMoveImplementA,
     public OptionBO totalStaffFigure(String time) throws SerException {
         String startDate = "";
         String endDate = time;
-        String sql = "select realityWorkTime as realityWorkTime from " + getTableName(StaffMoveImplementB.class) + "realityWorkTime <= '" + endDate + "'";
+        String sql = "select realityWorkTime as realityWorkTime from " + getTableName(StaffMoveImplementB.class) + " where realityWorkTime <= '" + endDate + "'";
         List<Object> objects = super.findBySql(sql);
         if (null != objects && objects.size() > 0) {
             startDate = String.valueOf(objects.get(0));

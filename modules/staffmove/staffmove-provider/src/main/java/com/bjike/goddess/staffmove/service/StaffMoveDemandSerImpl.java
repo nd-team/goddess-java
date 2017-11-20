@@ -239,7 +239,7 @@ public class StaffMoveDemandSerImpl extends ServiceImpl<StaffMoveDemand, StaffMo
             UserBO userBO = userAPI.currentUser();
             StaffMoveDemand staffMoveDemand = super.findById(to.getId());
             LocalDateTime createTime = staffMoveDemand.getCreateTime();
-            staffMoveDemand = BeanTransform.copyProperties(staffMoveDemand, StaffMoveDemand.class, true);
+            staffMoveDemand = BeanTransform.copyProperties(to, StaffMoveDemand.class, true);
             staffMoveDemand.setDemandPeople(userBO.getUsername());
             staffMoveDemand.setCreateTime(createTime);
             staffMoveDemand.setModifyTime(LocalDateTime.now());

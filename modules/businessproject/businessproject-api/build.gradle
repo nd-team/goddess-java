@@ -8,4 +8,6 @@ dependencies {
     compile project(":modules:message:message-api")
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:contacts:contacts-api")
+    compile project(":modules:taskallotment:taskallotment-api")
+
 }

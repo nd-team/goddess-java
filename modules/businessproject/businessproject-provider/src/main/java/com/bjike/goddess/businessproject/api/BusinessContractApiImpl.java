@@ -6,6 +6,7 @@ import com.bjike.goddess.businessproject.service.BusinessContractSer;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.to.PersonTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -542,23 +543,42 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     }
 
     @Override
-    public OptionMakeBO weekPersonFigure(String user, Integer year, Integer month, Integer week) throws SerException {
-        return businessContractSer.weekPersonFigure(user, year, month, week);
+    public OptionMakeBO weekPersonFigure(PersonTO to) throws SerException {
+        return businessContractSer.weekPersonFigure(to);
     }
 
     @Override
-    public OptionMakeBO monthPersonFigure(Integer year, Integer month) throws SerException {
-        return businessContractSer.monthPersonFigure(year, month);
+    public OptionMakeBO monthPersonFigure(PersonTO to) throws SerException {
+        return businessContractSer.monthPersonFigure(to);
     }
 
     @Override
-    public OptionMakeBO quarterPersonFigure(Integer year, Integer quarter) throws SerException {
-        return businessContractSer.quarterPersonFigure(year, quarter);
+    public OptionMakeBO quarterPersonFigure(PersonTO to) throws SerException {
+        return businessContractSer.quarterPersonFigure(to);
     }
 
     @Override
-    public OptionMakeBO yearPersonFigure(Integer year) throws SerException {
-        return businessContractSer.yearPersonFigure(year);
+    public OptionMakeBO yearPersonFigure(PersonTO to) throws SerException {
+        return businessContractSer.yearPersonFigure(to);
     }
 
+    @Override
+    public OptionMakeBO weekDepartFigure(PersonTO to) throws SerException {
+        return businessContractSer.weekDepartFigure(to);
+    }
+
+    @Override
+    public OptionMakeBO monthDepartFigure(PersonTO to) throws SerException {
+        return businessContractSer.monthDepartFigure(to);
+    }
+
+    @Override
+    public OptionMakeBO quarterDepartFigure(PersonTO to) throws SerException {
+        return businessContractSer.quarterDepartFigure(to);
+    }
+
+    @Override
+    public OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
+        return businessContractSer.yearDepartFigure(to);
+    }
 }
