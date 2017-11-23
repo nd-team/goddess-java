@@ -77,7 +77,26 @@ public class CustomerContactWeightSetAction {
         }
     }
 
+    /**
+     * 一个客户接触阶段权重设置
+     *
+     * @param id 客户接触阶段权重设置id
+     * @return class CustomerContactWeightSetVO
+     * @des 一个客户接触阶段权重设置
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findCustomerWeiOne(@PathVariable String id) throws ActException {
+        try {
 
+            CustomerContactWeightSetVO customerContactWeightSetVO = BeanTransform.copyProperties(
+                    customerContactWeightSetAPI.getOneContactWeight(id), CustomerContactWeightSetVO .class, true);
+            return ActResult.initialize(customerContactWeightSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 客户接触阶段权重设置列表
      *

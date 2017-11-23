@@ -1257,4 +1257,31 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
     default OptionMakeBO yearPersonFigure(PersonTO to) throws SerException {
         return null;
     }
+    /**
+     * 获取所有的单次合同名
+     * lijuntao
+     * @throws SerException
+     */
+    default List<String> findSingleContractName() throws SerException {
+        return null;
+    }
+    /**
+     * 根据单次合同名获取单次合同编号
+     * lijuntao
+     * @param singName 单次合同名
+     * @throws SerException
+     */
+    default List<String> findSingleNumByName(String singName) throws SerException {
+        return null;
+    }
+    /**
+     * 根据单次合同编号获取对应信息
+     * lijuntao
+     * @param singleNum 单次合同编号
+     * @return class BusinessContractsBO
+     * @throws SerException
+     */
+    default BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
+        return null;
+    }
 }

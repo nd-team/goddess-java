@@ -100,6 +100,26 @@ public class VisitRecommSetAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个拜访设置
+     *
+     * @param id 拜访设置id
+     * @return class VisitRecommSetVO
+     * @des 获取所有拜访设置信息
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findVisitOne(@PathVariable String id) throws ActException {
+        try {
+
+            VisitRecommSetVO visitRecommSetVO = BeanTransform.copyProperties(
+                    visitRecommSetAPI.getVisitRecoById(id), VisitRecommSetVO.class, true);
+            return ActResult.initialize(visitRecommSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 添加拜访设置

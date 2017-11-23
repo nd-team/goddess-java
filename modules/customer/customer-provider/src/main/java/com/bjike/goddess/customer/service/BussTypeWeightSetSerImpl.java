@@ -206,6 +206,7 @@ public class BussTypeWeightSetSerImpl extends ServiceImpl<BussTypeWeightSet, Bus
         LocalDateTime date = bussTypeWeightSet.getCreateTime();
         bussTypeWeightSet = BeanTransform.copyProperties(bussTypeWeightSetTO, BussTypeWeightSet.class);
         bussTypeWeightSet.setCreateTime(date);
+        bussTypeWeightSet.setModifyTime(LocalDateTime.now());
         super.update(bussTypeWeightSet);
         return BeanTransform.copyProperties(bussTypeWeightSet, BussTypeWeightSetBO.class);
     }

@@ -99,7 +99,26 @@ public class ClosenessFoactorSetAction {
         }
     }
 
+    /**
+     * 一个亲密度因素层设置
+     *
+     * @param id 业务类型权重id
+     * @return class ClosenessFoactorSetVO
+     * @des 一个亲密度因素层设置
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findClosenessOne(@PathVariable String id) throws ActException {
+        try {
 
+            ClosenessFoactorSetVO closenessFoactorSetVO = BeanTransform.copyProperties(
+                    closenessFoactorSetAPI.getOneCloseness(id), ClosenessFoactorSetVO .class, true);
+            return ActResult.initialize(closenessFoactorSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 添加亲密度因素层设置
      *

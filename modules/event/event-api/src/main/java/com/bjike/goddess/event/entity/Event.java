@@ -99,6 +99,11 @@ public class Event extends BaseEntity {
      */
     @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
     private Integer month;
+    /**
+     * 待办事件对应状态
+     */
+    @Column(name = "status",nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '待办事件对应状态'")
+    private String status;
 
     public Integer getYear() {
         return year;
@@ -202,5 +207,13 @@ public class Event extends BaseEntity {
 
     public void setActualTime(LocalDateTime actualTime) {
         this.actualTime = actualTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

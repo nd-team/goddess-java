@@ -581,4 +581,17 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
         return businessContractSer.yearDepartFigure(to);
     }
+    public List<String> findSingleContractName() throws SerException {
+        return businessContractSer.findSingleContractName();
+    }
+
+    @Override
+    public List<String> findSingleNumByName(String singName) throws SerException {
+        return businessContractSer.findSingleNumByName(singName);
+    }
+
+    @Override
+    public BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
+        return businessContractSer.findBySingleNum(singleNum);
+    }
 }

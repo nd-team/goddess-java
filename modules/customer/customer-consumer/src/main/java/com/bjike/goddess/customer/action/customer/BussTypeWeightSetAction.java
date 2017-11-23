@@ -78,7 +78,26 @@ public class BussTypeWeightSetAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个业务类型权重
+     *
+     * @param id 业务类型权重id
+     * @return class BussTypeWeightSetVO
+     * @des 获取所有业务类型权重
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findBussWeightOne(@PathVariable String id) throws ActException {
+        try {
 
+            BussTypeWeightSetVO bussTypeWeightSetVO = BeanTransform.copyProperties(
+                    bussTypeWeightSetAPI.getOneBussType(id), BussTypeWeightSetVO .class, true);
+            return ActResult.initialize(bussTypeWeightSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 业务类型权重设置列表

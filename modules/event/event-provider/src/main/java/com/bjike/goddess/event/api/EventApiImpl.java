@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.event.bo.*;
 import com.bjike.goddess.event.dto.EventDTO;
 import com.bjike.goddess.event.dto.FatherDTO;
+import com.bjike.goddess.event.enums.EventStatus;
+import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.service.EventSer;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.event.to.GuidePermissionTO;
@@ -11,6 +13,7 @@ import com.bjike.goddess.event.vo.AreaCountVO;
 import com.bjike.goddess.event.vo.ClassifyCountVO;
 import com.bjike.goddess.event.vo.ContentVO;
 import com.bjike.goddess.event.vo.SonPermissionObject;
+import com.bjike.goddess.user.entity.rbac.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,5 +111,15 @@ public class EventApiImpl implements EventAPI {
     @Override
     public List<ClassifyCountBO> classifyCount(EventDTO dto) throws SerException {
         return eventSer.classifyCount(dto);
+    }
+
+    @Override
+    public List<AppListDataBO> findAppList(String type) throws SerException {
+        return eventSer.findAppList(type);
+    }
+
+    @Override
+    public FatherBO findFatherById(String id) throws SerException {
+        return eventSer.findFatherById(id);
     }
 }
