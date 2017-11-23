@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.CusPermissionDTO;
 import com.bjike.goddess.businessproject.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -38,6 +39,23 @@ public interface CusPermissionAPI {
         return null;
     }
 
+    /**
+     * 商务合同权限列表总条数
+     */
+    default Long busCountPermission(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 商务合同权限列表
+     *
+     * @param cusPermissionDTO 客户权限数据
+     * @return CusPermissionBO
+     * @throws SerException
+     */
+    default List<CusPermissionBO> busList(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 一个客户权限
@@ -55,7 +73,7 @@ public interface CusPermissionAPI {
      *
      * @throws SerException
      */
-    default List<OpinionBO>  listOperateById(String id) throws SerException {
+    default List<OpinionBO> listOperateById(String id) throws SerException {
         return null;
     }
 
@@ -87,7 +105,7 @@ public interface CusPermissionAPI {
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean getCusPermission(String idFlag) throws SerException {
+    default Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
 
@@ -97,7 +115,16 @@ public interface CusPermissionAPI {
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean busCusPermission(String idFlag) throws SerException {
+    default Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
+        return null;
+    }
+    /**
+     * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
+     *
+     * @param idFlag 客户权限idFlag
+     * @throws SerException
+     */
+    default Boolean modCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
 }

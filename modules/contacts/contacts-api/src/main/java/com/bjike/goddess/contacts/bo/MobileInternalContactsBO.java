@@ -1,6 +1,7 @@
 package com.bjike.goddess.contacts.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.contacts.enums.ContactsStatus;
 import com.bjike.goddess.contacts.enums.Status;
 import com.bjike.goddess.user.enums.SexType;
 
@@ -54,7 +55,7 @@ public class MobileInternalContactsBO extends BaseBO {
     private String position;
 
     /**
-     * 联系电话
+     * 电话
      */
     private String phone;
 
@@ -68,10 +69,10 @@ public class MobileInternalContactsBO extends BaseBO {
      */
     private String bloc;
 
-//    /**
-//     * 联系电话2
-//     */
-//    private String phoneNumber;
+    /**
+     * 电话2
+     */
+    private String phoneNumber;
 
     /**
      * QQ号
@@ -101,7 +102,7 @@ public class MobileInternalContactsBO extends BaseBO {
     /**
      * 状态
      */
-    private Status status;
+    private ContactsStatus status;
 
     public String getUserId() {
         return userId;
@@ -215,11 +216,19 @@ public class MobileInternalContactsBO extends BaseBO {
         this.remark = remark;
     }
 
-    public Status getStatus() {
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public ContactsStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ContactsStatus status) {
         this.status = status;
     }
 }

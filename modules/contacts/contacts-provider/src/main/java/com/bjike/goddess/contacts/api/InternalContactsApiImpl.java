@@ -120,6 +120,11 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     }
 
     @Override
+    public List<PhoneNumberBO> mobileGetTel() throws SerException {
+        return internalContactsSer.mobileGetTel();
+    }
+
+    @Override
     public Long getMobileTotal(InternalContactsDTO dto) throws SerException {
         return internalContactsSer.getMobileTotal(dto);
     }
@@ -182,5 +187,10 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     @Override
     public void checkEmail() throws SerException {
         internalContactsSer.checkEmail();
+    }
+
+    @Override
+    public List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+        return internalContactsSer.mobileInfoByDepartment(dep);
     }
 }

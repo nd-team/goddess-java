@@ -201,7 +201,6 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
         List<ProblemCodeRule> problemCodeRules = super.findAll();
         if (problemCodeRules.isEmpty()) {
             List<PositionDetailBO> positionDetailBOS = positionDetailAPI.findStatus();
-//            for (ProblemCodeRule problemCodeRule : problemCodeRules) {
             for (PositionDetailBO positionDetailBO : positionDetailBOS) {
                 ProblemCodeRule problemCodeRule = new ProblemCodeRule();
                 problemCodeRule.setArea(positionDetailBO.getArea());
@@ -284,7 +283,6 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
                 problemCodeRule.setCodeFixedRule("Q" + time);
                 super.save(problemCodeRule);
 
-//                }
             }
         }
         List<ProblemCodeRule> list = super.findByCis(dto);

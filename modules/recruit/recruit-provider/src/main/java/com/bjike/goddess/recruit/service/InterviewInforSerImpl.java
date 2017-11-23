@@ -59,7 +59,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -77,7 +77,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -95,7 +95,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -112,7 +112,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -193,7 +193,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
         InterviewInfor interviewInfor = new InterviewInfor();
         for (FirstPhoneRecord record : firstPhoneRecords) {
-            if (record.getWhetherFirstInterview().equals(Boolean.TRUE) && record.getStatus() == null) {
+            if (Boolean.TRUE.equals(record.getWhetherFirstInterview()) && record.getStatus() == null) {
                 interviewInfor.setDate(record.getDate());//日期
                 interviewInfor.setResumeResource(record.getResumeResource());//简历来源
                 interviewInfor.setPosition(record.getPosition());//岗位

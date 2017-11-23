@@ -7,6 +7,7 @@ import com.bjike.goddess.recruit.bo.CusPermissionBO;
 import com.bjike.goddess.recruit.dto.CusPermissionDTO;
 import com.bjike.goddess.recruit.entity.CusPermission;
 import com.bjike.goddess.recruit.to.CusPermissionTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean getCusPermission(String idFlag) throws SerException{return null;}
+    default Boolean getCusPermission(String idFlag, UserBO userBO) throws SerException{return null;}
 
     /**
      * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
@@ -85,9 +86,19 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean busCusPermission(String idFlag) throws SerException {
+    default Boolean busCusPermission(String idFlag, UserBO userBO) throws SerException {
         return null;
     }
+    /**
+     * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
+     *
+     * @param idFlag 客户权限idFlag
+     * @throws SerException
+     */
+    default Boolean manCusPermission(String idFlag, UserBO userBO) throws SerException {
+        return null;
+    }
+
 
 
 }

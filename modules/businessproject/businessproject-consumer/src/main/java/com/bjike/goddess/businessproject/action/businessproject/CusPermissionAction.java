@@ -38,6 +38,52 @@ public class CusPermissionAction {
 
     @Autowired
     private CusPermissionAPI cusPermissionAPI;
+    /**
+     * 商务合同列表总条数
+     *
+     * @param cusPermissionDTO 客户权限信息dto
+     * @des 获取所有客户权限信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/bus/count")
+    public Result busCountPermission(CusPermissionDTO cusPermissionDTO) throws ActException {
+        try {
+            Long count = cusPermissionAPI.busCountPermission(cusPermissionDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 商务合同权限列表
+     *
+     * @param cusPermissionDTO 客户权限信息dto
+     * @param request      前端过滤参数
+     * @return class CusPermissionVO
+     * @des 获取所有客户权限信息
+     * @version v1
+     */
+    @GetMapping("v1/bus/list")
+    public Result busList(CusPermissionDTO cusPermissionDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            List<CusPermissionBO> boList = cusPermissionAPI.busList(cusPermissionDTO);
+            List<CusPermissionVO> cusPermissionVOList = new ArrayList<>();
+            boList.stream().forEach(str->{
+                CusPermissionVO temp = BeanTransform.copyProperties( str, CusPermissionVO.class, request);
+                List<CusOperateVO> covo = new ArrayList<>();
+                if(null != str.getCusOperateBO()){
+                    covo = BeanTransform.copyProperties(str.getCusOperateBO(),CusOperateVO.class);
+                }
+                temp.setCusOperateVO( covo );
+                cusPermissionVOList.add( temp );
+            });
+
+            return ActResult.initialize(cusPermissionVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 列表总条数

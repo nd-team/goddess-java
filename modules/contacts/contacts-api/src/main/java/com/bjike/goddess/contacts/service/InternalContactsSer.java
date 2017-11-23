@@ -162,7 +162,9 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
     default String getEmail(String name) throws SerException {
         return null;
     }
-
+    default List<MobileInternalContactsBO> mobileSort() throws SerException {
+        return null;
+    }
     /**
      * 移动端获取列表
      *
@@ -171,6 +173,16 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
      * @throws SerException
      */
     default List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端获取根据姓名获取所有电话号码
+     *
+     * @return class PhoneNumberBO
+     * @throws SerException
+     */
+    default List<PhoneNumberBO> mobileGetTel() throws SerException {
         return null;
     }
 
@@ -198,6 +210,7 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
     default void test(List<InternalContactsTO> tocs) throws SerException {
         return;
     }
+
 
     /**
      * 根据姓名获取地区,员工编号,职位,部门
@@ -288,5 +301,15 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
      * @throws SerException
      */
     default void checkEmail() throws SerException {
+    }
+
+    /**
+     * 查询部门下所有人的信息
+     *
+     * @return class MobileInternalContactsBO
+     * @throws SerException
+     */
+    default List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+        return null;
     }
 }
