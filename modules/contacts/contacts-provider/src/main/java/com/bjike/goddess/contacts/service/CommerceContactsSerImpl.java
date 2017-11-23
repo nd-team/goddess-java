@@ -141,8 +141,18 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
 
     @Override
     public List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
+        search(dto);
         List<CommerceContacts> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
+        return BeanTransform.copyProperties(list, CommerceContactsBO.class);
+    }
+    private List<CommerceContactsBO> search(CommerceContactsDTO dto)throws SerException{
+        //客户姓名
+        if(StringUtils.isNotBlank(dto.getCustomerName())){
+            dto.getConditions().add(Restrict.like("customerName",dto.getCustomerName()));
+        }
+        List<CommerceContacts> commerceContacts = super.findByCis(dto);
+        List<CommerceContactsBO> commerceContactsBOS = BeanTransform.copyProperties(commerceContacts,CommerceContactsBO.class);
+        return commerceContactsBOS;
     }
 
     @Override
@@ -156,6 +166,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Override
     public Long getTotal() throws SerException {
         CommerceContactsDTO dto = new CommerceContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 

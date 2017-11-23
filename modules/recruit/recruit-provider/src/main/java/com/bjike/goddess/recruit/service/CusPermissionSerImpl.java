@@ -101,16 +101,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
             List<CusOperateBO> coboList = null;
             if (null != ids && ids.length != 0) {
                 String token = RpcTransmit.getUserToken();
-                    RpcTransmit.transmitUserToken(token);
-                    if (CusPermissionType.LEVEL.equals(type)) {
-                        opinionBOS = arrangementAPI.findByIds(ids);
-                    } else if (CusPermissionType.MODULE.equals(type)) {
-                        opinionBOS = moduleTypeAPI.findByIds(ids);
-                    } else if (CusPermissionType.POSITION.equals(type)) {
-                        opinionBOS = positionDetailAPI.findByIds(ids);
-                    } else if (CusPermissionType.DEPART.equals(type)) {
-                        opinionBOS = departmentDetailAPI.findByIds(ids);
-                    }
+                RpcTransmit.transmitUserToken(token);
+                if (CusPermissionType.LEVEL.equals(type)) {
+                    opinionBOS = arrangementAPI.findByIds(ids);
+                } else if (CusPermissionType.MODULE.equals(type)) {
+                    opinionBOS = moduleTypeAPI.findByIds(ids);
+                } else if (CusPermissionType.POSITION.equals(type)) {
+                    opinionBOS = positionDetailAPI.findByIds(ids);
+                } else if (CusPermissionType.DEPART.equals(type)) {
+                    opinionBOS = departmentDetailAPI.findByIds(ids);
+                }
                 coboList = new ArrayList<>();
                 for (OpinionBO op : opinionBOS) {
                     CusOperateBO cobo = new CusOperateBO();
@@ -158,17 +158,17 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         List<CusOperateBO> coboList = new ArrayList<>();
         if (null != ids && ids.length != 0) {
             String token = RpcTransmit.getUserToken();
-                RpcTransmit.transmitUserToken(token);
-                if (CusPermissionType.LEVEL.equals(type)) {
-                    //根据id数组查询名字和id
-                    opinionBOS = arrangementAPI.findByIds(ids);
-                } else if (CusPermissionType.MODULE.equals(type)) {
-                    opinionBOS = moduleTypeAPI.findByIds(ids);
-                } else if (CusPermissionType.POSITION.equals(type)) {
-                    opinionBOS = positionDetailAPI.findByIds(ids);
-                } else if (CusPermissionType.DEPART.equals(type)) {
-                    opinionBOS = departmentDetailAPI.findByIds(ids);
-                }
+            RpcTransmit.transmitUserToken(token);
+            if (CusPermissionType.LEVEL.equals(type)) {
+                //根据id数组查询名字和id
+                opinionBOS = arrangementAPI.findByIds(ids);
+            } else if (CusPermissionType.MODULE.equals(type)) {
+                opinionBOS = moduleTypeAPI.findByIds(ids);
+            } else if (CusPermissionType.POSITION.equals(type)) {
+                opinionBOS = positionDetailAPI.findByIds(ids);
+            } else if (CusPermissionType.DEPART.equals(type)) {
+                opinionBOS = departmentDetailAPI.findByIds(ids);
+            }
 
 
             for (OpinionBO op : opinionBOS) {
@@ -193,18 +193,18 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
         CusPermission cusPermission = super.findById(id);
         CusPermissionType type = cusPermission.getType();
-        String token=RpcTransmit.getUserToken();
-            RpcTransmit.transmitUserToken(token);
-            if (CusPermissionType.LEVEL.equals(type)) {
-                list = arrangementAPI.findThawOpinion();
-            } else if (CusPermissionType.MODULE.equals(type)) {
-                list = moduleTypeAPI.findThawOpinion();
-            } else if (CusPermissionType.POSITION.equals(type)) {
-                list = positionDetailAPI.findThawOpinion();
-            } else if (CusPermissionType.DEPART.equals(type)) {
-                //TODO 部门查询
-                list = departmentDetailAPI.findThawOpinion();
-            }
+        String token = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
+        if (CusPermissionType.LEVEL.equals(type)) {
+            list = arrangementAPI.findThawOpinion();
+        } else if (CusPermissionType.MODULE.equals(type)) {
+            list = moduleTypeAPI.findThawOpinion();
+        } else if (CusPermissionType.POSITION.equals(type)) {
+            list = positionDetailAPI.findThawOpinion();
+        } else if (CusPermissionType.DEPART.equals(type)) {
+            //TODO 部门查询
+            list = departmentDetailAPI.findThawOpinion();
+        }
 
         return list;
     }
@@ -345,17 +345,17 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-        String token=RpcTransmit.getUserToken();
-            RpcTransmit.transmitUserToken(token);
-            Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        String token = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(token);
+        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
 
-            //TODO 部门
-            if (depart) {
-                flag = true;
-            } else {
-                flag = false;
-            }
+        //TODO 部门
+        if (depart) {
+            flag = true;
+        } else {
+            flag = false;
+        }
 
         return flag;
     }
@@ -399,15 +399,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-            RpcTransmit.transmitUserToken(userToken);
-            Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
-            if (moduleFlag) {
-                flag = true;
-            } else {
-                flag = false;
-            }
+        if (moduleFlag || positionFlag || depart) {
+            flag = true;
+        } else {
+            flag = false;
+        }
         RpcTransmit.transmitUserToken(userToken);
         String aa = RpcTransmit.getUserToken();
         return flag;

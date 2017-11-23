@@ -122,6 +122,7 @@ public class FirstPhoneRecordTO extends BaseTO {
     /**
      * 是否初试
      */
+    @NotNull(message = "是否初试",groups = {ADD.class,EDIT.class})
     private Boolean whetherFirstInterview;
 
     /**

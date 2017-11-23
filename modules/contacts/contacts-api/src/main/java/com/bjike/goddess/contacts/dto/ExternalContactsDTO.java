@@ -16,6 +16,31 @@ public class ExternalContactsDTO extends BaseDTO {
      * 用户名
      */
     private String userName;
+    /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 项目组
+     */
+    private String project;
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
 
     public String getUserName() {
         return userName;

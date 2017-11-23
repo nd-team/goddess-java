@@ -875,4 +875,38 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         strings = nameBOS.toArray(strings);
         return strings;
     }
+
+    @Override
+    public List<String> welfarePerson() throws SerException {
+        String sql = " SELECT a.name AS name,a.id FROM organize_position_detail_user a,organize_position_detail_user_table b, " +
+                " organize_position_detail c,organize_department_detail d,organize_moduletype e " +
+                " WHERE a.id=b.user_id AND b.position_id=c.id AND c.department_id=d.id AND c.module_id=e.id " +
+                " AND d.department='综合资源部'AND e.module='福利模块' ";
+        List<Object> nameBOS = super.findBySql(sql);
+        List<String> strs = new ArrayList<>();
+        if (nameBOS != null) {
+            for(Object o:nameBOS){
+                Object[] obj = (Object[])o;
+                strs.add((String) obj[0]);
+            }
+        }
+        return strs;
+    }
+
+    @Override
+    public List<String> planningPerson() throws SerException {
+        String sql = " SELECT a.name as name,a.id FROM organize_position_detail_user a,organize_position_detail_user_table b, " +
+                " organize_position_detail c,organize_department_detail d,organize_moduletype e " +
+                " WHERE a.id=b.user_id AND b.position_id=c.id AND c.department_id=d.id AND c.module_id=e.id " +
+                " AND d.department='综合资源部'AND e.module='规划模块' ";
+        List<Object> nameBOS = super.findBySql(sql);
+        List<String> strs = new ArrayList<>();
+        if (nameBOS != null) {
+            for (Object o : nameBOS) {
+                Object[] obj = (Object[]) o;
+                strs.add((String) obj[0]);
+            }
+        }
+        return strs;
+    }
 }

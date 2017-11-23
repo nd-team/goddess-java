@@ -14,6 +14,7 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -277,7 +278,10 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
                 }
                 problemCodeRule.setProblemCodeRule(problemRule);
                 problemCodeRule.setAcceptCodeRule(acceptRule);
-                problemCodeRule.setCodeFixedRule("Q" + LocalDateTime.now());
+                String time = String.valueOf(LocalDateTime.now());
+                time = StringUtils.replaceAll(time,"-","");
+                time = StringUtils.substring(time,0,8);
+                problemCodeRule.setCodeFixedRule("Q" + time);
                 super.save(problemCodeRule);
 
 //                }

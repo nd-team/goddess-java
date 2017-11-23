@@ -216,4 +216,14 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public String[] generPerson() throws SerException{
         return positionDetailUserSer.generPerson();
     }
+
+    @Override
+    public List<String> welfarePerson() throws SerException {
+        return positionDetailUserSer.welfarePerson();
+    }
+
+    @Override
+    public List<String> planningPerson() throws SerException {
+        return positionDetailUserSer.planningPerson();
+    }
 }

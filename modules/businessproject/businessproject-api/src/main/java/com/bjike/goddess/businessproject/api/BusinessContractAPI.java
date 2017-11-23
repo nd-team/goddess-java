@@ -5,6 +5,7 @@ import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.to.PersonTO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -1169,49 +1170,87 @@ public interface BusinessContractAPI {
     /**
      * 个人图表周汇总
      *
-     * @param user
-     * @param year
-     * @param month
-     * @param week
+     * @param to
      * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionMakeBO weekPersonFigure(String user, Integer year, Integer month, Integer week) throws SerException {
+    default OptionMakeBO weekPersonFigure(PersonTO to) throws SerException {
         return null;
     }
 
     /**
      * 个人图表月汇总
      *
-     * @param year
-     * @param month
+     * @param to
      * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionMakeBO monthPersonFigure(Integer year, Integer month) throws SerException {
+    default OptionMakeBO monthPersonFigure(PersonTO to) throws SerException {
         return null;
     }
 
     /**
      * 个人图表季度汇总
      *
-     * @param year
-     * @param quarter
+     * @param to
      * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionMakeBO quarterPersonFigure(Integer year, Integer quarter) throws SerException {
+    default OptionMakeBO quarterPersonFigure(PersonTO to) throws SerException {
         return null;
     }
 
     /**
      * 个人图表年汇总
      *
-     * @param year
+     * @param to
      * @return class OptionMakeBO
      * @throws SerException
      */
-    default OptionMakeBO yearPersonFigure(Integer year) throws SerException {
+    default OptionMakeBO yearPersonFigure(PersonTO to) throws SerException {
+        return null;
+    }
+    /**
+     * 部门图表周汇总
+     *
+     * @param to
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO weekDepartFigure(PersonTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门图表月汇总
+     *
+     * @param to
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO monthDepartFigure(PersonTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门图表季度汇总
+     *
+     * @param to
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO quarterDepartFigure(PersonTO to) throws SerException {
+        return null;
+    }
+
+    /**
+     * 部门图表年汇总
+     *
+     * @param to
+     * @return class OptionMakeBO
+     * @throws SerException
+     */
+    default OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
         return null;
     }
 }

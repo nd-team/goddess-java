@@ -145,9 +145,11 @@ public class PositionDutyAction extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/list")
     public Result list(PositionDutyDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
+            String userToken = RpcContext.getContext().getAttachment("userToken");
             List<PositionDutyBO> boList = positionDutyAPI.list(dto);
             List<PositionDutyVO> voList = BeanTransform.copyProperties(boList, PositionDutyVO.class, request);
             return ActResult.initialize(voList);

@@ -1,10 +1,9 @@
 package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.*;
+import com.bjike.goddess.contacts.to.CollectTO;
 import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
-import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
-import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.service.InternalContactsSer;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -138,5 +137,50 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     @Override
     public InternalContactsConditionBO getByName(String name) throws SerException {
         return internalContactsSer.getByName(name);
+    }
+
+    @Override
+    public List<ContactsCollectBO> dayCollect(CollectTO to) throws SerException {
+        return internalContactsSer.dayCollect(to);
+    }
+
+    @Override
+    public List<ContactsCollectBO> weekCollect(CollectTO to) throws SerException {
+        return internalContactsSer.weekCollect(to);
+    }
+
+    @Override
+    public List<ContactsCollectBO> monthCollect(CollectTO to) throws SerException {
+        return internalContactsSer.monthCollect(to);
+    }
+
+    @Override
+    public List<ContactsCollectBO> totalCollect(CollectTO to) throws SerException {
+        return internalContactsSer.totalCollect(to);
+    }
+
+    @Override
+    public OptionBO dayCollectFigure(CollectTO to) throws SerException {
+        return internalContactsSer.dayCollectFigure(to);
+    }
+
+    @Override
+    public OptionBO weekCollectFigure(CollectTO to) throws SerException {
+        return internalContactsSer.weekCollectFigure(to);
+    }
+
+    @Override
+    public OptionBO monthCollectFigure(CollectTO to) throws SerException {
+        return internalContactsSer.monthCollectFigure(to);
+    }
+
+    @Override
+    public OptionBO totalCollectFigure(CollectTO to) throws SerException {
+        return internalContactsSer.totalCollectFigure(to);
+    }
+
+    @Override
+    public void checkEmail() throws SerException {
+        internalContactsSer.checkEmail();
     }
 }

@@ -543,7 +543,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
                 if (userBO != null) {
                     InternalContactsBO contactsBO = internalContactsAPI.findByUser(userBO.getId());
                     if (contactsBO != null) {
-                        sendUserStr.add(contactsBO.getEmail());
+                        sendUserStr.add(contactsBO.getWorkEmail());
                     }
                 }
             }

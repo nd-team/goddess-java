@@ -188,11 +188,10 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
      * @throws SerException
      */
     @Override
-    @Transactional(rollbackFor = {SerException.class})
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
         checkSeeIdentity();
         search(dto);
-        List<FirstPhoneRecord> list = super.findByPage(dto);
+        List<FirstPhoneRecord> list = super.findByCis(dto);
         List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class);
         return listBO;
     }

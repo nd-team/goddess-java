@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -291,6 +292,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
 
     @Override
     public List<CommonalityBO> maps(CommonalityDTO dto) throws SerException {
+        search(dto);
         List<CommonalityBO> boList = new ArrayList<>(0);
         List<Commonality> list = super.findByPage(dto);
         if (null != list && list.size() > 0) {
@@ -303,6 +305,23 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
             }
         }
         return boList;
+    }
+    private List<CommonalityBO> search(CommonalityDTO dto)throws SerException{
+        //地区
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.like("area",dto.getArea()));
+        }
+        //项目组/部门
+        if(StringUtils.isNotBlank(dto.getDepartment())){
+            dto.getConditions().add(Restrict.like("department",dto.getDepartment()));
+        }
+        //状态
+        if(null != dto.getStatus()){
+            dto.getConditions().add(Restrict.eq("status",dto.getStatus()));
+        }
+        List<Commonality> commonalities = super.findByCis(dto);
+        List<CommonalityBO> commonalityBOS = BeanTransform.copyProperties(commonalities,CommonalityBO.class);
+        return commonalityBOS;
     }
 
     @Override
@@ -339,6 +358,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
     @Override
     public Long getTotal() throws SerException {
         CommonalityDTO dto = new CommonalityDTO();
+        search(dto);
         return super.count(dto);
     }
 

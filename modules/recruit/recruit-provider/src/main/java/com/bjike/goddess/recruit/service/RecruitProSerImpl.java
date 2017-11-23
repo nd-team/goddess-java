@@ -1,5 +1,6 @@
 package com.bjike.goddess.recruit.service;
 
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;

@@ -135,8 +135,27 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public List<ExternalContactsBO> maps(ExternalContactsDTO dto) throws SerException {
         dto.getSorts().add("writeTime=desc");
+        search(dto);
         List<ExternalContacts> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, ExternalContactsBO.class);
+    }
+
+    private List<ExternalContactsBO> search(ExternalContactsDTO dto) throws SerException {
+        //姓名
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            dto.getConditions().add(Restrict.like("username", dto.getUserName()));
+        }
+        //地区
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.like("area", dto.getArea()));
+        }
+        //部门/项目组
+        if (StringUtils.isNotBlank(dto.getProject())) {
+            dto.getConditions().add(Restrict.like("project", dto.getProject()));
+        }
+        List<ExternalContacts> externalContacts = super.findByCis(dto);
+        List<ExternalContactsBO> externalContactsBOS = BeanTransform.copyProperties(externalContacts, ExternalContactsBO.class);
+        return externalContactsBOS;
     }
 
     @Override
@@ -150,6 +169,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public Long getTotal() throws SerException {
         ExternalContactsDTO dto = new ExternalContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -278,7 +298,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
 //        dto.getSorts().add("writeTime=desc");
         searchMobileCondition(dto);
         List<ExternalContacts> list = super.findByCis(dto);
-        List<ExternalContactsBO> externalContactsBOs = BeanTransform.copyProperties(list, ExternalContactsBO.class,false);
+        List<ExternalContactsBO> externalContactsBOs = BeanTransform.copyProperties(list, ExternalContactsBO.class, false);
         if (!CollectionUtils.isEmpty(externalContactsBOs)) {
             List<MobileExternalContactsBO> bos = BeanTransform.copyProperties(externalContactsBOs, MobileExternalContactsBO.class, "sex", "headSculpture", "number");
             for (MobileExternalContactsBO bo : bos) {

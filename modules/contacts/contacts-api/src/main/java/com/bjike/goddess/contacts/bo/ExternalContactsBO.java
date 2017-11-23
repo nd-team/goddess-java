@@ -12,6 +12,14 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class ExternalContactsBO extends BaseBO {
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+    /**
+     * 录入人
+     */
+    private String input;
 
     /**
      * 地区
@@ -88,6 +96,21 @@ public class ExternalContactsBO extends BaseBO {
      */
     private String remark;
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
 
     public String getArea() {
         return area;

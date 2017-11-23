@@ -2,7 +2,10 @@ package com.bjike.goddess.contacts.excel;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.contacts.enums.ContactsStatus;
 import com.bjike.goddess.contacts.enums.Status;
+
+import java.time.LocalDate;
 
 
 /**
@@ -21,6 +24,11 @@ public class InternalContactsTemplateExport extends BaseEntity {
 //     */
 //    @ExcelHeader(name = "用户ID" , notNull = true)
 //    private String userId;
+
+    /**
+     * 更新时间
+     */
+    private LocalDate updateTime;
 
     /**
      * 地区
@@ -59,10 +67,30 @@ public class InternalContactsTemplateExport extends BaseEntity {
     private String phone;
 
     /**
-     * 邮箱
+     * 个人邮箱
      */
-    @ExcelHeader(name = "邮箱", notNull = false)
-    private String email;
+    @ExcelHeader(name = "个人邮箱", notNull = false)
+    private String personalEmail;
+    /**
+     * 工作邮箱
+     */
+    @ExcelHeader(name = "工作邮箱", notNull = false)
+    private String workEmail;
+    /**
+     * 原始密码
+     */
+    @ExcelHeader(name = "原始密码", notNull = false)
+    private String primalPassword;
+    /**
+     * 更改密码
+     */
+    @ExcelHeader(name = "更改密码", notNull = false)
+    private String updatePassword;
+    /**
+     * 工作邮箱检测是否通过
+     */
+    @ExcelHeader(name = "工作邮箱检测是否通过", notNull = false)
+    private String workEmailPass;
 
     /**
      * 集团号
@@ -71,11 +99,27 @@ public class InternalContactsTemplateExport extends BaseEntity {
     private String bloc;
 
     /**
+     * 联系电话1
+     */
+    @ExcelHeader(name = "联系电话1", notNull = false)
+    private String phoneNumberA;
+    /**
      * 联系电话2
      */
     @ExcelHeader(name = "联系电话2", notNull = false)
-    private String phoneNumber;
+    private String phoneNumberB;
 
+    /**
+     * 联系电话3
+     */
+    @ExcelHeader(name = "联系电话3", notNull = false)
+    private String phoneNumberC;
+
+    /**
+     * 联系电话4
+     */
+    @ExcelHeader(name = "联系电话4", notNull = false)
+    private String phoneNumberD;
     /**
      * QQ号
      */
@@ -110,7 +154,7 @@ public class InternalContactsTemplateExport extends BaseEntity {
      * 状态
      */
     @ExcelHeader(name = "状态", notNull = true)
-    private Status status;
+    private ContactsStatus status;
 
     public String getArea() {
         return area;
@@ -160,13 +204,6 @@ public class InternalContactsTemplateExport extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getBloc() {
         return bloc;
@@ -176,13 +213,6 @@ public class InternalContactsTemplateExport extends BaseEntity {
         this.bloc = bloc;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getQq() {
         return qq;
@@ -224,11 +254,91 @@ public class InternalContactsTemplateExport extends BaseEntity {
         this.remark = remark;
     }
 
-    public Status getStatus() {
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getPersonalEmail() {
+        return personalEmail;
+    }
+
+    public void setPersonalEmail(String personalEmail) {
+        this.personalEmail = personalEmail;
+    }
+
+    public String getWorkEmail() {
+        return workEmail;
+    }
+
+    public void setWorkEmail(String workEmail) {
+        this.workEmail = workEmail;
+    }
+
+    public String getPrimalPassword() {
+        return primalPassword;
+    }
+
+    public void setPrimalPassword(String primalPassword) {
+        this.primalPassword = primalPassword;
+    }
+
+    public String getUpdatePassword() {
+        return updatePassword;
+    }
+
+    public void setUpdatePassword(String updatePassword) {
+        this.updatePassword = updatePassword;
+    }
+
+    public String getWorkEmailPass() {
+        return workEmailPass;
+    }
+
+    public void setWorkEmailPass(String workEmailPass) {
+        this.workEmailPass = workEmailPass;
+    }
+
+    public String getPhoneNumberA() {
+        return phoneNumberA;
+    }
+
+    public void setPhoneNumberA(String phoneNumberA) {
+        this.phoneNumberA = phoneNumberA;
+    }
+
+    public String getPhoneNumberB() {
+        return phoneNumberB;
+    }
+
+    public void setPhoneNumberB(String phoneNumberB) {
+        this.phoneNumberB = phoneNumberB;
+    }
+
+    public String getPhoneNumberC() {
+        return phoneNumberC;
+    }
+
+    public void setPhoneNumberC(String phoneNumberC) {
+        this.phoneNumberC = phoneNumberC;
+    }
+
+    public String getPhoneNumberD() {
+        return phoneNumberD;
+    }
+
+    public void setPhoneNumberD(String phoneNumberD) {
+        this.phoneNumberD = phoneNumberD;
+    }
+
+    public ContactsStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ContactsStatus status) {
         this.status = status;
     }
 }

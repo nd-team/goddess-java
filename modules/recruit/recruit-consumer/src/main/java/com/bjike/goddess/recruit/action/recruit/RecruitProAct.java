@@ -1,5 +1,7 @@
 package com.bjike.goddess.recruit.action.recruit;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -113,8 +115,12 @@ public class RecruitProAct {
     @GetMapping("v1/list")
     public Result list(@Validated RecruitProDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
+//            String aa= RpcContext.getContext().getAttachment(RpcCommon.USER_TOKEN);
             List<RecruitProBO> boList = recruitProAPI.list(dto);
             List<RecruitProVO> voList = BeanTransform.copyProperties(boList, RecruitProVO.class, request);
+
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

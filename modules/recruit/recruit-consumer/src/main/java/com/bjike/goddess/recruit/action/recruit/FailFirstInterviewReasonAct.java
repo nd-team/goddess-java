@@ -84,9 +84,10 @@ public class FailFirstInterviewReasonAct {
      */
     @LoginAuth
     @GetMapping("v1/sonPermission")
-    public Result sonPermission() throws ActException {
+    public Result sonPermission(HttpServletRequest request) throws ActException {
         try {
-
+            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
             List<SonPermissionObject> hasPermissionList = failFirstInterviewReasonAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 
