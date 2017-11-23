@@ -8,6 +8,7 @@ import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimCompanyShapeDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDetailDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseTrendShapeDTO;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
@@ -15,9 +16,9 @@ import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimCompanyShapeBarVO;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeAllVO;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeMixVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -526,7 +527,7 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default ReimCompanyShapeBarVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
 
 
     /**
@@ -535,7 +536,7 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default ReimCompanyShapeBarVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
 
 
     /**
@@ -544,7 +545,16 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default ReimCompanyShapeBarVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司地区时间段内的特定指标统计图
+     * @param reimburseShapeDetailDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException{return null;}
 
 
 

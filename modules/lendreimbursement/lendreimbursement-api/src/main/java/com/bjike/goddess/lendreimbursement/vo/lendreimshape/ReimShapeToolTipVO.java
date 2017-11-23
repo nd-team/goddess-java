@@ -40,4 +40,12 @@ public class ReimShapeToolTipVO implements Serializable{
     public void setFormatter(String formatter) {
         this.formatter = formatter;
     }
+
+    public ReimShapeToolTipVO(String trigger, String formatter) {
+        this.trigger = trigger;
+        this.formatter = formatter;
+    }
+
+    public ReimShapeToolTipVO() {
+    }
 }

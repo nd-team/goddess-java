@@ -4,11 +4,11 @@ package com.bjike.goddess.lendreimbursement.vo.lendreimshape;
 import java.io.Serializable;
 
 /**
- * 日/周/月每个人的报销的情况
+ * 日/周/月每个人的报销的情况饼型图
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-04-06 10:01 ]
- * @Description: [ 日/周/月每个人的报销的情况 ]
+ * @Description: [ 日/周/月每个人的报销的情况饼型图 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

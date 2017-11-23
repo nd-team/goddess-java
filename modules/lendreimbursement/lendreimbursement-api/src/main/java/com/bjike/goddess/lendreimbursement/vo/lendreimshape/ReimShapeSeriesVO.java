@@ -66,4 +66,14 @@ public class ReimShapeSeriesVO implements Serializable{
     public void setSeriesDataVOList(List<ReimShapeSeriesDataVO> seriesDataVOList) {
         this.seriesDataVOList = seriesDataVOList;
     }
+
+    public ReimShapeSeriesVO() {
+    }
+
+    public ReimShapeSeriesVO(String name, String type, String radius, List<ReimShapeSeriesDataVO> seriesDataVOList) {
+        this.name = name;
+        this.type = type;
+        this.radius = radius;
+        this.seriesDataVOList = seriesDataVOList;
+    }
 }

@@ -6,22 +6,22 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.financeinit.api.CategoryAPI;
-import com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimCompanyShapeDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDetailDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseTrendShapeDTO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimCompanyMixShapeVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeAllVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeMixVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 报销记录图形
@@ -36,23 +36,27 @@ import java.time.LocalDate;
 @RequestMapping("reimburseshape")
 public class ReimburseShapeAction extends BaseFileAction {
 
-    @Autowired
-    private ReimburseRecordAPI reimburseRecordAPI;
-    @Autowired
-    private ReimburseAuditLogAPI reimburseAuditLogAPI;
-    @Autowired
-    private CategoryAPI categoryAPI;
-    @Autowired
-    private AccountAPI accountAPI;
-    @Autowired
-    private FileAPI fileAPI;
-    @Autowired
-    private UserSetPermissionAPI userSetPermissionAPI;
 
     @Autowired
     private ReimburseRecordAPI reimburseShapeAPI;
 
 
+    /**
+     * 获取所有年份
+     *
+     * @des 获取所有年份
+     * @version v1
+     */
+    @GetMapping("v1/allYear")
+    public Result listYear( ) throws ActException {
+        try {
+            LocalDate date = LocalDate.now();
+            List<Integer> list = DateUtil.allYearList(date);
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 获取当前年月有几周
      *
@@ -105,7 +109,7 @@ public class ReimburseShapeAction extends BaseFileAction {
     }
 
     /**
-     * 汇总年和月和周和日数据
+     * 汇总个人年和月和周和日数据
      *
      * @param reimburseShapeDTO 报销汇总条件
      * @return class ReimShapeAllVO
@@ -121,13 +125,12 @@ public class ReimburseShapeAction extends BaseFileAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
-        //TODO 上面的要拆分
     }
 
 
 
     /**
-     * 汇总任意两月的变化趋势图
+     * 汇总个人任意两月的变化趋势图
      *
      * @param reimburseTrendShapeDTO 报销汇总条件
      * @return class ReimShapeMixVO
@@ -150,7 +153,7 @@ public class ReimburseShapeAction extends BaseFileAction {
      * 汇总公司项目组时间段内的特定指标统计图
      *
      * @param reimCompanyShapeDTO 报销汇总条件
-     * @return class ReimCompanyShapeBarVO
+     * @return class ReimCompanyMixShapeVO
      * @des 汇总公司项目组时间段内的特定指标统计图
      * @version v1
      */
@@ -158,7 +161,7 @@ public class ReimburseShapeAction extends BaseFileAction {
     public Result collectGroupBar( ReimCompanyShapeDTO reimCompanyShapeDTO, BindingResult bindingResult) throws ActException {
         //项目组/项目/地区/时间指标的统计表（特定指标统计表）
         try {
-            ReimCompanyShapeBarVO reimShapeVO = reimburseShapeAPI.collectGroupBar(reimCompanyShapeDTO);
+            ReimCompanyMixShapeVO reimShapeVO = reimburseShapeAPI.collectGroupBar(reimCompanyShapeDTO);
             return ActResult.initialize(reimShapeVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -170,7 +173,7 @@ public class ReimburseShapeAction extends BaseFileAction {
      * 汇总公司项目名称时间段内的特定指标统计图
      *
      * @param reimCompanyShapeDTO 报销汇总条件
-     * @return class ReimCompanyShapeBarVO
+     * @return class ReimCompanyMixShapeVO
      * @des 汇总公司项目名称时间段内的特定指标统计图
      * @version v1
      */
@@ -178,7 +181,7 @@ public class ReimburseShapeAction extends BaseFileAction {
     public Result collectProjectBar( ReimCompanyShapeDTO reimCompanyShapeDTO, BindingResult bindingResult) throws ActException {
         //项目组/项目/地区/时间指标的统计表（特定指标统计表）
         try {
-            ReimCompanyShapeBarVO reimShapeVO = reimburseShapeAPI.collectProjectBar(reimCompanyShapeDTO);
+            ReimCompanyMixShapeVO reimShapeVO = reimburseShapeAPI.collectProjectBar(reimCompanyShapeDTO);
             return ActResult.initialize(reimShapeVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -190,7 +193,7 @@ public class ReimburseShapeAction extends BaseFileAction {
      * 汇总公司地区时间段内的特定指标统计图
      *
      * @param reimCompanyShapeDTO 报销汇总条件
-     * @return class ReimCompanyShapeBarVO
+     * @return class ReimCompanyMixShapeVO
      * @des 汇总公司地区时间段内的特定指标统计图
      * @version v1
      */
@@ -198,7 +201,26 @@ public class ReimburseShapeAction extends BaseFileAction {
     public Result collectAreaBar( ReimCompanyShapeDTO reimCompanyShapeDTO, BindingResult bindingResult) throws ActException {
         //项目组/项目/地区/时间指标的统计表（特定指标统计表）
         try {
-            ReimCompanyShapeBarVO reimShapeVO = reimburseShapeAPI.collectAreaBar(reimCompanyShapeDTO);
+            ReimCompanyMixShapeVO reimShapeVO = reimburseShapeAPI.collectAreaBar(reimCompanyShapeDTO);
+            return ActResult.initialize(reimShapeVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 详细图之汇总公司地区时间段内的特定指标统计图
+     *
+     * @param reimburseShapeDetailDTO 报销汇总条件
+     * @return class ReimShapeVO
+     * @des 详细图之汇总公司地区时间段内的特定指标统计图
+     * @version v1
+     */
+    @GetMapping("v1/detail/collectbar")
+    public Result collectCompanyDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO, BindingResult bindingResult) throws ActException {
+        //项目组/项目/地区/时间指标的统计表（特定指标统计表）
+        try {
+            ReimShapeVO reimShapeVO = reimburseShapeAPI.collectAreaDetailBar(reimburseShapeDetailDTO);
             return ActResult.initialize(reimShapeVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

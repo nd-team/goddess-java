@@ -9,37 +9,29 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseAuditLogBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
-import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.vo.PhoneReimAuditprocingVO;
 import com.bjike.goddess.lendreimbursement.vo.ReimburseRecordVO;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +55,9 @@ public class PhoneReimburseAction extends BaseFileAction {
     private UserAPI userAPI;
     @Autowired
     private ReimburseAuditLogAPI reimburseAuditLogAPI;
-    @Autowired
-    private CategoryAPI categoryAPI;
-    @Autowired
-    private AccountAPI accountAPI;
+
     @Autowired
     private FileAPI fileAPI;
-    @Autowired
-    private UserSetPermissionAPI userSetPermissionAPI;
 
 
 

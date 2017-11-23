@@ -1,12 +1,4 @@
 apply from: '../../../config.gradle'
-dependencies {
-    compile project(":common:common-api")
-    compile project(":common:common-utils")
-    compile project(":modules:user:user-api")
-    compile project(":modules:storage:storage-api")
-    compile project(":modules:organize:organize-api")
-    compile project(":modules:financeinit:financeinit-api")
-    compile project(":modules:reimbursementprepare:reimbursementprepare-api")
-    compile files("../lib/Msc.jar")
-    compile files("../lib/json-jena-1.0.jar")
-}
+dependencies { 
+compile project(":common:common-api")
+compile project(":common:common-utils")} 

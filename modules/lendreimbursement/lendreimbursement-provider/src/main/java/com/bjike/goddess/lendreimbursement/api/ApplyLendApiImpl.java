@@ -8,10 +8,12 @@ import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
-import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
+import com.bjike.goddess.lendreimbursement.excel.lendreimimport.LendReimImportExcelTO;
 import com.bjike.goddess.lendreimbursement.service.ApplyLendSer;
 import com.bjike.goddess.lendreimbursement.to.*;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -411,5 +413,49 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
 
+    @Override
+    public ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException {
+        return applyLendSer.collectSelfShape(reimburseShapeDTO);
+    }
+
+    @Override
+    public ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException {
+        return applyLendSer.collectSelfTrend( reimburseTrendShapeDTO );
+    }
+
+    @Override
+    public ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return applyLendSer.collectGroupBar( reimCompanyShapeDTO );
+    }
+
+    @Override
+    public ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return applyLendSer.collectProjectBar( reimCompanyShapeDTO );
+    }
+
+    @Override
+    public ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return applyLendSer.collectAreaBar( reimCompanyShapeDTO);
+    }
+
+    @Override
+    public ReimShapeVO collectAreaDetailBar(LendShapeDetailDTO reimburseShapeDetailDTO) throws SerException {
+        return applyLendSer.collectAreaDetailBar(reimburseShapeDetailDTO);
+    }
+
+    @Override
+    public LendMixReimShapeVO collectMixMonAndWeek(LendMixReimSelfShapeDTO lendMixReimShapeDTO) throws SerException {
+        return applyLendSer.collectMixMonAndWeek( lendMixReimShapeDTO );
+    }
+
+    @Override
+    public LendMixReimShapeVO collectMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
+        return applyLendSer.collectMixCompany(lendMixCompanyShapeDTO) ;
+    }
+
+    @Override
+    public ReimShapeVO collectDetailMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
+        return applyLendSer.collectDetailMixCompany( lendMixCompanyShapeDTO ) ;
+    }
 
 }
