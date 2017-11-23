@@ -2,17 +2,19 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
-import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
-import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
-import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
-import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
+import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
+import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
+import com.bjike.goddess.lendreimbursement.excel.lendreimimport.LendReimImportExcelTO;
+import com.bjike.goddess.lendreimbursement.to.*;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -729,6 +731,86 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     }
 
     ;
+
+
+
+    /**
+     * 汇总个人周月年借款数据图
+     * @param reimburseShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总任意两月的借款变化趋势图
+     * @param reimburseTrendShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司项目组时间段内的借款特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司项目时间段内的借款特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司地区时间段内的借款特定指标统计图
+     * @param reimCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+
+
+    /**
+     * 汇总公司地区时间段内的借款详情特定指标统计图
+     * @param reimburseShapeDetailDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeVO collectAreaDetailBar(LendShapeDetailDTO reimburseShapeDetailDTO) throws SerException{return null;}
+
+    /**
+     * 汇总个人年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     * @param lendMixReimShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default LendMixReimShapeVO collectMixMonAndWeek(LendMixReimSelfShapeDTO lendMixReimShapeDTO) throws SerException{return null;}
+
+    /**
+     * 汇总公司借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     * @param lendMixCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default LendMixReimShapeVO collectMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException{return null;}
+
+    /**
+     * 汇总详细公司借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     * @param lendMixCompanyShapeDTO
+     * @return
+     * @throws SerException
+     */
+    default ReimShapeVO collectDetailMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException{return null;}
+
 
 
 }

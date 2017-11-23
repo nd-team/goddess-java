@@ -22,7 +22,7 @@ public class ReimCompanyShapeDTO extends BaseDTO {
     public interface TESTWEEKCON{}
 
     /**
-     * 汇总类型
+     * 汇总类型(年/月周日季度)
      */
     @NotNull(groups = {ReimCompanyShapeDTO.TESTWEEKCON.class,ReimCompanyShapeDTO.TESTMONCON.class,ReimCompanyShapeDTO.TESTYEARCON.class} , message = "汇总类型不能为空")
     private ReimburseShapeStatus shapeStatus;

@@ -104,6 +104,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
 
     @Override
     public String sendSmsVerifyCode(SmsCodeParameterTO smsCodeParameterTO) throws SerException {
+
         if (StringUtils.isBlank(smsCodeParameterTO.getPhoneNumber())) {
             throw new SerException("手机号不能为空");
         }

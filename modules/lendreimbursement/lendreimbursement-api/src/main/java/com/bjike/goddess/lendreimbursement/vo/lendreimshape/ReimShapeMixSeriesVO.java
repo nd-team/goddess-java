@@ -66,4 +66,14 @@ public class ReimShapeMixSeriesVO implements Serializable {
     public void setSeriesDataVOList(List<Double> seriesDataVOList) {
         this.seriesDataVOList = seriesDataVOList;
     }
+
+    public ReimShapeMixSeriesVO() {
+    }
+
+    public ReimShapeMixSeriesVO(String name, String type, String barWidth, List<Double> seriesDataVOList) {
+        this.name = name;
+        this.type = type;
+        this.barWidth = barWidth;
+        this.seriesDataVOList = seriesDataVOList;
+    }
 }
