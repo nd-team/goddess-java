@@ -1,5 +1,10 @@
 package com.bjike.goddess.projectprocing.vo;
 
+import com.bjike.goddess.projectprocing.entity.SendFrequency;
+import com.bjike.goddess.projectprocing.entity.SummTableName;
+
+import java.time.LocalDate;
+
 /**
 * 通报机制制定表现层对象
 * @Author:			[ lijuntao ]
@@ -17,7 +22,7 @@ public class NotificationFormulaVO {
 /**
 * 汇总表名
 */
- private SummTableName  summTableName; 
+ private SummTableName summTableName;
 
 /**
 * 创建/修改人
@@ -27,12 +32,12 @@ public class NotificationFormulaVO {
 /**
 * 发送频率
 */
- private SendFrequency  sendFrequency; 
+ private SendFrequency sendFrequency;
 
 /**
 * 发送时间节点
 */
- private LocalDate  sendTimeNode; 
+ private LocalDate sendTimeNode;
 
 /**
 * 发送对象

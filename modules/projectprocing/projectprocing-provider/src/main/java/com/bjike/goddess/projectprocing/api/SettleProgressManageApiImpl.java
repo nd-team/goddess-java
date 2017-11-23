@@ -25,6 +25,12 @@ import java.util.List;
 public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
     @Autowired
     private SettleProgressManageSer settleProgressManageSer;
+
+    @Override
+    public byte[] exportExcel(String outUnit) throws SerException {
+        return settleProgressManageSer.exportExcel(outUnit);
+    }
+
     @Override
     public Long countManage(SettleProgressManageDTO settleProgressManageDTO) throws SerException {
         return settleProgressManageSer.countManage(settleProgressManageDTO);
@@ -99,4 +105,5 @@ public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
     public List<AllotmentNodeDataBO> findAllNodeById(String id) throws SerException {
         return settleProgressManageSer.findAllNodeById(id);
     }
+
 }

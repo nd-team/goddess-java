@@ -24,7 +24,7 @@ public class NodeHeadersCustom extends BaseEntity {
     /**
      * 外包单位
      */
-    @Column(name = "outUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '外包单位'")
+    @Column(name = "outUnit" , columnDefinition = "VARCHAR(255)   COMMENT '外包单位'")
     private String outUnit;
 
     /**
@@ -42,19 +42,19 @@ public class NodeHeadersCustom extends BaseEntity {
     /**
      * 节点1名称
      */
-    @Column(name = "nodeOneName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '节点1名称'")
+    @Column(name = "nodeOneName" , columnDefinition = "VARCHAR(255)   COMMENT '节点1名称'")
     private String nodeOneName;
 
     /**
      * 节点1名称内容
      */
-    @Column(name = "nodeOneContent", columnDefinition = "TINYINT(2)   COMMENT '节点1名称内容'")
+    @Column(name = "nodeOneNameContent", columnDefinition = "TINYINT(2)   COMMENT '节点1名称内容'")
     private Integer nodeOneNameContent;
 
     /**
      * 节点1表头
      */
-    @Column(name = "nodeOneHeader", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '节点1表头'")
+    @Column(name = "nodeOneHeader" , columnDefinition = "VARCHAR(255)   COMMENT '节点1表头'")
     private String nodeOneHeader;
 
     /**
@@ -66,13 +66,13 @@ public class NodeHeadersCustom extends BaseEntity {
     /**
      * 对节点2间隔时间（单位：天）
      */
-    @Column(name = "nodeTwoInterDate", nullable = false, columnDefinition = "INT(11)   COMMENT '对节点2间隔时间（单位：天）'")
+    @Column(name = "nodeTwoInterDate"  , columnDefinition = "INT(11)   COMMENT '对节点2间隔时间（单位：天）'")
     private Integer nodeTwoInterDate;
 
     /**
      * 节点2表头
      */
-    @Column(name = "nodeTwoHeader", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '节点2表头'")
+    @Column(name = "nodeTwoHeader" , columnDefinition = "VARCHAR(255)   COMMENT '节点2表头'")
     private String nodeTwoHeader;
 
     /**
@@ -84,13 +84,13 @@ public class NodeHeadersCustom extends BaseEntity {
     /**
      * 对节点3间隔时间（单位：天）
      */
-    @Column(name = "nodeThreeInterDate", nullable = false, columnDefinition = "INT(11)   COMMENT '对节点3间隔时间（单位：天）'")
+    @Column(name = "nodeThreeInterDate"   , columnDefinition = "INT(11)   COMMENT '对节点3间隔时间（单位：天）'")
     private Integer nodeThreeInterDate;
 
     /**
      * 节点3表头
      */
-    @Column(name = "nodeThreeHeader", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '节点3表头'")
+    @Column(name = "nodeThreeHeader" , columnDefinition = "VARCHAR(255)   COMMENT '节点3表头'")
     private String nodeThreeHeader;
 
     /**
@@ -102,13 +102,13 @@ public class NodeHeadersCustom extends BaseEntity {
     /**
      * 对节点4间隔时间（单位：天）
      */
-    @Column(name = "nodeFourInterDate", nullable = false, columnDefinition = "INT(11)   COMMENT '对节点4间隔时间（单位：天）'")
+    @Column(name = "nodeFourInterDate" , columnDefinition = "INT(11)   COMMENT '对节点4间隔时间（单位：天）'")
     private Integer nodeFourInterDate;
 
     /**
      * 节点4表头
      */
-    @Column(name = "nodeFourHeader", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '节点4表头'")
+    @Column(name = "nodeFourHeader" , columnDefinition = "VARCHAR(255)   COMMENT '节点4表头'")
     private String nodeFourHeader;
 
     /**

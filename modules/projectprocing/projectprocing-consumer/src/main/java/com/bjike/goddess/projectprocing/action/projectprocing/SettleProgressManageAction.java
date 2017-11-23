@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -421,5 +422,22 @@ public class SettleProgressManageAction extends BaseFileAction {
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+    /**
+     * 导出Excel
+
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "市场活动申请.xlsx";
+            super.writeOutFile(response, settleProgressManageAPI.exportExcel("外包1"),fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
     }
 }

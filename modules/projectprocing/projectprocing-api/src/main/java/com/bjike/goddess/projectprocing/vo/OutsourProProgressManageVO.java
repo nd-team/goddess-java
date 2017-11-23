@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectprocing.vo;
 
+import java.time.LocalDate;
+
 /**
 * 外包,半外包项目结算进度管理表现层对象
 * @Author:			[ lijuntao ]
@@ -17,7 +19,7 @@ public class OutsourProProgressManageVO {
 /**
 * 测算分类
 */
- private MeasureType  measureType; 
+ private String  measureType;
 
 /**
 * 测算是否通过
@@ -27,7 +29,7 @@ public class OutsourProProgressManageVO {
 /**
 * 签订时间
 */
- private LocalDate  signedTime; 
+ private LocalDate signedTime;
 
 /**
 * 地区
@@ -252,10 +254,10 @@ public class OutsourProProgressManageVO {
  public void setId (String id ) { 
  this.id = id ; 
  } 
- public MeasureType getMeasureType () { 
+ public String getMeasureType () {
  return measureType;
  } 
- public void setMeasureType (MeasureType measureType ) { 
+ public void setMeasureType (String measureType ) {
  this.measureType = measureType ; 
  } 
  public Boolean getMeasureThrough () { 

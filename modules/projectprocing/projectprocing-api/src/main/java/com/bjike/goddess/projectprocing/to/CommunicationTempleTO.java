@@ -1,6 +1,11 @@
 package com.bjike.goddess.projectprocing.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.projectprocing.entity.SendFrequency;
+import com.bjike.goddess.projectprocing.entity.SummTableName;
+
+import java.time.LocalDate;
+
 /**
 * 各类沟通模板
 * @Author:			[ lijuntao ]
@@ -14,7 +19,7 @@ public class CommunicationTempleTO extends BaseTO {
 /**
 * 汇总表名
 */
- private SummTableName  summTableName; 
+ private SummTableName summTableName;
 
 /**
 * 创建/修改人
@@ -24,12 +29,12 @@ public class CommunicationTempleTO extends BaseTO {
 /**
 * 发送频率
 */
- private SendFrequency  sendFrequency; 
+ private SendFrequency sendFrequency;
 
 /**
 * 发送时间节点
 */
- private LocalDate  sendTimeNode; 
+ private LocalDate sendTimeNode;
 
 /**
 * 发送对象

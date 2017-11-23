@@ -1,6 +1,9 @@
 package com.bjike.goddess.projectprocing.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+
+import java.time.LocalDate;
+
 /**
 * 结算进度调整记录&结算问题汇总
 * @Author:			[ lijuntao ]
@@ -34,7 +37,7 @@ public class SettleProgressRecordTO extends BaseTO {
 /**
 * 修改日期时间
 */
- private LocalDate  updateDate; 
+ private LocalDate updateDate;
 
 /**
 * 修改内容

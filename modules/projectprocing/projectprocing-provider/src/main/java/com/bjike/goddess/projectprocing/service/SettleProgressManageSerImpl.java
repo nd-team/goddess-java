@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
 import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
@@ -19,15 +20,21 @@ import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -285,8 +292,8 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         SettleProgressManage settleProgressManage = super.findById(id);
         List<NodeHeadersCustomBO> nodeHeadersCustomList = nodeHeadersCustomSer.getByManageId(id);
         List<AllotmentNodeDataBO> allotmentNodeDataBOList = new ArrayList<>();
-        if(nodeHeadersCustomList!=null && nodeHeadersCustomList.size()>0){
-            for (NodeHeadersCustomBO nodeHeadersCustomBO : nodeHeadersCustomList){
+        if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
+            for (NodeHeadersCustomBO nodeHeadersCustomBO : nodeHeadersCustomList) {
                 AllotmentNodeDataBO allotmentNodeDataBO = new AllotmentNodeDataBO();
                 allotmentNodeDataBO.setNodeId(nodeHeadersCustomBO.getId());
                 allotmentNodeDataBO.setNodeHeader(nodeHeadersCustomBO.getNodeOneHeader());
@@ -333,8 +340,180 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public byte[] exportExcel(String outUnit) throws SerException {
+        List<String> titles = new ArrayList<>();
+        titles.add("更改日期");
+        titles.add("是否更改日期");
+        titles.add("测算分类");
+        titles.add("测算是否通过");
+        titles.add("运营商名称");
+        titles.add("地区");
+        titles.add("外包单位");
+        titles.add("类型");
+        titles.add("专业");
+        titles.add("派工名称");
+        titles.add("厂家");
+        titles.add("销售合同号");
+        titles.add("外包合同号");
+        titles.add("所属项目组");
+        titles.add("内部项目编号");
+        titles.add("内部项目名称");
+        titles.add("派工情况");
+        titles.add("派工金额");
+        titles.add("实际完工状态");
+        titles.add("完工时间");
+        titles.add("可结算金额");
+        titles.add("本次预计结算金额");
+        titles.add("剩余未结算金额");
+        titles.add("已到帐金额");
+        titles.add("到账时间");
+        titles.add("是否全部结算完成");
+        titles.add("分批结算");
+        titles.add("预计开票时间");
+        titles.add("扣除违约金后金额");
+        titles.add("扣除管理费后金额");
+        titles.add("督导未结");
+        titles.add("状态");
+        titles.add("派工条目");
+        titles.add("单位");
+        titles.add("工程类型");
+        titles.add("工期");
+        titles.add("数量");
+        titles.add("单价");
+        titles.add("站点");
+        titles.add("已完工未做结算");
+        titles.add("进度");
+        titles.add("到货时间");
+        titles.add("kpi");
+        titles.add("现场实际情况（KPI");
+        titles.add("设备型号");
+        titles.add("大概描述项目派工的情况备注");
+        titles.add("总规模数");
+        titles.add("是否可制作申请结算");
+        titles.add("是否影响结算");
+        titles.add("结算计划");
+        titles.add("正在执行项目");
+        titles.add("归属");
+        titles.add("备注");
+        List<String> fields = new ArrayList<>();
+        fields.add("updateDate");
+        fields.add("is_isChangeDate");
+        fields.add("measureType");
+        fields.add("is_measureIsThough");
+        fields.add("operatorName");
+        fields.add("area");
+        fields.add("outUnit");
+        fields.add("types");
+        fields.add("majors");
+        fields.add("dispatName");
+        fields.add("manufacturer");
+        fields.add("saleContractNo");
+        fields.add("contractNo");
+        fields.add("projectTeam");
+        fields.add("internalProNum");
+        fields.add("internalProName");
+        fields.add("dispatCondition");
+        fields.add("dispatAmount");
+        fields.add("actualCompletedState");
+        fields.add("completedDate");
+        fields.add("payableAmount");
+        fields.add("estimSettleAmount");
+        fields.add("remaOutAmount");
+        fields.add("accountAmount");
+        fields.add("accountDate");
+        fields.add("is_allSettleComple");
+        fields.add("partialSettle");
+        fields.add("expecMakeInvoie");
+        fields.add("damagesShall");
+        fields.add("afterDeduction");
+        fields.add("superviseOutstan");
+        fields.add("status");
+        fields.add("dispatchingItems");
+        fields.add("unit");
+        fields.add("projectType");
+        fields.add("timeLimit");
+        fields.add("numbers");
+        fields.add("unitPrice");
+        fields.add("site");
+        fields.add("settleComplete");
+        fields.add("progress");
+        fields.add("arrivalTime");
+        fields.add("kpi");
+        fields.add("actualSituation");
+        fields.add("equipmentModel");
+        fields.add("descriptionRemark");
+        fields.add("totalScaleNum");
+        fields.add("settleMadeApple");
+        fields.add("affectSettlement");
+        fields.add("settlementPlan");
+        fields.add("underImplemen");
+        fields.add("attribution");
+        fields.add("remark");
 
+
+        String sql = " SELECT b.header,a.content,b.outUnit,a.is_requiredFill,b.types,a.remark,a.prossManageId  FROM " +
+                "    (SELECT b.* FROM projectprocing_settleprogressmanage a, " +
+                "    projectprocing_headerscustom b " +
+                "    where " +
+                "    a.id=prossManageId)a,projectprocing_headerscustom b " +
+                " where a.fatherId=b.id and b.outUnit='" + outUnit + "' ";
+
+        String[] str_fields = new String[]{"header", "content", "outUnit", "is_requiredFill", "types", "remark","prossManageId"};
+        List<HeadersCustom> customs = super.findBySql(sql, HeadersCustom.class, str_fields);
+        for(HeadersCustom custom:customs){
+            titles.add(custom.getHeader());
+        }
+        SettleProgressManageDTO dto = new SettleProgressManageDTO();
+        dto.getConditions().add(Restrict.eq("outUnit", outUnit));
+        List<SettleProgressManage> settleProgressManages = super.findByCis(dto);
+           if (settleProgressManages.size() > 0) {
+               XSSFWorkbook wb = new XSSFWorkbook(); // 创建一个工作execl文档
+            XSSFSheet sheet = wb.createSheet("test");
+            XSSFRow headerRow = sheet.createRow(0);
+            int i = 0;
+            for(String  title: titles){
+                XSSFCell cell = headerRow.createCell( i++);
+                cell.setCellValue(title);
+                cell.setCellType(CellType.STRING);
+            }
+               int rowIndex=1;
+            for (SettleProgressManage spm : settleProgressManages) {
+                List<Field> _fields = ClazzUtils.getFields(spm.getClass());
+                XSSFRow row = sheet.createRow(rowIndex++ );
+                int cellIndex=0;
+                for ( String f: fields){ //固定的
+                   XSSFCell cell =  row.createCell(cellIndex++);
+                    for(Field field: _fields){
+                        field.setAccessible(true);
+                        if(field.getName().equalsIgnoreCase(f)){
+                            try {
+                                cell.setCellValue(String.valueOf(field.get(spm)));;
+                            }catch (Exception e){
+                                throw  new SerException(e.getMessage());
+                            }
+                           break;
+                        }
+                    }
+                }
+               int lastCell =  row.getLastCellNum();
+                //自定义的
+                for(HeadersCustom custom:customs){
+                    if(custom.getProssManageId().equals(spm.getId())){
+                        XSSFCell cell = row.createCell(lastCell++);
+                        cell.setCellValue(custom.getContent());
+                    }
+                }
+
+            }
+            ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+            try {
+                wb.write(os);
+            } catch (IOException e) {
+                throw new SerException("文件写入错误");
+            }
+            return os.toByteArray();
+        }
         return new byte[0];
+
     }
 
     @Override

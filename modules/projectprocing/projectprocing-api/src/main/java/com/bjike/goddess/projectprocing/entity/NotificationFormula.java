@@ -2,6 +2,7 @@ package com.bjike.goddess.projectprocing.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -20,7 +21,7 @@ public class NotificationFormula extends BaseEntity {
 * 汇总表名
 */
 @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '汇总表名'"  ) 
- private SummTableName  summTableName; 
+ private SummTableName summTableName;
 
 /**
 * 创建/修改人
@@ -38,7 +39,7 @@ public class NotificationFormula extends BaseEntity {
 * 发送时间节点
 */
 @Column(name = "sendTimeNode",nullable = false,columnDefinition = "DATE   COMMENT '发送时间节点'"  ) 
- private LocalDate  sendTimeNode; 
+ private LocalDate sendTimeNode;
 
 /**
 * 发送对象
@@ -54,10 +55,10 @@ public class NotificationFormula extends BaseEntity {
 
 
 
- public SummTableName getSummTableName () { 
+ public SummTableName getSummTableName () {
  return summTableName;
  } 
- public void setSummTableName (SummTableName summTableName ) { 
+ public void setSummTableName (SummTableName summTableName ) {
  this.summTableName = summTableName ; 
  } 
  public String getModifier () { 

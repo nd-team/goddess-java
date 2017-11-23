@@ -24,7 +24,7 @@ public class HeadersCustom extends BaseEntity {
     /**
      * 外包单位
      */
-    @Column(name = "outUnit", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '外包单位'")
+    @Column(name = "outUnit" , columnDefinition = "VARCHAR(255)   COMMENT '外包单位'")
     private String outUnit;
 
     /**
@@ -42,19 +42,19 @@ public class HeadersCustom extends BaseEntity {
     /**
      * 表头
      */
-    @Column(name = "header",nullable = false,  columnDefinition = "VARCHAR(255)   COMMENT '表头'")
+    @Column(name = "header" ,  columnDefinition = "VARCHAR(255)   COMMENT '表头'")
     private String header;
 
     /**
      * 类型
      */
-    @Column(name = "types",nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '类型'")
+    @Column(name = "types", columnDefinition = "VARCHAR(255)   COMMENT '类型'")
     private Types types;
 
     /**
      * 是否为必填
      */
-    @Column(name = "is_requiredFill",nullable = false,columnDefinition = "TINYINT(1)  COMMENT '是否为必填'")
+    @Column(name = "is_requiredFill" ,columnDefinition = "TINYINT(1)  COMMENT '是否为必填'")
     private Boolean requiredFill;
 
     /**

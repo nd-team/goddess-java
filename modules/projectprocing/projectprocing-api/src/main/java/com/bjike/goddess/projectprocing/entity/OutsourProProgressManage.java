@@ -2,6 +2,7 @@ package com.bjike.goddess.projectprocing.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -20,7 +21,7 @@ public class OutsourProProgressManage extends BaseEntity {
 * 测算分类
 */
 @Column(name = "",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '测算分类'"  ) 
- private MeasureType  measureType; 
+ private String  measureType;
 
 /**
 * 测算是否通过
@@ -32,7 +33,7 @@ public class OutsourProProgressManage extends BaseEntity {
 * 签订时间
 */
 @Column(name = "signedTime",nullable = false,columnDefinition = "DATE   COMMENT '签订时间'"  ) 
- private LocalDate  signedTime; 
+ private LocalDate signedTime;
 
 /**
 * 地区
@@ -294,10 +295,10 @@ public class OutsourProProgressManage extends BaseEntity {
 
 
 
- public MeasureType getMeasureType () { 
+ public String getMeasureType () {
  return measureType;
  } 
- public void setMeasureType (MeasureType measureType ) { 
+ public void setMeasureType (String measureType ) {
  this.measureType = measureType ; 
  } 
  public Boolean getMeasureThrough () { 

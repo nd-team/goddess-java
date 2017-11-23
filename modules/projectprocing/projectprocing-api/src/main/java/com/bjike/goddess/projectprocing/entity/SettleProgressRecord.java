@@ -2,6 +2,7 @@ package com.bjike.goddess.projectprocing.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 
 /**
@@ -44,7 +45,7 @@ public class SettleProgressRecord extends BaseEntity {
 * 修改日期时间
 */
 @Column(name = "updateDate",nullable = false,columnDefinition = "DATE   COMMENT '修改日期时间'"  ) 
- private LocalDate  updateDate; 
+ private LocalDate updateDate;
 
 /**
 * 修改内容

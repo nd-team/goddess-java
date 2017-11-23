@@ -3,6 +3,8 @@ package com.bjike.goddess.projectprocing.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import javax.persistence.Column;
+import java.time.LocalDate;
+
 /**
 * 结算进度调整记录&结算问题汇总业务传输对象
 * @Author:			[ lijuntao ]
@@ -36,7 +38,7 @@ public class SettleProgressRecordBO extends BaseBO {
 /**
 * 修改日期时间
 */
- private LocalDate  updateDate; 
+ private LocalDate updateDate;
 
 /**
 * 修改内容

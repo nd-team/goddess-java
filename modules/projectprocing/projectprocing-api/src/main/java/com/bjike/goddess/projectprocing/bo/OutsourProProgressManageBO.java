@@ -3,6 +3,8 @@ package com.bjike.goddess.projectprocing.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import javax.persistence.Column;
+import java.time.LocalDate;
+
 /**
 * 外包,半外包项目结算进度管理业务传输对象
 * @Author:			[ lijuntao ]
@@ -16,7 +18,7 @@ public class OutsourProProgressManageBO extends BaseBO {
 /**
 * 测算分类
 */
- private MeasureType  measureType; 
+ private String  measureType;
 
 /**
 * 测算是否通过
@@ -26,7 +28,7 @@ public class OutsourProProgressManageBO extends BaseBO {
 /**
 * 签订时间
 */
- private LocalDate  signedTime; 
+ private LocalDate signedTime;
 
 /**
 * 地区
@@ -245,10 +247,10 @@ public class OutsourProProgressManageBO extends BaseBO {
 
 
 
- public MeasureType getMeasureType () { 
+ public String getMeasureType () {
  return measureType;
  } 
- public void setMeasureType (MeasureType measureType ) { 
+ public void setMeasureType (String measureType ) {
  this.measureType = measureType ; 
  } 
  public Boolean getMeasureThrough () { 

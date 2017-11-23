@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectprocing.vo;
 
+import java.time.LocalDate;
+
 /**
 * 结算进度调整记录&结算问题汇总表现层对象
 * @Author:			[ lijuntao ]
@@ -37,7 +39,7 @@ public class SettleProgressRecordVO {
 /**
 * 修改日期时间
 */
- private LocalDate  updateDate; 
+ private LocalDate updateDate;
 
 /**
 * 修改内容

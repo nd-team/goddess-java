@@ -19,6 +19,10 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SettleProgressManageAPI {
+
+    default byte[] exportExcel(String outUnit) throws SerException{
+        return  null;
+    }
     /**
      * 结算进度管理总条数
      */
