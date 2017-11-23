@@ -434,18 +434,48 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         PositionDetailUserDTO dto = new PositionDetailUserDTO();
         dto.getConditions().add(Restrict.ne("staffStatus", StaffStatus.HAVELEAVE));
         List<PositionDetailUser> list = super.findByCis(dto);
-        List<UserBO> bos = new ArrayList<>();
-        for (PositionDetailUser p : list) {
-            UserBO userBO = new UserBO();
-            userBO.setUsername(p.getName());
-            UserBO user = userAPI.findByUsername(p.getName());
-            if (null != user) {
-                userBO.setId(user.getId());
-            }
-            userBO.setEmployeeNumber(p.getNumber());
-            bos.add(userBO);
+        List<String> bos = new ArrayList<>();
+        List<UserBO> userinfo = new ArrayList<>();
+
+//        list.stream().forEach(obj -> {
+//            UserBO userBO = new UserBO();
+//            userBO.setUsername(obj.getName());
+////            UserBO user = userAPI.findByUsername(obj.getName());
+////            if (null != user) {
+////                userBO.setId(user.getId());
+////            }
+//            userBO.setEmployeeNumber(obj.getNumber());
+//            bos.add(userBO);
+//        });
+        bos = list.stream().map(PositionDetailUser::getName).collect(Collectors.toList());
+
+
+//        for (PositionDetailUser p : list) {
+//            UserBO userBO = new UserBO();
+//            userBO.setUsername(p.getName());
+//            UserBO user = userAPI.findByUsername(p.getName());
+//            if (null != user) {
+//                userBO.setId(user.getId());
+//            }
+//            userBO.setEmployeeNumber(p.getNumber());
+//            bos.add(userBO);
+//        }
+        if (bos != null && bos.size() > 0) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.in("username", bos));
+            userinfo = userAPI.findByCis(userDTO);
         }
-        return bos;
+        bos = null;
+        return userinfo;
+    }
+
+    @Override
+    public List<PositionDetailUserBO> findUserListInOrgan1() throws SerException {
+        PositionDetailUserDTO dto = new PositionDetailUserDTO();
+        dto.getConditions().add(Restrict.ne("staffStatus", StaffStatus.HAVELEAVE));
+        List<PositionDetailUser> list = super.findByCis(dto);
+        List<PositionDetailUserBO> list1 = BeanTransform.copyProperties(list, PositionDetailUserBO.class, false);
+        return list1;
     }
 
     @Override

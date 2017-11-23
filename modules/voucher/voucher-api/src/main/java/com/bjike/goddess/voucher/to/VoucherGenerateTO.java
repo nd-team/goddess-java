@@ -56,7 +56,6 @@ public class VoucherGenerateTO extends BaseTO {
     /**
      * 二级科目
      */
-    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "二级科目不能为空")
     private List<String> secondSubjects;
 
     /**
@@ -67,13 +66,13 @@ public class VoucherGenerateTO extends BaseTO {
     /**
      * 借方金额且数据与贷方金额相反填如1-10
      */
-    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "借方金额不能为空")
+//    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "借方金额不能为空")
     private List<Double> borrowMoneys;
 
     /**
      * 贷方金额且数据与借方金额相反填如0-1
      */
-    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "贷方金额不能为空")
+//    @NotNull(groups = {VoucherGenerateTO.TestAdd.class}, message = "贷方金额不能为空")
     private List<Double> loanMoneys;
 
     /**
@@ -81,6 +80,12 @@ public class VoucherGenerateTO extends BaseTO {
      */
     @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "摘要不能为空")
     private String sumary;
+
+    /**
+     * 来源
+     */
+    @NotBlank(groups = {VoucherGenerateTO.TestAdd.class}, message = "来源不能为空")
+    private String source;
 
     /**
      * 地区
@@ -347,5 +352,13 @@ public class VoucherGenerateTO extends BaseTO {
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

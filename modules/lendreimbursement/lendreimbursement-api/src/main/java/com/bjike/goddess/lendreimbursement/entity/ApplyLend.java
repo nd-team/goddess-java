@@ -268,13 +268,13 @@ public class ApplyLend extends BaseEntity {
     private Double reimMoney;
 
     /**
-     * 借款金额
+     * 借款金额(对应老系统的报销金额)
      */
     @Column(name = "lendMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '借款金额'")
     private Double lendMoney;
 
     /**
-     * 退回金额
+     * 退回金额(对应老系统的实际金额)
      */
     @Column(name = "returnMoney", columnDefinition = "DECIMAL(10,2)   COMMENT '退回金额'")
     private Double returnMoney;
@@ -431,6 +431,10 @@ public class ApplyLend extends BaseEntity {
     public ApplyLend() {
     }
 
+    public ApplyLend(String projectGroup, Double money) {
+        this.projectGroup = projectGroup;
+        this.money = money;
+    }
 
     public LocalDate getEstimateLendDate() {
         return estimateLendDate;

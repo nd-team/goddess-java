@@ -283,7 +283,7 @@ public class PositionWorkDetailsAction extends BaseFileAction {
     public Result getFunctions() throws ActException {
         List<String> list = new ArrayList<>(0);
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getFeatureName");//线上
+        HttpGet httpGet = new HttpGet("https://systematic.issp.bjike.com:8080/featurelist/v1/getFeatureName");//线上
 //        HttpGet httpGet = new HttpGet("http://localhost:51654/featurelist/v1/getFeatureName");//线下测试
         httpGet.setHeader("userToken", RpcContext.getContext().getAttachment("userToken"));
 

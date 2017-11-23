@@ -9,6 +9,7 @@ import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimCompanyShapeDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDTO;
+import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDetailDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseTrendShapeDTO;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
@@ -17,10 +18,7 @@ import com.bjike.goddess.lendreimbursement.service.ReimburseRecordSer;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimCompanyShapeBarVO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeAllVO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeBarVO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeMixVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -315,19 +313,22 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     }
 
     @Override
-    public ReimCompanyShapeBarVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+    public ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
         return reimburseRecordSer.collectGroupBar( reimCompanyShapeDTO );
     }
 
     @Override
-    public ReimCompanyShapeBarVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+    public ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
         return reimburseRecordSer.collectProjectBar( reimCompanyShapeDTO );
     }
 
     @Override
-    public ReimCompanyShapeBarVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+    public ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
         return reimburseRecordSer.collectAreaBar( reimCompanyShapeDTO);
     }
 
-
+    @Override
+    public ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException {
+        return reimburseRecordSer.collectAreaDetailBar(reimburseShapeDetailDTO);
+    }
 }

@@ -2,7 +2,6 @@ package com.bjike.goddess.lendreimbursement.action.lendreimbursement;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.constant.RpcCommon;
-import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -10,28 +9,26 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.financeinit.api.CategoryAPI;
-import com.bjike.goddess.financeinit.bo.CategoryBO;
-import com.bjike.goddess.financeinit.bo.FirstSubjectBO;
-import com.bjike.goddess.financeinit.dto.CategoryDTO;
+import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
 import com.bjike.goddess.lendreimbursement.api.LendAuditDetailAPI;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
-import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
-import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
 import com.bjike.goddess.lendreimbursement.enums.LendIndentityStatus;
-import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.to.*;
-import com.bjike.goddess.lendreimbursement.vo.*;
+import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
+import com.bjike.goddess.lendreimbursement.vo.PhoneLendAuditprocingVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -39,14 +36,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 手机端申请借款
@@ -67,12 +61,12 @@ public class PhoneApplyLendAction extends BaseFileAction {
     @Autowired
     private LendAuditDetailAPI lendAuditDetailAPI;
     @Autowired
-    private AccountAPI accountAPI;
+    private AccountanCourseAPI accountanCourseAPI;
 
     @Autowired
-    private CategoryAPI categoryAPI;
-    @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private UserAPI userAPI;
 
 
     /**
@@ -84,7 +78,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listAll")
-    public Result listAll(@Validated(PhoneApplyLendDTO.TESTSELECT.class) PhoneApplyLendDTO phoneApplyLendDTO , BindingResult bindingResult) throws ActException {
+    public Result listAll(@Validated(PhoneApplyLendDTO.TESTSELECT.class) PhoneApplyLendDTO phoneApplyLendDTO, BindingResult bindingResult) throws ActException {
         try {
             List<ApplyLendVO> applyLendVOList = BeanTransform.copyProperties(
                     applyLendAPI.listAll(phoneApplyLendDTO), ApplyLendVO.class, true);
@@ -175,15 +169,15 @@ public class PhoneApplyLendAction extends BaseFileAction {
         try {
             ApplyLendBO applyLendBO1 = new ApplyLendBO();
             LendIndentityStatus lendIndentityStatus = phoneApplyLendChargerTO.getLendIndentityStatus();
-            if ( LendIndentityStatus.CHARGER.equals( lendIndentityStatus)){
+            if (LendIndentityStatus.CHARGER.equals(lendIndentityStatus)) {
                 //负责人审核
-                applyLendBO1 = editAuditBycharger( phoneApplyLendChargerTO );
-            }else if ( LendIndentityStatus.FINACER.equals( lendIndentityStatus)){
+                applyLendBO1 = editAuditBycharger(phoneApplyLendChargerTO);
+            } else if (LendIndentityStatus.FINACER.equals(lendIndentityStatus)) {
                 //财务审核
-                applyLendBO1 = editAuditByOperate( phoneApplyLendChargerTO );
-            }else if ( LendIndentityStatus.MANAGER.equals( lendIndentityStatus)){
+                applyLendBO1 = editAuditByOperate(phoneApplyLendChargerTO);
+            } else if (LendIndentityStatus.MANAGER.equals(lendIndentityStatus)) {
                 //总经办审核
-                applyLendBO1 = editAuditByManager( phoneApplyLendChargerTO );
+                applyLendBO1 = editAuditByManager(phoneApplyLendChargerTO);
             }
             return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
         } catch (SerException e) {
@@ -202,25 +196,25 @@ public class PhoneApplyLendAction extends BaseFileAction {
     }
 
 
-    private ApplyLendBO editAuditByOperate( PhoneApplyLendChargerTO phoneApplyLendChargerTO) throws SerException {
-            ApplyLendTO applyLendTO = new ApplyLendTO();
-            applyLendTO.setId(phoneApplyLendChargerTO.getId());
-            applyLendTO.setFincerPass(phoneApplyLendChargerTO.getChargerPass());
-            applyLendTO.setFincerOpinion(phoneApplyLendChargerTO.getChargerOpinion());
+    private ApplyLendBO editAuditByOperate(PhoneApplyLendChargerTO phoneApplyLendChargerTO) throws SerException {
+        ApplyLendTO applyLendTO = new ApplyLendTO();
+        applyLendTO.setId(phoneApplyLendChargerTO.getId());
+        applyLendTO.setFincerPass(phoneApplyLendChargerTO.getChargerPass());
+        applyLendTO.setFincerOpinion(phoneApplyLendChargerTO.getChargerOpinion());
 
-            ApplyLendBO applyLendBO1 = applyLendAPI.editOperateWaitAudit(applyLendTO);
-         return applyLendBO1;
+        ApplyLendBO applyLendBO1 = applyLendAPI.editOperateWaitAudit(applyLendTO);
+        return applyLendBO1;
     }
 
 
     private ApplyLendBO editAuditByManager(PhoneApplyLendChargerTO phoneApplyLendChargerTO) throws SerException {
-            ApplyLendTO applyLendTO = new ApplyLendTO();
-            applyLendTO.setId(phoneApplyLendChargerTO.getId());
-            applyLendTO.setManagerPass(phoneApplyLendChargerTO.getChargerPass());
-            applyLendTO.setManagerOpinion(phoneApplyLendChargerTO.getChargerOpinion());
+        ApplyLendTO applyLendTO = new ApplyLendTO();
+        applyLendTO.setId(phoneApplyLendChargerTO.getId());
+        applyLendTO.setManagerPass(phoneApplyLendChargerTO.getChargerPass());
+        applyLendTO.setManagerOpinion(phoneApplyLendChargerTO.getChargerOpinion());
 
-            ApplyLendBO applyLendBO1 = applyLendAPI.editManageWaitAudit(applyLendTO);
-            return applyLendBO1;
+        ApplyLendBO applyLendBO1 = applyLendAPI.editManageWaitAudit(applyLendTO);
+        return applyLendBO1;
     }
 
     /**
@@ -251,11 +245,11 @@ public class PhoneApplyLendAction extends BaseFileAction {
                     PhoneLendAuditprocingVO procingVO = new PhoneLendAuditprocingVO();
                     LocalDateTime time = LocalDateTime.parse(str.getCreateTime(), formatter);
                     procingVO.setAuditTime(time.getYear() + "-" + time.getMonthValue() + "-" + time.getDayOfMonth());
-                    procingVO.setProcing((StringUtils.isBlank(str.getPosition())?"":str.getPosition())
-                            +"  审核人"+(StringUtils.isNotBlank(str.getAuditIdentity())?"("+str.getAuditIdentity()+")":"")
-                            +"："+str.getAuditor()+" <br>是否通过："
-                            +(StringUtils.isBlank(str.getPassOr())? "":(str.getPassOr().equals("是")?"审核通过":"审核不通过"))
-                            + "  <br>审核意见：" + (StringUtils.isBlank(str.getAuditSuggest())? "":str.getAuditSuggest()));
+                    procingVO.setProcing((StringUtils.isBlank(str.getPosition()) ? "" : str.getPosition())
+                            + "  审核人" + (StringUtils.isNotBlank(str.getAuditIdentity()) ? "(" + str.getAuditIdentity() + ")" : "")
+                            + "：" + str.getAuditor() + " <br>是否通过："
+                            + (StringUtils.isBlank(str.getPassOr()) ? "" : (str.getPassOr().equals("是") ? "审核通过" : "审核不通过"))
+                            + "  <br>审核意见：" + (StringUtils.isBlank(str.getAuditSuggest()) ? "" : str.getAuditSuggest()));
                     list.add(procingVO);
                 }
             }
@@ -312,7 +306,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
         ApplyLendTO applyLendTO = new ApplyLendTO();
         applyLendTO.setPayOrigin(phoneApplyLendPayTO.getPayOrigin());
         applyLendTO.setPayDate(phoneApplyLendPayTO.getPayDate());
-        applyLendTO.setId( phoneApplyLendPayTO.getId());
+        applyLendTO.setId(phoneApplyLendPayTO.getId());
         try {
             ApplyLendBO applyLendBO1 = applyLendAPI.editPayMoney(applyLendTO);
             return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
@@ -387,8 +381,8 @@ public class PhoneApplyLendAction extends BaseFileAction {
 
     /**
      * 添加还款图片
-     * @param id 借款id
      *
+     * @param id 借款id
      * @version v1
      */
     @LoginAuth
@@ -437,7 +431,6 @@ public class PhoneApplyLendAction extends BaseFileAction {
      * @param phoneLendReturnCheckTO 申请借款信息applyLendTO
      * @return class ApplyLendVO
      * @des 这里把网页版的还款核对和帐务核对的收到单据合并在一起了
-     *
      * @version v1
      */
     @LoginAuth
@@ -476,7 +469,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
     /**
      * 详情(手机端权限个别按钮出现)
      *
-     * @param id 借款id
+     * @param id                  借款id
      * @param lendPhoneShowStatus 状态
      * @return class ApplyLendVO
      * @des 待审核(负责人财务总经办)和付款和确认收款和还款核对
@@ -490,7 +483,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
             String userToken = RpcContext.getContext().getAttachment(RpcCommon.USER_TOKEN);
             ApplyLendVO applyLendVO = BeanTransform.copyProperties(
                     applyLendAPI.getOneById(id), ApplyLendVO.class, true);
-            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN,userToken);
+            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
             Boolean showRight = applyLendAPI.phoneShowRight(lendPhoneShowStatus, id);
             applyLendVO.setPhoneShowRight(showRight);
             return ActResult.initialize(applyLendVO);
@@ -540,13 +533,14 @@ public class PhoneApplyLendAction extends BaseFileAction {
 
     /**
      * 手机端获取项目组
+     *
      * @param phoneApplyLendSelectDTO 参数
      * @return {name:'List<string>',type:'List<string>',defaultValue:'',description:'返回地区数组'}
      * @des 获取项目组集合
      * @version v1
      */
     @GetMapping("v1/phone/getPGroupList")
-    public Result getPGroupList(@Validated(PhoneApplyLendSelectDTO.TESTDepart.class) PhoneApplyLendSelectDTO phoneApplyLendSelectDTO ,BindingResult bindingResult ) throws ActException {
+    public Result getPGroupList(@Validated(PhoneApplyLendSelectDTO.TESTDepart.class) PhoneApplyLendSelectDTO phoneApplyLendSelectDTO, BindingResult bindingResult) throws ActException {
         try {
             List<String> areaList = applyLendAPI.listPhoneProjectGroup(phoneApplyLendSelectDTO);
             return ActResult.initialize(areaList);
@@ -564,10 +558,27 @@ public class PhoneApplyLendAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/phone/getPNameList")
-    public Result getPNameList(@Validated(PhoneApplyLendSelectDTO.TESTPNAME.class) PhoneApplyLendSelectDTO phoneApplyLendSelectDTO ,BindingResult bindingResult) throws ActException {
+    public Result getPNameList(@Validated(PhoneApplyLendSelectDTO.TESTPNAME.class) PhoneApplyLendSelectDTO phoneApplyLendSelectDTO, BindingResult bindingResult) throws ActException {
         try {
             List<String> areaList = applyLendAPI.listPhoneProjectName(phoneApplyLendSelectDTO);
             return ActResult.initialize(areaList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有三级科目
+     *
+     * @des 根据一级科目的代码获取所有三级科目
+     * @version v1
+     */
+    @GetMapping("v1/listThirdSubject/{code}")
+    public Result listThirdByCode(@PathVariable String code) throws ActException {
+        try {
+            List<String> list = accountanCourseAPI.findThirdNameByCode(code);
+
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -580,80 +591,54 @@ public class PhoneApplyLendAction extends BaseFileAction {
      * @des 根据三级科目和说明获取所有二级科目
      * @version v1
      */
-    @GetMapping("v1/listSecond")
-    public Result listSecond(ReimburseRecordTO reimburseRecordTO) throws ActException {
+    @GetMapping("v1/listSecond/{code}")
+    public Result listSecond(@PathVariable String code) throws ActException {
         try {
-            List<String> firstName = new ArrayList<>();
-            List<CategoryBO> firstNameList = new ArrayList<>();
-            CategoryDTO categoryDTO = new CategoryDTO();
-            if (StringUtils.isBlank(reimburseRecordTO.getThirdSubject())
-                    && StringUtils.isBlank(reimburseRecordTO.getPlainInfo())) {
-                throw new SerException("三级科目(thirdSubject)或说明(plainInfo)不能为空");
-            }
-            categoryDTO.setThirdSubject(reimburseRecordTO.getThirdSubject());
-            categoryDTO.setRemark(reimburseRecordTO.getPlainInfo());
-            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
+            List<String> list = accountanCourseAPI.findSendNameByCode(code);
 
-            if (categories != null && categories.size() > 0) {
-                firstName = categories.stream().filter(str -> StringUtils.isNotBlank(str.getSecondSubject())).map(CategoryBO::getSecondSubject).distinct().collect(Collectors.toList());
-                if (firstName != null && firstName.size() > 0) {
-                    for (String str : firstName) {
-                        CategoryBO categoryBO = new CategoryBO();
-                        categoryBO.setSecondSubject(str);
-                        firstNameList.add(categoryBO);
-                    }
-
-                }
-            }
-            return ActResult.initialize(firstNameList);
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
-     * 手机版获取所有一级科目
+     * 手机版获取所有一级科目和代码
      *
-     * @des 根据三级科目和说明获取所有一级科目
+     * @des 手机版获取所有一级科目和代码
      * @version v1
      */
     @GetMapping("v1/listFirst")
     public Result listFirst(ReimburseRecordTO reimburseRecordTO) throws ActException {
+
         try {
-            List<String> firstName = new ArrayList<>();
-            List<CategoryBO> firstNameList = new ArrayList<>();
-            List<FirstSubjectBO> firstSubjectBOS = new ArrayList<>();
-            CategoryDTO categoryDTO = new CategoryDTO();
-            if (StringUtils.isBlank(reimburseRecordTO.getThirdSubject())
-                    && StringUtils.isBlank(reimburseRecordTO.getPlainInfo())) {
-                throw new SerException("三级科目(thirdSubject)或说明(plainInfo)不能为空");
-            }
-            categoryDTO.setThirdSubject(reimburseRecordTO.getThirdSubject());
-            categoryDTO.setRemark(reimburseRecordTO.getPlainInfo());
-            List<CategoryBO> categories = categoryAPI.listAllCategory(categoryDTO);
+            List<AccountAddDateBO> list = accountanCourseAPI.findFirstNameCode();
 
-            if (categories != null && categories.size() > 0) {
-                firstSubjectBOS = categories.stream().filter(str -> null != str.getFirstSubjectBO()).map(CategoryBO::getFirstSubjectBO).collect(Collectors.toList());
-                firstName = firstSubjectBOS.stream().filter(str -> StringUtils.isNotBlank(str.getName())).map(FirstSubjectBO::getName).distinct().collect(Collectors.toList());
-                if (firstName != null && firstName.size() > 0) {
-                    for (String str : firstName) {
-                        FirstSubjectBO firstSubjectBO = new FirstSubjectBO();
-                        firstSubjectBO.setName(str);
-                        CategoryBO categoryBO = new CategoryBO();
-                        categoryBO.setFirstSubjectBO(firstSubjectBO);
-                        firstNameList.add(categoryBO);
-                    }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
 
-                }
-            }
+    }
 
-            return ActResult.initialize(firstNameList);
+    /**
+     * 测试token是否过期
+     *
+     * @return class UserBO
+     * @des 总经办审核
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/testToken")
+    public Result testToken( ) throws ActException {
+        try {
+            UserBO userBO = userAPI.currentUser();
+
+            return  ActResult.initialize(userBO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
-
 
 
 }

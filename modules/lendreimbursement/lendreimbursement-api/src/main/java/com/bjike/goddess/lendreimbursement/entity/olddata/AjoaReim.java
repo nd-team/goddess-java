@@ -1,0 +1,513 @@
+package com.bjike.goddess.lendreimbursement.entity.olddata;
+
+import com.bjike.goddess.common.api.entity.BaseEntity;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+
+/**
+ * 老系统的报销
+ *
+ * @Author: [ tanghaixiang ]
+ * @Date: [ 2017-11-17 01:55 ]
+ * @Description: [ 老系统的报销 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+@Entity
+@Table(name = "aj_oa_finance_reimbursement")
+public class AjoaReim extends BaseEntity {
+
+    /**
+     * 填单人,系统上是当前登陆用户
+     */
+    @Column(name = "writer",  columnDefinition = "VARCHAR(255)   COMMENT '填单人,系统上是当前登陆用户'")
+    private String writer;
+
+    /**
+     * 流水报销单号
+     */
+    @Column(name = "runNum",  columnDefinition = "VARCHAR(255)   COMMENT '流水报销单号'")
+    private String runNum;
+
+    /**
+     * 项目名称
+     */
+    @Column(name = "project",  columnDefinition = "VARCHAR(255)   COMMENT '项目名称'")
+    private String project;
+
+    /**
+     * 报销人地区
+     */
+    @Column(name = "area",  columnDefinition = "VARCHAR(255)   COMMENT '报销人地区'")
+    private String area;
+
+    /**
+     * 报销人姓名
+     */
+    @Column(name = "reimburseName",  columnDefinition = "VARCHAR(255)   COMMENT '报销人姓名'")
+    private String reimburseName;
+
+    /**
+     * 报销提交时间
+     */
+    @Column(name = "reportDate",  columnDefinition = "DATETIME   COMMENT '报销提交时间'")
+    private LocalDateTime reportDate;
+
+    /**
+     * 预计处理时间,每周二9:30
+     */
+    @Column(name = "ruleDate",  columnDefinition = "DATETIME   COMMENT '预计处理时间,每周二9:30'")
+    private LocalDateTime ruleDate;
+
+    /**
+     * 单据编号(报销单号-单据数量排序)
+     */
+    @Column(name = "oddNumber",  columnDefinition = "VARCHAR(255)   COMMENT '单据编号(报销单号-单据数量排序)'")
+    private String oddNumber;
+
+    /**
+     * 单据数量
+     */
+    @Column(name = "billNumber",  columnDefinition = "INT(2)   COMMENT '单据数量'")
+    private int billNumber;
+
+    /**
+     * 报销总金额
+     */
+    @Column(name = "total",  columnDefinition = "DECIMAL(10,2)   COMMENT '报销总金额'")
+    private Double total;
+
+    /**
+     * 报销人备注
+     */
+    @Column(name = "remark",  columnDefinition = "VARCHAR(255)   COMMENT '报销人备注'")
+    private String remark;
+
+    /**
+     * 外键关联科目表
+     */
+    @Column(name = "sub",  columnDefinition = "VARCHAR(255)   COMMENT '外键关联科目表'")
+    private String sub;
+
+    /**
+     * 类别
+     */
+    @Column(name = "sort",  columnDefinition = "VARCHAR(255)   COMMENT '类别'")
+    private String sort;
+
+    /**
+     * 分类
+     */
+    @Column(name = "classify",  columnDefinition = "VARCHAR(255)   COMMENT '分类'")
+    private String classify;
+
+    /**
+     * 明细
+     */
+    @Column(name = "detail",  columnDefinition = "VARCHAR(255)   COMMENT '明细'")
+    private String detail;
+
+    /**
+     * 参与人
+     */
+    @Column(name = "participant",  columnDefinition = "DECIMAL(10,2)   COMMENT '参与人'")
+    private String participant;
+
+    /**
+     * 收票人
+     */
+    @Column(name = "biller",  columnDefinition = "VARCHAR(255)   COMMENT '收票人'")
+    private String biller;
+
+    /**
+     * 收票时间
+     */
+    @Column(name = "billDate",  columnDefinition = "DATETIME   COMMENT '收票时间'")
+    private LocalDateTime billDate;
+
+    /**
+     * 收到发票情况
+     */
+    @Column(name = "billCase",  columnDefinition = "VARCHAR(255)   COMMENT '收到发票情况'")
+    private String billCase;
+
+    /**
+     * 预计付款时间
+     */
+    @Column(name = "planTime",  columnDefinition = "DATETIME   COMMENT '预计付款时间'")
+    private LocalDateTime planTime;
+
+    /**
+     * 不知道
+     */
+    @Column(name = "payPlan",  columnDefinition = "VARCHAR(255)   COMMENT '不知道'")
+    private String payPlan;
+
+    /**
+     * 负责人审核的三种状态
+     */
+    @Column(name = "auditorState",  columnDefinition = "INT(2)   COMMENT '负责人审核的三种状态'")
+    private int auditorState;
+
+    /**
+     * 负责人审核时间
+     */
+    @Column(name = "auditorTime",  columnDefinition = "DATETIME   COMMENT '负责人审核时间'")
+    private LocalDateTime auditorTime;
+
+    /**
+     * 负责人审核意见
+     */
+    @Column(name = "auditorIdea",  columnDefinition = "VARCHAR(255)   COMMENT '负责人审核意见'")
+    private String auditorIdea;
+
+    /**
+     * 是否通过所有人的审核
+     */
+    @Column(name = "pastState",  columnDefinition = "INT(2)   COMMENT '是否通过所有人的审核'")
+    private int pastState;
+
+    /**
+     * 是否支付
+     */
+    @Column(name = "payState",  columnDefinition = "INT(2)   COMMENT '是否支付'")
+    private int payState;
+
+    /**
+     * 资金来源
+     */
+    @Column(name = "source",  columnDefinition = "VARCHAR(255)   COMMENT '资金来源'")
+    private String source;
+
+    /**
+     * 付款方公司
+     */
+    @Column(name = "payment",  columnDefinition = "VARCHAR(255)   COMMENT '付款方公司'")
+    private String payment;
+
+    /**
+     * 负责人审核,负责人姓名
+     */
+    @Column(name = "auditor",  columnDefinition = "VARCHAR(255)   COMMENT '负责人审核,负责人姓名'")
+    private String auditor;
+
+    /**
+     * 不知道
+     */
+    @Column(name = "payTime",  columnDefinition = "DATETIME   COMMENT '不知道'")
+    private LocalDateTime payTime;
+
+    /**
+     * 总经办确定冻结
+     */
+    @Column(name = "confirmCongeal",  columnDefinition = "INT(2)   COMMENT '总经办确定冻结'")
+    private int confirmCongeal;
+
+    /**
+     * 报销发生日期
+     */
+    @Column(name = "occurrenceDate",  columnDefinition = "DATE   COMMENT '报销发生日期'")
+    private LocalDate occurrenceDate;
+
+    /**
+     * 不知道
+     */
+    @Column(name = "thatDayTask",  columnDefinition = "VARCHAR(255)   COMMENT '不知道'")
+    private String thatDayTask;
+
+    /**
+     * 不知道
+     */
+    @Column(name = "supplement",  columnDefinition = "VARCHAR(255)   COMMENT '不知道'")
+    private String supplement;
+
+    /**
+     * 状态
+     */
+    @Column(name = "status",  columnDefinition = "INT(2)   COMMENT '状态'")
+    private int status;
+
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
+
+    public String getRunNum() {
+        return runNum;
+    }
+
+    public void setRunNum(String runNum) {
+        this.runNum = runNum;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getReimburseName() {
+        return reimburseName;
+    }
+
+    public void setReimburseName(String reimburseName) {
+        this.reimburseName = reimburseName;
+    }
+
+    public LocalDateTime getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(LocalDateTime reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public LocalDateTime getRuleDate() {
+        return ruleDate;
+    }
+
+    public void setRuleDate(LocalDateTime ruleDate) {
+        this.ruleDate = ruleDate;
+    }
+
+    public String getOddNumber() {
+        return oddNumber;
+    }
+
+    public void setOddNumber(String oddNumber) {
+        this.oddNumber = oddNumber;
+    }
+
+    public int getBillNumber() {
+        return billNumber;
+    }
+
+    public void setBillNumber(int billNumber) {
+        this.billNumber = billNumber;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getSub() {
+        return sub;
+    }
+
+    public void setSub(String sub) {
+        this.sub = sub;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getClassify() {
+        return classify;
+    }
+
+    public void setClassify(String classify) {
+        this.classify = classify;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getParticipant() {
+        return participant;
+    }
+
+    public void setParticipant(String participant) {
+        this.participant = participant;
+    }
+
+    public String getBiller() {
+        return biller;
+    }
+
+    public void setBiller(String biller) {
+        this.biller = biller;
+    }
+
+    public LocalDateTime getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(LocalDateTime billDate) {
+        this.billDate = billDate;
+    }
+
+    public String getBillCase() {
+        return billCase;
+    }
+
+    public void setBillCase(String billCase) {
+        this.billCase = billCase;
+    }
+
+    public LocalDateTime getPlanTime() {
+        return planTime;
+    }
+
+    public void setPlanTime(LocalDateTime planTime) {
+        this.planTime = planTime;
+    }
+
+    public String getPayPlan() {
+        return payPlan;
+    }
+
+    public void setPayPlan(String payPlan) {
+        this.payPlan = payPlan;
+    }
+
+    public int getAuditorState() {
+        return auditorState;
+    }
+
+    public void setAuditorState(int auditorState) {
+        this.auditorState = auditorState;
+    }
+
+    public LocalDateTime getAuditorTime() {
+        return auditorTime;
+    }
+
+    public void setAuditorTime(LocalDateTime auditorTime) {
+        this.auditorTime = auditorTime;
+    }
+
+    public String getAuditorIdea() {
+        return auditorIdea;
+    }
+
+    public void setAuditorIdea(String auditorIdea) {
+        this.auditorIdea = auditorIdea;
+    }
+
+    public int getPastState() {
+        return pastState;
+    }
+
+    public void setPastState(int pastState) {
+        this.pastState = pastState;
+    }
+
+    public int getPayState() {
+        return payState;
+    }
+
+    public void setPayState(int payState) {
+        this.payState = payState;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public String getAuditor() {
+        return auditor;
+    }
+
+    public void setAuditor(String auditor) {
+        this.auditor = auditor;
+    }
+
+    public LocalDateTime getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(LocalDateTime payTime) {
+        this.payTime = payTime;
+    }
+
+    public int getConfirmCongeal() {
+        return confirmCongeal;
+    }
+
+    public void setConfirmCongeal(int confirmCongeal) {
+        this.confirmCongeal = confirmCongeal;
+    }
+
+    public LocalDate getOccurrenceDate() {
+        return occurrenceDate;
+    }
+
+    public void setOccurrenceDate(LocalDate occurrenceDate) {
+        this.occurrenceDate = occurrenceDate;
+    }
+
+    public String getThatDayTask() {
+        return thatDayTask;
+    }
+
+    public void setThatDayTask(String thatDayTask) {
+        this.thatDayTask = thatDayTask;
+    }
+
+    public String getSupplement() {
+        return supplement;
+    }
+
+    public void setSupplement(String supplement) {
+        this.supplement = supplement;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+}

@@ -49,6 +49,11 @@ public class AccountInfoBO extends BaseBO {
     private String sumary;
 
     /**
+     * 来源
+     */
+    private String source;
+
+    /**
      * 一级科目
      */
     private String firstSubject;
@@ -191,5 +196,13 @@ public class AccountInfoBO extends BaseBO {
 
     public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

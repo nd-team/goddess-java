@@ -230,7 +230,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
                 grandSon.setPunchStatus(PunchStatus.LATE);
                 punchGrandSonSer.save(grandSon);
                 flag = true;
-            } else if (num < 3) {    //当前月迟到次数小于三次(10分钟以内)，免扣
+            } else if (mis >= 0&&num < 3) {    //当前月迟到次数小于三次(10分钟以内)，免扣
                 PunchGrandSon grandSon = new PunchGrandSon();
                 grandSon.setPunchSonId(punchSon.getId());
                 grandSon.setPunchStatus(PunchStatus.LATE);

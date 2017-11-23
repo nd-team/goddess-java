@@ -5,6 +5,7 @@ do
 	do
 		rm -rf "modules/$name/$ww/build"
 		#echo "modules/$name/$ww/out"
+		#git rm -rf --cached "modules/$name/$ww/src/main/profile/"
 		
 	done
 done

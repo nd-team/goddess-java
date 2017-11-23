@@ -13,6 +13,8 @@ import com.bjike.goddess.organize.entity.*;
 import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.organize.to.PositionDetailTO;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -445,21 +447,29 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
     }
 
     private String get(List<PositionUserDetail> list) throws SerException {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            if (i == list.size() - 1) {
-                String name = userAPI.findNameById(list.get(i).getUserId());
-                if (null != name) {
-                    sb.append(name);
-                }
-            } else {
-                String name = userAPI.findNameById(list.get(i).getUserId());
-                if (null != name) {
-                    sb.append(name + ",");
-                }
-            }
+//        StringBuilder sb = new StringBuilder();
+        if( list != null && list.size()>0 ){
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.in(ID,list.stream().map(PositionUserDetail::getUserId).collect(Collectors.toList())));
+            List<UserBO> userBOs = userAPI.findByCis( userDTO );
+            return userBOs.stream().map(UserBO::getUsername).collect(Collectors.toList()).get(0);
+        }else{
+            return "";
         }
-        return sb.toString();
+//        for (int i = 0; i < list.size(); i++) {
+//            if (i == list.size() - 1) {
+//                String name = userAPI.findNameById(list.get(i).getUserId());
+//                if (null != name) {
+//                    sb.append(name);
+//                }
+//            } else {
+//                String name = userAPI.findNameById(list.get(i).getUserId());
+//                if (null != name) {
+//                    sb.append(name + ",");
+//                }
+//            }
+//        }
+//        return sb.toString();
     }
 
     @Override
