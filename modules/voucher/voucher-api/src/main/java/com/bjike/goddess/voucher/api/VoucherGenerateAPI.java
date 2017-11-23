@@ -29,6 +29,7 @@ public interface VoucherGenerateAPI {
     default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 下拉导航权限
      */
@@ -720,6 +721,7 @@ public interface VoucherGenerateAPI {
     default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
+
     /**
      * 获取所有一级科目为现金或者银行存款的数据
      */
@@ -728,6 +730,7 @@ public interface VoucherGenerateAPI {
     }
 
     /**
+<<<<<<< HEAD
      * 科目汇总列表
      */
     List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;
@@ -746,7 +749,20 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default List<String> findFirstSubject() throws SerException {
+    default List<String> findFirstSubject() throws SerException { return null;}
+
+        /**
+     * 根据科目,时间 获取本期累计
+     *
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar          true,获取本期借方-贷方累计
+     * @return
+     * @throws SerException
+     */
+    //tar:true,获取借方,false,获取贷方
+    default Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         return null;
     }
 }

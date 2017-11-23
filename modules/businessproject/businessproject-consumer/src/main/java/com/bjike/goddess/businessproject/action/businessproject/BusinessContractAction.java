@@ -10,6 +10,7 @@ import com.bjike.goddess.businessproject.excel.BusinessContractExcel;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.to.PersonTO;
 import com.bjike.goddess.businessproject.vo.BusinessContractADetailVO;
 import com.bjike.goddess.businessproject.vo.BusinessContractVO;
 import com.bjike.goddess.common.api.constant.RpcCommon;
@@ -27,6 +28,9 @@ import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -338,10 +342,10 @@ public class BusinessContractAction extends BaseFileAction {
     }
 
     /**
-     * 根据地区汇总商务合同管理明细汇总
+     * 商务合同管理明细汇总
      *
      * @return class BusinessContractADetailVO
-     * @des 根据地区汇总商务合同管理明细汇总
+     * @des 商务合同管理明细汇总
      * @version v1
      */
     @GetMapping("v1/collect")
@@ -357,10 +361,10 @@ public class BusinessContractAction extends BaseFileAction {
         }
     }
     /**
-     * 根据地区汇总商务合同管理明细汇总
+     * 编辑商务合同管理明细汇总
      *
      * @return class BusinessContractADetailVO
-     * @des 根据地区汇总商务合同管理明细汇总
+     * @des 编辑商务合同管理明细汇总
      * @version v1
      */
     @GetMapping("v1/collectUpdate")
@@ -588,18 +592,139 @@ public class BusinessContractAction extends BaseFileAction {
     /**
      * 个人图表周汇总
      *
-     * @param user
-     * @param year
-     * @param month
-     * @param week
+     * @param to
      * @des 个人图表周汇总
      * @version v1
      */
     @GetMapping("v1/weekPersonFigure")
-    public Result weekPersonFigure(String user,Integer year, Integer month, Integer week) throws ActException {
+    public Result weekPersonFigure(PersonTO to) throws ActException {
         try {
-            OptionMakeBO bo = businessContractAPI.weekPersonFigure(user,year, month, week);
+            OptionMakeBO bo = businessContractAPI.weekPersonFigure(to);
             return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 个人图表月汇总
+     *
+     * @param to
+     * @des 个人图表月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthPersonFigure")
+    public Result monthPersonFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.monthPersonFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 个人图表季度汇总
+     *
+     * @param to
+     * @des 个人图表季度汇总
+     * @version v1
+     */
+    @GetMapping("v1/quarterPersonFigure")
+    public Result quarterPersonFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.quarterPersonFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 个人图表年汇总
+     *
+     * @param to
+     * @des 个人图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/yearPersonFigure")
+    public Result yearPersonFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.yearPersonFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 部门图表周汇总
+     *
+     * @param to
+     * @des 部门图表周汇总
+     * @version v1
+     */
+    @GetMapping("v1/weekDepartFigure")
+    public Result weekDepartFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.weekDepartFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 部门图表月汇总
+     *
+     * @param to
+     * @des 部门图表月汇总
+     * @version v1
+     */
+    @GetMapping("v1/monthDepartFigure")
+    public Result monthDepartFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.monthDepartFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 部门图表季度汇总
+     *
+     * @param to
+     * @des 部门图表季度汇总
+     * @version v1
+     */
+    @GetMapping("v1/quarterDepartFigure")
+    public Result quarterDepartFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.quarterDepartFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 部门图表年汇总
+     *
+     * @param to
+     * @des 部门图表年汇总
+     * @version v1
+     */
+    @GetMapping("v1/yearDepartFigure")
+    public Result yearDepartFigure(PersonTO to) throws ActException {
+        try {
+            OptionMakeBO bo = businessContractAPI.yearDepartFigure(to);
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    @Autowired
+    private TaskNodeAPI taskNodeAPI;
+    @GetMapping("v1/aa")
+    public Result aa(PersonTO to) throws ActException {
+        try {
+            CollectDataTO collectDataTO = BeanTransform.copyProperties(to, CollectDataTO.class);
+            CollectDataVO vo = taskNodeAPI.personProjectCollect(collectDataTO);
+            return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

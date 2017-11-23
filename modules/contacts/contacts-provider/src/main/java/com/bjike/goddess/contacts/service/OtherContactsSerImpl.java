@@ -2,11 +2,9 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
@@ -69,7 +67,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OtherContactsBO save(OtherContactsTO to) throws SerException {
-        OtherContacts entity = BeanTransform.copyProperties(to, OtherContacts.class,true);
+        OtherContacts entity = BeanTransform.copyProperties(to, OtherContacts.class, true);
         super.save(entity);
 
         //发送对象的邮箱地址
@@ -83,8 +81,8 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
                     if (sendObject.equals(opinionBO.getValue())) {
                         //根据组织结构中的部门名称查询部门id
                         DepartmentDetailDTO departmentDetailDTO = new DepartmentDetailDTO();
-                        departmentDetailDTO.getConditions().add(Restrict.eq("department",sendObject));
-                        List<DepartmentDetailBO> departmentDetailBOList =departmentDetailAPI.view(departmentDetailDTO);
+                        departmentDetailDTO.getConditions().add(Restrict.eq("department", sendObject));
+                        List<DepartmentDetailBO> departmentDetailBOList = departmentDetailAPI.view(departmentDetailDTO);
                         String departmentId = departmentDetailBOList.get(0).getId();
                         //从公邮中得到部门的邮箱
                         CommonalityDTO dto = new CommonalityDTO();
@@ -175,8 +173,19 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
 
     @Override
     public List<OtherContactsBO> maps(OtherContactsDTO dto) throws SerException {
+        search(dto);
         List<OtherContacts> list = super.findByPage(dto);
         return BeanTransform.copyProperties(list, OtherContactsBO.class);
+    }
+
+    private List<OtherContactsBO> search(OtherContactsDTO dto) throws SerException {
+        //公司名称
+        if (StringUtils.isNotBlank(dto.getName())) {
+            dto.getConditions().add(Restrict.like("name", dto.getName()));
+        }
+        List<OtherContacts> otherContacts = super.findByCis(dto);
+        List<OtherContactsBO> otherContactsBOS = BeanTransform.copyProperties(otherContacts, OtherContactsBO.class);
+        return otherContactsBOS;
     }
 
     @Override
@@ -191,6 +200,7 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
     @Override
     public Long getTotal() throws SerException {
         OtherContactsDTO dto = new OtherContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -285,14 +295,14 @@ public class OtherContactsSerImpl extends ServiceImpl<OtherContacts, OtherContac
 
         OtherContactsTemplateExport excel = new OtherContactsTemplateExport();
         excel.setType("移动通信类");
-        excel.setName( "test" );
+        excel.setName("test");
         excel.setPhone("jkj");
         excel.setAddress("jkj");
         excel.setUser("jkj");
         excel.setUseDate(LocalDate.now());
         excel.setEvaluate("jkj");
         excel.setRemark("jkj");
-        commerceContactsExports.add( excel );
+        commerceContactsExports.add(excel);
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
         return bytes;

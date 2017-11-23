@@ -418,6 +418,7 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+<<<<<<< HEAD
     public List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException {
         return voucherGenerateSer.collect ( dto );
     }
@@ -431,5 +432,9 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<String> findFirstSubject() throws SerException {
         return voucherGenerateSer.findFirstSubject ();
+=======
+    public Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrent(firstSubject,  startTime,  endTime,  tar);
+>>>>>>> upstream/develop
     }
 }

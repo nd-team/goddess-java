@@ -102,4 +102,18 @@ public class SkillPromotionApplyApiImpl implements SkillPromotionApplyAPI {
         return skillPromotionApplySer.totalLevelCollect(to);
     }
 
+    @Override
+    public Integer monthPromotedNum(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.monthPromotedNum(to);
+    }
+
+    @Override
+    public Integer quartPromotedNum(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.quartPromotedNum(to);
+    }
+
+    @Override
+    public Integer yearPromotedNum(SkillLevelCollectTO to) throws SerException {
+        return skillPromotionApplySer.yearPromotedNum(to);
+    }
 }

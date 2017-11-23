@@ -2487,8 +2487,8 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         entity.setProjectStageNum(projectStage);
 
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-//        HttpGet httpGet = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getPurpose/"+ entity.getFunction() + "");//线上
-        HttpGet httpGet = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getPurpose/" + entity.getFunction() + "");//线上
+//        HttpGet httpGet = new HttpGet("https://systematic.issp.bjike.com:8080/featurelist/v1/getPurpose/"+ entity.getFunction() + "");//线上
+        HttpGet httpGet = new HttpGet("https://systematic.issp.bjike.com:8080/featurelist/v1/getPurpose/" + entity.getFunction() + "");//线上
 //        HttpGet httpGet = new HttpGet("http://localhost:51654/featurelist/v1/getPurpose/" +entity.getFunction() +"");//线下测试
         String userToken = RpcTransmit.getUserToken();
         httpGet.setHeader("userToken", userToken);
@@ -2504,7 +2504,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         }
 
         CloseableHttpClient closeableHttpClient1 = HttpClients.createDefault();
-        HttpGet httpGet1 = new HttpGet("https://system.issp.bjike.com:8080/featurelist/v1/getVersion/" + entity.getFunction() + "");//线上
+        HttpGet httpGet1 = new HttpGet("https://systematic.issp.bjike.com:8080/featurelist/v1/getVersion/" + entity.getFunction() + "");//线上
 //        HttpGet httpGet1 = new HttpGet("http://localhost:51654/featurelist/v1/getVersion/" +entity.getFunction() +"");//线下测试
         httpGet1.setHeader("userToken", userToken);
         RpcTransmit.transmitUserToken(userToken);

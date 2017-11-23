@@ -226,7 +226,7 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
                 for(User user : users){
                     InternalContactsBO contactsBO = internalContactsAPI.findByUser(user.getId());
                     if(contactsBO != null)
-                        receivers.add(contactsBO.getEmail());
+                        receivers.add(contactsBO.getWorkEmail());
                 }
             }
             String[] sendUsers = (String[]) receivers.toArray(new String[receivers.size()]);

@@ -84,9 +84,8 @@ public class FailFirstInterviewReasonAct {
      */
     @LoginAuth
     @GetMapping("v1/sonPermission")
-    public Result sonPermission() throws ActException {
+    public Result sonPermission(HttpServletRequest request) throws ActException {
         try {
-
             List<SonPermissionObject> hasPermissionList = failFirstInterviewReasonAPI.sonPermission();
             return new ActResult(0, "有权限", hasPermissionList);
 

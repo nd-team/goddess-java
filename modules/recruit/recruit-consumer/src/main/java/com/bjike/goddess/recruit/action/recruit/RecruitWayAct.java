@@ -1,7 +1,5 @@
 package com.bjike.goddess.recruit.action.recruit;
 
-import com.alibaba.dubbo.rpc.RpcContext;
-import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -24,7 +22,6 @@ import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -34,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +46,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("recruitWay")
-public class RecruitWayAct extends BaseFileAction{
+public class RecruitWayAct extends BaseFileAction {
 
     @Autowired
     private RecruitWayAPI recruitWayAPI;
@@ -174,6 +170,7 @@ public class RecruitWayAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id解冻招聘渠道
      *
@@ -191,6 +188,7 @@ public class RecruitWayAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据id冻结招聘渠道
      *
@@ -222,6 +220,22 @@ public class RecruitWayAct extends BaseFileAction{
         try {
             recruitWayAPI.update(to);
             return new ActResult("edit success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取招聘渠道
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allRecruitName")
+    public Result allRecruitName() throws ActException {
+        try {
+            Set<String> set = recruitWayAPI.allRecruitName();
+            return ActResult.initialize(set);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -332,6 +346,7 @@ public class RecruitWayAct extends BaseFileAction{
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), deleteFileTO.getPaths());
         }
+
         return new ActResult("delFile success");
     }
 

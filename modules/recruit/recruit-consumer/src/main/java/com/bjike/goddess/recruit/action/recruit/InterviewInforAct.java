@@ -18,12 +18,8 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.recruit.api.FirstPhoneRecordAPI;
 import com.bjike.goddess.recruit.api.InterviewInforAPI;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
-import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
 import com.bjike.goddess.recruit.dto.InterviewInforDTO;
-import com.bjike.goddess.recruit.entity.InterviewInfor;
-import com.bjike.goddess.recruit.excel.FirstPhoneRecordExcel;
 import com.bjike.goddess.recruit.excel.InterviewInforExcel;
-import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.to.IdeaTO;
 import com.bjike.goddess.recruit.to.InterviewInforTO;
@@ -52,7 +48,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("interviewInfor")
-public class InterviewInforAct extends BaseFileAction{
+public class InterviewInforAct extends BaseFileAction {
 
     @Autowired
     private InterviewInforAPI interviewInforAPI;
@@ -196,6 +192,7 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 初试面试意见
      *
@@ -213,6 +210,7 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 复试面试意见
      *
@@ -230,6 +228,7 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 薪资面谈意见
      *
@@ -247,6 +246,7 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 总经办审核录取
      *
@@ -264,6 +264,7 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 入职信息填写
      *
@@ -281,7 +282,6 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
-
 
 
     /**
@@ -319,6 +319,7 @@ public class InterviewInforAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导入Excel
      *
@@ -343,74 +344,74 @@ public class InterviewInforAct extends BaseFileAction{
                 //简历筛选是否通过
                 if (str.getWhetherPass().equals("是")) {
                     inforTO.setWhetherPass(true);
-                }else {
+                } else {
                     inforTO.setWhetherPass(false);
                 }
                 //是否有相关工作经验
                 if (str.getWorkingExperience().equals("是")) {
                     inforTO.setWorkingExperience(true);
-                }else {
+                } else {
                     inforTO.setWorkingExperience(false);
                 }
                 //求职考试第一题是否正确
                 if (str.getWhetherFirstQuestionCorrect().equals("是")) {
                     inforTO.setWhetherFirstQuestionCorrect(true);
-                }else {
+                } else {
                     inforTO.setWhetherFirstQuestionCorrect(false);
                 }
                 //是否初试
                 if (str.getWhetherFaceTest().equals("是")) {
                     inforTO.setWhetherFaceTest(true);
-                }else {
+                } else {
                     inforTO.setWhetherFaceTest(false);
                 }
                 //初试是否通过
                 if (str.getWhetherFirstTestPass().equals("是")) {
                     inforTO.setWhetherFirstTestPass(true);
-                }else {
+                } else {
                     inforTO.setWhetherFirstTestPass(false);
                 }
                 //是否需要复试
                 if (str.getWhetherNeedSecondTest().equals("是")) {
                     inforTO.setWhetherNeedSecondTest(true);
-                }else {
+                } else {
                     inforTO.setWhetherNeedSecondTest(false);
                 }
                 //复试是否通过
                 if (str.getWhetherSecondTestPass().equals("是")) {
                     inforTO.setWhetherSecondTestPass(true);
-                }else {
+                } else {
                     inforTO.setWhetherSecondTestPass(false);
                 }
                 //是否同意录用
                 if (str.getAgreedEmployed().equals("是")) {
                     inforTO.setAgreedEmployed(true);
-                }else {
+                } else {
                     inforTO.setAgreedEmployed(false);
                 }
                 //是否接受录取
                 if (str.getWhetherAcceptAdmit().equals("是")) {
                     inforTO.setWhetherAcceptAdmit(true);
-                }else {
+                } else {
                     inforTO.setWhetherAcceptAdmit(false);
                 }
                 //是否住宿
                 if (str.getWhetherAccommodation().equals("是")) {
                     inforTO.setWhetherAccommodation(true);
-                }else {
+                } else {
                     inforTO.setWhetherAccommodation(false);
                 }
                 //是否使用公司电脑
                 if (str.getWhetherUseFirmPC().equals("是")) {
                     inforTO.setWhetherUseFirmPC(true);
-                }else {
+                } else {
                     inforTO.setWhetherUseFirmPC(false);
                 }
 
                 //是否入职
-                if(str.getWhetherEntry().equals("是")){
+                if (str.getWhetherEntry().equals("是")) {
                     inforTO.setWhetherEntry(true);
-                }else {
+                } else {
                     inforTO.setWhetherEntry(false);
                 }
                 tocs.add(inforTO);

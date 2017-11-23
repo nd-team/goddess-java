@@ -17,6 +17,7 @@ public class JapiTest {
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/staffmove/staffmove-api",
 				"modules/organize/organize-api",
+				"modules/user/user-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

@@ -10,6 +10,8 @@ import com.bjike.goddess.attendance.entity.Vacate;
 import com.bjike.goddess.attendance.entity.VacateAudit;
 import com.bjike.goddess.attendance.entity.VacateSet;
 import com.bjike.goddess.attendance.enums.*;
+import com.bjike.goddess.attendance.excel.VacateExportExcel;
+import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
@@ -21,6 +23,8 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
@@ -895,8 +899,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         if (CountType.DEPART.equals(dto.getCountType())) {
             sb.append("depart in ('" + StringUtils.join(dto.getDeparts(), "','") + "') AND");
         }
-        sb.append(" (DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '"+dto.getStartTime()+"' AND '"+dto.getEndTime()+"') AND" +
-                "      (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '"+dto.getStartTime()+"' AND '"+dto.getEndTime()+"')");
+        sb.append(" (DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '" + dto.getStartTime() + "' AND '" + dto.getEndTime() + "') AND" +
+                "      (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '" + dto.getStartTime() + "' AND '" + dto.getEndTime() + "')");
         List<Vacate> list = super.findBySql(sb.toString(), Vacate.class, new String[]{"id"});
         if (null != list) {
             return list.stream().map(Vacate::getId).distinct().collect(Collectors.toList());
@@ -1125,10 +1129,10 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
         String userName = overTimesDTO.getOverWorker();
         OverTimesType overTimesType = overTimesDTO.getOverTimesType();
-        if (StringUtils.isBlank( userName )){
+        if (StringUtils.isBlank(userName)) {
             throw new SerException("请假人员不能为空");
         }
-        if( null == overTimesType ){
+        if (null == overTimesType) {
             throw new SerException("汇总时间类型不能为空");
         }
 
@@ -1171,39 +1175,39 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             default:
                 return null;
         }
-        if( overTimesType.equals( OverTimesType.WEEK) ){
+        if (overTimesType.equals(OverTimesType.WEEK)) {
             while (timeBegan.isBefore(timeEnd) || timeBegan.isEqual(timeEnd)) {
                 DayOfWeek week = timeBegan.getDayOfWeek();
-                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
-                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),12,59,59);
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 0, 0, 1);
+                LocalDateTime end = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 12, 59, 59);
 
                 VacateDTO overWorkDTO = new VacateDTO();
                 overWorkDTO.getConditions().add(Restrict.eq("name", userName));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("startTime", start));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("endTime", end));
-                Long count = super.count( overWorkDTO );
+                Long count = super.count(overWorkDTO);
 
                 switch (week) {
                     case MONDAY:
-                        overWorkTimesVO.setFirst(""+count);
+                        overWorkTimesVO.setFirst("" + count);
                         break;
                     case TUESDAY:
-                        overWorkTimesVO.setSecond(""+count);
+                        overWorkTimesVO.setSecond("" + count);
                         break;
                     case WEDNESDAY:
-                        overWorkTimesVO.setThird(""+count);
+                        overWorkTimesVO.setThird("" + count);
                         break;
                     case THURSDAY:
-                        overWorkTimesVO.setFour(""+count);
+                        overWorkTimesVO.setFour("" + count);
                         break;
                     case FRIDAY:
-                        overWorkTimesVO.setFive(""+count);
+                        overWorkTimesVO.setFive("" + count);
                         break;
                     case SATURDAY:
-                        overWorkTimesVO.setSix(""+count);
+                        overWorkTimesVO.setSix("" + count);
                         break;
                     case SUNDAY:
-                        overWorkTimesVO.setSeven(""+count);
+                        overWorkTimesVO.setSeven("" + count);
                         break;
                     default:
                         break;
@@ -1211,35 +1215,35 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 }
                 timeBegan = timeBegan.plusDays(1);
             }
-            overWorkTimesVO.setFirst( StringUtils.isBlank(overWorkTimesVO.getFirst())?0+"": overWorkTimesVO.getFirst());
-            overWorkTimesVO.setSecond( StringUtils.isBlank(overWorkTimesVO.getSecond())?0+"": overWorkTimesVO.getSecond());
-            overWorkTimesVO.setThird( StringUtils.isBlank(overWorkTimesVO.getThird())?0+"": overWorkTimesVO.getThird());
-            overWorkTimesVO.setFour( StringUtils.isBlank(overWorkTimesVO.getFour())?0+"": overWorkTimesVO.getFour());
-            overWorkTimesVO.setFive( StringUtils.isBlank(overWorkTimesVO.getFive())?0+"": overWorkTimesVO.getFive());
-            overWorkTimesVO.setSix( StringUtils.isBlank(overWorkTimesVO.getSix())?0+"": overWorkTimesVO.getSix());
-            overWorkTimesVO.setSeven( StringUtils.isBlank(overWorkTimesVO.getSeven())?0+"": overWorkTimesVO.getSeven());
+            overWorkTimesVO.setFirst(StringUtils.isBlank(overWorkTimesVO.getFirst()) ? 0 + "" : overWorkTimesVO.getFirst());
+            overWorkTimesVO.setSecond(StringUtils.isBlank(overWorkTimesVO.getSecond()) ? 0 + "" : overWorkTimesVO.getSecond());
+            overWorkTimesVO.setThird(StringUtils.isBlank(overWorkTimesVO.getThird()) ? 0 + "" : overWorkTimesVO.getThird());
+            overWorkTimesVO.setFour(StringUtils.isBlank(overWorkTimesVO.getFour()) ? 0 + "" : overWorkTimesVO.getFour());
+            overWorkTimesVO.setFive(StringUtils.isBlank(overWorkTimesVO.getFive()) ? 0 + "" : overWorkTimesVO.getFive());
+            overWorkTimesVO.setSix(StringUtils.isBlank(overWorkTimesVO.getSix()) ? 0 + "" : overWorkTimesVO.getSix());
+            overWorkTimesVO.setSeven(StringUtils.isBlank(overWorkTimesVO.getSeven()) ? 0 + "" : overWorkTimesVO.getSeven());
 
-        }else if ( overTimesType.equals( OverTimesType.QUART)){
-            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue()-timeBegan.getMonthValue()<=2 && timeEnd.getMonthValue()-timeBegan.getMonthValue()>=0  ) {
-                int monthMinus = timeEnd.getMonthValue()-timeBegan.getMonthValue();
-                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(),timeBegan.getMonth(),timeBegan.getDayOfMonth(),0,0,1);
+        } else if (overTimesType.equals(OverTimesType.QUART)) {
+            while (timeEnd.getYear() == timeBegan.getYear() && timeEnd.getMonthValue() - timeBegan.getMonthValue() <= 2 && timeEnd.getMonthValue() - timeBegan.getMonthValue() >= 0) {
+                int monthMinus = timeEnd.getMonthValue() - timeBegan.getMonthValue();
+                LocalDateTime start = LocalDateTime.of(timeBegan.getYear(), timeBegan.getMonth(), timeBegan.getDayOfMonth(), 0, 0, 1);
                 LocalDateTime end = start.with(TemporalAdjusters.lastDayOfMonth());
 
                 VacateDTO overWorkDTO = new VacateDTO();
                 overWorkDTO.getConditions().add(Restrict.eq("name", userName));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("startTime", start));
                 overWorkDTO.getConditions().add(Restrict.lt_eq("endTime", end));
-                Long count = super.count( overWorkDTO );
+                Long count = super.count(overWorkDTO);
 
                 switch (monthMinus) {
                     case 2:
-                        overWorkTimesVO.setFirstMonth(start+"月-"+count);
+                        overWorkTimesVO.setFirstMonth(start + "月-" + count);
                         break;
                     case 1:
-                        overWorkTimesVO.setSecndMonth(start+"月-"+count);
+                        overWorkTimesVO.setSecndMonth(start + "月-" + count);
                         break;
                     case 0:
-                        overWorkTimesVO.setThirdMonth(start+"月-"+count);
+                        overWorkTimesVO.setThirdMonth(start + "月-" + count);
                         break;
                     default:
                         break;
@@ -1248,18 +1252,256 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
                 timeBegan = timeBegan.plusMonths(1);
             }
-            overWorkTimesVO.setFirstMonth( StringUtils.isBlank(overWorkTimesVO.getFirstMonth())?0+"": overWorkTimesVO.getFirstMonth());
-            overWorkTimesVO.setSecndMonth( StringUtils.isBlank(overWorkTimesVO.getSecndMonth())?0+"": overWorkTimesVO.getSecndMonth());
-            overWorkTimesVO.setThirdMonth( StringUtils.isBlank(overWorkTimesVO.getThirdMonth())?0+"": overWorkTimesVO.getThirdMonth());
+            overWorkTimesVO.setFirstMonth(StringUtils.isBlank(overWorkTimesVO.getFirstMonth()) ? 0 + "" : overWorkTimesVO.getFirstMonth());
+            overWorkTimesVO.setSecndMonth(StringUtils.isBlank(overWorkTimesVO.getSecndMonth()) ? 0 + "" : overWorkTimesVO.getSecndMonth());
+            overWorkTimesVO.setThirdMonth(StringUtils.isBlank(overWorkTimesVO.getThirdMonth()) ? 0 + "" : overWorkTimesVO.getThirdMonth());
         }
 
-        overWorkTimesVO.setOverTimesType( overTimesType );
-        overWorkTimesVO.setUserName( userName );
+        overWorkTimesVO.setOverTimesType(overTimesType);
+        overWorkTimesVO.setUserName(userName);
 
 
         return overWorkTimesVO;
     }
 
+    @Override
+    public byte[] exportExcel(VacateDTO dto) throws SerException {
+        dto.getSorts().add("createTime=desc");
+        List<Vacate> list = super.findByCis(dto, true);
+        List<VacateExportExcel> vacateExportExcels = new ArrayList<>();
+        for (Vacate v : list) {
+            vacateExportExcels.add(tranBO1(v));
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(vacateExportExcels, excel);
+        return bytes;
+    }
 
+    @Override
+    public byte[] templateExcel() throws SerException {
+        VacateImportExcel vacateImportExcel = new VacateImportExcel();
+        List<VacateImportExcel> vacateImportExcels = new ArrayList<>(0);
+        vacateImportExcels.add(vacateImportExcel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(vacateImportExcels, excel);
+        return bytes;
+    }
 
+    @Transactional
+    @Override
+    public void upload(List<VacateImportExcel> tos) throws SerException {
+        for (VacateImportExcel vacateImportExcel : tos) {
+            VacateImportBO vacateImportBO = BeanTransform.copyProperties(vacateImportExcel, VacateImportBO.class, "vacateType", "advance", "conform");
+            vacateImportBO.setVacateType(transVacateType1(vacateImportExcel.getVacateType()));
+            vacateImportBO.setAdvance(transAdvance1(vacateImportExcel.getAdvance()));
+            vacateImportBO.setConform(transConform1(vacateImportExcel.getConform()));
+            Vacate vacate = BeanTransform.copyProperties(vacateImportBO, Vacate.class, true);
+            vacate.setUuid(UUID.randomUUID().toString());
+            VacateAuditImportBO vacateAuditImportBO = BeanTransform.copyProperties(vacateImportExcel, VacateAuditImportBO.class, "aduitStatus");
+            vacateAuditImportBO.setAduitStatus(transAduitStatus1(vacateImportExcel.getAduitStatus()));
+            VacateAudit vacateAudit = new VacateAudit();
+            vacateAudit.setAduitStatus(vacateAuditImportBO.getAduitStatus());
+            vacateAudit.setName(vacateAuditImportBO.getName1());
+            vacateAudit.setAdvice(vacateAuditImportBO.getAdvice());
+            if (StringUtils.isNotBlank(vacateAuditImportBO.getDate1())) {
+                vacateAudit.setDate(DateUtil.parseDate(vacateAuditImportBO.getDate1()));
+            }
+            vacateAudit.setVacate(vacate);
+            List<VacateAudit> vacateAudits = new ArrayList<>(0);
+            vacateAudits.add(vacateAudit);
+            vacate.setVacateAudits(vacateAudits);
+            vacate = super.save(vacate);
+        }
+    }
+
+    private VacateExportExcel tranBO1(Vacate vacate) throws SerException {
+        VacateBO bo = BeanTransform.copyProperties(vacate, VacateBO.class, false);
+        VacateExportExcel vacateExportExcel = BeanTransform.copyProperties(bo, VacateExportExcel.class, "vacateType", "advance", "conform", "aduitStatus");
+        vacateExportExcel.setVacateType(transVacateType(bo.getVacateType()));
+        vacateExportExcel.setAdvance(transAdvance(bo.getAdvance()));
+        vacateExportExcel.setConform(transConform(bo.getConform()));
+
+        VacateAuditDTO dto = new VacateAuditDTO();
+        dto.getConditions().add(Restrict.eq("vacate.id", vacate.getId()));
+        List<VacateAudit> list = vacateAuditSer.findByCis(dto);
+        StringBuilder sb = new StringBuilder();
+        for (VacateAudit v : list) {
+            String advice = v.getAdvice();
+            if (null != advice) {
+                sb.append(v.getName() + ":" + advice + ";");
+            }
+        }
+        //已审核条数
+        int agreeNum = Integer.parseInt(list.stream().filter(vacateAudit -> AduitStatus.AGREE.equals(vacateAudit.getAduitStatus())).count() + "");
+        int rejectNum = Integer.parseInt(list.stream().filter(vacateAudit -> AduitStatus.REJECT.equals(vacateAudit.getAduitStatus())).count() + "");
+        if (agreeNum == list.size()) {
+            bo.setAduitStatus(AduitStatus.AGREE);
+        } else if (rejectNum == list.size()) {
+            bo.setAduitStatus(AduitStatus.REJECT);
+        } else {
+            bo.setAduitStatus(AduitStatus.DOING);
+        }
+        bo.setAdvice(sb.toString());
+
+        vacateExportExcel.setAdvice(bo.getAdvice());
+        vacateExportExcel.setAduitStatus(transAduitStatus(bo.getAduitStatus()));
+        return vacateExportExcel;
+    }
+
+    private String transAduitStatus(AduitStatus aduitStatus) throws SerException {
+        String string = "";
+        switch (aduitStatus) {
+            case DOING:
+                string = "审核中";
+                break;
+            case AGREE:
+                string = "通过";
+                break;
+            case REJECT:
+                string = "不通过";
+                break;
+        }
+        return string;
+    }
+
+    private AduitStatus transAduitStatus1(String string) throws SerException {
+        AduitStatus aduitStatus = null;
+        if (StringUtils.isBlank(string)) {
+            return AduitStatus.DOING;
+        }
+        switch (string) {
+            case "审核中":
+                aduitStatus = AduitStatus.DOING;
+                break;
+            case "通过":
+                aduitStatus = AduitStatus.AGREE;
+                break;
+            case "不通过":
+                aduitStatus = AduitStatus.REJECT;
+                break;
+            default:
+                aduitStatus = AduitStatus.DOING;
+                break;
+        }
+        return aduitStatus;
+    }
+
+    private String transVacateType(VacateType vacateType) throws SerException {
+        String str = "";
+        switch (vacateType) {
+            case ANNUAL:
+                str = "年假";
+                break;
+            case MATTER:
+                str = "事假";
+                break;
+            case SICK:
+                str = "病假";
+                break;
+            case ADJUST:
+                str = "调休";
+                break;
+            case MARRY:
+                str = "婚假";
+                break;
+            case MATERNITY:
+                str = "产假";
+                break;
+            case PATERNITY:
+                str = "陪产假";
+                break;
+            case CHECK:
+                str = "产检假";
+                break;
+            case FUNERAL:
+                str = "丧假";
+                break;
+            case OTHER:
+                str = "其他";
+                break;
+        }
+        return str;
+    }
+
+    private VacateType transVacateType1(String str) throws SerException {
+        VacateType vacateType = null;
+        switch (str) {
+            case "年假":
+                vacateType = VacateType.ANNUAL;
+                break;
+            case "事假":
+                vacateType = VacateType.MATTER;
+                break;
+            case "病假":
+                vacateType = VacateType.SICK;
+                break;
+            case "调休":
+                vacateType = VacateType.ADJUST;
+                break;
+            case "婚假":
+                vacateType = VacateType.MARRY;
+                break;
+            case "产假":
+                vacateType = VacateType.MATERNITY;
+                break;
+            case "陪产假":
+                vacateType = VacateType.PATERNITY;
+                break;
+            case "产检假":
+                vacateType = VacateType.CHECK;
+                break;
+            case "丧假":
+                vacateType = VacateType.FUNERAL;
+                break;
+            case "其他":
+                vacateType = VacateType.OTHER;
+                break;
+            default:
+                vacateType = VacateType.OTHER;
+                break;
+        }
+        return vacateType;
+    }
+
+    private String transAdvance(Boolean advance) throws SerException {
+        String string = "";
+        if (advance) {
+            string = "是";
+        } else {
+            string = "否";
+        }
+        return string;
+    }
+
+    private Boolean transAdvance1(String advance) throws SerException {
+        if (StringUtils.isBlank(advance)) {
+            return null;
+        }
+        Boolean tar = false;
+        if ("是".equals(advance)) {
+            tar = true;
+        }
+        return tar;
+    }
+
+    private String transConform(Boolean conform) throws SerException {
+        String string = "";
+        if (conform) {
+            string = "是";
+        } else {
+            string = "否";
+        }
+        return string;
+    }
+
+    private Boolean transConform1(String conform) throws SerException {
+        if (StringUtils.isBlank(conform)) {
+            return null;
+        }
+        Boolean tar = false;
+        if ("是".equals(conform)) {
+            tar = true;
+        }
+        return tar;
+    }
 }

@@ -12,6 +12,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class OtherContactsBO extends BaseBO {
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 
     /**
      * 服务类别
@@ -53,6 +57,13 @@ public class OtherContactsBO extends BaseBO {
      */
     private String remark;
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getType() {
         return type;

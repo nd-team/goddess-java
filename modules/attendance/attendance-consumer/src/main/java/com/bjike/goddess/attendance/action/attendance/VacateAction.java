@@ -1,15 +1,13 @@
 package com.bjike.goddess.attendance.action.attendance;
 
 import com.bjike.goddess.attendance.api.VacateAPI;
-import com.bjike.goddess.attendance.bo.DayReportCountBO;
 import com.bjike.goddess.attendance.bo.VacateBO;
 import com.bjike.goddess.attendance.bo.VacateCountBO;
-import com.bjike.goddess.attendance.dto.DayReportDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
+import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.to.DeleteFileTO;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
-import com.bjike.goddess.attendance.vo.DayReportCountVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
 import com.bjike.goddess.attendance.vo.VacateCountVO;
 import com.bjike.goddess.attendance.vo.VacateVO;
@@ -22,6 +20,8 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -660,6 +661,62 @@ public class VacateAction extends BaseFileAction {
         try {
             VacateCountBO list = vacateAPI.vacateCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, VacateCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     *
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(HttpServletResponse response, VacateDTO dto) throws ActException {
+        try {
+            String fileName = "请假管理.xlsx";
+            super.writeOutFile(response, vacateAPI.exportExcel(dto), fileName);
+            return ActResult.initialize("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/templateExcel")
+    public Result templateExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "请假管理excel模板下载.xlsx";
+            super.writeOutFile(response, vacateAPI.templateExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导入
+     *
+     * @version v1
+     */
+    @PostMapping("v1/upload")
+    public Result upload(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<VacateImportExcel> tos = ExcelUtil.excelToClazz(is, VacateImportExcel.class, excel);
+            vacateAPI.upload(tos);
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

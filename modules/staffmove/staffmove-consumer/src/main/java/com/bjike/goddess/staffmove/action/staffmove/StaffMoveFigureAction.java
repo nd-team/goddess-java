@@ -22,11 +22,11 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * 人员调动意愿情况
+ * 人员调动意愿情况图形
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-11-03 02:36 ]
- * @Description: [ 人员调动意愿情况 ]
+ * @Description: [ 人员调动意愿情况图形 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */

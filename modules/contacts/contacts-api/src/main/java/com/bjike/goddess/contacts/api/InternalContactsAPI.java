@@ -1,10 +1,9 @@
 package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.contacts.bo.InternalContactsBO;
+import com.bjike.goddess.contacts.bo.*;
+import com.bjike.goddess.contacts.to.CollectTO;
 import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
-import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
-import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
@@ -173,6 +172,15 @@ public interface InternalContactsAPI {
     default List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
         return null;
     }
+    /**
+     * 移动端获取根据姓名获取所有电话号码
+     *
+     * @return class PhoneNumberBO
+     * @throws SerException
+     */
+    default List<PhoneNumberBO> mobileGetTel() throws SerException {
+        return null;
+    }
 
     /**
      * 移动端总条数
@@ -207,6 +215,92 @@ public interface InternalContactsAPI {
      * @throws SerException
      */
     default InternalContactsConditionBO getByName(String name) throws SerException {
+        return null;
+    }
+    /**
+     * 通讯录信息管理日汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<ContactsCollectBO> dayCollect(CollectTO to) throws SerException;
+
+    /**
+     * 通讯录信息管理周汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<ContactsCollectBO> weekCollect(CollectTO to) throws SerException;
+
+    /**
+     * 通讯录信息管理月汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<ContactsCollectBO> monthCollect(CollectTO to) throws SerException;
+
+    /**
+     * 通讯录信息管理累计汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<ContactsCollectBO> totalCollect(CollectTO to) throws SerException;
+    /**
+     * 员工信息管理日汇总图表
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    OptionBO dayCollectFigure(CollectTO to) throws SerException;
+
+    /**
+     * 员工信息管理周汇总图表
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    OptionBO weekCollectFigure(CollectTO to) throws SerException;
+
+    /**
+     * 员工信息管理月汇总图表
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    OptionBO monthCollectFigure(CollectTO to) throws SerException;
+
+    /**
+     * 员工信息管理累计汇总图表
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    OptionBO totalCollectFigure(CollectTO to) throws SerException;
+    /**
+     * 检测邮箱是否通过
+     *
+     * @throws SerException
+     */
+    default void checkEmail() throws SerException {
+    }
+    /**
+     * 查询部门下所有人的信息
+     *
+     * @return class MobileInternalContactsBO
+     * @throws SerException
+     */
+    default List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
         return null;
     }
 }

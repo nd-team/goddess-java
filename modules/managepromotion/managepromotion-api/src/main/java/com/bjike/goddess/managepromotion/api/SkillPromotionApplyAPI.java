@@ -171,4 +171,28 @@ public interface SkillPromotionApplyAPI {
     default List<SkillLevelCollectBO> totalLevelCollect(SkillLevelCollectTO to) throws SerException {
         return  null;
     }
+    /**
+     * 获取已晋升次数月汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Integer monthPromotedNum(SkillLevelCollectTO to) throws SerException;
+    /**
+     * 获取已晋升次数季度汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Integer quartPromotedNum(SkillLevelCollectTO to) throws SerException;
+    /**
+     * 获取已晋升次数年汇总
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Integer yearPromotedNum(SkillLevelCollectTO to) throws SerException;
 }

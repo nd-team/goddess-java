@@ -12,6 +12,7 @@ import com.bjike.goddess.businessproject.excel.BusinessContractTemplateExcel;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
 import com.bjike.goddess.businessproject.to.CollectUpdateTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
+import com.bjike.goddess.businessproject.to.PersonTO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -27,6 +28,10 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
+import com.bjike.goddess.taskallotment.enums.TimeStatus;
+import com.bjike.goddess.taskallotment.to.CollectDataTO;
+import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +72,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     private OutsourcBusinessContractSer outsourcBusinessContractSer;
     @Autowired
     private CollectUpdateSer collectUpdateSer;
+    @Autowired
+    private TaskNodeAPI taskNodeAPI;
 
 
     /**
@@ -79,7 +86,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -98,7 +105,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -117,7 +124,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
             if (!flag) {
                 throw new SerException("您不是相关项目经理人员，不可以操作");
             }
@@ -136,7 +143,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.modCusPermission("4",null);
             if (!flag) {
                 throw new SerException("您不是相关规划部门的负责人，不可以操作");
             }
@@ -155,7 +162,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.modCusPermission("5",null);
             if (!flag) {
                 throw new SerException("您不是相关预算部门的负责人，不可以操作");
             }
@@ -174,7 +181,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -191,7 +198,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -208,7 +215,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
         } else {
             flag = true;
         }
@@ -225,7 +232,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.modCusPermission("4",null);
         } else {
             flag = true;
         }
@@ -242,7 +249,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.modCusPermission("5",null);
         } else {
             flag = true;
         }
@@ -357,27 +364,27 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         checkAddIdentity();
         BusinessContract contract = BeanTransform.copyProperties(to, BusinessContract.class, true);
         contract.setCreateTime(LocalDateTime.now());
-//        String[] names = positionDetailUserAPI.planPerson();//获取规划负责人
-//        String[] names1 = positionDetailUserAPI.budgetPerson();//获取预算负责人
-//        String[] names2 = positionDetailUserAPI.managerPerson();//获取项目经理
-//        List<String> email = null;
-//        if (null != names && null != names1 && null != names2) {
-//            email = internalContactsAPI.getEmails(names);
-//            email.addAll(internalContactsAPI.getEmails(names1));
-//            email.addAll(internalContactsAPI.getEmails(names2));
-//        }
-//        MessageTO messageTO = new MessageTO();
-//        messageTO.setContent(to.getContent());
-//        messageTO.setTitle("提供意见");
-//        messageTO.setMsgType(MsgType.SYS);
-//        messageTO.setSendType(SendType.EMAIL);
-//        messageTO.setRangeType(RangeType.SPECIFIED);
-//
-//        String[] strings1 = new String[email.size()];
-//        strings1 = email.toArray(strings1);
-//        messageTO.setReceivers(strings1);
-////        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
-//        messageAPI.send(messageTO);
+        String[] names = positionDetailUserAPI.planPerson();//获取规划负责人
+        String[] names1 = positionDetailUserAPI.budgetPerson();//获取预算负责人
+        String[] names2 = positionDetailUserAPI.managerPerson();//获取项目经理
+        List<String> email = null;
+        if (null != names && null != names1 && null != names2) {
+            email = internalContactsAPI.getEmails(names);
+            email.addAll(internalContactsAPI.getEmails(names1));
+            email.addAll(internalContactsAPI.getEmails(names2));
+        }
+        MessageTO messageTO = new MessageTO();
+        messageTO.setContent(to.getContent());
+        messageTO.setTitle("提供意见");
+        messageTO.setMsgType(MsgType.SYS);
+        messageTO.setSendType(SendType.EMAIL);
+        messageTO.setRangeType(RangeType.SPECIFIED);
+
+        String[] strings1 = new String[email.size()];
+        strings1 = email.toArray(strings1);
+        messageTO.setReceivers(strings1);
+//        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
+        messageAPI.send(messageTO);
         super.save(contract);
 
         BusinessContractsBO bo = BeanTransform.copyProperties(contract, BusinessContractsBO.class);
@@ -2415,9 +2422,13 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
-    public OptionMakeBO weekPersonFigure(String user, Integer year, Integer month, Integer week) throws SerException {
+    public OptionMakeBO weekDepartFigure(PersonTO to) throws SerException {
         UserBO userBO = userAPI.currentUser();
-        user = userBO.getUsername();
+//        String[] innerProject = to.getInnerName();
+
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
         if (null == year && null == month && null == week) {
             year = LocalDate.now().getYear();
             month = LocalDate.now().getMonthValue();
@@ -2427,46 +2438,194 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
         String startDate = String.valueOf(date[0]);
         String endDate = String.valueOf(date[1]);
-        String text_1 = "个人合同立项情况图表周汇总" + startDate + "-" + endDate;
-        return personFigure(startDate, endDate, text_1);
-
-    }
-
-    @Override
-    public OptionMakeBO monthPersonFigure(Integer year, Integer month) throws SerException {
+        String text_1 = "部门合同立项总金额图表周汇总" + startDate + "-" + endDate;
         return null;
     }
 
     @Override
-    public OptionMakeBO quarterPersonFigure(Integer year, Integer quarter) throws SerException {
+    public OptionMakeBO monthDepartFigure(PersonTO to) throws SerException {
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+//        String[] innerProject = to.getInnerName();
+
+        if (null == year && null == month) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "部门合同立项总金额图表月汇总" + startDate + "-" + endDate;
         return null;
     }
 
     @Override
-    public OptionMakeBO yearPersonFigure(Integer year) throws SerException {
+    public OptionMakeBO quarterDepartFigure(PersonTO to) throws SerException {
+//        String[] innerProject = to.getInnerName();
+
+        Integer year = to.getYear();
+        Integer quarter = to.getQuart();
+        if (null == year) {
+            year = LocalDate.now().getYear();
+            quarter = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quarter);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "部门合同立项总金额图表季度汇总" + startDate + "-" + endDate;
+        return null;
+    }
+
+    @Override
+    public OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
+//        String[] innerProject = to.getInnerName();
+        Integer year = to.getYear();
         if (null == year) {
             year = LocalDate.now().getYear();
         }
         String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
         String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        String text_1 = "部门合同立项总金额图表年汇总" + startDate + "-" + endDate;
         return null;
     }
 
-    private OptionMakeBO personFigure(String startDate, String endDate, String text_1) throws SerException {
-        List<PersonCollectBO> collectBOS = new ArrayList<>();
-        String[] fields = new String[]{"innerProject","totalMoney"};
-        StringBuilder sb = new StringBuilder();
-        //内部项目名称 立项金额总和
-        sb.append(" SELECT innerProject AS innerProject ,ifnull(sum(makeMoney),0) AS totalMoney FROM businessproject_siginmanage ");
-        sb.append(" WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' ");
-        sb.append(" GROUP BY innerProject ");
-        List<PersonCollectBO> boList = super.findBySql(sb.toString(), PersonCollectBO.class, fields);
-        if (boList != null && boList.size() > 0) {
-
+    @Override
+    public OptionMakeBO weekPersonFigure(PersonTO to) throws SerException {
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+        Integer week = to.getWeek();
+        if (null == year && null == month && null == week) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+            Calendar c = Calendar.getInstance();
+            week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
         }
+        LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+        String startDate = String.valueOf(date[0]);
+        String endDate = String.valueOf(date[1]);
+        String text_1 = "个人合同立项总金额图表周汇总" + startDate + "-" + endDate;
+        return personFigure(to, startDate, endDate, text_1);
 
-        return null;
     }
+
+    @Override
+    public OptionMakeBO monthPersonFigure(PersonTO to) throws SerException {
+        Integer year = to.getYear();
+        Integer month = to.getMonth();
+
+        if (null == year && null == month) {
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, month, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
+        String text_1 = "个人合同立项总金额图表月汇总" + startDate + "-" + endDate;
+        return personFigure(to, startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO quarterPersonFigure(PersonTO to) throws SerException {
+
+        Integer year = to.getYear();
+        Integer quarter = to.getQuart();
+        if (null == year) {
+            year = LocalDate.now().getYear();
+            quarter = (LocalDate.now().getMonthValue() + 2) / 3;
+        }
+        String[] date = quarter(year, quarter);
+        String startDate = date[0];
+        String endDate = date[1];
+        String text_1 = "个人合同立项总金额图表季度汇总" + startDate + "-" + endDate;
+        return personFigure(to, startDate, endDate, text_1);
+    }
+
+    @Override
+    public OptionMakeBO yearPersonFigure(PersonTO to) throws SerException {
+        Integer year = to.getYear();
+        if (null == year) {
+            year = LocalDate.now().getYear();
+        }
+        String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
+        String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
+        String text_1 = "个人合同立项总金额图表年汇总" + startDate + "-" + endDate;
+        return personFigure(to, startDate, endDate, text_1);
+    }
+
+    private OptionMakeBO personFigure(PersonTO to, String startDate, String endDate, String text_1) throws SerException {
+        CollectDataTO collectDataTO = BeanTransform.copyProperties(to, CollectDataTO.class);
+        CollectDataVO vo = taskNodeAPI.personProjectCollect(collectDataTO);
+        List<String> innerProjects = vo.getProjectName();
+//        List<Double> moneys = new ArrayList<>();
+        List<SeriesBBO> seriesBBOList = new ArrayList<>();
+        if (innerProjects != null && innerProjects.size() > 0) {
+            for (String inner : innerProjects) {
+                String sql = "SELECT ifnull(sum(makeMoney),0) FROM businessproject_businesscontract WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' and innerProject = '" + inner + "'";
+                List<Object> moneys_obj = super.findBySql(sql);
+                Double money = Double.parseDouble(String.valueOf(moneys_obj.get(0)));
+                SeriesBBO seriesBBO = new SeriesBBO();
+                seriesBBO.setName(inner);
+                seriesBBO.setType("bar");
+                seriesBBO.setData(new Double[]{money});
+                seriesBBOList.add(seriesBBO);
+//                moneys.add(money);
+            }
+        }
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"总金额"};
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+//        List<SeriesBBO> seriesBOS = new ArrayList<>();
+//        if (moneys != null && moneys.size() > 0) {
+//            List<Double> makeMoney = new ArrayList<>();
+//            for (Double figureBO : moneys) {
+////                text_list_3.add(figureBO.getInnerProject());
+//
+//                //柱状图数据
+//                makeMoney.add(figureBO);
+//            }
+//            List<List<Double>> nums = new ArrayList<>();
+//            nums.add(makeMoney);
+//            String[] ziduan = new String[]{"总金额"};
+//            for (int i = 0; i < 1; i++) {
+//                SeriesBBO seriesBO = new SeriesBBO();
+//                seriesBO.setName(ziduan[i]);
+//                seriesBO.setType("bar");
+//                Double[] text_int_4 = new Double[nums.get(0).size()];
+//                text_int_4 = nums.get(i).toArray(text_int_4);
+//                seriesBO.setData(text_int_4);
+//                seriesBOS.add(seriesBO);
+//            }
+//        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBBO[] text_4 = new SeriesBBO[seriesBBOList.size()];
+        text_4 = seriesBBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        OptionMakeBO optionBO = new OptionMakeBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+        optionBO.setTooltip(tooltipBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+
 
     //季度
     private String[] quarter(Integer year, Integer quarter) throws SerException {

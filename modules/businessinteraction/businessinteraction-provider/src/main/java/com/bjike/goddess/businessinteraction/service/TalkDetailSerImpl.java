@@ -17,8 +17,11 @@ import com.bjike.goddess.competitormanage.api.CompetitorAPI;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
+<<<<<<< HEAD
+=======
 //import com.bjike.goddess.market.api.MarketInfoAPI;
 //import com.bjike.goddess.market.bo.MarketInfoBO;
+>>>>>>> upsteam/develop
 import com.bjike.goddess.supplier.api.SupplierInformationAPI;
 import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.user.api.UserAPI;

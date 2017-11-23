@@ -243,7 +243,7 @@ public class CarSendEmailSerImpl extends ServiceImpl<CarSendEmail, CarSendEmailD
                     if (userBOS != null && userBOS.size() > 0) {
                         InternalContactsBO internalContactsBO = internalContactsAPI.findByUser(userBOS.get(0).getId());
                         logger.info("发送邮件开始4"+ JSON.toJSONString(internalContactsBO));
-                        String email = internalContactsBO.getEmail();
+                        String email = internalContactsBO.getWorkEmail();
                         receivers.add(email);
                     }
                 } else {

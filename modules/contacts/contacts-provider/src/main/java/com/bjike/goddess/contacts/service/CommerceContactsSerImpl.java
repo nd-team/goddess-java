@@ -20,6 +20,7 @@ import com.bjike.goddess.contacts.excel.CommerceContactsTemplateExport;
 import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contacts.to.CommerceContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
+import com.bjike.goddess.contacts.util.ChineseCharToEn;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
 import com.bjike.goddess.customer.enums.CustomerSex;
 import com.bjike.goddess.customer.enums.CustomerStatus;
@@ -45,7 +46,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * 商务通讯录业务实现
@@ -141,8 +144,18 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
 
     @Override
     public List<CommerceContactsBO> maps(CommerceContactsDTO dto) throws SerException {
+        search(dto);
         List<CommerceContacts> list = super.findByPage(dto);
-        return BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
+        return BeanTransform.copyProperties(list, CommerceContactsBO.class);
+    }
+    private List<CommerceContactsBO> search(CommerceContactsDTO dto)throws SerException{
+        //客户姓名
+        if(StringUtils.isNotBlank(dto.getCustomerName())){
+            dto.getConditions().add(Restrict.like("customerName",dto.getCustomerName()));
+        }
+        List<CommerceContacts> commerceContacts = super.findByCis(dto);
+        List<CommerceContactsBO> commerceContactsBOS = BeanTransform.copyProperties(commerceContacts,CommerceContactsBO.class);
+        return commerceContactsBOS;
     }
 
     @Override
@@ -156,6 +169,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
     @Override
     public Long getTotal() throws SerException {
         CommerceContactsDTO dto = new CommerceContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -340,10 +354,29 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
         return bytes;
     }
 
+    private static List<MobileCommerceContactsBO> sort(List<MobileCommerceContactsBO> data) {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+//        // Collator 类是用来执行区分语言环境的 String 比较的，这里选择使用CHINA
+//        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+//        // 使根据指定比较器产生的顺序对指定对象数组进行排序。
+//        Arrays.sort(data, comparator);
+        TreeSet<MobileCommerceContactsBO> treeSet = new TreeSet<>(new Comparator<MobileCommerceContactsBO>() {
+            @Override
+            public int compare(MobileCommerceContactsBO o1, MobileCommerceContactsBO o2) {
+                return ChineseCharToEn.getFirstLetter(o1.getCustomerName()).compareTo(ChineseCharToEn.getFirstLetter(o2.getCustomerName()));
+            }
+        });
+        for (MobileCommerceContactsBO m : data) {
+            treeSet.add(m);
+        }
+        return new ArrayList<>(treeSet);
+    }
+
     @Override
     public List<MobileCommerceContactsBO> mobileList(CommerceContactsDTO dto) throws SerException {
         searchMobileCondition(dto);
-        List<CommerceContacts> list = super.findByCis(dto);
         List<CommerceContactsBO> commerceContactsBOs = BeanTransform.copyProperties(super.findByPage(dto), CommerceContactsBO.class);
         if (!CollectionUtils.isEmpty(commerceContactsBOs)) {
             List<MobileCommerceContactsBO> bos = BeanTransform.copyProperties(commerceContactsBOs, MobileCommerceContactsBO.class, "headSculpture");
@@ -355,7 +388,7 @@ public class CommerceContactsSerImpl extends ServiceImpl<CommerceContacts, Comme
                     bo.setHeadSculpture(userBO.getHeadSculpture());
                 }
             }
-            return bos;
+            return sort(bos);
         }
         return null;
     }

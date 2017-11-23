@@ -107,6 +107,11 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
+    public List<PositionDetailUserBO> findUserListInOrgan1() throws SerException {
+        return positionDetailUserSer.findUserListInOrgan1();
+    }
+
+    @Override
     public List<String> getPosition(String name) throws SerException {
         return positionDetailUserSer.getPosition(name);
     }
@@ -210,5 +215,15 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     @Override
     public String[] generPerson() throws SerException{
         return positionDetailUserSer.generPerson();
+    }
+
+    @Override
+    public List<String> welfarePerson() throws SerException {
+        return positionDetailUserSer.welfarePerson();
+    }
+
+    @Override
+    public List<String> planningPerson() throws SerException {
+        return positionDetailUserSer.planningPerson();
     }
 }

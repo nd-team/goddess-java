@@ -32,33 +32,33 @@ include ':modules:organize:organize-provider'
 //include ':modules:contacts:contacts-consumer'
 //include ':modules:contacts:contacts-provider'
 ////#dimission
-//include ':modules:dimission:dimission-api'
-//include ':modules:dimission:dimission-consumer'
-//include ':modules:dimission:dimission-provider'
+include ':modules:dimission:dimission-api'
+include ':modules:dimission:dimission-consumer'
+include ':modules:dimission:dimission-provider'
 ////#staffentry
-//include ':modules:staffentry:staffentry-api'
-//include ':modules:staffentry:staffentry-consumer'
-//include ':modules:staffentry:staffentry-provider'
+include ':modules:staffentry:staffentry-api'
+include ':modules:staffentry:staffentry-consumer'
+include ':modules:staffentry:staffentry-provider'
 ////#archive
-//include ':modules:archive:archive-api'
-//include ':modules:archive:archive-consumer'
-//include ':modules:archive:archive-provider'
+include ':modules:archive:archive-api'
+include ':modules:archive:archive-consumer'
+include ':modules:archive:archive-provider'
 ////#annual
-//include ':modules:annual:annual-api'
-//include ':modules:annual:annual-consumer'
-//include ':modules:annual:annual-provider'
+include ':modules:annual:annual-api'
+include ':modules:annual:annual-consumer'
+include ':modules:annual:annual-provider'
 ////#voucher
-//include ':modules:voucher:voucher-api'
-//include ':modules:voucher:voucher-consumer'
-//include ':modules:voucher:voucher-provider'
+include ':modules:voucher:voucher-api'
+include ':modules:voucher:voucher-consumer'
+include ':modules:voucher:voucher-provider'
 //#customer
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
 ////#financeinit
-//include ':modules:financeinit:financeinit-api'
-//include ':modules:financeinit:financeinit-consumer'
-//include ':modules:financeinit:financeinit-provider'
+include ':modules:financeinit:financeinit-api'
+include ':modules:financeinit:financeinit-consumer'
+include ':modules:financeinit:financeinit-provider'
 //#assemble 关联模块 -liguiqin
 include ':modules:assemble:assemble-api'
 include ':modules:assemble:assemble-consumer'
@@ -68,9 +68,9 @@ include ':modules:assemble:assemble-provider'
 //include ':modules:business:business-consumer'
 //include ':modules:business:business-provider'
 ////#intromanage --公司简介
-//include ':modules:intromanage:intromanage-api'
-//include ':modules:intromanage:intromanage-consumer'
-//include ':modules:intromanage:intromanage-provider'
+include ':modules:intromanage:intromanage-api'
+include ':modules:intromanage:intromanage-consumer'
+include ':modules:intromanage:intromanage-provider'
 ////#materialsummary --物质汇总
 //include ':modules:materialsummary:materialsummary-api'
 //include ':modules:materialsummary:materialsummary-consumer'
@@ -112,37 +112,37 @@ include ':modules:assemble:assemble-provider'
 //include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-consumer'
 //include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-provider'
 ////#assistance
-//include ':modules:assistance:assistance-api'
-//include ':modules:assistance:assistance-consumer'
-//include ':modules:assistance:assistance-provider'
+include ':modules:assistance:assistance-api'
+include ':modules:assistance:assistance-consumer'
+include ':modules:assistance:assistance-provider'
 ////#managementpromotion
-//include ':modules:managementpromotion:managementpromotion-api'
-//include ':modules:managementpromotion:managementpromotion-consumer'
-//include ':modules:managementpromotion:managementpromotion-provider'
+include ':modules:managementpromotion:managementpromotion-api'
+include ':modules:managementpromotion:managementpromotion-consumer'
+include ':modules:managementpromotion:managementpromotion-provider'
 ////#employee-contract
 //include ':modules:employee-contract:employee-contract-api'
 //include ':modules:employee-contract:employee-contract-consumer'
 //include ':modules:employee-contract:employee-contract-provider'
 ////#bonus
-//include ':modules:bonus:bonus-api'
-//include ':modules:bonus:bonus-consumer'
-//include ':modules:bonus:bonus-provider'
+include ':modules:bonus:bonus-api'
+include ':modules:bonus:bonus-consumer'
+include ':modules:bonus:bonus-provider'
 ////#businessproject
 //include ':modules:businessproject:businessproject-api'
 //include ':modules:businessproject:businessproject-consumer'
 //include ':modules:businessproject:businessproject-provider'
 ////#regularization
-//include ':modules:regularization:regularization-api'
-//include ':modules:regularization:regularization-consumer'
-//include ':modules:regularization:regularization-provider'
+include ':modules:regularization:regularization-api'
+include ':modules:regularization:regularization-consumer'
+include ':modules:regularization:regularization-provider'
 ////#event
-//include ':modules:event:event-api'
-//include ':modules:event:event-consumer'
-//include ':modules:event:event-provider'
+include ':modules:event:event-api'
+include ':modules:event:event-consumer'
+include ':modules:event:event-provider'
 ////#marketdevelopment
-//include ':modules:marketdevelopment:marketdevelopment-api'
-//include ':modules:marketdevelopment:marketdevelopment-consumer'
-//include ':modules:marketdevelopment:marketdevelopment-provider'
+include ':modules:marketdevelopment:marketdevelopment-api'
+include ':modules:marketdevelopment:marketdevelopment-consumer'
+include ':modules:marketdevelopment:marketdevelopment-provider'
 ////#market
 //include ':modules:market:market-api'
 //include ':modules:market:market-consumer'
@@ -176,9 +176,9 @@ include ':modules:assemble:assemble-provider'
 //include ':modules:contractquotemanager:contractquotemanager-consumer'
 //include ':modules:contractquotemanager:contractquotemanager-provider'
 ////#salarymanage
-//include ':modules:salarymanage:salarymanage-api'
-//include ':modules:salarymanage:salarymanage-consumer'
-//include ':modules:salarymanage:salarymanage-provider'
+include ':modules:salarymanage:salarymanage-api'
+include ':modules:salarymanage:salarymanage-consumer'
+include ':modules:salarymanage:salarymanage-provider'
 ////#projectmarketfee
 //include ':modules:projectmarketfee:projectmarketfee-api'
 //include ':modules:projectmarketfee:projectmarketfee-consumer'
@@ -192,21 +192,21 @@ include ':modules:assemble:assemble-provider'
 //include ':modules:lendreimbursement:lendreimbursement-consumer'
 //include ':modules:lendreimbursement:lendreimbursement-provider'
 ////#managepromotion
-//include ':modules:managepromotion:managepromotion-api'
-//include ':modules:managepromotion:managepromotion-consumer'
-//include ':modules:managepromotion:managepromotion-provider'
+include ':modules:managepromotion:managepromotion-api'
+include ':modules:managepromotion:managepromotion-consumer'
+include ':modules:managepromotion:managepromotion-provider'
 ////#salaryconfirm
-//include ':modules:salaryconfirm:salaryconfirm-api'
-//include ':modules:salaryconfirm:salaryconfirm-consumer'
-//include ':modules:salaryconfirm:salaryconfirm-provider'
+include ':modules:salaryconfirm:salaryconfirm-api'
+include ':modules:salaryconfirm:salaryconfirm-consumer'
+include ':modules:salaryconfirm:salaryconfirm-provider'
 ////#secure
-//include ':modules:secure:secure-api'
-//include ':modules:secure:secure-consumer'
-//include ':modules:secure:secure-provider'
+include ':modules:secure:secure-api'
+include ':modules:secure:secure-consumer'
+include ':modules:secure:secure-provider'
 ////#rentutilitiespay
-//include ':modules:rentutilitiespay:rentutilitiespay-api'
-//include ':modules:rentutilitiespay:rentutilitiespay-consumer'
-//include ':modules:rentutilitiespay:rentutilitiespay-provider'
+include ':modules:rentutilitiespay:rentutilitiespay-api'
+include ':modules:rentutilitiespay:rentutilitiespay-consumer'
+include ':modules:rentutilitiespay:rentutilitiespay-provider'
 ////#businsurance --商业保险
 //include ':modules:businsurance:businsurance-api'
 //include ':modules:businsurance:businsurance-consumer'
@@ -220,13 +220,13 @@ include ':modules:assemble:assemble-provider'
 //include ':modules:salarymanage:salarymanage-consumer'
 //include ':modules:salarymanage:salarymanage-provider'
 ////#recruit
-//include ':modules:recruit:recruit-api'
-//include ':modules:recruit:recruit-consumer'
-//include ':modules:recruit:recruit-provider'
+include ':modules:recruit:recruit-api'
+include ':modules:recruit:recruit-consumer'
+include ':modules:recruit:recruit-provider'
 ////#accommodation
-//include ':modules:accommodation:accommodation-api'
-//include ':modules:accommodation:accommodation-consumer'
-//include ':modules:accommodation:accommodation-provider'
+include ':modules:accommodation:accommodation-api'
+include ':modules:accommodation:accommodation-consumer'
+include ':modules:accommodation:accommodation-provider'
 ////#budget
 //include ':modules:budget:budget-api'
 //include ':modules:budget:budget-consumer'
@@ -235,3 +235,48 @@ include ':modules:assemble:assemble-provider'
 //include ':modules:carinfo:carinfo-api'
 //include ':modules:carinfo:carinfo-consumer'
 //include ':modules:carinfo:carinfo-provider'
+
+//oilcardmanage 油卡管理
+//include ':modules:oilcardmanage:oilcardmanage-api'
+//include ':modules:oilcardmanage:oilcardmanage-consumer'
+//include ':modules:oilcardmanage:oilcardmanage-provider'
+
+//workhandover 工作交接
+include ':modules:workhandover:workhandover-api'
+include ':modules:workhandover:workhandover-consumer'
+include ':modules:workhandover:workhandover-provider'
+
+//subjectcollect 油卡管理
+include ':modules:subjectcollect:subjectcollect-api'
+include ':modules:subjectcollect:subjectcollect-consumer'
+include ':modules:subjectcollect:subjectcollect-provider'
+
+//contractware
+include ':modules:contractware:contractware-api'
+include ':modules:contractware:contractware-consumer'
+include ':modules:contractware:contractware-provider'
+//businessproject
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//contracts
+include ':modules:contacts:contacts-api'
+include ':modules:contacts:contacts-consumer'
+include ':modules:contacts:contacts-provider'
+
+//business
+include ':modules:business:business-api'
+include ':modules:business:business-consumer'
+include ':modules:business:business-provider'
+
+//qualifications
+include ':modules:qualifications:qualifications-api'
+include ':modules:qualifications:qualifications-consumer'
+include ':modules:qualifications:qualifications-provider'
+
+//qualifications
+include ':modules:taskallotment:taskallotment-api'
+include ':modules:taskallotment:taskallotment-consumer'
+include ':modules:taskallotment:taskallotment-provider'
+
+

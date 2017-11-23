@@ -21,13 +21,11 @@ import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
-import com.bjike.goddess.voucher.entity.SubjectCollect;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
 import com.bjike.goddess.voucher.enums.*;
@@ -84,8 +82,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     private AccountanCourseAPI accountanCourseAPI;
     @Autowired
     private CategoryAPI categoryAPI;
-    @Autowired
-    private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private VoucherPermissionSer voucherPermissionSer;
     @Autowired
@@ -192,16 +188,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         obj = new SonPermissionObject ();
         obj.setName ( "voucherRecord" );
         obj.setDescribesion ( "记账凭证记录" );
-        if (flagSeeSign || flagAddSign) {
-            obj.setFlag ( true );
-        } else {
-            obj.setFlag ( false );
-        }
-        list.add ( obj );
-
-        obj = new SonPermissionObject ();
-        obj.setName ( "subjectCollect" );
-        obj.setDescribesion ( "科目汇总表" );
         if (flagSeeSign || flagAddSign) {
             obj.setFlag ( true );
         } else {
@@ -568,6 +554,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         dto.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
         List<VoucherGenerate> list = super.findByCis ( dto );
+        if (null == list && list.size () < 1) {
+            VoucherGenerateDTO dto2 = new VoucherGenerateDTO ();
+            dto2.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+            dto2.getConditions ().add ( Restrict.between ( "secondSubject", firstSubject ) );
+            list = super.findByCis ( dto2 );
+            if (null == list && list.size () < 1) {
+                VoucherGenerateDTO dto3 = new VoucherGenerateDTO ();
+                dto3.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+                dto3.getConditions ().add ( Restrict.between ( "thirdSubject", firstSubject ) );
+                list = super.findByCis ( dto3 );
+            }
+        }
+
         if (null != list && list.size () > 0) {
             if (tar) {
                 begin = startSum + list.stream ().mapToDouble ( obj -> obj.getBorrowMoney () ).sum () - list.stream ().mapToDouble ( obj -> obj.getLoanMoney () ).sum ();
@@ -579,6 +578,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         dto1.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
         List<VoucherGenerate> list1 = super.findByCis ( dto1 );
+        if (null == list1 && list1.size () < 1) {
+            VoucherGenerateDTO dto4 = new VoucherGenerateDTO ();
+            dto4.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+            dto4.getConditions ().add ( Restrict.between ( "secondSubject", firstSubject ) );
+            list1 = super.findByCis ( dto4 );
+            if (null == list1 && list1.size () < 1) {
+                VoucherGenerateDTO dto5 = new VoucherGenerateDTO ();
+                dto5.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+                dto5.getConditions ().add ( Restrict.between ( "thirdSubject", firstSubject ) );
+                list1 = super.findByCis ( dto5 );
+            }
+        }
+
         if (null != list1 && list1.size () > 0) {
             if (tar) {
                 end = startSum + list1.stream ().mapToDouble ( obj -> obj.getBorrowMoney () ).sum () - list1.stream ().mapToDouble ( obj -> obj.getLoanMoney () ).sum ();
@@ -638,14 +650,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         Double current = 0d;
         Double year = 0d;
-//<<<<<<< Updated upstream
-////        Double profit = 0d;
-////        Double total = 0d;
-////        Double netProfits = 0d;
-//        String[] times = new String[]{startTime, endTime};
-//        VoucherGenerateDTO dto = new VoucherGenerateDTO();
-////        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
-//=======
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO ();
         dto.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
@@ -653,23 +657,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (null != list && list.size () > 0) {
             if ("营业收入".equals ( firstSubject )) {
                 current = getCurrent ( "主营业务收入", startTime, endTime, true );
-//<<<<<<< Updated upstream
-////                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
-////                profit += current;
-//            } else if ("营业成本".equals(firstSubject)) {
-//                current = getCurrent("营业成本", startTime, endTime, true);
-////                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
-////                profit = profit - current;
-//            } else if ("营业税金及附加".equals(firstSubject)) {
-//                current = getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true);
-////                profit = profit - current;
-//            } else if ("销售费用".equals(firstSubject)) {
-//                current = getCurrent("销售费用", startTime, endTime, true);
-////                profit = profit - current;
-//            } else if ("管理费用".equals(firstSubject)) {
-//                current = getCurrent("管理费用", startTime, endTime, true);
-////                profit = profit - current;
-//=======
             } else if ("营业成本".equals ( firstSubject )) {
                 current = getCurrent ( "营业成本", startTime, endTime, true );
             } else if ("营业税金及附加".equals ( firstSubject )) {
@@ -687,24 +674,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("营业外支出".equals ( firstSubject )) {
                 current = getCurrent ( "营业外支出", startTime, endTime, false );
             } else if ("营业利润".equals ( firstSubject )) {
-//<<<<<<< Updated upstream
-//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-//                        getCurrent("财务费用",startTime, endTime, true);
-//            } else if ("净利润".equals(firstSubject)) {
-//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-//                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
-//                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true) - getCurrent("所得税",startTime, endTime, true);
-//            }else if ("利润总额".equals(firstSubject)) {
-//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-//                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
-//                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true);
-//=======
                 current = getCurrent ( "营业收入", startTime, endTime, true ) -
                         getCurrent ( "营业成本", startTime, endTime, true ) -
                         (getCurrent ( "城建税", startTime, endTime, true ) +
@@ -753,352 +722,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
 
-    @Override
-    public List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException {
-        LocalDate[] dates = null;
-        if (StringUtils.isNotBlank ( dto.getStartTime () ) && StringUtils.isNotBlank ( dto.getEndTime () )) {
-            LocalDate startDate = DateUtil.parseDate ( dto.getStartTime () );
-            LocalDate endDate = DateUtil.parseDate ( dto.getEndTime () );
-            dates = new LocalDate[]{startDate, endDate};
-        } else if (StringUtils.isNotBlank ( dto.getStartTime () ) && StringUtils.isBlank ( dto.getEndTime () )) {
-            LocalDate startDate = DateUtil.parseDate ( dto.getStartTime () );
-            LocalDate endDate = LocalDate.now ();
-            dates = new LocalDate[]{startDate, endDate};
-        } else if (StringUtils.isBlank ( dto.getStartTime () ) && StringUtils.isNotBlank ( dto.getEndTime () )) {
-            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
-            LocalDate endDate = DateUtil.parseDate ( dto.getEndTime () );
-            dates = new LocalDate[]{startDate, endDate};
-        } else {
-            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
-            LocalDate endDate = LocalDate.now ();
-            dates = new LocalDate[]{startDate, endDate};
-        }
-        return figureCollect ( dates );
-    }
-
-
-    @Override
-    public byte[] exportExcel(ExportSubjectCollectTO to) throws SerException {
-        LocalDate[] dates = null;
-        String firstSubject = to.getFirstSubject ();
-        if (StringUtils.isNotBlank ( to.getStartTime () ) && StringUtils.isNotBlank ( to.getEndTime () )) {
-            LocalDate startDate = DateUtil.parseDate ( to.getStartTime () );
-            LocalDate endDate = DateUtil.parseDate ( to.getEndTime () );
-            dates = new LocalDate[]{startDate, endDate};
-        } else if (StringUtils.isNotBlank ( to.getStartTime () ) && StringUtils.isBlank ( to.getEndTime () )) {
-            LocalDate startDate = DateUtil.parseDate ( to.getStartTime () );
-            LocalDate endDate = LocalDate.now ();
-            dates = new LocalDate[]{startDate, endDate};
-        } else if (StringUtils.isBlank ( to.getStartTime () ) && StringUtils.isNotBlank ( to.getEndTime () )) {
-            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
-            LocalDate endDate = DateUtil.parseDate ( to.getEndTime () );
-            dates = new LocalDate[]{startDate, endDate};
-        } else {
-            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
-            LocalDate endDate = LocalDate.now ();
-            dates = new LocalDate[]{startDate, endDate};
-        }
-        List<FirstSubjectBO> list = figureCollect ( dates, firstSubject );
-        List<SubjectIntroExport> subjectIntroExports = new ArrayList<> ();
-        Map<Integer, List<Integer>> integerListMap = new HashMap<> ();
-        List<Map<String, List<SubjectIntroExport>>> maps = new ArrayList<> ();
-        Map<String, List<SubjectIntroExport>> listMap = new HashMap<> ();
-        if (list != null && list.size () > 0) {
-            for (int i = 0; i <= list.size (); i++) {
-                List<Integer> departmentListNumber = new ArrayList<> ();
-                List<Integer> areaListNumber = new ArrayList<> ();
-                List<Integer> subjectListNumber = new ArrayList<> ();
-                List<Integer> allListNumber = new ArrayList<> ();
-                Integer subjectNumber = 0;
-                Integer firstSubjectNumber = 0;
-                Integer allNumber = 0;
-                SubjectIntroExport subjectIntroExport = new SubjectIntroExport ();
-                subjectIntroExport.setFirstSubject ( list.get ( i ).getFirstSubject () );
-
-                List<AreaSubjectBO> areaSubjectBOS = list.get ( i ).getAreaSubjectList ();
-                for (int a = 0; a < areaSubjectBOS.size (); a++) {
-                    Integer areaNumber = 0;
-                    List<DepartmentSubjectBO> departmentSubjectBOS = areaSubjectBOS.get ( a ).getDepartmentSubjectList ();
-                    subjectIntroExport.setArea ( areaSubjectBOS.get ( a ).getArea () );
-                    for (int b = 0; b < departmentSubjectBOS.size (); b++) {
-                        Integer deartpmetnNumber = 0;
-                        subjectIntroExport.setDepartment ( departmentSubjectBOS.get ( b ).getDepartment () );
-                        List<SubjectCollectsBO> subjectCollectsBOS = departmentSubjectBOS.get ( b ).getSubjectCollectList ();
-                        for (SubjectCollectsBO subjectCollectsBO : subjectCollectsBOS) {
-                            subjectIntroExport.setProject ( subjectCollectsBO.getProject () );
-                            subjectIntroExport.setBeginBorrowMoney ( subjectCollectsBO.getBeginBorrowMoney () );
-                            subjectIntroExport.setBeginLoanMoney ( subjectCollectsBO.getBeginLoanMoney () );
-                            subjectIntroExport.setCurrentBorrowMoney ( subjectCollectsBO.getCurrentBorrowMoney () );
-                            subjectIntroExport.setCurrentLoanMoney ( subjectCollectsBO.getCurrentLoanMoney () );
-                            subjectIntroExport.setEndBorrowMoney ( subjectCollectsBO.getEndBorrowMoney () );
-                            subjectIntroExport.setEndLoanMoney ( subjectCollectsBO.getEndLoanMoney () );
-                            subjectIntroExports.add ( subjectIntroExport );
-                        }
-                        firstSubjectNumber = subjectCollectsBOS.size ();
-                        allNumber += firstSubjectNumber;
-                        deartpmetnNumber += firstSubjectNumber;
-                        departmentListNumber.add ( deartpmetnNumber );
-                        areaNumber += deartpmetnNumber;
-                    }
-                    areaListNumber.add ( areaNumber );
-                }
-                subjectNumber = allNumber;
-                subjectListNumber.add ( subjectNumber );
-                allListNumber.addAll ( departmentListNumber );
-                allListNumber.addAll ( subjectListNumber );
-                allListNumber.addAll ( areaListNumber );
-                integerListMap.put ( i, allListNumber );
-            }
-
-        }
-
-        //导出
-        Excel excel = new Excel ( 0, 2 );
-        byte[] bytes = ExcelUtil.clazzToExcel ( subjectIntroExports, excel );
-        XSSFWorkbook wb = null;
-        ByteArrayOutputStream os = null;
-        try {
-            InputStream is = new ByteArrayInputStream ( bytes );
-            wb = new XSSFWorkbook ( is );
-            XSSFSheet sheet;
-            sheet = wb.getSheetAt ( 0 );
-            //主表行数
-            int rowSize = list.size ();
-            List<Field> fields = ClazzUtils.getFields ( SubjectIntroExport.class ); //获得列表对象属性
-            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders ( fields, null );
-
-            int index = 0;
-            int lastRow = 0;
-            for (int j = 0; j < rowSize; j++) {
-
-                int x = 0;
-                //List<int> maxList所有子表的长度
-                if (null != integerListMap.get ( j ) && integerListMap.get ( j ).size () > 0) {
-//                    PositionWorkDetails mainPwd = list.get(j);
-                    int mergeRowCount = integerListMap.get ( j ).get ( j );
-                    //5
-                    if (mergeRowCount != 1) {
-                        int firstRow = index;
-                        lastRow = firstRow + mergeRowCount - 1;
-                        //合并主表共33列
-                        for (int i = 1; i < 3; i++) {
-                            //1,5
-                            sheet.addMergedRegion ( new CellRangeAddress ( firstRow, lastRow, i, i ) );
-                            x = 3;
-                        }
-                        //合并模快
-                        Map<Integer, List<Integer>> mergeMLen = integerListMap;
-                        //获取规划模块合并长度数据
-                        List<Integer> ghMergeLen = mergeMLen.get ( j );
-                        if (null != ghMergeLen && ghMergeLen.size () > 0) {
-                            int mfirstRow = firstRow;
-                            int mMergeRowCount = 0;
-                            for (Integer mi : ghMergeLen) {
-                                if (mi != 1) {
-                                    int mlastRow = (firstRow - 1) + mMergeRowCount + mi;
-                                    for (int z = x; z < x + 19; z++) {
-                                        sheet.addMergedRegion ( new CellRangeAddress ( mfirstRow, mlastRow, z, z ) );
-                                    }
-                                    x += 19;
-                                    mfirstRow = mlastRow + 1;
-                                    mMergeRowCount = mMergeRowCount + mi;
-                                }
-                            }
-                        }
-
-                        lastRow--;
-                    }
-                }
-                lastRow++;
-                index = lastRow + 1;
-            }
-
-
-            os = new ByteArrayOutputStream ();
-            wb.write ( os );
-        } catch (Exception e) {
-            e.printStackTrace ();
-        }
-
-        return os.toByteArray ();
-    }
-
-    @Override
-    public List<String> findFirstSubject() throws SerException {
-        Set<String> set = new HashSet<> ();
-        List<VoucherGenerate> voucherGenerates = super.findAll ();
-        for (VoucherGenerate voucherGenerate : voucherGenerates) {
-            set.add ( voucherGenerate.getFirstSubject () );
-        }
-        return new ArrayList<> ( set );
-    }
-
-
-    private List<FirstSubjectBO> figureCollect(LocalDate[] dates) throws SerException {
-        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
-        voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", dates ) );
-        voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
-        List<VoucherGenerateBO> boList = voucherGenerateAPI.listNoPage ( voucherGenerateDTO );
-        List<FirstSubjectBO> firstSubjectBOS = new ArrayList<> ();
-        if (boList != null && boList.size () > 0) {
-            Set<String> firstSubjects = boList.stream ().map ( p -> p.getFirstSubject () ).collect ( Collectors.toSet () );
-            Set<String> voucherDates = boList.stream ().map ( p -> p.getVoucherDate () ).collect ( Collectors.toSet () );
-
-            for (String voucherDate : voucherDates) {
-                for (String firstSubject : firstSubjects) {
-                    FirstSubjectBO firstSubjectBO = getFirstSubjectBO ( voucherDate, firstSubject );
-                    firstSubjectBOS.add ( firstSubjectBO );
-                }
-                Map<String, List<Integer>> map = new HashMap<> ();
-            }
-        }
-
-        return firstSubjectBOS;
-    }
-
-    private List<FirstSubjectBO> figureCollect(LocalDate[] dates, String firstSubject) throws SerException {
-        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
-        voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", dates ) );
-        voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
-        List<VoucherGenerateBO> boList = voucherGenerateAPI.listNoPage ( voucherGenerateDTO );
-        Set<String> voucherDates = boList.stream ().map ( p -> p.getVoucherDate () ).collect ( Collectors.toSet () );
-        List<FirstSubjectBO> firstSubjectBOS = new ArrayList<> ();
-        if (StringUtils.isNotBlank ( firstSubject )) {
-            for (String voucherDate : voucherDates) {
-                FirstSubjectBO firstSubjectBO = getFirstSubjectBO ( voucherDate, firstSubject );
-                firstSubjectBOS.add ( firstSubjectBO );
-            }
-        } else {
-            firstSubjectBOS = figureCollect ( dates );
-        }
-        return firstSubjectBOS;
-    }
-
-    private FirstSubjectBO getFirstSubjectBO(String time, String firstSubject) throws SerException {
-        LocalDate voucherDate = DateUtil.parseDate ( time );
-        FirstSubjectBO firstSubjectBO = new FirstSubjectBO ();
-        VoucherGenerateDTO voucherGenerateDTO1 = new VoucherGenerateDTO ();
-        voucherGenerateDTO1.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
-        voucherGenerateDTO1.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
-        List<VoucherGenerateBO> voucherGenerateBOS = voucherGenerateAPI.listNoPage ( voucherGenerateDTO1 );
-        Set<String> areas = voucherGenerateBOS.stream ().map ( p -> p.getArea () ).collect ( Collectors.toSet () );
-        List<AreaSubjectBO> areaSubjectBOS = new ArrayList<> ();
-        for (String area : areas) {
-            AreaSubjectBO areaSubjectBO = new AreaSubjectBO ();
-            VoucherGenerateDTO voucherGenerateDTO5 = new VoucherGenerateDTO ();
-            voucherGenerateDTO5.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
-            voucherGenerateDTO5.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
-            voucherGenerateDTO5.getConditions ().add ( Restrict.eq ( "area", area ) );
-            List<VoucherGenerateBO> voucherGenerateBOS4 = voucherGenerateAPI.listNoPage ( voucherGenerateDTO5 );
-            Set<String> departments = voucherGenerateBOS4.stream ().map ( p -> p.getProjectGroup () ).collect ( Collectors.toSet () );
-            List<DepartmentSubjectBO> departmentSubjectBOS = new ArrayList<> ();
-            for (String department : departments) {
-                DepartmentSubjectBO departmentSubjectBO = new DepartmentSubjectBO ();
-                VoucherGenerateDTO voucherGenerateDTO2 = new VoucherGenerateDTO ();
-                voucherGenerateDTO2.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
-                voucherGenerateDTO2.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
-                voucherGenerateDTO2.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
-                List<VoucherGenerateBO> voucherGenerateBOS1 = voucherGenerateAPI.listVoucherGenerate ( voucherGenerateDTO1 );
-                Set<String> projects = voucherGenerateBOS1.stream ().map ( p -> p.getProjectName () ).collect ( Collectors.toSet () );
-                List<SubjectCollectsBO> subjectCollectsBOS = new ArrayList<> ();
-                for (String project : projects) {
-                    //期初借方余额
-                    Double beginBorrowMoney = 0.0;
-                    //期初贷方余额
-                    Double beginLoanMoney = 0.0;
-                    //本期借方余额
-                    Double currentBorrowMoney = 0.0;
-                    //本期贷方余额
-                    Double currentLoanMoney = 0.0;
-                    //期末借方发生额
-                    Double endBorrowMoney = 0.0;
-                    //期末贷方发生额
-                    Double endLoanMoney = 0.0;
-                    //本年借方统计
-                    Double currentYearBorrowMoney = 0.0;
-                    //本年贷方统计
-                    Double currentYearLoanMoney = 0.0;
-
-                    VoucherGenerateDTO voucherGenerateDTO3 = new VoucherGenerateDTO ();
-                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
-                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
-                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "projectName", project ) );
-                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
-                    List<VoucherGenerateBO> voucherGenerateBOS2 = voucherGenerateAPI.listNoPage ( voucherGenerateDTO3 );
-
-                    Integer year = Integer.valueOf ( time.substring ( 0, 4 ) );
-                    Integer month = Integer.valueOf ( time.substring ( 5, 7 ) );
-                    LocalDate startDate = DateUtil.getStartDayOfMonth ( year, month );
-                    LocalDate endDate = startDate.minusDays ( 1 );
-                    VoucherGenerateDTO voucherGenerateDTO4 = new VoucherGenerateDTO ();
-                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
-                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
-                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "projectName", project ) );
-                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "voucherDate", endDate ) );
-                    List<VoucherGenerateBO> voucherGenerateBOS3 = voucherGenerateAPI.listNoPage ( voucherGenerateDTO4 );
-
-                    LocalDate startTime = DateUtil.parseDate ( year + "-01-01" );
-                    LocalDate endTime = DateUtil.parseDate ( year + "-12-31" );
-                    LocalDate[] times = new LocalDate[]{startTime, endTime};
-                    VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
-                    voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
-                    voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
-                    voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "projectName", project ) );
-                    voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
-                    List<VoucherGenerateBO> voucherGenerateBOS5 = voucherGenerateAPI.listNoPage ( voucherGenerateDTO );
-
-                    if (voucherGenerateBOS3 != null && voucherGenerateBOS3.size () > 0) {
-                        beginBorrowMoney = voucherGenerateBOS3.stream ().filter ( p -> p.getBorrowMoney () != null ).mapToDouble ( p -> p.getBorrowMoney () ).sum ();
-                        beginLoanMoney = voucherGenerateBOS3.stream ().filter ( p -> p.getLoanMoney () != null ).mapToDouble ( p -> p.getLoanMoney () ).sum ();
-                    }
-
-                    if (voucherGenerateBOS2 != null && voucherGenerateBOS2.size () > 0) {
-                        currentBorrowMoney = voucherGenerateBOS2.stream ().filter ( p -> p.getBorrowMoney () != null ).mapToDouble ( p -> p.getBorrowMoney () ).sum ();
-                        currentLoanMoney = voucherGenerateBOS2.stream ().filter ( p -> p.getLoanMoney () != null ).mapToDouble ( p -> p.getLoanMoney () ).sum ();
-                    }
-
-                    if (voucherGenerateBOS5 != null && voucherGenerateBOS5.size () > 0) {
-                        currentYearBorrowMoney = voucherGenerateBOS5.stream ().filter ( p -> p.getBorrowMoney () != null ).mapToDouble ( p -> p.getBorrowMoney () ).sum ();
-                        currentYearLoanMoney = voucherGenerateBOS5.stream ().filter ( p -> p.getLoanMoney () != null ).mapToDouble ( p -> p.getLoanMoney () ).sum ();
-                    }
-                    endBorrowMoney = beginBorrowMoney - currentBorrowMoney;
-                    endLoanMoney = beginLoanMoney - currentLoanMoney;
-
-                    SubjectCollectsBO subjectCollectsBO = new SubjectCollectsBO ();
-                    subjectCollectsBO.setProject ( project );
-                    subjectCollectsBO.setBeginBorrowMoney ( beginBorrowMoney );
-                    subjectCollectsBO.setBeginLoanMoney ( beginLoanMoney );
-                    subjectCollectsBO.setCurrentBorrowMoney ( currentBorrowMoney );
-                    subjectCollectsBO.setCurrentLoanMoney ( currentLoanMoney );
-                    subjectCollectsBO.setEndBorrowMoney ( endBorrowMoney );
-                    subjectCollectsBO.setEndLoanMoney ( endLoanMoney );
-                    subjectCollectsBO.setCurrentYearBorrowMoney ( currentYearBorrowMoney );
-                    subjectCollectsBO.setCurrentLoanMoney ( currentLoanMoney );
-                    subjectCollectsBOS.add ( subjectCollectsBO );
-                }
-                departmentSubjectBO.setDepartment ( department );
-                departmentSubjectBO.setSubjectCollectList ( subjectCollectsBOS );
-                departmentSubjectBOS.add ( departmentSubjectBO );
-            }
-            areaSubjectBO.setArea ( area );
-            areaSubjectBO.setDepartmentSubjectList ( departmentSubjectBOS );
-            areaSubjectBOS.add ( areaSubjectBO );
-        }
-        firstSubjectBO.setFirstSubject ( firstSubject );
-        firstSubjectBO.setAreaSubjectList ( areaSubjectBOS );
-        return firstSubjectBO;
-    }
-
     //tar:true,获取借方,false,获取贷方
     @Override
     public Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         Double current = 0d;
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO ();
-//        BeanUtils.copyProperties(subjectCollectDTO, dto);
         dto.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
         dto.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
         List<VoucherGenerate> list = super.findByCis ( dto );
+        if (null == list || list.size () < 1) {
+            VoucherGenerateDTO dto1 = new VoucherGenerateDTO ();
+            dto1.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+            dto1.getConditions ().add ( Restrict.eq ( "secondSubject", firstSubject ) );
+            list = super.findByCis ( dto1 );
+            if (null == list || list.size () < 1) {
+                VoucherGenerateDTO dto2 = new VoucherGenerateDTO ();
+                dto2.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+                dto2.getConditions ().add ( Restrict.eq ( "thirdSubject", firstSubject ) );
+                list = super.findByCis ( dto2 );
+            }
+        }
+
         if (null != list && list.size () > 0) {
             if (tar) {
                 current = list.stream ().filter ( obj -> !"结转".equals ( obj.getSumary ().substring ( obj.getSumary ().length () - 2, obj.getSumary ().length () ) ) ).mapToDouble ( obj -> obj.getBorrowMoney () ).sum () -
@@ -4165,4 +3810,344 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerateBO> voucherGenerateBOS = super.findBySql ( sql.toString (), VoucherGenerateBO.class, feilds );
         return voucherGenerateBOS;
     }
+
+
+    @Override
+    public List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException {
+        LocalDate[] dates = null;
+        if (StringUtils.isNotBlank ( dto.getStartTime () ) && StringUtils.isNotBlank ( dto.getEndTime () )) {
+            LocalDate startDate = DateUtil.parseDate ( dto.getStartTime () );
+            LocalDate endDate = DateUtil.parseDate ( dto.getEndTime () );
+            dates = new LocalDate[]{startDate, endDate};
+        } else if (StringUtils.isNotBlank ( dto.getStartTime () ) && StringUtils.isBlank ( dto.getEndTime () )) {
+            LocalDate startDate = DateUtil.parseDate ( dto.getStartTime () );
+            LocalDate endDate = LocalDate.now ();
+            dates = new LocalDate[]{startDate, endDate};
+        } else if (StringUtils.isBlank ( dto.getStartTime () ) && StringUtils.isNotBlank ( dto.getEndTime () )) {
+            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
+            LocalDate endDate = DateUtil.parseDate ( dto.getEndTime () );
+            dates = new LocalDate[]{startDate, endDate};
+        } else {
+            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
+            LocalDate endDate = LocalDate.now ();
+            dates = new LocalDate[]{startDate, endDate};
+        }
+        return figureCollect ( dates );
+    }
+
+    @Override
+    public byte[] exportExcel(ExportSubjectCollectTO to) throws SerException {
+        LocalDate[] dates = null;
+        String firstSubject = to.getFirstSubject ();
+        if (StringUtils.isNotBlank ( to.getStartTime () ) && StringUtils.isNotBlank ( to.getEndTime () )) {
+            LocalDate startDate = DateUtil.parseDate ( to.getStartTime () );
+            LocalDate endDate = DateUtil.parseDate ( to.getEndTime () );
+            dates = new LocalDate[]{startDate, endDate};
+        } else if (StringUtils.isNotBlank ( to.getStartTime () ) && StringUtils.isBlank ( to.getEndTime () )) {
+            LocalDate startDate = DateUtil.parseDate ( to.getStartTime () );
+            LocalDate endDate = LocalDate.now ();
+            dates = new LocalDate[]{startDate, endDate};
+        } else if (StringUtils.isBlank ( to.getStartTime () ) && StringUtils.isNotBlank ( to.getEndTime () )) {
+            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
+            LocalDate endDate = DateUtil.parseDate ( to.getEndTime () );
+            dates = new LocalDate[]{startDate, endDate};
+        } else {
+            LocalDate startDate = DateUtil.parseDate ( "1901-01-01" );
+            LocalDate endDate = LocalDate.now ();
+            dates = new LocalDate[]{startDate, endDate};
+        }
+        List<FirstSubjectBO> list = figureCollect ( dates, firstSubject );
+        List<SubjectIntroExport> subjectIntroExports = new ArrayList<> ();
+        Map<Integer, List<Integer>> integerListMap = new HashMap<> ();
+        List<Map<String, List<SubjectIntroExport>>> maps = new ArrayList<> ();
+        Map<String, List<SubjectIntroExport>> listMap = new HashMap<> ();
+        if (list != null && list.size () > 0) {
+            for (int i = 0; i <= list.size (); i++) {
+                List<Integer> departmentListNumber = new ArrayList<> ();
+                List<Integer> areaListNumber = new ArrayList<> ();
+                List<Integer> subjectListNumber = new ArrayList<> ();
+                List<Integer> allListNumber = new ArrayList<> ();
+                Integer subjectNumber = 0;
+                Integer firstSubjectNumber = 0;
+                Integer allNumber = 0;
+                SubjectIntroExport subjectIntroExport = new SubjectIntroExport ();
+                subjectIntroExport.setFirstSubject ( list.get ( i ).getFirstSubject () );
+
+                List<AreaSubjectBO> areaSubjectBOS = list.get ( i ).getAreaSubjectList ();
+                for (int a = 0; a < areaSubjectBOS.size (); a++) {
+                    Integer areaNumber = 0;
+                    List<DepartmentSubjectBO> departmentSubjectBOS = areaSubjectBOS.get ( a ).getDepartmentSubjectList ();
+                    subjectIntroExport.setArea ( areaSubjectBOS.get ( a ).getArea () );
+                    for (int b = 0; b < departmentSubjectBOS.size (); b++) {
+                        Integer deartpmetnNumber = 0;
+                        subjectIntroExport.setDepartment ( departmentSubjectBOS.get ( b ).getDepartment () );
+                        List<SubjectCollectsBO> subjectCollectsBOS = departmentSubjectBOS.get ( b ).getSubjectCollectList ();
+                        for (SubjectCollectsBO subjectCollectsBO : subjectCollectsBOS) {
+                            subjectIntroExport.setProject ( subjectCollectsBO.getProject () );
+                            subjectIntroExport.setBeginBorrowMoney ( subjectCollectsBO.getBeginBorrowMoney () );
+                            subjectIntroExport.setBeginLoanMoney ( subjectCollectsBO.getBeginLoanMoney () );
+                            subjectIntroExport.setCurrentBorrowMoney ( subjectCollectsBO.getCurrentBorrowMoney () );
+                            subjectIntroExport.setCurrentLoanMoney ( subjectCollectsBO.getCurrentLoanMoney () );
+                            subjectIntroExport.setEndBorrowMoney ( subjectCollectsBO.getEndBorrowMoney () );
+                            subjectIntroExport.setEndLoanMoney ( subjectCollectsBO.getEndLoanMoney () );
+                            subjectIntroExports.add ( subjectIntroExport );
+                        }
+                        firstSubjectNumber = subjectCollectsBOS.size ();
+                        allNumber += firstSubjectNumber;
+                        deartpmetnNumber += firstSubjectNumber;
+                        departmentListNumber.add ( deartpmetnNumber );
+                        areaNumber += deartpmetnNumber;
+                    }
+                    areaListNumber.add ( areaNumber );
+                }
+                subjectNumber = allNumber;
+                subjectListNumber.add ( subjectNumber );
+                allListNumber.addAll ( departmentListNumber );
+                allListNumber.addAll ( subjectListNumber );
+                allListNumber.addAll ( areaListNumber );
+                integerListMap.put ( i, allListNumber );
+            }
+
+        }
+
+        //导出
+        Excel excel = new Excel ( 0, 2 );
+        byte[] bytes = ExcelUtil.clazzToExcel ( subjectIntroExports, excel );
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream ( bytes );
+            wb = new XSSFWorkbook ( is );
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt ( 0 );
+            //主表行数
+            int rowSize = list.size ();
+            List<Field> fields = ClazzUtils.getFields ( SubjectIntroExport.class ); //获得列表对象属性
+            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders ( fields, null );
+
+            int index = 0;
+            int lastRow = 0;
+            for (int j = 0; j < rowSize; j++) {
+
+                int x = 0;
+                //List<int> maxList所有子表的长度
+                if (null != integerListMap.get ( j ) && integerListMap.get ( j ).size () > 0) {
+//                    PositionWorkDetails mainPwd = list.get(j);
+                    int mergeRowCount = integerListMap.get ( j ).get ( j );
+                    //5
+                    if (mergeRowCount != 1) {
+                        int firstRow = index;
+                        lastRow = firstRow + mergeRowCount - 1;
+                        //合并主表共33列
+                        for (int i = 1; i < 3; i++) {
+                            //1,5
+                            sheet.addMergedRegion ( new CellRangeAddress ( firstRow, lastRow, i, i ) );
+                            x = 3;
+                        }
+                        //合并模快
+                        Map<Integer, List<Integer>> mergeMLen = integerListMap;
+                        //获取规划模块合并长度数据
+                        List<Integer> ghMergeLen = mergeMLen.get ( j );
+                        if (null != ghMergeLen && ghMergeLen.size () > 0) {
+                            int mfirstRow = firstRow;
+                            int mMergeRowCount = 0;
+                            for (Integer mi : ghMergeLen) {
+                                if (mi != 1) {
+                                    int mlastRow = (firstRow - 1) + mMergeRowCount + mi;
+                                    for (int z = x; z < x + 19; z++) {
+                                        sheet.addMergedRegion ( new CellRangeAddress ( mfirstRow, mlastRow, z, z ) );
+                                    }
+                                    x += 19;
+                                    mfirstRow = mlastRow + 1;
+                                    mMergeRowCount = mMergeRowCount + mi;
+                                }
+                            }
+                        }
+
+                        lastRow--;
+                    }
+                }
+                lastRow++;
+                index = lastRow + 1;
+            }
+
+
+            os = new ByteArrayOutputStream ();
+            wb.write ( os );
+        } catch (Exception e) {
+            e.printStackTrace ();
+        }
+
+        return os.toByteArray ();
+    }
+
+
+    private List<FirstSubjectBO> figureCollect(LocalDate[] dates, String firstSubject) throws SerException {
+        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
+        voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", dates ) );
+        voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
+        List<VoucherGenerateBO> boList = listNoPage ( voucherGenerateDTO );
+        Set<String> voucherDates = boList.stream ().map ( p -> p.getVoucherDate () ).collect ( Collectors.toSet () );
+        List<FirstSubjectBO> firstSubjectBOS = new ArrayList<> ();
+        if (StringUtils.isNotBlank ( firstSubject )) {
+            for (String voucherDate : voucherDates) {
+                FirstSubjectBO firstSubjectBO = getFirstSubjectBO ( voucherDate, firstSubject );
+                firstSubjectBOS.add ( firstSubjectBO );
+            }
+        } else {
+            firstSubjectBOS = figureCollect ( dates );
+        }
+        return firstSubjectBOS;
+    }
+
+
+    private List<FirstSubjectBO> figureCollect(LocalDate[] dates) throws SerException {
+        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
+        voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", dates ) );
+        voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
+        List<VoucherGenerateBO> boList = listNoPage ( voucherGenerateDTO );
+        List<FirstSubjectBO> firstSubjectBOS = new ArrayList<> ();
+        if (boList != null && boList.size () > 0) {
+            Set<String> firstSubjects = boList.stream ().map ( p -> p.getFirstSubject () ).collect ( Collectors.toSet () );
+            Set<String> voucherDates = boList.stream ().map ( p -> p.getVoucherDate () ).collect ( Collectors.toSet () );
+            for (String voucherDate : voucherDates) {
+                for (String firstSubject : firstSubjects) {
+                    FirstSubjectBO firstSubjectBO = getFirstSubjectBO ( voucherDate, firstSubject );
+                    firstSubjectBOS.add ( firstSubjectBO );
+                }
+                Map<String, List<Integer>> map = new HashMap<> ();
+            }
+        }
+
+
+        return firstSubjectBOS;
+    }
+
+
+    private FirstSubjectBO getFirstSubjectBO(String time, String firstSubject) throws SerException {
+        LocalDate voucherDate = DateUtil.parseDate ( time );
+        FirstSubjectBO firstSubjectBO = new FirstSubjectBO ();
+        VoucherGenerateDTO voucherGenerateDTO1 = new VoucherGenerateDTO ();
+        voucherGenerateDTO1.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
+        voucherGenerateDTO1.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
+        List<VoucherGenerateBO> voucherGenerateBOS = listNoPage ( voucherGenerateDTO1 );
+        Set<String> areas = voucherGenerateBOS.stream ().map ( p -> p.getArea () ).collect ( Collectors.toSet () );
+        List<AreaSubjectBO> areaSubjectBOS = new ArrayList<> ();
+        for (String area : areas) {
+            AreaSubjectBO areaSubjectBO = new AreaSubjectBO ();
+            VoucherGenerateDTO voucherGenerateDTO5 = new VoucherGenerateDTO ();
+            voucherGenerateDTO5.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
+            voucherGenerateDTO5.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
+            voucherGenerateDTO5.getConditions ().add ( Restrict.eq ( "area", area ) );
+            List<VoucherGenerateBO> voucherGenerateBOS4 = listNoPage ( voucherGenerateDTO5 );
+            Set<String> departments = voucherGenerateBOS4.stream ().map ( p -> p.getProjectGroup () ).collect ( Collectors.toSet () );
+            List<DepartmentSubjectBO> departmentSubjectBOS = new ArrayList<> ();
+            for (String department : departments) {
+                DepartmentSubjectBO departmentSubjectBO = new DepartmentSubjectBO ();
+                VoucherGenerateDTO voucherGenerateDTO2 = new VoucherGenerateDTO ();
+                voucherGenerateDTO2.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
+                voucherGenerateDTO2.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
+                voucherGenerateDTO2.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
+                List<VoucherGenerateBO> voucherGenerateBOS1 = listVoucherGenerate ( voucherGenerateDTO1 );
+                Set<String> projects = voucherGenerateBOS1.stream ().map ( p -> p.getProjectName () ).collect ( Collectors.toSet () );
+                List<SubjectCollectsBO> subjectCollectsBOS = new ArrayList<> ();
+                for (String project : projects) {
+                    //期初借方余额
+                    Double beginBorrowMoney = 0.0;
+                    //期初贷方余额
+                    Double beginLoanMoney = 0.0;
+                    //本期借方余额
+                    Double currentBorrowMoney = 0.0;
+                    //本期贷方余额
+                    Double currentLoanMoney = 0.0;
+                    //期末借方发生额
+                    Double endBorrowMoney = 0.0;
+                    //期末贷方发生额
+                    Double endLoanMoney = 0.0;
+                    //本年借方统计
+                    Double currentYearBorrowMoney = 0.0;
+                    //本年贷方统计
+                    Double currentYearLoanMoney = 0.0;
+
+                    VoucherGenerateDTO voucherGenerateDTO3 = new VoucherGenerateDTO ();
+                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
+                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
+                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "projectName", project ) );
+                    voucherGenerateDTO3.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
+                    List<VoucherGenerateBO> voucherGenerateBOS2 = listNoPage ( voucherGenerateDTO3 );
+
+                    Integer year = Integer.valueOf ( time.substring ( 0, 4 ) );
+                    Integer month = Integer.valueOf ( time.substring ( 5, 7 ) );
+                    LocalDate startDate = DateUtil.getStartDayOfMonth ( year, month );
+                    LocalDate endDate = startDate.minusDays ( 1 );
+                    VoucherGenerateDTO voucherGenerateDTO4 = new VoucherGenerateDTO ();
+                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
+                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
+                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "projectName", project ) );
+                    voucherGenerateDTO4.getConditions ().add ( Restrict.eq ( "voucherDate", endDate ) );
+                    List<VoucherGenerateBO> voucherGenerateBOS3 = listNoPage ( voucherGenerateDTO4 );
+
+                    LocalDate startTime = DateUtil.parseDate ( year + "-01-01" );
+                    LocalDate endTime = DateUtil.parseDate ( year + "-12-31" );
+                    LocalDate[] times = new LocalDate[]{startTime, endTime};
+                    VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
+                    voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
+                    voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "projectGroup", department ) );
+                    voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "projectName", project ) );
+                    voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", times ) );
+                    List<VoucherGenerateBO> voucherGenerateBOS5 = listNoPage ( voucherGenerateDTO );
+
+                    if (voucherGenerateBOS3 != null && voucherGenerateBOS3.size () > 0) {
+                        beginBorrowMoney = voucherGenerateBOS3.stream ().filter ( p -> p.getBorrowMoney () != null ).mapToDouble ( p -> p.getBorrowMoney () ).sum ();
+                        beginLoanMoney = voucherGenerateBOS3.stream ().filter ( p -> p.getLoanMoney () != null ).mapToDouble ( p -> p.getLoanMoney () ).sum ();
+                    }
+
+                    if (voucherGenerateBOS2 != null && voucherGenerateBOS2.size () > 0) {
+                        currentBorrowMoney = voucherGenerateBOS2.stream ().filter ( p -> p.getBorrowMoney () != null ).mapToDouble ( p -> p.getBorrowMoney () ).sum ();
+                        currentLoanMoney = voucherGenerateBOS2.stream ().filter ( p -> p.getLoanMoney () != null ).mapToDouble ( p -> p.getLoanMoney () ).sum ();
+                    }
+
+                    if (voucherGenerateBOS5 != null && voucherGenerateBOS5.size () > 0) {
+                        currentYearBorrowMoney = voucherGenerateBOS5.stream ().filter ( p -> p.getBorrowMoney () != null ).mapToDouble ( p -> p.getBorrowMoney () ).sum ();
+                        currentYearLoanMoney = voucherGenerateBOS5.stream ().filter ( p -> p.getLoanMoney () != null ).mapToDouble ( p -> p.getLoanMoney () ).sum ();
+                    }
+                    endBorrowMoney = beginBorrowMoney - currentBorrowMoney;
+                    endLoanMoney = beginLoanMoney - currentLoanMoney;
+
+                    SubjectCollectsBO subjectCollectsBO = new SubjectCollectsBO ();
+                    subjectCollectsBO.setProject ( project );
+                    subjectCollectsBO.setBeginBorrowMoney ( beginBorrowMoney );
+                    subjectCollectsBO.setBeginLoanMoney ( beginLoanMoney );
+                    subjectCollectsBO.setCurrentBorrowMoney ( currentBorrowMoney );
+                    subjectCollectsBO.setCurrentLoanMoney ( currentLoanMoney );
+                    subjectCollectsBO.setEndBorrowMoney ( endBorrowMoney );
+                    subjectCollectsBO.setEndLoanMoney ( endLoanMoney );
+                    subjectCollectsBO.setCurrentYearBorrowMoney ( currentYearBorrowMoney );
+                    subjectCollectsBO.setCurrentLoanMoney ( currentLoanMoney );
+                    subjectCollectsBOS.add ( subjectCollectsBO );
+                }
+                departmentSubjectBO.setDepartment ( department );
+                departmentSubjectBO.setSubjectCollectList ( subjectCollectsBOS );
+                departmentSubjectBOS.add ( departmentSubjectBO );
+            }
+            areaSubjectBO.setArea ( area );
+            areaSubjectBO.setDepartmentSubjectList ( departmentSubjectBOS );
+            areaSubjectBOS.add ( areaSubjectBO );
+        }
+        firstSubjectBO.setFirstSubject ( firstSubject );
+        firstSubjectBO.setAreaSubjectList ( areaSubjectBOS );
+        return firstSubjectBO;
+    }
+
+    @Override
+    public List<String> findFirstSubject() throws SerException {
+        Set<String> set = new HashSet<> ();
+        List<VoucherGenerate> voucherGenerates = super.findAll ();
+        for (VoucherGenerate voucherGenerate : voucherGenerates) {
+            set.add ( voucherGenerate.getFirstSubject () );
+        }
+        return new ArrayList<> ( set );
+    }
+
 }
+

@@ -77,7 +77,7 @@ public class RecruitChannelAction {
         }
     }
     /**
-     * 渠道汇总
+     * 面试率汇总
      *
      * @param to 渠道汇总dto
      * @return class OptionPieBO
@@ -93,7 +93,7 @@ public class RecruitChannelAction {
         }
     }
     /**
-     * 渠道汇总
+     * 入职率汇总
      *
      * @param to 渠道汇总dto
      * @return class OptionPieBO

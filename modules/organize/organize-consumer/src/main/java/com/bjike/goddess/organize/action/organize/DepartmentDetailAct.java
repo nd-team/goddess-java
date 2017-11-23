@@ -292,4 +292,12 @@ public class DepartmentDetailAct {
             throw new ActException(e.getMessage());
         }
     }
+    @GetMapping("v1/departmentTotalPeople")
+    public Result departmentTotalPeople(String dep) throws ActException {
+        try {
+            return ActResult.initialize(departmentDetailAPI.departmentTotalPeople(dep));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

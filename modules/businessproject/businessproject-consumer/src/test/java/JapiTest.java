@@ -25,6 +25,7 @@ public class JapiTest {
 				"modules/user/user-api",
 				"modules/organize/organize-api",
 				"modules/storage/storage-api",
+				"modules/taskallotment/taskallotment-api",
 				"common/common-api"
 		});
 		JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

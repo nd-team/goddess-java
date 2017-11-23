@@ -161,8 +161,10 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
      */
     private BusinessCourseBO transformBO(BusinessCourse entity) {
         BusinessCourseBO bo = BeanTransform.copyProperties(entity, BusinessCourseBO.class);
-        bo.setTypeId(entity.getType().getId());
-        bo.setTypeName(entity.getType().getType());
+        BusinessCourseDTO dto = new BusinessCourseDTO();
+        dto.getSorts().add("businessNum=asc");
+        dto.getSorts().add("subjectNum=asc");
+
         return bo;
     }
 
@@ -173,6 +175,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
      * @return
      */
     private List<BusinessCourseBO> transformBOList(List<BusinessCourse> list) {
+
         List<BusinessCourseBO> bos = new ArrayList<>(list.size());
         for (BusinessCourse entity : list)
             bos.add(this.transformBO(entity));
@@ -182,10 +185,9 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO save(BusinessCourseTO to) throws SerException {
-//        if (!marPermissionSer.getMarPermission(marketManage))
-//            throw new SerException("您的帐号没有权限");
         BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
-        entity.setType(typeSer.findById(to.getTypeId()));
+
+        //entity.setType(typeSer.findById(to.getTypeId()));
         entity.setStatus(Status.THAW);
         super.save(entity);
         return this.transformBO(entity);
@@ -201,7 +203,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
             if (null == entity)
                 throw new SerException("数据对象不能为空");
             BeanTransform.copyProperties(to, entity, true);
-            entity.setType(typeSer.findById(to.getTypeId()));
+            //entity.setType(typeSer.findById(to.getTypeId()));
             if (entity.getType() == null)
                 throw new SerException("业务类型不存在");
             entity.setModifyTime(LocalDateTime.now());
@@ -285,9 +287,8 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     public List<BusinessCourseBO> maps(BusinessCourseDTO dto) throws SerException {
 //        if (!marPermissionSer.getMarPermission(marketCheck))
 //            throw new SerException("您的帐号没有权限");
-        dto.getSorts().add("typeId=desc");
-        dto.getSorts().add("course=asc");
-        dto.getSorts().add("modifyTime=desc");
+        dto.getSorts().add("businessNum=asc");
+        dto.getSorts().add("subjectNum=asc");
         return this.transformBOList(super.findByPage(dto));
     }
 

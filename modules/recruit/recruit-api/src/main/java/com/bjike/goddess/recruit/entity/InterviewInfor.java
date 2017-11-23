@@ -36,36 +36,36 @@ public class InterviewInfor extends BaseEntity {
     /**
      * 岗位
      */
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '应聘岗位' ")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '应聘岗位' ")
     private String position;
     /**
      * 应聘地区
      */
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '应聘地区' ")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '应聘地区' ")
     private String area;
 
     /**
      * 应聘部门/项目组
      */
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '应聘部门' ")
+    @Column( columnDefinition = "VARCHAR(255) COMMENT '应聘部门' ")
     private String department;
 
     /**
      * 姓名
      */
-    @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(255) COMMENT '姓名' ")
+    @Column( unique = true, columnDefinition = "VARCHAR(255) COMMENT '姓名' ")
     private String name;
 
     /**
      * 性别
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(2) COMMENT '性别' ")
+    @Column( columnDefinition = "TINYINT(2) COMMENT '性别' ")
     private Gender gender;
 
     /**
      * 联系方式
      */
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '联系电话' ")
+    @Column( columnDefinition = "VARCHAR(255) COMMENT '联系电话' ")
     private String phone;
     /**
      * 简历筛选是否通过

@@ -12,12 +12,14 @@ import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
 import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
 import com.bjike.goddess.contacts.excel.ExternalContactsTemplateExport;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
+import com.bjike.goddess.contacts.util.ChineseCharToEn;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -42,7 +44,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * 外部通讯录业务实现
@@ -135,8 +139,27 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public List<ExternalContactsBO> maps(ExternalContactsDTO dto) throws SerException {
         dto.getSorts().add("writeTime=desc");
+        search(dto);
         List<ExternalContacts> list = super.findByCis(dto);
         return BeanTransform.copyProperties(list, ExternalContactsBO.class);
+    }
+
+    private List<ExternalContactsBO> search(ExternalContactsDTO dto) throws SerException {
+        //姓名
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            dto.getConditions().add(Restrict.like("username", dto.getUserName()));
+        }
+        //地区
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.like("area", dto.getArea()));
+        }
+        //部门/项目组
+        if (StringUtils.isNotBlank(dto.getProject())) {
+            dto.getConditions().add(Restrict.like("project", dto.getProject()));
+        }
+        List<ExternalContacts> externalContacts = super.findByCis(dto);
+        List<ExternalContactsBO> externalContactsBOS = BeanTransform.copyProperties(externalContacts, ExternalContactsBO.class);
+        return externalContactsBOS;
     }
 
     @Override
@@ -150,6 +173,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     @Override
     public Long getTotal() throws SerException {
         ExternalContactsDTO dto = new ExternalContactsDTO();
+        search(dto);
         return super.count(dto);
     }
 
@@ -272,13 +296,31 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
         return bytes;
     }
-
+    private static List<MobileExternalContactsBO> sort(List<MobileExternalContactsBO> data) {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+//        // Collator 类是用来执行区分语言环境的 String 比较的，这里选择使用CHINA
+//        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+//        // 使根据指定比较器产生的顺序对指定对象数组进行排序。
+//        Arrays.sort(data, comparator);
+        TreeSet<MobileExternalContactsBO> treeSet = new TreeSet<>(new Comparator<MobileExternalContactsBO>() {
+            @Override
+            public int compare(MobileExternalContactsBO o1, MobileExternalContactsBO o2) {
+                return ChineseCharToEn.getFirstLetter(o1.getUsername()).compareTo(ChineseCharToEn.getFirstLetter(o2.getUsername()));
+            }
+        });
+        for (MobileExternalContactsBO m : data) {
+            treeSet.add(m);
+        }
+        return new ArrayList<>(treeSet);
+    }
     @Override
     public List<MobileExternalContactsBO> mobileList(ExternalContactsDTO dto) throws SerException {
 //        dto.getSorts().add("writeTime=desc");
         searchMobileCondition(dto);
         List<ExternalContacts> list = super.findByCis(dto);
-        List<ExternalContactsBO> externalContactsBOs = BeanTransform.copyProperties(list, ExternalContactsBO.class,false);
+        List<ExternalContactsBO> externalContactsBOs = BeanTransform.copyProperties(list, ExternalContactsBO.class, false);
         if (!CollectionUtils.isEmpty(externalContactsBOs)) {
             List<MobileExternalContactsBO> bos = BeanTransform.copyProperties(externalContactsBOs, MobileExternalContactsBO.class, "sex", "headSculpture", "number");
             for (MobileExternalContactsBO bo : bos) {
@@ -301,7 +343,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
 
                 }
             }
-            return bos;
+            return sort(bos);
         }
         return null;
     }

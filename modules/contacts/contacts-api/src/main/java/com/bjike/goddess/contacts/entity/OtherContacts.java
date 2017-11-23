@@ -20,6 +20,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "contacts_other_contacts")
 public class OtherContacts extends BaseEntity {
+    /**
+     * 更新时间
+     */
+    @Column(name = "updateTime", columnDefinition = "DATE   COMMENT '更新时间'")
+    private LocalDate updateTime;
 
     /**
      * 服务类别
@@ -69,6 +74,13 @@ public class OtherContacts extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    public LocalDate getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDate updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getType() {
         return type;

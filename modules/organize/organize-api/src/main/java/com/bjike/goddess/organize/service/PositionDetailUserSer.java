@@ -205,6 +205,10 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
         return null;
     }
 
+    default List<PositionDetailUserBO> findUserListInOrgan1() throws SerException {
+        return null;
+    }
+
     /**
      * 根据名字获取岗位名称
      */
@@ -355,5 +359,21 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      * @throws SerException
      */
     String[] generPerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取综合资源部福利模块的名字
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> welfarePerson() throws SerException;
+    /**
+     * xiazhili
+     * 获取综合资源部规划模块的名字
+     *
+     * @return
+     * @throws SerException
+     */
+    List<String> planningPerson() throws SerException;
 
 }

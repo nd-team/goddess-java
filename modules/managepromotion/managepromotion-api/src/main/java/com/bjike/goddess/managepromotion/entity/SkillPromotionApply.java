@@ -92,7 +92,7 @@ public class SkillPromotionApply extends BaseEntity {
     /**
      * 已晋升次数
      */
-    @Column(columnDefinition = "VARCHAR(255)   COMMENT '已晋升次数'")
+    @Column(columnDefinition = "INT   COMMENT '已晋升次数'")
     private Integer promotedNumber;
 
     /**

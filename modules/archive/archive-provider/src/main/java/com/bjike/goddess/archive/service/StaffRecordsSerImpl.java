@@ -598,6 +598,9 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
     public List<StaffRecordsCollectBO> dayCollect(String day) throws SerException {
         String startTime = "";
         String endTime = "";
+        if (StringUtils.isBlank(day)) {
+            day = DateUtil.dateToString(LocalDate.now());
+        }
         if (StringUtils.isNotBlank(day)) {
             startTime = day;
             endTime = getAfterDay(day);
@@ -1070,4 +1073,5 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         }
         return dto;
     }
+
 }

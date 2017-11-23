@@ -48,7 +48,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -66,7 +66,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -84,7 +84,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.getCusPermission("4",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -102,7 +102,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.manCusPermission("5",null);
             if (!flag) {
                 throw new SerException("您不是总经办的人员，不可以操作");
             }
@@ -120,7 +120,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -137,7 +137,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -154,7 +154,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.getCusPermission("4",null);
         } else {
             flag = true;
         }
@@ -171,7 +171,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.manCusPermission("5",null);
         } else {
             flag = true;
         }
@@ -188,6 +188,7 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         Boolean flagSw = guideSwIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagMa = guideMaIdentity();
+        RpcTransmit.transmitUserToken(userToken);
         if (flagSee || flagAdd || flagSw || flagMa) {
             return true;
         } else {
@@ -263,17 +264,18 @@ public class RecruitProSerImpl extends ServiceImpl<RecruitPro, RecruitProDTO> im
         return listBO;
     }
 
-    private List<RecruitProBO> search(RecruitProDTO dto)throws SerException{
-        if(StringUtils.isNotBlank(dto.getRecruitSite())){
-            dto.getConditions().add(Restrict.like("recruitSite",dto.getRecruitSite()));
+    private List<RecruitProBO> search(RecruitProDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getRecruitSite())) {
+            dto.getConditions().add(Restrict.like("recruitSite", dto.getRecruitSite()));
         }
-        if(null != dto.getHaveContract()){
-            dto.getConditions().add(Restrict.eq("haveContract",dto.getHaveContract()));
+        if (null != dto.getHaveContract()) {
+            dto.getConditions().add(Restrict.eq("haveContract", dto.getHaveContract()));
         }
         List<RecruitPro> list = super.findByCis(dto);
-        List<RecruitProBO> recruitProBOS = BeanTransform.copyProperties(list,RecruitProBO.class);
+        List<RecruitProBO> recruitProBOS = BeanTransform.copyProperties(list, RecruitProBO.class);
         return recruitProBOS;
     }
+
     /**
      * 保存招聘方案
      *

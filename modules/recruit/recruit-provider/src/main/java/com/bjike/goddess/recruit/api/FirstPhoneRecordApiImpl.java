@@ -73,7 +73,6 @@ public class FirstPhoneRecordApiImpl implements FirstPhoneRecordAPI {
      * @throws SerException
      */
     @Override
-    @Transactional
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
         return firstPhoneRecordSer.list(dto);
     }
