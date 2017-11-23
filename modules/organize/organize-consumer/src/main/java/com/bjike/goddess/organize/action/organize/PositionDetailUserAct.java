@@ -287,10 +287,10 @@ public class PositionDetailUserAct {
      * @version v1
      */
     @GetMapping("v1/checkAsUserPosition")
-    public Result checkAsUserPosition(String userid , String[] poids ) throws ActException {
+    public Result checkAsUserPosition(String userid, String[] poids) throws ActException {
         try {
-            Boolean userBOS = positionDetailUserAPI.checkAsUserPosition(userid,poids);
-            return ActResult.initialize( userBOS );
+            Boolean userBOS = positionDetailUserAPI.checkAsUserPosition(userid, poids);
+            return ActResult.initialize(userBOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -304,15 +304,28 @@ public class PositionDetailUserAct {
      * @version v1
      */
     @GetMapping("v1/checkAsUserPosit2")
-    public Result checkAsUserPosition2(String userid , String[] poids ) throws ActException {
+    public Result checkAsUserPosition2(String userid, String[] poids) throws ActException {
         try {
-            Boolean userBOS = positionDetailUserAPI.checkAsUserPosit2(userid,poids);
-            return ActResult.initialize( userBOS );
+            Boolean userBOS = positionDetailUserAPI.checkAsUserPosit2(userid, poids);
+            return ActResult.initialize(userBOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+    /**
+     * 获取组织结构中的用户列表
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findUserListInOrgan1")
+    public Result findUserListInOrgan1() throws ActException {
+        try {
+            return ActResult.initialize(positionDetailUserAPI.findUserListInOrgan1());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

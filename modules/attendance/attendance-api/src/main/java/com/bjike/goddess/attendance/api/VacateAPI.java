@@ -5,7 +5,7 @@ import com.bjike.goddess.attendance.bo.VacateCountBO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
-import com.bjike.goddess.attendance.entity.Vacate;
+import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
@@ -25,7 +25,9 @@ import java.util.List;
  */
 public interface VacateAPI {
     List<SonPermissionObject> sonPermission() throws SerException;
+
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 列表
      *
@@ -80,6 +82,7 @@ public interface VacateAPI {
 
     /**
      * 移动端通过id查找
+     *
      * @param id
      * @return
      * @throws SerException
@@ -171,12 +174,44 @@ public interface VacateAPI {
 
     /**
      * 某人当前周从周一至周日请假次数或某个季度分别请假次数
+     *
      * @param overTimesDTO
      * @return
      * @throws SerException
      */
-    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return null;
+    }
 
 
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(VacateDTO dto) throws SerException {
+        return null;
+    }
 
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<VacateImportExcel> tos) throws SerException {
+        return;
+    }
 }

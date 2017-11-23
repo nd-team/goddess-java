@@ -35,7 +35,7 @@ public class ReimburseTrendShapeDTO extends BaseDTO {
     /**
      * 汇总的结束时间，格式为2017-10
      */
-    @NotBlank(groups = {ReimburseTrendShapeDTO.TESTCON.class} , message = "汇总的结束时间不能为空,格式为2017-10")
+    @NotBlank(groups = {ReimburseTrendShapeDTO.TESTCON.class} , message = "汇总的结束时间不能为空,格式为2017-08")
     private String startTime;
 
     public String getUserName() {

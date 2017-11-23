@@ -1,22 +1,13 @@
-模块名:archive
-类名:ResumeInfo
+模块名:reportmanagement
+类名:CashAnalyse
 作者:zhuangkaiqin
-描述:人员简历信息
+描述:现金流量分析
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
-String username 姓名;
-String serialNumber 员工编号;
-String area 地区;
-String project 项目组;
-String position 职位;
-String education 学历;
-String major 专业;
-String school 毕业学校;
-LocalDate graduate 毕业时间;
-LocalDate entryTime 入职时间;
-String hobby 兴趣爱好;
-String description 工作经历描述;
-String industry 行业;
-Status status 状态;
+String project 项目;
+String money 金额;
+String rate 比率;
+String analyse 分析;
+String advice 管理建议;
 )

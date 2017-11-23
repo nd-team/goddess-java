@@ -50,6 +50,11 @@ public class AccountInfoVO {
     private String sumary;
 
     /**
+     * 来源
+     */
+    private String source;
+
+    /**
      * 一级科目
      */
     private String firstSubject;
@@ -200,5 +205,13 @@ public class AccountInfoVO {
 
     public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

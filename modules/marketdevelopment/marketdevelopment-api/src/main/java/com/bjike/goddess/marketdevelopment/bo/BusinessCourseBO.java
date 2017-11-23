@@ -1,7 +1,8 @@
 package com.bjike.goddess.marketdevelopment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.type.Status;
+
+import java.util.List;
 
 /**
  * 业务方向科目业务传输对象
@@ -15,68 +16,41 @@ import com.bjike.goddess.common.api.type.Status;
 public class BusinessCourseBO extends BaseBO {
 
     /**
-     * 业务类型ID
+     * 业务方向编号
      */
-    private String typeId;
+    private String businessNum;
 
     /**
-     * 业务类型
+     * 业务方向分类
      */
-    private String typeName;
+    private String businessType;
 
     /**
-     * 业务方向科目
+     * 业务方向科目集合
      */
-    private String course;
+    private List<BusinessSubjectBO> businessSubjectVOs;
 
-    /**
-     * 描述
-     */
-    private String description;
-
-    /**
-     * 状态
-     */
-    private Status status;
-
-
-    public String getTypeId() {
-        return typeId;
+    public String getBusinessNum() {
+        return businessNum;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public void setBusinessNum(String businessNum) {
+        this.businessNum = businessNum;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
-    public String getCourse() {
-        return course;
+    public List<BusinessSubjectBO> getBusinessSubjectVOs() {
+        return businessSubjectVOs;
     }
 
-    public void setCourse(String course) {
-        this.course = course;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setBusinessSubjectVOs(List<BusinessSubjectBO> businessSubjectVOs) {
+        this.businessSubjectVOs = businessSubjectVOs;
     }
 }

@@ -202,6 +202,10 @@ public interface PositionDetailUserAPI {
         return null;
     }
 
+    default List<PositionDetailUserBO> findUserListInOrgan1() throws SerException {
+        return null;
+    }
+
     /**
      * 根据名字获取岗位名称
      */

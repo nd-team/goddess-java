@@ -511,7 +511,7 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/day/collect")
-    public Result dayCollect(@RequestParam String day, HttpServletRequest request) throws ActException {
+    public Result dayCollect(String day, HttpServletRequest request) throws ActException {
         try {
             List<StaffRecordsCollectBO> bos = staffRecordsAPI.dayCollect(day);
             return ActResult.initialize(BeanTransform.copyProperties(bos, StaffRecordsCollectVO.class));

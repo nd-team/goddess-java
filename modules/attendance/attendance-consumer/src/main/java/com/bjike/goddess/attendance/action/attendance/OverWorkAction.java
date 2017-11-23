@@ -6,6 +6,7 @@ import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkCountBO;
 import com.bjike.goddess.attendance.dto.overtime.OverLongAndRelaxdayDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverWorkDTO;
+import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
 import com.bjike.goddess.attendance.to.OverWorkTO;
 import com.bjike.goddess.attendance.vo.OverLongAndRelaxDayVO;
 import com.bjike.goddess.attendance.vo.OverWorkCountVO;
@@ -14,15 +15,21 @@ import com.bjike.goddess.attendance.vo.PositionAndDepartVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -36,7 +43,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("overwork")
-public class OverWorkAction {
+public class OverWorkAction extends BaseFileAction{
 
     @Autowired
     private OverWorkAPI overWorkAPI;
@@ -220,4 +227,61 @@ public class OverWorkAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 导出excel
+     *
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(HttpServletResponse response, OverWorkDTO dto) throws ActException {
+        try {
+            String fileName = "加班管理.xlsx";
+            super.writeOutFile(response, overWorkAPI.exportExcel(dto), fileName);
+            return ActResult.initialize("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/templateExcel")
+    public Result templateExcel(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "加班管理excel模板下载.xlsx";
+            super.writeOutFile(response, overWorkAPI.templateExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导入
+     *
+     * @version v1
+     */
+    @PostMapping("v1/upload")
+    public Result upload(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<OverWorkImportExcel> tos = ExcelUtil.excelToClazz(is, OverWorkImportExcel.class, excel);
+            overWorkAPI.upload(tos);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    
 }

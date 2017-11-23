@@ -414,4 +414,9 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     public List<VoucherGenerateBO> findByCourseName() throws SerException {
         return voucherGenerateSer.findByCourseName();
     }
+
+    @Override
+    public Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrent(firstSubject,  startTime,  endTime,  tar);
+    }
 }

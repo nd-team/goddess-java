@@ -6,13 +6,13 @@ import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
+import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 打卡子表业务接口
@@ -25,7 +25,9 @@ import java.util.Map;
  */
 public interface PunchSonAPI {
     Boolean sonPermission() throws SerException;
+
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 打卡
      *
@@ -57,6 +59,7 @@ public interface PunchSonAPI {
 
     /**
      * 移动端列表
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -83,11 +86,43 @@ public interface PunchSonAPI {
 
     /**
      * 某人当前周从周一至周日请假次数或某个季度分别未打卡次数
+     *
      * @param overTimesDTO
      * @return
      * @throws SerException
      */
-    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return null;
+    }
 
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(PunchDTO dto) throws SerException {
+        return null;
+    }
 
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<PunchImportExcel> tos) throws SerException {
+        return;
+    }
 }

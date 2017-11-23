@@ -74,6 +74,11 @@ public class VoucherGenerateBO extends BaseBO {
     private String sumary;
 
     /**
+     * 来源
+     */
+    private String source;
+
+    /**
      * 地区
      */
     private String area;
@@ -407,5 +412,13 @@ public class VoucherGenerateBO extends BaseBO {
 
     public void setLoanMoneyTotal(Double loanMoneyTotal) {
         this.loanMoneyTotal = loanMoneyTotal;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }
