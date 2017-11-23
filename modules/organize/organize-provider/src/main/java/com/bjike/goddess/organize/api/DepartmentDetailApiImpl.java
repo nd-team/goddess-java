@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.service.DepartmentDetailSer;
@@ -160,4 +161,8 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
         return departmentDetailSer.findAllDepartment();
     }
 
+    @Override
+    public List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
+        return departmentDetailSer.peopleByDepartment();
+    }
 }

@@ -172,6 +172,15 @@ public interface InternalContactsAPI {
     default List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
         return null;
     }
+    /**
+     * 移动端获取根据姓名获取所有电话号码
+     *
+     * @return class PhoneNumberBO
+     * @throws SerException
+     */
+    default List<PhoneNumberBO> mobileGetTel() throws SerException {
+        return null;
+    }
 
     /**
      * 移动端总条数
@@ -284,5 +293,14 @@ public interface InternalContactsAPI {
      * @throws SerException
      */
     default void checkEmail() throws SerException {
+    }
+    /**
+     * 查询部门下所有人的信息
+     *
+     * @return class MobileInternalContactsBO
+     * @throws SerException
+     */
+    default List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+        return null;
     }
 }

@@ -73,31 +73,13 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
         }
         RpcTransmit.transmitUserToken(userToken);
 
-    }
-
-    /**
-     * 核对添加修改删除审核权限（岗位级别）
-     */
-    private void checkAddIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
-            if (!flag) {
-                throw new SerException("您不是相应部门的人员，不可以操作");
-            }
-        }
-        RpcTransmit.transmitUserToken(userToken);
     }
 
     /**
@@ -110,7 +92,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
             if (!flag) {
                 throw new SerException("您不是福利模块的人员，不可以操作");
             }
@@ -128,7 +110,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -145,7 +127,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -162,7 +144,7 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
         } else {
             flag = true;
         }
@@ -172,97 +154,139 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
+//        String userToken = RpcTransmit.getUserToken();
+//        Boolean flagSeeSign = guideSeeIdentity();//getCusPermission("1");
+//        RpcTransmit.transmitUserToken(userToken);
+//        Boolean flagAddModule = guideModuleIdentity();//busCusPermission("3");
+//        RpcTransmit.transmitUserToken(userToken);
+
+        Boolean flag1 = false;
+        Boolean flag2 = false;
+        Boolean flag3 = false;
+        Boolean flag4 = false;
+        Boolean flag5 = false;
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
+        UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddModule = guideModuleIdentity();
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag1 = cusPermissionSer.getCusPermission("1",userBO);
+            flag2 = cusPermissionSer.getCusPermission("2",userBO);
+            flag3 = cusPermissionSer.busCusPermission("3",userBO);
+            flag4 = cusPermissionSer.getCusPermission("4",userBO);
+            flag5 = cusPermissionSer.manCusPermission("5",userBO);
+        } else {
+            flag1 = true;
+            flag2 = true;
+            flag3 = true;
+            flag4 = true;
+            flag5 = true;
+        }
+
 
         SonPermissionObject obj = new SonPermissionObject();
 
+        //1-3
         obj = new SonPermissionObject();
         obj.setName("failfirstinterviewreason");
         obj.setDescribesion("未应约初试原因");
-        if (flagSeeSign || flagAddSign || flagAddModule) {
+        if (flag1 || flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = failInviteReasonSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2
+//        RpcTransmit.transmitUserToken(userToken);
+        //getCusPermission("2");
+        //getCusPermission("1");
+//        Boolean flagSeeDis = failInviteReasonSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("failinvitereason");
         obj.setDescribesion("未邀约成功原因");
-        if (flagSeeDis) {
+        if (flag1||flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeePhone = failPhoneReasonSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2
+//        RpcTransmit.transmitUserToken(userToken);
+        //getCusPermission("2");
+        //getCusPermission("1");
+//        Boolean flagSeePhone = failPhoneReasonSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("failurephonereason");
         obj.setDescribesion("未成功通话原因");
-        if (flagSeePhone) {
+        if (flag1||flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeefPhone = firstPhoneRecordSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2
+//        RpcTransmit.transmitUserToken(userToken);
+        //getCusPermission("2");
+        //getCusPermission("1");
+//        Boolean flagSeefPhone = firstPhoneRecordSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("firstphonerecord");
         obj.setDescribesion("第一次电访记录");
-        if (flagSeefPhone) {
+        if (flag1||flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeefi = interviewAddressInforSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-3
+//        RpcTransmit.transmitUserToken(userToken);
+        //.busCusPermission("3");
+        //getCusPermission("1");
+//        Boolean flagSeefi = interviewAddressInforSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("interviewaddressinfor");
         obj.setDescribesion("面试地址信息");
-        if (flagSeefi) {
+        if (flag1||flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeefin = interviewInforSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2
+//        RpcTransmit.transmitUserToken(userToken);
+        //getCusPermission("2");
+        //getCusPermission("1");
+//        Boolean flagSeefin = interviewInforSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("interviewinfor");
         obj.setDescribesion("面试信息");
-        if (flagSeefin) {
+        if (flag1||flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeE = notEntryReasonSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-3
+//        RpcTransmit.transmitUserToken(userToken);
+        //.busCusPermission("3");
+        //getCusPermission("1");
+//        Boolean flagSeeE = notEntryReasonSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("notentryreason");
         obj.setDescribesion("未入职原因");
-        if (flagSeeE) {
+        if (flag1||flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -270,65 +294,83 @@ public class FailFirstInterviewReasonSerImpl extends ServiceImpl<FailFirstInterv
         list.add(obj);
 
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeRp = recruitDemandPlanSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2
+//        RpcTransmit.transmitUserToken(userToken);
+        //getCusPermission("2");
+        //getCusPermission("1");
+//        Boolean flagSeeRp = recruitDemandPlanSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("recruitdemandplan");
         obj.setDescribesion("招聘需求与计划");
-        if (flagSeeRp) {
+        if (flag1||flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeRpo = recruitProSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2-4-5
+        //getCusPermission("2");
+        //getCusPermission("1");
+        //getCusPermission("4");
+//        manCusPermission("5")
+//        RpcTransmit.transmitUserToken(userToken);
+//        Boolean flagSeeRpo = recruitProSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("recruitpro");
         obj.setDescribesion("招聘方案");
-        if (flagSeeRpo) {
+        if (flag1||flag2||flag4||flag5) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeRw = recruitWaySer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-2
+        //getCusPermission("2");
+        //getCusPermission("1");
+//        RpcTransmit.transmitUserToken(userToken);
+//        Boolean flagSeeRw = recruitWaySer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("recruitway");
         obj.setDescribesion("招聘渠道");
-        if (flagSeeRw) {
+        if (flag1||flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeRa = reportAddressInforSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-3
+//        RpcTransmit.transmitUserToken(userToken);
+        //.busCusPermission("3");
+        //getCusPermission("1");
+//        RpcTransmit.transmitUserToken(userToken);
+//        Boolean flagSeeRa = reportAddressInforSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("reportaddressinfor");
         obj.setDescribesion("报道地址信息");
-        if (flagSeeRa) {
+        if (flag1||flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeT = templateManageSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
+        //1-3
+//        RpcTransmit.transmitUserToken(userToken);
+        //.busCusPermission("3");
+        //getCusPermission("1");
+//        Boolean flagSeeT = templateManageSer.sonPermission();
+//        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("templatemanage");
         obj.setDescribesion("模板管理");
-        if (flagSeeT) {
+        if (flag1||flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

@@ -12,12 +12,14 @@ import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
 import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
 import com.bjike.goddess.contacts.excel.ExternalContactsTemplateExport;
 import com.bjike.goddess.contacts.to.ExternalContactsTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
+import com.bjike.goddess.contacts.util.ChineseCharToEn;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
@@ -42,7 +44,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * 外部通讯录业务实现
@@ -292,7 +296,25 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
         byte[] bytes = ExcelUtil.clazzToExcel(commerceContactsExports, exce);
         return bytes;
     }
-
+    private static List<MobileExternalContactsBO> sort(List<MobileExternalContactsBO> data) {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+//        // Collator 类是用来执行区分语言环境的 String 比较的，这里选择使用CHINA
+//        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+//        // 使根据指定比较器产生的顺序对指定对象数组进行排序。
+//        Arrays.sort(data, comparator);
+        TreeSet<MobileExternalContactsBO> treeSet = new TreeSet<>(new Comparator<MobileExternalContactsBO>() {
+            @Override
+            public int compare(MobileExternalContactsBO o1, MobileExternalContactsBO o2) {
+                return ChineseCharToEn.getFirstLetter(o1.getUsername()).compareTo(ChineseCharToEn.getFirstLetter(o2.getUsername()));
+            }
+        });
+        for (MobileExternalContactsBO m : data) {
+            treeSet.add(m);
+        }
+        return new ArrayList<>(treeSet);
+    }
     @Override
     public List<MobileExternalContactsBO> mobileList(ExternalContactsDTO dto) throws SerException {
 //        dto.getSorts().add("writeTime=desc");
@@ -321,7 +343,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
 
                 }
             }
-            return bos;
+            return sort(bos);
         }
         return null;
     }

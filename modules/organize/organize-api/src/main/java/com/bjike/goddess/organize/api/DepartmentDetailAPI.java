@@ -3,6 +3,7 @@ package com.bjike.goddess.organize.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
@@ -288,6 +289,24 @@ public interface DepartmentDetailAPI {
      * @throws SerException
      */
     default List<String> findAllDepartment() throws SerException {
+        return null;
+    }
+    /**
+     * 查询所有部门下的人数
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
+        return null;
+    }
+    /**
+     * 查询部门下所有人的信息
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> infoByDepartment(String dep) throws SerException {
         return null;
     }
 }

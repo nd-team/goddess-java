@@ -456,7 +456,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
             String[] bids = new String[bIdList.size()];
             bids = bIdList.toArray(bids);
             JobsBetCDTO jobsBetCDTO = new JobsBetCDTO();
-            jobsBetCDTO.getConditions().add(Restrict.eq("jobsBetB.id", bids));
+            jobsBetCDTO.getConditions().add(Restrict.in("jobsBetB.id", bids));
             List<JobsBetC> cList = jobsBetCSer.findByCis(jobsBetCDTO);
             if (cList != null && cList.size() > 0) {
                 //查询对应D表的数据，先删除
@@ -892,8 +892,8 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
             systemBetADTO.getConditions().add(Restrict.in("projectName", to.getProjectName()));
         }
         List<SystemBetABO> systemBetABOS = system(systemBetADTO);
-        List<SystemBetBBO> systemBetBBOS = null;
-        List<SystemBetCBO> systemBetCBOS = null;
+        List<SystemBetBBO> systemBetBBOS = new ArrayList<>();
+        List<SystemBetCBO> systemBetCBOS = new ArrayList<>();
         for (SystemBetABO systemBetABO : systemBetABOS) {
             SystemBetBDTO systemBetBDTO = new SystemBetBDTO();
             systemBetBDTO.getConditions().add(Restrict.eq("systemBetA.id", systemBetABO.getId()));
@@ -908,10 +908,10 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         }
         Set<String> systems = systemBetBBOS.stream().map(SystemBetBBO::getSystem).collect(Collectors.toSet());
         manageCommissionBOS = BeanTransform.copyProperties(systemBetABOS, ManageCommissionBO.class);
-        List<DepartmentBetCBO> departmentBetCBOS = null;
-        List<DepartmentBetDBO> departmentBetDBOS = null;
-        List<JobsBetDBO> jobsBetDBOS = null;
-        List<JobsBetEBO> jobsBetEBOS = null;
+        List<DepartmentBetCBO> departmentBetCBOS = new ArrayList<>();
+        List<DepartmentBetDBO> departmentBetDBOS = new ArrayList<>();
+        List<JobsBetDBO> jobsBetDBOS = new ArrayList<>();
+        List<JobsBetEBO> jobsBetEBOS = new ArrayList<>();
         for (ManageCommissionBO bo : manageCommissionBOS) {
             DepartmentBetADTO departmentBetADTO = new DepartmentBetADTO();
             List<DepartmentBetABO> departmentBetABOS = department(departmentBetADTO);
@@ -928,22 +928,25 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
                         List<DepartmentBetC> listC = departmentBetCSer.findByCis(cdto);
                         departmentBetCBOS = BeanTransform.copyProperties(listC, DepartmentBetCBO.class);
                         departmentBetBBO.setDepartmentBetCBOS(departmentBetCBOS);
-                        for (DepartmentBetCBO departmentBetCBO : departmentBetCBOS) {
-                            DepartmentBetDDTO ddto = new DepartmentBetDDTO();
-                            ddto.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetCBO.getId()));
-                            List<DepartmentBetD> listD = departmentBetDSer.findByCis(ddto);
-                            departmentBetDBOS = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
-                            departmentBetCBO.setDepartmentBetDBOS(departmentBetDBOS);
-                            if (departmentBetDBOS != null) {
-                                for (DepartmentBetDBO departmentBetDBO : departmentBetDBOS) {
-                                    DepartmentBetEDTO edto = new DepartmentBetEDTO();
-                                    edto.getConditions().add(Restrict.eq("departmentBetD.id", departmentBetDBO.getId()));
-                                    List<DepartmentBetE> listE = departmentBetESer.findByCis(edto);
-                                    List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetEBO.class);
-                                    departmentBetDBO.setDepartmentBetEBOS(listEBO);
+                        if(departmentBetCBOS != null){
+                            for (DepartmentBetCBO departmentBetCBO : departmentBetCBOS) {
+                                DepartmentBetDDTO ddto = new DepartmentBetDDTO();
+                                ddto.getConditions().add(Restrict.eq("departmentBetC.id", departmentBetCBO.getId()));
+                                List<DepartmentBetD> listD = departmentBetDSer.findByCis(ddto);
+                                departmentBetDBOS = BeanTransform.copyProperties(listD, DepartmentBetDBO.class);
+                                departmentBetCBO.setDepartmentBetDBOS(departmentBetDBOS);
+                                if (departmentBetDBOS != null) {
+                                    for (DepartmentBetDBO departmentBetDBO : departmentBetDBOS) {
+                                        DepartmentBetEDTO edto = new DepartmentBetEDTO();
+                                        edto.getConditions().add(Restrict.eq("departmentBetD.id", departmentBetDBO.getId()));
+                                        List<DepartmentBetE> listE = departmentBetESer.findByCis(edto);
+                                        List<DepartmentBetEBO> listEBO = BeanTransform.copyProperties(listE, DepartmentBetEBO.class);
+                                        departmentBetDBO.setDepartmentBetEBOS(listEBO);
+                                    }
                                 }
                             }
                         }
+
                     }
                 }
             }
@@ -1018,7 +1021,7 @@ public class JobsBetSerImpl extends ServiceImpl<JobsBet, JobsBetDTO> implements 
         //体系间对赌表实际对赌得分
         Double betScorePracticeSystem = systemBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBetScorePractice()).sum();
         //部门间对赌表目标基础得分
-        Double basesScoreDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScore()).sum();
+        Double basesScoreDepartment = departmentBetCBOS.stream().filter(p -> p != null&&null!=p.getBasesScore()).mapToDouble(p -> p.getBasesScore()).sum();
         //部门间对赌表计划基础得分
         Double basesScorePlanDepartment = departmentBetCBOS.stream().filter(p -> p != null).mapToDouble(p -> p.getBasesScorePlan()).sum();
         //部门间对赌表实际基础得分

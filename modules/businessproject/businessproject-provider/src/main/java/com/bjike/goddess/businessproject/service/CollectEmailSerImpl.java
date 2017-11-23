@@ -76,7 +76,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -94,7 +94,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -112,7 +112,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -129,7 +129,7 @@ public class CollectEmailSerImpl extends ServiceImpl<CollectEmail, CollectEmailD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }

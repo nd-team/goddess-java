@@ -86,7 +86,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -105,7 +105,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -124,7 +124,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
             if (!flag) {
                 throw new SerException("您不是相关项目经理人员，不可以操作");
             }
@@ -143,7 +143,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.modCusPermission("4",null);
             if (!flag) {
                 throw new SerException("您不是相关规划部门的负责人，不可以操作");
             }
@@ -162,7 +162,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.modCusPermission("5",null);
             if (!flag) {
                 throw new SerException("您不是相关预算部门的负责人，不可以操作");
             }
@@ -181,7 +181,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -198,7 +198,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -215,7 +215,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
         } else {
             flag = true;
         }
@@ -232,7 +232,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.modCusPermission("4",null);
         } else {
             flag = true;
         }
@@ -249,7 +249,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.modCusPermission("5",null);
         } else {
             flag = true;
         }
