@@ -1,6 +1,7 @@
-package com.bjike.goddess.subjectcollect.dto;
+package com.bjike.goddess.voucher.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+
 /**
 * 科目汇总数据传输对象
 * @Author:			[ jiangzaixuan ]
@@ -9,7 +10,7 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public class SubjectCollectDTO extends BaseDTO {
+public class SubjectCollectsDTO extends BaseDTO {
     /**
      * 查询开始时间
      */

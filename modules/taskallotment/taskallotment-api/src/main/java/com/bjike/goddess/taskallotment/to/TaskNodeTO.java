@@ -95,7 +95,7 @@ public class TaskNodeTO extends BaseTO {
      * 计划任务量
      */
     @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class}, message = "计划任务量必须大于0")
-    @NotNull(groups = {ADD.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "任务类型不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class}, message = "任务类型不能为空")
     private Double planNum;
     /**
      * 完成任务量
@@ -107,7 +107,7 @@ public class TaskNodeTO extends BaseTO {
      * 所需时长
      */
     @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "所需时长必须大于0")
-    @NotNull(groups = {ADD.class,TaskNodeTO.AGAIN.class}, message = "所需时长不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "所需时长不能为空")
     private Double needTime;
 
     /**

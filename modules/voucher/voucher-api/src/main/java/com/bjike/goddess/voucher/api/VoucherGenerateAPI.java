@@ -2,11 +2,10 @@ package com.bjike.goddess.voucher.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.*;
-import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.to.AnalysisTO;
+import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
@@ -36,7 +35,6 @@ public interface VoucherGenerateAPI {
     default List<SonPermissionObject> sonPermissionAccount() throws SerException {
         return null;
     }
-
 
     /**
      * 导航权限
@@ -726,6 +724,29 @@ public interface VoucherGenerateAPI {
      * 获取所有一级科目为现金或者银行存款的数据
      */
     default List<VoucherGenerateBO> findByCourseName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 科目汇总列表
+     */
+    List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;
+
+    /**
+     * 科目汇总导出
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportSubjectCollectTO to) throws SerException;
+
+    /**
+     * 获取所有会计科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findFirstSubject() throws SerException {
         return null;
     }
 }

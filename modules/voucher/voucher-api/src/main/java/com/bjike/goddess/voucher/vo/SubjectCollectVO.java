@@ -1,18 +1,18 @@
-package com.bjike.goddess.subjectcollect.bo;
+package com.bjike.goddess.voucher.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
-import javax.persistence.Column;
 /**
-* 科目汇总业务传输对象
+* 科目汇总表现层对象
 * @Author:			[ jiangzaixuan ]
 * @Date:			[  2017-10-26 02:42 ]
-* @Description:	[ 科目汇总业务传输对象 ]
+* @Description:	[ 科目汇总表现层对象 ]
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public class SubjectCollectBO extends BaseBO {
-
+public class SubjectCollectVO {
+    /**
+     * id
+     */
+    private String  id;
     /**
      * 项目
      */
@@ -58,12 +58,36 @@ public class SubjectCollectBO extends BaseBO {
      */
     private Double  currentYearLoanMoney;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getProject() {
         return project;
     }
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public Double getBeginBorrowMoney() {
+        return beginBorrowMoney;
+    }
+
+    public void setBeginBorrowMoney(Double beginBorrowMoney) {
+        this.beginBorrowMoney = beginBorrowMoney;
+    }
+
+    public Double getBeginLoanMoney() {
+        return beginLoanMoney;
+    }
+
+    public void setBeginLoanMoney(Double beginLoanMoney) {
+        this.beginLoanMoney = beginLoanMoney;
     }
 
     public Double getCurrentBorrowMoney() {
@@ -112,21 +136,5 @@ public class SubjectCollectBO extends BaseBO {
 
     public void setCurrentYearLoanMoney(Double currentYearLoanMoney) {
         this.currentYearLoanMoney = currentYearLoanMoney;
-    }
-
-    public Double getBeginBorrowMoney() {
-        return beginBorrowMoney;
-    }
-
-    public void setBeginBorrowMoney(Double beginBorrowMoney) {
-        this.beginBorrowMoney = beginBorrowMoney;
-    }
-
-    public Double getBeginLoanMoney() {
-        return beginLoanMoney;
-    }
-
-    public void setBeginLoanMoney(Double beginLoanMoney) {
-        this.beginLoanMoney = beginLoanMoney;
     }
 }

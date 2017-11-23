@@ -286,11 +286,13 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         TaskNodeBO bo = BeanTransform.copyProperties(entity, TaskNodeBO.class, "needTime", "executeTime", "actualTime", "undoneTime", "delayTime", "table");
         Table table = tableSer.findById(entity.getTableId());
         Project project = projectSer.findById(table.getProjectId());
-        bo.setTable(table.getName());
-        bo.setArea(project.getArea());
-        bo.setDepart(project.getDepart());
-        bo.setProject(project.getProject());
-        bo.setInnerProject(project.getInnerProject());
+        if(project != null && !project.equals ( "" )){
+            bo.setTable(table.getName());
+            bo.setArea(project.getArea());
+            bo.setDepart(project.getDepart());
+            bo.setProject(project.getProject());
+            bo.setInnerProject(project.getInnerProject());
+        }
         CustomTitleDTO customTitleDTO = new CustomTitleDTO();
         customTitleDTO.getConditions().add(Restrict.eq("taskNodeId", entity.getId()));
         List<CustomTitle> customTitles = customTitleSer.findByCis(customTitleDTO);
@@ -613,6 +615,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             Table e = new Table();
             e.setProjectId(projectId);
             e.setName(table);
+            e.setCreater(name);
             e.setStatus(Status.START);
             tableSer.save(e);
             tableId = e.getId();

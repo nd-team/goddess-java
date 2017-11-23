@@ -201,7 +201,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/addTask")
-    public Result addTask(TaskNodeTO to, BindingResult result) throws ActException {
+    public Result addTask(@Validated(TaskNodeTO.ADDTASK.class) TaskNodeTO to, BindingResult result) throws ActException {
         try {
             taskNodeAPI.addTask(to);
             return new ActResult("添加小任务成功");
@@ -1109,5 +1109,44 @@ public class TaskNodeAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 我分发的任务(phone)
+     *
+     * @param dto dto
+     * @return class TaskNodeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/initiate")
+    public Result Initiate(TaskNodeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<TaskNodeBO> list = taskNodeAPI.myInitiate(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, TaskNodeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 我执行的任务(phone)
+     *
+     * @param dto dto
+     * @return class TaskNodeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/Execute")
+    public Result Execute(TaskNodeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<TaskNodeBO> list = taskNodeAPI.myExecute(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, TaskNodeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
 
 }

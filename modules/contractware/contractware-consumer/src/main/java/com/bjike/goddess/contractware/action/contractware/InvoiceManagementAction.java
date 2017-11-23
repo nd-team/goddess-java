@@ -81,7 +81,7 @@ public class InvoiceManagementAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) InvoiceManagementTO invoiceManagementTO) throws ActException {
+    public Result add(@Validated(ADD.class) InvoiceManagementTO invoiceManagementTO, HttpServletRequest request) throws ActException {
         try {
             invoiceManagementAPI.add ( invoiceManagementTO );
             return new ActResult ( "添加成功" );
@@ -98,10 +98,10 @@ public class InvoiceManagementAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/pageList")
-    public Result pageList(InvoiceManagementDTO invoiceManagementDTO) throws ActException {
+    public Result pageList(InvoiceManagementDTO invoiceManagementDTO, HttpServletRequest request) throws ActException {
         try {
             List<InvoiceManagementBO> boList = invoiceManagementAPI.pageList ( invoiceManagementDTO );
-            List<InvoiceManagementVO> voList = BeanTransform.copyProperties ( boList, InvoiceManagementVO.class );
+            List<InvoiceManagementVO> voList = BeanTransform.copyProperties ( boList, InvoiceManagementVO.class, request );
             return ActResult.initialize ( voList );
         } catch (SerException e) {
             throw new ActException ( e.getMessage () );

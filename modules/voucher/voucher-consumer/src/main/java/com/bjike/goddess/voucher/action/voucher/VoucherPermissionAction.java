@@ -201,4 +201,51 @@ public class VoucherPermissionAction {
         }
     }
 
+    /**
+     * 科目汇总列表总条数
+     *
+     * @param voucherPermissionDTO 明细账权限信息dto
+     * @des 获取所有明细账权限信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/Subject/count")
+    public Result countSubject(VoucherPermissionDTO voucherPermissionDTO) throws ActException {
+        try {
+            Long count = voucherPermissionAPI.countSubjectPermission(voucherPermissionDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 科目汇总权限列表
+     *
+     * @param voucherPermissionDTO 客户权限信息dto
+     * @param request              前端过滤参数
+     * @return class VoucherPermissionVO
+     * @des 获取所有明细账权限信息
+     * @version v1
+     */
+    @GetMapping("v1/Subject/list")
+    public Result findListSubjectPermission(VoucherPermissionDTO voucherPermissionDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            List<VoucherPermissionBO> boList = voucherPermissionAPI.listSubject(voucherPermissionDTO);
+            List<VoucherPermissionVO> voucherPermissionVOList = new ArrayList<>();
+            boList.stream().forEach(str -> {
+                VoucherPermissionVO temp = BeanTransform.copyProperties(str, VoucherPermissionVO.class, request);
+                List<VoucherOperateVO> covo = new ArrayList<>();
+                if (null != str.getCusOperateBO()) {
+                    covo = BeanTransform.copyProperties(str.getCusOperateBO(), VoucherOperateVO.class);
+                }
+                temp.setCusOperateVO(covo);
+                voucherPermissionVOList.add(temp);
+            });
+
+            return ActResult.initialize(voucherPermissionVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

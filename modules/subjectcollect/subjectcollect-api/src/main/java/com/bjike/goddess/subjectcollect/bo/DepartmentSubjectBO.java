@@ -18,7 +18,7 @@ public class DepartmentSubjectBO {
     /**
      * 子集合
      */
-    private List<SubjectCollectBO> subjectCollectList;
+    private List<SubjectCollectsBO> subjectCollectList;
 
     public String getDepartment() {
         return department;
@@ -28,11 +28,11 @@ public class DepartmentSubjectBO {
         this.department = department;
     }
 
-    public List<SubjectCollectBO> getSubjectCollectList() {
+    public List<SubjectCollectsBO> getSubjectCollectList() {
         return subjectCollectList;
     }
 
-    public void setSubjectCollectList(List<SubjectCollectBO> subjectCollectList) {
+    public void setSubjectCollectList(List<SubjectCollectsBO> subjectCollectList) {
         this.subjectCollectList = subjectCollectList;
     }
 }

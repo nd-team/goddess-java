@@ -51,6 +51,28 @@ public interface VoucherPermissionSer extends Ser<VoucherPermission, VoucherPerm
     }
 
     /**
+     * 科目汇总权限总条数
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default Long countSubjectPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 科目汇总权限列表
+     *
+     * @param cusPermissionDTO
+     * @return
+     * @throws SerException
+     */
+    default List<VoucherPermissionBO> listSubject(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 客户权限列表
      *
      * @param cusPermissionDTO 客户权限数据

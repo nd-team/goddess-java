@@ -1,6 +1,6 @@
 package com.bjike.goddess.subjectcollect.vo;
 
-import com.bjike.goddess.subjectcollect.bo.SubjectCollectBO;
+import com.bjike.goddess.subjectcollect.bo.SubjectCollectsBO;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class DepartmentSubjectVO {
     /**
      * 子集合
      */
-    private List<SubjectCollectBO> subjectCollectList;
+    private List<SubjectCollectsBO> subjectCollectList;
 
     public String getDepartment() {
         return department;
@@ -30,11 +30,11 @@ public class DepartmentSubjectVO {
         this.department = department;
     }
 
-    public List<SubjectCollectBO> getSubjectCollectList() {
+    public List<SubjectCollectsBO> getSubjectCollectList() {
         return subjectCollectList;
     }
 
-    public void setSubjectCollectList(List<SubjectCollectBO> subjectCollectList) {
+    public void setSubjectCollectList(List<SubjectCollectsBO> subjectCollectList) {
         this.subjectCollectList = subjectCollectList;
     }
 }

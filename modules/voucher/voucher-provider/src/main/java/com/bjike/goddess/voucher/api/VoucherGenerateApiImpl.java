@@ -3,11 +3,13 @@ package com.bjike.goddess.voucher.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
+import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.service.VoucherGenerateSer;
 import com.bjike.goddess.voucher.to.AnalysisTO;
+import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -413,5 +415,21 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public List<VoucherGenerateBO> findByCourseName() throws SerException {
         return voucherGenerateSer.findByCourseName();
+    }
+
+    @Override
+    public List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException {
+        return voucherGenerateSer.collect ( dto );
+    }
+
+
+    @Override
+    public byte[] exportExcel(ExportSubjectCollectTO to) throws SerException {
+        return new byte[0];
+    }
+
+    @Override
+    public List<String> findFirstSubject() throws SerException {
+        return voucherGenerateSer.findFirstSubject ();
     }
 }
