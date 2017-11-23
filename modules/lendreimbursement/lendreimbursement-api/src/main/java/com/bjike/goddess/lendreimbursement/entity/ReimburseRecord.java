@@ -310,6 +310,13 @@ public class ReimburseRecord extends BaseEntity {
     @Column(name = "receiveAddr", columnDefinition = "VARCHAR(255)   COMMENT '收件地址'")
     private String receiveAddr;
 
+    public ReimburseRecord(String reimer, Double reimMoney) {
+        this.reimer = reimer;
+        this.reimMoney = reimMoney;
+    }
+
+    public ReimburseRecord() {
+    }
 
     public LocalDate getOccureDate() {
         return occureDate;

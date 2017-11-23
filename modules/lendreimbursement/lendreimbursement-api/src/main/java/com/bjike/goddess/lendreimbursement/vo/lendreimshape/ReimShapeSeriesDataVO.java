@@ -39,4 +39,12 @@ public class ReimShapeSeriesDataVO implements Serializable{
     public void setValue(String value) {
         this.value = value;
     }
+
+    public ReimShapeSeriesDataVO(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public ReimShapeSeriesDataVO() {
+    }
 }
