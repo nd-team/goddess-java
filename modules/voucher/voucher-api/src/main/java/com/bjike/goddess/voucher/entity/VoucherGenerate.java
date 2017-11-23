@@ -49,7 +49,7 @@ public class VoucherGenerate extends BaseEntity {
     /**
      * 二级科目
      */
-    @Column(name = "secondSubject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
+    @Column(name = "secondSubject", columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
     private String secondSubject;
 
     /**
@@ -61,13 +61,13 @@ public class VoucherGenerate extends BaseEntity {
     /**
      * 借方金额
      */
-    @Column(name = "borrowMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '借方金额'")
+    @Column(name = "borrowMoney", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '借方金额'")
     private Double borrowMoney;
 
     /**
      * 贷方金额
      */
-    @Column(name = "loanMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '贷方金额'")
+    @Column(name = "loanMoney", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '贷方金额'")
     private Double loanMoney;
 
     /**
@@ -75,6 +75,12 @@ public class VoucherGenerate extends BaseEntity {
      */
     @Column(name = "sumary", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '摘要'")
     private String sumary;
+
+    /**
+     * 来源
+     */
+    @Column(name = "source" , nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '来源'")
+    private String source;
 
     /**
      * 地区
@@ -302,5 +308,13 @@ public class VoucherGenerate extends BaseEntity {
 
     public void setTotalId(String totalId) {
         this.totalId = totalId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

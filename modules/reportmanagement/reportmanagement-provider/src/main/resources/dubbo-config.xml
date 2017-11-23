@@ -29,6 +29,8 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CusPermissionAPI" ref="cusPermissionApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.ProfitFormulaAPI" ref="profitFormulaApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.ProjectAPI" ref="projectApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFlowProjectAPI" ref="cashFlowProjectApiImpl"/>
 
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>

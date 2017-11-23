@@ -78,6 +78,11 @@ public class VoucherGenerateVO {
     private String sumary;
 
     /**
+     * 来源
+     */
+    private String source;
+
+    /**
      * 地区
      */
     private String area;
@@ -420,5 +425,13 @@ public class VoucherGenerateVO {
 
     public void setLoanMoneyTotal(Double loanMoneyTotal) {
         this.loanMoneyTotal = loanMoneyTotal;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

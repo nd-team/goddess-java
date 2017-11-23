@@ -5,6 +5,7 @@ import com.bjike.goddess.attendance.bo.overtime.OverWorkBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkCountBO;
 import com.bjike.goddess.attendance.bo.overtime.OverWorkRestDayBO;
 import com.bjike.goddess.attendance.dto.overtime.*;
+import com.bjike.goddess.attendance.excel.OverWorkImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.OverWorkAuditTO;
 import com.bjike.goddess.attendance.to.OverWorkTO;
@@ -195,6 +196,37 @@ public interface OverWorkAPI {
     OverWorkCountBO outWorkCount(OverWorkDTO dto) throws SerException;
 
     //某人当前周从周一至周五加班次数
-    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return null;
+    }
 
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(OverWorkDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<OverWorkImportExcel> tos) throws SerException {
+        return;
+    }
 }

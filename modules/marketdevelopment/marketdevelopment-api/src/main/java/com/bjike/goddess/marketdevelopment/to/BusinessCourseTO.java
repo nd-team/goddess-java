@@ -3,7 +3,6 @@ package com.bjike.goddess.marketdevelopment.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,15 +18,11 @@ import javax.validation.constraints.NotNull;
 public class BusinessCourseTO extends BaseTO {
 
     /**
-     * 业务类型id
+     * 业务方向分类
      */
-    @NotNull(message = "业务类型ID不能为空",groups = {ADD.class, EDIT.class})
-    private String typeId;
+    @NotNull(message = "业务方向分类不能为空",groups = {ADD.class, EDIT.class})
+    private String businessType;
 
-    /**
-     * 业务类型
-     */
-    private String typeName;
 
     /**
      * 业务方向科目
@@ -36,30 +31,22 @@ public class BusinessCourseTO extends BaseTO {
     private String course;
 
     /**
-     * 描述
+     * 所属类别
      */
-    private String description;
+    @NotNull(message = "所属类别不能为空",groups = {ADD.class, EDIT.class})
+    private String type;
 
     /**
-     * 状态
+     * 可以做的具体业务
      */
-    private Status status;
+    private String business;
 
-
-    public String getTypeId() {
-        return typeId;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     public String getCourse() {
@@ -70,19 +57,19 @@ public class BusinessCourseTO extends BaseTO {
         this.course = course;
     }
 
-    public String getDescription() {
-        return description;
+    public String getType() {
+        return type;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 }

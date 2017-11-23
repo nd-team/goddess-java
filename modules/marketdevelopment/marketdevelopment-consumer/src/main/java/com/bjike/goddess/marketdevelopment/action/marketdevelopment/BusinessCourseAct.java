@@ -74,7 +74,7 @@ public class BusinessCourseAct {
     }
 
     /**
-     * 保存业务方向科目数据
+     * 添加
      *
      * @param to 业务方向科目传输对象
      * @return class BusinessCourseVO

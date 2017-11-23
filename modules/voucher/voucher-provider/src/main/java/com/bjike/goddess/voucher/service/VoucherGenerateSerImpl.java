@@ -515,10 +515,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String firstSubject = subjectCollectDTO.getFirstSubject();
 
         VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
-        dto1.getConditions().add(Restrict.eq("firstSubject",firstSubject));
+        dto1.getConditions().add(Restrict.eq("firstSubject", firstSubject));
 //        BeanTransform.copyProperties(subjectCollectDTO, dto1,"serialVersionUID");
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.eq("firstSubject",firstSubject));
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
 //        BeanTransform.copyProperties(subjectCollectDTO, dto,"serialVersionUID");
 //        dto.getConditions().add(Restrict.between("voucherDate",new String[]{"2017-01-01","2017-02-02"}));
 
@@ -550,6 +550,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         dto.getConditions().add(Restrict.between("voucherDate", times));
         List<VoucherGenerate> list = super.findByCis(dto);
+        if (null == list && list.size() < 1) {
+            VoucherGenerateDTO dto2 = new VoucherGenerateDTO();
+            dto2.getConditions().add(Restrict.between("voucherDate", times));
+            dto2.getConditions().add(Restrict.between("secondSubject", firstSubject));
+            list = super.findByCis(dto2);
+            if (null == list && list.size() < 1) {
+                VoucherGenerateDTO dto3 = new VoucherGenerateDTO();
+                dto3.getConditions().add(Restrict.between("voucherDate", times));
+                dto3.getConditions().add(Restrict.between("thirdSubject", firstSubject));
+                list = super.findByCis(dto3);
+            }
+        }
+
         if (null != list && list.size() > 0) {
             if (tar) {
                 begin = startSum + list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
@@ -561,6 +574,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         dto1.getConditions().add(Restrict.between("voucherDate", times));
         List<VoucherGenerate> list1 = super.findByCis(dto1);
+        if (null == list1 && list1.size() < 1) {
+            VoucherGenerateDTO dto4 = new VoucherGenerateDTO();
+            dto4.getConditions().add(Restrict.between("voucherDate", times));
+            dto4.getConditions().add(Restrict.between("secondSubject", firstSubject));
+            list1 = super.findByCis(dto4);
+            if (null == list1 && list1.size() < 1) {
+                VoucherGenerateDTO dto5 = new VoucherGenerateDTO();
+                dto5.getConditions().add(Restrict.between("voucherDate", times));
+                dto5.getConditions().add(Restrict.between("thirdSubject", firstSubject));
+                list1 = super.findByCis(dto5);
+            }
+        }
+
         if (null != list1 && list1.size() > 0) {
             if (tar) {
                 end = startSum + list1.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list1.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
@@ -620,14 +646,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         Double current = 0d;
         Double year = 0d;
-//<<<<<<< Updated upstream
-////        Double profit = 0d;
-////        Double total = 0d;
-////        Double netProfits = 0d;
-//        String[] times = new String[]{startTime, endTime};
-//        VoucherGenerateDTO dto = new VoucherGenerateDTO();
-////        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
-//=======
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         dto.getConditions().add(Restrict.between("voucherDate", times));
@@ -635,23 +653,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (null != list && list.size() > 0) {
             if ("营业收入".equals(firstSubject)) {
                 current = getCurrent("主营业务收入", startTime, endTime, true);
-//<<<<<<< Updated upstream
-////                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
-////                profit += current;
-//            } else if ("营业成本".equals(firstSubject)) {
-//                current = getCurrent("营业成本", startTime, endTime, true);
-////                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
-////                profit = profit - current;
-//            } else if ("营业税金及附加".equals(firstSubject)) {
-//                current = getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true);
-////                profit = profit - current;
-//            } else if ("销售费用".equals(firstSubject)) {
-//                current = getCurrent("销售费用", startTime, endTime, true);
-////                profit = profit - current;
-//            } else if ("管理费用".equals(firstSubject)) {
-//                current = getCurrent("管理费用", startTime, endTime, true);
-////                profit = profit - current;
-//=======
             } else if ("营业成本".equals(firstSubject)) {
                 current = getCurrent("营业成本", startTime, endTime, true);
             } else if ("营业税金及附加".equals(firstSubject)) {
@@ -669,24 +670,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             } else if ("营业外支出".equals(firstSubject)) {
                 current = getCurrent("营业外支出", startTime, endTime, false);
             } else if ("营业利润".equals(firstSubject)) {
-//<<<<<<< Updated upstream
-//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-//                        getCurrent("财务费用",startTime, endTime, true);
-//            } else if ("净利润".equals(firstSubject)) {
-//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-//                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
-//                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true) - getCurrent("所得税",startTime, endTime, true);
-//            }else if ("利润总额".equals(firstSubject)) {
-//                current = getCurrent("营业收入", startTime, endTime, true) - getCurrent("营业成本", startTime, endTime, true) -
-//                        (getCurrent("城建税", startTime, endTime, true) + getCurrent("教育附加", startTime, endTime, true) + getCurrent("地方教育附加", startTime, endTime, true)) + getCurrent("其他业务收入",startTime, endTime, true) - getCurrent("其他业务支出",startTime, endTime, true) -
-//                        getCurrent("营业费用",startTime, endTime, true) - getCurrent("管理费用",startTime, endTime, true) -
-//                        getCurrent("财务费用",startTime, endTime, true) +  getCurrent("补贴收入", startTime, endTime, true) +
-//                        getCurrent("营业外收入", startTime, endTime, true) -  getCurrent("营业外支出", startTime, endTime, true);
-//=======
                 current = getCurrent("营业收入", startTime, endTime, true) -
                         getCurrent("营业成本", startTime, endTime, true) -
                         (getCurrent("城建税", startTime, endTime, true) +
@@ -740,10 +723,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double current = 0d;
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
-//        BeanUtils.copyProperties(subjectCollectDTO, dto);
         dto.getConditions().add(Restrict.between("voucherDate", times));
         dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
         List<VoucherGenerate> list = super.findByCis(dto);
+        if (null == list || list.size() < 1) {
+            VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
+            dto1.getConditions().add(Restrict.between("voucherDate", times));
+            dto1.getConditions().add(Restrict.eq("secondSubject", firstSubject));
+            list = super.findByCis(dto1);
+            if (null == list || list.size() < 1) {
+                VoucherGenerateDTO dto2 = new VoucherGenerateDTO();
+                dto2.getConditions().add(Restrict.between("voucherDate", times));
+                dto2.getConditions().add(Restrict.eq("thirdSubject", firstSubject));
+                list = super.findByCis(dto2);
+            }
+        }
+
         if (null != list && list.size() > 0) {
             if (tar) {
                 current = list.stream().filter(obj -> !"结转".equals(obj.getSumary().substring(obj.getSumary().length() - 2, obj.getSumary().length()))).mapToDouble(obj -> obj.getBorrowMoney()).sum() -

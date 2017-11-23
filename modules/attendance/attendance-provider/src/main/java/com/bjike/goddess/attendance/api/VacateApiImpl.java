@@ -5,6 +5,7 @@ import com.bjike.goddess.attendance.bo.VacateCountBO;
 import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
+import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.service.VacateSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
@@ -123,5 +124,20 @@ public class VacateApiImpl implements VacateAPI {
     @Override
     public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
         return vacateSer.userOverTimeCollect( overTimesDTO);
+    }
+
+    @Override
+    public byte[] exportExcel(VacateDTO dto) throws SerException {
+        return vacateSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return vacateSer.templateExcel();
+    }
+
+    @Override
+    public void upload(List<VacateImportExcel> tos) throws SerException {
+        vacateSer.upload(tos);
     }
 }

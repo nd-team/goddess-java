@@ -5,6 +5,7 @@ import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.dto.PunchSonDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.PunchSon;
+import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
@@ -125,4 +126,34 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
     default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
 
 
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(PunchDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<PunchImportExcel> tos) throws SerException {
+        return;
+    }
 }

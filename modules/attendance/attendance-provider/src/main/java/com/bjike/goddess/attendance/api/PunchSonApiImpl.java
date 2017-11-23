@@ -6,6 +6,7 @@ import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
+import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.service.PunchSonSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 打卡子表业务接口实现
@@ -74,5 +74,20 @@ public class PunchSonApiImpl implements PunchSonAPI {
     @Override
     public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
         return punchSonSer.userOverTimeCollect(overTimesDTO) ;
+    }
+
+    @Override
+    public byte[] exportExcel(PunchDTO dto) throws SerException {
+        return punchSonSer.exportExcel(dto);
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return punchSonSer.templateExcel();
+    }
+
+    @Override
+    public void upload(List<PunchImportExcel> tos) throws SerException {
+        punchSonSer.upload(tos);
     }
 }

@@ -7,6 +7,7 @@ import com.bjike.goddess.attendance.dto.VacateConDTO;
 import com.bjike.goddess.attendance.dto.VacateDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.Vacate;
+import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
@@ -190,6 +191,34 @@ public interface VacateSer extends Ser<Vacate, VacateDTO> {
     default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
 
 
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(VacateDTO dto) throws SerException {
+        return null;
+    }
 
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
 
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<VacateImportExcel> tos) throws SerException {
+        return;
+    }
 }

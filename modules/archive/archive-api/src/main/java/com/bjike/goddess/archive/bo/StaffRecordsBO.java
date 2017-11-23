@@ -144,6 +144,11 @@ public class StaffRecordsBO extends BaseBO {
      */
     private String qq;
 
+    /**
+     * 个人邮箱
+     */
+    private String selfEmail;
+
 
     public String getUsername() {
         return username;
@@ -351,5 +356,13 @@ public class StaffRecordsBO extends BaseBO {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getSelfEmail() {
+        return selfEmail;
+    }
+
+    public void setSelfEmail(String selfEmail) {
+        this.selfEmail = selfEmail;
     }
 }
