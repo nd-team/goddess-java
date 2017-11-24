@@ -21,33 +21,48 @@ import javax.validation.constraints.NotNull;
 public class EventTO extends BaseTO {
 
     /**
-     * 项目名称
+     * 模块名称中文名
      */
-    @NotBlank(groups = ADD.class,message = "项目名称不能为空")
-    private String project;
+    @NotBlank(groups = ADD.class, message = "模块名称中文名不能为空")
+    private String projectChineseName;
+    /**
+     * 模块名称英文名
+     */
+    @NotBlank(groups = ADD.class, message = "模块名称英文名不能为空")
+    private String projectEnglishName;
+    /**
+     * 功能名称中文名
+     */
+    @NotBlank(groups = ADD.class, message = "功能名称中文名不能为空")
+    private String functionChineseName;
+    /**
+     * 功能名称英文名
+     */
+    @NotBlank(groups = ADD.class, message = "功能名称英文名不能为空")
+    private String functionEnglishName;
 
     /**
      * 事件内容
      */
-    @NotBlank(groups = ADD.class,message = "事件内容不能为空")
+    @NotBlank(groups = ADD.class, message = "事件内容不能为空")
     private String content;
 
     /**
      * 要求处理时间
      */
-    @NotBlank(groups = ADD.class,message = "要求处理时间不能为空")
+    @NotBlank(groups = ADD.class, message = "要求处理时间不能为空")
     private String requestTime;
 
     /**
      * 处理人
      */
-    @NotBlank(groups = ADD.class,message = "处理人不能为空")
+    @NotBlank(groups = ADD.class, message = "处理人不能为空")
     private String name;
 
     /**
      * 权限
      */
-    @NotNull(groups = ADD.class,message = "权限不能为空")
+    @NotNull(groups = ADD.class, message = "权限不能为空")
     private Permissions permissions;
 
     /**
@@ -58,20 +73,26 @@ public class EventTO extends BaseTO {
     /**
      * 实际处理完成时间
      */
-    @NotBlank(groups = EDIT.class,message = "实际处理完成时间不能为空")
+    @NotBlank(groups = EDIT.class, message = "实际处理完成时间不能为空")
     private String actualTime;
 
     /**
      * 待办事件id
      */
-    @NotBlank(groups = ADD.class,message = "待办事件id不能为空")
+    @NotBlank(groups = ADD.class, message = "待办事件id不能为空")
     private String eventId;
 
     /**
      * 事件处理状态
      */
-    @NotNull(groups = EDIT.class,message = "事件处理状态不能为空")
+    @NotNull(groups = EDIT.class, message = "事件处理状态不能为空")
     private EventStatus eventStatus;
+
+    /**
+     * 待办事件对应状态
+     */
+    @NotNull(groups = ADD.class, message = "待办事件对应状态不能为空")
+    private String status;
 
     public EventStatus getEventStatus() {
         return eventStatus;
@@ -97,12 +118,36 @@ public class EventTO extends BaseTO {
         this.eventId = eventId;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectChineseName() {
+        return projectChineseName;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectChineseName(String projectChineseName) {
+        this.projectChineseName = projectChineseName;
+    }
+
+    public String getProjectEnglishName() {
+        return projectEnglishName;
+    }
+
+    public void setProjectEnglishName(String projectEnglishName) {
+        this.projectEnglishName = projectEnglishName;
+    }
+
+    public String getFunctionChineseName() {
+        return functionChineseName;
+    }
+
+    public void setFunctionChineseName(String functionChineseName) {
+        this.functionChineseName = functionChineseName;
+    }
+
+    public String getFunctionEnglishName() {
+        return functionEnglishName;
+    }
+
+    public void setFunctionEnglishName(String functionEnglishName) {
+        this.functionEnglishName = functionEnglishName;
     }
 
     public String getContent() {
@@ -143,5 +188,13 @@ public class EventTO extends BaseTO {
 
     public void setActualTime(String actualTime) {
         this.actualTime = actualTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

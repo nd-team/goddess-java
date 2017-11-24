@@ -78,7 +78,26 @@ public class FunPowerWeightAction {
         }
     }
 
+    /**
+     * 一个职权因素层权重
+     *
+     * @param id  职权因素层权重id
+     * @return class FunPowerWeightFactorVO
+     * @des 一个职权因素层权重
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findCustomerWeiOne(@PathVariable String id) throws ActException {
+        try {
 
+            FunPowerWeightFactorVO funPowerWeightFactorVO = BeanTransform.copyProperties(
+                    funPowerWeightFactorAPI.getOneFunPower(id), FunPowerWeightFactorVO .class, true);
+            return ActResult.initialize(funPowerWeightFactorVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 职权因素层权重设置列表
      *

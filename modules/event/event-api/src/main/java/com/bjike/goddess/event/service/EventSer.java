@@ -6,10 +6,12 @@ import com.bjike.goddess.event.bo.*;
 import com.bjike.goddess.event.dto.EventDTO;
 import com.bjike.goddess.event.dto.FatherDTO;
 import com.bjike.goddess.event.entity.Event;
+import com.bjike.goddess.event.enums.EventStatus;
+import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.event.to.GuidePermissionTO;
-import com.bjike.goddess.event.vo.ClassifyCountVO;
 import com.bjike.goddess.event.vo.SonPermissionObject;
+import com.bjike.goddess.user.entity.rbac.Permission;
 
 import java.util.List;
 
@@ -54,6 +56,14 @@ public interface EventSer extends Ser<Event, EventDTO> {
      * @throws SerException
      */
     EventBO save(EventTO to) throws SerException;
+
+    /**
+     * 对应的待办事件如果审核了核对了分析了就删除
+     * lijuntao
+     * @param eventId
+     * @throws SerException
+     */
+    void deleteEvent(String eventId) throws SerException;
 
     /**
      * 编辑
@@ -168,4 +178,18 @@ public interface EventSer extends Ser<Event, EventDTO> {
      * @throws SerException
      */
     List<ClassifyCountBO> classifyCount(EventDTO dto) throws SerException;
+
+    /**
+     * 移动端列表获取数据
+     *
+     * @throws SerException
+     */
+    List<AppListDataBO> findAppList(String type) throws SerException;
+    /**
+     * 移动端跳转详情所需数据
+     *
+     * @throws SerException
+     */
+    FatherBO findFatherById(String id) throws SerException;
+
 }

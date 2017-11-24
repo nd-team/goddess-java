@@ -18,9 +18,22 @@ public class FatherVO {
      */
     private String id;
     /**
-     * 项目名称
+     * 模块名称中文名
      */
-    private String project;
+    private String projectChineseName;
+    /**
+     * 模块名称英文名
+     */
+    private String projectEnglishName;
+    /**
+     * 功能名称中文名
+     */
+    private String functionChineseName;
+
+    /**
+     * 功能名称英文名
+     */
+    private String functionEnglishName;
 
     /**
      * 事件集合
@@ -43,11 +56,35 @@ public class FatherVO {
         this.id = id;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectChineseName() {
+        return projectChineseName;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectChineseName(String projectChineseName) {
+        this.projectChineseName = projectChineseName;
+    }
+
+    public String getProjectEnglishName() {
+        return projectEnglishName;
+    }
+
+    public void setProjectEnglishName(String projectEnglishName) {
+        this.projectEnglishName = projectEnglishName;
+    }
+
+    public String getFunctionChineseName() {
+        return functionChineseName;
+    }
+
+    public void setFunctionChineseName(String functionChineseName) {
+        this.functionChineseName = functionChineseName;
+    }
+
+    public String getFunctionEnglishName() {
+        return functionEnglishName;
+    }
+
+    public void setFunctionEnglishName(String functionEnglishName) {
+        this.functionEnglishName = functionEnglishName;
     }
 }

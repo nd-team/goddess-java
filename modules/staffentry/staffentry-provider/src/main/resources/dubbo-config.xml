@@ -49,4 +49,5 @@
 	<dubbo:reference  validation="true" id="senioritySubsidiesApiImpl" interface="com.bjike.goddess.assistance.api.SenioritySubsidiesAPI" />
 	<dubbo:reference  validation="true" id="computerSubsidiesApiImpl" interface="com.bjike.goddess.assistance.api.ComputerSubsidiesAPI" />
 
+
 </beans>

@@ -24,6 +24,8 @@ import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -35,10 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 事件业务实现
@@ -66,6 +65,8 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
     private MessageAPI messageAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -147,9 +148,12 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
     @Transactional(rollbackFor = {SerException.class})
     public EventBO save(EventTO to) throws SerException {
         Event entity = BeanTransform.copyProperties(to, Event.class, true);
-        String project = to.getProject();
+//        String project = to.getProject();
         Father father = new Father();
-        father.setProject(project);
+        father.setProjectChineseName(to.getProjectChineseName());
+        father.setProjectEnglishName(to.getProjectEnglishName());
+        father.setFunctionChineseName(to.getFunctionChineseName());
+        father.setFunctionEnglishName(to.getFunctionEnglishName());
         fatherSer.save(father);
         UserBO userBO = userAPI.findByUsername(entity.getName());
         List<PositionDetailBO> positionDetailBOs = null;
@@ -166,6 +170,14 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         entity.setYear(entity.getRequestTime().getMonthValue());
         super.save(entity);
         return BeanTransform.copyProperties(entity, EventBO.class);
+    }
+
+    @Override
+    public void deleteEvent(String eventId) throws SerException {
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.getConditions().add(Restrict.eq("eventId", eventId));
+        List<Event> eventList = super.findByCis(eventDTO);
+        super.remove(eventList);
     }
 
     @Override
@@ -213,7 +225,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
                             if (null != email) {
                                 MessageTO messageTO = new MessageTO();
                                 messageTO.setTitle("您有一件待办事件处理");
-                                messageTO.setContent("您有一件项目名称为:" + event.getFather().getProject() + "的" + event.getContent() + "等待您去处理");
+                                messageTO.setContent("您有一件项目名称为:" + event.getFather().getFunctionChineseName() + "的" + event.getContent() + "等待您去处理");
                                 messageTO.setMsgType(MsgType.SYS);
                                 messageTO.setSendType(SendType.EMAIL);
                                 messageTO.setRangeType(RangeType.SPECIFIED);
@@ -243,7 +255,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         int month = dto.getMonth();
         int year = dto.getYear();
         dto.getConditions().add(Restrict.eq("name", name));
-        dto.getConditions().add(Restrict.ne("eventStatus",EventStatus.HAVEDEAL.getValue()));
+        dto.getConditions().add(Restrict.ne("eventStatus", EventStatus.HAVEDEAL.getValue()));
         List<Event> list = super.findByCis(dto);
         List<ContentBO> contentVOs = new ArrayList<>();
         for (Event event : list) {
@@ -251,7 +263,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
             if (year == request.getYear() && month == request.getMonthValue()) {
                 ContentBO vo = new ContentBO();
                 vo.setTime(DateUtil.dateToString(request));
-                vo.setContent(event.getFather().getProject() + "的" + event.getContent());
+                vo.setContent(event.getFather().getProjectChineseName() + "的" + event.getContent());
                 contentVOs.add(vo);
             }
         }
@@ -862,5 +874,79 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
             }
         }
         return vos;
+    }
+
+    @Override
+    public List<AppListDataBO> findAppList(String type) throws SerException {
+        List<Event> eventList = new ArrayList<>();
+        if (StringUtils.isBlank(type)) {
+            eventList = super.findAll();
+        } else {
+            EventDTO eventDTO = new EventDTO();
+            switch (type) {
+                case "SEE":
+                    eventDTO.getConditions().add(Restrict.eq("permissions", Permissions.SEE.getValue()));
+                    break;
+                case "MAKE":
+                    eventDTO.getConditions().add(Restrict.eq("permissions", Permissions.MAKE.getValue()));
+                    break;
+                case "ADUIT":
+                    eventDTO.getConditions().add(Restrict.eq("permissions", Permissions.ADUIT.getValue()));
+                    break;
+                case "CONFIRM":
+                    eventDTO.getConditions().add(Restrict.eq("permissions", Permissions.CONFIRM.getValue()));
+                    break;
+                case "CHECK":
+                    eventDTO.getConditions().add(Restrict.eq("permissions", Permissions.CHECK.getValue()));
+                    break;
+                case "ANALYZE":
+                    eventDTO.getConditions().add(Restrict.eq("permissions", Permissions.ANALYZE.getValue()));
+                    break;
+                case "HAVEDEAL":
+                    eventDTO.getConditions().add(Restrict.eq("eventStatus", EventStatus.HAVEDEAL.getValue()));
+                    break;
+                case "NOSEENODEAL":
+                    eventDTO.getConditions().add(Restrict.eq("eventStatus", EventStatus.NOSEENODEAL.getValue()));
+                    break;
+                case "SEENODEAL":
+                    eventDTO.getConditions().add(Restrict.eq("eventStatus", EventStatus.SEENODEAL.getValue()));
+                    break;
+                case "NODEAL":
+                    eventDTO.getConditions().add(Restrict.eq("eventStatus", EventStatus.NODEAL.getValue()));
+                    break;
+                default:
+                    break;
+            }
+            eventList = super.findByCis(eventDTO,true);
+        }
+        List<AppListDataBO> appListDataBOList = new ArrayList<>();
+        if (eventList != null && eventList.size() > 0) {
+            for (Event event : eventList) {
+                UserBO userBO = userAPI.findByUsername(event.getName());
+                List<EntryRegisterBO> entryRegisterBOS = entryRegisterAPI.getEntryRegisterByName(event.getName());
+                AppListDataBO appListDataBO = new AppListDataBO();
+                appListDataBO.setId(event.getId());
+                if (entryRegisterBOS != null && entryRegisterBOS.size() > 0) {
+                    appListDataBO.setDeparment(entryRegisterBOS.get(0).getDepartment());
+                }
+                if (userBO != null) {
+                    appListDataBO.setHeadPortrait(userBO.getHeadSculpture());
+                    appListDataBO.setUserName(userBO.getUsername());
+                }
+                appListDataBO.setGetTime(event.getGetTime().toString());
+                appListDataBO.setContent(event.getContent());
+                appListDataBO.setContents(event.getContent().split("&"));
+                appListDataBO.setFatherBO(BeanTransform.copyProperties(event.getFather(),FatherBO.class));
+                appListDataBO.setStatus(event.getStatus());
+                appListDataBOList.add(appListDataBO);
+            }
+        }
+        return appListDataBOList;
+    }
+
+    @Override
+    public FatherBO findFatherById(String id) throws SerException {
+        Event event = super.findById(id);
+        return BeanTransform.copyProperties(event.getFather(),FatherBO.class);
     }
 }
