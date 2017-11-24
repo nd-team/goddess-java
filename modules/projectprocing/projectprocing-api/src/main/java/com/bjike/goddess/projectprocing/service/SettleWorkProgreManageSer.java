@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectprocing.bo.SettleWorkProgreManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.entity.SettleWorkProgreManage;
+import com.bjike.goddess.projectprocing.to.CompletionStatusTO;
 import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 
 import java.util.List;
@@ -79,5 +80,13 @@ public interface SettleWorkProgreManageSer extends Ser<SettleWorkProgreManage, S
      */
     default List<SettleWorkProgreManageBO> listWorkByOutUnit(String outUnit) throws SerException {
         return null;
+    }
+    /**
+     * 填写完成情况
+     *
+     * @param completionStatusTO 填写任务情况to
+     */
+    default void fullFinishStatus(CompletionStatusTO completionStatusTO) throws SerException {
+        return;
     }
 }

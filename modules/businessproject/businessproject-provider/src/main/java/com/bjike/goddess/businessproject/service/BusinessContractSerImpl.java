@@ -34,6 +34,7 @@ import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -2488,6 +2489,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         return null;
     }
 
+<<<<<<< Updated upstream
     @Override
     public OptionMakeBO weekPersonFigure(PersonTO to) throws SerException {
         Integer year = to.getYear();
@@ -2506,6 +2508,18 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         return personFigure(to, startDate, endDate, text_1);
 
     }
+=======
+    private OptionMakeBO personFigure(String startDate, String endDate, String text_1) throws SerException {
+        List<PersonCollectBO> collectBOS = new ArrayList<>();
+        String[] fields = new String[]{"innerProject", "totalMoney"};
+        StringBuilder sb = new StringBuilder();
+        //内部项目名称 立项金额总和
+        sb.append(" SELECT innerProject AS innerProject ,ifnull(sum(makeMoney),0) AS totalMoney FROM businessproject_siginmanage ");
+        sb.append(" WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' ");
+        sb.append(" GROUP BY innerProject ");
+        List<PersonCollectBO> boList = super.findBySql(sb.toString(), PersonCollectBO.class, fields);
+        if (boList != null && boList.size() > 0) {
+>>>>>>> Stashed changes
 
     @Override
     public OptionMakeBO monthPersonFigure(PersonTO to) throws SerException {
@@ -4001,4 +4015,36 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         return boList;
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    @Override
+    public List<String> findSingleContractName() throws SerException {
+        List<BusinessContract> businessContractList = super.findAll();
+        if (CollectionUtils.isEmpty(businessContractList)) {
+            return Collections.emptyList();
+        }
+        return businessContractList.stream().map(BusinessContract::getSingleContractName).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findSingleNumByName(String singName) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("singleContractName", singName));
+        List<BusinessContract> businessContractList = super.findByCis(businessContractDTO);
+        if (CollectionUtils.isEmpty(businessContractList)) {
+            return Collections.emptyList();
+        }
+        return businessContractList.stream().map(BusinessContract::getSingleContractNum).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("singleContractNum", singleNum));
+        BusinessContract businessContract = super.findOne(businessContractDTO);
+        return BeanTransform.copyProperties(businessContract,BusinessContractsBO.class);
+    }
+}
+>>>>>>> Stashed changes

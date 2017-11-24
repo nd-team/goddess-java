@@ -15,6 +15,7 @@ import com.bjike.goddess.projectprocing.api.SettleProgressManageAPI;
 import com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
+import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 import com.bjike.goddess.projectprocing.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.projectprocing.vo.AllotmentNodeDataVO;
@@ -315,24 +316,10 @@ public class SettleProgressManageAction extends BaseFileAction {
         }
     }
     /**
-     * 根据外包合同号获取对应字段信息
-     * @return class AllotmentNodeDataVO
-     * @version v1
-     */
-    @GetMapping("v1/allotmentNodeData")
-    public Result findAllotmentNodeData(@RequestParam String contractNo, HttpServletRequest request) throws ActException {
-        try {
-            List<AllotmentNodeDataVO> allotmentNodeDataVO = BeanTransform.copyProperties(settleProgressManageAPI.findAllNodeById(contractNo),AllotmentNodeDataVO.class);
-            return ActResult.initialize(allotmentNodeDataVO);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-    /**
      * 分配责任人
      * @version v1
      */
-    @GetMapping("v1/redistribution")
+    @PostMapping("v1/redistribution")
     public Result redistribution(@RequestParam String id, @RequestParam String responsible,HttpServletRequest request) throws ActException {
         try {
             settleWorkProgreManageAPI.redistribution(id,responsible);
@@ -431,13 +418,45 @@ public class SettleProgressManageAction extends BaseFileAction {
     @GetMapping("v1/exportExcel")
     public Result exportExcel(HttpServletResponse response) throws ActException {
         try {
-            String fileName = "市场活动申请.xlsx";
+            String fileName = "结算进度管理.xlsx";
             super.writeOutFile(response, settleProgressManageAPI.exportExcel("外包1"),fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 分配节点和进度延后的节点下拉值
+     * @return class AllotmentNodeDataVO
+     * @version v1
+     */
+    @GetMapping("v1/allotmentNodeData/{id}")
+    public Result findAllotmentNodeData(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            List<AllotmentNodeDataVO> allotmentNodeDataVO = BeanTransform.copyProperties(settleProgressManageAPI.findAllNodeById(id),AllotmentNodeDataVO.class);
+            return ActResult.initialize(allotmentNodeDataVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 进度延后
+     *
+     * @param scheduleDelayDataTO 进度延后to
+     * @des 进度延后
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/scheduleDelay")
+    public Result scheduleDelay(@Validated({ADD.class}) ScheduleDelayDataTO scheduleDelayDataTO) throws ActException {
+        try {
+            settleProgressManageAPI.scheduleDelay(scheduleDelayDataTO);
+            return new ActResult("scheduleDelay success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

@@ -46,6 +46,7 @@
 	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
 	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="positionUserDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
 	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />

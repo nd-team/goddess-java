@@ -1,8 +1,8 @@
-package com.bjike.goddess.projectprocing.entity;
+package com.bjike.goddess.projectprocing.enums;
 
 
 /**
- * 性别
+ * 汇总模板
  *
  * @Author: [liguiqin]
  * @Date: [2016-11-23 15:47]

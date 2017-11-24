@@ -2,7 +2,7 @@ package com.bjike.goddess.projectprocing.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.projectprocing.entity.SendFrequency;
-import com.bjike.goddess.projectprocing.entity.SummTableName;
+import com.bjike.goddess.projectprocing.enums.SummTableName;
 
 import java.time.LocalDate;
 

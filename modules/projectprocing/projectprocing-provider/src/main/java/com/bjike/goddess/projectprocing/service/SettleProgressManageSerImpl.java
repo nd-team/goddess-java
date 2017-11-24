@@ -4,9 +4,16 @@ import com.bjike.goddess.businessproject.api.BusinessContractAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.PositionDetailUserBO;
+import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.entity.PositionDetailUser;
+import com.bjike.goddess.organize.service.PositionDetailUserSer;
 import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
 import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
@@ -15,9 +22,13 @@ import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.entity.HeadersCustom;
 import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
 import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
+import com.bjike.goddess.projectprocing.entity.SettleProgressRecord;
 import com.bjike.goddess.projectprocing.to.HeadersCustomTO;
 import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
+import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellType;
@@ -55,7 +66,14 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     private NodeHeadersCustomSer nodeHeadersCustomSer;
     @Autowired
     private BusinessContractAPI businessContractAPI;
-
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private SettleProgressRecordSer settleProgressRecordSer;
+    @Autowired
+    private PositionUserDetailAPI positionUserDetailAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
     @Override
     public Long countManage(SettleProgressManageDTO settleProgressManageDTO) throws SerException {
         searchCondi(settleProgressManageDTO);
@@ -294,6 +312,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         List<AllotmentNodeDataBO> allotmentNodeDataBOList = new ArrayList<>();
         if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
             for (NodeHeadersCustomBO nodeHeadersCustomBO : nodeHeadersCustomList) {
+
                 AllotmentNodeDataBO allotmentNodeDataBO = new AllotmentNodeDataBO();
                 allotmentNodeDataBO.setNodeId(nodeHeadersCustomBO.getId());
                 allotmentNodeDataBO.setNodeHeader(nodeHeadersCustomBO.getNodeOneHeader());
@@ -336,6 +355,14 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
             }
         }
         return allotmentNodeDataBOList;
+    }
+
+    @Override
+    public SettleProgressManageBO findByContractNo(String contractNo) throws SerException {
+        SettleProgressManageDTO settleProgressManageDTO = new SettleProgressManageDTO();
+        settleProgressManageDTO.getConditions().add(Restrict.eq("contractNo",contractNo));
+        SettleProgressManage settleProgressManage = super.findOne(settleProgressManageDTO);
+        return BeanTransform.copyProperties(settleProgressManage,SettleProgressManageBO.class);
     }
 
     @Override
@@ -519,5 +546,65 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     @Override
     public void importExcel(List<SettleProgressManageTO> settleProgressManageTOS) throws SerException {
 
+    }
+
+    @Override
+    public void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
+        SettleProgressManage settleProgressManage = super.findById(scheduleDelayDataTO.getId());
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        checkUpdateZD(scheduleDelayDataTO);//修改节点数据
+        //添加至结算进度调整记录&结算问题汇总表中
+        SettleProgressRecord settleProgressRecord = new SettleProgressRecord();
+        String moneyModuleName = positionDetailUserAPI.moneyModulePerson();
+        List<PositionDetailUserBO> positionDetailUserBOS = positionUserDetailAPI.findManager();
+        settleProgressRecord.setOutUnit(settleProgressManage.getOutUnit());
+        settleProgressRecord.setDispatchingName(settleProgressManage.getDispatchingItems());
+        settleProgressRecord.setInternalName(settleProgressManage.getInternalProName());
+        settleProgressRecord.setModifier(userBO.getUsername());
+        settleProgressRecord.setUpdateDate(LocalDateTime.now());
+        settleProgressRecord.setUpdateContent("修改了" + scheduleDelayDataTO.getNode() + "节点时间改为" + scheduleDelayDataTO.getNodeContent());
+        settleProgressRecord.setProblemDescription(scheduleDelayDataTO.getProblemDescription());
+        settleProgressRecord.setProblemType(scheduleDelayDataTO.getProblemType());
+        settleProgressRecord.setAssistPeoper(scheduleDelayDataTO.getAssistPeoper());
+        settleProgressRecord.setAssistContent(scheduleDelayDataTO.getAssistContent());
+        settleProgressRecord.setMoneyModule(moneyModuleName);
+        if(positionDetailUserBOS!=null && positionDetailUserBOS.size()>0){
+            settleProgressRecord.setMoneyModule(positionDetailUserBOS.get(0).getName());
+        }
+        settleProgressRecordSer.save(settleProgressRecord);
+
+        //更新本表中的更新时间
+        settleProgressManage.setChangeDate(true);
+        settleProgressManage.setUpdateDate(settleProgressRecord.getUpdateDate());
+        super.update(settleProgressManage);
+    }
+    /**
+     * 检测修改的是哪个节点然后进行后面节点数据的推算
+     *
+     * @param scheduleDelayDataTO
+     * @throws SerException
+     */
+    private void checkUpdateZD(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
+        NodeHeadersCustom nodeHeadersCustom = nodeHeadersCustomSer.findById(scheduleDelayDataTO.getNodeId());//本条节点内容
+        NodeHeadersCustomBO nodeHeadersCustomBO = nodeHeadersCustomSer.getByFatherId(nodeHeadersCustom.getFatherId());//本条数据的对应父数据(节点表头名)
+        if (scheduleDelayDataTO.getNode().equals(nodeHeadersCustomBO.getNodeOneHeader())) {
+            nodeHeadersCustom.setNodeOneContent(DateUtil.parseDate(scheduleDelayDataTO.getNodeContent()));
+            nodeHeadersCustom.setNodeTwoContent(nodeHeadersCustom.getNodeOneContent().plusDays(nodeHeadersCustomBO.getNodeTwoInterDate()));
+            nodeHeadersCustom.setNodeThreeContent(nodeHeadersCustom.getNodeTwoContent().plusDays(nodeHeadersCustomBO.getNodeThreeInterDate()));
+            nodeHeadersCustom.setNodeFourContent(nodeHeadersCustom.getNodeThreeContent().plusDays(nodeHeadersCustomBO.getNodeFourInterDate()));
+        } else if (scheduleDelayDataTO.getNode().equals(nodeHeadersCustomBO.getNodeTwoHeader())) {
+            nodeHeadersCustom.setNodeTwoContent(DateUtil.parseDate(scheduleDelayDataTO.getNodeContent()));
+            nodeHeadersCustom.setNodeThreeContent(nodeHeadersCustom.getNodeTwoContent().plusDays(nodeHeadersCustomBO.getNodeThreeInterDate()));
+            nodeHeadersCustom.setNodeFourContent(nodeHeadersCustom.getNodeThreeContent().plusDays(nodeHeadersCustomBO.getNodeFourInterDate()));
+        } else if (scheduleDelayDataTO.getNode().equals(nodeHeadersCustomBO.getNodeThreeHeader())) {
+            nodeHeadersCustom.setNodeThreeContent(DateUtil.parseDate(scheduleDelayDataTO.getNodeContent()));
+            nodeHeadersCustom.setNodeFourContent(nodeHeadersCustom.getNodeThreeContent().plusDays(nodeHeadersCustomBO.getNodeFourInterDate()));
+        } else if (scheduleDelayDataTO.getNode().equals(nodeHeadersCustomBO.getNodeFourHeader())) {
+            nodeHeadersCustom.setNodeFourContent(DateUtil.parseDate(scheduleDelayDataTO.getNodeContent()));
+        }
+        nodeHeadersCustom.setModifyTime(LocalDateTime.now());
+        nodeHeadersCustomSer.update(nodeHeadersCustom);
     }
 }

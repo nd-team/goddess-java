@@ -132,4 +132,12 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
             }
         }
     }
+
+    @Override
+    public NodeHeadersCustomBO getByFatherId(String fatherId) throws SerException {
+        NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("fatherId",fatherId));
+        NodeHeadersCustom nodeHeadersCustom = super.findOne(nodeHeadersCustomDTO);
+        return BeanTransform.copyProperties(nodeHeadersCustom,NodeHeadersCustomBO.class);
+    }
 }

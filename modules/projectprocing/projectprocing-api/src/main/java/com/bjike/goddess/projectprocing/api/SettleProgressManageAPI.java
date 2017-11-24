@@ -5,6 +5,7 @@ import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
 import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
+import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 
 import java.util.List;
@@ -152,5 +153,27 @@ public interface SettleProgressManageAPI {
      */
     default List<AllotmentNodeDataBO> findAllNodeById(String id) throws SerException {
         return null;
+    }
+    /**
+     * 根据外包合同号获取数据
+     *
+     * @return class SettleProgressManageBO
+     */
+    default SettleProgressManageBO findByContractNo(String contractNo) throws SerException {
+        return null;
+    }
+
+    /**
+     *  导入
+     * @param settleProgressManageTOS 结算进度管理
+     */
+    void importExcel(List<SettleProgressManageTO> settleProgressManageTOS) throws SerException;
+
+    /**
+     * 进度延后
+     *
+     */
+    default void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
+        return;
     }
 }
