@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectprocing.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 类型
  *
@@ -14,10 +16,12 @@ public enum DispatCondition {
     /**
      * 已派工
      */
+    @ExcelValue(name = "已派工")
     HAVESENDWORKER(0),
     /**
      * 未派工
      */
+    @ExcelValue(name = "未派工")
     NOSENDWORKER(1);
 
     private int value;

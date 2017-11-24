@@ -8,6 +8,7 @@ import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -20,6 +21,9 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SettleProgressManageAPI {
+
+    default void excelImport(List<InputStream> is ,String outUnit) throws SerException{
+    }
 
     default byte[] exportExcel(String outUnit) throws SerException{
         return  null;
@@ -162,12 +166,6 @@ public interface SettleProgressManageAPI {
     default SettleProgressManageBO findByContractNo(String contractNo) throws SerException {
         return null;
     }
-
-    /**
-     *  导入
-     * @param settleProgressManageTOS 结算进度管理
-     */
-    void importExcel(List<SettleProgressManageTO> settleProgressManageTOS) throws SerException;
 
     /**
      * 进度延后

@@ -1,5 +1,7 @@
 package com.bjike.goddess.projectprocing.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 类型
  *
@@ -14,10 +16,12 @@ public enum ActualCompletedState {
     /**
      * 完工
      */
+    @ExcelValue(name = "完工")
     COMPLETION(0),
     /**
      * 未完工
      */
+    @ExcelValue(name = "未完工")
     UNFINISHED(1);
 
     private int value;

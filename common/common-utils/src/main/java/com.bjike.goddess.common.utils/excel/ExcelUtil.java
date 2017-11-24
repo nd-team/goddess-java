@@ -427,7 +427,7 @@ public class ExcelUtil {
      * @param fields
      * @return
      */
-    private static Object convertValue(String val, ExcelHeader eh, List<Field> fields) throws ActException {
+    public static Object convertValue(String val, ExcelHeader eh, List<Field> fields) throws ActException {
         Object value = null;
         if (StringUtils.isBlank(val)) {
             return value;
@@ -600,7 +600,7 @@ public class ExcelUtil {
      * @return
      */
 
-    private static String fieldToEnum(Field field, Object val) throws ActException {
+    public static String fieldToEnum(Field field, Object val) throws ActException {
         Field[] enumFields = field.getType().getFields();
         String value = val.toString();
         for (Field f : enumFields) {
@@ -624,7 +624,7 @@ public class ExcelUtil {
      * @param obj
      * @param val
      */
-    private static void enumToField(Field field, Object obj, Object val) throws ActException {
+    public static void enumToField(Field field, Object obj, Object val) throws ActException {
         String value = val.toString();
         try {
             Field[] enumFields = field.getType().getFields();
@@ -656,7 +656,7 @@ public class ExcelUtil {
      * @param val
      * @throws ActException
      */
-    private static void setCellValue(Cell cell, Field field, Object val) throws ActException {
+    public static void setCellValue(Cell cell, Field field, Object val) throws ActException {
         String fileType = field.getType().getName();
 
         if (fileType.equals(LocalDateTime.class.getName()) || //处理时间类型

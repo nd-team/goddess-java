@@ -11,6 +11,7 @@ import com.bjike.goddess.projectprocing.enums.DispatCondition;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -170,9 +171,9 @@ public interface SettleProgressManageSer extends Ser<SettleProgressManage, Settl
 
     /**
      *  导入
-     * @param settleProgressManageTOS 结算进度管理
+     * @param
      */
-    void importExcel(List<SettleProgressManageTO> settleProgressManageTOS) throws SerException;
+    void importExcel(List<InputStream> is, String outUnit) throws SerException;
 
     /**
      * 进度延后

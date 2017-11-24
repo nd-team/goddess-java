@@ -427,6 +427,16 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+    @PostMapping("v1/importExcel")
+    public Result exportExcel(@RequestParam String outUnit,HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = getInputStreams(request);
+            settleProgressManageAPI.excelImport(inputStreams, outUnit);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 分配节点和进度延后的节点下拉值
      * @return class AllotmentNodeDataVO
