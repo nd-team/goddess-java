@@ -34,7 +34,7 @@ public class NodeHeadersCustomBO extends BaseBO {
     /**
      * 节点1名称内容
      */
-    private String nodeOneNameContent;
+    private Integer nodeOneNameContent;
 
     /**
      * 节点1表头
@@ -123,11 +123,11 @@ public class NodeHeadersCustomBO extends BaseBO {
         this.nodeOneName = nodeOneName;
     }
 
-    public String getNodeOneNameContent() {
+    public Integer getNodeOneNameContent() {
         return nodeOneNameContent;
     }
 
-    public void setNodeOneNameContent(String nodeOneNameContent) {
+    public void setNodeOneNameContent(Integer nodeOneNameContent) {
         this.nodeOneNameContent = nodeOneNameContent;
     }
 

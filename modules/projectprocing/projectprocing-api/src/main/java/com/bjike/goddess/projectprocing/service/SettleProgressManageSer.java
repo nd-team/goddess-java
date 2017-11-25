@@ -10,6 +10,7 @@ import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
 import com.bjike.goddess.projectprocing.enums.DispatCondition;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
+import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 
 import java.io.InputStream;
 import java.util.List;
@@ -182,4 +183,11 @@ public interface SettleProgressManageSer extends Ser<SettleProgressManage, Settl
     default void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
         return;
     }
+//    /**
+//     * 分配责任人
+//     *
+//     */
+//    default void assignHead(SettleWorkProgreManageTO settleWorkProgreManageTO) throws SerException {
+//        return;
+//    }
 }

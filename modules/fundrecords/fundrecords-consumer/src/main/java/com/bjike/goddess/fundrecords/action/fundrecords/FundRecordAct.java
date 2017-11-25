@@ -722,4 +722,38 @@ public class FundRecordAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 根据账户来源导出Excel
+     *
+     * @param dataSource 账户来源
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export/ljt")
+    public Result exportExcel(@RequestParam String dataSource, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "资金流水.xlsx";
+            super.writeOutFile(response, fundRecordAPI.exportExcelLJT(dataSource), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 获取所有的账户来源
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/allDataSource")
+    public Result allDataSource( HttpServletRequest request) throws ActException {
+        try {
+            List<String> dataSources = fundRecordAPI.findAllDataSource();
+            return  ActResult.initialize(dataSources);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 节点表头定制
  *
@@ -57,7 +59,7 @@ public class NodeHeadersCustomTO extends BaseTO {
     /**
      * 对节点2间隔时间（单位：天）
      */
-    @NotBlank(message = "对节点2间隔时间不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "对节点2间隔时间不能为空",groups = {ADD.class,EDIT.class})
     private Integer nodeTwoInterDate;
 
     /**
@@ -74,7 +76,7 @@ public class NodeHeadersCustomTO extends BaseTO {
     /**
      * 对节点3间隔时间（单位：天）
      */
-    @NotBlank(message = "对节点3间隔时间不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "对节点3间隔时间不能为空",groups = {ADD.class,EDIT.class})
     private Integer nodeThreeInterDate;
 
     /**
@@ -91,7 +93,7 @@ public class NodeHeadersCustomTO extends BaseTO {
     /**
      * 对节点4间隔时间（单位：天）
      */
-    @NotBlank(message = "对节点4间隔时间不能为空",groups = {ADD.class,EDIT.class})
+    @NotNull(message = "对节点4间隔时间不能为空",groups = {ADD.class,EDIT.class})
     private Integer nodeFourInterDate;
 
     /**

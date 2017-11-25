@@ -17,6 +17,7 @@ import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
+import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 import com.bjike.goddess.projectprocing.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.projectprocing.vo.AllotmentNodeDataVO;
 import com.bjike.goddess.projectprocing.vo.ScreeningSettleProgressManageVO;
@@ -317,12 +318,13 @@ public class SettleProgressManageAction extends BaseFileAction {
     }
     /**
      * 分配责任人
+     * @param settleWorkProgreManageTO 结算工作进度管理
      * @version v1
      */
     @PostMapping("v1/redistribution")
-    public Result redistribution(@RequestParam String id, @RequestParam String responsible,HttpServletRequest request) throws ActException {
+    public Result redistribution(@Validated({ADD.class}) SettleWorkProgreManageTO settleWorkProgreManageTO, HttpServletRequest request) throws ActException {
         try {
-            settleWorkProgreManageAPI.redistribution(id,responsible);
+            settleWorkProgreManageAPI.addSettleWork(settleWorkProgreManageTO);
             return new ActResult("redistribution success");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -427,6 +429,13 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
+    /**
+     * 导入
+     * @param outUnit 外包单位
+     * @return
+     * @throws ActException
+     */
     @PostMapping("v1/importExcel")
     public Result exportExcel(@RequestParam String outUnit,HttpServletRequest request) throws ActException {
         try {

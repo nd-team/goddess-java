@@ -23,10 +23,7 @@ import com.bjike.goddess.projectprocing.entity.HeadersCustom;
 import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
 import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
 import com.bjike.goddess.projectprocing.entity.SettleProgressRecord;
-import com.bjike.goddess.projectprocing.to.HeadersCustomTO;
-import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
-import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
-import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
+import com.bjike.goddess.projectprocing.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -157,9 +154,11 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 nodeHeadersCustom.setCreateTime(LocalDateTime.now());
                 nodeHeadersCustom.setProssManageId(settleProgressManage.getId());
                 nodeHeadersCustom.setFatherId(nodeHeadersCustomTO.getId());
-                nodeHeadersCustom.setNodeTwoContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeOneContent()).plusDays(nodeHeadersCustomTO.getNodeTwoInterDate()));
-                nodeHeadersCustom.setNodeThreeContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeTwoContent()).plusDays(nodeHeadersCustomTO.getNodeThreeInterDate()));
-                nodeHeadersCustom.setNodeFourContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeThreeContent()).plusDays(nodeHeadersCustomTO.getNodeFourInterDate()));
+                nodeHeadersCustom.setNodeOneNameContent(1);
+                nodeHeadersCustom.setNodeOneContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeOneContent()));
+                nodeHeadersCustom.setNodeTwoContent(nodeHeadersCustom.getNodeOneContent().plusDays(nodeHeadersCustomTO.getNodeTwoInterDate()));
+                nodeHeadersCustom.setNodeThreeContent(nodeHeadersCustom.getNodeTwoContent().plusDays(nodeHeadersCustomTO.getNodeThreeInterDate()));
+                nodeHeadersCustom.setNodeFourContent(nodeHeadersCustom.getNodeThreeContent().plusDays(nodeHeadersCustomTO.getNodeFourInterDate()));
                 nodeHeadersCustomList.add(nodeHeadersCustom);
             }
             nodeHeadersCustomSer.save(nodeHeadersCustomList);
@@ -199,9 +198,11 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 nodeHeadersCustom.setCreateTime(LocalDateTime.now());
                 nodeHeadersCustom.setProssManageId(settleProgressManage.getId());
                 nodeHeadersCustom.setFatherId(nodeHeadersCustomTO.getId());
-                nodeHeadersCustom.setNodeTwoContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeOneContent()).plusDays(nodeHeadersCustomTO.getNodeTwoInterDate()));
-                nodeHeadersCustom.setNodeThreeContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeTwoContent()).plusDays(nodeHeadersCustomTO.getNodeThreeInterDate()));
-                nodeHeadersCustom.setNodeFourContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeThreeContent()).plusDays(nodeHeadersCustomTO.getNodeFourInterDate()));
+                nodeHeadersCustom.setNodeOneNameContent(1);
+                nodeHeadersCustom.setNodeOneContent(DateUtil.parseDate(nodeHeadersCustomTO.getNodeOneContent()));
+                nodeHeadersCustom.setNodeTwoContent(nodeHeadersCustom.getNodeOneContent().plusDays(nodeHeadersCustomTO.getNodeTwoInterDate()));
+                nodeHeadersCustom.setNodeThreeContent(nodeHeadersCustom.getNodeTwoContent().plusDays(nodeHeadersCustomTO.getNodeThreeInterDate()));
+                nodeHeadersCustom.setNodeFourContent(nodeHeadersCustom.getNodeThreeContent().plusDays(nodeHeadersCustomTO.getNodeFourInterDate()));
                 nodeHeadersCustomList.add(nodeHeadersCustom);
             }
             nodeHeadersCustomSer.save(nodeHeadersCustomList);
@@ -318,44 +319,44 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         List<AllotmentNodeDataBO> allotmentNodeDataBOList = new ArrayList<>();
         if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
             for (NodeHeadersCustomBO nodeHeadersCustomBO : nodeHeadersCustomList) {
-
+                NodeHeadersCustomBO nodeHeadersCustomBO1 = nodeHeadersCustomSer.getByFatherId(nodeHeadersCustomBO.getFatherId());
                 AllotmentNodeDataBO allotmentNodeDataBO = new AllotmentNodeDataBO();
                 allotmentNodeDataBO.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO.setNodeHeader(nodeHeadersCustomBO.getNodeOneHeader());
+                allotmentNodeDataBO.setNodeHeader(nodeHeadersCustomBO1.getNodeOneHeader());
                 allotmentNodeDataBO.setNodeContent(nodeHeadersCustomBO.getNodeOneContent());
                 allotmentNodeDataBO.setContractNo(settleProgressManage.getContractNo());
                 allotmentNodeDataBO.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO.setPayableAmount(settleProgressManage.getPartialSettle());
+                allotmentNodeDataBO.setPayableAmount(settleProgressManage.getPayableAmount());
                 allotmentNodeDataBO.setSaleContractNo(settleProgressManage.getSaleContractNo());
                 allotmentNodeDataBOList.add(allotmentNodeDataBO);
 
                 AllotmentNodeDataBO allotmentNodeDataBO1 = new AllotmentNodeDataBO();
                 allotmentNodeDataBO1.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO1.setNodeHeader(nodeHeadersCustomBO.getNodeTwoHeader());
+                allotmentNodeDataBO1.setNodeHeader(nodeHeadersCustomBO1.getNodeTwoHeader());
                 allotmentNodeDataBO1.setNodeContent(nodeHeadersCustomBO.getNodeTwoContent());
                 allotmentNodeDataBO1.setContractNo(settleProgressManage.getContractNo());
                 allotmentNodeDataBO1.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO1.setPayableAmount(settleProgressManage.getPartialSettle());
+                allotmentNodeDataBO1.setPayableAmount(settleProgressManage.getPayableAmount());
                 allotmentNodeDataBO1.setSaleContractNo(settleProgressManage.getSaleContractNo());
                 allotmentNodeDataBOList.add(allotmentNodeDataBO1);
 
                 AllotmentNodeDataBO allotmentNodeDataBO2 = new AllotmentNodeDataBO();
                 allotmentNodeDataBO2.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO2.setNodeHeader(nodeHeadersCustomBO.getNodeThreeHeader());
+                allotmentNodeDataBO2.setNodeHeader(nodeHeadersCustomBO1.getNodeThreeHeader());
                 allotmentNodeDataBO2.setNodeContent(nodeHeadersCustomBO.getNodeThreeContent());
                 allotmentNodeDataBO2.setContractNo(settleProgressManage.getContractNo());
                 allotmentNodeDataBO2.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO2.setPayableAmount(settleProgressManage.getPartialSettle());
+                allotmentNodeDataBO2.setPayableAmount(settleProgressManage.getPayableAmount());
                 allotmentNodeDataBO2.setSaleContractNo(settleProgressManage.getSaleContractNo());
                 allotmentNodeDataBOList.add(allotmentNodeDataBO2);
 
                 AllotmentNodeDataBO allotmentNodeDataBO3 = new AllotmentNodeDataBO();
                 allotmentNodeDataBO3.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO3.setNodeHeader(nodeHeadersCustomBO.getNodeFourHeader());
+                allotmentNodeDataBO3.setNodeHeader(nodeHeadersCustomBO1.getNodeFourHeader());
                 allotmentNodeDataBO3.setNodeContent(nodeHeadersCustomBO.getNodeFourContent());
                 allotmentNodeDataBO3.setContractNo(settleProgressManage.getContractNo());
                 allotmentNodeDataBO3.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO3.setPayableAmount(settleProgressManage.getPartialSettle());
+                allotmentNodeDataBO3.setPayableAmount(settleProgressManage.getPayableAmount());
                 allotmentNodeDataBO3.setSaleContractNo(settleProgressManage.getSaleContractNo());
                 allotmentNodeDataBOList.add(allotmentNodeDataBO3);
             }
@@ -749,4 +750,6 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         nodeHeadersCustom.setModifyTime(LocalDateTime.now());
         nodeHeadersCustomSer.update(nodeHeadersCustom);
     }
+
+
 }

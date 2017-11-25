@@ -46,7 +46,7 @@ public class AllotmentNodeDataBO extends BaseBO {
     /**
      * 可结算金额
      */
-    private String payableAmount;
+    private Double payableAmount;
 
     public String getNodeId() {
         return nodeId;
@@ -96,11 +96,11 @@ public class AllotmentNodeDataBO extends BaseBO {
         this.contractNo = contractNo;
     }
 
-    public String getPayableAmount() {
+    public Double getPayableAmount() {
         return payableAmount;
     }
 
-    public void setPayableAmount(String payableAmount) {
+    public void setPayableAmount(Double payableAmount) {
         this.payableAmount = payableAmount;
     }
 }

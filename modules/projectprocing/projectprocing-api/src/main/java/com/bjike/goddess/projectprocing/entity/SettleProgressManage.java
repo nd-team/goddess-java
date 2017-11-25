@@ -173,25 +173,25 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 到账时间
      */
-    @Column(name = "accountDate",  columnDefinition = "DATE   COMMENT '到账时间'")
+    @Column(name = "accountDate", columnDefinition = "DATE   COMMENT '到账时间'")
     private LocalDate accountDate;
 
     /**
      * 是否全部结算完成
      */
-    @Column(name = "is_allSettleComple",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否全部结算完成'", insertable = false)
+    @Column(name = "is_allSettleComple", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否全部结算完成'", insertable = false)
     private Boolean allSettleComple;
 
     /**
      * 分批结算
      */
-    @Column(name = "partialSettle",columnDefinition = "VARCHAR(255)   COMMENT '分批结算'")
+    @Column(name = "partialSettle", columnDefinition = "VARCHAR(255)   COMMENT '分批结算'")
     private String partialSettle;
 
     /**
      * 预计开票时间
      */
-    @Column(name = "expecMakeInvoie",  columnDefinition = "DATE   COMMENT '预计开票时间'")
+    @Column(name = "expecMakeInvoie", columnDefinition = "DATE   COMMENT '预计开票时间'")
     private LocalDate expecMakeInvoie;
 
     /**
@@ -209,13 +209,13 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 督导未结
      */
-    @Column(name = "superviseOutstan",columnDefinition = "DECIMAL(10,2)   COMMENT '督导未结'")
+    @Column(name = "superviseOutstan", columnDefinition = "DECIMAL(10,2)   COMMENT '督导未结'")
     private Double superviseOutstan;
 
     /**
      * 状态
      */
-    @Column(name = "status",columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "status", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private String status;
 
     /**
@@ -245,7 +245,7 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 数量
      */
-    @Column(name = "numbers",columnDefinition = "INT(11)   COMMENT '数量'")
+    @Column(name = "numbers", columnDefinition = "INT(11)   COMMENT '数量'")
     private Integer numbers;
 
     /**
@@ -275,7 +275,7 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 到货时间
      */
-    @Column(name = "arrivalTime",  columnDefinition = "DATE   COMMENT '到货时间'")
+    @Column(name = "arrivalTime", columnDefinition = "DATE   COMMENT '到货时间'")
     private LocalDate arrivalTime;
 
     /**
@@ -311,14 +311,14 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 是否可制作申请结算
      */
-    @Column(name = "settleMadeApple", columnDefinition = "DECIMAL(10,2)   COMMENT '是否可制作申请结算'")
-    private Double settleMadeApple;
+    @Column(name = "settleMadeApple", columnDefinition = "TINYINT(2)   COMMENT '是否可制作申请结算'")
+    private Boolean settleMadeApple;
 
     /**
      * 是否影响结算
      */
-    @Column(name = "affectSettlement", columnDefinition = "DECIMAL(10,2)   COMMENT '是否影响结算'")
-    private Double affectSettlement;
+    @Column(name = "affectSettlement", columnDefinition = "TINYINT(2)   COMMENT '是否影响结算'")
+    private Boolean affectSettlement;
 
     /**
      * 结算计划
@@ -335,7 +335,7 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 归属
      */
-    @Column(name = "attribution",  columnDefinition = "VARCHAR(255)   COMMENT '归属'")
+    @Column(name = "attribution", columnDefinition = "VARCHAR(255)   COMMENT '归属'")
     private String attribution;
 
     /**
@@ -720,19 +720,19 @@ public class SettleProgressManage extends BaseEntity {
         this.totalScaleNum = totalScaleNum;
     }
 
-    public Double getSettleMadeApple() {
+    public Boolean getSettleMadeApple() {
         return settleMadeApple;
     }
 
-    public void setSettleMadeApple(Double settleMadeApple) {
+    public void setSettleMadeApple(Boolean settleMadeApple) {
         this.settleMadeApple = settleMadeApple;
     }
 
-    public Double getAffectSettlement() {
+    public Boolean getAffectSettlement() {
         return affectSettlement;
     }
 
-    public void setAffectSettlement(Double affectSettlement) {
+    public void setAffectSettlement(Boolean affectSettlement) {
         this.affectSettlement = affectSettlement;
     }
 

@@ -2,6 +2,7 @@ package com.bjike.goddess.projectprocing.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectprocing.bo.PersonalTasksSummBO;
 import com.bjike.goddess.projectprocing.bo.SettleWorkProgreManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.entity.SettleWorkProgreManage;
@@ -88,5 +89,29 @@ public interface SettleWorkProgreManageSer extends Ser<SettleWorkProgreManage, S
      */
     default void fullFinishStatus(CompletionStatusTO completionStatusTO) throws SerException {
         return;
+    }
+    /**
+     * 结算进度日汇总
+     *
+     * @return class PersonalTasksSummBO
+     */
+    default PersonalTasksSummBO personalSummDay(String summDate) throws SerException {
+        return null;
+    }
+    /**
+     * 结算进度周汇总
+     *
+     * @return class PersonalTasksSummBO
+     */
+    default PersonalTasksSummBO personalSummWeek(Integer year,Integer month,Integer week) throws SerException {
+        return null;
+    }
+    /**
+     * 结算进度月汇总
+     *
+     * @return class PersonalTasksSummBO
+     */
+    default PersonalTasksSummBO personalSummMonth(Integer year,Integer month) throws SerException {
+        return null;
     }
 }

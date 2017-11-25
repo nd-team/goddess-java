@@ -117,6 +117,14 @@ public interface FundRecordAPI {
 
     void leadExcel(List<FundRecordTO> toList) throws SerException;
 
+    /**
+     * 根据账户来源导出
+     * @param dataSource 账户来源
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcelLJT(String dataSource) throws SerException;
+
     byte[] exportExcel(String startDate, String endDate)  throws SerException;
 
     byte[] exportExcelModule() throws SerException;
@@ -227,5 +235,12 @@ public interface FundRecordAPI {
      * @return 项目名称分析结果集
      */
     ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month,String projectName) throws SerException;
+
+    /**
+     * 获取所有账户来源
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllDataSource() throws SerException{return null;}
 
 }

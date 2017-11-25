@@ -10,6 +10,7 @@ import com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.to.CompletionStatusTO;
+import com.bjike.goddess.projectprocing.vo.PersonalTasksSummVO;
 import com.bjike.goddess.projectprocing.vo.SettleWorkProgreManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -136,6 +137,64 @@ public class SettleWorkProgreManageAction {
         try {
             settleWorkProgreManageAPI.fullFinishStatus(completionStatusTO);
             return new ActResult("redistribution sucess");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 结算工作进度日汇总
+     *
+     * @param summDate 日期
+     * @return class PersonalTasksSummVO
+     * @des 结算工作进度日汇总
+     * @version v1
+     */
+    @GetMapping("v1/personalSumm/day")
+    public Result personalSummDay(String summDate, HttpServletRequest request) throws ActException {
+        try {
+            PersonalTasksSummVO personalTasksSummVO = BeanTransform.copyProperties(
+                    settleWorkProgreManageAPI.personalSummDay(summDate), PersonalTasksSummVO.class, request);
+            return ActResult.initialize(personalTasksSummVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 结算工作进度周汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class PersonalTasksSummVO
+     * @des 结算工作进度周汇总
+     * @version v1
+     */
+    @GetMapping("v1/personalSumm/week")
+    public Result personalSummWeek(Integer year,Integer month,Integer week, HttpServletRequest request) throws ActException {
+        try {
+            PersonalTasksSummVO personalTasksSummVO = BeanTransform.copyProperties(
+                    settleWorkProgreManageAPI.personalSummWeek(year,month,week), PersonalTasksSummVO.class, request);
+            return ActResult.initialize(personalTasksSummVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 结算工作进度月汇总
+     *
+     * @param year 年份
+     * @param month 月份
+     * @return class PersonalTasksSummVO
+     * @des 结算工作进度周汇总
+     * @version v1
+     */
+    @GetMapping("v1/personalSumm/month")
+    public Result personalSummMonth(Integer year,Integer month, HttpServletRequest request) throws ActException {
+        try {
+            PersonalTasksSummVO personalTasksSummVO = BeanTransform.copyProperties(
+                    settleWorkProgreManageAPI.personalSummMonth(year,month), PersonalTasksSummVO.class, request);
+            return ActResult.initialize(personalTasksSummVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

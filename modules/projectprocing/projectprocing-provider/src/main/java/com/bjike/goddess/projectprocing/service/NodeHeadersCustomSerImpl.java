@@ -52,7 +52,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         NodeHeadersCustom nodeHeadersCustom = BeanTransform.copyProperties(nodeHeadersCustomTO, NodeHeadersCustom.class);
         nodeHeadersCustom.setCreateTime(LocalDateTime.now());
         super.save(nodeHeadersCustom);
-        return BeanTransform.copyProperties(nodeHeadersCustom, NodeHeadersCustom.class);
+        return BeanTransform.copyProperties(nodeHeadersCustom, NodeHeadersCustomBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -136,7 +136,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     @Override
     public NodeHeadersCustomBO getByFatherId(String fatherId) throws SerException {
         NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
-        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("fatherId",fatherId));
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("id",fatherId));
         NodeHeadersCustom nodeHeadersCustom = super.findOne(nodeHeadersCustomDTO);
         return BeanTransform.copyProperties(nodeHeadersCustom,NodeHeadersCustomBO.class);
     }

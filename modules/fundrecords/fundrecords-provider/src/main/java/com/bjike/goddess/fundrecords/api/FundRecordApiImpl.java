@@ -93,6 +93,11 @@ public class FundRecordApiImpl implements FundRecordAPI {
     }
 
     @Override
+    public byte[] exportExcelLJT(String dataSource) throws SerException {
+        return fundRecordSer.exportExcelLJT(dataSource);
+    }
+
+    @Override
     public byte[] exportExcel(String startDate, String endDate) throws SerException {
         return fundRecordSer.exportExcel(startDate,endDate);
     }
@@ -170,5 +175,10 @@ public class FundRecordApiImpl implements FundRecordAPI {
     @Override
     public ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month, String projectName) throws SerException {
         return fundRecordSer.projectNameAnalysis(year,month,projectName);
+    }
+
+    @Override
+    public List<String> findAllDataSource() throws SerException {
+        return fundRecordSer.findAllDataSource();
     }
 }
