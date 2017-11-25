@@ -560,9 +560,9 @@ public class ProjectAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/namesBy/group")
-    public Result projectByAreaAndGroup(@Validated(ProjectNameDTO.QUEARY.class) ProjectNameDTO projectNameDTO,BindingResult bindingResult) throws ActException {
+    public Result projectByAreaAndGroup(@Validated(ProjectNameDTO.QUEARY.class) ProjectNameDTO projectNameDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            return ActResult.initialize(projectAPI.projectByAreaAndGroup( projectNameDTO));
+            return ActResult.initialize(BeanTransform.copyProperties(projectAPI.projectByAreaAndGroup(projectNameDTO), ProjectVO.class, request));
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
@@ -576,9 +576,9 @@ public class ProjectAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/tablesBy/pname")
-    public Result tableNamesBypname(@Validated(ProjectNameDTO.QUEARYTABLES.class) ProjectNameDTO projectNameDTO,BindingResult bindingResult) throws ActException {
+    public Result tableNamesBypname(@Validated(ProjectNameDTO.QUEARYTABLES.class) ProjectNameDTO projectNameDTO, BindingResult bindingResult) throws ActException {
         try {
-            return ActResult.initialize(projectAPI.tableNamesBypname( projectNameDTO));
+            return ActResult.initialize(projectAPI.tableNamesBypname(projectNameDTO));
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }

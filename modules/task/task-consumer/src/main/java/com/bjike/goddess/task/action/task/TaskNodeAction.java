@@ -23,11 +23,11 @@ import com.bjike.goddess.taskallotment.bo.*;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.excel.TaskNodeExcel;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.excel.WholeTaskExcel;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
-import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.DeleteFileTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
@@ -1092,21 +1092,39 @@ public class TaskNodeAction extends BaseFileAction {
         }
     }
 
-    @PostMapping("v1/test")
-    public Result test(CollectDataTO collectDataTO) throws ActException {
-        try {
-            CollectDataVO ss = taskNodeAPI.personProjectCollect(collectDataTO);
-            return ActResult.initialize(ss);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @PostMapping("v1/test")
+//    public Result test(CollectDataTO collectDataTO) throws ActException {
+//        try {
+//            CollectDataVO ss = taskNodeAPI.personProjectCollect(collectDataTO);
+//            return ActResult.initialize(ss);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("v1/aa")
+//    public Result aa(CollectDataTO to) throws ActException {
+//        try {
+//            CollectDataVO vo = taskNodeAPI.personProjectCollect(to);
+//            return ActResult.initialize(vo);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
-    @GetMapping("v1/aa")
-    public Result aa(CollectDataTO to) throws ActException {
+    /**
+     * 编辑任务状态
+     *
+     * @param id         id
+     * @param taskStatus 任务状态
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/editStatus/{id}/{taskStatus}")
+    public Result editStatus(@PathVariable String id, @PathVariable TaskStatus taskStatus) throws ActException {
         try {
-            CollectDataVO vo = taskNodeAPI.personProjectCollect(to);
-            return ActResult.initialize(vo);
+            taskNodeAPI.editStatus(id, taskStatus);
+            return new ActResult("编辑成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
