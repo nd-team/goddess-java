@@ -192,7 +192,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             }
         }
 
-        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
+        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class,true);
 
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("name", to.getName()));
