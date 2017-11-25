@@ -5,14 +5,17 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
-import com.bjike.goddess.taskallotment.dto.ProjectDTO;
-import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
-import com.bjike.goddess.taskallotment.dto.TableDTO;
+import com.bjike.goddess.taskallotment.dto.*;
+import com.bjike.goddess.taskallotment.entity.CustomTitle;
 import com.bjike.goddess.taskallotment.entity.Project;
+import com.bjike.goddess.taskallotment.entity.TaskNode;
 import com.bjike.goddess.taskallotment.enums.Status;
 import com.bjike.goddess.taskallotment.excel.ProjectExcel;
 import com.bjike.goddess.taskallotment.excel.TableExcel;
+import com.bjike.goddess.taskallotment.service.CustomTitleSer;
 import com.bjike.goddess.taskallotment.service.ProjectSer;
+import com.bjike.goddess.taskallotment.service.TableSer;
+import com.bjike.goddess.taskallotment.service.TaskNodeSer;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
 import com.bjike.goddess.taskallotment.to.TableTO;
@@ -20,6 +23,8 @@ import com.bjike.goddess.taskallotment.vo.SonPermissionObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,6 +42,12 @@ import java.util.stream.Collectors;
 public class ProjectApiImpl implements ProjectAPI {
     @Autowired
     private ProjectSer projectSer;
+    @Autowired
+    private TableSer tableSer;
+    @Autowired
+    private CustomTitleSer customTitleSer;
+    @Autowired
+    private TaskNodeSer taskNodeSer;
 
     @Override
     public List<ProjectBO> list(ProjectDTO dto) throws SerException {
@@ -149,46 +160,78 @@ public class ProjectApiImpl implements ProjectAPI {
     }
 
     @Override
-    public List<String> areass() throws SerException{
-        ProjectDTO dto=new ProjectDTO();
+    public List<String> areass() throws SerException {
+        ProjectDTO dto = new ProjectDTO();
         dto.getConditions().add(Restrict.eq("status", Status.START));
         return projectSer.findByCis(dto).stream().map(Project::getArea).distinct().collect(Collectors.toList());
     }
 
     @Override
-    public List<String> departs(String area) throws SerException{
-        ProjectDTO dto=new ProjectDTO();
+    public List<String> departs(String area) throws SerException {
+        ProjectDTO dto = new ProjectDTO();
         dto.getConditions().add(Restrict.eq("status", Status.START));
-        dto.getConditions().add(Restrict.eq("area",area));
+        dto.getConditions().add(Restrict.eq("area", area));
         return projectSer.findByCis(dto).stream().map(Project::getDepart).distinct().collect(Collectors.toList());
     }
 
     @Override
-    public List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException {
-        return projectSer.projectByAreaAndGroup(projectNameDTO) ;
+    public List<ProjectBO> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException {
+        return projectSer.projectByAreaAndGroup(projectNameDTO);
     }
 
     @Override
     public List<String> tableNamesBypname(ProjectNameDTO projectNameDTO) throws SerException {
-        return projectSer.tableNamesBypname(projectNameDTO) ;
+        return projectSer.tableNamesBypname(projectNameDTO);
     }
 
     @Override
-    public List<String> makeProjects(String area,String depart) throws SerException{
-        ProjectDTO dto=new ProjectDTO();
+    public List<String> makeProjects(String area, String depart) throws SerException {
+        ProjectDTO dto = new ProjectDTO();
         dto.getConditions().add(Restrict.eq("status", Status.START));
-        dto.getConditions().add(Restrict.eq("area",area));
-        dto.getConditions().add(Restrict.eq("depart",depart));
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("depart", depart));
         return projectSer.findByCis(dto).stream().map(Project::getMakeProject).distinct().collect(Collectors.toList());
     }
 
     @Override
-    public List<ProjectBO> projects(String area,String depart,String makeProject) throws SerException{
-        ProjectDTO dto=new ProjectDTO();
+    public List<ProjectBO> projects(String area, String depart, String makeProject) throws SerException {
+        ProjectDTO dto = new ProjectDTO();
         dto.getConditions().add(Restrict.eq("status", Status.START));
-        dto.getConditions().add(Restrict.eq("area",area));
-        dto.getConditions().add(Restrict.eq("depart",depart));
-        dto.getConditions().add(Restrict.eq("makeProject",makeProject));
-        return BeanTransform.copyProperties(projectSer.findByCis(dto),ProjectBO.class);
+        dto.getConditions().add(Restrict.eq("area", area));
+        dto.getConditions().add(Restrict.eq("depart", depart));
+        dto.getConditions().add(Restrict.eq("makeProject", makeProject));
+        return BeanTransform.copyProperties(projectSer.findByCis(dto), ProjectBO.class);
+    }
+
+    @Override
+    public List<ProjectBO> starts() throws SerException {
+        ProjectDTO dto = new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        return BeanTransform.copyProperties(projectSer.findByCis(dto), ProjectBO.class);
+    }
+
+    @Override
+    public List<TableBO> tableByProjectId(String projectId) throws SerException {
+        TableDTO tableDTO=new TableDTO();
+        tableDTO.getConditions().add(Restrict.eq("projectId",projectId));
+        tableDTO.getConditions().add(Restrict.eq("status", Status.START));
+        return BeanTransform.copyProperties(tableSer.findByCis(tableDTO), TableBO.class);
+    }
+
+    @Override
+    public List<String> fileds(String[] tablesId) throws SerException {
+        Set<String> set=new HashSet<>();
+        TaskNodeDTO taskNodeDTO=new TaskNodeDTO();
+        taskNodeDTO.getConditions().add(Restrict.in("tableId",tablesId));
+        List<TaskNode> taskNodes=taskNodeSer.findByCis(taskNodeDTO);
+        Set<String> nodeIds=taskNodes.stream().map(TaskNode::getId).collect(Collectors.toSet());
+        if (!nodeIds.isEmpty()){
+            CustomTitleDTO customTitleDTO=new CustomTitleDTO();
+            customTitleDTO.getConditions().add(Restrict.in("taskNodeId",nodeIds));
+            List<CustomTitle> customTitles=customTitleSer.findByCis(customTitleDTO);
+            Set<String> titles=customTitles.stream().map(CustomTitle::getTitle).collect(Collectors.toSet());
+            set.addAll(titles);
+        }
+        return new ArrayList<>(set);
     }
 }

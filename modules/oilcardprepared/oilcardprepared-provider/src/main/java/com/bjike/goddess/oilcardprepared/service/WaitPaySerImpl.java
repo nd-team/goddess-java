@@ -266,7 +266,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                             waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
                             waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
                             waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
-                            waitPay.setPay(v.getPay());
+                            waitPay.setPay(v.getIfPayed());
                             super.save(waitPay);
                         }
                     }
@@ -293,7 +293,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
                             waitPay.setRechargeMoney(oilCardRechargeBO.getRechargeMoney());
                             waitPay.setRechargeUser(oilCardRechargeBO.getRechargeUser());
                             waitPay.setRechargeWay(oilCardRechargeBO.getRechargeWay());
-                            waitPay.setPay(v.getPay());
+                            waitPay.setPay(v.getIfPayed());
                             super.save(waitPay);
                         }
                     }
@@ -303,7 +303,7 @@ public class WaitPaySerImpl extends ServiceImpl<WaitPay, WaitPayDTO> implements 
         for (WaitPay p : super.findAll()) {
             if (null != p.getWaitId()) {
                 DispatchCarInfoBO v = dispatchCarInfoAPI.findById(p.getWaitId());
-                if (v == null || v.getPay()) {
+                if (v == null || v.getIfPayed()) {
                     super.remove(p.getId());
                 }
             }

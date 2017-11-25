@@ -3,6 +3,9 @@ package com.bjike.goddess.task.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.dto.CollectDTO;
+import com.bjike.goddess.task.to.CustomizeTO;
+
+import java.util.Set;
 
 /**
  * 进度
@@ -19,4 +22,11 @@ public interface ScheduleAPI {
         return null;
     }
 
+    /**
+     * 字段对应的值
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Set<String> values(CustomizeTO to) throws SerException;
 }

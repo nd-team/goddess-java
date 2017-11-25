@@ -5,6 +5,10 @@ import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.dto.CollectDTO;
 import com.bjike.goddess.task.entity.Customize;
 import com.bjike.goddess.task.enums.CollectType;
+import com.bjike.goddess.task.to.CustomizeTO;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [liguiqin]
@@ -14,15 +18,34 @@ import com.bjike.goddess.task.enums.CollectType;
  * @Copy: [com.bjike]
  */
 public interface ScheduleSer {
+
     /**
-     * 项目汇总
+     * html
      * @param dto
      * @return
      * @throws SerException
      */
-    default Collect collect(CollectDTO dto) throws SerException {
-        return null;
-    }
+    String html(CollectDTO dto) throws SerException;
+
+    /**
+     * 汇总方案汇总
+     * @param result
+     * @param dto
+     * @param cutomizeId
+     * @param count
+     * @param initas
+     * @param charges
+     * @param excutes
+     * @throws SerException
+     */
+    void htmlScheme(StringBuilder result, CollectDTO dto, String cutomizeId, List<Long> count, Set<String> initas, Set<String> charges, Set<String> excutes) throws SerException;
+
+    /**
+     * 固定表头
+     * @param sb
+     * @throws SerException
+     */
+    void fixTitleScheme(StringBuilder sb) throws SerException;
 
     /**
      * 构建项目汇总html
@@ -44,4 +67,11 @@ public interface ScheduleSer {
     default void customizeCollect(Customize customize) throws SerException {
     }
 
+    /**
+     * 字段对应的值
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    Set<String> values(CustomizeTO to) throws SerException;
 }

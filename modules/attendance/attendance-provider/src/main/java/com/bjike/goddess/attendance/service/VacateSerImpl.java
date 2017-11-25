@@ -74,8 +74,6 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     @Autowired
     private DayReportSer dayReportSer;
     @Autowired
-    private VacateSer vacateSer;
-    @Autowired
     private OverWorkSer overWorkSer;
     @Autowired
     private FinanceAttendanceSer financeAttendanceSer;

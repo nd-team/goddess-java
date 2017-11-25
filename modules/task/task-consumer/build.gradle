@@ -1,19 +1,13 @@
-apply from: '../../../config.gradle'
-
-
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version")
-        classpath("org.springframework:springloaded:1.2.7.RELEASE")
     }
 }
+
 apply plugin: 'org.springframework.boot'
-bootRun{
-    addResources = true
-}
 jar {
     String buildDir = project.buildDir
     manifest {
@@ -22,7 +16,6 @@ jar {
                 "Class-Path": new File(buildDir + '/libs/lib').list().collect { "lib/${it}" }.join(" ")
         )
     }
-
 }
 
 task copyJars(type: Copy) {
@@ -40,20 +33,16 @@ sourceSets {
     }
 }
 dependencies {
-
     compile(project(":common:common-consumer")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
+
     compile project(":modules:task:task-api")
-    compile project(":modules:taskallotment:taskallotment-api")
     compile project(":modules:businessproject:businessproject-api")
     compile project(":modules:storage:storage-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
-    compile("org.springframework.boot:spring-boot-starter-web"){
+    compile("org.springframework.boot:spring-boot-starter-web") {
         exclude group: 'com.fasterxml.jackson.core'
     }
-
 }
-
-
 

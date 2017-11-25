@@ -23,26 +23,26 @@ public class TaskRunner extends Thread {
 
     @Override
     public void run() {
-        synchronized (this) {
-            while (true) {
-                if (suspend) {
-                    try {
-                        wait();
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    customizeSer.executeTask();
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        }
+//        synchronized (this) {
+//            while (true) {
+//                if (suspend) {
+//                    try {
+//                        wait();
+//
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                try {
+//                    customizeSer.executeTask();
+//                    Thread.sleep(500);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+//        }
 
     }
 
