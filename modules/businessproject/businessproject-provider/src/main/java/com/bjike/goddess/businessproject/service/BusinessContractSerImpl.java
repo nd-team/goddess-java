@@ -29,7 +29,6 @@ import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
-import com.bjike.goddess.taskallotment.enums.TimeStatus;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -87,7 +86,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -106,7 +105,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -125,7 +124,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3",null);
+            flag = cusPermissionSer.busCusPermission("3", null);
             if (!flag) {
                 throw new SerException("您不是相关项目经理人员，不可以操作");
             }
@@ -144,7 +143,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.modCusPermission("4",null);
+            flag = cusPermissionSer.modCusPermission("4", null);
             if (!flag) {
                 throw new SerException("您不是相关规划部门的负责人，不可以操作");
             }
@@ -163,7 +162,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.modCusPermission("5",null);
+            flag = cusPermissionSer.modCusPermission("5", null);
             if (!flag) {
                 throw new SerException("您不是相关预算部门的负责人，不可以操作");
             }
@@ -182,7 +181,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -199,7 +198,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -216,7 +215,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3",null);
+            flag = cusPermissionSer.busCusPermission("3", null);
         } else {
             flag = true;
         }
@@ -233,7 +232,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.modCusPermission("4",null);
+            flag = cusPermissionSer.modCusPermission("4", null);
         } else {
             flag = true;
         }
@@ -250,7 +249,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.modCusPermission("5",null);
+            flag = cusPermissionSer.modCusPermission("5", null);
         } else {
             flag = true;
         }
@@ -2489,7 +2488,6 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         return null;
     }
 
-<<<<<<< Updated upstream
     @Override
     public OptionMakeBO weekPersonFigure(PersonTO to) throws SerException {
         Integer year = to.getYear();
@@ -2508,18 +2506,6 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         return personFigure(to, startDate, endDate, text_1);
 
     }
-=======
-    private OptionMakeBO personFigure(String startDate, String endDate, String text_1) throws SerException {
-        List<PersonCollectBO> collectBOS = new ArrayList<>();
-        String[] fields = new String[]{"innerProject", "totalMoney"};
-        StringBuilder sb = new StringBuilder();
-        //内部项目名称 立项金额总和
-        sb.append(" SELECT innerProject AS innerProject ,ifnull(sum(makeMoney),0) AS totalMoney FROM businessproject_siginmanage ");
-        sb.append(" WHERE  realityStartDate BETWEEN '" + startDate + "' AND '" + endDate + "' ");
-        sb.append(" GROUP BY innerProject ");
-        List<PersonCollectBO> boList = super.findBySql(sb.toString(), PersonCollectBO.class, fields);
-        if (boList != null && boList.size() > 0) {
->>>>>>> Stashed changes
 
     @Override
     public OptionMakeBO monthPersonFigure(PersonTO to) throws SerException {
@@ -4015,9 +4001,6 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         return boList;
     }
-<<<<<<< Updated upstream
-}
-=======
 
     @Override
     public List<String> findSingleContractName() throws SerException {
@@ -4044,7 +4027,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         BusinessContractDTO businessContractDTO = new BusinessContractDTO();
         businessContractDTO.getConditions().add(Restrict.eq("singleContractNum", singleNum));
         BusinessContract businessContract = super.findOne(businessContractDTO);
-        return BeanTransform.copyProperties(businessContract,BusinessContractsBO.class);
+        return BeanTransform.copyProperties(businessContract, BusinessContractsBO.class);
     }
+
+
 }
->>>>>>> Stashed changes

@@ -563,7 +563,6 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     }
 
     @Override
-<<<<<<< Updated upstream
     public OptionMakeBO weekDepartFigure(PersonTO to) throws SerException {
         return businessContractSer.weekDepartFigure(to);
     }
@@ -582,8 +581,7 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
         return businessContractSer.yearDepartFigure(to);
     }
-=======
->>>>>>> Stashed changes
+    @Override
     public List<String> findSingleContractName() throws SerException {
         return businessContractSer.findSingleContractName();
     }

@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 通讯录管理汇总
+ * 通讯录管理图表汇总
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-11-16 05:08 ]
- * @Description: [ 通讯录管理汇总 ]
+ * @Description: [ 通讯录管理图表汇总 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -59,7 +59,7 @@ public class ContactsCollectFigureAct {
     }
 
     /**
-     * 通讯录信息管理日汇总
+     * 通讯录信息管理图表日汇总
      *
      * @param to to
      * @return class OptionBO
@@ -76,7 +76,7 @@ public class ContactsCollectFigureAct {
     }
 
     /**
-     * 通讯录信息管理周汇总
+     * 通讯录信息管理图表周汇总
      *
      * @param to to
      * @return class OptionBO
@@ -93,7 +93,7 @@ public class ContactsCollectFigureAct {
     }
 
     /**
-     * 通讯录信息管理月汇总
+     * 通讯录信息管理图表月汇总
      *
      * @param to to
      * @return class OptionBO
@@ -110,7 +110,7 @@ public class ContactsCollectFigureAct {
     }
 
     /**
-     * 通讯录信息管理累计汇总
+     * 通讯录信息管理图表累计汇总
      *
      * @param to to
      * @return class ContactsCollectBO

@@ -19,19 +19,19 @@ public class InvoiceInfoTO extends BaseTO {
     /**
      * 票种
      */
-    @NotBlank(message = "票种不能为空",groups = {InvoiceInfoTO.TestAdd.class,InvoiceInfoTO.TestEdit.class})
+    @NotBlank(message = "票种不能为空",groups = {TestAdd.class,TestEdit.class})
     private String ticket;
 
     /**
      * 全部购票员
      */
-    @NotBlank(message = "全部购票员不能为空",groups = {InvoiceInfoTO.TestAdd.class,InvoiceInfoTO.TestEdit.class})
+    @NotBlank(message = "全部购票员不能为空",groups = {TestAdd.class,TestEdit.class})
     private String fullTicket;
 
     /**
      * 取票方式
      */
-    @NotBlank(message = "取票方式不能为空",groups = {InvoiceInfoTO.TestAdd.class,InvoiceInfoTO.TestEdit.class})
+    @NotBlank(message = "取票方式不能为空",groups = {TestAdd.class,TestEdit.class})
     private String ticketWay;
 
 
