@@ -5,6 +5,7 @@ import com.bjike.goddess.projectprocing.bo.SettleWorkProgreManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.service.SettleProgressRecordSer;
 import com.bjike.goddess.projectprocing.service.SettleWorkProgreManageSer;
+import com.bjike.goddess.projectprocing.to.CompletionStatusTO;
 import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,15 @@ public class SettleWorkProgreManageApiImpl implements SettleWorkProgreManageAPI 
     @Override
     public void deleteSettleWork(String id) throws SerException {
         settleWorkProgreManageSer.deleteSettleWork(id);
+    }
+
+    @Override
+    public List<SettleWorkProgreManageBO> listWorkByOutUnit(String outUnit) throws SerException {
+        return settleWorkProgreManageSer.listWorkByOutUnit(outUnit);
+    }
+
+    @Override
+    public void fullFinishStatus(CompletionStatusTO completionStatusTO) throws SerException {
+        settleWorkProgreManageSer.fullFinishStatus(completionStatusTO);
     }
 }

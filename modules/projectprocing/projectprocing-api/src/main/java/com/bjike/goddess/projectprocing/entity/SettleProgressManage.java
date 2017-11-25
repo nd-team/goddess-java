@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -28,8 +29,8 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 更改日期
      */
-    @Column(name = "updateDate", columnDefinition = "DATE   COMMENT '更改日期'")
-    private LocalDate updateDate;
+    @Column(name = "updateDate", columnDefinition = "DATETIME   COMMENT '更改日期'")
+    private LocalDateTime updateDate;
 
     /**
      * 是否更改日期
@@ -343,11 +344,11 @@ public class SettleProgressManage extends BaseEntity {
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
-    public LocalDate getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDate updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 

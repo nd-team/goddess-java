@@ -1,6 +1,7 @@
 package com.bjike.goddess.projectprocing.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.projectprocing.enums.SummTableName;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

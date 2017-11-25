@@ -6,10 +6,12 @@ import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.service.SettleProgressManageSer;
+import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -25,6 +27,11 @@ import java.util.List;
 public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
     @Autowired
     private SettleProgressManageSer settleProgressManageSer;
+
+    @Override
+    public void excelImport(List<InputStream> is, String outUnit) throws SerException {
+        settleProgressManageSer.importExcel(is,outUnit);
+    }
 
     @Override
     public byte[] exportExcel(String outUnit) throws SerException {
@@ -106,4 +113,15 @@ public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
         return settleProgressManageSer.findAllNodeById(id);
     }
 
+    @Override
+    public SettleProgressManageBO findByContractNo(String contractNo) throws SerException {
+        return settleProgressManageSer.findByContractNo(contractNo);
+    }
+
+
+
+    @Override
+    public void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
+        settleProgressManageSer.scheduleDelay(scheduleDelayDataTO);
+    }
 }

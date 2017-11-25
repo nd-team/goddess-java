@@ -103,4 +103,12 @@ public interface NodeHeadersCustomSer extends Ser<NodeHeadersCustom, NodeHeaders
     default void checkNodeCutoff() throws SerException {
         return;
     }
+    /**
+     * 获取本条数据对应的父id数据
+     *
+     * @return class NodeHeadersCustomBO
+     */
+    default NodeHeadersCustomBO getByFatherId(String fatherId) throws SerException {
+        return null;
+    }
 }

@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.SettleWorkProgreManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
+import com.bjike.goddess.projectprocing.to.CompletionStatusTO;
 import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 
 import java.util.List;
@@ -56,9 +57,9 @@ public interface SettleWorkProgreManageAPI {
      * 重新分配负责人
      *
      * @param responsible 责任人
-     * @param id          id
+     * @param id id
      */
-    default void redistribution(String id, String responsible) throws SerException {
+    default void redistribution(String id,String responsible) throws SerException {
         return;
     }
 
@@ -68,6 +69,22 @@ public interface SettleWorkProgreManageAPI {
      * @param id id
      */
     default void deleteSettleWork(String id) throws SerException {
+        return;
+    }
+    /**
+     * 根据外包单位筛选列表
+     *
+     * @return class SettleWorkProgreManageBO
+     */
+    default List<SettleWorkProgreManageBO> listWorkByOutUnit(String outUnit) throws SerException {
+        return null;
+    }
+    /**
+     * 填写完成情况
+     *
+     * @param completionStatusTO 填写任务情况to
+     */
+    default void fullFinishStatus(CompletionStatusTO completionStatusTO) throws SerException {
         return;
     }
 }

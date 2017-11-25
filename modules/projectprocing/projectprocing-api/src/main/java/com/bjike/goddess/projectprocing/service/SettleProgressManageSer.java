@@ -8,8 +8,10 @@ import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
 import com.bjike.goddess.projectprocing.enums.DispatCondition;
+import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -145,11 +147,19 @@ public interface SettleProgressManageSer extends Ser<SettleProgressManage, Settl
         return null;
     }
     /**
-     * 获取该条数据所有的节点表头字段
+     * 节点分配用到的获取该条数据所有的节点表头字段和对应数据
      *
      * @return class AllotmentNodeDataBO
      */
     default List<AllotmentNodeDataBO> findAllNodeById(String id) throws SerException {
+        return null;
+    }
+    /**
+     * 根据外包合同号获取数据
+     *
+     * @return class SettleProgressManageBO
+     */
+    default SettleProgressManageBO findByContractNo(String contractNo) throws SerException {
         return null;
     }
     /**
@@ -161,7 +171,15 @@ public interface SettleProgressManageSer extends Ser<SettleProgressManage, Settl
 
     /**
      *  导入
-     * @param settleProgressManageTOS 结算进度管理
+     * @param
      */
-    void importExcel(List<SettleProgressManageTO> settleProgressManageTOS) throws SerException;
+    void importExcel(List<InputStream> is, String outUnit) throws SerException;
+
+    /**
+     * 进度延后
+     *
+     */
+    default void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
+        return;
+    }
 }
