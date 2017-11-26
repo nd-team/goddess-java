@@ -85,7 +85,7 @@ public class SettleProgressManageTO extends BaseTO {
      * 外包合同号
      */
     @NotBlank(message = "外包合同号不能为空", groups = {ADD.class, EDIT.class})
-    private String contractNo;
+        private String contractNo;
 
     /**
      * 所属项目组

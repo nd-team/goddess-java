@@ -180,7 +180,7 @@ public class SettleProgressManageAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listByOutUnit")
-    public Result findListByOutUnit(@RequestParam String outUnit, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result findListByOutUnit(@RequestParam String outUnit, HttpServletRequest request) throws ActException {
         try {
             List<ScreeningSettleProgressManageVO> screeningSettleProgressManageVOS = BeanTransform.copyProperties(
                     settleProgressManageAPI.listByOutUnit(outUnit), ScreeningSettleProgressManageVO.class, request);
@@ -418,10 +418,10 @@ public class SettleProgressManageAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/exportExcel")
-    public Result exportExcel(HttpServletResponse response) throws ActException {
+    public Result exportExcel(@RequestParam String outUnit,HttpServletResponse response) throws ActException {
         try {
             String fileName = "结算进度管理.xlsx";
-            super.writeOutFile(response, settleProgressManageAPI.exportExcel("外包1"),fileName);
+            super.writeOutFile(response, settleProgressManageAPI.exportExcel(outUnit),fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
