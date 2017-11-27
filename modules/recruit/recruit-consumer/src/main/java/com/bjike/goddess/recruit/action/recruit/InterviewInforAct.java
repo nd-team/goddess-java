@@ -342,77 +342,103 @@ public class InterviewInforAct extends BaseFileAction {
                         "agreedEmployed", "whetherAcceptAdmit", "whetherAccommodation", "whetherUseFirmPC",
                         "whetherEntry");
                 //简历筛选是否通过
-                if (str.getWhetherPass().equals("是")) {
-                    inforTO.setWhetherPass(true);
-                } else {
-                    inforTO.setWhetherPass(false);
+                if (null != str.getWhetherPass()) {
+                    if (str.getWhetherPass().equals("是")) {
+                        inforTO.setWhetherPass(true);
+                    } else {
+                        inforTO.setWhetherPass(false);
+                    }
                 }
                 //是否有相关工作经验
-                if (str.getWorkingExperience().equals("是")) {
-                    inforTO.setWorkingExperience(true);
-                } else {
-                    inforTO.setWorkingExperience(false);
+                if (null != str.getWorkingExperience()) {
+                    if (str.getWorkingExperience().equals("是")) {
+                        inforTO.setWorkingExperience(true);
+                    } else {
+                        inforTO.setWorkingExperience(false);
+                    }
                 }
                 //求职考试第一题是否正确
-                if (str.getWhetherFirstQuestionCorrect().equals("是")) {
-                    inforTO.setWhetherFirstQuestionCorrect(true);
-                } else {
-                    inforTO.setWhetherFirstQuestionCorrect(false);
+                if (null != str.getWhetherFirstQuestionCorrect()) {
+                    if (str.getWhetherFirstQuestionCorrect().equals("是")) {
+                        inforTO.setWhetherFirstQuestionCorrect(true);
+                    } else {
+                        inforTO.setWhetherFirstQuestionCorrect(false);
+                    }
+
                 }
                 //是否初试
-                if (str.getWhetherFaceTest().equals("是")) {
-                    inforTO.setWhetherFaceTest(true);
-                } else {
-                    inforTO.setWhetherFaceTest(false);
+                if (null != str.getWhetherFaceTest()) {
+                    if (str.getWhetherFaceTest().equals("是")) {
+                        inforTO.setWhetherFaceTest(true);
+                    } else {
+                        inforTO.setWhetherFaceTest(false);
+                    }
                 }
                 //初试是否通过
-                if (str.getWhetherFirstTestPass().equals("是")) {
-                    inforTO.setWhetherFirstTestPass(true);
-                } else {
-                    inforTO.setWhetherFirstTestPass(false);
+                if (null != str.getWhetherFirstTestPass()) {
+                    if (str.getWhetherFirstTestPass().equals("是")) {
+                        inforTO.setWhetherFirstTestPass(true);
+                    } else {
+                        inforTO.setWhetherFirstTestPass(false);
+                    }
+
                 }
                 //是否需要复试
-                if (str.getWhetherNeedSecondTest().equals("是")) {
-                    inforTO.setWhetherNeedSecondTest(true);
-                } else {
-                    inforTO.setWhetherNeedSecondTest(false);
+                if (null != str.getWhetherNeedSecondTest()) {
+                    if (str.getWhetherNeedSecondTest().equals("是")) {
+                        inforTO.setWhetherNeedSecondTest(true);
+                    } else {
+                        inforTO.setWhetherNeedSecondTest(false);
+                    }
                 }
                 //复试是否通过
-                if (str.getWhetherSecondTestPass().equals("是")) {
-                    inforTO.setWhetherSecondTestPass(true);
-                } else {
-                    inforTO.setWhetherSecondTestPass(false);
+                if (null != str.getWhetherSecondTestPass()) {
+                    if (str.getWhetherSecondTestPass().equals("是")) {
+                        inforTO.setWhetherSecondTestPass(true);
+                    } else {
+                        inforTO.setWhetherSecondTestPass(false);
+                    }
                 }
                 //是否同意录用
-                if (str.getAgreedEmployed().equals("是")) {
-                    inforTO.setAgreedEmployed(true);
-                } else {
-                    inforTO.setAgreedEmployed(false);
+                if (null != str.getAgreedEmployed()) {
+                    if (str.getAgreedEmployed().equals("是")) {
+                        inforTO.setAgreedEmployed(true);
+                    } else {
+                        inforTO.setAgreedEmployed(false);
+                    }
                 }
                 //是否接受录取
-                if (str.getWhetherAcceptAdmit().equals("是")) {
-                    inforTO.setWhetherAcceptAdmit(true);
-                } else {
-                    inforTO.setWhetherAcceptAdmit(false);
+                if (null != str.getWhetherAcceptAdmit()) {
+                    if (str.getWhetherAcceptAdmit().equals("是")) {
+                        inforTO.setWhetherAcceptAdmit(true);
+                    } else {
+                        inforTO.setWhetherAcceptAdmit(false);
+                    }
                 }
                 //是否住宿
-                if (str.getWhetherAccommodation().equals("是")) {
-                    inforTO.setWhetherAccommodation(true);
-                } else {
-                    inforTO.setWhetherAccommodation(false);
+                if (null != str.getWhetherAccommodation()) {
+                    if (str.getWhetherAccommodation().equals("是")) {
+                        inforTO.setWhetherAccommodation(true);
+                    } else {
+                        inforTO.setWhetherAccommodation(false);
+                    }
                 }
                 //是否使用公司电脑
-                if (str.getWhetherUseFirmPC().equals("是")) {
-                    inforTO.setWhetherUseFirmPC(true);
-                } else {
-                    inforTO.setWhetherUseFirmPC(false);
-                }
+                if (null != str.getWhetherUseFirmPC()) {
 
+                    if (str.getWhetherUseFirmPC().equals("是")) {
+                        inforTO.setWhetherUseFirmPC(true);
+                    } else {
+                        inforTO.setWhetherUseFirmPC(false);
+                    }
+                }
                 //是否入职
-                if (str.getWhetherEntry().equals("是")) {
-                    inforTO.setWhetherEntry(true);
-                } else {
-                    inforTO.setWhetherEntry(false);
+                if (null != str.getWhetherEntry()) {
+                    if (str.getWhetherEntry().equals("是")) {
+                        inforTO.setWhetherEntry(true);
+                    } else {
+                        inforTO.setWhetherEntry(false);
+                    }
                 }
                 tocs.add(inforTO);
             }
