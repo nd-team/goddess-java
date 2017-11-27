@@ -2,6 +2,7 @@ package com.bjike.goddess.taskallotment.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.taskallotment.enums.CountType;
+import com.bjike.goddess.taskallotment.enums.DataType;
 import com.bjike.goddess.taskallotment.enums.PersonCountType;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,6 +18,14 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class TaskNodeDTO extends BaseDTO {
+    public DataType getDatatype() {
+        return datatype;
+    }
+
+    public void setDatatype(DataType datatype) {
+        this.datatype = datatype;
+    }
+
     public interface COUNT {
     }
 
@@ -34,6 +43,10 @@ public class TaskNodeDTO extends BaseDTO {
      * 汇总类型
      */
     private CountType countType;
+    /**
+     * 汇总时间类型
+     */
+    private DataType datatype;
     /**
      * 开始时间
      */

@@ -1167,6 +1167,38 @@ public class TaskNodeAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 上报任务(phone)
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/phone/report")
+    public Result reports(@Validated(TaskNodeTO.REPORT.class) TaskNodeTO to, BindingResult result) throws ActException {
+        try {
+            taskNodeAPI.report(to);
+            return new ActResult("上报任务成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
-
+    /**
+     * 完成情况汇总(phone)
+     *
+     * @param dto dto
+     * @return class FinishCaseVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/finishCounts")
+    public Result finishCounts(@Validated(TaskNodeDTO.COUNT.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            CaseLastBO caseLastBO= taskNodeAPI.phoneCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(caseLastBO, FinishCaseVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

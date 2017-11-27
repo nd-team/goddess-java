@@ -49,11 +49,31 @@ public class CaseLastBO extends BaseBO {
      * 未上报未完成工时(小时)
      */
     private Double unReportUnFinish;
+    /**
+     * 行政任务总数
+     */
+    private Long admininstrationNum;
+
+    /**
+     * 工程任务总数
+     */
+    private Long engineeringNum;
+
+    /**
+     * 培训任务总数
+     */
+    private Long trainingNum;
+
+    /**
+     * 今日任务总数
+     */
+    private Long todayNum;
+
 
     public CaseLastBO() {
     }
 
-    public CaseLastBO(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish) {
+    public CaseLastBO(Double planNum, Double actualNum, Double unFinishNum, Double planTime, Double actualTime, Double unFinishTime, Double reportUnFinish, Double unReportUnFinish, Long admininstrationNum, Long engineeringNum, Long trainingNum, Long todayNum) {
         this.planNum = planNum;
         this.actualNum = actualNum;
         this.unFinishNum = unFinishNum;
@@ -62,6 +82,10 @@ public class CaseLastBO extends BaseBO {
         this.unFinishTime = unFinishTime;
         this.reportUnFinish = reportUnFinish;
         this.unReportUnFinish = unReportUnFinish;
+        this.admininstrationNum = admininstrationNum;
+        this.engineeringNum = engineeringNum;
+        this.trainingNum = trainingNum;
+        this.todayNum = todayNum;
     }
 
     public TaskType getTaskType() {
@@ -134,5 +158,37 @@ public class CaseLastBO extends BaseBO {
 
     public void setUnReportUnFinish(Double unReportUnFinish) {
         this.unReportUnFinish = unReportUnFinish;
+    }
+
+    public Long getAdmininstrationNum() {
+        return admininstrationNum;
+    }
+
+    public void setAdmininstrationNum(Long admininstrationNum) {
+        this.admininstrationNum = admininstrationNum;
+    }
+
+    public Long getEngineeringNum() {
+        return engineeringNum;
+    }
+
+    public void setEngineeringNum(Long engineeringNum) {
+        this.engineeringNum = engineeringNum;
+    }
+
+    public Long getTrainingNum() {
+        return trainingNum;
+    }
+
+    public void setTrainingNum(Long trainingNum) {
+        this.trainingNum = trainingNum;
+    }
+
+    public Long getTodayNum() {
+        return todayNum;
+    }
+
+    public void setTodayNum(Long todayNum) {
+        this.todayNum = todayNum;
     }
 }

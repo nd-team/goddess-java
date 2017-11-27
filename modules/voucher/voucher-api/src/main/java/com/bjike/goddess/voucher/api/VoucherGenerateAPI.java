@@ -730,7 +730,6 @@ public interface VoucherGenerateAPI {
     }
 
     /**
-<<<<<<< HEAD
      * 科目汇总列表
      */
     List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;

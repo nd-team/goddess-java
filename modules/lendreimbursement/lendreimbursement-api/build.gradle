@@ -10,3 +10,4 @@ dependencies {
     compile files("../lib/Msc.jar")
     compile files("../lib/json-jena-1.0.jar")
 }
+
