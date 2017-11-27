@@ -33,6 +33,9 @@
     <dubbo:service interface="com.bjike.goddess.task.api.CustomizeAPI" ref="customizeApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.task.api.InnerTemplateAPI" ref="innerTemplateApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.task.api.RecordAPI" ref="recordApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.CustomizeSonAPI" ref="customizeSonApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.CollectSchemeAPI" ref="collectSchemeApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.task.api.SchemeSonAPI" ref="schemeSonApiImpl"/>
 
     <!--接口引用-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" id="internalContactsApiImpl"/>
@@ -42,9 +45,13 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModulesAPI" id="modulesApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TableAPI" id="tablesApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.ProjectAPI" id="projectApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" id="taskNodeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.taskallotment.api.CustomTitleAPI" id="customTitleApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI" id="dispatchCarInfoApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" id="baseInfoManageApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.CommonalityAPI" id="commonalityApiImpl"/>
 
 </beans>

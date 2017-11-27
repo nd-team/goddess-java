@@ -34,5 +34,6 @@
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.checkhost.api.DormitoryInfoAPI" id="dormitoryInfoApiImpl"/>
     <dubbo:reference  validation="true"  interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 
 </beans>

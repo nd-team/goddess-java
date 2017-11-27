@@ -7,10 +7,13 @@ import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
 import com.bjike.goddess.taskallotment.bo.figure.DataBO;
 import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
+import com.bjike.goddess.taskallotment.dto.CustomTitleDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
+import com.bjike.goddess.taskallotment.service.CustomTitleSer;
 import com.bjike.goddess.taskallotment.service.TaskNodeSer;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
@@ -34,6 +37,8 @@ import java.util.List;
 public class TaskNodeApiImpl implements TaskNodeAPI {
     @Autowired
     private TaskNodeSer taskNodeSer;
+    @Autowired
+    private CustomTitleSer customTitleSer;
 
     @Override
     public List<TableBO> list(TableDTO dto) throws SerException {
@@ -279,5 +284,20 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     @Override
     public CollectDataVO personProjectCollect(CollectDataTO collectDataTO) throws SerException {
         return taskNodeSer.personProjectCollect( collectDataTO ) ;
+    }
+
+    @Override
+    public List<TaskNodeExcel> findByDTO(TaskNodeDTO dto) throws SerException {
+        return taskNodeSer.findByDTO(dto);
+    }
+
+    @Override
+    public List<CustomTitleBO> findByDTO(CustomTitleDTO dto) throws SerException {
+        return customTitleSer.findByDTO(dto);
+    }
+
+    @Override
+    public void editStatus(String id, TaskStatus taskStatus) throws SerException {
+        taskNodeSer.editStatus(id,taskStatus);
     }
 }

@@ -66,9 +66,9 @@ public class MyInterceptor implements HandlerInterceptor {
             token = obj.toString();
         }
         handlerUserToken(token);
-//        if (check(request)){
-//            return true;
-//        }
+        if (check(request)){
+            return true;
+        }
 //        if (announcementAPI.checkRequired()) {
 //            String path = request.getServletPath();
 //            if (path.startsWith("/announcement/v1/read") || path.startsWith("/announcement/v1/requiredReads") || path.startsWith("/announcement/v1/requiredCount")|| path.startsWith("/announcement/v1/checkByClass")) {   //todo:获取阅读必读公告路径

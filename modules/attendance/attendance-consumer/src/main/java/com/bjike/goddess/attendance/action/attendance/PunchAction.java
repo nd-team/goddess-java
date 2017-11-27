@@ -93,8 +93,6 @@ public class PunchAction extends BaseFileAction {
      */
     @GetMapping("v1/list")
     public Result list(PunchDTO dto, HttpServletRequest request) throws ActException {
-        String ss = RpcContext.getContext().getAttachment("userToken");
-        System.out.println(ss);
         try {
             if (CheckMobile.check(request)) {   //移动端列表
                 dto.setStartTime(DateUtil.dateToString(LocalDate.now()));

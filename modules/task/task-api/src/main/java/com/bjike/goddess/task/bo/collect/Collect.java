@@ -15,12 +15,11 @@ import java.util.List;
  */
 public class Collect implements Serializable {
 
-    private String project;//项目名
+    @ExcelHeader(name = "项目")
+    private String project;//项目
 
     @ExcelHeader(name = "内部项目名称")
     private String innerProject; //内部项目名称
-    @ExcelHeader(name = "外部项目名称")
-    private String outProject; //外部项目名称
     @ExcelHeader(name = "是否完工")
     private String isFinish;//是否完工
     @ExcelHeader(name = "人工数")
@@ -67,14 +66,6 @@ public class Collect implements Serializable {
 
     public void setInnerProject(String innerProject) {
         this.innerProject = innerProject;
-    }
-
-    public String getOutProject() {
-        return outProject;
-    }
-
-    public void setOutProject(String outProject) {
-        this.outProject = outProject;
     }
 
     public String getIsFinish() {

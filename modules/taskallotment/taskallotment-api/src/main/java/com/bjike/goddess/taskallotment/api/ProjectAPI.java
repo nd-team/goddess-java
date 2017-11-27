@@ -225,7 +225,7 @@ public interface ProjectAPI {
      * @return
      * @throws SerException
      */
-    List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException;
+    List<ProjectBO> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException;
 
     /**
      * 根据项目获取所有项目表
@@ -254,4 +254,27 @@ public interface ProjectAPI {
      * @throws SerException
      */
     List<ProjectBO> projects(String area,String depart,String makeProject) throws SerException;
+
+    /**
+     * 开启状态的所有项目
+     * @return
+     * @throws SerException
+     */
+    List<ProjectBO> starts() throws SerException;
+
+    /**
+     * 根据项目id获取任务表
+     * @param projectId
+     * @return
+     * @throws SerException
+     */
+    List<TableBO> tableByProjectId(String projectId) throws SerException;
+
+    /**
+     * 获取自定义字段
+     * @param tablesId
+     * @return
+     * @throws SerException
+     */
+    List<String> fileds(String[] tablesId) throws SerException;
 }

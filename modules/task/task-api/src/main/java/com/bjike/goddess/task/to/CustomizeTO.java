@@ -3,13 +3,14 @@ package com.bjike.goddess.task.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.task.dto.ValDTO;
+import com.bjike.goddess.task.enums.CollectSuitation;
 import com.bjike.goddess.task.enums.DateType;
-import com.bjike.goddess.task.enums.NoticeType;
-import com.bjike.goddess.task.enums.SummaryType;
 import com.bjike.goddess.task.enums.TimeType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 定制化
@@ -21,145 +22,142 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class CustomizeTO extends BaseTO {
+    public interface NOTICE {
+    }
+
+    public interface VALUE{}
+    public interface FIELD{}
+
     /**
      * 汇总名
      */
     @NotBlank(message = "汇总名不能为空", groups = {ADD.class, EDIT.class})
-    private String collectName;
+    private String name;
 
     /**
-     * 项目
+     * 项目id
      */
-    @NotBlank(message = "项目id不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "项目id不能为空")
     private String projectId;
+    /**
+     * 任务id
+     */
+    @NotNull(groups = {ADD.class, EDIT.class,CustomizeTO.VALUE.class,CustomizeTO.FIELD.class}, message = "任务id不能为空")
+    private String[] tablesId;
+    /**
+     * 是否需要固定表头
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否需要固定表头不能为空")
+    private Boolean needFixed;
 
     /**
-     * 表id
+     * 汇总对象
      */
-    @NotNull(message = "表id不能为空", groups = {ADD.class, EDIT.class})
-    private String[] tables;
-
-
-    /**
-     * 汇总字段
-     */
-    @NotNull(message = "汇总字段不能为空", groups = {ADD.class, EDIT.class})
-    private String[] fields;
-    /**
-     * 定时时间类型
-     */
-    @NotNull(message = "定时时间类型不能为空", groups = {ADD.class, EDIT.class})
-    private TimeType timeType;
+    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "汇总对象不能为空")
+    private String[] collectObjecs;
 
     /**
-     * 定时时间间隔值
+     * 是否抄送本部门
      */
-    @NotBlank(message = "定时间隔值不能为空", groups = {ADD.class, EDIT.class})
-    private String timeVal;
-
-    /**
-     * 部门名
-     */
-    @NotBlank(message = "部门名", groups = {ADD.class, EDIT.class})
-    private String department;
-
-    /**
-     * 通知类型
-     */
-    @NotNull(message = "通知类型不能为空", groups = {ADD.class, EDIT.class})
-    private NoticeType noticeType;
-    /**
-     * 通知目标(部门(name),用户(username)等,所有时为空)
-     */
-    private String noticeTarget;
+    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "是否抄送本部门不能为空")
+    private Boolean sendDepart;
 
     /**
      * 是否启用
      */
-    @NotNull(message = "是否启用不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "是否启用不能为空")
     private Boolean enable;
+
     /**
-     * 汇总类型,执行项目的所有人还是个人...
+     * 汇总频率
      */
-    @NotNull(message = "汇总类型不能为空", groups = {ADD.class, EDIT.class})
-    private SummaryType summaryType;
+    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "汇总频率不能为空")
+    private DateType collectType;
+
     /**
-     * 汇总目标(部门(name),用户(username)等,所有时为空)
+     * 提醒频率
      */
-    private String summaryTarget;
+    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "提醒频率不能为空")
+    private TimeType remindType;
     /**
-     * 间隔类型
+     * 提醒间隔值
      */
-    @NotNull(message = "间隔类型不能为空", groups = {ADD.class, EDIT.class})
-    private DateType dateType;
-    /**
-     * 间隔值
-     */
-    @NotNull(message = "间隔值不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "提醒间隔值不能为空")
     private Integer dateVal;
 
-    public String getCollectName() {
-        return collectName;
+    /**
+     * 提醒时间
+     */
+    @NotBlank(groups = {CustomizeTO.NOTICE.class}, message = "提醒时间不能为空")
+    private String sendTime;
+
+    /**
+     * 汇总字段
+     */
+    private List<String> fields;
+    /**
+     * 汇总条件
+     */
+    private List<CollectSuitation> collectSuitations;
+    /**
+     * 类型值
+     */
+    private List<ValDTO> vals;
+    /**
+     * 汇总表头字段
+     */
+    private List<String> tableFields;
+
+    /**
+     * 字段
+     */
+    @NotBlank(groups = {CustomizeTO.VALUE.class}, message = "字段不能为空")
+    private String field;
+
+    /**
+     * 条件
+     */
+    @NotNull(groups = {CustomizeTO.VALUE.class}, message = "条件不能为空")
+    private CollectSuitation collectSuitation;
+
+    public String getField() {
+        return field;
     }
 
-    public void setCollectName(String collectName) {
-        this.collectName = collectName;
+    public void setField(String field) {
+        this.field = field;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public CollectSuitation getCollectSuitation() {
+        return collectSuitation;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setCollectSuitation(CollectSuitation collectSuitation) {
+        this.collectSuitation = collectSuitation;
     }
 
-    public String[] getTables() {
-        return tables;
+    public String getName() {
+        return name;
     }
 
-    public void setTables(String[] tables) {
-        this.tables = tables;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String[] getFields() {
-        return fields;
+    public String[] getCollectObjecs() {
+        return collectObjecs;
     }
 
-    public void setFields(String[] fields) {
-        this.fields = fields;
+    public void setCollectObjecs(String[] collectObjecs) {
+        this.collectObjecs = collectObjecs;
     }
 
-    public TimeType getTimeType() {
-        return timeType;
+    public Boolean getSendDepart() {
+        return sendDepart;
     }
 
-    public void setTimeType(TimeType timeType) {
-        this.timeType = timeType;
-    }
-
-    public String getTimeVal() {
-        return timeVal;
-    }
-
-    public void setTimeVal(String timeVal) {
-        this.timeVal = timeVal;
-    }
-
-    public NoticeType getNoticeType() {
-        return noticeType;
-    }
-
-    public void setNoticeType(NoticeType noticeType) {
-        this.noticeType = noticeType;
-    }
-
-    public String getNoticeTarget() {
-        return noticeTarget;
-    }
-
-    public void setNoticeTarget(String noticeTarget) {
-        this.noticeTarget = noticeTarget;
+    public void setSendDepart(Boolean sendDepart) {
+        this.sendDepart = sendDepart;
     }
 
     public Boolean getEnable() {
@@ -170,28 +168,20 @@ public class CustomizeTO extends BaseTO {
         this.enable = enable;
     }
 
-    public SummaryType getSummaryType() {
-        return summaryType;
+    public DateType getCollectType() {
+        return collectType;
     }
 
-    public void setSummaryType(SummaryType summaryType) {
-        this.summaryType = summaryType;
+    public void setCollectType(DateType collectType) {
+        this.collectType = collectType;
     }
 
-    public String getSummaryTarget() {
-        return summaryTarget;
+    public TimeType getRemindType() {
+        return remindType;
     }
 
-    public void setSummaryTarget(String summaryTarget) {
-        this.summaryTarget = summaryTarget;
-    }
-
-    public DateType getDateType() {
-        return dateType;
-    }
-
-    public void setDateType(DateType dateType) {
-        this.dateType = dateType;
+    public void setRemindType(TimeType remindType) {
+        this.remindType = remindType;
     }
 
     public Integer getDateVal() {
@@ -202,11 +192,67 @@ public class CustomizeTO extends BaseTO {
         this.dateVal = dateVal;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getSendTime() {
+        return sendTime;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
+    }
+
+    public List<CollectSuitation> getCollectSuitations() {
+        return collectSuitations;
+    }
+
+    public void setCollectSuitations(List<CollectSuitation> collectSuitations) {
+        this.collectSuitations = collectSuitations;
+    }
+
+    public List<ValDTO> getVals() {
+        return vals;
+    }
+
+    public void setVals(List<ValDTO> vals) {
+        this.vals = vals;
+    }
+
+    public List<String> getTableFields() {
+        return tableFields;
+    }
+
+    public void setTableFields(List<String> tableFields) {
+        this.tableFields = tableFields;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String[] getTablesId() {
+        return tablesId;
+    }
+
+    public void setTablesId(String[] tablesId) {
+        this.tablesId = tablesId;
+    }
+
+    public Boolean getNeedFixed() {
+        return needFixed;
+    }
+
+    public void setNeedFixed(Boolean needFixed) {
+        this.needFixed = needFixed;
     }
 }

@@ -32,4 +32,18 @@ public enum FinishStatus {
     public int getCode() {
         return this.code;
     }
+
+    @Override
+    public String toString() {
+        String s = "";
+        switch (code) {
+            case 0:
+                s = "已完成";
+                break;
+            case 1:
+                s = "未完成";
+                break;
+        }
+        return s;
+    }
 }
