@@ -88,6 +88,11 @@ public class EventVO {
      */
     private String color;
 
+    /**
+     * 待办事件对应状态
+     */
+    private String status;
+
     public String getId() {
         return id;
     }
@@ -206,5 +211,13 @@ public class EventVO {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -364,4 +364,9 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     public List<AreaBO> findArea() throws SerException {
         return dispatchCarInfoSer.findArea();
     }
+
+    @Override
+    public Long dispatchCount(String project) throws SerException {
+        return dispatchCarInfoSer.dispatchCount(project);
+    }
 }

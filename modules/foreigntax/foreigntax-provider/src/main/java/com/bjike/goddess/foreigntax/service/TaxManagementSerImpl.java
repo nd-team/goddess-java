@@ -255,7 +255,7 @@ public class TaxManagementSerImpl extends ServiceImpl<TaxManagement, TaxManageme
     }
 
     @Override
-    public void getTime() throws SerException {
+    public void taxTime() throws SerException {
         Integer year = LocalDate.now().getYear();
         Integer month = LocalDate.now().getMonthValue();
         LocalDate taxStart = LocalDate.of(year,month,1);

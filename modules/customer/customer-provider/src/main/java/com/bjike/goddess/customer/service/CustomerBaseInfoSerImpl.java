@@ -814,8 +814,8 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                         sql.append(" (SELECT count(*) as toVisitNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND recommendVisitTime < '" + endDate + "' AND area ='" + area + "' AND visitStatus = 0) b, ");
                         sql.append(" (SELECT count(*) as haveVisitNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND recommendVisitTime < '" + endDate + "' AND area ='" + area + "' AND visitStatus = 1) c, ");
                         sql.append(" (SELECT count(*) as notVisitNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND recommendVisitTime < '" + endDate + "' AND area ='" + area + "' AND visitStatus = 3) d, ");
-                        sql.append(" (SELECT count(*) as unconnectedCustomerNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND area ='" + area + "' marketInfoNum is NULL) e, ");
-                        sql.append(" (SELECT count(*) as associatedCustomerNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND area ='" + area + "' marketInfoNum is NOT NULL) f, ");
+                        sql.append(" (SELECT count(*) as unconnectedCustomerNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND area ='" + area + "' AND marketInfoNum is NULL) e, ");
+                        sql.append(" (SELECT count(*) as associatedCustomerNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND area ='" + area + "' AND marketInfoNum is NOT NULL) f, ");
                         sql.append(" (SELECT count(*) as marketActivitNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND updateDate < '" + endDate + "' AND area ='" + area + "' AND proceedMarketTreat = 1) p, ");
                         sql.append(" (SELECT count(*) as custIntrodNewCustNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND updateDate < '" + endDate + "' AND area ='" + area + "' AND origin = 0) h, ");
                         sql.append(" (SELECT count(*) as marketEnNewCustNum FROM customer_customerbaseinfo WHERE businessType = '" + bussType + "' AND updateDate < '" + endDate + "' AND area ='" + area + "' AND origin = 1) i, ");
@@ -1962,10 +1962,16 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                 }
             }
         }
-        CustomerBaseInfoDTO customerBaseInfoDTO = new CustomerBaseInfoDTO();
-        int limit = customerBaseInfoDTO.getLimit();
-        int start = limit * customerBaseInfoDTO.getPage();
-        List<CustomerBaseInfo> customerBaseInfoList = customerBaseInfos.stream().skip(start).limit(limit).collect(Collectors.toList());
-        return BeanTransform.copyProperties(customerBaseInfoList, CustomerBaseInfoBO.class);
+//        CustomerBaseInfoDTO customerBaseInfoDTO = new CustomerBaseInfoDTO();
+//        int limit = customerBaseInfoDTO.getLimit();
+//        int start = limit * customerBaseInfoDTO.getPage();
+//        List<CustomerBaseInfo> customerBaseInfoList = customerBaseInfos.stream().skip(start).limit(limit).collect(Collectors.toList());
+       Collections.sort(customerBaseInfos, new Comparator<CustomerBaseInfo>() {
+           @Override
+           public int compare(CustomerBaseInfo o1, CustomerBaseInfo o2) {
+               return o2.getFinalWeight().compareTo(o1.getFinalWeight());
+           }
+       });
+        return BeanTransform.copyProperties(customerBaseInfos, CustomerBaseInfoBO.class);
     }
 }

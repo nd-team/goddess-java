@@ -76,7 +76,26 @@ public class DifficultyFoactorSetAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个难易度因素层设置
+     *
+     * @param id  难易度因素层设置id
+     * @return class DifficultyFoactorSetVO
+     * @des 一个难易度因素层设置
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findCustomerWeiOne(@PathVariable String id) throws ActException {
+        try {
 
+            DifficultyFoactorSetVO difficultyFoactorSetVO = BeanTransform.copyProperties(
+                    difficultyFoactorSetAPI.getOneDifficulty(id), DifficultyFoactorSetVO .class, true);
+            return ActResult.initialize(difficultyFoactorSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 难易度因素层设置列表

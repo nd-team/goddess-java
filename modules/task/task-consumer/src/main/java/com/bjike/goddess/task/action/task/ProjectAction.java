@@ -8,9 +8,12 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
@@ -18,9 +21,14 @@ import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
+import com.bjike.goddess.taskallotment.api.TableAPI;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import com.bjike.goddess.taskallotment.bo.TableBO;
 import com.bjike.goddess.taskallotment.dto.ProjectDTO;
+import com.bjike.goddess.taskallotment.dto.ProjectNameDTO;
+import com.bjike.goddess.taskallotment.dto.TableDTO;
+import com.bjike.goddess.taskallotment.excel.ProjectExcel;
+import com.bjike.goddess.taskallotment.excel.TableExcel;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
 import com.bjike.goddess.taskallotment.to.ProjectTO;
 import com.bjike.goddess.taskallotment.to.TableTO;
@@ -35,6 +43,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +61,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("project")
-public class ProjectAction {
+public class ProjectAction extends BaseFileAction {
     public static final Logger LOGGER = LoggerFactory.getLogger(ProjectAction.class);
 
     @Autowired
@@ -65,6 +76,8 @@ public class ProjectAction {
     private DispatchSheetAPI dispatchSheetAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    private TableAPI tableAPI;
 
     /**
      * 模块设置导航权限
@@ -404,6 +417,17 @@ public class ProjectAction {
             List<DepartmentDetailBO> list = new ArrayList<>();
             try {
                 list = departmentDetailAPI.findStatus();
+                for (DepartmentDetailBO detailBO : list) {
+                    detailBO.setClassify(null);
+                    detailBO.setDescription(null);
+                    detailBO.setHierarchyId(null);
+                    detailBO.setHierarchyName(null);
+                    detailBO.setHierarchyNumber(null);
+                    detailBO.setInnerProject(null);
+                    detailBO.setSerialNumber(null);
+                    detailBO.setShowNumber(null);
+                    detailBO.setStatus(null);
+                }
             } catch (Exception e) {
                 if (e.getMessage().indexOf("Forbid consumer") != -1) {
                     LOGGER.error("organize模块服务不可用!");
@@ -428,6 +452,134 @@ public class ProjectAction {
             projectAPI.addTable(to);
             return new ActResult("添加成功");
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导入项目excel
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/lead/project/excel")
+    public Result leadProjectExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<ProjectExcel> toList = ExcelUtil.excelToClazz(is, ProjectExcel.class, excel);
+            projectAPI.leadProjectExcel(toList);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出项目excel
+     *
+     * @param dto dto
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export/excel")
+    public Result exportExcel(@Validated(ProjectDTO.EXPORT.class) ProjectDTO dto, BindingResult result, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "项目.xlsx";
+            super.writeOutFile(response, projectAPI.exportProjectExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 导入项目表excel
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/lead/table/excel/{projectId}")
+    public Result leadTableExcel(@PathVariable String projectId, HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<TableExcel> toList = ExcelUtil.excelToClazz(is, TableExcel.class, excel);
+            projectAPI.leadTableExcel(toList, projectId);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出项目表excel
+     *
+     * @param dto dto
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export/table/excel")
+    public Result exportTableExcel(@Validated(TableDTO.EXPORT.class) TableDTO dto, BindingResult result, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "项目表.xlsx";
+            super.writeOutFile(response, projectAPI.exportTableExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目
+     *
+     * @return class TableVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/table/names")
+    public Result tableNames() throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(tableAPI.tableNames(), TableVO.class));
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目组获取所有项目
+     *
+     * @param projectNameDTO 条件
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/namesBy/group")
+    public Result projectByAreaAndGroup(@Validated(ProjectNameDTO.QUEARY.class) ProjectNameDTO projectNameDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(projectAPI.projectByAreaAndGroup(projectNameDTO), ProjectVO.class, request));
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据项目获取所有项目表
+     *
+     * @param projectNameDTO 条件
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/tablesBy/pname")
+    public Result tableNamesBypname(@Validated(ProjectNameDTO.QUEARYTABLES.class) ProjectNameDTO projectNameDTO, BindingResult bindingResult) throws ActException {
+        try {
+            return ActResult.initialize(projectAPI.tableNamesBypname(projectNameDTO));
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

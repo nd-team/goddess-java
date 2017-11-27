@@ -323,6 +323,15 @@ public interface PositionDetailUserAPI {
      * @throws SerException
      */
     String customRepPerson() throws SerException;
+
+    /**
+     * lijuntao
+     * 获取资金模块负责人
+     *
+     * @return
+     * @throws SerException
+     */
+    String moneyModulePerson() throws SerException;
     /**
      * xiazhili
      * 获取预算模块负责人

@@ -61,10 +61,6 @@ import java.util.stream.Collectors;
 @RequestMapping("table")
 public class TableAction extends BaseFileAction {
     @Autowired
-    private TaskNodeAPI taskNodeAPI;
-    @Autowired
-    private ProjectAPI projectAPI;
-    @Autowired
     private TableAPI tableAPI;
 
 

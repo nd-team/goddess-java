@@ -103,7 +103,26 @@ public class AreaWeightSetAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 一个地区权重
+     *
+     * @param id 地区权重id
+     * @return class AreaWeightSetVO
+     * @des 获取所有地区权重
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findAreaWeightOne(@PathVariable String id) throws ActException {
+        try {
 
+            AreaWeightSetVO areaWeightSetVO = BeanTransform.copyProperties(
+                    areaWeightSetAPI.getOneAreaWeight(id), AreaWeightSetVO .class, true);
+            return ActResult.initialize(areaWeightSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 添加地区权重设置

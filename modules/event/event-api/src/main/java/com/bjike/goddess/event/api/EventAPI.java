@@ -4,10 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.event.bo.*;
 import com.bjike.goddess.event.dto.EventDTO;
 import com.bjike.goddess.event.dto.FatherDTO;
+import com.bjike.goddess.event.enums.EventStatus;
+import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.event.to.GuidePermissionTO;
 import com.bjike.goddess.event.vo.ClassifyCountVO;
 import com.bjike.goddess.event.vo.SonPermissionObject;
+import com.bjike.goddess.user.entity.rbac.Permission;
 
 import java.util.List;
 
@@ -157,4 +160,17 @@ public interface EventAPI {
      * @throws SerException
      */
     List<ClassifyCountBO> classifyCount(EventDTO dto) throws SerException;
+
+    /**
+     * 移动端列表获取数据
+     *
+     * @throws SerException
+     */
+    List<AppListDataBO> findAppList(String type) throws SerException;
+    /**
+     * 移动端跳转详情所需数据
+     *
+     * @throws SerException
+     */
+    FatherBO findFatherById(String id) throws SerException;
 }

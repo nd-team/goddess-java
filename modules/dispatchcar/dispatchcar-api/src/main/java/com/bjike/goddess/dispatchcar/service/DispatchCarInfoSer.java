@@ -399,5 +399,12 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      */
     List<AreaBO> findArea() throws SerException;
 
-
+    /**
+     * chenjunhao
+     * 根据项目名称获取出车数量
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Long dispatchCount(String project) throws SerException;
 }

@@ -4,7 +4,7 @@ jar {
     String buildDir = project.buildDir
     manifest {
         attributes (
-                "Main-Class": "com.bjike.goddess.buyticket.Application",//main主函数加载入口
+                "Main-Class": "com.bjike.goddess.businsurance.Application",//main主函数加载入口
                 "Class-Path": new File(buildDir+'/libs/lib').list().collect { "lib/${it}" }.join(" ")
         )
     }

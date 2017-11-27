@@ -165,7 +165,7 @@ public interface ProjectSer extends Ser<Project, ProjectDTO> {
      * @return
      * @throws SerException
      */
-    List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException;
+    List<ProjectBO> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException;
 
     /**
      * 根据项目获取所有项目表

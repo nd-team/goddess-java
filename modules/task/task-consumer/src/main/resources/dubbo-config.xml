@@ -32,6 +32,9 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeAPI" id="customizeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.InnerTemplateAPI" id="innerTemplateApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.RecordAPI" id="recordApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeSonAPI" id="customizeSonApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CollectSchemeAPI" id="collectSchemeSonApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.SchemeSonAPI" id="schemeSonApiImpl"/>
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" id="baseInfoManageApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" id="siginManageApiImpl"/>

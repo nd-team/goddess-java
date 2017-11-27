@@ -45,9 +45,9 @@ public class AnnouncementTO extends BaseTO {
     private String publishContent;
 
     /**
-     * 发布对象数组(传用户id)
+     * 发布对象数组
      */
-    @NotNull(groups = {AnnouncementTO.ADDPERSON.class}, message = "发布对象数组(传用户id)不能为空")
+    @NotNull(groups = {AnnouncementTO.ADDPERSON.class}, message = "发布对象数组不能为空")
     private String[] recipients;
 
     /**
@@ -72,20 +72,6 @@ public class AnnouncementTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "是否全部发送不能为空")
     private Boolean all;
-
-    /**
-     * uuid
-     */
-    @NotBlank(groups = {ADD.class}, message = "uuid不能为空")
-    private String uuid;
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     public Boolean getAll() {
         return all;

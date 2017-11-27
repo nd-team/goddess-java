@@ -89,7 +89,7 @@ public interface TaxManagementAPI {
      *
      * @throws SerException
      */
-    default void getTime() throws SerException {
+    default void taxTime() throws SerException {
     }
 
     /**

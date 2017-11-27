@@ -17,12 +17,22 @@
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 	<!--<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />-->
 	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
-
 	<dubbo:reference  validation="true" id="projectAcceptanceApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectAcceptanceAPI" />
 	<dubbo:reference  validation="true" id="projectCarryApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectCarryAPI" />
 	<dubbo:reference  validation="true" id="projectCarryAuditAuditApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectCarryAuditAPI" />
 	<dubbo:reference  validation="true" id="projectSettlementFollowApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectSettlementFollowAPI" />
 	<dubbo:reference  validation="true" id="projectSituationApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectSituationAPI" />
+	<dubbo:reference  validation="true" id="communicationTempleApiImpl" interface="com.bjike.goddess.projectprocing.api.CommunicationTempleAPI" />
+	<dubbo:reference  validation="true" id="headersCustomApiImpl" interface="com.bjike.goddess.projectprocing.api.HeadersCustomAPI" />
+	<dubbo:reference  validation="true" id="nodeHeadersCustomApiImpl" interface="com.bjike.goddess.projectprocing.api.NodeHeadersCustomAPI" />
+	<dubbo:reference  validation="true" id="notificationFormulaApiImpl" interface="com.bjike.goddess.projectprocing.api.NotificationFormulaAPI" />
+	<dubbo:reference  validation="true" id="outsourProProgressManageApiImpl" interface="com.bjike.goddess.projectprocing.api.OutsourProProgressManageAPI" />
+	<dubbo:reference  validation="true" id="settlementProcessApiImpl" interface="com.bjike.goddess.projectprocing.api.SettlementProcessAPI" />
+	<dubbo:reference  validation="true" id="settleProgressManageApiImpl" interface="com.bjike.goddess.projectprocing.api.SettleProgressManageAPI" />
+	<dubbo:reference  validation="true" id="settleProgressRecordApiImpl" interface="com.bjike.goddess.projectprocing.api.SettleProgressRecordAPI" />
+	<dubbo:reference  validation="true" id="settleWorkProgreManageApiImpl" interface="com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI" />
+
+
 
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
@@ -33,6 +43,7 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.projectprocing.api.CusPermissionAPI" />
 	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.projectprocing.api.CusPermissionOperateAPI" />
+	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
 
 
 

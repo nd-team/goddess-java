@@ -1,4 +1,4 @@
-package com.bjike.goddess.business.bo;
+package com.bjike.goddess.foreigntax.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 

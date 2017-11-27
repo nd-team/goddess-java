@@ -1,4 +1,4 @@
-package com.bjike.goddess.business.vo;
+package com.bjike.goddess.foreigntax.vo;
 
 /**
  * 工商权限配置操作对象表现层对象

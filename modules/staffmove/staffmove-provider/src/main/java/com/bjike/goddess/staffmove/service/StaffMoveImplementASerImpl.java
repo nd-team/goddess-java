@@ -316,16 +316,12 @@ public class StaffMoveImplementASerImpl extends ServiceImpl<StaffMoveImplementA,
                 List<StaffMoveImplementBBO> staffMoveImplementBBOS = BeanTransform.copyProperties(staffMoveImplementBS, StaffMoveImplementBBO.class);
                 if (staffMoveImplementBBOS != null) {
                     for (StaffMoveImplementBBO bbo : staffMoveImplementBBOS) {
-//                String area = bbo.getMobilizedArea();
-//                String department = bbo.getMobilizedProjectGroup();
-                        for (String area : areas()) {
-                            for (String department : departments()) {
-                                String sql = " SELECT count(*) FROM staffmove_staffmoveimplementb where mobilizedArea='" + area + "' and mobilizedProjectGroup = '" + department + "'";
-                                List<Object> objects = staffMoveImplementBSer.findBySql(sql);
-                                if (objects != null && objects.size() > 0) {
-                                    bbo.setTransferNum(Integer.valueOf(String.valueOf(objects.get(0))));
-                                }
-                            }
+                        String area = bbo.getMobilizedArea();
+                        String department = bbo.getMobilizedProjectGroup();
+                        String sql = " SELECT count(*) FROM staffmove_staffmoveimplementb where mobilizedArea='" + area + "' and mobilizedProjectGroup = '" + department + "'";
+                        List<Object> objects = staffMoveImplementBSer.findBySql(sql);
+                        if (objects != null && objects.size() > 0) {
+                            bbo.setTransferNum(Integer.valueOf(String.valueOf(objects.get(0))));
                         }
                     }
                 }

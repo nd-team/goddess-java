@@ -539,7 +539,9 @@ public class SecureCaseSerImpl extends ServiceImpl<SecureCase, SecureCaseDTO> im
         Set<String> areas = new HashSet<>();
         List<SecureCase> list = super.findAll();
         for (SecureCase entity : list) {
-            areas.add(entity.getArea());
+            if (null != entity.getArea()) {
+                areas.add(entity.getArea());
+            }
         }
         return areas;
     }
@@ -549,7 +551,9 @@ public class SecureCaseSerImpl extends ServiceImpl<SecureCase, SecureCaseDTO> im
         Set<String> projectGroups = new HashSet<>();
         List<SecureCase> list = super.findAll();
         for (SecureCase entity : list) {
-            projectGroups.add(entity.getProjectGroup());
+            if (null != entity.getProjectGroup()) {
+                projectGroups.add(entity.getProjectGroup());
+            }
         }
         return projectGroups;
     }
@@ -559,9 +563,10 @@ public class SecureCaseSerImpl extends ServiceImpl<SecureCase, SecureCaseDTO> im
         Set<String> units = new HashSet<>();
         List<SecureCase> list = super.findAll();
         for (SecureCase entity : list) {
-            units.add(entity.getUnit());
+            if (null != entity.getUnit()) {
+                units.add(entity.getUnit());
+            }
         }
         return units;
-
     }
 }

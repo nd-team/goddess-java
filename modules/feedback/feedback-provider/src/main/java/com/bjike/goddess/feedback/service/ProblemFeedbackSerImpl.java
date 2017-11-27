@@ -103,7 +103,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -139,7 +139,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
         } else {
             flag = true;
         }
@@ -325,11 +325,11 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
             problemFeedback.setProjectGroup(departmentName);
             if (departmentName != null) {
                 ProblemCodeRuleDTO problemCodeRuleDTO = new ProblemCodeRuleDTO();
-                problemCodeRuleDTO.getConditions().add(Restrict.or("projectGroup", departmentName));
-                problemCodeRuleDTO.getConditions().add(Restrict.or("module", moduleName));
-                ProblemCodeRule problemCodeRule = problemCodeRuleSer.findOne(problemCodeRuleDTO);
+                problemCodeRuleDTO.getConditions().add(Restrict.eq("projectGroup", departmentName));
+                problemCodeRuleDTO.getConditions().add(Restrict.eq("module", moduleName));
+                List<ProblemCodeRule> problemCodeRule = problemCodeRuleSer.findByCis(problemCodeRuleDTO);
                 if (problemCodeRule != null) {
-                    problemFeedback.setProblemNum(problemCodeRule.getProblemCodeRule() + "Q" + s1);
+                    problemFeedback.setProblemNum(problemCodeRule.get(0).getProblemCodeRule() + "Q" + s1);
 
                 }
             }

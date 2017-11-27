@@ -338,7 +338,7 @@ public class CustomerBaseInfo extends BaseEntity {
     /**
      * 拜访周期
      */
-    @Column(name = "callcyle", columnDefinition = "TINYINT(4)   COMMENT '拜访周期'")
+    @Column(name = "callcyle", columnDefinition = "INT(11)   COMMENT '拜访周期'")
     private Integer callcyle;
 
     /**

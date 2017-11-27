@@ -101,7 +101,7 @@ public interface TaxManagementSer extends Ser<TaxManagement, TaxManagementDTO> {
      *
      * @throws SerException
      */
-    default void getTime() throws SerException {
+    default void taxTime() throws SerException {
     }
 
     /**

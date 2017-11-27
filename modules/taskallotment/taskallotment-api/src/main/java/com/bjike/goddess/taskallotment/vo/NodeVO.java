@@ -1,5 +1,6 @@
 package com.bjike.goddess.taskallotment.vo;
 
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.enums.TaskType;
 import com.bjike.goddess.taskallotment.enums.TimeType;
 
@@ -50,6 +51,18 @@ public class NodeVO {
      * 备注
      */
     private String remark;
+    /**
+     * 任务状态
+     */
+    private TaskStatus taskStatus;
+
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
 
     public String getExecute() {
         return execute;

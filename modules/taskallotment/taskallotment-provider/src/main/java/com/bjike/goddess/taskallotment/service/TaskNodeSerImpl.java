@@ -181,18 +181,17 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Transactional(rollbackFor = {SerException.class})
     public void edit(TaskNodeTO to) throws SerException {
         TaskNode entity = update(to);
-        super.update(entity);
     }
 
     @Transactional(rollbackFor = {SerException.class})
     public TaskNode update(TaskNodeTO to) throws SerException {
-        String name = userAPI.currentUser().getUsername();
+//        String name = userAPI.currentUser().getUsername();
         TaskNode entity = super.findById(to.getId());
         if (null == entity) {
             throw new SerException("该对象不存在");
         }
-        entity.setInitiate(name);
-        entity.setTaskStatus(TaskStatus.DOING);
+//        entity.setInitiate(name);
+//        entity.setTaskStatus(TaskStatus.DOING);
 //        List<CustomTitle> customTitles = entity.getCustomTitles();
 //        if (null != customTitles && !customTitles.isEmpty()) {
 //            customTitleSer.remove(customTitles);
@@ -204,7 +203,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //            questionSer.remove(questions);
 //        }
         TaskNode taskNode = BeanTransform.copyProperties(to, TaskNode.class, true);
-        BeanUtils.copyProperties(taskNode, entity, "id", "taskStatus", "initiate", "createTime", "fatherId", "haveSon", "tableId", "time");
+        BeanUtils.copyProperties(taskNode, entity, "id", "initiate", "createTime", "fatherId", "haveSon", "tableId", "time");
         TaskType taskType = entity.getTaskType();
         entity.setType(type(taskType));
 //        entity.setQuestions(null);
@@ -442,10 +441,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (null != entity1.getInitiate()) {
             throw new SerException("该任务已被分发，不能再次发起");
         }
-//        entity.setInitiate(name);
-//        entity.setTaskStatus(TaskStatus.DOING);
         RpcTransmit.transmitUserToken(token);
         TaskNode entity = update(to);
+        entity.setInitiate(name);
         entity.setTime(LocalDateTime.now());
         super.update(entity);
         if ((null != entity.getSplit()) && (entity.getSplit())) {
@@ -622,10 +620,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         } else {
             tableId = tables.get(0).getId();
         }
-        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true, "table");
+        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
         entity.setTableId(tableId);
         entity.setInitiate(name);
-        entity.setTaskStatus(TaskStatus.DOING);
         List<CustomTitleTO> titleTOS = to.getCustomTitles();
         List<CustomTitle> titles = new ArrayList<>();
         entity.setTime(LocalDateTime.now());
@@ -712,6 +709,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if ((null != entity.getHaveSon()) && entity.getHaveSon()) {
             updateFather(entity.getFatherId());
         }
+        updateTable(entity);
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -763,6 +761,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if ((null != entity.getHaveSon()) && entity.getHaveSon()) {
             updateFather(entity.getFatherId());
         }
+        updateTable(entity);
     }
 
     @Override
@@ -774,6 +773,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
         entity.setAduitType(AduitType.PASS);
         entity.setResult(to.getResult());
+        entity.setTaskStatus(TaskStatus.DOING);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
@@ -787,6 +787,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
         entity.setAduitType(AduitType.NOTPASS);
         entity.setNotPassReason(to.getNotPassReason());
+        entity.setTaskStatus(TaskStatus.DOING);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
@@ -926,6 +927,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setDelayType(to.getDelayType());
         entity.setReportReason(to.getReportReason());
         entity.setReport(true);
+        entity.setTaskStatus(TaskStatus.TOBEAUDITED);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
@@ -950,6 +952,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setEndTime(DateUtil.parseDateTime(to.getEndTime()));
         entity.setRemark(to.getRemark());
         entity.setSplit(to.getSplit());
+        entity.setTaskStatus(TaskStatus.RECEIVE);
         if (to.getSplit()) {
             entity.setDay(to.getDay());
             split(entity);
@@ -1280,6 +1283,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (!ds.isEmpty()) {
                 departs = ds.toArray(departs);
             }
+//            List<String> ps1 = projects();
+//            String[] ps11 = new String[ps1.size()];
+//            if (!ps1.isEmpty()) {
+//                ps11 = ds.toArray(ps11);
+//            }
         } else {
             departs = dto.getDepart();
             area = dto.getArea();
@@ -1779,7 +1787,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (!ds.isEmpty()) {
                 depart = ds.toArray(depart);
             }
-            return cCount(dto, area, depart, projects, null, tables);
+            List<String> ps1 = projects();
+            String[] ps11 = new String[ps1.size()];
+            if (!ps1.isEmpty()) {
+                ps11 = ds.toArray(ps11);
+            }
+            return cCount(dto, area, depart, ps11, null, tables);
         } else if (CountType.DEPART.equals(countType)) {
             return cCount(dto, areas, departs, projects, null, tables);
         } else if (CountType.PERSON.equals(countType)) {
@@ -2288,7 +2301,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (!ds.isEmpty()) {
                 depart = ds.toArray(depart);
             }
-            return fCount(dto, area, depart, ps, null, tables);
+            List<String> ps1 = projects();
+            String[] ps11 = new String[ps1.size()];
+            if (!ps1.isEmpty()) {
+                ps11 = ds.toArray(ps11);
+            }
+            return fCount(dto, area, depart, ps11, null, tables);
         } else if (CountType.DEPART.equals(countType)) {
             return fCount(dto, areas, departs, ps, null, tables);
         } else if (CountType.PERSON.equals(countType)) {
@@ -2718,6 +2736,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return new ArrayList<>(s);
     }
 
+    private List<String> projects() throws SerException {
+        List<Project> list = projectSer.findAll();
+        Set<String> s = list.stream().map(project -> project.getProject()).collect(Collectors.toSet());
+        return new ArrayList<>(s);
+    }
+
     @Override
     public void confirm(String id) throws SerException {
         TaskNode entity = super.findById(id);
@@ -2725,6 +2749,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             throw new SerException("该对象不存在");
         }
         entity.setConfirm(true);
+        entity.setTaskStatus(TaskStatus.DOING);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
@@ -2737,6 +2762,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         }
         entity.setConfirm(false);
         entity.setReason(to.getReason());
+        entity.setTaskStatus(TaskStatus.NOTRECEIVE);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
     }
@@ -3434,5 +3460,63 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return collectDataVO;
     }
 
+    @Override
+    public List<com.bjike.goddess.taskallotment.bo.TaskNodeExcel> findByDTO(TaskNodeDTO dto) throws SerException {
+        List<TaskNode> list = super.findByCis(dto);
+        return BeanTransform.copyProperties(list, com.bjike.goddess.taskallotment.bo.TaskNodeExcel.class);
+    }
 
+    @Override
+    public void editStatus(String id, TaskStatus taskStatus) throws SerException {
+        Table table = tableSer.findById(id);
+        if (null != table) {
+            TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+            taskNodeDTO.getConditions().add(Restrict.eq("tableId", table.getId()));
+            List<TaskNode> taskNodeList = super.findByCis(taskNodeDTO);
+            if (!taskNodeList.isEmpty()) {
+                for (TaskNode t : taskNodeList) {
+                    t.setTaskStatus(taskStatus);
+                    t.setModifyTime(LocalDateTime.now());
+                }
+                super.update(taskNodeList);
+            }
+            table.setTaskStatus(taskStatus);
+            table.setModifyTime(LocalDateTime.now());
+            tableSer.update(table);
+        } else {
+            TaskNode taskNode = super.findById(id);
+            if (null == taskNode) {
+                throw new SerException("该对象不存在");
+            }
+            taskNode.setTaskStatus(taskStatus);
+            if (taskStatus.equals(TaskStatus.FINISH)) {
+                taskNode.setFinishStatus(FinishStatus.FINISH);
+            } else if (taskStatus.equals(TaskStatus.UNFINISHED)) {
+                taskNode.setFinishStatus(FinishStatus.UNFINISHED);
+            }
+            taskNode.setModifyTime(LocalDateTime.now());
+            super.update(taskNode);
+            updateTable(taskNode);
+        }
+    }
+
+    private void updateTable(TaskNode taskNode) throws SerException {
+        TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+        taskNodeDTO.getConditions().add(Restrict.eq("tableId", taskNode.getTableId()));
+        List<TaskNode> taskNodeList = super.findByCis(taskNodeDTO);
+        long finishTotal = taskNodeList.stream().filter(taskNode1 -> TaskStatus.FINISH.equals(taskNode1.getTaskStatus())).count();
+        long unFinishTotal = taskNodeList.stream().filter(taskNode1 -> TaskStatus.UNFINISHED.equals(taskNode1.getTaskStatus())).count();
+        Table father = tableSer.findById(taskNode.getTableId());
+        if (null != father) {
+            if (finishTotal == taskNodeList.size()) {
+                father.setTaskStatus(TaskStatus.FINISH);
+                father.setModifyTime(LocalDateTime.now());
+                tableSer.update(father);
+            } else if (unFinishTotal == taskNodeList.size()) {
+                father.setTaskStatus(TaskStatus.UNFINISHED);
+                father.setModifyTime(LocalDateTime.now());
+                tableSer.update(father);
+            }
+        }
+    }
 }

@@ -63,7 +63,7 @@ public class AnnouncementVO {
     /**
      * 是否已经读取
      */
-    private Boolean haveRead;
+    private String haveReadS;
 
     /**
      * 图片路径数组
@@ -78,12 +78,12 @@ public class AnnouncementVO {
         this.photos = photos;
     }
 
-    public Boolean getHaveRead() {
-        return haveRead;
+    public String getHaveReadS() {
+        return haveReadS;
     }
 
-    public void setHaveRead(Boolean haveRead) {
-        this.haveRead = haveRead;
+    public void setHaveReadS(String haveReadS) {
+        this.haveReadS = haveReadS;
     }
 
     public Status getStatus() {

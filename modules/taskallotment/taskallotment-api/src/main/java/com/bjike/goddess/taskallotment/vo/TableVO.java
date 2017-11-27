@@ -1,8 +1,7 @@
 package com.bjike.goddess.taskallotment.vo;
 
-import com.bjike.goddess.taskallotment.bo.NodeBO;
-import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.Status;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 
 import java.util.List;
 
@@ -34,14 +33,22 @@ public class TableVO {
      */
     private Status status;
     /**
-     * 任务完成状态
+     * 任务状态
      */
-    private FinishStatus finishStatus;
+    private TaskStatus taskStatus;
 
     /**
      * 任务节点名称集合
      */
-    private List<NodeBO> nodeS;
+    private List<NodeVO> nodeS;
+
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
 
     public String getCreater() {
         return creater;
@@ -49,14 +56,6 @@ public class TableVO {
 
     public void setCreater(String creater) {
         this.creater = creater;
-    }
-
-    public List<NodeBO> getNodeS() {
-        return nodeS;
-    }
-
-    public void setNodeS(List<NodeBO> nodeS) {
-        this.nodeS = nodeS;
     }
 
     public Status getStatus() {
@@ -83,11 +82,11 @@ public class TableVO {
         this.name = name;
     }
 
-    public FinishStatus getFinishStatus() {
-        return finishStatus;
+    public List<NodeVO> getNodeS() {
+        return nodeS;
     }
 
-    public void setFinishStatus(FinishStatus finishStatus) {
-        this.finishStatus = finishStatus;
+    public void setNodeS(List<NodeVO> nodeS) {
+        this.nodeS = nodeS;
     }
 }
