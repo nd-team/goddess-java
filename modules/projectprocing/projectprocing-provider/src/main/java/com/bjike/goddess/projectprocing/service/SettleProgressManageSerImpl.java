@@ -447,7 +447,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 "    a.id=prossManageId)a,projectprocing_headerscustom b " +
                 " where a.fatherId=b.id and b.outUnit='" + outUnit + "' ";
 
-        int customStartSize=titles.size();
+        int customStartSize = titles.size();
         String[] str_fields = new String[]{"header", "content", "outUnit", "is_requiredFill", "types", "remark", "prossManageId"};
         List<HeadersCustom> customs = super.findBySql(sql, HeadersCustom.class, str_fields);
         for (HeadersCustom custom : customs) {//自定义
@@ -490,13 +490,13 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                         field.setAccessible(true);
                         if (field.getName().equalsIgnoreCase(f)) {
                             try {
-                                String name =field.getType().getSimpleName();
-                                if(!name.equalsIgnoreCase("boolean")){
+                                String name = field.getType().getSimpleName();
+                                if (!name.equalsIgnoreCase("boolean")) {
                                     ExcelUtil.setCellValue(cell, field, field.get(spm));
-                                }else {
+                                } else {
                                     Object o = field.get(spm);
-                                    if(null!=o)
-                                    cell.setCellValue((boolean) o==true?"是":"否");
+                                    if (null != o)
+                                        cell.setCellValue((boolean) o == true ? "是" : "否");
                                 }
 
                             } catch (Exception e) {
@@ -665,8 +665,8 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
             List<Field> fields = ClazzUtils.getFields(SettleProgressManage.class);
             for (Field field : fields) {
                 Column c = field.getAnnotation(Column.class);
-                if(StringUtils.isNotBlank(c.name()) && !c.name().equals("id"))
-                str_titles.add(c.name());
+                if (StringUtils.isNotBlank(c.name()) && !c.name().equals("id"))
+                    str_titles.add(c.name());
             }
 
             for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
@@ -707,7 +707,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 if (customs.size() > 0) {
                     try {
                         for (HeadersCustom headersCustom : customs) {
-                            XSSFCell customCell  = row.getCell(cellIndex++);
+                            XSSFCell customCell = row.getCell(cellIndex++);
                             String cellVal = ExcelUtil.getCellValue(customCell, null);
                             HeadersCustom custom = new HeadersCustom();
                             custom.setCreateTime(LocalDateTime.now());
@@ -720,32 +720,49 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                         throw new SerException(e.getMessage());
                     }
                 }
+
 //                //自定义节点表头添加数据(跟导出处理相反操作)
                 if (ncs.size() > 0) {
-                    for(int k = nodeSize;nodeSize<titles.size();k++){ //获取一行的自定义节点表头
-                        try {
-                            String head = sheet.getRow(0).getCell(nodeSize).getStringCellValue();//表头
-                            String cellVal = ExcelUtil.getCellValue(row.getCell(nodeSize), null);//内容
-                            nodeSize++;
-                            if(StringUtils.isNotBlank(cellVal)){
-                                for (NodeHeadersCustom nc : ncs) {
-                                    if(head.equals(nc.getNodeOneName())){
-
-                                    }else if(head.equals(nc.getNodeOneHeader())){
-
-                                    }else if(head.equals(nc.getNodeTwoHeader())){
-
-                                    }else if(head.equals(nc.getNodeThreeHeader())){
-
-                                    }else if(head.equals(nc.getNodeFourHeader())){
-
-                                    }
-                                }
+                    XSSFRow xr = sheet.getRow(rowIndex);
+                    for(NodeHeadersCustom ncm:ncs){
+                        NodeHeadersCustom nhc = new NodeHeadersCustom();
+                        nhc.setNodeFourInterDate(1);
+                        nhc.setNodeTwoInterDate(1);
+                        nhc.setNodeThreeInterDate(1);
+                        nhc.setFatherId(ncm.getId());
+                        nhc.setProssManageId(ncm.getProssManageId());
+                        nhc.setOutUnit(outUnit);
+                        for (int z = nodeSize; nodeSize < titles.size(); z++) {
+                            String head =titles.get(z);
+                            String val =null;
+                            try {
+                                val = ExcelUtil.getCellValue(xr.getCell(z),null);//值
+                            }catch (Exception e){
+                                throw  new SerException(e.getMessage());
                             }
 
-                        }catch (Exception e){
-                            e.printStackTrace();
+                            if(ncm.getNodeOneName().equals(head)){
+                                nhc.setNodeOneName(head);
+                                nhc.setNodeOneNameContent(val==null?0:Integer.parseInt(val));
+                            }else if(ncm.getNodeOneHeader().equals(head)){
+                                nhc.setNodeOneHeader(head);
+                                nhc.setNodeOneContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
+                            }
+                            else if(ncm.getNodeTwoHeader().equals(head)){
+                                nhc.setNodeTwoHeader(head);
+                                nhc.setNodeTwoContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
+                            }
+                            else if(ncm.getNodeThreeHeader().equals(head)){
+                                nhc.setNodeThreeHeader(head);
+                                nhc.setNodeThreeContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
+                            }
+                            else if(ncm.getNodeFourHeader().equals(head)){
+                                nhc.setNodeFourHeader(head);
+                                nhc.setNodeFourContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
+                            }
+                            break;
                         }
+                        nodeHeadersCustomSer.save(nhc);
                     }
 
                 }
