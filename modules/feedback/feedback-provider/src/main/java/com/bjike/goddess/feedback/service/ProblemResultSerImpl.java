@@ -75,7 +75,7 @@ public class ProblemResultSerImpl extends ServiceImpl<ProblemResult, ProblemResu
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -110,7 +110,7 @@ public class ProblemResultSerImpl extends ServiceImpl<ProblemResult, ProblemResu
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
         } else {
             flag = true;
         }

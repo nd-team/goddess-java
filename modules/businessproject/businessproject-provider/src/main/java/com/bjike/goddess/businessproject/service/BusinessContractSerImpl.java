@@ -2242,89 +2242,125 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                     "makeContract", "scaleBalance", "solutionBalance", "implement", "partial",
                     "persist", "settlementProcess", "account", "closeSingle", "archive");
             //测算是否通过
-            if (str.getMeasurePass().equals(true)) {
-                export.setMeasurePass("是");
-            } else {
-                export.setMeasurePass("否");
+            if (null != str.getMeasurePass()) {
+                if (str.getMeasurePass().equals(true)) {
+                    export.setMeasurePass("是");
+                } else {
+                    export.setMeasurePass("否");
+                }
+
             }
             //是否通报
-            if (str.getNotification().equals(true)) {
-                export.setNotification("是");
-            } else {
-                export.setNotification("否");
+            if (null != str.getNotification()) {
+                if (str.getNotification().equals(true)) {
+                    export.setNotification("是");
+                } else {
+                    export.setNotification("否");
+                }
             }
             //是否有共同分包单位
-            if (str.getCommonSubcontractor().equals(true)) {
-                export.setCommonSubcontractor("是");
-            } else {
-                export.setCommonSubcontractor("否");
+            if (null != str.getCommonSubcontractor()) {
+                if (str.getCommonSubcontractor().equals(true)) {
+                    export.setCommonSubcontractor("是");
+                } else {
+                    export.setCommonSubcontractor("否");
+                }
+
             }
             //派工归属清理是否完成
-            if (str.getTaskFinish().equals(true)) {
-                export.setTaskFinish("是");
-            } else {
-                export.setTaskFinish("否");
+            if (null != str.getTaskFinish()) {
+
+                if (str.getTaskFinish().equals(true)) {
+                    export.setTaskFinish("是");
+                } else {
+                    export.setTaskFinish("否");
+                }
             }
             //是否有合同派工合同
-            if (str.getTaskContract().equals(true)) {
-                export.setTaskContract("是");
-            } else {
-                export.setTaskContract("否");
+            if (null != str.getTaskContract()) {
+                if (str.getTaskContract().equals(true)) {
+                    export.setTaskContract("是");
+                } else {
+                    export.setTaskContract("否");
+                }
+
             }
 
             //合同规模数是否有差异
-            if (str.getScaleBalance().equals(true)) {
-                export.setScaleBalance("是");
-            } else {
-                export.setScaleBalance("否");
+            if (null != str.getScaleBalance()) {
+                if (str.getScaleBalance().equals(true)) {
+                    export.setScaleBalance("是");
+                } else {
+                    export.setScaleBalance("否");
+                }
             }
             //是否解决差异问题
-            if (str.getSolutionBalance().equals(true)) {
-                export.setSolutionBalance("是");
-            } else {
-                export.setSolutionBalance("否");
+            if (null != str.getSolutionBalance()) {
+
+                if (str.getSolutionBalance().equals(true)) {
+                    export.setSolutionBalance("是");
+                } else {
+                    export.setSolutionBalance("否");
+                }
             }
             //预估项目是否确认实施
-            if (str.getImplement().equals(true)) {
-                export.setImplement("是");
-            } else {
-                export.setImplement("否");
+            if (null != str.getImplement()) {
+
+                if (str.getImplement().equals(true)) {
+                    export.setImplement("是");
+                } else {
+                    export.setImplement("否");
+                }
             }
             //是否分批结算
-            if (str.getPartial().equals(true)) {
-                export.setPartial("是");
-            } else {
-                export.setPartial("否");
+            if (null != str.getPartial()) {
+                if (str.getPartial().equals(true)) {
+                    export.setPartial("是");
+                } else {
+                    export.setPartial("否");
+                }
+
             }
             //是否为持续
-            if (str.getPersist().equals(true)) {
-                export.setPersist("是");
-            } else {
-                export.setPersist("否");
+            if (null != str.getPersist()) {
+                if (str.getPersist().equals(true)) {
+                    export.setPersist("是");
+                } else {
+                    export.setPersist("否");
+                }
+
             }
             //是否正在走结算流程
-            if (str.getSettlementProcess().equals(true)) {
-                export.setSettlementProcess("是");
-            } else {
-                export.setSettlementProcess("否");
+            if (null != str.getSettlementProcess()) {
+                if (str.getSettlementProcess().equals(true)) {
+                    export.setSettlementProcess("是");
+                } else {
+                    export.setSettlementProcess("否");
+                }
             }
             //是否到账
-            if (str.getAccount().equals(true)) {
-                export.setAccount("是");
-            } else {
-                export.setAccount("否");
+            if (null != str.getAccount()) {
+                if (str.getAccount().equals(true)) {
+                    export.setAccount("是");
+                } else {
+                    export.setAccount("否");
+                }
             }
             //是否闭单
-            if (str.getCloseSingle().equals(true)) {
-                export.setCloseSingle("是");
-            } else {
-                export.setCloseSingle("否");
+            if (null != str.getCloseSingle()) {
+                if (str.getCloseSingle().equals(true)) {
+                    export.setCloseSingle("是");
+                } else {
+                    export.setCloseSingle("否");
+                }
             }
             //合同是否已归档
-            if (str.getArchive().equals(true)) {
-                export.setArchive("是");
-            } else {
-                export.setArchive("否");
+            if (null != str.getArchive()) {
+                if (str.getArchive().equals(true)) {
+                    export.setArchive("是");
+                } else {
+                    export.setArchive("否");
+                }
             }
             //是否有合同立项
             export.setMakeContract(MakeContract.exportStrConvert(str.getMakeContract()));
