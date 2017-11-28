@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -659,14 +660,11 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 }
             }
             //开始插入数据
-            int rowCount = sheet.getLastRowNum();
+            int rowCount = sheet.getLastRowNum()+1;
             List<String> str_titles = new ArrayList<>();
             List<Field> fields = ClazzUtils.getFields(SettleProgressManage.class);
             for (Field field : fields) {
                 //TODO 这里改了你看一下(这个导入为什么excel里面有两条数据可是只导入成功一条)
-//                Column c = field.getAnnotation(Column.class);
-//                if (StringUtils.isNotBlank(c.name()) && !c.name().equals("id"))
-//                    str_titles.add(c.name());
                 if (!field.getName().equals("id") && !field.getName().equals("createTime") && !field.getName().equals("modifyTime")) {
                     str_titles.add(field.getName());
                 }
@@ -684,26 +682,32 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                     } catch (Exception e) {
                         throw new SerException(e.getMessage());
                     }
-                    if (null != cellVal) {
-                        for (Field field : fieldList) {
-                            if (field.getName().equalsIgnoreCase(s)) {
-                                field.setAccessible(true);
-                                try {
-                                    if (field.getType().isEnum()) {
-                                        ExcelUtil.enumToField(field, spm, cellVal);
-                                    } else {
-                                        Object v = DataTypeUtils.convertDataType(cellVal, field.getType().getSimpleName());
-                                        field.set(spm, v);
-                                    }
 
-                                } catch (Exception e) {
-                                    throw new SerException(e.getMessage());
+                    for (Field field : fieldList) {
+                        if (field.getName().equalsIgnoreCase(s)) {
+                            field.setAccessible(true);
+                            try {
+                                if (field.getType().isEnum()) {
+                                    cellVal = StringUtils.isBlank(cellVal) ? "0" : cellVal;
+                                    ExcelUtil.enumToField(field, spm, cellVal);
+                                } else {
+                                    if (StringUtils.isBlank(cellVal)) {
+                                        if (field.getType().getSimpleName().equals("LocalDateTime")) {
+                                            cellVal = DateUtil.dateToString(LocalDateTime.now());
+                                        }else if(field.getType().getSimpleName().equals("LocalDate")){
+                                            cellVal = DateUtil.dateToString(LocalDate.now());
+                                        }else if(field.getType().getSimpleName().equals("LocalTime")){
+                                            cellVal = DateUtil.dateToString(LocalTime.now());
+                                        }
+                                    }
+                                    Object v = DataTypeUtils.convertDataType(cellVal, field.getType().getSimpleName());
+                                    field.set(spm, v);
                                 }
+
+                            } catch (Exception e) {
+                                throw new SerException(e.getMessage());
                             }
                         }
-                        //TODO 这里改了(帮我判断一下一些非空字段我不知道怎么判断对照一下entity,还有一些转换的比如转时间,转枚举,如果数据为空就会报空指针)
-                    } else if ("updateDate".equals(s)) {
-                        spm.setUpdateDate(LocalDateTime.now());
                     }
                 }
                 spm.setCreateTime(LocalDateTime.now());
@@ -1089,36 +1093,36 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     public List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
         List<String> internalProNames = new ArrayList<>();
         List<SettleProgressManageSummBO> settleProgressManageSummBOList = new ArrayList<>();
-        for (String name : internalProNames){
+        for (String name : internalProNames) {
             StringBuilder sql = new StringBuilder();
-            String[] filds = new String[]{"contractTotal","amountTotal","completedCount", "completedAmount",
-                    "uncompletedCount","uncompletedAmount","settleCompletedStart", "settleCompletedStartAmount",
-                    "settleCompletedNoStart","settleCompletedNoStartAmount", "settleUnCompletedStart","settleUnCompletedStartAmount",
-                    "unfinishedSettled","unfinishedSettledAmount", "returnedItemsNum","returnedItemsAmount","noReturnSingular"};
+            String[] filds = new String[]{"contractTotal", "amountTotal", "completedCount", "completedAmount",
+                    "uncompletedCount", "uncompletedAmount", "settleCompletedStart", "settleCompletedStartAmount",
+                    "settleCompletedNoStart", "settleCompletedNoStartAmount", "settleUnCompletedStart", "settleUnCompletedStartAmount",
+                    "unfinishedSettled", "unfinishedSettledAmount", "returnedItemsNum", "returnedItemsAmount", "noReturnSingular"};
             sql.append("SELECT * FROM ( ");
-            sql.append(" (SELECT count(*) as contractTotal  FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') a, ");
-            sql.append(" (SELECT sum(IFNULL(dispatAmount, IFNULL(estimSettleAmount, 0))) as amountTotal FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') b, ");
-            sql.append(" (SELECT count(*) as completedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0) c, ");
-            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as completedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0) d, ");
-            sql.append(" (SELECT count(*) as uncompletedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1) e, ");
-            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as uncompletedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1) f, ");
-            sql.append(" (SELECT count(*) as settleCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 1) g, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 1) h, ");
-            sql.append(" (SELECT count(*) as settleCompletedNoStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 0) i, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedNoStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 0) j, ");
-            sql.append(" (SELECT count(*) as settleUnCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 1) k, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleUnCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 1) l, ");
-            sql.append(" (SELECT count(*) as unfinishedSettled FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 0) m, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as unfinishedSettledAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 0) n, ");
-            sql.append(" (SELECT count(*) as returnedItemsNum FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND accountAmount is NOT NULL) o, ");
-            sql.append(" (SELECT IFNULL(sum(accountAmount),0) as returnedItemsAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') p, ");
-            sql.append(" (SELECT count(*) as noReturnSingular FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND is_allSettleComple = 0) q ");
+            sql.append(" (SELECT count(*) as contractTotal  FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') a, ");
+            sql.append(" (SELECT sum(IFNULL(dispatAmount, IFNULL(estimSettleAmount, 0))) as amountTotal FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') b, ");
+            sql.append(" (SELECT count(*) as completedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0) c, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as completedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0) d, ");
+            sql.append(" (SELECT count(*) as uncompletedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1) e, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as uncompletedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1) f, ");
+            sql.append(" (SELECT count(*) as settleCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 1) g, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 1) h, ");
+            sql.append(" (SELECT count(*) as settleCompletedNoStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 0) i, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedNoStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 0) j, ");
+            sql.append(" (SELECT count(*) as settleUnCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 1) k, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleUnCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 1) l, ");
+            sql.append(" (SELECT count(*) as unfinishedSettled FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 0) m, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as unfinishedSettledAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 0) n, ");
+            sql.append(" (SELECT count(*) as returnedItemsNum FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND accountAmount is NOT NULL) o, ");
+            sql.append(" (SELECT IFNULL(sum(accountAmount),0) as returnedItemsAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') p, ");
+            sql.append(" (SELECT count(*) as noReturnSingular FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND is_allSettleComple = 0) q ");
             sql.append("} ");
 
-            List<SettleProgressManageSummBO> settleProgressManageSummBOS = super.findBySql(sql.toString(),SettleProgressManageSummBO.class,filds);
+            List<SettleProgressManageSummBO> settleProgressManageSummBOS = super.findBySql(sql.toString(), SettleProgressManageSummBO.class, filds);
             SettleProgressManageSummBO settleProgressManageSummBO = settleProgressManageSummBOS.get(0);
             settleProgressManageSummBO.setProject(name);
-            settleProgressManageSummBO.setNoReturnSingularAmount(settleProgressManageSummBO.getAmountTotal()-settleProgressManageSummBO.getReturnedItemsAmount());
+            settleProgressManageSummBO.setNoReturnSingularAmount(settleProgressManageSummBO.getAmountTotal() - settleProgressManageSummBO.getReturnedItemsAmount());
             settleProgressManageSummBOList.add(settleProgressManageSummBO);
         }
         return settleProgressManageSummBOList;
