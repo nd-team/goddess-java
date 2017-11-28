@@ -2,15 +2,14 @@ package com.bjike.goddess.task.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.task.enums.DateType;
-import com.bjike.goddess.task.enums.NoticeType;
-import com.bjike.goddess.task.enums.SummaryType;
 import com.bjike.goddess.task.enums.TimeType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 /**
- * 定制化汇总
+ * 自定义汇总
  *
  * @Author: [liguiqin]
  * @Date: [2017-09-25 15:47]
@@ -22,19 +21,19 @@ import java.time.LocalDateTime;
 @javax.persistence.Table(name = "task_customize")
 public class Customize extends BaseEntity {
     /**
-     * 汇总名
+     * 汇总表名称
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '汇总名' ", nullable = false)
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '汇总表名称' ", nullable = false)
     private String name;
 
     /**
-     * 项目id
+     * 汇总项目id
      */
     @Column(columnDefinition = "VARCHAR(50) COMMENT '项目id' ", nullable = false)
     private String projectId;
 
     /**
-     * 表id
+     * 汇总任务id
      */
     @Column(columnDefinition = "TEXT COMMENT '表id,多个' ", nullable = false)
     private String tablesId;
@@ -46,70 +45,65 @@ public class Customize extends BaseEntity {
     private String user;
 
     /**
-     * 汇总自定义字段
+     * 汇总对象
      */
-    @Column(columnDefinition = "TEXT COMMENT '汇总自定义字段,多个(非id)' ", nullable = false)
-    private String fields;
-    /**
-     * 定时时间类型
-     */
-    @Column(columnDefinition = "TINYINT(2) COMMENT '定时时间类型' ", nullable = false)
-    private TimeType timeType;
+    @Column(columnDefinition = "TEXT COMMENT '汇总对象' ")
+    private String collectObjec;
 
     /**
-     * 定时时间间隔值
+     * 是否抄送本部门
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '定时时间隔值'",nullable = false)
-    private String timeVal;
-
-    /**
-     * 汇总部门
-     */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '汇总部门(非id)'",nullable = false)
-    private String department;
-
-    /**
-     * 通知类型
-     */
-    @Column(columnDefinition = "TINYINT(2) COMMENT '通知类型' ", nullable = false)
-    private NoticeType noticeType;
-    /**
-     * 通知目标(部门,用户等,所有时为空)
-     */
-    @Column(columnDefinition = "TEXT COMMENT 'noticeType:0-用户(username),1-部门(name),2-为空' ")
-    private String noticeTarget;
+    @Column(name = "sendDepart", columnDefinition = "TINYINT(1)  COMMENT '是否抄送本部门'")
+    private Boolean sendDepart;
 
     /**
      * 是否启用
      */
-    @Column(name = "is_enable", columnDefinition = "TINYINT(1)  COMMENT '是否使用'", nullable = false)
+    @Column(name = "is_enable", columnDefinition = "TINYINT(1)  COMMENT '是否使用'")
     private Boolean enable;
+
     /**
-     * 汇总类型
+     * 是否需要固定表头
      */
-    @Column(columnDefinition = "TINYINT(2) COMMENT '汇总类型' ", nullable = false)
-    private SummaryType summaryType;
+    @Column(name = "is_needFixed", columnDefinition = "TINYINT(1)  COMMENT '是否需要固定表头'", nullable = false)
+    private Boolean needFixed;
+
     /**
-     * 汇总目标(部门,用户等,所有时为空)
+     * 汇总频率
      */
-    @Column(columnDefinition = "TEXT comment '汇总目标[summaryType:0-用户(username),1-部门(name),2-为空]' ")
-    private String summaryTarget;
+    @Column(columnDefinition = "TINYINT(2) COMMENT '汇总频率' ")
+    private DateType collectType;
+
     /**
-     * 间隔类型
+     * 提醒频率
      */
-    @Column(columnDefinition = "TINYINT(2) COMMENT '间隔类型' ", nullable = false)
-    private DateType dateType;
+    @Column(columnDefinition = "TINYINT(2) COMMENT '提醒频率' ")
+    private TimeType remindType;
     /**
-     * 间隔值
+     * 提醒间隔值
      */
-    @Column(columnDefinition = "INT(8) COMMENT '间隔值'",nullable = false)
+    @Column(columnDefinition = "INT(11) COMMENT '提醒间隔值'")
     private Integer dateVal;
+
+    /**
+     * 提醒时间
+     */
+    @Column(columnDefinition = "DATETIME COMMENT '提醒时间'")
+    private LocalDateTime sendTime;
 
     /**
      * 上次发送时间
      */
-    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '上次发送时间' ",insertable = false,nullable = false)
+    @Column(columnDefinition = "DATETIME COMMENT '上次发送时间'")
     private LocalDateTime lastTime;
+
+    public Boolean getNeedFixed() {
+        return needFixed;
+    }
+
+    public void setNeedFixed(Boolean needFixed) {
+        this.needFixed = needFixed;
+    }
 
     public String getName() {
         return name;
@@ -127,14 +121,6 @@ public class Customize extends BaseEntity {
         this.projectId = projectId;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
     public String getTablesId() {
         return tablesId;
     }
@@ -143,44 +129,28 @@ public class Customize extends BaseEntity {
         this.tablesId = tablesId;
     }
 
-    public String getFields() {
-        return fields;
+    public String getUser() {
+        return user;
     }
 
-    public void setFields(String fields) {
-        this.fields = fields;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public TimeType getTimeType() {
-        return timeType;
+    public String getCollectObjec() {
+        return collectObjec;
     }
 
-    public void setTimeType(TimeType timeType) {
-        this.timeType = timeType;
+    public void setCollectObjec(String collectObjec) {
+        this.collectObjec = collectObjec;
     }
 
-    public String getTimeVal() {
-        return timeVal;
+    public Boolean getSendDepart() {
+        return sendDepart;
     }
 
-    public void setTimeVal(String timeVal) {
-        this.timeVal = timeVal;
-    }
-
-    public NoticeType getNoticeType() {
-        return noticeType;
-    }
-
-    public void setNoticeType(NoticeType noticeType) {
-        this.noticeType = noticeType;
-    }
-
-    public String getNoticeTarget() {
-        return noticeTarget;
-    }
-
-    public void setNoticeTarget(String noticeTarget) {
-        this.noticeTarget = noticeTarget;
+    public void setSendDepart(Boolean sendDepart) {
+        this.sendDepart = sendDepart;
     }
 
     public Boolean getEnable() {
@@ -191,28 +161,20 @@ public class Customize extends BaseEntity {
         this.enable = enable;
     }
 
-    public SummaryType getSummaryType() {
-        return summaryType;
+    public DateType getCollectType() {
+        return collectType;
     }
 
-    public void setSummaryType(SummaryType summaryType) {
-        this.summaryType = summaryType;
+    public void setCollectType(DateType collectType) {
+        this.collectType = collectType;
     }
 
-    public String getSummaryTarget() {
-        return summaryTarget;
+    public TimeType getRemindType() {
+        return remindType;
     }
 
-    public void setSummaryTarget(String summaryTarget) {
-        this.summaryTarget = summaryTarget;
-    }
-
-    public DateType getDateType() {
-        return dateType;
-    }
-
-    public void setDateType(DateType dateType) {
-        this.dateType = dateType;
+    public void setRemindType(TimeType remindType) {
+        this.remindType = remindType;
     }
 
     public Integer getDateVal() {
@@ -223,19 +185,19 @@ public class Customize extends BaseEntity {
         this.dateVal = dateVal;
     }
 
+    public LocalDateTime getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(LocalDateTime sendTime) {
+        this.sendTime = sendTime;
+    }
+
     public LocalDateTime getLastTime() {
         return lastTime;
     }
 
     public void setLastTime(LocalDateTime lastTime) {
         this.lastTime = lastTime;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 }

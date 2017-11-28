@@ -617,8 +617,7 @@ public class CasualtyPurchasingDetailSerImpl extends ServiceImpl<CasualtyPurchas
                             entryNum = entryRegisterAPI.findNumByEntryDate(endDate, area, department);
                         }
                         if (moduleAPI.isCheck("secure")) {
-                            givingBuyNum = abandonAPI.findALL().size();
-                            givingBuyNum = givingBuyNum == null ? 0 : givingBuyNum;
+                            givingBuyNum = abandonAPI.findALL() == null ? 0 : abandonAPI.findALL().size();
                         }
                         Integer casualtyIncreaseNum = casualtyPurchasingListSer.findCasualtyIncreaseNum(endDate);
                         //TODO 由于离职模块还未修改他的新功能 所有到离职模块中拿离职人数未做
@@ -658,7 +657,7 @@ public class CasualtyPurchasingDetailSerImpl extends ServiceImpl<CasualtyPurchas
 
     //未购买意外险人数
     public Integer noBuyCasualtyNum(String area, String department) throws SerException {
-        String sql = "SELECT count(*) from businsurance_casualtypurchasingdetail where area = '"+area+"' and department = '"+department+"' and buyCasualtyStatus = 1 or buyCasualtyStatus = 2";
+        String sql = "SELECT count(*) from businsurance_casualtypurchasingdetail where area = '"+area+"' and department = '"+department+"' and buyCasualtyStatus IN (1,2)";
         List<Object> num_list = super.findBySql(sql);
         Integer num = Integer.parseInt(String.valueOf(num_list.get(0)));
         return num;

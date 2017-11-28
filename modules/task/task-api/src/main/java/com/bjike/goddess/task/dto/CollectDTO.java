@@ -1,10 +1,11 @@
 package com.bjike.goddess.task.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import com.bjike.goddess.task.enums.CollectType;
+import com.bjike.goddess.task.enums.CollectSuitation;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author: [liguiqin]
@@ -14,31 +15,96 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class CollectDTO extends BaseDTO {
-    public interface COUNT{}
+    public interface COUNT {
+    }
+
     /**
-     * 项目
+     * 项目id
      */
-    @NotBlank(groups = CollectDTO.COUNT.class,message ="项目不能为空")
+    @NotBlank(groups = CollectDTO.COUNT.class, message = "项目id不能为空")
     private String projectId;
     /**
-     * 多个表(为空时查询所有表)
+     * 任务id
      */
+    @NotNull(groups = CollectDTO.COUNT.class, message = "任务id不能为空")
     private String[] tablesId;
     /**
      * 是否需要固定表头
      */
-    @NotNull(groups = CollectDTO.COUNT.class,message ="是否需要固定表头不能为空")
-    private boolean needFixed = true;
+    @NotNull(groups = CollectDTO.COUNT.class, message = "是否需要固定表头不能为空")
+    private Boolean needFixed;
+    /**
+     * 开始时间
+     */
+    private String startTime;
+    /**
+     * 结束时间
+     */
+    private String endTime;
+    /**
+     * 汇总字段
+     */
+    private List<String> fields;
+    /**
+     * 汇总条件
+     */
+    private List<CollectSuitation> collectSuitations;
+    /**
+     * 类型值
+     */
+    private List<ValDTO> vals;
+    /**
+     * 汇总表头字段
+     */
+    private List<String> tableFields;
 
-    /**
-     * 自定义汇总字段
-     */
-    private String[] fields;
-    /**
-     * 自定义汇总类型
-     */
-    @NotNull(groups = CollectDTO.COUNT.class,message ="自定义汇总类型不能为空")
-    private CollectType type;
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public List<String> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
+    }
+
+    public List<CollectSuitation> getCollectSuitations() {
+        return collectSuitations;
+    }
+
+    public void setCollectSuitations(List<CollectSuitation> collectSuitations) {
+        this.collectSuitations = collectSuitations;
+    }
+
+    public List<ValDTO> getVals() {
+        return vals;
+    }
+
+    public void setVals(List<ValDTO> vals) {
+        this.vals = vals;
+    }
+
+    public List<String> getTableFields() {
+        return tableFields;
+    }
+
+    public void setTableFields(List<String> tableFields) {
+        this.tableFields = tableFields;
+    }
 
     public String getProjectId() {
         return projectId;
@@ -56,27 +122,11 @@ public class CollectDTO extends BaseDTO {
         this.tablesId = tablesId;
     }
 
-    public boolean isNeedFixed() {
+    public Boolean getNeedFixed() {
         return needFixed;
     }
 
-    public void setNeedFixed(boolean needFixed) {
+    public void setNeedFixed(Boolean needFixed) {
         this.needFixed = needFixed;
-    }
-
-    public String[] getFields() {
-        return fields;
-    }
-
-    public void setFields(String[] fields) {
-        this.fields = fields;
-    }
-
-    public CollectType getType() {
-        return type;
-    }
-
-    public void setType(CollectType type) {
-        this.type = type;
     }
 }

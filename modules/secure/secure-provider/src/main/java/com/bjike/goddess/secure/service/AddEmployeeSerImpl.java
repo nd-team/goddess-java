@@ -536,9 +536,11 @@ public class AddEmployeeSerImpl extends ServiceImpl<AddEmployee, AddEmployeeDTO>
             List<DepartmentDetailBO> d = list.stream().filter(departmentDetailBO -> "运营商务部".equals(departmentDetailBO.getDepartment())).collect(Collectors.toList());
             if (moduleAPI.isCheck("contacts")) {
                 RpcTransmit.transmitUserToken(token);
-                CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
-                if (commonality != null && commonality.getEmail() != null) {
-                    set.add(commonality.getEmail());
+                if (!d.isEmpty()) {
+                    CommonalityBO commonality = commonalityAPI.findByDepartment(d.get(0).getId());
+                    if (commonality != null && commonality.getEmail() != null) {
+                        set.add(commonality.getEmail());
+                    }
                 }
             }
             List<PositionDetailBO> p = list1.stream().filter(positionDetailBO -> positionDetailBO.getPosition().contains("总经理")).collect(Collectors.toList());

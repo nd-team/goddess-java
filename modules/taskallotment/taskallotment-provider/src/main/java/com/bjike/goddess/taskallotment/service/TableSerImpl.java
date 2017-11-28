@@ -63,7 +63,7 @@ public class TableSerImpl extends ServiceImpl<Table, TableDTO> implements TableS
         TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
         taskNodeDTO.getConditions().add(Restrict.eq("tableId", table.getId()));
         List<TaskNode> taskNodeList = taskNodeSer.findByCis(taskNodeDTO);
-        if( taskNodeList != null ){
+        if( !taskNodeList.isEmpty() ){
             taskNodeSer.remove( taskNodeList );
         }
         super.remove( table );

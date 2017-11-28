@@ -9,33 +9,33 @@ package com.bjike.goddess.task.enums;
  */
 public enum TimeType {
     /**
-     * 秒
-     */
-    SECOND(0),
-    /**
      * 分钟
      */
-    MINUTE(1),
+    MINTUE(0),
     /**
      * 小时
      */
-    HOUR(2),
+    HOUR(1),
     /**
-     * 每天
+     * 天
      */
-    EVERYDAY(3),;
+    DAY(2),
+    /**
+     * 周
+     */
+    WEEK(3),
+    /**
+     * 月
+     */
+    MONTH(4);
 
-    int code;
+    private int code;
 
     TimeType(int code) {
         this.code = code;
     }
 
     public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
+        return this.code;
     }
 }

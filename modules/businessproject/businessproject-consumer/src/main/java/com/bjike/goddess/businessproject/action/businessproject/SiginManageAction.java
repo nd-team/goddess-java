@@ -600,8 +600,8 @@ public class SiginManageAction extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/findWeek")
-    public Result findWeek(@RequestParam Integer year, @RequestParam Integer month) throws ActException {
+    @GetMapping("v1/findWeek/{year}/{month}")
+    public Result findWeek(@PathVariable Integer year, @PathVariable Integer month) throws ActException {
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.YEAR, year);

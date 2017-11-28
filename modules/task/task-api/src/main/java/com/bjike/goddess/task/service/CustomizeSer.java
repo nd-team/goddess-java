@@ -18,7 +18,8 @@ import java.util.List;
  */
 public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
     /**
-     * 自定义定时任务列表
+     * 列表
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -37,30 +38,71 @@ public interface CustomizeSer extends Ser<Customize, CustomizeDTO> {
 
     void edit(CustomizeTO to) throws SerException;
 
-    /**
-     * 启用或者关闭定时任务
-     * @param id
-     * @param enable
-     * @throws SerException
-     */
-    default void enable(String id, boolean enable) throws SerException {
+//    /**
+//     * 启用或者关闭定时任务
+//     * @param id
+//     * @param enable
+//     * @throws SerException
+//     */
+//    default void enable(String id, boolean enable) throws SerException {
+//
+//    }
+//
+//    /**
+//     * 执行任务
+//     *
+//     * @throws SerException
+//     */
+//    default void executeTask() throws SerException {
+//
+//    }
 
-    }
-
     /**
-     * 执行任务
+     * 获取实际完成规模数
      *
-     * @throws SerException
-     */
-    default void executeTask() throws SerException {
-
-    }
-
-    /**
-     *
-     * @param project
+     * @param tableIds
      * @return
      * @throws SerException
      */
-    Double get(String project) throws SerException;
+    Double get(String[] tableIds) throws SerException;
+
+    /**
+     * 设置通报
+     *
+     * @param to
+     * @throws SerException
+     */
+    void notice(CustomizeTO to) throws SerException;
+
+    /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 通过id查找
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    CustomizeBO one(String id) throws SerException;
+
+    /**
+     * 定时发送
+     *
+     * @throws SerException
+     */
+    void quartz() throws SerException;
+
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    String detail(String id) throws SerException;
 }

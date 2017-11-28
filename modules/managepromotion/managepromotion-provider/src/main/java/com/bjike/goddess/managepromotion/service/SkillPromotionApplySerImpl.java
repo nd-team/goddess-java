@@ -429,7 +429,7 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         if (moduleAPI.isCheck("event")) {
             for (String s : events(skillPromotionApply.getName())) {
                 EventTO eventTO = new EventTO();
-                eventTO.setProject("管理等级晋升");
+                eventTO.setProjectChineseName("管理等级晋升");
                 eventTO.setContent("管理等级晋升申请审核");
                 eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
                 eventTO.setName(s);

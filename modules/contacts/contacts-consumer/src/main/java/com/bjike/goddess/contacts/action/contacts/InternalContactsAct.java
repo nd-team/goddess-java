@@ -33,7 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -449,6 +451,7 @@ public class InternalContactsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 移动端从获取部门下的信息
      *
@@ -462,6 +465,51 @@ public class InternalContactsAct extends BaseFileAction {
             List<MobileInternalContactsBO> list = internalContactsAPI.mobileInfoByDepartment(dep);
             return ActResult.initialize(list);
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前月有几周
+     *
+     * @param year  年份
+     * @param month 月份
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findWeek/{year}/{month}")
+    public Result findWeek(@PathVariable Integer year, @PathVariable Integer month) throws ActException {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);
+            int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= weekNum; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有年份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/year")
+    public Result year() throws ActException {
+        try {
+            List<Integer> list = new ArrayList<>();
+            Integer year = LocalDate.now().getYear();
+            for (int i = year - 5; i < year + 5; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

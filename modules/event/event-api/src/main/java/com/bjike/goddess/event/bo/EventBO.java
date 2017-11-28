@@ -85,6 +85,12 @@ public class EventBO extends BaseBO {
      */
     private String color;
 
+    /**
+     * 待办事件对应状态
+     */
+    private String status;
+
+
     public String getColor() {
         return color;
     }
@@ -195,5 +201,13 @@ public class EventBO extends BaseBO {
 
     public void setActualTime(String actualTime) {
         this.actualTime = actualTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

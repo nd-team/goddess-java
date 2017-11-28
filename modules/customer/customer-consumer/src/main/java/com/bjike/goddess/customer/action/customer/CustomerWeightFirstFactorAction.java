@@ -77,7 +77,26 @@ public class CustomerWeightFirstFactorAction {
         }
     }
 
+    /**
+     * 一个客户权重一层因素层设置
+     *
+     * @param id  客户权重一层因素层设置id
+     * @return class CustomerWeightFirstFactorVO
+     * @des 一个客户权重一层因素层设置
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findCustomerWeiOne(@PathVariable String id) throws ActException {
+        try {
 
+            CustomerWeightFirstFactorVO customerContactWeightSetVO = BeanTransform.copyProperties(
+                    customerWeightFirstFactorAPI.getOneFirstFactor(id), CustomerWeightFirstFactorVO .class, true);
+            return ActResult.initialize(customerContactWeightSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 客户权重一层因素层设置列表
      *

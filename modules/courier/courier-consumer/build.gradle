@@ -43,6 +43,7 @@ dependencies {
     compile project(":modules:organize:organize-api")
     compile project(":modules:accommodation:accommodation-api")
     compile project(":modules:assemble:assemble-api")
+    compile project(":modules:message:message-api")
     compile project(":modules:checkhost:checkhost-api")
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 

@@ -192,7 +192,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             }
         }
 
-        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
+        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class,true);
 
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("name", to.getName()));
@@ -599,9 +599,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         List<InternalContactsTemplateExport> commerceContactsExports = new ArrayList<>();
 
         InternalContactsTemplateExport excel = new InternalContactsTemplateExport();
+        excel.setUpdateTime(LocalDate.now());
+        excel.setArea("广州");
         excel.setName("test");
         excel.setEmployeeNum("0012");
-        excel.setArea("广州");
         excel.setDepartment("研发部");
         excel.setPosition("数据分析师");
         excel.setPhone("test");

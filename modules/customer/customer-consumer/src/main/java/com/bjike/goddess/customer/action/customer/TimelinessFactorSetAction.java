@@ -77,7 +77,26 @@ public class TimelinessFactorSetAction {
         }
     }
 
+    /**
+     * 一个时效性因素层设置
+     *
+     * @param id  时效性因素层设置id
+     * @return class TimelinessFactorSetVO
+     * @des 一个时效性因素层设置
+     * @version v1
+     */
+    @GetMapping("v1/getOne/{id}")
+    public Result findCustomerWeiOne(@PathVariable String id) throws ActException {
+        try {
 
+            TimelinessFactorSetVO timelinessFactorSetVO = BeanTransform.copyProperties(
+                    timelinessFactorSetAPI.getOneTimeliness(id), TimelinessFactorSetVO .class, true);
+            return ActResult.initialize(timelinessFactorSetVO);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 时效性因素层设置列表
      *

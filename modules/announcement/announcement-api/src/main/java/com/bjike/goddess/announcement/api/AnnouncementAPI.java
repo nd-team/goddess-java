@@ -45,6 +45,22 @@ public interface AnnouncementAPI {
     List<AnnouncementBO> list(AnnouncementDTO dto) throws SerException;
 
     /**
+     * 当前用户列表
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<AnnouncementBO> currentList(AnnouncementDTO dto) throws SerException;
+
+    /**
+     * 当前用户列表总条数
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    Long currentListCount(AnnouncementDTO dto) throws SerException;
+
+    /**
      * 添加
      *
      * @param to

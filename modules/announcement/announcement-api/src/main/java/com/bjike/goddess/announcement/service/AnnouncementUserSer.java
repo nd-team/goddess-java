@@ -39,11 +39,11 @@ public interface AnnouncementUserSer extends Ser<AnnouncementUser, AnnouncementU
      * 查看该公告是否已经读取
      *
      * @param announcementId
-     * @param userId
+     * @param name
      * @return
      * @throws SerException
      */
-    boolean check(String announcementId, String userId) throws SerException;
+    Boolean check(String announcementId, String name) throws SerException;
 
     /**
      * 查找

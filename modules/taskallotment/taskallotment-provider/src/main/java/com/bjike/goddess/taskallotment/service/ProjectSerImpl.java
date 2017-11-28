@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.taskallotment.bo.ProjectBO;
@@ -21,12 +22,12 @@ import com.bjike.goddess.taskallotment.to.TableTO;
 import com.bjike.goddess.taskallotment.vo.SonPermissionObject;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,6 +209,9 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         List<Table> tables = new ArrayList<>();
         List<TableTO> tableTOSs = to.getTables();
         super.save(entity);
+        entity.setCreateTime(LocalDateTime.now());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
         if (null != tableTOSs) {
             for (TableTO tableTO : tableTOSs) {
                 Table table = BeanTransform.copyProperties(tableTO, Table.class, true);
@@ -216,6 +220,11 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
                 tables.add(table);
             }
             tableSer.save(tables);
+            for (Table t : tables) {
+                t.setCreateTime(LocalDateTime.now());
+                t.setModifyTime(LocalDateTime.now());
+            }
+            tableSer.update(tables);
         }
     }
 
@@ -395,29 +404,27 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     }
 
     @Override
-    public List<String> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException {
+    public List<ProjectBO> projectByAreaAndGroup(ProjectNameDTO projectNameDTO) throws SerException {
         ProjectDTO dto = new ProjectDTO();
+        LocalDate start = DateUtil.parseDate(projectNameDTO.getStartTime());
+        LocalDate end = DateUtil.parseDate(projectNameDTO.getEndTime());
+        LocalDate[] time = new LocalDate[]{start, end};
         dto.getConditions().add(Restrict.eq("status", Status.START));
-//        dto.getConditions().add(Restrict.in("area", projectNameDTO.getAreas()));
+        dto.getConditions().add(Restrict.between("createTime", time));
         dto.getConditions().add(Restrict.in("depart", projectNameDTO.getDeparts()));
         List<Project> list = super.findByCis(dto);
-        List<String> projectNames = new ArrayList<>();
-        projectNames.addAll(list.stream().map(Project::getProject).collect(Collectors.toList()));
-        return projectNames;
+        return BeanTransform.copyProperties(list, ProjectBO.class);
     }
 
     @Override
     public List<String> tableNamesBypname(ProjectNameDTO projectNameDTO) throws SerException {
-        ProjectDTO dto = new ProjectDTO();
-        dto.getConditions().add(Restrict.eq("status", Status.START));
-        dto.getConditions().add(Restrict.in("project", projectNameDTO.getProjects()));
-        List<Project> list = super.findByCis(dto);
-        List<String> projectIds = new ArrayList<>();
-        projectIds.addAll( list.stream().map(Project::getId).collect(Collectors.toList()) );
-
+        LocalDate start = DateUtil.parseDate(projectNameDTO.getStartTime());
+        LocalDate end = DateUtil.parseDate(projectNameDTO.getEndTime());
+        LocalDate[] time = new LocalDate[]{start, end};
         TableDTO tdto = new TableDTO();
-        tdto.getConditions().add(Restrict.in("projectId", projectIds));
+        tdto.getConditions().add(Restrict.in("projectId", projectNameDTO.getProjectsID()));
         tdto.getConditions().add(Restrict.eq("status", Status.START));
+        tdto.getConditions().add(Restrict.between("createTime", time));
         List<Table> tableList = tableSer.findByCis(tdto);
         List<String> tableNames = new ArrayList<>();
         tableNames = tableList.stream().map(Table::getName).distinct().collect(Collectors.toList());
@@ -443,13 +450,16 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         table.setCreater(userAPI.currentUser().getUsername());
         table.setStatus(to.getStatus());
         tableSer.save(table);
+        table.setCreateTime(LocalDateTime.now());
+        table.setModifyTime(LocalDateTime.now());
+        tableSer.update(table);
     }
 
     @Override
     public byte[] exportProjectExcel(ProjectDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.in("project",dto.getProjects()));
-        List<Project> list=super.findByCis(dto);
-        List<ProjectExcel> toList=BeanTransform.copyProperties(list,ProjectExcel.class);
+        dto.getConditions().add(Restrict.in("project", dto.getProjects()));
+        List<Project> list = super.findByCis(dto);
+        List<ProjectExcel> toList = BeanTransform.copyProperties(list, ProjectExcel.class);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
@@ -458,15 +468,20 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void leadProjectExcel(List<ProjectExcel> toList) throws SerException {
-        List<Project> list=BeanTransform.copyProperties(toList,Project.class,true);
+        List<Project> list = BeanTransform.copyProperties(toList, Project.class, true);
         super.save(list);
+        for (Project p : list) {
+            p.setCreateTime(LocalDateTime.now());
+            p.setModifyTime(LocalDateTime.now());
+        }
+        super.update(list);
     }
 
     @Override
     public byte[] exportTableExcel(TableDTO dto) throws SerException {
-        dto.getConditions().add(Restrict.in("name",dto.getTables()));
-        List<Table> list=tableSer.findByCis(dto);
-        List<TableExcel> toList=BeanTransform.copyProperties(list,TableExcel.class);
+        dto.getConditions().add(Restrict.in("name", dto.getTables()));
+        List<Table> list = tableSer.findByCis(dto);
+        List<TableExcel> toList = BeanTransform.copyProperties(list, TableExcel.class);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
@@ -474,12 +489,17 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void leadTableExcel(List<TableExcel> toList,String projectId) throws SerException {
-        List<Table> list=BeanTransform.copyProperties(toList,Table.class,true);
-        for (Table table:list){
+    public void leadTableExcel(List<TableExcel> toList, String projectId) throws SerException {
+        List<Table> list = BeanTransform.copyProperties(toList, Table.class, true);
+        for (Table table : list) {
             table.setProjectId(projectId);
         }
         tableSer.save(list);
+        for (Table table : list) {
+            table.setCreateTime(LocalDateTime.now());
+            table.setModifyTime(LocalDateTime.now());
+        }
+        tableSer.update(list);
     }
 
 

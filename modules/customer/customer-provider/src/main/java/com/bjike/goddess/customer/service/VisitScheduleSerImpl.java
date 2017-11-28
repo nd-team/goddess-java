@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * 拜访日程表业务实现
@@ -179,6 +180,14 @@ public class VisitScheduleSerImpl extends ServiceImpl<VisitSchedule, VisitSchedu
         visitScheduleDTO.getConditions().add(Restrict.eq("month", visitScheduleDTO.getMonth()));
         visitScheduleDTO.getConditions().add(Restrict.eq("week", visitScheduleDTO.getWeek()));
         VisitSchedule visitSchedule = super.findOne(visitScheduleDTO);
+        if(visitSchedule==null){
+            VisitScheduleDTO visitScheduleDTO1 = new VisitScheduleDTO();
+            visitScheduleDTO1.getSorts().add("createTime=desc");
+            List<VisitSchedule> visitSchedules = super.findByCis(visitScheduleDTO1);
+            if(visitSchedules!=null && visitSchedules.size()>0){
+                visitSchedule = visitSchedules.get(0);
+            }
+        }
         return BeanTransform.copyProperties(visitSchedule, VisitScheduleBO.class);
     }
 

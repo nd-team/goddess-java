@@ -1,8 +1,8 @@
 package com.bjike.goddess.taskallotment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.Status;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,11 +45,20 @@ public class Table extends BaseEntity {
      */
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '状态'")
     private Status status;
-//    /**
-//     * 任务完成状态
-//     */
-//    @Column(name = "finishStatus", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '任务完成状态'")
-//    private FinishStatus finishStatus;
+
+    /**
+     * 任务状态
+     */
+    @Column(name = "taskStatus", columnDefinition = "TINYINT(2)   COMMENT '任务状态'")
+    private TaskStatus taskStatus;
+
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
 
     public String getCreater() {
         return creater;
@@ -83,11 +92,4 @@ public class Table extends BaseEntity {
         this.name = name;
     }
 
-//    public FinishStatus getFinishStatus() {
-//        return finishStatus;
-//    }
-//
-//    public void setFinishStatus(FinishStatus finishStatus) {
-//        this.finishStatus = finishStatus;
-//    }
 }

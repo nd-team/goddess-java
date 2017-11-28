@@ -70,8 +70,8 @@ public class TaxManagementApiImpl implements TaxManagementAPI {
     }
 
     @Override
-    public void getTime() throws SerException {
-        taxManagementSer.getTime();
+    public void taxTime() throws SerException {
+        taxManagementSer.taxTime();
     }
 
     @Override
