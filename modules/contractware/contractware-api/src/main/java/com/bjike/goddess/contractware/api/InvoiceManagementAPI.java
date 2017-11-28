@@ -66,7 +66,9 @@ public interface InvoiceManagementAPI  {
     ContractManagementBO findByNumber(String number) throws SerException;
 
     /**
-     * 上传附件更新电子版这个字段为有
+     * 上传附件更新电子版这个字段为有询模块类型
      */
     void updateElectronic(String id) throws SerException;
+
+
 }

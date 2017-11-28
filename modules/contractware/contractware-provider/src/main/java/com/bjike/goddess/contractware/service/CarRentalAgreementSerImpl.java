@@ -218,7 +218,9 @@ public class CarRentalAgreementSerImpl extends ServiceImpl<CarRentalAgreement, C
             throw new SerException("id不能为空");
         }
         CarRentalAgreement carRentalAgreement = super.findById(carRentalAgreementTO.getId());
-        BeanTransform.copyProperties(carRentalAgreementTO,carRentalAgreement,true);
+        LocalDateTime createTime = carRentalAgreement.getCreateTime ();
+        carRentalAgreement = BeanTransform.copyProperties(carRentalAgreementTO,CarRentalAgreement.class,true);
+        carRentalAgreement.setCreateTime ( createTime );
         carRentalAgreement.setModifyTime(LocalDateTime.now());
         super.update(carRentalAgreement);
         return BeanTransform.copyProperties(carRentalAgreement,CarRentalAgreementBO.class);

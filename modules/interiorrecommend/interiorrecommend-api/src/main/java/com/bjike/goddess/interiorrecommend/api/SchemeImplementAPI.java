@@ -6,7 +6,6 @@ import com.bjike.goddess.interiorrecommend.dto.SchemeImplementDTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
 
 import java.util.List;
 import java.util.Set;

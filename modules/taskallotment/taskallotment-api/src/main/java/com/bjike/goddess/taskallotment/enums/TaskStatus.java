@@ -16,12 +16,12 @@ public enum TaskStatus {
      * 已完成
      */
     @ExcelValue(name = "已完成")
-    FINISH(0),
+    FINISH ( 0 ),
     /**
      * 正在执行
      */
     @ExcelValue(name = "正在执行")
-    DOING(1),
+    DOING ( 1 ),
     /**
      * 未完成
      */
@@ -31,9 +31,8 @@ public enum TaskStatus {
     /**
      * 待接收
      */
-    @ExcelValue(name = "待接收")
+    @ExcelValue ( name = "待接收")
     RECEIVE(3),
-
     /**
      * 不接收
      */

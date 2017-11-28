@@ -136,7 +136,77 @@ public class VoucherPermissionSerImpl extends ServiceImpl<VoucherPermission, Vou
         return count;
     }
 
+    //科目汇总列表权限
+    @Override
+    public List<VoucherPermissionBO> listSubject(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
+            cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
+        }
 
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag",new String[]{"4"}));
+        List<VoucherPermission> list = super.findByCis(cusPermissionDTO, true);
+        List<VoucherPermissionBO> bo = new ArrayList<>();
+        for (VoucherPermission str : list) {
+            VoucherPermissionBO temp = BeanTransform.copyProperties(str, VoucherPermissionBO.class);
+
+            //先查询操作对象
+            List<String> idList = new ArrayList<>();
+            VoucherPermissionOperateDTO cpoDTO = new VoucherPermissionOperateDTO();
+            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", temp.getId()));
+            List<VoucherPermissionOperate> operateList = voucherPermissionOperateSer.findByCis(cpoDTO);
+            if (operateList != null && operateList.size() > 0) {
+                operateList.stream().forEach(op -> {
+                    idList.add(op.getOperator());
+                });
+            }
+            //操作对象list转String[]
+            String[] ids = null;
+            if (null != idList && idList.size() > 0) {
+                ids = new String[idList.size()];
+                for (int i = 0; i < idList.size(); i++) {
+                    ids[i] = idList.get(i);
+                }
+
+            }
+            VoucherPermissionType type = str.getType();
+            List<OpinionBO> opinionBOS = new ArrayList<>();
+            List<VoucherOperateBO> coboList = null;
+            if (null != ids && ids.length != 0) {
+
+                if (VoucherPermissionType.LEVEL.equals(type)) {
+                    opinionBOS = arrangementAPI.findByIds(ids);
+                } else if (VoucherPermissionType.MODULE.equals(type)) {
+                    opinionBOS = moduleTypeAPI.findByIds(ids);
+                } else if (VoucherPermissionType.POSITION.equals(type)) {
+                    opinionBOS = positionDetailAPI.findByIds(ids);
+                } else if (VoucherPermissionType.DEPART.equals(type)) {
+                    opinionBOS = departmentDetailAPI.findByIds(ids);
+                }
+
+                coboList = new ArrayList<>();
+                for (OpinionBO op : opinionBOS) {
+                    VoucherOperateBO cobo = new VoucherOperateBO();
+                    cobo.setId(op.getId());
+                    cobo.setOperator(op.getValue());
+                    coboList.add(cobo);
+                }
+            }
+            temp.setCusOperateBO(coboList);
+
+            bo.add(temp);
+        }
+        return bo;
+    }
+    //科目汇总权限总条数
+    @Override
+    public Long countSubjectPermission(VoucherPermissionDTO cusPermissionDTO) throws SerException {
+        if (StringUtils.isNotBlank(cusPermissionDTO.getDescription())) {
+            cusPermissionDTO.getConditions().add(Restrict.like("description", cusPermissionDTO.getDescription()));
+        }
+        cusPermissionDTO.getConditions().add(Restrict.in("idFlag",new String[]{"4"}));
+        Long count = super.count(cusPermissionDTO);
+        return count;
+    }
 
     @Override
     public List<VoucherPermissionBO> list(VoucherPermissionDTO cusPermissionDTO) throws SerException {

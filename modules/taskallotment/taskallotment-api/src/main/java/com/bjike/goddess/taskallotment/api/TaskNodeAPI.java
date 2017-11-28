@@ -462,9 +462,19 @@ public interface TaskNodeAPI {
 
     /**
      * 编辑状态
+     *
      * @param id
      * @param taskStatus
      * @throws SerException
      */
     void editStatus(String id, TaskStatus taskStatus) throws SerException;
+
+
+    /**
+     * 完成情况汇总(phone)
+     *
+     * @return
+     * @throws SerException
+     */
+    CaseLastBO phoneCount(TaskNodeDTO dto) throws SerException;
 }

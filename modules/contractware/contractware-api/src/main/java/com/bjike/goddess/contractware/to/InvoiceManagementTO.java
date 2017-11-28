@@ -80,6 +80,12 @@ public class InvoiceManagementTO extends BaseTO {
     private Integer  amount;
 
     /**
+     * 电子版
+     */
+    @NotNull(message = "电子版不能为空" ,groups = {ADD.class, EDIT.class})
+    private Boolean  electronicEdition;
+
+    /**
      * 预计到账时间
      */
     @NotBlank(message = "预计到账时间不能为空" ,groups = {ADD.class, EDIT.class})
@@ -155,6 +161,14 @@ public class InvoiceManagementTO extends BaseTO {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public Boolean getElectronicEdition() {
+        return electronicEdition;
+    }
+
+    public void setElectronicEdition(Boolean electronicEdition) {
+        this.electronicEdition = electronicEdition;
     }
 
     public String getMakeInvoiceDate() {

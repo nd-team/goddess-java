@@ -49,7 +49,6 @@
     <dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.organize.api.HierarchyAPI" id="hierarchyApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.managementpromotion.api.LevelShowAPI" id="levslShowApiImpl"/>
-    <dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="entryBasicInfoApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.assistance.api.TemperatureSubsidiesAPI" id="temperatureSubsidiesApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.assistance.api.SenioritySubsidiesAPI" id="senioritySubsidiesApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.assistance.api.ComputerSubsidiesAPI" id="computerSubsidiesApiImpl"/>
