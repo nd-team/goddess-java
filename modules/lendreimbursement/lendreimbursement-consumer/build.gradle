@@ -39,9 +39,10 @@ dependencies {
     }
 
     compile project(":modules:lendreimbursement:lendreimbursement-api")
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
 
+    compile group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1'
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile("org.springframework.boot:spring-boot-starter-web")
+
 }
 

@@ -9,13 +9,13 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.ModulesAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.collect.Collect;
 import com.bjike.goddess.task.bo.collect.Custom;
@@ -23,13 +23,23 @@ import com.bjike.goddess.task.bo.collect.TaskCollect;
 import com.bjike.goddess.task.bo.collect.TomorrowCollect;
 import com.bjike.goddess.task.bo.custmize.*;
 import com.bjike.goddess.task.dto.CollectDTO;
-import com.bjike.goddess.task.entity.Customize;
-import com.bjike.goddess.task.enums.*;
+import com.bjike.goddess.task.dto.ValDTO;
+import com.bjike.goddess.task.enums.CollectSuitation;
+import com.bjike.goddess.task.enums.CollectType;
+import com.bjike.goddess.task.enums.TitleType;
+import com.bjike.goddess.task.to.CustomizeTO;
+import com.bjike.goddess.task.to.TaskNodeExcel;
 import com.bjike.goddess.task.util.HtmlBuild;
+import com.bjike.goddess.taskallotment.api.CustomTitleAPI;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
+import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
+import com.bjike.goddess.taskallotment.bo.CustomTitleBO;
+import com.bjike.goddess.taskallotment.dto.CustomTitleDTO;
+import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.enums.FinishStatus;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
+import com.bjike.goddess.taskallotment.enums.TaskType;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +47,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,8 +64,6 @@ public class ScheduleSerImpl implements ScheduleSer {
     public static final Logger LOGGER = LoggerFactory.getLogger(ScheduleSerImpl.class);
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private PositionUserDetailAPI positionUserDetailAPI;
     @Autowired
     private TableSer tableSer;
     @Autowired
@@ -74,25 +82,19 @@ public class ScheduleSerImpl implements ScheduleSer {
     private BaseInfoManageAPI baseInfoManageAPI;
     @Autowired
     private CustomizeSer customizeSer;
+    @Autowired
+    private DispatchCarInfoAPI dispatchCarInfoAPI;
+    @Autowired
+    private TaskNodeAPI taskNodeAPI;
+    @Autowired
+    private CustomTitleAPI customTitleAPI;
 
-    @Override
-    public Collect collect(CollectDTO dto) throws SerException {
-        UserBO user = userAPI.currentUser();
-        Map<String, String> map = positionUserDetailAPI.departPosition(user.getUsername());
-        Set<String> names = null;
-        if (null != map) {
-            Set<String> set = map.keySet();
-            for (String s : set) {
-                List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(new String[]{s});
-                if (null != detailBOS && !detailBOS.isEmpty()) {
-                    names = departmentDetailAPI.departPersons(detailBOS.get(0).getId());
-                }
-            }
-        }
-        Collect collect = new Collect();
-        if (dto.isNeedFixed()) {
+    private Collect collect(CollectDTO dto) throws SerException {
+        if (dto.getNeedFixed()) {
+            Collect collect = new Collect();
             String sql = getSql(dto);
             String project = projectAPI.findByID(dto.getProjectId()).getProject();
+            collect.setProject(project);
             try {
                 collect.setScaleCount(baseInfoManageAPI.contractScale(project));
             } catch (Exception e) {
@@ -100,37 +102,27 @@ public class ScheduleSerImpl implements ScheduleSer {
                     LOGGER.error("businessproject服务不可用!");
                 }
             }
-            collect.setFinishCount(customizeSer.get(project));
-            //todo 出车数量（从出车记录管理获取）未获取
+            collect.setFinishCount(customizeSer.get(dto.getTablesId()));
+            try {
+                collect.setCarCount(Integer.parseInt(dispatchCarInfoAPI.dispatchCount(project) + ""));
+            } catch (Exception e) {
+                if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                    LOGGER.error("dispatchcar服务不可用!");
+                }
+            }
             List<Object> objects = tableSer.findBySql(sql);
             if (null != objects && objects.size() > 0) {
                 Object o = objects.get(0);
                 if (null != o) {
                     Object[] arrays = (Object[]) o;
-                    collect.setOutProject(String.valueOf(arrays[0]));
                     collect.setInnerProject(String.valueOf(arrays[1]));
                     collect.setIsFinish(String.valueOf(arrays[2]));
                     collect.setWorkerCount(Integer.parseInt(String.valueOf(arrays[3])));
                 }
             }
+            return collect;
         }
-        collect.setCustoms(initCustoms(dto));
-        //今天任务
-        String start = DateUtil.dateToString(LocalDate.now().atTime(00, 00, 01));
-        String end = DateUtil.dateToString(LocalDate.now().atTime(23, 59, 59));
-        if (null != initDateTask(names, start, end)) {
-            collect.setTodayCollects(initDateTask(names, start, end));
-        }
-        //可添加汇总   collectToday(collects);
-        //可添加明天汇总 collectTomorrow(collects);
-        //明天任务
-        start = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(00, 00, 01));
-        end = DateUtil.dateToString(LocalDate.now().plusDays(1).atTime(23, 59, 59));
-        List<TaskCollect> taskCollects = initDateTask(names, start, end);
-        if (null != taskCollects) {
-            collect.setTomorrowCollects(BeanTransform.copyProperties(taskCollects, TomorrowCollect.class));
-        }
-        return collect;
+        return null;
     }
 
     /**
@@ -211,46 +203,529 @@ public class ScheduleSerImpl implements ScheduleSer {
     }
 
     /**
-     * 查询自定义汇总
+     * 固定表头
+     *
+     * @param sb
+     * @throws SerException
      */
-    private List<Custom> initCustoms(CollectDTO dto) throws SerException {
-        String projectId = dto.getProjectId();
-        String[] fields = dto.getFields();
-        String cons = null;
-        if (null != dto.getTablesId()) {
-            cons = "AND t.id IN('" + StringUtils.join(dto.getTablesId(), "','") + "')";
+    private void fixTitle(StringBuilder sb) throws SerException {
+        sb.append("<td>内部项目名称</td>");
+        sb.append("<td>是否完工</td>");
+        sb.append("<td>人工数</td>");
+        sb.append("<td>合同规模数</td>");
+        sb.append("<td>实际完成规模数</td>");
+        sb.append("<td>出车数量</td>");
+        sb.append("<td>项目</td>");
+    }
+
+    @Override
+    public void fixTitleScheme(StringBuilder sb) throws SerException {
+        sb.append("<td>汇总任务</td>");
+        sb.append("<td>内部项目名称</td>");
+        sb.append("<td>是否完工</td>");
+        sb.append("<td>人工数</td>");
+        sb.append("<td>合同规模数</td>");
+        sb.append("<td>实际完成规模数</td>");
+        sb.append("<td>出车数量</td>");
+        sb.append("<td>实际人工</td>");
+    }
+
+    /**
+     * 固定值
+     *
+     * @param sb
+     * @throws SerException
+     */
+    private void fixValue(StringBuilder sb, Collect collect, int size) throws SerException {
+        if (null != collect.getInnerProject()) {
+            sb.append("<td rowspan='" + size + "'>" + collect.getInnerProject() + "</td>");
+        } else {
+            sb.append("<td rowspan='" + size + "'> </td>");
         }
-        if (null != fields) {
-            //验证表头有效性
-            StringBuilder sb = new StringBuilder();
-            String fieldId = "'" + StringUtils.join(fields, "','") + "'";
-            sb.append("   SELECT a.*,b.content as detail FROM ( ");
-            sb.append(" SELECT  tc.title  , COUNT(tc.content) as count ");
-            sb.append("  FROM taskallotment_tasknode n,taskallotment_project p,taskallotment_table t,taskallotment_customtitle tc ");
-            sb.append(" WHERE p.id = '" + projectId + "' ");
-            sb.append(" AND p.id =t.project_id AND n.table_id=t.id  AND tc.tasknode_id = n.id ");
-            if (null != cons) {
-                sb.append(cons);
-            }
-            sb.append(" AND tc.title IN (" + fieldId + ") ");
-            sb.append("  GROUP BY ");
-            sb.append("  tc.title ) a,( ");
-            sb.append(" SELECT title ,GROUP_CONCAT(a.content) AS content FROM( ");
-            sb.append(" SELECT tc.title, tc.content FROM taskallotment_tasknode n,taskallotment_project p,taskallotment_table t,taskallotment_customtitle tc ");
-            sb.append(" WHERE p.id = '" + projectId + "' ");
-            sb.append(" AND p.id =t.project_id AND n.table_id=t.id  AND tc.tasknode_id = n.id ");
-            if (null != cons) {
-                sb.append(cons);
-            }
-            sb.append(" AND tc.title IN (" + fieldId + ") ");
-            sb.append(" )a GROUP BY a.title ");
-            sb.append(" ) b where a.title=b.title ");
-            String sql = sb.toString();
-            String[] _fields = new String[]{"title", "count", "detail"};
-            List<Custom> customs = tableSer.findBySql(sql, Custom.class, _fields);
-            return customs;
+        if (null != collect.getIsFinish()) {
+            sb.append("<td rowspan='" + size + "'>" + collect.getIsFinish() + "</td>");
+        } else {
+            sb.append("<td rowspan='" + size + "'> </td>");
         }
-        return new ArrayList<>();
+        sb.append("<td rowspan='" + size + "'>" + collect.getWorkerCount() + "</td>");
+        sb.append("<td rowspan='" + size + "'>" + collect.getScaleCount() + "</td>");
+        sb.append("<td rowspan='" + size + "'>" + collect.getFinishCount() + "</td>");
+        sb.append("<td rowspan='" + size + "'>" + collect.getCarCount() + "</td>");
+        if (null != collect.getProject()) {
+            sb.append("<td rowspan='" + size + "'>" + collect.getProject() + "</td>");
+        } else {
+            sb.append("<td rowspan='" + size + "'> </td>");
+        }
+    }
+
+    private void fixValueScheme(String cutomizeId, StringBuilder sb, Collect collect, List<Long> count) throws SerException {
+        sb.append("<td>" + customizeSer.findById(cutomizeId).getName() + "</td>");
+        if (null != collect.getInnerProject()) {
+            sb.append("<td>" + collect.getInnerProject() + "</td>");
+        } else {
+            sb.append("<td> </td>");
+        }
+        if (null != collect.getIsFinish()) {
+            sb.append("<td>" + collect.getIsFinish() + "</td>");
+        } else {
+            sb.append("<td> </td>");
+        }
+        sb.append("<td>" + collect.getWorkerCount() + "</td>");
+        sb.append("<td>" + collect.getScaleCount() + "</td>");
+        sb.append("<td>" + collect.getFinishCount() + "</td>");
+        sb.append("<td>" + collect.getCarCount() + "</td>");
+        sb.append("<td>" + collect.getWorkerCount() + "</td>");
+        long num = count.get(0);
+        long sum = collect.getWorkerCount() + num;
+        count.set(0, sum);
+    }
+
+//    private int size(List<String> fields, List<ValDTO> vals) throws SerException {
+//        int size = 1;
+//        for (int i = 0; i < fields.size(); i++) {
+//            if ("发起人".equals(fields.get(i)) || "负责人".equals(fields.get(i)) || "执行人".equals(fields.get(i))) {
+//                ValDTO valDTO = vals.get(i);
+//                List<String> values = valDTO.getValues();
+//                if (values.size() > size) {
+//                    size = values.size();
+//                }
+//            }
+//        }
+//        return size;
+//    }
+
+    @Override
+    public void htmlScheme(StringBuilder result, CollectDTO dto, String cutomizeId, List<Long> count, Set<String> initas, Set<String> charges, Set<String> excutes) throws SerException {
+        Collect collect = collect(dto);
+        String valTr = "<tr style='height: 20px'>";
+        String endTr = "</tr>";
+        List<String> fields = dto.getFields();
+        List<CollectSuitation> collectSuitations = dto.getCollectSuitations();
+        List<ValDTO> vals = dto.getVals();
+        List<String> tableFields = dto.getTableFields();
+        if (null != fields && null != collectSuitations && null != vals && null != tableFields) {
+            result.append(valTr);
+            if (null != collect) {
+                fixValueScheme(cutomizeId, result, collect, count);
+            }
+            for (int i = 0; i < tableFields.size(); i++) {
+                if (!"null".equals(fields.get(i))) {   //某小汇总表没有该字段
+                    String title = getString(fields.get(i));
+                    CollectSuitation collectSuitation = collectSuitations.get(i);
+                    ValDTO valDTO = vals.get(i);
+                    List<String> values = valDTO.getValues();
+                    if (null == values) {
+                        throw new SerException("" + fields.get(i) + "字段的类型不能为空");
+                    }
+                    String[] strings = dto.getTablesId();
+                    List<String> tablesId = Arrays.asList(strings);
+                    if (null != title) {
+                        if ("taskType".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "行政任务":
+                                        values.set(j,"0");
+                                        break;
+                                    case "工程任务":
+                                        values.set(j,"1");
+                                        break;
+                                    case "培训任务":
+                                        values.set(j,"2");
+                                        break;
+                                }
+                            }
+                        }else if ("finishStatus".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "已完成":
+                                        values.set(j,"0");
+                                        break;
+                                    case "未完成":
+                                        values.set(j,"1");
+                                        break;
+                                }
+                            }
+                        }else if ("confirm".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("reimbursement".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("report".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("delay".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("taskStatus".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "已完成":
+                                        values.set(j,"0");
+                                        break;
+                                    case "正在执行":
+                                        values.set(j,"1");
+                                        break;
+                                    case "未完成":
+                                        values.set(j,"2");
+                                        break;
+                                    case "待接收":
+                                        values.set(j,"3");
+                                        break;
+                                    case "不接收":
+                                        values.set(j,"4");
+                                        break;
+                                    case "上报待审核":
+                                        values.set(j,"5");
+                                        break;
+                                }
+                            }
+                        }
+                        TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                        taskNodeDTO.getConditions().add(Restrict.in("tableId", tablesId));
+                        if (CollectSuitation.EQ.equals(collectSuitation)) {
+                            taskNodeDTO.getConditions().add(Restrict.in("" + title + "", values));
+                        } else if (CollectSuitation.NULL.equals(collectSuitation)) {
+                            taskNodeDTO.getConditions().add(Restrict.isNull("" + title + ""));
+                        } else {
+                            taskNodeDTO.getConditions().add(Restrict.isNotNull("" + title + ""));
+                        }
+                        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+                            LocalDate start = DateUtil.parseDate(dto.getStartTime());
+                            LocalDate end = DateUtil.parseDate(dto.getEndTime());
+                            taskNodeDTO.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
+                            taskNodeDTO.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
+                        }
+                        if ("发起人".equals(fields.get(i)) || "负责人".equals(fields.get(i)) || "执行人".equals(fields.get(i))) {
+                            StringBuilder sb = new StringBuilder();
+                            for (int j = 0; j < values.size(); j++) {
+                                if (j == values.size() - 1) {
+                                    sb.append(values.get(j));
+                                } else {
+                                    sb.append(values.get(j) + "、");
+                                }
+                                switch (fields.get(i)) {
+                                    case "发起人":
+                                        initas.add(values.get(j));
+                                        break;
+                                    case "负责人":
+                                        charges.add(values.get(j));
+                                        break;
+                                    case "执行人":
+                                        excutes.add(values.get(j));
+                                        break;
+                                }
+                            }
+                            switch (fields.get(i)) {
+                                case "发起人":
+                                    count.set(i + 1, Long.parseLong(initas.size() + ""));    //计算合计
+                                    break;
+                                case "负责人":
+                                    count.set(i + 1, Long.parseLong(charges.size() + ""));    //计算合计
+                                    break;
+                                case "执行人":
+                                    count.set(i + 1, Long.parseLong(excutes.size() + ""));    //计算合计
+                                    break;
+                            }
+                            result.append("<td>" + sb.toString() + "</td>");
+                        } else {
+                            long num = taskNodeAPI.count(taskNodeDTO);
+                            long sum = count.get(i + 1);
+                            sum += num;
+                            count.set(i + 1, sum);    //计算合计
+                            result.append("<td>" + num + "</td>");
+                        }
+                    } else {
+                        String field = fields.get(i);
+                        CustomTitleDTO customTitleDTO = new CustomTitleDTO();
+                        customTitleDTO.getConditions().add(Restrict.eq("title", field));
+                        customTitleDTO.getConditions().add(Restrict.in("content", values));
+                        List<String> nodeIds = customTitleAPI.nodeId(customTitleDTO);
+                        long num = 0;
+                        for (String s : nodeIds) {
+                            if (tablesId.contains(taskNodeAPI.findByID(s).getTableId())) {
+                                num++;
+                            }
+                        }
+                        result.append("<td>" + num + "</td>");
+                        long sum = count.get(i + 1);
+                        sum += num;
+                        count.set(i + 1, sum);    //计算合计
+                    }
+                } else {
+                    result.append("<td> </td>");
+                }
+            }
+            result.append(endTr);
+        }
+    }
+
+    @Override
+    public String html(CollectDTO dto) throws SerException {
+        Collect collect = collect(dto);
+        String nameTr = "<tr style='width: 350px ;height:30px;background-color: #00aaee'>";
+        String valTr = "<tr style='height: 20px'>";
+        String endTr = "</tr>";
+        StringBuilder result = new StringBuilder("<table style='text-align:center;' border=1 width='95%' height='30px'  cellspacing='0'>");
+        result.append(nameTr);
+        if (null != collect) {  //固定表头
+            fixTitle(result);
+        }
+        result.append("<td>任务</td>");
+        List<String> fields = dto.getFields();
+        List<CollectSuitation> collectSuitations = dto.getCollectSuitations();
+        List<ValDTO> vals = dto.getVals();
+        List<String> tableFields = dto.getTableFields();
+        String[] tableIds = dto.getTablesId();
+        if (null != fields && null != collectSuitations && null != vals && null != tableFields) {
+            int a = 0;
+            List<Long> count = new ArrayList<>();  //用于计算每个字段的合计
+            for (int i = 0; i < fields.size(); i++) {
+                Long l = 0l;
+                count.add(l);
+                result.append("<td>" + tableFields.get(i) + "</td>");
+            }
+            result.append(endTr);
+            result.append(valTr);
+            if (null != collect) {
+                fixValue(result, collect, tableIds.length);
+            }
+            StringBuilder tableNames = new StringBuilder();
+            Set<String> initas = new HashSet<>();  //发起人
+            Set<String> charges = new HashSet<>();  //负责人
+            Set<String> excutes = new HashSet<>();  //执行人
+            for (String tableId : tableIds) {
+                if (a == tableIds.length - 1) {
+                    tableNames.append(projectAPI.table(tableId).getName());
+                } else {
+                    tableNames.append(projectAPI.table(tableId).getName() + "、");
+                }
+                result.append("<td>" + projectAPI.table(tableId).getName() + "</td>");
+                for (int i = 0; i < fields.size(); i++) {
+                    String title = getString(fields.get(i));
+                    CollectSuitation collectSuitation = collectSuitations.get(i);
+                    ValDTO valDTO = vals.get(i);
+                    List<String> values = valDTO.getValues();
+                    if (null == values) {
+                        throw new SerException("" + fields.get(i) + "字段的类型不能为空");
+                    }
+                    if (null != title) {
+                        if ("taskType".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "行政任务":
+                                        values.set(j,"0");
+                                        break;
+                                    case "工程任务":
+                                        values.set(j,"1");
+                                        break;
+                                    case "培训任务":
+                                        values.set(j,"2");
+                                        break;
+                                }
+                            }
+                        }else if ("finishStatus".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "已完成":
+                                        values.set(j,"0");
+                                        break;
+                                    case "未完成":
+                                        values.set(j,"1");
+                                        break;
+                                }
+                            }
+                        }else if ("confirm".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("reimbursement".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("report".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("delay".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "是":
+                                        values.set(j,"1");
+                                        break;
+                                    case "否":
+                                        values.set(j,"0");
+                                        break;
+                                }
+                            }
+                        }else if ("taskStatus".equals(title)){
+                            for(int j=0;j<values.size();j++){
+                                switch (values.get(j)){
+                                    case "已完成":
+                                        values.set(j,"0");
+                                        break;
+                                    case "正在执行":
+                                        values.set(j,"1");
+                                        break;
+                                    case "未完成":
+                                        values.set(j,"2");
+                                        break;
+                                    case "待接收":
+                                        values.set(j,"3");
+                                        break;
+                                    case "不接收":
+                                        values.set(j,"4");
+                                        break;
+                                    case "上报待审核":
+                                        values.set(j,"5");
+                                        break;
+                                }
+                            }
+                        }
+                        TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+                        taskNodeDTO.getConditions().add(Restrict.eq("tableId", tableId));
+                        if (CollectSuitation.EQ.equals(collectSuitation)) {
+                            taskNodeDTO.getConditions().add(Restrict.in("" + title + "", values));
+                        } else if (CollectSuitation.NULL.equals(collectSuitation)) {
+                            taskNodeDTO.getConditions().add(Restrict.isNull("" + title + ""));
+                        } else {
+                            taskNodeDTO.getConditions().add(Restrict.isNotNull("" + title + ""));
+                        }
+                        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+                            LocalDate start = DateUtil.parseDate(dto.getStartTime());
+                            LocalDate end = DateUtil.parseDate(dto.getEndTime());
+                            taskNodeDTO.getConditions().add(Restrict.between("startTime", new LocalDate[]{start, end}));
+                            taskNodeDTO.getConditions().add(Restrict.between("endTime", new LocalDate[]{start, end}));
+                        }
+                        if ("发起人".equals(fields.get(i)) || "负责人".equals(fields.get(i)) || "执行人".equals(fields.get(i))) {
+                            StringBuilder sb = new StringBuilder();
+                            for (int j = 0; j < values.size(); j++) {
+                                if (j == values.size() - 1) {
+                                    sb.append(values.get(j));
+                                } else {
+                                    sb.append(values.get(j) + "、");
+                                }
+                                switch (fields.get(i)) {
+                                    case "发起人":
+                                        initas.add(values.get(j));
+                                        break;
+                                    case "负责人":
+                                        charges.add(values.get(j));
+                                        break;
+                                    case "执行人":
+                                        excutes.add(values.get(j));
+                                        break;
+                                }
+                            }
+                            switch (fields.get(i)) {
+                                case "发起人":
+                                    count.set(i, Long.parseLong(initas.size() + ""));    //计算合计
+                                    break;
+                                case "负责人":
+                                    count.set(i, Long.parseLong(charges.size() + ""));    //计算合计
+                                    break;
+                                case "执行人":
+                                    count.set(i, Long.parseLong(excutes.size() + ""));    //计算合计
+                                    break;
+                            }
+                            if (a == 0) {
+                                result.append("<td rowspan='" + tableIds.length + "'>" + sb.toString() + "</td>");
+                            }
+                        } else {
+                            long num = taskNodeAPI.count(taskNodeDTO);
+                            long sum = count.get(i);
+                            sum += num;
+                            count.set(i, sum);    //计算合计
+                            result.append("<td>" + num + "</td>");
+                        }
+                    } else {
+                        String field = fields.get(i);
+                        CustomTitleDTO customTitleDTO = new CustomTitleDTO();
+                        customTitleDTO.getConditions().add(Restrict.eq("title", field));
+                        customTitleDTO.getConditions().add(Restrict.in("content", values));
+                        List<String> nodeIds = customTitleAPI.nodeId(customTitleDTO);
+                        long num = 0;
+                        for (String s : nodeIds) {
+                            if (tableId.equals(taskNodeAPI.findByID(s).getTableId())) {
+                                num++;
+                            }
+                        }
+                        result.append("<td>" + num + "</td>");
+                        long sum = count.get(i);
+                        sum += num;
+                        count.set(i, sum);    //计算合计
+                    }
+                }
+                a++;
+                result.append(endTr);
+            }
+            //合计部分
+            result.append(valTr);
+            if (null != collect) {
+                result.append("<td colspan='7'>合计</td>");
+            }
+            result.append("<td>" + tableNames + "</td>");
+            for (int i = 0; i < count.size(); i++) {
+                result.append("<td>" + count.get(i) + "</td>");
+            }
+            result.append(endTr);
+            result.append("</table>");
+            return result.toString();
+        }
+        return null;
     }
 
     /**
@@ -259,6 +734,7 @@ public class ScheduleSerImpl implements ScheduleSer {
      * @param dto
      * @return
      */
+
     private String getSql(CollectDTO dto) {
         String projectId = dto.getProjectId();
         String cons = null;
@@ -287,6 +763,16 @@ public class ScheduleSerImpl implements ScheduleSer {
         return sb.toString();
     }
 
+    private String getString(String field) throws SerException {
+        List<Field> fields = ClazzUtils.getFields(TaskNodeExcel.class);
+        List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+        for (int i = 0; i < headers.size(); i++) {
+            if (field.equals(headers.get(i).name())) {
+                return fields.get(i).getName();
+            }
+        }
+        return null;
+    }
 
     @Override
     public String buildCollectHtml(Collect collect, CollectType type) throws SerException {
@@ -334,94 +820,94 @@ public class ScheduleSerImpl implements ScheduleSer {
         return sb.toString();
     }
 
-    /**
-     * 自定义汇总
-     *
-     * @param customize
-     * @return
-     * @throws SerException
-     */
-    @Override
-    public void customizeCollect(Customize customize) throws SerException {
-        boolean available = true; //尝试调用消息接口,服务是否可用,如果不可用则不再进行查询操作
-        try {
-            messageAPI.read("");
-        } catch (Exception e) {
-            if (e.getMessage().indexOf("Forbid consumer") != -1) {
-                available = false;
-                LOGGER.error("消息模块服务不可用!");
-            }
-        }
-        if (available) {
-            CustomProject project = new CustomProject();
-            String sql = "SELECT p.name as projectName ,t.name as tableName,t.id as tid FROM taskallotment_project p ,taskallotment_table t  " +
-                    "WHERE p.id='" + customize.getProjectId() + "'  " +
-                    "AND t.project_id=p.id ";
-            if (StringUtils.isNotBlank(customize.getTablesId())) {
-                String[] tables = customize.getTablesId().split(",");
-                sql += "AND t.id in('" + StringUtils.join(tables, "','") + "')";
-            }
-            //查询包含项目表
-            List<Object> objects = tableSer.findBySql(sql);
-            if (null != objects && objects.size() > 0) {
-                Object[] ot = (Object[]) objects.get(0);
-                project.setName(String.valueOf(ot[0])); //初始化项目
-                List<CustomTable> tables = new ArrayList<>(objects.size());
-                for (Object o : objects) { //初始化项目表
-                    ot = (Object[]) o;
-                    CustomTable table = new CustomTable();
-                    table.setName(String.valueOf(ot[1]));
-                    table.setTid(String.valueOf(ot[2]));
-                    tables.add(table);
-                }
-                CustomCondition condition = initCondition(customize);//初始化条件
-                initFixedField(tables, condition); //初始化固定表头及内容
-                initCustomField(tables, condition);//初始化自定义表头及内容
-                initCustomCollect(tables, project);//手动汇总自定义计算
-                //--------------------------------
-                initDeptCollect(project, customize.getDepartment());//初始化部门汇总
-                collectToday(project.getTaskCollects()); //部门今天任务汇总
-                collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总
-                project.setTables(tables);
-                String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
-                //邮件发送
-                NoticeType type = customize.getNoticeType();
-                String[] strings = null;
-                if (type.equals(NoticeType.PERSON)) {
-                    strings = customize.getNoticeTarget().split(",");
-                } else if (type.equals(NoticeType.DEPT)) {
-                    String[] s = customize.getNoticeTarget().split(",");  //部门数组
-                    Set<String> set = new HashSet<>();
-                    List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(strings);
-                    if (null != detailBOS) {
-                        for (DepartmentDetailBO d : detailBOS) {
-                            Set<String> names = departmentDetailAPI.departPersons(d.getId());
-                            if (null != names) {
-                                set.addAll(names);
-                            }
-                        }
-                    }
-                    List<String> list = new ArrayList<>(set);
-                    strings = new String[list.size()];
-                    strings = list.toArray(strings);
-                } else {
-                    List<UserBO> findUserListInOrgan = positionDetailUserAPI.findUserListInOrgan();
-                    List<String> list = findUserListInOrgan.stream().map(UserBO::getUsername).collect(Collectors.toList());
-                    strings = new String[list.size()];
-                    strings = list.toArray(strings);
-                }
-                if (null != strings) {
-                    List<String> mails = internalContactsAPI.getEmails(strings);
-                    if (null != mails && !mails.isEmpty()) {
-                        String[] recivers = new String[mails.size()];
-                        recivers = mails.toArray(recivers);
-                        sendMail(customize.getName(), html, recivers);
-                    }
-                }
-            }
-        }
-
-    }
+//    /**
+//     * 自定义汇总
+//     *
+//     * @param customize
+//     * @return
+//     * @throws SerException
+//     */
+//    @Override
+//    public void customizeCollect(Customize customize) throws SerException {
+//        boolean available = true; //尝试调用消息接口,服务是否可用,如果不可用则不再进行查询操作
+//        try {
+//            messageAPI.read("");
+//        } catch (Exception e) {
+//            if (e.getMessage().indexOf("Forbid consumer") != -1) {
+//                available = false;
+//                LOGGER.error("消息模块服务不可用!");
+//            }
+//        }
+//        if (available) {
+//            CustomProject project = new CustomProject();
+//            String sql = "SELECT p.name as projectName ,t.name as tableName,t.id as tid FROM taskallotment_project p ,taskallotment_table t  " +
+//                    "WHERE p.id='" + customize.getProjectId() + "'  " +
+//                    "AND t.project_id=p.id ";
+//            if (StringUtils.isNotBlank(customize.getTablesId())) {
+//                String[] tables = customize.getTablesId().split(",");
+//                sql += "AND t.id in('" + StringUtils.join(tables, "','") + "')";
+//            }
+//            //查询包含项目表
+//            List<Object> objects = tableSer.findBySql(sql);
+//            if (null != objects && objects.size() > 0) {
+//                Object[] ot = (Object[]) objects.get(0);
+//                project.setName(String.valueOf(ot[0])); //初始化项目
+//                List<CustomTable> tables = new ArrayList<>(objects.size());
+//                for (Object o : objects) { //初始化项目表
+//                    ot = (Object[]) o;
+//                    CustomTable table = new CustomTable();
+//                    table.setName(String.valueOf(ot[1]));
+//                    table.setTid(String.valueOf(ot[2]));
+//                    tables.add(table);
+//                }
+//                CustomCondition condition = initCondition(customize);//初始化条件
+//                initFixedField(tables, condition); //初始化固定表头及内容
+//                initCustomField(tables, condition);//初始化自定义表头及内容
+//                initCustomCollect(tables, project);//手动汇总自定义计算
+//                //--------------------------------
+//                initDeptCollect(project, customize.getDepartment());//初始化部门汇总
+//                collectToday(project.getTaskCollects()); //部门今天任务汇总
+//                collectTomorrow(project.getTomorrowCollects());//部门明天任务汇总
+//                project.setTables(tables);
+//                String html = HtmlBuild.createCustomHtml(project, customize.getName());//创建html数据
+//                //邮件发送
+//                NoticeType type = customize.getNoticeType();
+//                String[] strings = null;
+//                if (type.equals(NoticeType.PERSON)) {
+//                    strings = customize.getNoticeTarget().split(",");
+//                } else if (type.equals(NoticeType.DEPT)) {
+//                    String[] s = customize.getNoticeTarget().split(",");  //部门数组
+//                    Set<String> set = new HashSet<>();
+//                    List<DepartmentDetailBO> detailBOS = departmentDetailAPI.departByName(strings);
+//                    if (null != detailBOS) {
+//                        for (DepartmentDetailBO d : detailBOS) {
+//                            Set<String> names = departmentDetailAPI.departPersons(d.getId());
+//                            if (null != names) {
+//                                set.addAll(names);
+//                            }
+//                        }
+//                    }
+//                    List<String> list = new ArrayList<>(set);
+//                    strings = new String[list.size()];
+//                    strings = list.toArray(strings);
+//                } else {
+//                    List<UserBO> findUserListInOrgan = positionDetailUserAPI.findUserListInOrgan();
+//                    List<String> list = findUserListInOrgan.stream().map(UserBO::getUsername).collect(Collectors.toList());
+//                    strings = new String[list.size()];
+//                    strings = list.toArray(strings);
+//                }
+//                if (null != strings) {
+//                    List<String> mails = internalContactsAPI.getEmails(strings);
+//                    if (null != mails && !mails.isEmpty()) {
+//                        String[] recivers = new String[mails.size()];
+//                        recivers = mails.toArray(recivers);
+//                        sendMail(customize.getName(), html, recivers);
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 
     /**
      * 邮件发送
@@ -704,74 +1190,74 @@ public class ScheduleSerImpl implements ScheduleSer {
     }
 
 
-    /**
-     * 构建条件
-     *
-     * @param customize
-     * @return
-     * @throws SerException
-     */
-    private CustomCondition initCondition(Customize customize) throws SerException {
-        DateType dateType = customize.getDateType(); //日期条件
-        LocalDateTime start = null;
-        LocalDateTime end = null;
-        List<UserBO> dept_users = null;//查询结果用户必须包含在此部门人员列表内
-        List<UserBO> users = null;//指定查询汇总的人
-        if (customize.getSummaryType().equals(SummaryType.DEPT)) {
-            dept_users = userAPI.findByDept(customize.getSummaryTarget().split(","));
-        } else if (customize.getSummaryType().equals(SummaryType.PERSON)) { //仅查询的人
-            String[] nickname = customize.getSummaryTarget().split(",");
-            UserDTO dto = new UserDTO();
-            dto.getConditions().add(Restrict.in("nickname", nickname));
-            users = userAPI.findByCis(dto);
-        }
-        switch (dateType) {
-            case DAY:
-                start = LocalDate.now().atTime(00, 00, 01);
-                end = LocalDate.now().atTime(23, 59, 59);
-                break;
-            case WEEK:
-                start = DateUtil.getStartWeek().atTime(00, 00, 01);
-                end = DateUtil.getEndWeek().atTime(23, 59, 59);
-                break;
-            case MONTH:
-                start = DateUtil.getStartMonth().atTime(00, 00, 01);
-                end = DateUtil.getEndMonth().atTime(23, 59, 59);
-                break;
-            case QUARTER:
-                start = DateUtil.getStartQuart();
-                end = DateUtil.getEndQuart();
-                break;
-            case YEAR:
-                start = DateUtil.getStartYear().atTime(00, 00, 01);
-                end = DateUtil.getEndYear().atTime(23, 59, 59);
-                break;
-        }
-        String[] fields = customize.getFields().split(",");
-        CustomCondition customCondition = new CustomCondition();
-        customCondition.setStart(DateUtil.dateToString(start));
-        customCondition.setEnd(DateUtil.dateToString(end));
-        customCondition.setFields(fields);
-        customCondition.setProjectId(customize.getProjectId());
-        if (null != customize.getTablesId()) {
-            customCondition.setTablesId(customize.getTablesId().split(","));
-        }
-        List<String> tmp_users = new ArrayList<>();
-        if (null != dept_users) {
-            for (UserBO user : dept_users) {
-                tmp_users.add(user.getNickname());
-            }
-            customCondition.setDeptUsers(tmp_users);
-            tmp_users.clear();
-        }
-        if (null != users) {
-            for (UserBO user : users) {
-                tmp_users.add(user.getNickname());
-            }
-            customCondition.setUsers(tmp_users);
-        }
-        return customCondition;
-    }
+//    /**
+//     * 构建条件
+//     *
+//     * @param customize
+//     * @return
+//     * @throws SerException
+//     */
+//    private CustomCondition initCondition(Customize customize) throws SerException {
+//        DateType dateType = customize.getDateType(); //日期条件
+//        LocalDateTime start = null;
+//        LocalDateTime end = null;
+//        List<UserBO> dept_users = null;//查询结果用户必须包含在此部门人员列表内
+//        List<UserBO> users = null;//指定查询汇总的人
+//        if (customize.getSummaryType().equals(SummaryType.DEPT)) {
+//            dept_users = userAPI.findByDept(customize.getSummaryTarget().split(","));
+//        } else if (customize.getSummaryType().equals(SummaryType.PERSON)) { //仅查询的人
+//            String[] nickname = customize.getSummaryTarget().split(",");
+//            UserDTO dto = new UserDTO();
+//            dto.getConditions().add(Restrict.in("nickname", nickname));
+//            users = userAPI.findByCis(dto);
+//        }
+//        switch (dateType) {
+//            case DAY:
+//                start = LocalDate.now().atTime(00, 00, 01);
+//                end = LocalDate.now().atTime(23, 59, 59);
+//                break;
+//            case WEEK:
+//                start = DateUtil.getStartWeek().atTime(00, 00, 01);
+//                end = DateUtil.getEndWeek().atTime(23, 59, 59);
+//                break;
+//            case MONTH:
+//                start = DateUtil.getStartMonth().atTime(00, 00, 01);
+//                end = DateUtil.getEndMonth().atTime(23, 59, 59);
+//                break;
+//            case QUARTER:
+//                start = DateUtil.getStartQuart();
+//                end = DateUtil.getEndQuart();
+//                break;
+//            case YEAR:
+//                start = DateUtil.getStartYear().atTime(00, 00, 01);
+//                end = DateUtil.getEndYear().atTime(23, 59, 59);
+//                break;
+//        }
+//        String[] fields = customize.getFields().split(",");
+//        CustomCondition customCondition = new CustomCondition();
+//        customCondition.setStart(DateUtil.dateToString(start));
+//        customCondition.setEnd(DateUtil.dateToString(end));
+//        customCondition.setFields(fields);
+//        customCondition.setProjectId(customize.getProjectId());
+//        if (null != customize.getTablesId()) {
+//            customCondition.setTablesId(customize.getTablesId().split(","));
+//        }
+//        List<String> tmp_users = new ArrayList<>();
+//        if (null != dept_users) {
+//            for (UserBO user : dept_users) {
+//                tmp_users.add(user.getNickname());
+//            }
+//            customCondition.setDeptUsers(tmp_users);
+//            tmp_users.clear();
+//        }
+//        if (null != users) {
+//            for (UserBO user : users) {
+//                tmp_users.add(user.getNickname());
+//            }
+//            customCondition.setUsers(tmp_users);
+//        }
+//        return customCondition;
+//    }
 
     private String getTimeSql(String start, String end) {
         if (StringUtils.isNotBlank(start) && StringUtils.isNotBlank(end)) {
@@ -786,4 +1272,77 @@ public class ScheduleSerImpl implements ScheduleSer {
         return null;
     }
 
+
+    @Override
+    public Set<String> values(CustomizeTO to) throws SerException {
+        Set<String> set = new HashSet<>();
+        String title = getString(to.getField());
+        CollectSuitation collectSuitation = to.getCollectSuitation();
+        if (!CollectSuitation.EQ.equals(collectSuitation)) {
+            set.add("-");
+            return set;
+        }
+        TaskNodeDTO dto = new TaskNodeDTO();
+        dto.getConditions().add(Restrict.in("tableId", to.getTablesId()));
+        List<com.bjike.goddess.taskallotment.bo.TaskNodeExcel> bos = taskNodeAPI.findByDTO(dto);
+        if (null != bos) {
+            if (null != title) {
+                for (com.bjike.goddess.taskallotment.bo.TaskNodeExcel taskNodeExcel : bos) {
+                    Field[] fields = taskNodeExcel.getClass().getDeclaredFields();
+                    for (int i = 0; i < fields.length; i++) {
+                        String name = fields[i].getName(); // 获取属性的名字
+                        if (title.equals(name)) {
+                            name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                            try {
+                                Method m = taskNodeExcel.getClass().getMethod("get" + name);
+                                Object value = m.invoke(taskNodeExcel);// 调用getter方法获取属性值
+                                if (null != value) {
+                                    if (fields[i].getGenericType().toString().equals("class java.lang.Boolean")) {
+                                        Boolean b = (Boolean) value;
+                                        if (null != b) {
+                                            if (b) {
+                                                set.add("是");
+                                            } else {
+                                                set.add("否");
+                                            }
+                                        }
+                                    } else if (fields[i].getGenericType().toString().equals("class java.lang.Double")) {
+                                        Double b = (Double) value;
+                                        set.add(b + "");
+                                    } else if (fields[i].getGenericType().toString().equals("class java.lang.Integer")) {
+                                        Integer b = (Integer) value;
+                                        set.add(b + "");
+                                    } else if (fields[i].getGenericType().toString().equals("class com.bjike.goddess.taskallotment.enums.TaskType")){
+                                        TaskType b = (TaskType) value;
+                                        set.add(b.toString());
+                                    }else if (fields[i].getGenericType().toString().equals("class com.bjike.goddess.taskallotment.enums.FinishStatus")){
+                                        FinishStatus b = (FinishStatus) value;
+                                        set.add(b.toString());
+                                    }else if (fields[i].getGenericType().toString().equals("class com.bjike.goddess.taskallotment.enums.TaskStatus")){
+                                        TaskStatus b = (TaskStatus) value;
+                                        set.add(b.toString());
+                                    }else {
+                                        String b = (String) value;
+                                        set.add(b);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                throw new SerException("获取字段对应的值失败");
+                            }
+                        }
+                    }
+                }
+            } else {
+                List<String> nodeIds = bos.stream().map(com.bjike.goddess.taskallotment.bo.TaskNodeExcel::getId).distinct().collect(Collectors.toList());
+                CustomTitleDTO customTitleDTO = new CustomTitleDTO();
+                customTitleDTO.getConditions().add(Restrict.in("taskNodeId", nodeIds));
+                List<CustomTitleBO> list = taskNodeAPI.findByDTO(customTitleDTO);
+                if (null != list) {
+                    Set<String> set1 = list.stream().filter(customTitleBO -> to.getField().equals(customTitleBO.getTitle())).map(CustomTitleBO::getContent).collect(Collectors.toSet());
+                    set.addAll(set1);
+                }
+            }
+        }
+        return set;
+    }
 }

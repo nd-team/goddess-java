@@ -4,11 +4,13 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
+import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.to.AnalysisTO;
+import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
 import com.bjike.goddess.voucher.to.GuidePermissionTO;
 import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 
@@ -766,6 +768,28 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @throws SerException
      */
     default Double findCurrent(String firstSubject, String startTime, String endTime) throws SerException {
+        return null;
+    }
+    /**
+     * 列表
+     */
+    List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;
+
+    /**
+     * 导出
+     *
+     * @param to
+     * @throws SerException
+     */
+    byte[] exportExcel(ExportSubjectCollectTO to) throws SerException;
+
+    /**
+     * 获取所有会计科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findFirstSubject() throws SerException {
         return null;
     }
 }

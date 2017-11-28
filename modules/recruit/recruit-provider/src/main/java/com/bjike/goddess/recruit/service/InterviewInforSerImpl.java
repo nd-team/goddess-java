@@ -59,7 +59,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -77,7 +77,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -95,7 +95,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -112,7 +112,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -193,7 +193,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
         InterviewInfor interviewInfor = new InterviewInfor();
         for (FirstPhoneRecord record : firstPhoneRecords) {
-            if (record.getWhetherFirstInterview().equals(Boolean.TRUE) && record.getStatus() == null) {
+            if (Boolean.TRUE.equals(record.getWhetherFirstInterview()) && record.getStatus() == null) {
                 interviewInfor.setDate(record.getDate());//日期
                 interviewInfor.setResumeResource(record.getResumeResource());//简历来源
                 interviewInfor.setPosition(record.getPosition());//岗位
@@ -427,77 +427,108 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
                     "agreedEmployed", "whetherAcceptAdmit", "whetherAccommodation", "whetherUseFirmPC",
                     "whetherEntry", "gender");
             //简历筛选是否通过
-            if (str.getWhetherPass().equals(0)) {
-                export.setWhetherPass("否");
-            } else {
-                export.setWhetherPass("是");
+            if(null != str.getWhetherPass()){
+                if (str.getWhetherPass().equals(0)) {
+                    export.setWhetherPass("否");
+                } else {
+                    export.setWhetherPass("是");
+                }
+
             }
             //是否有相关工作经验
-            if (str.getWorkingExperience().equals(0)) {
-                export.setWorkingExperience("否");
-            } else {
-                export.setWorkingExperience("是");
+            if(null != str.getWorkingExperience()){
+                if (str.getWorkingExperience().equals(0)) {
+                    export.setWorkingExperience("否");
+                } else {
+                    export.setWorkingExperience("是");
+                }
+
             }
             //求职考试第一题是否正确
-            if (str.getWhetherFirstQuestionCorrect().equals(0)) {
-                export.setWhetherFirstQuestionCorrect("否");
-            } else {
-                export.setWhetherFirstQuestionCorrect("是");
+            if(null != str.getWhetherFirstQuestionCorrect()){
+                if (str.getWhetherFirstQuestionCorrect().equals(0)) {
+                    export.setWhetherFirstQuestionCorrect("否");
+                } else {
+                    export.setWhetherFirstQuestionCorrect("是");
+                }
             }
             //是否初试
-            if (str.getWhetherFaceTest().equals(0)) {
-                export.setWhetherFaceTest("否");
-            } else {
-                export.setWhetherFaceTest("是");
+            if(null != str.getWhetherFaceTest()){
+                if (str.getWhetherFaceTest().equals(0)) {
+                    export.setWhetherFaceTest("否");
+                } else {
+                    export.setWhetherFaceTest("是");
+                }
             }
             //初试是否通过
-            if (str.getWhetherFirstTestPass().equals(0)) {
-                export.setWhetherFirstTestPass("否");
-            } else {
-                export.setWhetherFirstTestPass("是");
+            if(null != str.getWhetherFirstTestPass()){
+                if (str.getWhetherFirstTestPass().equals(0)) {
+                    export.setWhetherFirstTestPass("否");
+                } else {
+                    export.setWhetherFirstTestPass("是");
+                }
+
             }
             //是否需要复试
-            if (str.getWhetherNeedSecondTest().equals(0)) {
-                export.setWhetherNeedSecondTest("否");
-            } else {
-                export.setWhetherNeedSecondTest("是");
+            if(null != str.getWhetherNeedSecondTest()){
+                if (str.getWhetherNeedSecondTest().equals(0)) {
+                    export.setWhetherNeedSecondTest("否");
+                } else {
+                    export.setWhetherNeedSecondTest("是");
+                }
+
             }
             //复试是否通过
-            if (str.getWhetherSecondTestPass().equals(0)) {
-                export.setWhetherSecondTestPass("否");
-            } else {
-                export.setWhetherSecondTestPass("是");
+            if(null != str.getWhetherSecondTestPass()){
+                if (str.getWhetherSecondTestPass().equals(0)) {
+                    export.setWhetherSecondTestPass("否");
+                } else {
+                    export.setWhetherSecondTestPass("是");
+                }
+
             }
             //是否同意录用
-            if (str.getAgreedEmployed().equals(0)) {
-                export.setAgreedEmployed("否");
-            } else {
-                export.setAgreedEmployed("是");
+            if(null != str.getAgreedEmployed()){
+                if (str.getAgreedEmployed().equals(0)) {
+                    export.setAgreedEmployed("否");
+                } else {
+                    export.setAgreedEmployed("是");
+                }
             }
             //是否接受录取
-            if (str.getWhetherAcceptAdmit().equals(0)) {
-                export.setWhetherAcceptAdmit("否");
-            } else {
-                export.setWhetherAcceptAdmit("是");
+            if(null != str.getWhetherAcceptAdmit()){
+                if (str.getWhetherAcceptAdmit().equals(0)) {
+                    export.setWhetherAcceptAdmit("否");
+                } else {
+                    export.setWhetherAcceptAdmit("是");
+                }
+
             }
             //是否住宿
-            if (str.getWhetherAccommodation().equals(0)) {
-                export.setWhetherAccommodation("否");
-            } else {
-                export.setWhetherAccommodation("是");
+            if(null != str.getWhetherAccommodation()){
+                if (str.getWhetherAccommodation().equals(0)) {
+                    export.setWhetherAccommodation("否");
+                } else {
+                    export.setWhetherAccommodation("是");
+                }
+
             }
             //是否使用公司电脑
-            if (str.getWhetherUseFirmPC().equals(0)) {
-                export.setWhetherUseFirmPC("否");
-            } else {
-                export.setWhetherUseFirmPC("是");
+            if(null != str.getWhetherUseFirmPC()){
+                if (str.getWhetherUseFirmPC().equals(0)) {
+                    export.setWhetherUseFirmPC("否");
+                } else {
+                    export.setWhetherUseFirmPC("是");
+                }
             }
-
             //是否入职
-            if (str.getWhetherEntry().equals(0)) {
-                export.setWhetherEntry("否");
-            } else {
-                export.setWhetherEntry("是");
+            if(null != str.getWhetherEntry()){
+                if (str.getWhetherEntry().equals(0)) {
+                    export.setWhetherEntry("否");
+                } else {
+                    export.setWhetherEntry("是");
+                }
+
             }
             export.setGender(Gender.exportStrConvert(str.getGender()));
             exports.add(export);

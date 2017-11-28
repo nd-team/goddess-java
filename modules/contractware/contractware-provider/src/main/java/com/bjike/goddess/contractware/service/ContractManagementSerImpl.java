@@ -33,7 +33,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
 * 合同保管业务实现
@@ -355,5 +357,16 @@ public class ContractManagementSerImpl extends ServiceImpl<ContractManagement, C
         invoiceBouncesBO.setEngineeringAward(engineeringAward);
         invoiceBouncesBO.setWaitMakeInvoiceMoney(waitMakeINvoiceMoney);
         return invoiceBouncesBO;
+    }
+
+    @Override
+    public List<String> findInternalContractNumber() throws SerException {
+            Set<String> set = new HashSet<> (  );
+            List<ContractManagement> contractManagements = super.findAll ();
+            for(ContractManagement contractManagement:contractManagements){
+                set.add ( contractManagement.getInternalContractNumber () );
+            }
+            return new ArrayList<> ( set );
+
     }
 }

@@ -218,7 +218,9 @@ public class HousingContractSerImpl extends ServiceImpl<HousingContract, Housing
             throw new SerException("id不能为空");
         }
         HousingContract housingContract = super.findById(housingContractTO.getId());
-        BeanTransform.copyProperties(housingContractTO, housingContract, true);
+        LocalDateTime createTime = housingContract.getCreateTime ();
+        housingContract = BeanTransform.copyProperties(housingContractTO, HousingContract.class, true);
+        housingContract.setCreateTime ( createTime );
         housingContract.setModifyTime(LocalDateTime.now());
         super.update(housingContract);
         return BeanTransform.copyProperties(housingContract, HousingContractBO.class);

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.entity.DepartmentDetail;
@@ -304,6 +305,15 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
      * @throws SerException
      */
     default List<String> findAllDepartment() throws SerException {
+        return null;
+    }
+    /**
+     * 查询所有部门下的人数
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
         return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.bjike.goddess.contacts.action.contacts;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -14,6 +16,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
+import com.bjike.goddess.contacts.bo.PhoneNumberBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.excel.InternalContactsExcel;
 import com.bjike.goddess.contacts.excel.InternalContactsTestExcel;
@@ -21,6 +24,8 @@ import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 import com.bjike.goddess.contacts.vo.InternalContactsVO;
 import com.bjike.goddess.contacts.vo.MobileInternalContactsVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -30,7 +35,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -48,6 +55,8 @@ public class InternalContactsAct extends BaseFileAction {
 
     @Autowired
     private InternalContactsAPI internalContactsAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 保存
@@ -324,6 +333,22 @@ public class InternalContactsAct extends BaseFileAction {
     }
 
     /**
+     * 移动端获取根据姓名获取所有电话号码
+     *
+     * @return class PhoneNumberBO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/tel")
+    public Result mobileGetTel() throws ActException {
+        try {
+            List<PhoneNumberBO> phoneNumberBOS = internalContactsAPI.mobileGetTel();
+            return ActResult.initialize(phoneNumberBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 移动端总条数
      *
      * @version v1
@@ -382,7 +407,7 @@ public class InternalContactsAct extends BaseFileAction {
     }
 
     /**
-     *
+     * 发送邮件
      *
      * @version v1
      */
@@ -395,4 +420,85 @@ public class InternalContactsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 移动端从组织结构中获取所有部门下的人数
+     *
+     * @return class DepartmentPeopleBO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/people")
+    public Result peopleByDepartment(HttpServletRequest request) throws ActException {
+        try {
+//            String userToken = request.getHeader(RpcCommon.USER_TOKEN).toString();
+//            RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, userToken);
+            List<DepartmentPeopleBO> list = departmentDetailAPI.peopleByDepartment();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 移动端从获取部门下的信息
+     *
+     * @param dep 部门
+     * @return class MobileInternalContactsBO
+     * @version v1
+     */
+    @GetMapping("v1/mobile/info")
+    public Result mobileInfoByDepartment(String dep) throws ActException {
+        try {
+            List<MobileInternalContactsBO> list = internalContactsAPI.mobileInfoByDepartment(dep);
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前月有几周
+     *
+     * @param year  年份
+     * @param month 月份
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findWeek/{year}/{month}")
+    public Result findWeek(@PathVariable Integer year, @PathVariable Integer month) throws ActException {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);
+            int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            List<Integer> list = new ArrayList<>();
+            for (int i = 1; i <= weekNum; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有年份
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/year")
+    public Result year() throws ActException {
+        try {
+            List<Integer> list = new ArrayList<>();
+            Integer year = LocalDate.now().getYear();
+            for (int i = year - 5; i < year + 5; i++) {
+                list.add(i);
+            }
+            return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

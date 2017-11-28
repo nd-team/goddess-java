@@ -2,13 +2,15 @@ package com.bjike.goddess.taskallotment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.taskallotment.bo.*;
-import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.figure.DataBO;
 import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
+import com.bjike.goddess.taskallotment.dto.CustomTitleDTO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
@@ -359,6 +361,7 @@ public interface TaskNodeAPI {
 
     /**
      * 日报汇总邮件
+     *
      * @param startTime
      * @param endTime
      * @param departIds
@@ -403,6 +406,7 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     void leadExcel(List<TaskNodeLeadTO> toList, String tableId) throws SerException;
+
     /**
      * 整体进度导入任务excel
      *
@@ -417,7 +421,7 @@ public interface TaskNodeAPI {
      * @param projectId
      * @throws SerException
      */
-    byte[] wholeExportExcel( String projectId) throws SerException;
+    byte[] wholeExportExcel(String projectId) throws SerException;
 
     /**
      * 根据项目表id获取任务名称
@@ -439,11 +443,38 @@ public interface TaskNodeAPI {
 
     /**
      * 个人项目汇总
+     *
      * @param collectDataTO
      * @return
      * @throws SerException
      * @desc 根据某个用户名汇总返回用户和参与的项目名称
      * @author tanghaixiang
      */
-     default CollectDataVO personProjectCollect (CollectDataTO collectDataTO) throws SerException{return null;};
+    default CollectDataVO personProjectCollect(CollectDataTO collectDataTO) throws SerException {
+        return null;
+    }
+
+    ;
+
+    List<TaskNodeExcel> findByDTO(TaskNodeDTO dto) throws SerException;
+
+    List<CustomTitleBO> findByDTO(CustomTitleDTO dto) throws SerException;
+
+    /**
+     * 编辑状态
+     *
+     * @param id
+     * @param taskStatus
+     * @throws SerException
+     */
+    void editStatus(String id, TaskStatus taskStatus) throws SerException;
+
+
+    /**
+     * 完成情况汇总(phone)
+     *
+     * @return
+     * @throws SerException
+     */
+    CaseLastBO phoneCount(TaskNodeDTO dto) throws SerException;
 }

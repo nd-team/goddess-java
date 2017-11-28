@@ -40,7 +40,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -161,6 +160,50 @@ public class AnnouncementAct extends BaseFileAction {
     }
 
     /**
+     * 当前用户列表
+     *
+     * @param dto 公告数据传输
+     * @return class AnnouncementVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/current/list")
+    public Result currentList(AnnouncementDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<AnnouncementVO> vos=new ArrayList<>();
+            List<AnnouncementBO> list = announcementAPI.currentList(dto);
+            for (AnnouncementBO bo:list){
+                AnnouncementVO vo=BeanTransform.copyProperties(bo, AnnouncementVO.class, request);
+                if (bo.getHaveRead()){
+                    vo.setHaveReadS("true");
+                }else {
+                    vo.setHaveReadS("false");
+                }
+                vos.add(vo);
+            }
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 当前用户列表总条数
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/current/list/count")
+    public Result currentListCount(AnnouncementDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(announcementAPI.currentListCount(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 添加
      *
      * @param to 公告传输对象
@@ -261,7 +304,7 @@ public class AnnouncementAct extends BaseFileAction {
         try {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
-            String path = "/announcement/announcement/" + id;
+            String path = "/" + id;
             List<InputStream> inputStreams = getInputStreams(request, path);
             List<MultipartFile> list = getMultipartFile(request);
             String s = null;
@@ -291,7 +334,7 @@ public class AnnouncementAct extends BaseFileAction {
     public Result list(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             //跟前端约定好 ，文件路径是列表id
-            String path = "/announcement/announcement/" + id;
+            String path = "/" + id;
             FileInfo fileInfo = new FileInfo();
             fileInfo.setPath(path);
             Object storageToken = request.getAttribute("storageToken");

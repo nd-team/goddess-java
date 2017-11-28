@@ -34,6 +34,16 @@ public class AnnouncementApiImpl implements AnnouncementAPI {
     }
 
     @Override
+    public List<AnnouncementBO> currentList(AnnouncementDTO dto) throws SerException {
+        return announcementSer.currentList(dto);
+    }
+
+    @Override
+    public Long currentListCount(AnnouncementDTO dto) throws SerException {
+        return announcementSer.currentListCount(dto);
+    }
+
+    @Override
     public AnnouncementBO save(AnnouncementTO to) throws SerException {
         return announcementSer.save(to);
     }

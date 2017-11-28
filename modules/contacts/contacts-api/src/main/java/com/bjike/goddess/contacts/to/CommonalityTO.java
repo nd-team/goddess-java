@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.contacts.enums.Status;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -30,13 +31,13 @@ public class CommonalityTO extends BaseTO {
     /**
      * 项目组/部门
      */
-    @NotNull(message = "项目组/部门不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "项目组/部门不能为空", groups = {ADD.class, EDIT.class})
     private String departmentId;
 
     /**
      * 邮箱地址
      */
-    @NotNull(message = "邮箱地址不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "邮箱地址不能为空", groups = {ADD.class, EDIT.class})
     private String email;
 
     /**

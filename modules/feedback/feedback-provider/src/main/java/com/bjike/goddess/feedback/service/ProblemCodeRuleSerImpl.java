@@ -71,7 +71,7 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -106,7 +106,7 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
         } else {
             flag = true;
         }
@@ -201,7 +201,6 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
         List<ProblemCodeRule> problemCodeRules = super.findAll();
         if (problemCodeRules.isEmpty()) {
             List<PositionDetailBO> positionDetailBOS = positionDetailAPI.findStatus();
-//            for (ProblemCodeRule problemCodeRule : problemCodeRules) {
             for (PositionDetailBO positionDetailBO : positionDetailBOS) {
                 ProblemCodeRule problemCodeRule = new ProblemCodeRule();
                 problemCodeRule.setArea(positionDetailBO.getArea());
@@ -284,7 +283,6 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
                 problemCodeRule.setCodeFixedRule("Q" + time);
                 super.save(problemCodeRule);
 
-//                }
             }
         }
         List<ProblemCodeRule> list = super.findByCis(dto);

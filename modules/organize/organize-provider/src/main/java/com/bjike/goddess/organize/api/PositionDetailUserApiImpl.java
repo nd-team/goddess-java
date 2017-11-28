@@ -198,6 +198,10 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public String customRepPerson() throws SerException {
         return positionDetailUserSer.customRepPerson();
     }
+    @Override
+    public String moneyModulePerson() throws SerException {
+        return positionDetailUserSer.moneyModulePerson();
+    }
 
     @Override
     public String[] budgetPerson() throws SerException {

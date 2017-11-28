@@ -62,7 +62,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -80,7 +80,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -98,7 +98,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -115,7 +115,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -329,50 +329,65 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         List<FirstPhoneRecordExport> exports = new ArrayList<>();
         list.stream().forEach(str->{
             FirstPhoneRecordExport export = BeanTransform.copyProperties(str,FirstPhoneRecordExport.class,
-                    "whetherPass","whetherPhoneSuccess","whetherWorkExperience",
+                    "gender","whetherPass","whetherPhoneSuccess","whetherWorkExperience",
                     "whetherFirstInviteSuccess","whetherFirstInterview","whetherFaceTest",
                     "retrial");
             //简历筛选是否通过
-            if(str.getWhetherPass().equals(0)){
-                export.setWhetherPass("否");
-            }else {
-                export.setWhetherPass("是");
+            if(null != str.getWhetherPass()){
+                if(str.getWhetherPass().equals(0)){
+                    export.setWhetherPass("否");
+                }else {
+                    export.setWhetherPass("是");
+                }
             }
             //通话是否成功
-            if(str.getWhetherPhoneSuccess().equals(0)){
-                export.setWhetherPhoneSuccess("否");
-            }else {
-                export.setWhetherPhoneSuccess("是");
+            if(null != str.getWhetherPhoneSuccess()){
+                if(str.getWhetherPhoneSuccess().equals(0)){
+                    export.setWhetherPhoneSuccess("否");
+                }else {
+                    export.setWhetherPhoneSuccess("是");
+                }
             }
             //是否有相关工作经验
-            if(str.getWhetherWorkExperience().equals(0)){
-                export.setWhetherWorkExperience("否");
-            }else {
-                export.setWhetherWorkExperience("是");
+            if(null != str.getWhetherWorkExperience()){
+                if(str.getWhetherWorkExperience().equals(0)){
+                    export.setWhetherWorkExperience("否");
+                }else {
+                    export.setWhetherWorkExperience("是");
+                }
             }
             //是否成功邀约初试
-            if(str.getWhetherFirstInviteSuccess().equals(0)){
-                export.setWhetherFirstInviteSuccess("否");
-            }else {
-                export.setWhetherFirstInviteSuccess("是");
+            if(null != str.getWhetherFirstInviteSuccess()){
+                if(str.getWhetherFirstInviteSuccess().equals(0)){
+                    export.setWhetherFirstInviteSuccess("否");
+                }else {
+                    export.setWhetherFirstInviteSuccess("是");
+                }
+
             }
             //是否初试
-            if(str.getWhetherFirstInterview().equals(0)){
-                export.setWhetherFirstInterview("否");
-            }else {
-                export.setWhetherFirstInterview("是");
+            if(null != str.getWhetherFirstInterview()){
+                if(str.getWhetherFirstInterview().equals(0)){
+                    export.setWhetherFirstInterview("否");
+                }else {
+                    export.setWhetherFirstInterview("是");
+                }
             }
             //初试是否为面试
-            if(str.getWhetherFaceTest().equals(0)){
-                export.setWhetherFaceTest("否");
-            }else {
-                export.setWhetherFaceTest("是");
+            if(null != str.getWhetherFaceTest()){
+                if(str.getWhetherFaceTest().equals(0)){
+                    export.setWhetherFaceTest("否");
+                }else {
+                    export.setWhetherFaceTest("是");
+                }
             }
             //是否需要复试
-            if(str.getRetrial().equals(0)){
-                export.setRetrial("否");
-            }else {
-                export.setRetrial("是");
+            if(null != str.getRetrial()){
+                if(str.getRetrial().equals(0)){
+                    export.setRetrial("否");
+                }else {
+                    export.setRetrial("是");
+                }
             }
             export.setGender(Gender.exportStrConvert(str.getGender()));
             exports.add(export);

@@ -1,8 +1,8 @@
 package com.bjike.goddess.taskallotment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.Status;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class TableBO extends BaseBO {
      */
     private List<NodeBO> nodeS;
     /**
-     * 任务完成状态
+     * 任务状态
      */
-    private FinishStatus finishStatus;
+    private TaskStatus taskStatus;
 
     public String getCreater() {
         return creater;
@@ -73,11 +73,11 @@ public class TableBO extends BaseBO {
         this.name = name;
     }
 
-    public FinishStatus getFinishStatus() {
-        return finishStatus;
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
     }
 
-    public void setFinishStatus(FinishStatus finishStatus) {
-        this.finishStatus = finishStatus;
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 }

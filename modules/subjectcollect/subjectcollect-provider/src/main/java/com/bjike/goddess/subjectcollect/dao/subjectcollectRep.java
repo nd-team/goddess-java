@@ -1,7 +1,7 @@
 package com.bjike.goddess.subjectcollect.dao;
 
 import com.bjike.goddess.common.jpa.dao.JpaRep;
-import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.dto.SubjectCollectsDTO;
 import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
 
 /**
@@ -12,6 +12,6 @@ import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface subjectcollectRep extends JpaRep<SubjectCollect,SubjectCollectDTO> {
+public interface subjectcollectRep extends JpaRep<SubjectCollect,SubjectCollectsDTO> {
 
  }

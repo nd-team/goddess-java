@@ -22,14 +22,11 @@ import com.bjike.goddess.dispatchcar.entity.CheckChangeCar;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.entity.LeaseCarCost;
 import com.bjike.goddess.dispatchcar.enums.*;
-import com.bjike.goddess.dispatchcar.enums.OilCardStatus;
 import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.DispatchcarInfoCollectSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.message.api.MessageAPI;
-import com.bjike.goddess.message.enums.SendType;
-import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.oilcardmanage.api.OilCardBasicAPI;
 import com.bjike.goddess.oilcardmanage.bo.OilCardBasicBO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
@@ -103,8 +100,6 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 
     @Autowired
     private DispatchcarRecordCollectSer dispatchcarRecordCollectSer;
-
-
 
 
     /**
@@ -539,7 +534,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             dto.getConditions().add(Restrict.eq("number", dto.getNumber()));
         }
         List<DispatchCarInfo> list = super.findByPage(dto);
-        List<DispatchCarInfoBO> boList =  BeanTransform.copyProperties(list, DispatchCarInfoBO.class, false);
+        List<DispatchCarInfoBO> boList = BeanTransform.copyProperties(list, DispatchCarInfoBO.class, false);
         return boList;
     }
 
@@ -558,7 +553,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         }
 
         //因为model里面有个枚举所以不能直接转换成String,要单独拿出来.
-        DispatchCarInfoBO info = BeanTransform.copyProperties(model,DispatchCarInfoBO.class,false);
+        DispatchCarInfoBO info = BeanTransform.copyProperties(model, DispatchCarInfoBO.class, false);
 //        BeanUtils.copyProperties(model, info, "evaluatedriver");
 //        info.setEvaluatedriver(model.getEvaluatedriver());
 //        info.setStartTime(model.getStartTime().toString());
@@ -986,7 +981,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                             model.setReceiveDate(DateUtil.parseDate(dispatchCarInfoTO.getReceiveDate()));
                             model.setReceiveReceipts(dispatchCarInfoTO.getReceiveReceipts());
                             super.update(model);
-                        }else {
+                        } else {
                             throw new SerException("必须收到票据核对无误后方可审核");
                         }
                     } else {
@@ -1057,7 +1052,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 model.setPrincipalAuditTime(LocalDateTime.now());
                 if (auditResult == false) {
                     model.setFindType(FindType.WRONG);
-                }else if (auditResult == true){
+                } else if (auditResult == true) {
                     model.setFindType(FindType.FINANCEAUDIT);
                 }
                 super.update(model);
@@ -2100,9 +2095,9 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         UserBO userBO = userAPI.currentUser();
         List<DispatchCarInfo> list = new ArrayList<>();
         for (DispatchCarInfoSetExcel model : toList) {
-            DispatchCarInfo excel = BeanTransform.copyProperties(model, DispatchCarInfo.class, true,"companyDispatch"
-                    ,"projectApproval","siesta","aircondition","downtown","addOil","receipt","ifPass","ifFreeze","ifCorrect"
-                    ,"ifSendArchiveAL","ifSendReimbursementAl","ifSendAddOilReceipts","ifPayed");
+            DispatchCarInfo excel = BeanTransform.copyProperties(model, DispatchCarInfo.class, true, "companyDispatch"
+                    , "projectApproval", "siesta", "aircondition", "downtown", "addOil", "receipt", "ifPass", "ifFreeze", "ifCorrect"
+                    , "ifSendArchiveAL", "ifSendReimbursementAl", "ifSendAddOilReceipts", "ifPayed");
             if (model.getCompanyDispatch() != null) {
                 if (model.getCompanyDispatch().equals("是")) {
                     excel.setCompanyDispatch(true);
@@ -2225,105 +2220,105 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         List<DispatchCarInfo> list = super.findByCis(dto);
         List<DispatchCarInfoSetExcel> toList = new ArrayList<DispatchCarInfoSetExcel>();
         for (DispatchCarInfo model : list) {
-            DispatchCarInfoSetExcel excel = BeanTransform.copyProperties(model, DispatchCarInfoSetExcel.class,"companyDispatch"
-                    ,"projectApproval","siesta","aircondition","downtown","addOil","receipt","ifPass","ifFreeze","ifCorrect"
-                    ,"ifSendArchiveAL","ifSendReimbursementAl","ifSendAddOilReceipts","ifPayed");
-            if (model.getIfSendArchiveAL() != null){
-                if (model.getIfSendArchiveAL() == true){
+            DispatchCarInfoSetExcel excel = BeanTransform.copyProperties(model, DispatchCarInfoSetExcel.class, "companyDispatch"
+                    , "projectApproval", "siesta", "aircondition", "downtown", "addOil", "receipt", "ifPass", "ifFreeze", "ifCorrect"
+                    , "ifSendArchiveAL", "ifSendReimbursementAl", "ifSendAddOilReceipts", "ifPayed");
+            if (model.getIfSendArchiveAL() != null) {
+                if (model.getIfSendArchiveAL() == true) {
                     excel.setIfSendArchiveAL("是");
-                }else {
+                } else {
                     excel.setIfSendArchiveAL("否");
                 }
             }
-            if (model.getCompanyDispatch() != null){
-                if (model.getCompanyDispatch() == true){
+            if (model.getCompanyDispatch() != null) {
+                if (model.getCompanyDispatch() == true) {
                     excel.setCompanyDispatch("是");
-                }else {
+                } else {
                     excel.setCompanyDispatch("否");
                 }
             }
-            if (model.getProjectApproval() != null){
-                if (model.getProjectApproval() == true){
+            if (model.getProjectApproval() != null) {
+                if (model.getProjectApproval() == true) {
                     excel.setProjectApproval("是");
-                }else {
+                } else {
                     excel.setProjectApproval("否");
                 }
             }
-            if (model.getReceipt() != null){
-                if (model.getReceipt() == true){
+            if (model.getReceipt() != null) {
+                if (model.getReceipt() == true) {
                     excel.setReceipt("是");
-                }else {
+                } else {
                     excel.setReceipt("否");
                 }
             }
-            if (model.getSiesta() != null){
-                if (model.getSiesta() == true){
+            if (model.getSiesta() != null) {
+                if (model.getSiesta() == true) {
                     excel.setSiesta("是");
-                }else {
+                } else {
                     excel.setSiesta("否");
                 }
             }
-            if (model.getAircondition() != null){
-                if (model.getAircondition() == true){
+            if (model.getAircondition() != null) {
+                if (model.getAircondition() == true) {
                     excel.setAircondition("是");
-                }else {
+                } else {
                     excel.setAircondition("否");
                 }
             }
-            if (model.getDowntown() != null){
-                if (model.getDowntown() == true){
+            if (model.getDowntown() != null) {
+                if (model.getDowntown() == true) {
                     excel.setDowntown("是");
-                }else {
+                } else {
                     excel.setDowntown("否");
                 }
             }
-            if (model.getAddOil() != null){
-                if (model.getAddOil() == true){
+            if (model.getAddOil() != null) {
+                if (model.getAddOil() == true) {
                     excel.setAddOil("是");
-                }else {
+                } else {
                     excel.setAddOil("否");
                 }
             }
-            if (model.getIfPass() != null){
-                if (model.getIfPass() == true){
+            if (model.getIfPass() != null) {
+                if (model.getIfPass() == true) {
                     excel.setIfPass("是");
-                }else {
+                } else {
                     excel.setIfPass("否");
                 }
             }
-            if (model.getIfFreeze() != null){
-                if (model.getIfFreeze() == true){
+            if (model.getIfFreeze() != null) {
+                if (model.getIfFreeze() == true) {
                     excel.setIfFreeze("是");
-                }else {
+                } else {
                     excel.setIfFreeze("否");
                 }
             }
-            if (model.getIfCorrect() != null){
-                if (model.getIfCorrect() == true){
+            if (model.getIfCorrect() != null) {
+                if (model.getIfCorrect() == true) {
                     excel.setIfCorrect("是");
-                }else {
+                } else {
                     excel.setIfCorrect("否");
                 }
             }
 
-            if (model.getIfSendReimbursementAl() != null){
-                if (model.getIfSendReimbursementAl() == true){
+            if (model.getIfSendReimbursementAl() != null) {
+                if (model.getIfSendReimbursementAl() == true) {
                     excel.setIfSendReimbursementAl("是");
-                }else {
+                } else {
                     excel.setIfSendReimbursementAl("否");
                 }
             }
-            if (model.getIfSendAddOilReceipts() != null){
-                if (model.getIfSendAddOilReceipts() == true){
+            if (model.getIfSendAddOilReceipts() != null) {
+                if (model.getIfSendAddOilReceipts() == true) {
                     excel.setIfSendAddOilReceipts("是");
-                }else {
+                } else {
                     excel.setIfSendAddOilReceipts("否");
                 }
             }
-            if (model.getIfPayed() != null){
-                if (model.getIfPayed() == true){
+            if (model.getIfPayed() != null) {
+                if (model.getIfPayed() == true) {
                     excel.setIfPayed("是");
-                }else {
+                } else {
                     excel.setIfPayed("否");
                 }
             }
@@ -2465,14 +2460,14 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 roadCost = dispatchCarInfoList.stream().filter(p -> p.getRoadCost() != null).mapToDouble(P -> P.getRoadCost()).sum();
                 mealCost = dispatchCarInfoList.stream().filter(p -> p.getMealCost() != null).mapToDouble(P -> P.getMealCost()).sum();
                 if (overWorkTime == 0) {
-                    overUnitCost = 0.0 ;
-                }else {
+                    overUnitCost = 0.0;
+                } else {
                     DecimalFormat decimalFormat = new DecimalFormat("#.##");
                     Double overUnitCost1 = overWorkCost / overWorkTime;
                     String overUnitCost2 = decimalFormat.format(overUnitCost1);
                     overUnitCost = Double.valueOf(overUnitCost2);
                 }
-                PayDriverMoneyCollectBO payDriverMoneyCollectBO = new PayDriverMoneyCollectBO("", "", 0.0, 0.0, 0.0,0.0, 0.0, 0.0, 0.0, "合计");
+                PayDriverMoneyCollectBO payDriverMoneyCollectBO = new PayDriverMoneyCollectBO("", "", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "合计");
                 total = carRentalCost + parkRost + roadCost + mealCost + overWorkCost;
                 payDriverMoneyCollectBO.setDriver(driver);
                 payDriverMoneyCollectBO.setPayDate(dispatchCarInfo.getExpectPayDate().toString());
@@ -2597,7 +2592,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             bo.setProject(proejct.getProject());
             if (collectType == CollectType.AREA) {
                 findByType(proejct.getArea(), proejct.getGroup(), proejct.getProject(), bo, collectIntervalType, to);
-            }else {
+            } else {
                 findByDriver(proejct.getDriver(), proejct.getGroup(), proejct.getProject(), bo, collectIntervalType, to);
             }
 
@@ -3121,7 +3116,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(userToken);
             departments = positionDetailUserAPI.getAllDepartment();
-        }else {
+        } else {
             throw new SerException("请去模块关联设置组织结构关联");
         }
         return departments;
@@ -3134,9 +3129,16 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(userToken);
             areas = departmentDetailAPI.findArea();
-        }else {
+        } else {
             throw new SerException("请去模块关联设置组织结构关联");
         }
         return areas;
+    }
+
+    @Override
+    public Long dispatchCount(String project) throws SerException {
+        DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+        dto.getConditions().add(Restrict.eq("project", project));
+        return super.count(dto);
     }
 }

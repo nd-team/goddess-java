@@ -311,7 +311,6 @@ public class AttachedSerImpl extends ServiceImpl<Attached, AttachedDTO> implemen
         }
         return attachedBO;
     }
-
     private String html(AttachedBO buy) throws SerException {
         StringBuffer sb = new StringBuffer("");
         sb = new StringBuffer("<h4>社保挂靠信息:</h4>");

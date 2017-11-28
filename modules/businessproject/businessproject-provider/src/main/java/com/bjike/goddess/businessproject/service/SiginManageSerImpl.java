@@ -69,7 +69,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -88,7 +88,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -107,7 +107,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -124,7 +124,7 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -134,17 +134,38 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
+//        String userToken = RpcTransmit.getUserToken();
+//        Boolean flagSeeSign = guideSeeIdentity();
+//        RpcTransmit.transmitUserToken(userToken);
+//        Boolean flagAddSign = guideAddIdentity();
+        Boolean flag1 = false;
+        Boolean flag2 = false;
+        Boolean flag3 = false;
+        Boolean flag4 = false;
+        Boolean flag5 = false;
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
+        UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
-
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag1 = cusPermissionSer.getCusPermission("1",userBO);
+            flag2 = cusPermissionSer.getCusPermission("2",userBO);
+            flag3 = cusPermissionSer.busCusPermission("3",userBO);
+            flag4 = cusPermissionSer.modCusPermission("4",userBO);
+            flag5 = cusPermissionSer.modCusPermission("5",userBO);
+        } else {
+            flag1 = true;
+            flag2 = true;
+            flag3 = true;
+            flag4 = true;
+            flag5 = true;
+        }
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("siginmanage");
         obj.setDescribesion("商务项目合同签订与立项");
-        if (flagSeeSign || flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -152,49 +173,60 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         list.add(obj);
 
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = dispatchSheetSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("dispatchsheet");
         obj.setDescribesion("商务项目派工单信息管理");
-        if (flagSeeDis) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeCate = contractCategorySer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("contractcategory");
         obj.setDescribesion("商务项目合同类型");
-        if (flagSeeCate) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeEmail = collectEmailSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("collectemail");
         obj.setDescribesion("商务项目合同邮件发送");
-        if (flagSeeEmail) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeBase = baseInfoManageSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("baseinfomanage");
         obj.setDescribesion("商务项目合同基本信息");
-        if (flagSeeBase) {
+        if (flag1 || flag2) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("businesscontract");
+        obj.setDescribesion("商务项目合同");
+        if (flag1 || flag2 || flag3 || flag4 || flag5) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        obj = new SonPermissionObject();
+        obj.setName("outsourcbusinesscontract");
+        obj.setDescribesion("外包半外包项目合同管理");
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

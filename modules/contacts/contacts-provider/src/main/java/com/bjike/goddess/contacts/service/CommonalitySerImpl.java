@@ -85,7 +85,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
             }
         }
 //        to.setDepartmentId(departmentId1);
-        Commonality entity = BeanTransform.copyProperties(to, Commonality.class);
+        Commonality entity = BeanTransform.copyProperties(to, Commonality.class,true);
         entity.setDepartment(to.getDepartmentId());
         entity.setStatus(Status.THAW);
         super.save(entity);
@@ -140,6 +140,8 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
         //拼表头
         sb.append("<tr>");
+        sb.append("<td>更新时间</td>");
+        sb.append("<td>地区</td>");
         sb.append("<td>项目组/部门</td>");
         sb.append("<td>邮箱地址</td>");
         sb.append("<td>状态</td>");
@@ -151,6 +153,8 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
 //        if (StringUtils.isEmpty(pdID)) {
 //            pdID = entity.getDepartmentId();
 //        }
+        sb.append("<td>" + entity.getUpdateTime() + "</td>");
+        sb.append("<td>" + entity.getArea() + "</td>");
         sb.append("<td>" + entity.getDepartment() + "</td>");
         sb.append("<td>" + entity.getEmail() + "</td>");
         sb.append("<td>" + entity.getStatus() + "</td>");

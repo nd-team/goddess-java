@@ -11,6 +11,7 @@ import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
 import com.bjike.goddess.taskallotment.dto.TaskNodeDTO;
 import com.bjike.goddess.taskallotment.entity.TaskNode;
+import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
@@ -455,4 +456,20 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @author tanghaixiang
      */
     default CollectDataVO personProjectCollect (CollectDataTO collectDataTO) throws SerException{return null;};
+
+    List<TaskNodeExcel> findByDTO(TaskNodeDTO dto) throws SerException;
+
+    /**
+     * 编辑状态
+     * @param id
+     * @param taskStatus
+     * @throws SerException
+     */
+    void editStatus(String id, TaskStatus taskStatus) throws SerException;
+    /**
+     * 完成情况汇总(phone)
+     * @return
+     * @throws SerException
+     */
+    CaseLastBO phoneCount(TaskNodeDTO dto) throws SerException;
 }

@@ -50,25 +50,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
-            if (!flag) {
-                throw new SerException("您不是相应部门的人员，不可以操作");
-            }
-        }
-        RpcTransmit.transmitUserToken(userToken);
-    }
-
-    /**
-     * 核对添加修改删除审核权限（岗位级别）
-     */
-    private void checkAddIdentity() throws SerException {
-        Boolean flag = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
-        String userName = userBO.getUsername();
-        if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -86,7 +68,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
             if (!flag) {
                 throw new SerException("您不是福利模块的人员，不可以操作");
             }
@@ -104,7 +86,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -121,7 +103,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -138,7 +120,7 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3",null);
         } else {
             flag = true;
         }
@@ -150,10 +132,9 @@ public class NotEntryReasonSerImpl extends ServiceImpl<NotEntryReason, NotEntryR
         String userToken = RpcTransmit.getUserToken();
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = guideAddIdentity();
-        RpcTransmit.transmitUserToken(userToken);
         Boolean flagM = guideModuleIdentity();
-        if (flagSee || flagAdd || flagM) {
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagM) {
             return true;
         } else {
             return false;

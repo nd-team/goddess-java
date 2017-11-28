@@ -21,6 +21,7 @@ import com.bjike.goddess.contacts.to.CollectTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 import com.bjike.goddess.contacts.until.MailPasswordCheck;
+import com.bjike.goddess.contacts.util.ChineseCharToEn;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
 import com.bjike.goddess.dimission.bo.DimissionInfoBO;
 import com.bjike.goddess.dimission.dto.DimissionInfoDTO;
@@ -52,10 +53,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -194,7 +192,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             }
         }
 
-        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class);
+        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class,true);
 
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("name", to.getName()));
@@ -601,9 +599,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         List<InternalContactsTemplateExport> commerceContactsExports = new ArrayList<>();
 
         InternalContactsTemplateExport excel = new InternalContactsTemplateExport();
+        excel.setUpdateTime(LocalDate.now());
+        excel.setArea("广州");
         excel.setName("test");
         excel.setEmployeeNum("0012");
-        excel.setArea("广州");
         excel.setDepartment("研发部");
         excel.setPosition("数据分析师");
         excel.setPhone("test");
@@ -695,6 +694,26 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         return null;
     }
 
+    private static List<MobileInternalContactsBO> sort(List<MobileInternalContactsBO> data) {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+//        // Collator 类是用来执行区分语言环境的 String 比较的，这里选择使用CHINA
+//        Comparator<Object> comparator = Collator.getInstance(java.util.Locale.CHINA);
+//        // 使根据指定比较器产生的顺序对指定对象数组进行排序。
+//        Arrays.sort(data, comparator);
+        TreeSet<MobileInternalContactsBO> treeSet = new TreeSet<>(new Comparator<MobileInternalContactsBO>() {
+            @Override
+            public int compare(MobileInternalContactsBO o1, MobileInternalContactsBO o2) {
+                return ChineseCharToEn.getFirstLetter(o1.getUsername()).compareTo(ChineseCharToEn.getFirstLetter(o2.getUsername()));
+            }
+        });
+        for (MobileInternalContactsBO m : data) {
+            treeSet.add(m);
+        }
+        return new ArrayList<>(treeSet);
+    }
+
     @Override
     public List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
         log.info("查询列表开始....");
@@ -730,7 +749,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 mobIn.setPhone(bo.getPhone());
                 mobIn.setPosition(bo.getPosition());
                 mobIn.setQq(bo.getQq());
-//                mobIn.setStatus(bo.getStatus());
+                mobIn.setPhoneNumber(bo.getPhoneNumberA());
+                mobIn.setStatus(bo.getStatus());
                 mobIn.setRemark(bo.getRemark());
                 mobIn.setWeChat(bo.getWeChat());
                 if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
@@ -762,9 +782,71 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 mobileInternalContactsBOs.add(mobIn);
             }
             log.info("查询列表结束....");
-            return mobileInternalContactsBOs;
+            return sort(mobileInternalContactsBOs);
         }
         return null;
+    }
+
+    @Override
+    public List<PhoneNumberBO> mobileGetTel() throws SerException {
+        List<PhoneNumberBO> boList = new ArrayList<>();
+        UserBO userBO = userAPI.currentUser();
+        InternalContactsDTO dto = new InternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
+        List<InternalContacts> list = super.findByCis(dto);
+        for (InternalContacts entity : list) {
+            PhoneNumberBO mobIn = new PhoneNumberBO();
+            mobIn.setPhone(entity.getPhone());
+            mobIn.setPhoneNumberA(entity.getPhoneNumberA());
+            mobIn.setPhoneNumberB(entity.getPhoneNumberB());
+            mobIn.setPhoneNumberC(entity.getPhoneNumberC());
+            mobIn.setPhoneNumberD(entity.getPhoneNumberD());
+            boList.add(mobIn);
+        }
+        return boList;
+    }
+
+    @Override
+    public List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+        List<MobileInternalContactsBO> boList = new ArrayList<>();
+        InternalContactsDTO dto = new InternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("department", dep));
+        List<InternalContacts> list = super.findByCis(dto);
+
+        List<String> userNames = list.stream().map(InternalContacts::getName).collect(Collectors.toList());
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.in("username", userNames));
+        List<UserBO> userBOs = userAPI.findByCis(userDTO);
+
+        //查员工入职
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.in("username", userNames));
+        List<UserNameSexBO> userNameSexBOs = entryRegisterAPI.findSexByUserName((String[]) userNames.toArray(new String[userNames.size()]));
+
+        for (InternalContacts bo : list) {
+            MobileInternalContactsBO mobIn = new MobileInternalContactsBO();
+            if (null != userBOs && userBOs.size() > 0) {
+                mobIn.setHeadSculpture(userBOs.get(0).getHeadSculpture());
+            }
+            mobIn.setUserId(bo.getId());
+            mobIn.setUsername(bo.getName());
+            mobIn.setDepartment(bo.getDepartment());
+            mobIn.setPhone(bo.getPhone());
+            mobIn.setPosition(bo.getPosition());
+            if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
+                List<Integer> integerList = userNameSexBOs.stream().filter(str -> bo.getName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
+                if (null != integerList && integerList.size() > 0) {
+                    if (0 == integerList.get(0)) {
+                        mobIn.setSex(SexType.MAN);
+                    } else {
+                        mobIn.setSex(SexType.WOMAN);
+                    }
+                }
+            }
+            boList.add(mobIn);
+
+        }
+        return boList;
     }
 
     @Override
@@ -1354,7 +1436,6 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         Integer commonalityNum = 0;
         for (String area : areas()) {
             for (String department : departments()) {
-                String[] date = new String[]{startDate, endDate};
                 //入职人数
                 entryNum = entryRegisterAPI.findNumByEntryDate(endDate, area, department);
                 //更新通讯录信息数
@@ -1818,12 +1899,12 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 //        Integer hours = LocalDateTime.now().getHour();//获得10点
         for (InternalContacts entity : internalContacts) {
 //            if (day == 6 && hours == 10) {
-                MailPasswordCheck mailPasswordCheck = new MailPasswordCheck(entity.getWorkEmail(), entity.getPrimalPassword());
-                new Thread(mailPasswordCheck).start();
-                if ("success".equals(mailPasswordCheck.getSuccess())) {
-                    entity.setWorkEmailPass(Boolean.TRUE);
-                } else if ("update".equals(mailPasswordCheck.getSuccess())) {
-                    entity.setWorkEmailPass(Boolean.FALSE);
+            MailPasswordCheck mailPasswordCheck = new MailPasswordCheck(entity.getWorkEmail(), entity.getPrimalPassword());
+            new Thread(mailPasswordCheck).start();
+            if ("success".equals(mailPasswordCheck.getSuccess())) {
+                entity.setWorkEmailPass(Boolean.TRUE);
+            } else if ("update".equals(mailPasswordCheck.getSuccess())) {
+                entity.setWorkEmailPass(Boolean.FALSE);
 //                }
             }
         }

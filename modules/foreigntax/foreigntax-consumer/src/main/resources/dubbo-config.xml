@@ -16,32 +16,26 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
-
-	<dubbo:reference  validation="true" id="taxManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI" />
-	<dubbo:reference  validation="true" id="accountInfoManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.AccountInfoManagementAPI" />
-	<dubbo:reference  validation="true" id="invoiceInfoApiImpl" interface="com.bjike.goddess.foreigntax.api.InvoiceInfoAPI" />
-	<dubbo:reference  validation="true" id="invoiceReceiveApiImpl" interface="com.bjike.goddess.foreigntax.api.InvoiceReceiveAPI" />
-	<dubbo:reference  validation="true" id="outputInvoiceApiImpl" interface="com.bjike.goddess.foreigntax.api.OutputInvoiceAPI" />
-	<dubbo:reference  validation="true" id="incomeInvoiceApiImpl" interface="com.bjike.goddess.foreigntax.api.IncomeInvoiceAPI" />
-	<dubbo:reference  validation="true" id="landTaxReportApiImpl" interface="com.bjike.goddess.foreigntax.api.LandTaxReportAPI" />
-	<dubbo:reference  validation="true" id="discountRecordApiImpl" interface="com.bjike.goddess.foreigntax.api.DiscountRecordAPI" />
-
-	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionAPI" />
-	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionOperateAPI" />
-
-	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
-	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
-	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
-	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
-	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
-	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
-	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
-	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
-	<dubbo:reference  validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" />
-
-
-	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
-	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
-
-
-</beans>
+	<dubbo:reference validation="true" id="taxVoucherApiImpl" interface="com.bjike.goddess.foreigntax.api.TaxVoucherAPI"/>
+	<dubbo:reference validation="true" id="taxManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.TaxManagementAPI"/>
+	<dubbo:reference validation="true" id="accountInfoManagementApiImpl" interface="com.bjike.goddess.foreigntax.api.AccountInfoManagementAPI"/>
+	<dubbo:reference validation="true" id="invoiceInfoApiImpl" interface="com.bjike.goddess.foreigntax.api.InvoiceInfoAPI"/>
+	<dubbo:reference validation="true" id="invoiceReceiveApiImpl" interface="com.bjike.goddess.foreigntax.api.InvoiceReceiveAPI"/>
+	<dubbo:reference validation="true" id="outputInvoiceApiImpl" interface="com.bjike.goddess.foreigntax.api.OutputInvoiceAPI"/>
+	<dubbo:reference validation="true" id="incomeInvoiceApiImpl" interface="com.bjike.goddess.foreigntax.api.IncomeInvoiceAPI"/>
+	<dubbo:reference validation="true" id="landTaxReportApiImpl" interface="com.bjike.goddess.foreigntax.api.LandTaxReportAPI"/>
+	<dubbo:reference validation="true" id="discountRecordApiImpl" interface="com.bjike.goddess.foreigntax.api.DiscountRecordAPI"/>
+	<dubbo:reference validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionAPI"/>
+	<dubbo:reference validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.foreigntax.api.CusPermissionOperateAPI"/>
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI"/>
+	<dubbo:reference validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI"/>
+	<dubbo:reference validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI"/>
+	<dubbo:reference validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI"/>
+	<dubbo:reference validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI"/>
+	<dubbo:reference validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI"/>
+	<dubbo:reference validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
+	<dubbo:reference validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI"/>
+	<dubbo:reference validation="true" id="voucherGenerateApiImpl" interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI"/>
+	<dubbo:reference validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI"/>
+	<dubbo:reference validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI"/>
+	</beans>

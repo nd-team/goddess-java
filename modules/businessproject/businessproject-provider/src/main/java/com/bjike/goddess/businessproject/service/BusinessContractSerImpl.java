@@ -29,11 +29,11 @@ import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
-import com.bjike.goddess.taskallotment.enums.TimeStatus;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -86,7 +86,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -105,7 +105,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -124,7 +124,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3", null);
             if (!flag) {
                 throw new SerException("您不是相关项目经理人员，不可以操作");
             }
@@ -143,7 +143,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.modCusPermission("4", null);
             if (!flag) {
                 throw new SerException("您不是相关规划部门的负责人，不可以操作");
             }
@@ -162,7 +162,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.modCusPermission("5", null);
             if (!flag) {
                 throw new SerException("您不是相关预算部门的负责人，不可以操作");
             }
@@ -181,7 +181,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -198,7 +198,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -215,7 +215,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3", null);
         } else {
             flag = true;
         }
@@ -232,7 +232,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.modCusPermission("4", null);
         } else {
             flag = true;
         }
@@ -249,7 +249,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.modCusPermission("5", null);
         } else {
             flag = true;
         }
@@ -2242,89 +2242,125 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                     "makeContract", "scaleBalance", "solutionBalance", "implement", "partial",
                     "persist", "settlementProcess", "account", "closeSingle", "archive");
             //测算是否通过
-            if (str.getMeasurePass().equals(true)) {
-                export.setMeasurePass("是");
-            } else {
-                export.setMeasurePass("否");
+            if (null != str.getMeasurePass()) {
+                if (str.getMeasurePass().equals(true)) {
+                    export.setMeasurePass("是");
+                } else {
+                    export.setMeasurePass("否");
+                }
+
             }
             //是否通报
-            if (str.getNotification().equals(true)) {
-                export.setNotification("是");
-            } else {
-                export.setNotification("否");
+            if (null != str.getNotification()) {
+                if (str.getNotification().equals(true)) {
+                    export.setNotification("是");
+                } else {
+                    export.setNotification("否");
+                }
             }
             //是否有共同分包单位
-            if (str.getCommonSubcontractor().equals(true)) {
-                export.setCommonSubcontractor("是");
-            } else {
-                export.setCommonSubcontractor("否");
+            if (null != str.getCommonSubcontractor()) {
+                if (str.getCommonSubcontractor().equals(true)) {
+                    export.setCommonSubcontractor("是");
+                } else {
+                    export.setCommonSubcontractor("否");
+                }
+
             }
             //派工归属清理是否完成
-            if (str.getTaskFinish().equals(true)) {
-                export.setTaskFinish("是");
-            } else {
-                export.setTaskFinish("否");
+            if (null != str.getTaskFinish()) {
+
+                if (str.getTaskFinish().equals(true)) {
+                    export.setTaskFinish("是");
+                } else {
+                    export.setTaskFinish("否");
+                }
             }
             //是否有合同派工合同
-            if (str.getTaskContract().equals(true)) {
-                export.setTaskContract("是");
-            } else {
-                export.setTaskContract("否");
+            if (null != str.getTaskContract()) {
+                if (str.getTaskContract().equals(true)) {
+                    export.setTaskContract("是");
+                } else {
+                    export.setTaskContract("否");
+                }
+
             }
 
             //合同规模数是否有差异
-            if (str.getScaleBalance().equals(true)) {
-                export.setScaleBalance("是");
-            } else {
-                export.setScaleBalance("否");
+            if (null != str.getScaleBalance()) {
+                if (str.getScaleBalance().equals(true)) {
+                    export.setScaleBalance("是");
+                } else {
+                    export.setScaleBalance("否");
+                }
             }
             //是否解决差异问题
-            if (str.getSolutionBalance().equals(true)) {
-                export.setSolutionBalance("是");
-            } else {
-                export.setSolutionBalance("否");
+            if (null != str.getSolutionBalance()) {
+
+                if (str.getSolutionBalance().equals(true)) {
+                    export.setSolutionBalance("是");
+                } else {
+                    export.setSolutionBalance("否");
+                }
             }
             //预估项目是否确认实施
-            if (str.getImplement().equals(true)) {
-                export.setImplement("是");
-            } else {
-                export.setImplement("否");
+            if (null != str.getImplement()) {
+
+                if (str.getImplement().equals(true)) {
+                    export.setImplement("是");
+                } else {
+                    export.setImplement("否");
+                }
             }
             //是否分批结算
-            if (str.getPartial().equals(true)) {
-                export.setPartial("是");
-            } else {
-                export.setPartial("否");
+            if (null != str.getPartial()) {
+                if (str.getPartial().equals(true)) {
+                    export.setPartial("是");
+                } else {
+                    export.setPartial("否");
+                }
+
             }
             //是否为持续
-            if (str.getPersist().equals(true)) {
-                export.setPersist("是");
-            } else {
-                export.setPersist("否");
+            if (null != str.getPersist()) {
+                if (str.getPersist().equals(true)) {
+                    export.setPersist("是");
+                } else {
+                    export.setPersist("否");
+                }
+
             }
             //是否正在走结算流程
-            if (str.getSettlementProcess().equals(true)) {
-                export.setSettlementProcess("是");
-            } else {
-                export.setSettlementProcess("否");
+            if (null != str.getSettlementProcess()) {
+                if (str.getSettlementProcess().equals(true)) {
+                    export.setSettlementProcess("是");
+                } else {
+                    export.setSettlementProcess("否");
+                }
             }
             //是否到账
-            if (str.getAccount().equals(true)) {
-                export.setAccount("是");
-            } else {
-                export.setAccount("否");
+            if (null != str.getAccount()) {
+                if (str.getAccount().equals(true)) {
+                    export.setAccount("是");
+                } else {
+                    export.setAccount("否");
+                }
             }
             //是否闭单
-            if (str.getCloseSingle().equals(true)) {
-                export.setCloseSingle("是");
-            } else {
-                export.setCloseSingle("否");
+            if (null != str.getCloseSingle()) {
+                if (str.getCloseSingle().equals(true)) {
+                    export.setCloseSingle("是");
+                } else {
+                    export.setCloseSingle("否");
+                }
             }
             //合同是否已归档
-            if (str.getArchive().equals(true)) {
-                export.setArchive("是");
-            } else {
-                export.setArchive("否");
+            if (null != str.getArchive()) {
+                if (str.getArchive().equals(true)) {
+                    export.setArchive("是");
+                } else {
+                    export.setArchive("否");
+                }
             }
             //是否有合同立项
             export.setMakeContract(MakeContract.exportStrConvert(str.getMakeContract()));
@@ -4001,4 +4037,34 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         }
         return boList;
     }
+
+    @Override
+    public List<String> findSingleContractName() throws SerException {
+        List<BusinessContract> businessContractList = super.findAll();
+        if (CollectionUtils.isEmpty(businessContractList)) {
+            return Collections.emptyList();
+        }
+        return businessContractList.stream().map(BusinessContract::getSingleContractName).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findSingleNumByName(String singName) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("singleContractName", singName));
+        List<BusinessContract> businessContractList = super.findByCis(businessContractDTO);
+        if (CollectionUtils.isEmpty(businessContractList)) {
+            return Collections.emptyList();
+        }
+        return businessContractList.stream().map(BusinessContract::getSingleContractNum).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("singleContractNum", singleNum));
+        BusinessContract businessContract = super.findOne(businessContractDTO);
+        return BeanTransform.copyProperties(businessContract, BusinessContractsBO.class);
+    }
+
+
 }

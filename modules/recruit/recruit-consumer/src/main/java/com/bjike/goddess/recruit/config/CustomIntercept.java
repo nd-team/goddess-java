@@ -28,8 +28,8 @@ import java.util.List;
 public class CustomIntercept implements Interceptor {
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private PermissionAPI permissionAPI;
+//    @Autowired
+//    private PermissionAPI permissionAPI;
     @Autowired
     private StorageUserAPI storageUserAPI;
 
@@ -61,7 +61,7 @@ public class CustomIntercept implements Interceptor {
                 "*/login",
                 "*/register"
         };
-        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
+//        HIInfo authInfo = new HIInfo(new AuthIntercept(permissionAPI, excludes), "/**");
 
         /**
          * 顺序
