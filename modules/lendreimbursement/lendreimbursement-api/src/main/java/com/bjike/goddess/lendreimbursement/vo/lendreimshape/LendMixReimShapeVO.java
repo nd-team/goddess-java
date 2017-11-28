@@ -23,6 +23,11 @@ public class LendMixReimShapeVO implements Serializable{
      */
     private ReimShapeVO reimShapeVO;
 
+    /**
+     * 公司柱型图
+     */
+    private ReimCompanyShapeBarVO companyShapeMixVO;
+
     public ReimShapeMixVO getReimShapeMixVO() {
         return reimShapeMixVO;
     }
@@ -30,6 +35,15 @@ public class LendMixReimShapeVO implements Serializable{
     public void setReimShapeMixVO(ReimShapeMixVO reimShapeMixVO) {
         this.reimShapeMixVO = reimShapeMixVO;
     }
+
+    public ReimCompanyShapeBarVO getCompanyShapeMixVO() {
+        return companyShapeMixVO;
+    }
+
+    public void setCompanyShapeMixVO(ReimCompanyShapeBarVO companyShapeMixVO) {
+        this.companyShapeMixVO = companyShapeMixVO;
+    }
+
 
     public ReimShapeVO getReimShapeVO() {
         return reimShapeVO;

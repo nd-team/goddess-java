@@ -21,6 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -52,6 +54,12 @@ public class ReimburseShapeAction extends BaseFileAction {
         try {
             LocalDate date = LocalDate.now();
             List<Integer> list = DateUtil.allYearList(date);
+            Collections.sort(list, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return o2.compareTo(o1);
+                }
+            });
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

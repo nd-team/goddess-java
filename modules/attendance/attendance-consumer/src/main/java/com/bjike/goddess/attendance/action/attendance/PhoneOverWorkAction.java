@@ -1,23 +1,35 @@
 package com.bjike.goddess.attendance.action.attendance;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.attendance.api.overtime.OverWorkAPI;
 import com.bjike.goddess.attendance.dto.overtime.PhoneMyEntryOverWorkDTO;
 import com.bjike.goddess.attendance.dto.overtime.PhoneMyOverWorkDTO;
+import com.bjike.goddess.attendance.enums.OverWorkIndentity;
 import com.bjike.goddess.attendance.vo.OverWorkVO;
+import com.bjike.goddess.attendance.vo.overtime.PhoneOWIdentityVO;
 import com.bjike.goddess.attendance.vo.overtime.PhoneOverWorkVO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
+import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.storage.api.FileAPI;
+import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -31,11 +43,55 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("phoneoverwork")
-public class PhoneOverWorkAction {
+public class PhoneOverWorkAction extends BaseFileAction {
 
     @Autowired
     private OverWorkAPI overWorkAPI;
+    @Autowired
+    private PositionUserDetailAPI positionUserDetailAPI;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private FileAPI fileAPI;
 
+    /**
+     * 当前用户身份
+     *
+     * @return class PhoneOWIdentityVO
+     * @des 根据id获取加班
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/identity")
+    public Result identity() throws ActException {
+        try {
+            PhoneOWIdentityVO phoneOWIdentityVO = new PhoneOWIdentityVO();
+            OverWorkIndentity overWorkIndentity = OverWorkIndentity.NOMAL;
+            RpcContext.getContext().getAttachment("userToken");
+            String userName = userAPI.currentUser().getUsername();
+            RpcContext.getContext().setAttachment("userToken", userName);
+            PositionDetailBO positionDetailBO = positionUserDetailAPI.getPosition(userName);
+            RpcContext.getContext().setAttachment("userToken", userName);
+            if (positionDetailBO != null) {
+                if (StringUtils.isBlank(positionDetailBO.getPosition())) {
+                    return null;
+                } else {
+                    if ( positionDetailBO.getPosition().contains("项目经理")) {
+                        overWorkIndentity = OverWorkIndentity.MANAGE;
+                    } else if (userName.toLowerCase().equals("ike") || positionDetailBO.getPosition().contains("负责人")) {
+                        overWorkIndentity = OverWorkIndentity.CHARGE;
+                    } else {
+                        overWorkIndentity = OverWorkIndentity.NOMAL;
+                    }
+                    phoneOWIdentityVO.setName(userName);
+                    phoneOWIdentityVO.setOverWorkIndentity(overWorkIndentity);
+                }
+            }
+            return ActResult.initialize(phoneOWIdentityVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 一个加班
@@ -49,7 +105,7 @@ public class PhoneOverWorkAction {
     public Result getPhoneOneById(@PathVariable String id) throws ActException {
         try {
             PhoneOverWorkVO overWorkVO = BeanTransform.copyProperties(
-                    overWorkAPI.getPhoneOneById(id), OverWorkVO.class);
+                    overWorkAPI.getPhoneOneById(id), PhoneOverWorkVO.class);
             return ActResult.initialize(overWorkVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

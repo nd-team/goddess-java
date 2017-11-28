@@ -123,7 +123,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
         if (entity.getAll()) {
             List<String> emails = new ArrayList<>(0);
             emails.addAll(internalContactsAPI.findEmailNotNull().stream()
-                    .map(InternalContactsBO::getEmail)
+                    .map(InternalContactsBO::getWorkEmail)
                     .collect(Collectors.toList()));
             emails.addAll(commonalityAPI.findThaw().stream()
                     .map(CommonalityBO::getEmail)

@@ -3,8 +3,6 @@ package com.bjike.goddess.attendance.bo.overtime;
 import com.bjike.goddess.attendance.enums.AuditStatus;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.persistence.Column;
-
 /**
  * 加班业务传输对象
  *
@@ -109,6 +107,15 @@ public class OverWorkBO extends BaseBO {
      * 手机版是否有权限审核
      */
     private Boolean hasAuditIs;
+    /**
+     * 创建时间
+     */
+    private String createTime;
+    /**
+     * 手机版头像
+     */
+    private String pic;
+
 
     public String getArea() {
         return area;
@@ -260,5 +267,21 @@ public class OverWorkBO extends BaseBO {
 
     public void setHasAuditIs(Boolean hasAuditIs) {
         this.hasAuditIs = hasAuditIs;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 }
