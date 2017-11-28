@@ -1,7 +1,7 @@
 package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.AgeAssistAPI;
+import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -72,7 +72,7 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
-    private AgeAssistAPI ageAssistAPI;
+    private SenioritySubsidiesAPI senioritySubsidiesAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -265,7 +265,7 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
 
             int months = 0;
             if (moduleAPI.isCheck("assistance")) {
-                months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
+                months = senioritySubsidiesAPI.findAge(userBO.getUsername()).getCompanyLength();
             }
             entity.setMonths(months);
             entity.setSellName(schemeIssueBO.getPublisher());

@@ -6,8 +6,8 @@ import com.bjike.goddess.archive.dto.StaffRecordsDTO;
 import com.bjike.goddess.archive.entity.ForeignStaffingSet;
 import com.bjike.goddess.archive.entity.StaffRecords;
 import com.bjike.goddess.archive.entity.StaffRecords1Excel;
-import com.bjike.goddess.archive.entity.StaffRecordsExcel;
 import com.bjike.goddess.archive.enums.GuideAddrStatus;
+import com.bjike.goddess.archive.enums.Status;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.StaffRecords1ExcelTO;
 import com.bjike.goddess.archive.to.StaffRecordsExcelTO;
@@ -15,7 +15,6 @@ import com.bjike.goddess.archive.to.StaffRecordsTO;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -289,7 +288,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         dto = findData(dto);
         searchCondition(dto);
         dto.getSorts().add("serialNumber=desc");
-        dto.getConditions().add(Restrict.eq("status", Status.THAW));
+//        dto.getConditions().add(Restrict.eq("status", Status.THAW));
         return BeanTransform.copyProperties(super.findByPage(dto), StaffRecordsBO.class);
     }
 
@@ -397,8 +396,8 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
     @Override
     public byte[] templateExcel() throws SerException {
-        List<StaffRecordsExcel> toList = new ArrayList<StaffRecordsExcel>();
-        StaffRecordsExcel staffRecordsExcel = new StaffRecordsExcel();
+        List<StaffRecordsExcelTO> toList = new ArrayList<StaffRecordsExcelTO>();
+        StaffRecordsExcelTO staffRecordsExcel = new StaffRecordsExcelTO();
         toList.add(staffRecordsExcel);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
@@ -560,10 +559,10 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         List<StaffRecords> list = super.findByCis(dto);
         Excel excel = new Excel(0, 2);
 
-        List<StaffRecordsExcel> staffRecordsExcels = new ArrayList<>(0);
+        List<com.bjike.goddess.archive.excel.StaffRecordsExcel> staffRecordsExcels = new ArrayList<>(0);
         if (null != list && list.size() > 0) {
             list.stream().forEach(obj -> {
-                StaffRecordsExcel staffRecordsExcel = BeanTransform.copyProperties(obj, StaffRecordsExcel.class, false);
+                com.bjike.goddess.archive.excel.StaffRecordsExcel staffRecordsExcel = BeanTransform.copyProperties(obj, com.bjike.goddess.archive.excel.StaffRecordsExcel.class, false);
                 staffRecordsExcels.add(staffRecordsExcel);
             });
         }
@@ -717,7 +716,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             List<EntryRegisterBO> entryRegisterBOs = entryRegisterAPI.getEntryRegisterByName(name);
             if (null != entryRegisterBOs && entryRegisterBOs.size() > 0) {
                 EntryRegisterBO entryRegisterBO = entryRegisterBOs.get(0);
-                StaffRecordsDataBO bo = BeanTransform.copyProperties(entryRegisterBO, StaffRecordsBO.class);
+                StaffRecordsDataBO bo = BeanTransform.copyProperties(entryRegisterBO, StaffRecordsDataBO.class);
                 bo.setSerialNumber(entryRegisterBO.getEmpNumber());
                 bo.setProject(entryRegisterBO.getDepartment());
                 bo.setMajor(entryRegisterBO.getProfession());

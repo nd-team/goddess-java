@@ -249,7 +249,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     }
 
     //根据科目查询金额
-    private Double findCashByProject(String projectName, CashFlowProjectDTO dto) throws SerException {
+    @Override
+    public Double findCashByProject(String projectName, CashFlowProjectDTO dto) throws SerException {
         Double cash = 0d;
         if ("销售商品、提供劳务收到的现金".equals(projectName)) {
             cash = findCash(dto);

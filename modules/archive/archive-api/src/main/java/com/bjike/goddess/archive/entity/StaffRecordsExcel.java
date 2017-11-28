@@ -3,6 +3,7 @@ package com.bjike.goddess.archive.entity;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * @Author: [dengjunren]
@@ -13,11 +14,11 @@ import java.io.Serializable;
  */
 public class StaffRecordsExcel implements Serializable {
 
-    /**
-     * 更新时间
-     */
-    @ExcelHeader(name = "更新时间", notNull = true)
-    private String modifyTime;
+//    /**
+//     * 更新时间
+//     */
+//    @ExcelHeader(name = "更新时间", notNull = true)
+//    private String modifyTime;
 
     /**
      * 姓名
@@ -65,18 +66,18 @@ public class StaffRecordsExcel implements Serializable {
      * 毕业时间
      */
     @ExcelHeader(name = "毕业时间")
-    private String graduate;
+    private LocalDate graduate;
 
     /**
      * 入职时间
      */
     @ExcelHeader(name = "入职时间", notNull = true)
-    private String entryTime;
+    private LocalDate entryTime;
 
     /**
      * 在职时间(月)
      */
-    @ExcelHeader(name = "在职时间(月数)", notNull = true)
+    @ExcelHeader(name = "在职时间", notNull = true)
     private Integer seniority;
 
     /**
@@ -95,7 +96,7 @@ public class StaffRecordsExcel implements Serializable {
      * 出生日期
      */
     @ExcelHeader(name = "出生日期", notNull = true)
-    private String birth;
+    private LocalDate birth;
 
     /**
      * 户籍地址
@@ -183,19 +184,19 @@ public class StaffRecordsExcel implements Serializable {
         this.school = school;
     }
 
-    public String getGraduate() {
+    public LocalDate getGraduate() {
         return graduate;
     }
 
-    public void setGraduate(String graduate) {
+    public void setGraduate(LocalDate graduate) {
         this.graduate = graduate;
     }
 
-    public String getEntryTime() {
+    public LocalDate getEntryTime() {
         return entryTime;
     }
 
-    public void setEntryTime(String entryTime) {
+    public void setEntryTime(LocalDate entryTime) {
         this.entryTime = entryTime;
     }
 
@@ -215,11 +216,19 @@ public class StaffRecordsExcel implements Serializable {
         this.telephone = telephone;
     }
 
-    public String getBirth() {
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public LocalDate getBirth() {
         return birth;
     }
 
-    public void setBirth(String birth) {
+    public void setBirth(LocalDate birth) {
         this.birth = birth;
     }
 
@@ -261,21 +270,5 @@ public class StaffRecordsExcel implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
     }
 }

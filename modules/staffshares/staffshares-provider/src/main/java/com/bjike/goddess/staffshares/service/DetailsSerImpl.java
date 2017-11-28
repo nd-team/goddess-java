@@ -1,7 +1,7 @@
 package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.AgeAssistAPI;
+import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -74,7 +74,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
-    private AgeAssistAPI ageAssistAPI;
+    private SenioritySubsidiesAPI senioritySubsidiesAPI;
 
 
     /**
@@ -316,7 +316,7 @@ public class DetailsSerImpl extends ServiceImpl<Details, DetailsDTO> implements 
 
                 int months = 0;
                 if (moduleAPI.isCheck("assistance")) {
-                    months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
+                    months = senioritySubsidiesAPI.findAge(userBO.getUsername()).getCompanyLength();
                 }
                 purchase.setMonths(0);
                 purchase.setSellName(entity.getPublisher());

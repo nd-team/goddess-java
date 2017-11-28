@@ -3500,7 +3500,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     public static final String[] EXCELHEAD2 = {"序号", "凭证字", "凭证日期", "一级科目",
-            "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "地区", "项目名称", "项目组",
+            "二级科目", "三级科目", "借方金额", "贷方金额", "摘要", "来源", "地区", "项目名称", "项目组",
             "制单人", "票据数量", "附件"};
 
 
@@ -3519,6 +3519,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel.setBorrowMoney(11d);
         excel.setLoanMoney(0d);
         excel.setSumary("test");
+        excel.setSource("fds");
         excel.setArea("广州");
         excel.setProjectName("测试");
         excel.setProjectGroup("测试");
@@ -3538,6 +3539,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel2.setBorrowMoney(0d);
         excel2.setLoanMoney(11d);
         excel2.setSumary("test");
+        excel2.setSource("12");
         excel2.setArea("广州");
         excel2.setProjectName("测试");
         excel2.setProjectGroup("测试");
@@ -3557,6 +3559,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel.setBorrowMoney(55d);
         excel.setLoanMoney(0d);
         excel.setSumary("test");
+        excel.setSource("212");
         excel.setArea("湖南");
         excel.setProjectName("测试");
         excel.setProjectGroup("测试");
@@ -3576,6 +3579,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         excel2.setBorrowMoney(0d);
         excel2.setLoanMoney(55d);
         excel2.setSumary("test");
+        excel2.setSource("545");
         excel2.setArea("湖南");
         excel2.setProjectName("测试");
         excel2.setProjectGroup("测试");

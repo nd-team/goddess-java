@@ -1,6 +1,7 @@
 package com.bjike.goddess.archive.vo;
 
-import com.bjike.goddess.common.api.type.Status;
+
+import com.bjike.goddess.archive.enums.Status;
 
 /**
  * 员工档案表现层对象
@@ -148,6 +149,11 @@ public class StaffRecordsVO {
      * @return
      */
     private String qq;
+
+    /**
+     * 个人邮箱
+     */
+    private String selfEmail;
 
 
     public String getId() {
@@ -364,5 +370,13 @@ public class StaffRecordsVO {
 
     public void setNowAddress(String nowAddress) {
         this.nowAddress = nowAddress;
+    }
+
+    public String getSelfEmail() {
+        return selfEmail;
+    }
+
+    public void setSelfEmail(String selfEmail) {
+        this.selfEmail = selfEmail;
     }
 }

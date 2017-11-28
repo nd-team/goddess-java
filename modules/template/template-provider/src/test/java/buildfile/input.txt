@@ -5,9 +5,11 @@
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
+Integer num 序号;
 String project 项目;
 String money 金额;
 String rate 比率;
+AnalyseType analyseType 分析类型;
 String analyse 分析;
 String advice 管理建议;
 )

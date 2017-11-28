@@ -1,7 +1,7 @@
 package com.bjike.goddess.archive.entity;
 
+import com.bjike.goddess.archive.enums.Status;
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

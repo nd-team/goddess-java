@@ -659,7 +659,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                     List<InternalContacts> list = super.findByCis(dto);
                     if (!list.isEmpty()) {
 //                        strings.add(list.get(0).getEmail());
-                        strings.add(list.get(0).getWorkEmail());
+                        if (null != list.get(0).getWorkEmail()) {
+                            strings.add(list.get(0).getWorkEmail());
+                        }
                     }
                 } catch (Exception e) {
                     throw new SerException(e.getMessage());
@@ -687,7 +689,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             dto.getConditions().add(Restrict.eq("name", name));
             List<InternalContacts> list = super.findByCis(dto);
             if (!list.isEmpty()) {
-                return list.get(0).getWorkEmail();
+                if (null != list.get(0).getWorkEmail()) {
+                    return list.get(0).getWorkEmail();
+                }
             }
         }
         return null;

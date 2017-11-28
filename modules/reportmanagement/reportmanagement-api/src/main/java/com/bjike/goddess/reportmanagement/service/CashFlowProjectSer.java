@@ -13,13 +13,14 @@ import com.bjike.goddess.reportmanagement.to.CashRateTO;
 import java.util.List;
 
 /**
-* 现金流量项目表业务接口
-* @Author:			[ zhuangkaiqin ]
-* @Date:			[  2017-11-20 03:06 ]
-* @Description:	[ 现金流量项目表业务接口 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 现金流量项目表业务接口
+ *
+ * @Author: [ zhuangkaiqin ]
+ * @Date: [ 2017-11-20 03:06 ]
+ * @Description: [ 现金流量项目表业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 public interface CashFlowProjectSer extends Ser<CashFlowProject, CashFlowProjectDTO> {
 
     /**
@@ -93,4 +94,18 @@ public interface CashFlowProjectSer extends Ser<CashFlowProject, CashFlowProject
     default void editRate(CashRateTO to) throws SerException {
         return;
     }
+
+    /**
+     * 根据科目查询金额
+     *
+     * @param projectName
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Double findCashByProject(String projectName, CashFlowProjectDTO dto) throws SerException {
+        return null;
+    }
+
+
 }

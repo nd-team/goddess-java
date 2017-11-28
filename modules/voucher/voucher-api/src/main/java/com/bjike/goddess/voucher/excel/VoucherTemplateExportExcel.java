@@ -1,6 +1,5 @@
 package com.bjike.goddess.voucher.excel;
 
-import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.voucher.enums.AuditStatus;
 import com.bjike.goddess.voucher.enums.CheckStatus;
 import com.bjike.goddess.voucher.enums.TransferStatus;
@@ -67,6 +66,11 @@ public class VoucherTemplateExportExcel implements Serializable{
      * 摘要
      */
     private String sumary;
+
+    /**
+     * 来源
+     */
+    private String source;
 
     /**
      * 地区
@@ -305,5 +309,11 @@ public class VoucherTemplateExportExcel implements Serializable{
         this.moneyTotal = moneyTotal;
     }
 
+    public String getSource() {
+        return source;
+    }
 
+    public void setSource(String source) {
+        this.source = source;
+    }
 }

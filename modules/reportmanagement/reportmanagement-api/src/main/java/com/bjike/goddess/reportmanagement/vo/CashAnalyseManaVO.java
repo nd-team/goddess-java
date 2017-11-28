@@ -1,4 +1,4 @@
-package com.bjike.goddess.reportmanagement.bo;
+package com.bjike.goddess.reportmanagement.vo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.reportmanagement.enums.AnalyseType;
@@ -12,7 +12,7 @@ import com.bjike.goddess.reportmanagement.enums.AnalyseType;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class CashAnalyseBO extends BaseBO {
+public class CashAnalyseManaVO extends BaseBO {
 
     /**
      * 序号
@@ -25,14 +25,19 @@ public class CashAnalyseBO extends BaseBO {
     private String project;
 
     /**
-     * 金额
+     * 本期金额
      */
     private String money;
 
     /**
-     * 比率
+     * 上期金额
      */
-    private String rate;
+    private String money1;
+
+//    /**
+//     * 比率
+//     */
+//    private String rate;
 
     /**
      * 分析类型
@@ -51,15 +56,23 @@ public class CashAnalyseBO extends BaseBO {
 
     /**
      * 开始时间
-     * @return
      */
     private String startTime;
 
     /**
      * 结束时间
-     * @return
      */
     private String endTime;
+
+    /**
+     * 增长额
+     */
+    private Double growthAmount;
+
+    /**
+     * 增长率
+     */
+    private String growthRate;
 
 
     public Integer getNum() {
@@ -86,12 +99,12 @@ public class CashAnalyseBO extends BaseBO {
         this.money = money;
     }
 
-    public String getRate() {
-        return rate;
+    public String getMoney1() {
+        return money1;
     }
 
-    public void setRate(String rate) {
-        this.rate = rate;
+    public void setMoney1(String money1) {
+        this.money1 = money1;
     }
 
     public AnalyseType getAnalyseType() {
@@ -132,5 +145,21 @@ public class CashAnalyseBO extends BaseBO {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Double getGrowthAmount() {
+        return growthAmount;
+    }
+
+    public void setGrowthAmount(Double growthAmount) {
+        this.growthAmount = growthAmount;
+    }
+
+    public String getGrowthRate() {
+        return growthRate;
+    }
+
+    public void setGrowthRate(String growthRate) {
+        this.growthRate = growthRate;
     }
 }

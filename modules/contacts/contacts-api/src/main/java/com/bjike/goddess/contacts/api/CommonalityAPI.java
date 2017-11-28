@@ -100,7 +100,7 @@ public interface CommonalityAPI {
     }
 
     /**
-     * 根据部门ID查询公共邮箱
+     * 根据部门查询公共邮箱
      *
      * @param department 部门ID
      * @return

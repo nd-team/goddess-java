@@ -46,8 +46,8 @@
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="disciplineRecordApiImpl" interface="com.bjike.goddess.bonus.api.DisciplineRecordAPI" />
-	<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+	<!--<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />-->
 	<dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
-	<dubbo:reference validation="true" id="ageAssistApiImpl" interface="com.bjike.goddess.assistance.api.AgeAssistAPI" />
+	<dubbo:reference validation="true" id="ageAssistApiImpl" interface="com.bjike.goddess.assistance.api.SenioritySubsidiesAPI" />
 
 </beans>

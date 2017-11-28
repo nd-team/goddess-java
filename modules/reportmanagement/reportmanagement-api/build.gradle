@@ -1,4 +1,10 @@
 apply from: '../../../config.gradle'
-dependencies { 
-compile project(":common:common-api")
-compile project(":common:common-utils")} 
+dependencies {
+    compile project(":common:common-api")
+    compile project(":common:common-utils")
+    compile project(":modules:organize:organize-api")
+    compile project(":modules:user:user-api")
+    compile project(":modules:voucher:voucher-api")
+    compile project(":modules:assemble:assemble-api")
+    compile project(":modules:subjectcollect:subjectcollect-api")
+}

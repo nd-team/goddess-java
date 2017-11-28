@@ -1,5 +1,4 @@
 apply from: '../../../config.gradle'
-<<<<<<< Updated upstream
 dependencies {
     compile project(":common:common-api")
     compile project(":common:common-utils")
@@ -9,9 +8,3 @@ dependencies {
     compile project(":modules:financeinit:financeinit-api")
     compile project(":modules:reimbursementprepare:reimbursementprepare-api")
 }
-
-=======
-dependencies { 
-compile project(":common:common-api")
-compile project(":common:common-utils")} 
->>>>>>> Stashed changes

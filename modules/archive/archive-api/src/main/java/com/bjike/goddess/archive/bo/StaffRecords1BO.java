@@ -1,7 +1,7 @@
 package com.bjike.goddess.archive.bo;
 
+import com.bjike.goddess.archive.enums.Status;
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.type.Status;
 
 /**
  * 员工档案业务传输对象

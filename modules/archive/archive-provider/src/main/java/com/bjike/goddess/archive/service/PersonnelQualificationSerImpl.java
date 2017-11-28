@@ -334,8 +334,7 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         searchCondition(dto);
         List<PersonnelQualification> personnelQualifications = super.findByCis(dto);
         List<PersonnelQualificationBO> bos = BeanTransform.copyProperties(personnelQualifications, PersonnelQualificationBO.class, false);
-        List<PersonnelQualificationExportExcel> personnelQualificationExportExcels = new ArrayList<>(0);
-        BeanTransform.copyProperties(bos, personnelQualificationExportExcels);
+        List<PersonnelQualificationExportExcel> personnelQualificationExportExcels = BeanTransform.copyProperties(bos, PersonnelQualificationExportExcel.class);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(personnelQualificationExportExcels, excel);
         return bytes;
