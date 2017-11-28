@@ -114,7 +114,7 @@ public class ResumeInfoAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findEntity/{id}")
-    public Result findEntity(@PathVariable String id) throws ActException {
+    public Result findEntity(@PathVariable String id, BindingResult bindingResult) throws ActException {
         try {
             ResumeInfoBO bo = resumeInfoAPI.findEntity(id);
             return ActResult.initialize(BeanTransform.copyProperties(bo, ResumeInfoVO.class));
@@ -129,7 +129,7 @@ public class ResumeInfoAction extends BaseFileAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, BindingResult bindingResult) throws ActException {
         try {
             resumeInfoAPI.delete(id);
             return ActResult.initialize("DELETE SUCCESS");

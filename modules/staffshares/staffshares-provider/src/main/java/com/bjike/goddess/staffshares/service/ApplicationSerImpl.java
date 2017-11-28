@@ -1,7 +1,7 @@
 package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
+import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -10,6 +10,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffshares.bo.ApplicationBO;
 import com.bjike.goddess.staffshares.dto.ApplicationDTO;
 import com.bjike.goddess.staffshares.entity.Application;
@@ -67,7 +68,7 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
     @Autowired
     private ModuleAPI moduleAPI;
     @Autowired
-    private SenioritySubsidiesAPI senioritySubsidiesAPI;
+    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -315,7 +316,7 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
 //            months = getMonthSpace(entryBasicInfoBOs.get(0).getEntryTime(), LocalDate.now().toString());
 //        }
         if (moduleAPI.isCheck("assistance")) {
-            months = senioritySubsidiesAPI.findAge(userBO.getUsername()).getCompanyLength();
+            months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
         }
         entity.setMonths(months);
         entity.setReason(to.getReason());

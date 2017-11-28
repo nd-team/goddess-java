@@ -42,7 +42,6 @@
 	<dubbo:reference  validation="true" id="dimissionApiImpl" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" />
 	<dubbo:reference  validation="true" id="internalContractApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
-	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 
 
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />

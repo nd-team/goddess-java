@@ -34,9 +34,6 @@ public class DataTypeUtils {
     public static Object convertDataType(String val, String type) {
         Object obj = null;
         switch (type) {
-            case "Long":
-                obj = val;
-                break;
             case "String":
                 obj = val;
                 break;

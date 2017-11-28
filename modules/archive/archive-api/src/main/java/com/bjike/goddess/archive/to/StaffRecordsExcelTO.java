@@ -79,12 +79,6 @@ public class StaffRecordsExcelTO extends BaseTO {
     private String telephone;
 
     /**
-     * qq
-     */
-    @ExcelHeader(name = "qq", notNull = true)
-    private String qq;
-
-    /**
      * 出生日期
      */
     @ExcelHeader(name = "出生日期", notNull = true)
@@ -206,14 +200,6 @@ public class StaffRecordsExcelTO extends BaseTO {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
     }
 
     public String getBirth() {

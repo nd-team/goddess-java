@@ -29,7 +29,6 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:businesscommission:businesscommission-api")
-    compile project(":modules:taskallotment:taskallotment-api")
     compile project(":common:common-utils")
 }
 

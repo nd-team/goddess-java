@@ -1,5 +1,6 @@
 package com.bjike.goddess.supplier.service;
 
+import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -122,7 +123,7 @@ public class CollectSendSerImpl extends ServiceImpl<CollectSend, CollectSendDTO>
         if (entity.getAll()) {
             List<String> emails = new ArrayList<>(0);
             emails.addAll(internalContactsAPI.findEmailNotNull().stream()
-                    .map(InternalContactsBO::getWorkEmail)
+                    .map(InternalContactsBO::getEmail)
                     .collect(Collectors.toList()));
             emails.addAll(commonalityAPI.findThaw().stream()
                     .map(CommonalityBO::getEmail)

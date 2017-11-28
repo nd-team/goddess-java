@@ -1,5 +1,7 @@
 package com.bjike.goddess.contacts.action.contacts;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -309,21 +311,6 @@ public class InternalContactsAct extends BaseFileAction {
     public Result getEmail(String[] names, HttpServletRequest request) throws ActException {
         try {
             return ActResult.initialize(internalContactsAPI.getEmails(names));
-        } catch (Exception e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 根据姓名获取邮箱
-     *
-     * @version v1
-     */
-    @GetMapping("v1/a")
-    public Result a(String[] names) throws ActException {
-        try {
-            List<String> list=internalContactsAPI.getEmails(names);
-            return ActResult.initialize(list);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }

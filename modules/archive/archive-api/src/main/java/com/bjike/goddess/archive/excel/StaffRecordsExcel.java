@@ -1,7 +1,7 @@
 package com.bjike.goddess.archive.excel;
 
-import com.bjike.goddess.archive.enums.Status;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
 /**
@@ -14,12 +14,6 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
  * @Copy: [ com.bjike ]
  */
 public class StaffRecordsExcel extends BaseTO{
-    /**
-     * 更新时间
-     */
-    @ExcelHeader(name = "更新时间")
-    private String modifyTime;
-
     /**
      * 姓名
      */
@@ -293,13 +287,5 @@ public class StaffRecordsExcel extends BaseTO{
 
     public void setQq(String qq) {
         this.qq = qq;
-    }
-
-    public String getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(String modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

@@ -209,7 +209,8 @@ public class ResumeInfoSerImpl extends ServiceImpl<ResumeInfo, ResumeInfoDTO> im
 
     @Override
     public void add(ResumeInfoTO to) throws SerException {
-        ResumeInfo entity = BeanTransform.copyProperties(to, ResumeInfo.class, true);
+        ResumeInfo entity = new ResumeInfo();
+        BeanUtils.copyProperties(to, entity);
         entity.setStatus(Status.THAW);
         super.save(entity);
     }

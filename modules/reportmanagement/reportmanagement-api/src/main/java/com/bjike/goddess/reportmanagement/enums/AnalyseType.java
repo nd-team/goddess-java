@@ -6,22 +6,25 @@ package com.bjike.goddess.reportmanagement.enums;
 public enum AnalyseType {
 
     /**
-     * 经营活动产生的现金流量分析
+     * 流动资产
      */
-    MANAGEMENT(0),
+    AFLOW(0),
     /**
-     * 投资活动产生的现金流量分析
+     * 长期资产
      */
-    INVESTMENT(1),
+    BLONG(1),
     /**
-     * 筹资活动产生的现金流量分析
+     * 固定资产
      */
-    FINANCING(2),
+    CFIX(2),
     /**
-     * 现金流量构成分析
+     * 无形资产及其他资产
      */
-    CASH(3);
-
+    DINVISIBLE(3),
+    /**
+     * 递延税款
+     */
+    ETAX(4);
     private int code;
 
     AnalyseType(int code) {

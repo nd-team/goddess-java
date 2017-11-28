@@ -80,6 +80,7 @@ public class StaffRecordsAct extends BaseFileAction {
     @GetMapping("v1/guidePermission")
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
+
             Boolean isHasPermission = staffRecordsAPI.guidePermission(guidePermissionTO);
             if (!isHasPermission) {
                 //int code, String msg
@@ -129,7 +130,7 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/findEntity/{id}")
-    public Result findEntity(@PathVariable String id) throws ActException {
+    public Result findEntity(@PathVariable String id, BindingResult bindingResult) throws ActException {
         try {
             StaffRecordsBO bo = staffRecordsAPI.findEntity(id);
             return ActResult.initialize(BeanTransform.copyProperties(bo, StaffRecordsVO.class));
@@ -144,7 +145,7 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String id, BindingResult bindingResult) throws ActException {
         try {
             staffRecordsAPI.delete(id);
             return ActResult.initialize("DELETE SUCCESS");

@@ -31,13 +31,6 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.ProfitFormulaAPI" ref="profitFormulaApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.ProjectAPI" ref="projectApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFlowProjectAPI" ref="cashFlowProjectApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashAnalyseAPI" ref="cashAnalyseApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFlowAPI" ref="cashFlowApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFlowDataAPI" ref="cashFlowDataApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFlowDatumAPI" ref="cashFlowDatumApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFormulaAPI" ref="cashFormulaApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashFormulaDataAPI" ref="cashFormulaDataApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashRateAPI" ref="cashRateApiImpl"/>
 
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" id="positionDetailUserApiImpl"/>

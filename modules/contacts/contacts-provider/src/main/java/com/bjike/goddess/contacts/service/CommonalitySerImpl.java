@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -338,7 +339,7 @@ public class CommonalitySerImpl extends ServiceImpl<Commonality, CommonalityDTO>
         if (StringUtils.isBlank(department))
             return null;
         CommonalityDTO dto = new CommonalityDTO();
-        dto.getConditions().add(Restrict.eq("department", department));
+        dto.getConditions().add(Restrict.eq("departmentId", department));
         Commonality entity = super.findOne(dto);
         return BeanTransform.copyProperties(entity, CommonalityBO.class);
     }
