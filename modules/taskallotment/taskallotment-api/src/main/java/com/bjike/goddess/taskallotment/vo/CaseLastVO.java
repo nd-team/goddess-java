@@ -12,7 +12,7 @@ import com.bjike.goddess.taskallotment.enums.TaskType;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class CaseLastVO{
+public class CaseLastVO {
     /**
      * 任务类型
      */
@@ -49,6 +49,25 @@ public class CaseLastVO{
      * 未上报未完成工时(小时)
      */
     private Double unReportUnFinish;
+    /**
+     * 行政任务总数
+     */
+    private Long admininstrationNum;
+
+    /**
+     * 工程任务总数
+     */
+    private Long engineeringNum;
+
+    /**
+     * 培训任务总数
+     */
+    private Long trainingNum;
+
+    /**
+     * 今日任务总数
+     */
+    private Long todayNum;
 
     public TaskType getTaskType() {
         return taskType;
@@ -120,5 +139,37 @@ public class CaseLastVO{
 
     public void setUnReportUnFinish(Double unReportUnFinish) {
         this.unReportUnFinish = unReportUnFinish;
+    }
+
+    public Long getAdmininstrationNum() {
+        return admininstrationNum;
+    }
+
+    public void setAdmininstrationNum(Long admininstrationNum) {
+        this.admininstrationNum = admininstrationNum;
+    }
+
+    public Long getEngineeringNum() {
+        return engineeringNum;
+    }
+
+    public void setEngineeringNum(Long engineeringNum) {
+        this.engineeringNum = engineeringNum;
+    }
+
+    public Long getTrainingNum() {
+        return trainingNum;
+    }
+
+    public void setTrainingNum(Long trainingNum) {
+        this.trainingNum = trainingNum;
+    }
+
+    public Long getTodayNum() {
+        return todayNum;
+    }
+
+    public void setTodayNum(Long todayNum) {
+        this.todayNum = todayNum;
     }
 }

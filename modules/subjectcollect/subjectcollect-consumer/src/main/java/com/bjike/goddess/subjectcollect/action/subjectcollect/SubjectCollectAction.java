@@ -8,14 +8,13 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.subjectcollect.bo.FirstSubjectBO;
-import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.dto.SubjectCollectsDTO;
 import com.bjike.goddess.subjectcollect.to.ExportSubjectCollectTO;
 import com.bjike.goddess.subjectcollect.vo.FirstSubjectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,15 +34,15 @@ public class SubjectCollectAction extends BaseFileAction{
 
     /**
      * 列表
-     * @param subjectCollectDTO 更新条件
+     * @param subjectCollectsDTO 更新条件
      * @return class FirstSubjectVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/pageList")
-    public Result pageList(SubjectCollectDTO subjectCollectDTO) throws ActException{
+    public Result pageList(SubjectCollectsDTO subjectCollectsDTO) throws ActException{
         try {
-            List<FirstSubjectBO> bos = subjectCollectAPI.collect(subjectCollectDTO);
+            List<FirstSubjectBO> bos = subjectCollectAPI.collect( subjectCollectsDTO );
             List<FirstSubjectVO> vos = BeanTransform.copyProperties(bos,FirstSubjectVO.class);
             return ActResult.initialize(vos);
         }catch (SerException e){

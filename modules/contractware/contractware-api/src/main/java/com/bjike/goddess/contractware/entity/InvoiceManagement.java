@@ -8,93 +8,94 @@ import java.time.LocalDate;
 
 
 /**
-* 发票管理
-* @Author:			[ jiangzaixuan ]
-* @Date:			[  2017-11-01 11:04 ]
-* @Description:	[ 发票管理 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 发票管理
+ *
+ * @Author: [ jiangzaixuan ]
+ * @Date: [ 2017-11-01 11:04 ]
+ * @Description: [ 发票管理 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 @Entity
 @Table(name = "contractware_invoicemanagement")
 public class InvoiceManagement extends BaseEntity {
     /**
      * 内部合同编号
      */
-    @Column(name = "internalContractNumber",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '内部合同编号'"  )
-    private String  internalContractNumber;
+    @Column(name = "internalContractNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '内部合同编号'")
+    private String internalContractNumber;
 
     /**
      * 合作单位
      */
-    @Column(name = "cooperator",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '合作单位'"  )
-    private String  cooperator;
+    @Column(name = "cooperator", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合作单位'")
+    private String cooperator;
 
     /**
      * 地区
      */
-    @Column(name = "area",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '地区'"  )
-    private String  area;
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    private String area;
 
     /**
      * 项目内部名称
      */
-    @Column(name = "innerProject",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '项目内部名称'"  )
-    private String  innerProject;
+    @Column(name = "innerProject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目内部名称'")
+    private String innerProject;
 
     /**
      * 开票公司
      */
-    @Column(name = "makeInvoiceCompany",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '开票公司'"  )
-    private String  makeInvoiceCompany;
+    @Column(name = "makeInvoiceCompany", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '开票公司'")
+    private String makeInvoiceCompany;
 
     /**
      * 发票类型
      */
-    @Column(name = "invoiceType",nullable = false,columnDefinition = "TINYINT(4)  COMMENT '发票类型'"  )
+    @Column(name = "invoiceType", nullable = false, columnDefinition = "TINYINT(4)  COMMENT '发票类型'")
     private InvoiceType invoiceType;
 
     /**
      * 发票编号
      */
-    @Column(name = "invoiceNumber",nullable = false,columnDefinition = "VARCHAR(255)   COMMENT '发票编号'"  )
-    private String  invoiceNumber;
+    @Column(name = "invoiceNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '发票编号'")
+    private String invoiceNumber;
 
     /**
      * 发票金额
      */
-    @Column(name = "invoiceMoney",nullable = false,columnDefinition = "DECIMAL(10,2)   COMMENT '发票金额'"  )
-    private Double  invoiceMoney;
+    @Column(name = "invoiceMoney", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '发票金额'")
+    private Double invoiceMoney;
 
     /**
      * 开票日期
      */
-    @Column(name = "makeInvoiceDate",nullable = false,columnDefinition = "DATE   COMMENT '开票日期'"  )
-    private LocalDate  makeInvoiceDate;
+    @Column(name = "makeInvoiceDate", nullable = false, columnDefinition = "DATE   COMMENT '开票日期'")
+    private LocalDate makeInvoiceDate;
 
     /**
      * 张数
      */
-    @Column(name = "",nullable = false,columnDefinition = "INTEGER   COMMENT '张数'"  )
-    private Integer  amount;
+    @Column(nullable = false, columnDefinition = "INTEGER   COMMENT '张数'")
+    private Integer amount;
 
     /**
      * 电子版
      */
-    @Column(name = "is_electronicEdition",columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '电子版'"  , insertable = false  )
-    private Boolean  electronicEdition;
+    @Column(name = "is_electronicEdition", columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '电子版'")
+    private Boolean electronicEdition;
 
     /**
      * 预计到账时间
      */
-    @Column(name = "expectedTimeIntoAccount",nullable = false,columnDefinition = "DATE   COMMENT '预计到账时间'"  )
+    @Column(name = "expectedTimeIntoAccount", nullable = false, columnDefinition = "DATE   COMMENT '预计到账时间'")
     private LocalDate expectedTimeIntoAccount;
 
     /**
      * 是否到账
      */
-    @Column(name = "is_ifReceiveMoney",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否到账'"  , insertable = false  )
-    private Boolean  ifReceiveMoney;
+    @Column(name = "is_ifReceiveMoney", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否到账'")
+    private Boolean ifReceiveMoney;
 
     public String getInternalContractNumber() {
         return internalContractNumber;

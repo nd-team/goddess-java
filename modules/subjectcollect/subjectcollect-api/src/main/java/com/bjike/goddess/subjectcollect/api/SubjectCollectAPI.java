@@ -2,7 +2,7 @@ package com.bjike.goddess.subjectcollect.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.subjectcollect.bo.FirstSubjectBO;
-import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.dto.SubjectCollectsDTO;
 import com.bjike.goddess.subjectcollect.to.ExportSubjectCollectTO;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface SubjectCollectAPI {
     /**
      * 列表
      */
-    List<FirstSubjectBO> collect(SubjectCollectDTO dto) throws SerException;
+    List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;
 
     /**
      * 导出

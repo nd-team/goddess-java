@@ -7,7 +7,7 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.customer.entity.CustomerDetail;
 import com.bjike.goddess.customer.entity.CustomerLevel;
 import com.bjike.goddess.customer.enums.*;
-import com.sun.javafx.geom.BaseBounds;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;

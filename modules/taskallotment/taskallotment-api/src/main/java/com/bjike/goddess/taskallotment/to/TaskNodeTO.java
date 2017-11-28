@@ -120,8 +120,8 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 所需时长
      */
-    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class, TaskNodeTO.CONFIRM.class}, message = "所需时长必须大于0")
-    @NotNull(groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class, TaskNodeTO.CONFIRM.class}, message = "所需时长不能为空")
+    @DecimalMin(value = "0.00",groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "所需时长必须大于0")
+    @NotNull(groups = {ADD.class, EDIT.class,TaskNodeTO.INITIATE.class,TaskNodeTO.ADDTASK.class,TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "所需时长不能为空")
     private Double needTime;
 
     /**

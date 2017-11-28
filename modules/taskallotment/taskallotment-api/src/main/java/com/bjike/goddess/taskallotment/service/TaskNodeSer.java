@@ -466,4 +466,10 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @throws SerException
      */
     void editStatus(String id, TaskStatus taskStatus) throws SerException;
+    /**
+     * 完成情况汇总(phone)
+     * @return
+     * @throws SerException
+     */
+    CaseLastBO phoneCount(TaskNodeDTO dto) throws SerException;
 }

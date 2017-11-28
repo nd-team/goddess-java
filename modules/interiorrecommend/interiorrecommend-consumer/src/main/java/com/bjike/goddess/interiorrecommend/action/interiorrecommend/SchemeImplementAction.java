@@ -10,19 +10,13 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.SchemeImplementAPI;
 import com.bjike.goddess.interiorrecommend.bo.SchemeImplementBO;
 import com.bjike.goddess.interiorrecommend.dto.SchemeImplementDTO;
-import com.bjike.goddess.interiorrecommend.service.SchemeImplementSer;
-import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
 import com.bjike.goddess.interiorrecommend.vo.SchemeImplementVO;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -206,15 +200,15 @@ public class SchemeImplementAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/find/entry")
-    public Result findEntry() throws ActException{
-        try {
-            List<EntryBasicInfoBO> boList = schemeImplementAPI.findEntry();
-            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
-            return ActResult.initialize(voList);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/find/entry")
+//    public Result findEntry() throws ActException{
+//        try {
+//            List<EntryBasicInfoBO> boList = schemeImplementAPI.findEntry();
+//            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+//            return ActResult.initialize(voList);
+//        }catch (SerException e){
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
  }

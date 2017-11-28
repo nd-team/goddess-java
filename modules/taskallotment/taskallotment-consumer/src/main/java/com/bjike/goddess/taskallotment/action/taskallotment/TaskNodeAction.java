@@ -201,7 +201,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PostMapping("v1/addTask")
-    public Result addTask(TaskNodeTO to, BindingResult result) throws ActException {
+    public Result addTask(@Validated(TaskNodeTO.ADDTASK.class) TaskNodeTO to, BindingResult result) throws ActException {
         try {
             taskNodeAPI.addTask(to);
             return new ActResult("添加小任务成功");
@@ -1125,6 +1125,78 @@ public class TaskNodeAction extends BaseFileAction {
         try {
             taskNodeAPI.editStatus(id, taskStatus);
             return new ActResult("编辑成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 我分发的任务(phone)
+     *
+     * @param dto dto
+     * @return class TaskNodeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/initiate")
+    public Result Initiate(TaskNodeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<TaskNodeBO> list = taskNodeAPI.myInitiate(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, TaskNodeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 我执行的任务(phone)
+     *
+     * @param dto dto
+     * @return class TaskNodeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/Execute")
+    public Result Execute(TaskNodeDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<TaskNodeBO> list = taskNodeAPI.myExecute(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, TaskNodeVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 上报任务(phone)
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/phone/report")
+    public Result reports(@Validated(TaskNodeTO.REPORT.class) TaskNodeTO to, BindingResult result) throws ActException {
+        try {
+            taskNodeAPI.report(to);
+            return new ActResult("上报任务成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 完成情况汇总(phone)
+     *
+     * @param dto dto
+     * @return class FinishCaseVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/finishCounts")
+    public Result finishCounts(@Validated(TaskNodeDTO.COUNT.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            CaseLastBO caseLastBO= taskNodeAPI.phoneCount(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(caseLastBO, FinishCaseVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
