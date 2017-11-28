@@ -698,6 +698,8 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                                             cellVal = DateUtil.dateToString(LocalDate.now());
                                         }else if(field.getType().getSimpleName().equals("LocalTime")){
                                             cellVal = DateUtil.dateToString(LocalTime.now());
+                                        } else if(field.getType().getSimpleName().equals("Boolean")){
+                                            cellVal = "true";
                                         }
                                     }
                                     Object v = DataTypeUtils.convertDataType(cellVal, field.getType().getSimpleName());
