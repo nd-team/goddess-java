@@ -10,6 +10,8 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.managementpromotion.api.LevelDesignAPI;
 import com.bjike.goddess.managementpromotion.api.LevelShowAPI;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
@@ -28,6 +30,7 @@ import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,8 +68,8 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     private LevelShowAPI levelShowAPI;
     @Autowired
     private MessageAPI messageAPI;
-    //    @Autowired
-//    private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -500,58 +504,58 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
         return set;
     }
 
-//    @Override
-//    @Transactional(rollbackFor = {SerException.class})
-//    public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
-//        checkAddIdentity();
-//        PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
-//        String token = RpcTransmit.getUserToken();
-//        if (moduleAPI.isCheck("staffentry")) {
-//            RpcTransmit.transmitUserToken(token);
-//            List<EntryBasicInfoBO> list = entryBasicInfoAPI.getByEmpNumber(to.getEmployeeId());
-//            if ((list != null) && (list.size() != 0)) {
-//                LocalDate time = DateUtil.parseDate(list.get(0).getEntryTime());
-//                int entryYear = time.getYear();
-//                int entryMonth = time.getMonthValue();
-//                int year = LocalDate.now().getYear();
-//                int month = LocalDate.now().getMonthValue();
-//                if (month - entryMonth >= 0) {
-//                    if (year - entryYear > 0) {
-//                        double d = (year - entryYear) * 12 + (month - entryMonth);
-//                        entity.setWorkAge(d);
-//                    } else {
-//                        entity.setWorkAge((double) (month - entryMonth));
-//                    }
-//                } else {
-//                    double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
-//                    entity.setWorkAge(d);
-//                }
-//            }
-//        }
-//        if (moduleAPI.isCheck("regularization")) {
-//            RpcTransmit.transmitUserToken(token);
-//            String time = regularizationAPI.time(to.getEmployeeId());
-//            if (null != time) {
-//                LocalDate date = DateUtil.parseDate(time);
-//                entity.setPositiveDate(date);
-//            }
-//        }
-//        super.save(entity);
-//        if (moduleAPI.isCheck("event")) {
-//            for (String s : events(entity.getName())) {
-//                EventTO eventTO = new EventTO();
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public PromotionApplyBO save(PromotionApplyTO to) throws SerException {
+        checkAddIdentity();
+        PromotionApply entity = BeanTransform.copyProperties(to, PromotionApply.class, true);
+        String token = RpcTransmit.getUserToken();
+        if (moduleAPI.isCheck("staffentry")) {
+            RpcTransmit.transmitUserToken(token);
+            String entryTime = entryRegisterAPI.getEntryTime(entity.getName());
+            if (null != entryTime) {
+                LocalDate time = DateUtil.parseDate(entryTime);
+                int entryYear = time.getYear();
+                int entryMonth = time.getMonthValue();
+                int year = LocalDate.now().getYear();
+                int month = LocalDate.now().getMonthValue();
+                if (month - entryMonth >= 0) {
+                    if (year - entryYear > 0) {
+                        double d = (year - entryYear) * 12 + (month - entryMonth);
+                        entity.setWorkAge(d);
+                    } else {
+                        entity.setWorkAge((double) (month - entryMonth));
+                    }
+                } else {
+                    double d = (year - entryYear - 1) * 12 + (12 - entryMonth + month);
+                    entity.setWorkAge(d);
+                }
+            }
+        }
+        if (moduleAPI.isCheck("regularization")) {
+            RpcTransmit.transmitUserToken(token);
+            String time = regularizationAPI.time(to.getEmployeeId());
+            if (null != time) {
+                LocalDate date = DateUtil.parseDate(time);
+                entity.setPositiveDate(date);
+            }
+        }
+        super.save(entity);
+        if (moduleAPI.isCheck("event")) {
+            for (String s : events(entity.getName())) {
+                EventTO eventTO = new EventTO();
 //                eventTO.setProject("管理等级晋升");
-//                eventTO.setContent("管理等级晋升申请审核");
-//                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
-//                eventTO.setName(s);
-//                eventTO.setPermissions(Permissions.ADUIT);
-//                eventTO.setEventId(entity.getId());
-//                RpcTransmit.transmitUserToken(token);
-//                eventAPI.save(eventTO);
-//            }
-//        }
-//        return BeanTransform.copyProperties(entity, PromotionApplyBO.class);
-//    }
+                eventTO.setContent("管理等级晋升申请审核");
+                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
+                eventTO.setName(s);
+                eventTO.setPermissions(Permissions.ADUIT);
+                eventTO.setEventId(entity.getId());
+                RpcTransmit.transmitUserToken(token);
+                eventAPI.save(eventTO);
+            }
+        }
+        return BeanTransform.copyProperties(entity, PromotionApplyBO.class);
+    }
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -744,7 +748,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
 
     @Override
     public Long count(PromotionApplyDTO dto) throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         RpcTransmit.transmitUserToken(token);
         List<PromotionApplyBO> list = find1(dto);
         long sum = 0l;
@@ -1036,7 +1040,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     @Override
     //每月21号定时发邮件给总经办  //todo:
     public void send() throws SerException {
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         List<PromotionApplyBO> list = rank();
         RpcTransmit.transmitUserToken(token);
         Set<String> set = mangerEmail();

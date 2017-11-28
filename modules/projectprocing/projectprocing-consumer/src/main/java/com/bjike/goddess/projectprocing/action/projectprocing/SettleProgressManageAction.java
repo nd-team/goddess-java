@@ -22,6 +22,7 @@ import com.bjike.goddess.projectprocing.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.projectprocing.vo.AllotmentNodeDataVO;
 import com.bjike.goddess.projectprocing.vo.ScreeningSettleProgressManageVO;
 import com.bjike.goddess.projectprocing.vo.SettleProgressManageVO;
+import com.bjike.goddess.projectprocing.vo.SettleProgressSummVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -414,7 +415,6 @@ public class SettleProgressManageAction extends BaseFileAction {
     }
     /**
      * 导出Excel
-
      * @version v1
      */
     @GetMapping("v1/exportExcel")
@@ -437,7 +437,7 @@ public class SettleProgressManageAction extends BaseFileAction {
      * @throws ActException
      */
     @PostMapping("v1/importExcel")
-    public Result exportExcel(@RequestParam String outUnit,HttpServletRequest request) throws ActException {
+    public Result importExcel(String outUnit,HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = getInputStreams(request);
             settleProgressManageAPI.excelImport(inputStreams, outUnit);
@@ -474,6 +474,20 @@ public class SettleProgressManageAction extends BaseFileAction {
         try {
             settleProgressManageAPI.scheduleDelay(scheduleDelayDataTO);
             return new ActResult("scheduleDelay success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 结算进度汇总模板
+     * @return class SettleProgressSummVO
+     * @version v1
+     */
+    @GetMapping("v1/settleProgressSumm")
+    public Result settleProgressSumm(String area , String outUnit, HttpServletRequest request) throws ActException {
+        try {
+            List<SettleProgressSummVO> settleProgressSummVOS = BeanTransform.copyProperties(settleProgressManageAPI.settleProgress(area,outUnit),SettleProgressSummVO.class);
+            return ActResult.initialize(settleProgressSummVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

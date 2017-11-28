@@ -328,4 +328,20 @@ public class ContractManagementAction extends BaseFileAction{
         }
     }
 
+    /**
+     * 获取内部合同编号
+     * @param request
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/findInternalContractNumber")
+    public Result findInternalContractNumber(HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = contractManagementAPI.findInternalContractNumber ();
+            return ActResult.initialize ( list );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
+        }
+    }
+
  }

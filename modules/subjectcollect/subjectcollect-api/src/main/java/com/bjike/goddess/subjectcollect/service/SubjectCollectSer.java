@@ -4,7 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.subjectcollect.bo.FirstSubjectBO;
 import com.bjike.goddess.subjectcollect.entity.SubjectCollect;
-import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.dto.SubjectCollectsDTO;
 import com.bjike.goddess.subjectcollect.to.ExportSubjectCollectTO;
 
 import java.util.List;
@@ -17,11 +17,11 @@ import java.util.List;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectDTO> {
+public interface SubjectCollectSer extends Ser<SubjectCollect, SubjectCollectsDTO> {
     /**
      * 列表
      */
-    List<FirstSubjectBO> collect(SubjectCollectDTO dto) throws SerException;
+    List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException;
 
     /**
      * 导出

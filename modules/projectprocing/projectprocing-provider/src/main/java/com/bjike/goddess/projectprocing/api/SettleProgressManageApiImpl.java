@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
 import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
+import com.bjike.goddess.projectprocing.bo.SettleProgressSummBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.service.SettleProgressManageSer;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
@@ -30,7 +31,7 @@ public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
 
     @Override
     public void excelImport(List<InputStream> is, String outUnit) throws SerException {
-        settleProgressManageSer.importExcel(is,outUnit);
+        settleProgressManageSer.importExcel(is, outUnit);
     }
 
     @Override
@@ -119,9 +120,13 @@ public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
     }
 
 
-
     @Override
     public void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
         settleProgressManageSer.scheduleDelay(scheduleDelayDataTO);
+    }
+
+    @Override
+    public List<SettleProgressSummBO> settleProgress(String area, String outUnit) throws SerException {
+        return settleProgressManageSer.settleProgress(area, outUnit);
     }
 }

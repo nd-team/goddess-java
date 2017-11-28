@@ -28,6 +28,7 @@ public class InternalContactsTemplateExport extends BaseEntity {
     /**
      * 更新时间
      */
+    @ExcelHeader(name = "更新时间")
     private LocalDate updateTime;
 
     /**

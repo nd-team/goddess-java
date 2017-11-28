@@ -36,8 +36,8 @@ public class AnnouncementUserSerImpl extends ServiceImpl<AnnouncementUser, Annou
 
     @Override
     @Transactional(rollbackFor = SerException.class)
-    public void read(String announcementId, String userId) throws SerException {
-        AnnouncementUser announcementUser = find(announcementId, userId);
+    public void read(String announcementId, String name) throws SerException {
+        AnnouncementUser announcementUser = find(announcementId, name);
         if (announcementUser != null) {
             AnnouncementUser entity = super.findById(announcementUser.getId());
             entity.setHaveRead(true);
@@ -47,23 +47,26 @@ public class AnnouncementUserSerImpl extends ServiceImpl<AnnouncementUser, Annou
     }
 
     @Override
-    public boolean check(String announcementId, String userId) throws SerException {
-        AnnouncementUser announcementUser = find1(announcementId, userId);
-        AnnouncementUser entity = super.findById(announcementUser.getId());
-        if ((entity.getHaveRead() != null) && (entity.getHaveRead())) {
-            return true;
+    public Boolean check(String announcementId, String name) throws SerException {
+        AnnouncementUser announcementUser = find1(announcementId, name);
+        if(announcementUser!=null){
+            AnnouncementUser entity = super.findById(announcementUser.getId());
+            if ((entity.getHaveRead() != null) && (entity.getHaveRead())) {
+                return true;
+            }
+            return false;
         }
-        return false;
+        return null;
     }
 
     @Override
-    public AnnouncementUser find(String announcementId, String userId) throws SerException {
+    public AnnouncementUser find(String announcementId, String name) throws SerException {
         String[] announcements = new String[]{announcementId};
-        String[] users = new String[]{userId};
+        String[] users = new String[]{name};
         List<AnnouncementUser> list = null;
         for (int i = 0; i < announcements.length; i++) {
             String sql = "select id from announcement_announcementuser where " +
-                    "announcement_id='" + announcements[i] + "' and user_id='" + users[i] + "'";
+                    "announcement_id='" + announcements[i] + "' and name='" + users[i] + "'";
             String[] fileds = new String[]{"id"};
             list = super.findBySql(sql, AnnouncementUser.class, fileds);
         }
@@ -73,13 +76,13 @@ public class AnnouncementUserSerImpl extends ServiceImpl<AnnouncementUser, Annou
         return list.get(0);
     }
 
-    private AnnouncementUser find1(String announcementId, String userId) throws SerException {
+    private AnnouncementUser find1(String announcementId, String name) throws SerException {
         String[] announcements = new String[]{announcementId};
-        String[] users = new String[]{userId};
+        String[] users = new String[]{name};
         List<AnnouncementUser> list = null;
         for (int i = 0; i < announcements.length; i++) {
             String sql = "select id from announcement_announcementuser where " +
-                    "announcement_id='" + announcements[i] + "' and user_id='" + users[i] + "'";
+                    "announcement_id='" + announcements[i] + "' and name='" + users[i] + "'";
             String[] fileds = new String[]{"id"};
             list = super.findBySql(sql, AnnouncementUser.class, fileds);
         }

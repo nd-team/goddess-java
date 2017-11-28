@@ -223,14 +223,10 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             boolean flag = false;
             boolean flag1 = false;
             LocalDateTime time = DateUtil.parseDateTime(DateUtil.dateToString(date) + " 08:40:00");    //迟到大于十分钟没得免扣
+            LocalDateTime time1 = DateUtil.parseDateTime(DateUtil.dateToString(date) + " 08:31:00");
             long mis = DateUtil.mis(punchSon.getPunchTime(), time);
-            if (mis >= 0) {
-                PunchGrandSon grandSon = new PunchGrandSon();
-                grandSon.setPunchSonId(punchSon.getId());
-                grandSon.setPunchStatus(PunchStatus.LATE);
-                punchGrandSonSer.save(grandSon);
-                flag = true;
-            } else if (mis >= 0&&num < 3) {    //当前月迟到次数小于三次(10分钟以内)，免扣
+            long mis1 = DateUtil.mis(punchSon.getPunchTime(), time1);
+            if (mis1 >= 0 && mis < 0 && num < 3) {    //当前月迟到次数小于三次(10分钟以内)，免扣
                 PunchGrandSon grandSon = new PunchGrandSon();
                 grandSon.setPunchSonId(punchSon.getId());
                 grandSon.setPunchStatus(PunchStatus.LATE);
@@ -239,6 +235,12 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
                 grandSon1.setPunchSonId(punchSon.getId());
                 grandSon1.setPunchStatus(PunchStatus.FEE);
                 punchGrandSonSer.save(grandSon1);
+                flag = true;
+            } else if ((mis1 >= 0 && mis < 0) || mis >= 0) {
+                PunchGrandSon grandSon = new PunchGrandSon();
+                grandSon.setPunchSonId(punchSon.getId());
+                grandSon.setPunchStatus(PunchStatus.LATE);
+                punchGrandSonSer.save(grandSon);
                 flag = true;
             }
             if (PunchStatus.OUTSIDE.equals(punchStatus)) {

@@ -1,6 +1,7 @@
 package com.bjike.goddess.taskallotment.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class ProjectNameDTO extends BaseDTO {
     public interface QUEARY {
     }
+
     public interface QUEARYTABLES {
     }
 
@@ -26,11 +28,38 @@ public class ProjectNameDTO extends BaseDTO {
     private String[] departs;
 
     /**
+     * 开始时间
+     */
+    @NotBlank(groups = {ProjectNameDTO.QUEARY.class, ProjectNameDTO.QUEARYTABLES.class}, message = "开始时间不能为空")
+    private String startTime;
+
+    /**
+     * 结束时间
+     */
+    @NotBlank(groups = {ProjectNameDTO.QUEARY.class, ProjectNameDTO.QUEARYTABLES.class}, message = "开始时间不能为空")
+    private String endTime;
+
+    /**
      * 项目数组
      */
     @NotNull(groups = ProjectNameDTO.QUEARYTABLES.class, message = "项目数组不能为空")
-    private String[] projects;
+    private String[] projectsID;
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public String[] getDeparts() {
         return departs;
@@ -40,11 +69,11 @@ public class ProjectNameDTO extends BaseDTO {
         this.departs = departs;
     }
 
-    public String[] getProjects() {
-        return projects;
+    public String[] getProjectsID() {
+        return projectsID;
     }
 
-    public void setProjects(String[] projects) {
-        this.projects = projects;
+    public void setProjectsID(String[] projectsID) {
+        this.projectsID = projectsID;
     }
 }

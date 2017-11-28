@@ -14,11 +14,8 @@ import com.bjike.goddess.interiorrecommend.entity.SchemeImplement;
 import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
-import com.bjike.goddess.interiorrecommend.vo.SchemeImplementVO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.dto.EntryBasicInfoDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 /**
 * 内部推荐方案实施业务实现
@@ -43,8 +39,8 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
     @Autowired
     private RecommendSchemeSer recommendSchemeSer;
 
-    @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+//    @Autowired
+//    private EntryBasicInfoAPI entryBasicInfoAPI;
     @Autowired
     private RegularizationAPI regularizationAPI;
 
@@ -197,28 +193,28 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
     @Override
     public void add(SchemeImplementTO to) throws SerException {
         SchemeImplement schemeImplement = BeanTransform.copyProperties(to,SchemeImplement.class,true);
-        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.getEntryBasicInfoByName(to.getBeRecommender());
-        if(boList !=null && boList.size() > 0){
-            schemeImplement.setIsEntry(true);
-            Boolean isRegular = regularizationAPI.checkTran(to.getBeRecommender());
-            schemeImplement.setIsRegular(isRegular);
-            if(isRegular == true){
-                schemeImplement.setIsAcquire(true);
-            }else{
-                schemeImplement.setIsAcquire(false);
-            }
-
-        }else{
-            schemeImplement.setIsEntry(false);
-            schemeImplement.setIsRegular(false);
-            schemeImplement.setIsAcquire(false);
-        }
-        RecommendSchemeDTO dto = new RecommendSchemeDTO();
-        dto.getConditions().add(Restrict.eq("recommendPosition",to.getRecommendPosition()));
-        dto.getConditions().add(Restrict.eq("type",to.getType()));
-        RecommendScheme recommendScheme = recommendSchemeSer.findOne(dto);
-        schemeImplement.setReferralBonus(recommendScheme.getAwardMoney());
-        super.save(schemeImplement);
+//        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.getEntryBasicInfoByName(to.getBeRecommender());
+//        if(boList !=null && boList.size() > 0){
+//            schemeImplement.setIsEntry(true);
+//            Boolean isRegular = regularizationAPI.checkTran(to.getBeRecommender());
+//            schemeImplement.setIsRegular(isRegular);
+//            if(isRegular == true){
+//                schemeImplement.setIsAcquire(true);
+//            }else{
+//                schemeImplement.setIsAcquire(false);
+//            }
+//
+//        }else{
+//            schemeImplement.setIsEntry(false);
+//            schemeImplement.setIsRegular(false);
+//            schemeImplement.setIsAcquire(false);
+//        }
+//        RecommendSchemeDTO dto = new RecommendSchemeDTO();
+//        dto.getConditions().add(Restrict.eq("recommendPosition",to.getRecommendPosition()));
+//        dto.getConditions().add(Restrict.eq("type",to.getType()));
+//        RecommendScheme recommendScheme = recommendSchemeSer.findOne(dto);
+//        schemeImplement.setReferralBonus(recommendScheme.getAwardMoney());
+//        super.save(schemeImplement);
     }
 
     @Override
@@ -291,8 +287,9 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
 
     @Override
     public List<EntryBasicInfoBO> findEntry() throws SerException {
-        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo();
-        return boList;
+//        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo();
+//        return boList;
+        return null;
     }
 
 

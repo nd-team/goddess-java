@@ -290,46 +290,66 @@ public class FirstPhoneRecordAct extends BaseFileAction{
                         "whetherFirstInviteSuccess","whetherFirstInterview","whetherFaceTest",
                         "retrial");
                 //简历筛选是否通过
-                if(str.getWhetherPass().equals("是")){
-                    recordTO.setWhetherPass(true);
-                }else {
-                    recordTO.setWhetherPass(false);
+                if(null != str.getWhetherPass()){
+                    if(str.getWhetherPass().equals("是")){
+                        recordTO.setWhetherPass(true);
+                    }else {
+                        recordTO.setWhetherPass(false);
+                    }
+
                 }
                 //通话是否成功
-                if(str.getWhetherPhoneSuccess().equals("是")){
-                    recordTO.setWhetherPhoneSuccess(true);
-                }else {
-                    recordTO.setWhetherPhoneSuccess(false);
+                if(null != str.getWhetherPhoneSuccess()){
+                    if(str.getWhetherPhoneSuccess().equals("是")){
+                        recordTO.setWhetherPhoneSuccess(true);
+                    }else {
+                        recordTO.setWhetherPhoneSuccess(false);
+                    }
+
                 }
                 //是否有相关工作经验
-                if(str.getWhetherWorkExperience().equals("是")){
-                    recordTO.setWhetherWorkExperience(true);
-                }else {
-                    recordTO.setWhetherWorkExperience(false);
+                if (null != str.getWhetherWorkExperience()) {
+                    if(str.getWhetherWorkExperience().equals("是")){
+                        recordTO.setWhetherWorkExperience(true);
+                    }else {
+                        recordTO.setWhetherWorkExperience(false);
+                    }
                 }
                 //是否成功邀约初试
-                if(str.getWhetherFirstInviteSuccess().equals("是")){
-                    recordTO.setWhetherFirstInviteSuccess(true);
-                }else {
-                    recordTO.setWhetherFirstInviteSuccess(false);
+                if(null != str.getWhetherFirstInviteSuccess()){
+                    if(str.getWhetherFirstInviteSuccess().equals("是")){
+                        recordTO.setWhetherFirstInviteSuccess(true);
+                    }else {
+                        recordTO.setWhetherFirstInviteSuccess(false);
+                    }
+
                 }
                 //是否初试
-                if(str.getWhetherFirstInterview().equals("是")){
-                    recordTO.setWhetherFirstInterview(true);
-                }else {
-                    recordTO.setWhetherFirstInterview(false);
+                if(null != str.getWhetherFirstInterview()){
+                    if(str.getWhetherFirstInterview().equals("是")){
+                        recordTO.setWhetherFirstInterview(true);
+                    }else {
+                        recordTO.setWhetherFirstInterview(false);
+                    }
+
                 }
                 //初试是否为面试
-                if(str.getWhetherFaceTest().equals("是")){
-                    recordTO.setWhetherFaceTest(true);
-                }else {
-                    recordTO.setWhetherFaceTest(false);
+                if(null != str.getWhetherFaceTest()){
+                    if(str.getWhetherFaceTest().equals("是")){
+                        recordTO.setWhetherFaceTest(true);
+                    }else {
+                        recordTO.setWhetherFaceTest(false);
+                    }
+
                 }
                 //是否需要复试
-                if(str.getRetrial().equals("是")){
-                    recordTO.setRetrial(true);
-                }else {
-                    recordTO.setRetrial(false);
+                if(null != str.getRetrial()){
+                    if(str.getRetrial().equals("是")){
+                        recordTO.setRetrial(true);
+                    }else {
+                        recordTO.setRetrial(false);
+                    }
+
                 }
                 tocs.add(recordTO);
             }

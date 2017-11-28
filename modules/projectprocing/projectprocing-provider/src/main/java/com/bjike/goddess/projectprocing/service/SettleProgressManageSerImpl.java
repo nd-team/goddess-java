@@ -13,10 +13,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
-import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
-import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
-import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
-import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
+import com.bjike.goddess.projectprocing.bo.*;
 import com.bjike.goddess.projectprocing.dto.NodeHeadersCustomDTO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.entity.HeadersCustom;
@@ -41,7 +38,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Column;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -136,6 +132,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     public SettleProgressManageBO addManage(SettleProgressManageTO settleProgressManageTO) throws SerException {
         SettleProgressManage settleProgressManage = BeanTransform.copyProperties(settleProgressManageTO, SettleProgressManage.class, true);
         settleProgressManage.setCreateTime(LocalDateTime.now());
+        settleProgressManage.setUpdateDate(LocalDateTime.now());
         super.save(settleProgressManage);
         List<HeadersCustomTO> headersCustomTOList = settleProgressManageTO.getHeadersCustomTOS();
         List<NodeHeadersCustomTO> nodeHeadersCustomTOList = settleProgressManageTO.getNodeHeadersCustomTOS();
@@ -177,6 +174,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         LocalDateTime dateTime = settleProgressManage.getCreateTime();
         settleProgressManage = BeanTransform.copyProperties(settleProgressManageTO, SettleProgressManage.class, true);
         settleProgressManage.setCreateTime(dateTime);
+        settleProgressManage.setUpdateDate(LocalDateTime.now());
         settleProgressManage.setModifyTime(LocalDateTime.now());
         super.update(settleProgressManage);
         List<HeadersCustomTO> headersCustomTOList = settleProgressManageTO.getHeadersCustomTOS();
@@ -436,8 +434,9 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         List<Field> fieldList = ClazzUtils.getFields(SettleProgressManage.class);
         for (Field field : fieldList) {
             if (!field.getName().equalsIgnoreCase("id")) {
-                Column c = field.getAnnotation(Column.class);
-                fields.add(c.name());
+                //TODO 这里改了
+//                Column c = field.getAnnotation(Column.class);
+                fields.add(field.getName());
             }
         }
         String sql = " SELECT b.header,a.content,b.outUnit,a.is_requiredFill,b.types,a.remark,a.prossManageId  FROM " +
@@ -453,10 +452,10 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         for (HeadersCustom custom : customs) {//自定义
             titles.add(custom.getHeader());
         }
-        int nodeStartSize = titles.size(); //
+        int nodeStartSize = titles.size(); //节点开始列
 
         NodeHeadersCustomDTO ncDto = new NodeHeadersCustomDTO();
-        ncDto.getConditions().add(Restrict.eq("outUnit", "外包单位1"));
+        ncDto.getConditions().add(Restrict.eq("outUnit", outUnit));
         List<NodeHeadersCustom> nodeHeadersCustoms = nodeHeadersCustomSer.findByCis(ncDto);
         for (NodeHeadersCustom custom : nodeHeadersCustoms) {//自定义
             titles.add(custom.getNodeOneName());
@@ -559,7 +558,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     }
 
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void importExcel(List<InputStream> inputStreams, String outUnit) throws SerException {
         if (null != inputStreams && inputStreams.size() > 0) {
@@ -632,7 +631,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
             }
             int nodeSize = titles.size();
             NodeHeadersCustomDTO ncDto = new NodeHeadersCustomDTO();
-            ncDto.getConditions().add(Restrict.eq("outUnit", "外包单位1"));
+            ncDto.getConditions().add(Restrict.eq("outUnit", outUnit));
             List<NodeHeadersCustom> ncs = nodeHeadersCustomSer.findByCis(ncDto);
             for (NodeHeadersCustom c : ncs) {
                 titles.add(c.getNodeOneName());
@@ -664,9 +663,13 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
             List<String> str_titles = new ArrayList<>();
             List<Field> fields = ClazzUtils.getFields(SettleProgressManage.class);
             for (Field field : fields) {
-                Column c = field.getAnnotation(Column.class);
-                if (StringUtils.isNotBlank(c.name()) && !c.name().equals("id"))
-                    str_titles.add(c.name());
+                //TODO 这里改了你看一下(这个导入为什么excel里面有两条数据可是只导入成功一条)
+//                Column c = field.getAnnotation(Column.class);
+//                if (StringUtils.isNotBlank(c.name()) && !c.name().equals("id"))
+//                    str_titles.add(c.name());
+                if (!field.getName().equals("id") && !field.getName().equals("createTime") && !field.getName().equals("modifyTime")) {
+                    str_titles.add(field.getName());
+                }
             }
 
             for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
@@ -681,22 +684,26 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                     } catch (Exception e) {
                         throw new SerException(e.getMessage());
                     }
+                    if (null != cellVal) {
+                        for (Field field : fieldList) {
+                            if (field.getName().equalsIgnoreCase(s)) {
+                                field.setAccessible(true);
+                                try {
+                                    if (field.getType().isEnum()) {
+                                        ExcelUtil.enumToField(field, spm, cellVal);
+                                    } else {
+                                        Object v = DataTypeUtils.convertDataType(cellVal, field.getType().getSimpleName());
+                                        field.set(spm, v);
+                                    }
 
-                    for (Field field : fieldList) {
-                        if (field.getName().equalsIgnoreCase(s)) {
-                            field.setAccessible(true);
-                            try {
-                                if (field.getType().isEnum()) {
-                                    ExcelUtil.enumToField(field, spm, cellVal);
-                                } else {
-                                    Object v = DataTypeUtils.convertDataType(cellVal, field.getType().getSimpleName());
-                                    field.set(spm, v);
+                                } catch (Exception e) {
+                                    throw new SerException(e.getMessage());
                                 }
-
-                            } catch (Exception e) {
-                                throw new SerException(e.getMessage());
                             }
                         }
+                        //TODO 这里改了(帮我判断一下一些非空字段我不知道怎么判断对照一下entity,还有一些转换的比如转时间,转枚举,如果数据为空就会报空指针)
+                    } else if ("updateDate".equals(s)) {
+                        spm.setUpdateDate(LocalDateTime.now());
                     }
                 }
                 spm.setCreateTime(LocalDateTime.now());
@@ -722,43 +729,41 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 }
 
 //                //自定义节点表头添加数据(跟导出处理相反操作)
+                //TODO 这里的添加大概是这样写的还没测(然后再优化一下代码)
                 if (ncs.size() > 0) {
                     XSSFRow xr = sheet.getRow(rowIndex);
-                    for(NodeHeadersCustom ncm:ncs){
+                    for (NodeHeadersCustom ncm : ncs) {
                         NodeHeadersCustom nhc = new NodeHeadersCustom();
-                        nhc.setNodeFourInterDate(1);
-                        nhc.setNodeTwoInterDate(1);
-                        nhc.setNodeThreeInterDate(1);
+//                        nhc.setNodeFourInterDate(1);
+//                        nhc.setNodeTwoInterDate(1);
+//                        nhc.setNodeThreeInterDate(1);
                         nhc.setFatherId(ncm.getId());
-                        nhc.setProssManageId(ncm.getProssManageId());
-                        nhc.setOutUnit(outUnit);
+                        nhc.setProssManageId(spm.getId());
+//                        nhc.setOutUnit(outUnit);
                         for (int z = nodeSize; nodeSize < titles.size(); z++) {
-                            String head =titles.get(z);
-                            String val =null;
+                            String head = titles.get(z);
+                            String val = null;
                             try {
-                                val = ExcelUtil.getCellValue(xr.getCell(z),null);//值
-                            }catch (Exception e){
-                                throw  new SerException(e.getMessage());
+                                val = ExcelUtil.getCellValue(xr.getCell(z), null);//值
+                            } catch (Exception e) {
+                                throw new SerException(e.getMessage());
                             }
 
-                            if(ncm.getNodeOneName().equals(head)){
-                                nhc.setNodeOneName(head);
-                                nhc.setNodeOneNameContent(val==null?0:Integer.parseInt(val));
-                            }else if(ncm.getNodeOneHeader().equals(head)){
-                                nhc.setNodeOneHeader(head);
+                            if (ncm.getNodeOneName().equals(head)) {
+//                                nhc.setNodeOneName(head);
+                                nhc.setNodeOneNameContent(val == null ? 1 : Integer.parseInt(val));
+                            } else if (ncm.getNodeOneHeader().equals(head)) {
+//                                nhc.setNodeOneHeader(head);
                                 nhc.setNodeOneContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
-                            }
-                            else if(ncm.getNodeTwoHeader().equals(head)){
-                                nhc.setNodeTwoHeader(head);
-                                nhc.setNodeTwoContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
-                            }
-                            else if(ncm.getNodeThreeHeader().equals(head)){
-                                nhc.setNodeThreeHeader(head);
-                                nhc.setNodeThreeContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
-                            }
-                            else if(ncm.getNodeFourHeader().equals(head)){
-                                nhc.setNodeFourHeader(head);
-                                nhc.setNodeFourContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
+                            } else if (ncm.getNodeTwoHeader().equals(head)) {
+//                                nhc.setNodeTwoHeader(head);
+                                nhc.setNodeTwoContent(val == null ? nhc.getNodeOneContent().plusDays(ncm.getNodeTwoInterDate()) : DateUtil.parseDate(val));
+                            } else if (ncm.getNodeThreeHeader().equals(head)) {
+//                                nhc.setNodeThreeHeader(head);
+                                nhc.setNodeThreeContent(val == null ? nhc.getNodeTwoContent().plusDays(ncm.getNodeThreeInterDate()) : DateUtil.parseDate(val));
+                            } else if (ncm.getNodeFourHeader().equals(head)) {
+//                                nhc.setNodeFourHeader(head);
+                                nhc.setNodeFourContent(val == null ? nhc.getNodeThreeContent().plusDays(ncm.getNodeFourInterDate()) : DateUtil.parseDate(val));
                             }
                             break;
                         }
@@ -772,6 +777,17 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         } else {
             throw new SerException("没解析到任何上传文件");
         }
+    }
+
+    @Override
+    public List<String> findOutUnitByArea(String area) throws SerException {
+        SettleProgressManageDTO settleProgressManageDTO = new SettleProgressManageDTO();
+        settleProgressManageDTO.getConditions().add(Restrict.eq("area", area));
+        List<SettleProgressManage> settleProgressManageList = super.findByCis(settleProgressManageDTO);
+        if (CollectionUtils.isEmpty(settleProgressManageList)) {
+            return Collections.emptyList();
+        }
+        return settleProgressManageList.stream().map(SettleProgressManage::getOutUnit).distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -835,5 +851,277 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         nodeHeadersCustomSer.update(nodeHeadersCustom);
     }
 
+    @Override
+    public List<SettleProgressSummBO> settleProgress(String area, String outUnit) throws SerException {
+        List<String> areas = findArea();
+        if (StringUtils.isNotBlank(area)) {
+            areas = new ArrayList<>();
+            areas.add(area);
+        }
+        List<SettleProgressSummBO> settleProgressSummBOList = new ArrayList<>();
+        for (String a : areas) {
+            List<String> outUnits = findOutUnitByArea(a);
+            if (StringUtils.isNotBlank(outUnit)) {
+                outUnits = new ArrayList<>();
+                outUnits.add(outUnit);
+            }
+            SettleProgressSummBO settleProgressSummBO = new SettleProgressSummBO();
+            String sql1 = "SELECT ifnull(sum(dispatAmount),0) FROM projectprocing_settleprogressmanage WHERE area = '" + a + "'";
+            List<Object> objectList = super.findBySql(sql1);
+            settleProgressSummBO.setArea(a);
+            settleProgressSummBO.setAreaStatistics(Double.parseDouble(String.valueOf(objectList.get(0))));//所属地区的总额
+
+            List<OutUnitSummBO> outUnitSummBOList = new ArrayList<>();
+            for (String out : outUnits) {
+                String sql = "SELECT outUnit as outUnit,ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "'";
+                List<Object> objectList1 = super.findBySql(sql);
+                if (objectList1 != null && objectList1.size() > 0) {
+                    Object[] objects = (Object[]) objectList1.get(0);
+                    OutUnitSummBO outUnitSummBO = new OutUnitSummBO();
+                    outUnitSummBO.setOutUnit(String.valueOf(objects[0]));
+                    outUnitSummBO.setOutUnitTotal(Double.parseDouble(String.valueOf(objects[1])));
+
+
+                    List<DispatchingConditionBO> dispatchingConditionBOList = new ArrayList<>();
+                    //派工情况(已派工)
+                    DispatchingConditionBO dispatchingConditionBO1 = new DispatchingConditionBO();
+                    dispatchingConditionBO1.setCompletedAmount("已派工金额");
+                    String sql2 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 0";
+                    List<Object> objectList2 = super.findBySql(sql2);
+                    dispatchingConditionBO1.setCompletedAmountTot(Double.parseDouble(String.valueOf(objectList2.get(0))));
+
+                    List<CompletionStateBO> completionStateBOS = new ArrayList<>();
+                    //完工情况(已派工-已完工)
+                    CompletionStateBO completionStateBO = new CompletionStateBO();
+                    completionStateBO.setCompletedAmount("已派工-已完工");
+                    String sql4 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 0 and actualCompletedState = 0";
+                    List<Object> objectList4 = super.findBySql(sql4);
+                    completionStateBO.setCompletedAmountTot(Double.parseDouble(String.valueOf(objectList4.get(0))));
+                    //验收情况
+                    List<AcceptSituationBO> acceptSituationBOS = new ArrayList<>();
+                    //属于kip状态的数据
+                    List<String> kip_list = new ArrayList<>();
+                    kip_list.add("已完工-不需要验收金额");
+                    kip_list.add("已完工-到货金额");
+                    kip_list.add("已完工-待初验金额");
+                    kip_list.add("已完工-待终验金额");
+                    int i = 0;
+                    for (String kip : kip_list) {
+                        //如果状态为完成就跳过
+                        if (i == 2) {
+                            i++;
+                        }
+                        AcceptSituationBO acceptSituationBO = new AcceptSituationBO();
+                        String sql7 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 0 and actualCompletedState = 0 and kpi = " + i + "";
+                        List<Object> objectList7 = super.findBySql(sql7);
+                        acceptSituationBO.setCompletedAmount(kip);
+                        acceptSituationBO.setCompletedAmountCount(Double.parseDouble(String.valueOf(objectList7.get(0))));
+                        acceptSituationBOS.add(acceptSituationBO);
+                        i++;
+                    }
+
+                    List<String> settlementPlan_list = new ArrayList<>();
+                    settlementPlan_list.add("已完工-可制作结算资料");
+                    settlementPlan_list.add("已完工-正在走结算金额（到账金额）");
+                    List<Integer> int_list = new ArrayList<>();
+                    int_list.add(1);
+                    int_list.add(3);
+                    int j = 0;
+                    for (String settlementPlan : settlementPlan_list) {
+                        AcceptSituationBO acceptSituationBO = new AcceptSituationBO();
+                        String sql8 = "SELECT ifnull(sum(estimSettleAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 0 and actualCompletedState = 0 and settlementPlan = " + int_list.get(j) + "";
+                        List<Object> objectList8 = super.findBySql(sql8);
+                        acceptSituationBO.setCompletedAmount(settlementPlan);
+                        acceptSituationBO.setCompletedAmountCount(Double.parseDouble(String.valueOf(objectList8.get(0))));
+                        acceptSituationBOS.add(acceptSituationBO);
+                        j++;
+                    }
+
+
+                    completionStateBO.setAcceptSituationBOS(acceptSituationBOS);
+
+                    completionStateBOS.add(completionStateBO);
+
+                    //完工情况(已派工-未完工)
+                    CompletionStateBO completionStateBO1 = new CompletionStateBO();
+                    completionStateBO1.setCompletedAmount("已派工-未完工");
+                    String sql5 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 0 and actualCompletedState = 1";
+                    List<Object> objectList5 = super.findBySql(sql5);
+                    completionStateBO1.setCompletedAmountTot(Double.parseDouble(String.valueOf(objectList5.get(0))));
+                    completionStateBOS.add(completionStateBO1);
+
+                    dispatchingConditionBO1.setCompletionStateBOS(completionStateBOS);
+                    dispatchingConditionBOList.add(dispatchingConditionBO1);
+
+
+                    //派工情况(未派工)
+                    DispatchingConditionBO dispatchingConditionBO2 = new DispatchingConditionBO();
+                    dispatchingConditionBO2.setCompletedAmount("未派工金额");
+                    String sql3 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 1";
+                    List<Object> objectList3 = super.findBySql(sql3);
+                    dispatchingConditionBO2.setCompletedAmountTot(Double.parseDouble(String.valueOf(objectList3.get(0))));
+
+                    List<CompletionStateBO> completionStateBOS1 = new ArrayList<>();
+                    //完工情况(未派工-已完工)
+                    CompletionStateBO completionStateBO3 = new CompletionStateBO();
+                    completionStateBO3.setCompletedAmount("未派工-已完工");
+                    String sql6 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 1 and actualCompletedState = 0";
+                    List<Object> objectList6 = super.findBySql(sql6);
+                    completionStateBO3.setCompletedAmountTot(Double.parseDouble(String.valueOf(objectList6.get(0))));
+                    completionStateBOS1.add(completionStateBO3);
+
+                    //完工情况(未派工-未完工)
+                    CompletionStateBO completionStateBO4 = new CompletionStateBO();
+                    completionStateBO4.setCompletedAmount("未派工-未完工");
+                    String sql7 = "SELECT ifnull(sum(dispatAmount),0) as dispatAmount FROM projectprocing_settleprogressmanage WHERE area = '" + a + "' and outUnit = '" + out + "' and dispatCondition = 1 and actualCompletedState = 1";
+                    List<Object> objectList7 = super.findBySql(sql7);
+                    completionStateBO4.setCompletedAmountTot(Double.parseDouble(String.valueOf(objectList7.get(0))));
+                    completionStateBOS1.add(completionStateBO4);
+
+                    dispatchingConditionBO2.setCompletionStateBOS(completionStateBOS1);
+                    dispatchingConditionBOList.add(dispatchingConditionBO2);
+
+                    outUnitSummBO.setDispatchingConditionBOS(dispatchingConditionBOList);
+
+                    //获取节点和对应数据
+                    NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
+                    nodeHeadersCustomDTO.getConditions().add(Restrict.eq("outUnit", out));
+//                    nodeHeadersCustomDTO.getConditions().add(Restrict.eq("area", a));
+                    List<NodeHeadersCustom> nodeHeadersCustomList = nodeHeadersCustomSer.findByCis(nodeHeadersCustomDTO);
+                    List<NodeDataBO> nodeDataBOList = new ArrayList<>();
+                    if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
+                        for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustomList) {
+                            NodeDataBO nodeDataBO1 = new NodeDataBO();
+                            nodeDataBO1.setNode(nodeHeadersCustom.getNodeOneHeader());
+                            nodeDataBOList.add(nodeDataBO1);
+                            NodeDataBO nodeDataBO2 = new NodeDataBO();
+                            nodeDataBO2.setNode(nodeHeadersCustom.getNodeTwoHeader());
+                            nodeDataBOList.add(nodeDataBO2);
+                            NodeDataBO nodeDataBO3 = new NodeDataBO();
+                            nodeDataBO3.setNode(nodeHeadersCustom.getNodeThreeHeader());
+                            nodeDataBOList.add(nodeDataBO3);
+                            NodeDataBO nodeDataBO4 = new NodeDataBO();
+                            nodeDataBO4.setNode(nodeHeadersCustom.getNodeFourHeader());
+                            nodeDataBOList.add(nodeDataBO4);
+                        }
+                    }
+
+                    String[] filds = new String[]{"estimSettleAmount", "nodeOneNameContent", "fatherId", "nodeOneHeader", "nodeTwoHeader", "nodeThreeHeader", "nodeFourHeader"};
+                    String sql9 = "SELECT " +
+                            "  sum(a.estimSettleAmount) as estimSettleAmount," +
+                            "  b.nodeOneNameContent as nodeOneNameContent," +
+                            "  b.fatherId as fatherId," +
+                            "  c.nodeOneHeader as nodeOneHeader," +
+                            "  c.nodeTwoHeader as nodeTwoHeader," +
+                            "  c.nodeThreeHeader as nodeThreeHeader," +
+                            "  c.nodeFourHeader as nodeFourHeader" +
+                            "  FROM projectprocing_settleprogressmanage a" +
+                            "  LEFT JOIN projectprocing_nodeheaderscustom b ON a.id = b.prossManageId" +
+                            "  LEFT JOIN" +
+                            "  (SELECT" +
+                            "     id," +
+                            "     nodeOneHeader," +
+                            "     nodeTwoHeader," +
+                            "     nodeThreeHeader," +
+                            "     nodeFourHeader" +
+                            "   FROM projectprocing_nodeheaderscustom)" +
+                            "  c ON c.id = b.fatherId" +
+                            "  WHERE a.outUnit = '" + out + "' and area = '" + a + "'" +
+                            "  GROUP BY" +
+                            "  b.nodeOneNameContent," +
+                            "  b.fatherId," +
+                            "  c.nodeOneHeader," +
+                            "  c.nodeTwoHeader," +
+                            "  c.nodeThreeHeader," +
+                            "  c.nodeFourHeader";
+                    List<EncapsulationNodeBO> encapsulationNodeBOList = nodeHeadersCustomSer.findBySql(sql9, EncapsulationNodeBO.class, filds);
+                    if (encapsulationNodeBOList != null && encapsulationNodeBOList.size() > 0) {
+                        for (EncapsulationNodeBO encapsulationNodeBO : encapsulationNodeBOList) {
+                            for (NodeDataBO nodeDataBO : nodeDataBOList) {
+                                switch (encapsulationNodeBO.getNodeOneNameContent()) {
+                                    case 1:
+                                        if (encapsulationNodeBO.getNodeOneHeader().equals(nodeDataBO.getNode())) {
+                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                        }
+                                        break;
+                                    case 2:
+                                        if (encapsulationNodeBO.getNodeTwoHeader().equals(nodeDataBO.getNode())) {
+                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                        }
+                                        break;
+                                    case 3:
+                                        if (encapsulationNodeBO.getNodeThreeHeader().equals(nodeDataBO.getNode())) {
+                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                        }
+                                        break;
+                                    case 4:
+                                        if (encapsulationNodeBO.getNodeFourHeader().equals(nodeDataBO.getNode())) {
+                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    outUnitSummBO.setNodeDataBOS(nodeDataBOList);
+                    outUnitSummBOList.add(outUnitSummBO);
+                }
+            }
+            settleProgressSummBO.setOutUnitSummBOS(outUnitSummBOList);
+            settleProgressSummBOList.add(settleProgressSummBO);
+        }
+        return settleProgressSummBOList;
+    }
+
+    @Override
+    public List<String> findInternalProName() throws SerException {
+        List<SettleProgressManage> settleProgressManageList = super.findAll();
+        if (CollectionUtils.isEmpty(settleProgressManageList)) {
+            Collections.emptyList();
+        }
+        return settleProgressManageList.stream().map(SettleProgressManage::getInternalProName).distinct().collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
+        List<String> internalProNames = new ArrayList<>();
+        List<SettleProgressManageSummBO> settleProgressManageSummBOList = new ArrayList<>();
+        for (String name : internalProNames){
+            StringBuilder sql = new StringBuilder();
+            String[] filds = new String[]{"contractTotal","amountTotal","completedCount", "completedAmount",
+                    "uncompletedCount","uncompletedAmount","settleCompletedStart", "settleCompletedStartAmount",
+                    "settleCompletedNoStart","settleCompletedNoStartAmount", "settleUnCompletedStart","settleUnCompletedStartAmount",
+                    "unfinishedSettled","unfinishedSettledAmount", "returnedItemsNum","returnedItemsAmount","noReturnSingular"};
+            sql.append("SELECT * FROM ( ");
+            sql.append(" (SELECT count(*) as contractTotal  FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') a, ");
+            sql.append(" (SELECT sum(IFNULL(dispatAmount, IFNULL(estimSettleAmount, 0))) as amountTotal FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') b, ");
+            sql.append(" (SELECT count(*) as completedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0) c, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as completedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0) d, ");
+            sql.append(" (SELECT count(*) as uncompletedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1) e, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as uncompletedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1) f, ");
+            sql.append(" (SELECT count(*) as settleCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 1) g, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 1) h, ");
+            sql.append(" (SELECT count(*) as settleCompletedNoStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 0) i, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedNoStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 0) j, ");
+            sql.append(" (SELECT count(*) as settleUnCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 1) k, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleUnCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 1) l, ");
+            sql.append(" (SELECT count(*) as unfinishedSettled FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 0) m, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as unfinishedSettledAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 0) n, ");
+            sql.append(" (SELECT count(*) as returnedItemsNum FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND accountAmount is NOT NULL) o, ");
+            sql.append(" (SELECT IFNULL(sum(accountAmount),0) as returnedItemsAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') p, ");
+            sql.append(" (SELECT count(*) as noReturnSingular FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND is_allSettleComple = 0) q ");
+            sql.append("} ");
+
+            List<SettleProgressManageSummBO> settleProgressManageSummBOS = super.findBySql(sql.toString(),SettleProgressManageSummBO.class,filds);
+            SettleProgressManageSummBO settleProgressManageSummBO = settleProgressManageSummBOS.get(0);
+            settleProgressManageSummBO.setProject(name);
+            settleProgressManageSummBO.setNoReturnSingularAmount(settleProgressManageSummBO.getAmountTotal()-settleProgressManageSummBO.getReturnedItemsAmount());
+            settleProgressManageSummBOList.add(settleProgressManageSummBO);
+        }
+        return settleProgressManageSummBOList;
+    }
 
 }

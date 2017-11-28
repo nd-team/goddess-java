@@ -2,7 +2,7 @@ package com.bjike.goddess.subjectcollect.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.subjectcollect.bo.FirstSubjectBO;
-import com.bjike.goddess.subjectcollect.dto.SubjectCollectDTO;
+import com.bjike.goddess.subjectcollect.dto.SubjectCollectsDTO;
 import com.bjike.goddess.subjectcollect.service.SubjectCollectSer;
 import com.bjike.goddess.subjectcollect.to.ExportSubjectCollectTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class SubjectCollectApiImpl implements SubjectCollectAPI {
     @Autowired
     private SubjectCollectSer subjectCollectSer;
     @Override
-    public List<FirstSubjectBO> collect(SubjectCollectDTO dto) throws SerException {
+    public List<FirstSubjectBO> collect(SubjectCollectsDTO dto) throws SerException {
         return subjectCollectSer.collect(dto);
     }
 

@@ -2,7 +2,10 @@ package com.bjike.goddess.announcement.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 /**
@@ -21,7 +24,7 @@ public class AnnouncementUser extends BaseEntity {
     /**
      * 是否已经读取
      */
-    @Column(name = "is_haveRead",columnDefinition = "TINYINT(1) COMMENT '是否已经读取'")
+    @Column(name = "is_haveRead", columnDefinition = "TINYINT(1) COMMENT '是否已经读取'")
     private Boolean haveRead;
 
     /**
@@ -35,14 +38,14 @@ public class AnnouncementUser extends BaseEntity {
     /**
      * 公告id
      */
-    @JoinColumn(name = "announcement_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '公告id' ")
+    @Column(name = "announcement_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '公告id' ")
     private String announcementId;
 
     /**
      * 用户信息
      */
-    @Column(name = "user_id", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '用户id'")
-    private String userId;
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(36) COMMENT '用户id'")
+    private String name;
 
     public String getAnnouncementId() {
         return announcementId;
@@ -52,12 +55,12 @@ public class AnnouncementUser extends BaseEntity {
         this.announcementId = announcementId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Announcement getAnnouncement() {

@@ -37,8 +37,9 @@ compile(project(":common:common-consumer")){
     exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 }
 
-compile project(":modules:lendreimbursement:lendreimbursement-api")
+    compile project(":modules:lendreimbursement:lendreimbursement-api")
 
-compile("org.springframework.boot:spring-boot-starter-web")
+    compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
+    compile("org.springframework.boot:spring-boot-starter-web")
 }
 

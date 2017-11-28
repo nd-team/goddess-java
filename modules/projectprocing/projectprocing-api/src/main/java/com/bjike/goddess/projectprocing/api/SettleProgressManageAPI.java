@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
 import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
+import com.bjike.goddess.projectprocing.bo.SettleProgressSummBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
@@ -173,5 +174,11 @@ public interface SettleProgressManageAPI {
      */
     default void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
         return;
+    }
+    /**
+     * 结算进度汇总
+     */
+    default List<SettleProgressSummBO> settleProgress(String area , String outUnit) throws SerException {
+        return null;
     }
 }

@@ -1,15 +1,12 @@
 package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.task.bo.CustomizeBO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
-import com.bjike.goddess.task.entity.Customize;
 import com.bjike.goddess.task.service.CustomizeSer;
 import com.bjike.goddess.task.to.CustomizeTO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.api.TableAPI;
-import com.bjike.goddess.taskallotment.bo.ProjectBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,20 +54,27 @@ public class CustomizeApiImpl implements CustomizeAPI {
     }
 
     @Override
-    public void enable(String id, boolean enable) throws SerException {
-        customizeSer.enable(id, enable);
+    public Double get(String[] tableIds) throws SerException {
+        return customizeSer.get(tableIds);
     }
 
     @Override
-    public CustomizeBO findByID(String id) throws SerException {
-        Customize customize = customizeSer.findById(id);
-        CustomizeBO bo= BeanTransform.copyProperties(customize, CustomizeBO.class);
-        bo.setCollectName(customizeSer.findById(bo.getId()).getName());
-        ProjectBO project = projectAPI.findByID(bo.getProjectId());
-        if (null != project) {
-            bo.setProject(project.getProject());
-        }
-        bo.setTables(tableAPI.names(bo.getTablesId().split(",")));
-        return bo;
+    public void notice(CustomizeTO to) throws SerException {
+        customizeSer.notice(to);
+    }
+
+    @Override
+    public CustomizeBO one(String id) throws SerException {
+        return customizeSer.one(id);
+    }
+
+    @Override
+    public void quartz() throws SerException {
+        customizeSer.quartz();
+    }
+
+    @Override
+    public String detail(String id) throws SerException {
+        return customizeSer.detail(id);
     }
 }

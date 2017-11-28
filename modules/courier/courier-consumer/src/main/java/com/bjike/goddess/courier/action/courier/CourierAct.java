@@ -26,6 +26,8 @@ import com.bjike.goddess.courier.to.GuidePermissionTO;
 import com.bjike.goddess.courier.vo.CourierCountVO;
 import com.bjike.goddess.courier.vo.CourierVO;
 import com.bjike.goddess.courier.vo.SonPermissionObject;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
@@ -76,6 +78,8 @@ public class CourierAct extends BaseFileAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private MessageAPI messageAPI;
 
     /**
      * 模块设置导航权限
@@ -648,6 +652,21 @@ public class CourierAct extends BaseFileAction {
                 list.add(i);
             }
             return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("v1/count1")
+    public Result count1() throws ActException {
+        try {
+            MessageTO messageTO=new MessageTO();
+            messageTO.setContent("asf");
+            messageTO.setTitle("a");
+            messageTO.setReceivers(new String[]{"chenjunhao_aj@163.com"});
+            messageAPI.send(messageTO);
+            return null;
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }

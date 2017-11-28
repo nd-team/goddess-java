@@ -2,18 +2,15 @@ package com.bjike.goddess.dispatchcar.api;
 
 
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
-import com.bjike.goddess.carinfo.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
-import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
-import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.user.bo.UserBO;
 
@@ -44,7 +41,6 @@ public interface DispatchCarInfoAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
-
 
 
     /**
@@ -110,15 +106,13 @@ public interface DispatchCarInfoAPI {
 
     /**
      * 资金核对意见
-     *
      */
-    void fundSugg(DispatchCarInfoTO dispatchCarInfoTO,PredictPayTO to) throws SerException;
+    void fundSugg(DispatchCarInfoTO dispatchCarInfoTO, PredictPayTO to) throws SerException;
 
     /**
      * 预算核对意见
-     *
      */
-    void budgetSugg(DispatchCarInfoTO dispatchCarInfoTO,CheckChangeCarTO to) throws SerException;
+    void budgetSugg(DispatchCarInfoTO dispatchCarInfoTO, CheckChangeCarTO to) throws SerException;
 
 
     /**
@@ -135,7 +129,7 @@ public interface DispatchCarInfoAPI {
     /**
      * 财务模块负责人核对意见
      */
-    void financialSugg(DispatchCarInfoTO dispatchCarInfoTO,CheckChangeCarTO to) throws SerException;
+    void financialSugg(DispatchCarInfoTO dispatchCarInfoTO, CheckChangeCarTO to) throws SerException;
 
     /**
      * 项目负责人或任务下发人审核
@@ -243,7 +237,6 @@ public interface DispatchCarInfoAPI {
 
     /**
      * 付款计划
-     *
      */
     void predict(PredictPayTO to) throws SerException;
 
@@ -263,7 +256,7 @@ public interface DispatchCarInfoAPI {
      *
      * @return
      */
-    List<DriverDispatchFeeBO> findDispatchFree(String area,String projectGroup,Integer year,Integer month) throws SerException;
+    List<DriverDispatchFeeBO> findDispatchFree(String area, String projectGroup, Integer year, Integer month) throws SerException;
 
 
     /**
@@ -271,13 +264,14 @@ public interface DispatchCarInfoAPI {
      *
      * @return
      */
-    List<DriverDispatchsBO> findDispatchs(String area,String projectGroup,Integer year,Integer month) throws SerException ;
+    List<DriverDispatchsBO> findDispatchs(String area, String projectGroup, Integer year, Integer month) throws SerException;
 
 
     Double findOilAmount(String oilCardCode, Integer year, Integer month) throws SerException;
 
     /**
      * 查询所有司机信息
+     *
      * @return
      * @throws SerException
      */
@@ -285,6 +279,7 @@ public interface DispatchCarInfoAPI {
 
     /**
      * 查询所有用车陪同人员,任务下达人,用车人
+     *
      * @throws SerException
      */
     List<UserBO> findAllEntry() throws SerException;
@@ -292,6 +287,7 @@ public interface DispatchCarInfoAPI {
 
     /**
      * 查询所有油卡信息
+     *
      * @throws SerException
      */
     List<OilCardBasicCarBO> findAllOil() throws SerException;
@@ -316,7 +312,7 @@ public interface DispatchCarInfoAPI {
     /**
      * 收到票据
      */
-    void receivePaper(String id,Boolean isCorrect) throws SerException;
+    void receivePaper(String id, Boolean isCorrect) throws SerException;
 
     /**
      * 寄件
@@ -355,20 +351,18 @@ public interface DispatchCarInfoAPI {
     /**
      * 支付司机金额汇总
      */
-    List<PayDriverMoneyCollectBO> driverCollect(String startTime,String endTime) throws SerException;
+    List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime) throws SerException;
 
 
     /**
      * 汇总
      */
-    List<PayedCollectBO> collectPayed(String startTime,String endTime) throws SerException;
+    List<PayedCollectBO> collectPayed(String startTime, String endTime) throws SerException;
 
     /**
      * 出车情况汇总导出功能
      */
-    byte[] exportExcel(CollectIntervalType collectIntervalType,CollectType collectType,ExportCollectPayedTO to) throws SerException;
-
-
+    byte[] exportExcel(CollectIntervalType collectIntervalType, CollectType collectType, ExportCollectPayedTO to) throws SerException;
 
 
     /**
@@ -396,7 +390,7 @@ public interface DispatchCarInfoAPI {
     /**
      * 根据油卡编号，地区，部门，汇总时间查询出车记录
      */
-    List<DispatchCarInfoBO> findInformation(String area,String department,String day) throws SerException;
+    List<DispatchCarInfoBO> findInformation(String area, String department, String day) throws SerException;
 
     /**
      * 根据油卡编号，地区，部门，汇总时间区间查询出车记录
@@ -405,11 +399,12 @@ public interface DispatchCarInfoAPI {
 
     /**
      * 部门，汇总时间区间查询出车记录
+     *
      * @param department
      * @param day
      * @throws SerException
      */
-    List<DispatchCarInfoBO> findInformation( String department, LocalDate[] day) throws SerException;
+    List<DispatchCarInfoBO> findInformation(String department, LocalDate[] day) throws SerException;
 
 
     /**
@@ -438,4 +433,13 @@ public interface DispatchCarInfoAPI {
      */
     List<AreaBO> findArea() throws SerException;
 
+    /**
+     * chenjunhao
+     * 根据项目名称获取出车数量
+     *
+     * @param project
+     * @return
+     * @throws SerException
+     */
+    Long dispatchCount(String project) throws SerException;
 }

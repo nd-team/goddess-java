@@ -320,7 +320,9 @@ public class ProjectContractSerImpl extends ServiceImpl<ProjectContract, Project
             throw new SerException("id不能为空");
         }
         ProjectContract projectContract = super.findById(projectContractTO.getId());
-        BeanTransform.copyProperties(projectContractTO, projectContract, true);
+        LocalDateTime createTime = projectContract.getCreateTime ();
+        projectContract =  BeanTransform.copyProperties(projectContractTO, ProjectContract.class, true);
+        projectContract.setCreateTime ( createTime );
         projectContract.setModifyTime(LocalDateTime.now());
         super.update(projectContract);
         return BeanTransform.copyProperties(projectContract, ProjectContractBO.class);
