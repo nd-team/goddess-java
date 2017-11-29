@@ -18,10 +18,12 @@ public class OverWorkTO extends BaseTO {
 
     public  interface TESTAddAndEdit{}
 
+    public interface PHONEADD{}
+
     /**
      * 地区
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "地区不能为空")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "地区不能为空")
     private String area;
 
     /**
@@ -33,13 +35,13 @@ public class OverWorkTO extends BaseTO {
     /**
      * 加班人员
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "加班人员不能为空")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "加班人员不能为空")
     private String overWorker;
 
     /**
      * 加班类型(普通加班/节假日加班/其他....)
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "加班类型不能为空")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "加班类型不能为空")
     private String overType;
 
     /**
@@ -57,31 +59,31 @@ public class OverWorkTO extends BaseTO {
     /**
      * 开始时间
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "开始时间不能为空，格式为2017-10-01 18:00:00")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "开始时间不能为空，格式为2017-10-01 18:00:00")
     private String overStartTime;
 
     /**
      * 结束时间
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "结束时间不能为空，格式为2017-10-01 18:00:00")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "结束时间不能为空，格式为2017-10-01 18:00:00")
     private String overEndTime;
 
     /**
      * 加班时长
      */
-    @NotNull(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "加班时长不能为空")
+    @NotNull(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "加班时长不能为空")
     private Double overLong;
 
     /**
      * 是否午休
      */
-    @NotNull(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "是否午休不能为空")
+    @NotNull(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "是否午休不能为空")
     private Boolean noonBreakOr;
 
     /**
      * 工作内容
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "工作内容不能为空")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "工作内容不能为空")
     private String workContent;
 
     /**
@@ -93,13 +95,13 @@ public class OverWorkTO extends BaseTO {
     /**
      * 可休天数
      */
-    @NotNull(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "可休天数不能为空")
+    @NotNull(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "可休天数不能为空")
     private Double relaxDay;
 
     /**
      * 负责人(审批人)
      */
-    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class} , message = "负责人(审批人)不能为空")
+    @NotBlank(groups = {OverWorkTO.TESTAddAndEdit.class,OverWorkTO.PHONEADD.class} , message = "负责人(审批人)不能为空")
     private String charger;
 
 

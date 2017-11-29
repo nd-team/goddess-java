@@ -9,11 +9,13 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.SmsCodeParameterTO;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
 import com.bjike.goddess.user.utils.SmsCodeUtil;
 import com.bjike.goddess.user.vo.SmsReceiveCodeVO;
+import com.mysql.cj.mysqlx.protobuf.MysqlxDatatypes;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,5 +153,60 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             throw new SerException("验证码不正确");
         }
         return verifyFlag;
+    }
+
+    @Override
+    public void checkPassword(String password, String repassword) throws SerException {
+        if (password.equals(repassword)) {
+            if (!Validator.isPassword(password)) {
+                throw new SerException("密码过于简单！");
+            }
+        } else {
+            throw new SerException("输入密码不一致！");
+        }
+    }
+
+    @Override
+    public void registerUser(AppUserRegisterTO appUserRegisterTO) throws SerException {
+        try {
+            UserBO bo = userSer.findByUsername(appUserRegisterTO.getUsername());
+            if (null == bo) {
+                String employeeNumber = userSer.maxUserEmpNumber();
+                String sysNO = userSer.findByMaxField("systemNO", User.class);
+                User user = new User();
+                if(!appUserRegisterTO.getRegisterType().equals("个人")){
+                    user.setEnterpriseName(appUserRegisterTO.getEnterpriseName());
+                }
+                user.setUsername(appUserRegisterTO.getUsername());
+                user.setPhone(appUserRegisterTO.getPhone());
+                user.setPassword(PasswordHash.createHash(appUserRegisterTO.getPassword()));
+                user.setUserType(UserType.ADMIN);
+                user.setCreateTime(LocalDateTime.now());
+                user.setStatus(Status.THAW);
+                user.setEmployeeNumber(SeqUtil.generateEmp(employeeNumber));
+                user.setSystemNO(SeqUtil.generateSys(sysNO));
+                userSer.save(user);
+            } else {
+                throw new SerException(appUserRegisterTO.getUsername() + "已被注册!");
+            }
+
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String autogenerationNum(String startNumber) throws SerException {
+        String sql = "SELECT substring(employeeNumber,1,5) as employeeNumber FROM user";
+        List<Object> objectList = userSer.findBySql(sql);
+        if(objectList!=null && objectList.size()>0){
+            for (Object obj : objectList){
+                Object[] o = (Object[]) obj;
+                if(String.valueOf(o[0]).equalsIgnoreCase(startNumber)){
+                    throw new SerException("该编号已存在");
+                }
+            }
+        }
+        return SeqUtil.appAutogeneration(startNumber);
     }
 }

@@ -28,11 +28,15 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +51,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -78,6 +79,8 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private EventAPI eventAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -238,6 +241,17 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         overWork.setAuditStatus(AuditStatus.NONE);
         overWork.setEntryer(userBO.getUsername());
         super.save(overWork);
+        EventTO eventTO = new EventTO();
+        eventTO.setName(overWork.getCharger());
+        eventTO.setProjectChineseName("考勤");
+        eventTO.setProjectEnglishName("attendance");
+        eventTO.setFunctionChineseName("加班");
+        eventTO.setFunctionEnglishName("overwork");
+        eventTO.setContent("加班审核");
+        eventTO.setPermissions(Permissions.ADUIT);
+        eventTO.setEventId(overWork.getId());
+        eventTO.setStatus("待审核");
+        eventAPI.save(eventTO);
 
         //如果是项目经理下发的任务，则不用审核，将审核状态改为已通过
         RpcTransmit.transmitUserToken(userToken);
@@ -398,6 +412,10 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             overWork.setModifyTime(LocalDateTime.now());
             super.update(overWork);
         }
+        String eventId = eventAPI.findId(auditTO.getId(), userBO.getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
         return BeanTransform.copyProperties(overWork, OverWorkBO.class);
     }
 
@@ -520,7 +538,19 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
 
         dto.getSorts().add("createTime=desc");
         List<OverWork> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, OverWorkBO.class);
+        List<OverWorkBO> bo = BeanTransform.copyProperties(list, OverWorkBO.class);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.eq("username", phoneMyOverWorkDTO.getOverWorker()));
+        List<UserBO> listUserBO = userAPI.findByCis(userDTO);
+        if (listUserBO != null && null != bo && listUserBO.size() > 0) {
+            for (OverWorkBO u : bo) {
+                u.setPic(listUserBO != null && listUserBO.size() > 0 ? listUserBO.get(0).getHeadSculpture() : "");
+
+            }
+        }
+
+        return bo;
     }
 
     @Override
@@ -549,7 +579,24 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         //是项目经理就查所有，不传条件
         dto.getSorts().add("createTime=desc");
         List<OverWork> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, OverWorkBO.class);
+        List<OverWorkBO> bo = BeanTransform.copyProperties(list, OverWorkBO.class);
+        if (bo != null && bo.size() > 0) {
+            List<String> overerList = bo.stream().filter(str -> StringUtils.isNotBlank(str.getOverWorker())).map(OverWorkBO::getOverWorker).collect(Collectors.toList());
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.in("username", overerList));
+            List<UserBO> listUserBO = userAPI.findByCis(userDTO);
+            if (listUserBO != null && listUserBO.size() > 0) {
+                for (OverWorkBO u : bo) {
+                    if (StringUtils.isNotBlank(u.getOverWorker())) {
+                        Optional<UserBO> temp = listUserBO.stream().findFirst().filter(str -> u.getOverWorker().equals(str.getUsername()));
+                        if (temp.isPresent()) {
+                            u.setPic(temp.get().getHeadSculpture());
+                        }
+                    }
+                }
+            }
+        }
+        return bo;
     }
 
     @Override
@@ -581,8 +628,26 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         dto.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
         dto.getSorts().add("createTime=desc");
         List<OverWork> list = super.findByCis(dto, true);
-        return BeanTransform.copyProperties(list, OverWorkBO.class);
+        List<OverWorkBO> bo = BeanTransform.copyProperties(list, OverWorkBO.class);
+        if (bo != null && bo.size() > 0) {
+            List<String> overerList = bo.stream().filter(str -> StringUtils.isNotBlank(str.getOverWorker())).map(OverWorkBO::getOverWorker).collect(Collectors.toList());
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.in("username", overerList));
+            List<UserBO> listUserBO = userAPI.findByCis(userDTO);
+            if (listUserBO != null && listUserBO.size() > 0) {
+                for (OverWorkBO u : bo) {
+                    if (StringUtils.isNotBlank(u.getOverWorker())) {
+                        Optional<UserBO> temp = listUserBO.stream().findFirst().filter(str -> u.getOverWorker().equals(str.getUsername()));
+                        if (temp.isPresent()) {
+                            u.setPic(temp.get().getHeadSculpture());
+                        }
+                    }
+                }
+            }
+        }
+        return bo;
     }
+
 
     @Override
     public OverWorkBO getPhoneOneById(String id) throws SerException {
@@ -612,6 +677,10 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             bo.setHasAuditIs(true);
         } else {
             bo.setHasAuditIs(false);
+        }
+        if (StringUtils.isNotBlank(bo.getOverWorker())) {
+            UserBO overer = userAPI.findByUsername(bo.getOverWorker());
+            bo.setPic(overer != null ? overer.getHeadSculpture() : "");
         }
 
         return bo;

@@ -228,16 +228,16 @@ public interface SettleProgressManageSer extends Ser<SettleProgressManage, Settl
         return null;
     }
 
-//    /**
-//     * 结算进度管理数量柱状图
-//     */
-//    default List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
-//        return null;
-//    }
-//    /**
-//     * 结算进度管理金额柱状图
-//     */
-//    default List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
-//        return null;
-//    }
+    /**
+     * 结算进度管理数量柱状图
+     */
+    default OptionBO settleProgressNum() throws SerException {
+        return null;
+    }
+    /**
+     * 结算进度管理金额柱状图
+     */
+    default OptionAmountBO settleProgressAmount() throws SerException {
+        return null;
+    }
 }

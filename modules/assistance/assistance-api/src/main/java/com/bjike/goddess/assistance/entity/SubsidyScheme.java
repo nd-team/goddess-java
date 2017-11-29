@@ -108,8 +108,8 @@ public class SubsidyScheme extends BaseEntity {
     /**
      * 补助单价/天
      */
-    @Column(name = "schemePrice", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '补助单价/天'")
-    private String schemePrice;
+    @Column(name = "schemePrice", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '补助单价/天'")
+    private Double schemePrice;
 
     /**
      * 补助发放形式
@@ -253,11 +253,11 @@ public class SubsidyScheme extends BaseEntity {
         this.schemeContent = schemeContent;
     }
 
-    public String getSchemePrice() {
+    public Double getSchemePrice() {
         return schemePrice;
     }
 
-    public void setSchemePrice(String schemePrice) {
+    public void setSchemePrice(Double schemePrice) {
         this.schemePrice = schemePrice;
     }
 

@@ -70,4 +70,13 @@ public class SeqUtil {
     public static void main(String[] args) throws SerException {
         System.out.println(generateSys("SYS.NO000002"));
     }
+
+    /**
+     * 自动生成编号
+     *
+     * @param startNumber 初始字母(五位)
+     */
+    public static synchronized String appAutogeneration(String startNumber) throws SerException {
+        return startNumber + "000001"; //自动生成编号
+    }
 }

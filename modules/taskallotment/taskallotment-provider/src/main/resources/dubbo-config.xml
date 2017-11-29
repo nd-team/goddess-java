@@ -40,5 +40,6 @@
 	<dubbo:reference interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
 	<dubbo:reference interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
 	<dubbo:reference interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
+	<dubbo:reference interface="com.bjike.goddess.event.api.EventAPI" id="eventApiImpl"/>
 
 </beans>

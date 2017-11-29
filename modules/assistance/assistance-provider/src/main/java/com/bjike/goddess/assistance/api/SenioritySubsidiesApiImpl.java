@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.SenioritySubsidiesBO;
 import com.bjike.goddess.assistance.dto.SenioritySubsidiesDTO;
 import com.bjike.goddess.assistance.entity.SenioritySubsidies;
 import com.bjike.goddess.assistance.service.SenioritySubsidiesSer;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,17 @@ import java.util.List;
 public class SenioritySubsidiesApiImpl implements SenioritySubsidiesAPI {
     @Autowired
     private SenioritySubsidiesSer senioritySubsidiesSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return senioritySubsidiesSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return senioritySubsidiesSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countSenSub(SenioritySubsidiesDTO senioritySubsidiesDTO) throws SerException {
         return senioritySubsidiesSer.countSenSub(senioritySubsidiesDTO);

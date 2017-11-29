@@ -3,8 +3,10 @@ package com.bjike.goddess.assistance.api;
 import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
 import com.bjike.goddess.assistance.dto.TemperatureSubsidiesDTO;
 import com.bjike.goddess.assistance.service.TemperatureSubsidiesSer;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.TemperatureSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.TemperatureSubsidiesTO;
+import com.bjike.goddess.assistance.vo.SonPermissionObject;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,16 @@ import java.util.List;
 public class TemperatureSubsidiesApiImpl implements TemperatureSubsidiesAPI {
     @Autowired
     private TemperatureSubsidiesSer temperatureSubsidiesSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return temperatureSubsidiesSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return temperatureSubsidiesSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countTempera(TemperatureSubsidiesDTO temperatureSubsidiesDTO) throws SerException {

@@ -15,6 +15,7 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.CollectSchemeBO;
+import com.bjike.goddess.task.bo.SchemeSonBO;
 import com.bjike.goddess.task.dto.*;
 import com.bjike.goddess.task.entity.CollectScheme;
 import com.bjike.goddess.task.entity.Customize;
@@ -27,6 +28,8 @@ import com.bjike.goddess.task.to.CollectSchemeTO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -50,6 +53,7 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "taskSerCache")
 @Service
 public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSchemeDTO> implements CollectSchemeSer {
+    public static final Logger LOGGER = LoggerFactory.getLogger(CollectSchemeSerImpl.class);
     @Autowired
     private SchemeSonSer schemeSonSer;
     @Autowired
@@ -64,8 +68,8 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
     private UserAPI userAPI;
     @Autowired
     private ProjectAPI projectAPI;
-    @Autowired
-    private DepartmentDetailAPI departmentDetailAPI;
+//    @Autowired
+//    private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CommonalityAPI commonalityAPI;
 
@@ -147,6 +151,7 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
         entity.setLastTime(lastTime);
         entity.setCollectObject(StringUtils.join(to.getCollectObjects(), ","));
         entity.setTables(StringUtils.join(to.getTabless(), ","));
+        entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
         SchemeSonDTO sonDTO = new SchemeSonDTO();
         sonDTO.getConditions().add(Restrict.eq("schemeId", entity.getId()));
@@ -190,6 +195,11 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
         tables = list.toArray(tables);
         bo.setTables(sb.toString());
         bo.setTable(tables);
+        SchemeSonDTO sonDTO=new SchemeSonDTO();
+        sonDTO.getConditions().add(Restrict.eq("schemeId",bo.getId()));
+        sonDTO.getSorts().add("titleIndex=asc");
+        List<SchemeSon> sons=schemeSonSer.findByCis(sonDTO);
+        bo.setSons(BeanTransform.copyProperties(sons, SchemeSonBO.class));
         return bo;
     }
 
@@ -248,13 +258,13 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
                     Customize customize = customizeSer.findById(cutomizeId);
                     String projectId = customize.getProjectId();
                     String depart = projectAPI.findByID(projectId).getDepart();
-                    List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
-                    if (null != departmentDetailBOS) {
-                        CommonalityBO commonalityBO = commonalityAPI.findByDepartment(departmentDetailBOS.get(0).getId());
-                        if (null != commonalityBO) {
-                            departEmails.add(commonalityBO.getEmail());
-                        }
+//                    List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
+//                    if (null != departmentDetailBOS) {
+                    CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
+                    if (null != commonalityBO) {
+                        departEmails.add(commonalityBO.getEmail());
                     }
+//                    }
                 }
             }
             TimeType remindType = collectScheme.getRemindType();
@@ -303,7 +313,13 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
                     } else {
                         messageTO.setReceivers(recivers);
                     }
-                    messageAPI.send(messageTO);
+                    try {
+                        messageAPI.send(messageTO);
+                    } catch (Exception e) {
+                        if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                            LOGGER.error("message模块服务不可用!");
+                        }
+                    }
                 }
                 collectScheme.setLastTime(LocalDateTime.now());
                 collectScheme.setModifyTime(LocalDateTime.now());
@@ -458,12 +474,12 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
                 Customize customize = customizeSer.findById(cutomizeId);
                 String projectId = customize.getProjectId();
                 String depart = projectAPI.findByID(projectId).getDepart();
-                List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
-                if (null != departmentDetailBOS) {
-                    CommonalityBO commonalityBO = commonalityAPI.findByDepartment(departmentDetailBOS.get(0).getId());
-                    if (null != commonalityBO) {
-                        departEmails.add(commonalityBO.getEmail());
-                    }
+//                List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
+//                if (null != departmentDetailBOS) {
+                CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
+                if (null != commonalityBO) {
+                    departEmails.add(commonalityBO.getEmail());
+//                    }
                 }
             }
         }
@@ -491,7 +507,13 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
             } else {
                 messageTO.setReceivers(recivers);
             }
-            messageAPI.send(messageTO);
+            try {
+                messageAPI.send(messageTO);
+            } catch (Exception e) {
+                if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                    LOGGER.error("message模块服务不可用!");
+                }
+            }
         }
     }
 
@@ -526,11 +548,11 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
         List<SchemeSon> sons = schemeSonSer.findByCis(sonDTO);
         result.append("<td rowspan='" + sons.size() + "'>" + entity.getName() + "</td>");
         result.append("<td rowspan='" + sons.size() + "'>" + sb.toString() + "</td>");
-        for (int i=0;i<sons.size();i++){
-            if (0!=i){
+        for (int i = 0; i < sons.size(); i++) {
+            if (0 != i) {
                 result.append(valTr);
             }
-            result.append("<td>"+sons.get(i).getTitle()+"</td>");
+            result.append("<td>" + sons.get(i).getTitle() + "</td>");
             result.append(endTr);
         }
         result.append("</table>");

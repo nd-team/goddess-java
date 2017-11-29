@@ -33,6 +33,7 @@ dependencies {
     compile project(":modules:message:message-api")
     compile project(":modules:dimission:dimission-api")
     compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:event:event-api")
     compile project(":modules:push:push-api")
     compile files("lib/json-20151123.jar")
     compile project(":common:common-utils")

@@ -9,6 +9,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
@@ -82,6 +85,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private TimeSetSer timeSetSer;
+    @Autowired
+    private EventAPI eventAPI;
 
     /**
      * 再次分发权限（层级级别）
@@ -180,13 +185,17 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void edit(TaskNodeTO to) throws SerException {
+
         TaskNode entity = update ( to );
+
     }
 
     @Transactional(rollbackFor = {SerException.class})
     public TaskNode update(TaskNodeTO to) throws SerException {
 //        String name = userAPI.currentUser().getUsername();
+
         TaskNode entity = super.findById ( to.getId () );
+
         if (null == entity) {
             throw new SerException ( "该对象不存在" );
         }
@@ -452,7 +461,20 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (null != to.getExecute ()) {
             priority ( entity );  //处理优先级
         }
-        send ( name, entity );
+        send(name, entity);
+        if (null != entity.getExecute()) {
+            EventTO eventTO = new EventTO();
+            eventTO.setName(entity.getExecute());
+            eventTO.setProjectChineseName("任务分配");
+            eventTO.setProjectEnglishName("taskallotment");
+            eventTO.setFunctionChineseName("任务分配");
+            eventTO.setFunctionEnglishName("toaskallotment");
+            eventTO.setContent("待确认接收");
+            eventTO.setPermissions(Permissions.CONFIRM);
+            eventTO.setEventId(entity.getId());
+            eventTO.setStatus("待确认");
+            eventAPI.save(eventTO);
+        }
     }
 
     public void split(TaskNode entity) throws SerException {
@@ -710,7 +732,20 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (null != entity.getExecute ()) {
             priority ( entity );  //处理优先级
         }
-        send ( name, entity );
+        send(name, entity);
+        if (null != entity.getExecute()) {
+            EventTO eventTO = new EventTO();
+            eventTO.setName(entity.getExecute());
+            eventTO.setProjectChineseName("任务分配");
+            eventTO.setProjectEnglishName("taskallotment");
+            eventTO.setFunctionChineseName("任务分配");
+            eventTO.setFunctionEnglishName("toaskallotment");
+            eventTO.setContent("待确认接收");
+            eventTO.setPermissions(Permissions.CONFIRM);
+            eventTO.setEventId(entity.getId());
+            eventTO.setStatus("待确认");
+            eventAPI.save(eventTO);
+        }
     }
 
     @Override
@@ -746,32 +781,42 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     public void finish(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById ( to.getId () );
         if (entity == null) {
-            throw new SerException ( "该对象不存在" );
+            throw new SerException("该对象不存在");
         }
-        entity.setContent ( to.getContent () );
-        entity.setActualNum ( to.getActualNum () );
-        entity.setTaskType ( to.getTaskType () );
-        entity.setTaskName ( to.getTaskName () );
-        entity.setExecute ( to.getExecute () );
-        entity.setPlanNum ( to.getPlanNum () );
-        entity.setNeedTime ( to.getNeedTime () );
-        entity.setNeedType ( to.getNeedType () );
-        entity.setActualTime ( to.getActualTime () );
-        entity.setActualType ( to.getActualType () );
-        entity.setUndoneTime ( to.getUndoneTime () );
-        entity.setUndoneType ( to.getUndoneType () );
-        entity.setStartTime ( DateUtil.parseDateTime ( to.getStartTime () ) );
-        entity.setEndTime ( DateUtil.parseDateTime ( to.getEndTime () ) );
-        entity.setNotice ( to.getNotice () );
-        entity.setReimbursement ( to.getReimbursement () );
-        entity.setTaskStatus ( TaskStatus.FINISH );
-        entity.setFinishStatus ( FinishStatus.FINISH );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
-        if ((null != entity.getHaveSon ()) && entity.getHaveSon ()) {
-            updateFather ( entity.getFatherId () );
+        entity.setContent(to.getContent());
+        entity.setActualNum(to.getActualNum());
+        entity.setTaskType(to.getTaskType());
+        entity.setTaskName(to.getTaskName());
+        entity.setExecute(to.getExecute());
+        entity.setPlanNum(to.getPlanNum());
+        entity.setNeedTime(to.getNeedTime());
+        entity.setNeedType(to.getNeedType());
+        entity.setActualTime(to.getActualTime());
+        entity.setActualType(to.getActualType());
+        entity.setUndoneTime(to.getUndoneTime());
+        entity.setUndoneType(to.getUndoneType());
+        entity.setStartTime(DateUtil.parseDateTime(to.getStartTime()));
+        entity.setEndTime(DateUtil.parseDateTime(to.getEndTime()));
+        entity.setNotice(to.getNotice());
+        entity.setReimbursement(to.getReimbursement());
+        entity.setTaskStatus(TaskStatus.FINISH);
+        entity.setFinishStatus(FinishStatus.FINISH);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        if ((null != entity.getHaveSon()) && entity.getHaveSon()) {
+            updateFather(entity.getFatherId());
         }
-        updateTable ( entity );
+        updateTable(entity);
+        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
+        if (null != entity.getExecute()) {
+            String eventId1 = eventAPI.findId(entity.getId(), entity.getExecute());
+            if (null != eventId1) {
+                eventAPI.delete(eventId1);
+            }
+        }
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -798,32 +843,42 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     public void unFinish(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById ( to.getId () );
         if (entity == null) {
-            throw new SerException ( "该对象不存在" );
+            throw new SerException("该对象不存在");
         }
-        entity.setContent ( to.getContent () );
-        entity.setActualNum ( to.getActualNum () );
-        entity.setTaskType ( to.getTaskType () );
-        entity.setTaskName ( to.getTaskName () );
-        entity.setExecute ( to.getExecute () );
-        entity.setPlanNum ( to.getPlanNum () );
-        entity.setNeedTime ( to.getNeedTime () );
-        entity.setNeedType ( to.getNeedType () );
-        entity.setActualTime ( to.getActualTime () );
-        entity.setActualType ( to.getActualType () );
-        entity.setUndoneTime ( to.getUndoneTime () );
-        entity.setUndoneType ( to.getUndoneType () );
-        entity.setStartTime ( DateUtil.parseDateTime ( to.getStartTime () ) );
-        entity.setEndTime ( DateUtil.parseDateTime ( to.getEndTime () ) );
-        entity.setNotice ( to.getNotice () );
-        entity.setReimbursement ( to.getReimbursement () );
-        entity.setTaskStatus ( TaskStatus.UNFINISHED );
-        entity.setFinishStatus ( FinishStatus.UNFINISHED );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
-        if ((null != entity.getHaveSon ()) && entity.getHaveSon ()) {
-            updateFather ( entity.getFatherId () );
+        entity.setContent(to.getContent());
+        entity.setActualNum(to.getActualNum());
+        entity.setTaskType(to.getTaskType());
+        entity.setTaskName(to.getTaskName());
+        entity.setExecute(to.getExecute());
+        entity.setPlanNum(to.getPlanNum());
+        entity.setNeedTime(to.getNeedTime());
+        entity.setNeedType(to.getNeedType());
+        entity.setActualTime(to.getActualTime());
+        entity.setActualType(to.getActualType());
+        entity.setUndoneTime(to.getUndoneTime());
+        entity.setUndoneType(to.getUndoneType());
+        entity.setStartTime(DateUtil.parseDateTime(to.getStartTime()));
+        entity.setEndTime(DateUtil.parseDateTime(to.getEndTime()));
+        entity.setNotice(to.getNotice());
+        entity.setReimbursement(to.getReimbursement());
+        entity.setTaskStatus(TaskStatus.UNFINISHED);
+        entity.setFinishStatus(FinishStatus.UNFINISHED);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        if ((null != entity.getHaveSon()) && entity.getHaveSon()) {
+            updateFather(entity.getFatherId());
         }
-        updateTable ( entity );
+        updateTable(entity);
+        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
+        if (null != entity.getExecute()) {
+            String eventId1 = eventAPI.findId(entity.getId(), entity.getExecute());
+            if (null != eventId1) {
+                eventAPI.delete(eventId1);
+            }
+        }
     }
 
     @Override
@@ -833,11 +888,15 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (entity == null) {
             throw new SerException ( "该对象不存在" );
         }
-        entity.setAduitType ( AduitType.PASS );
-        entity.setResult ( to.getResult () );
-        entity.setTaskStatus ( TaskStatus.DOING );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
+        entity.setAduitType(AduitType.PASS);
+        entity.setResult(to.getResult());
+        entity.setTaskStatus(TaskStatus.DOING);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
     }
 
     @Override
@@ -847,11 +906,15 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (entity == null) {
             throw new SerException ( "该对象不存在" );
         }
-        entity.setAduitType ( AduitType.NOTPASS );
-        entity.setNotPassReason ( to.getNotPassReason () );
-        entity.setTaskStatus ( TaskStatus.DOING );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
+        entity.setAduitType(AduitType.NOTPASS);
+        entity.setNotPassReason(to.getNotPassReason());
+        entity.setTaskStatus(TaskStatus.DOING);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
     }
 
     @Override
@@ -984,14 +1047,25 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (mis < (3600000 * 3)) {   //需提前三小时上报
             throw new SerException ( "需在任务结束时间提前3小时上报" );
         }
-        entity.setDelay ( to.getDelay () );
-        entity.setDelayTime ( to.getDelayTime () );
-        entity.setDelayType ( to.getDelayType () );
-        entity.setReportReason ( to.getReportReason () );
-        entity.setReport ( true );
-        entity.setTaskStatus ( TaskStatus.TOBEAUDITED );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
+        entity.setDelay(to.getDelay());
+        entity.setDelayTime(to.getDelayTime());
+        entity.setDelayType(to.getDelayType());
+        entity.setReportReason(to.getReportReason());
+        entity.setReport(true);
+        entity.setTaskStatus(TaskStatus.TOBEAUDITED);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        EventTO eventTO = new EventTO();
+        eventTO.setName(userAPI.currentUser().getUsername());
+        eventTO.setProjectChineseName("任务分配");
+        eventTO.setProjectEnglishName("taskallotment");
+        eventTO.setFunctionChineseName("任务分配");
+        eventTO.setFunctionEnglishName("taskallotment");
+        eventTO.setContent("上报审核");
+        eventTO.setPermissions(Permissions.ADUIT);
+        eventTO.setEventId(entity.getId());
+        eventTO.setStatus("待审核");
+        eventAPI.save(eventTO);
     }
 
     @Override
@@ -1065,11 +1139,22 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 executeTime = executeTime * 8;
                 break;
         }
-        double efficiency = entity.getPlanNum () * 8 / entity.getActualNum () / executeTime;
-        efficiency = new BigDecimal ( efficiency ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue ();
-        entity.setEfficiency ( efficiency );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
+        double efficiency = entity.getPlanNum() * 8 / entity.getActualNum() / executeTime;
+        efficiency = new BigDecimal(efficiency).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        entity.setEfficiency(efficiency);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        EventTO eventTO = new EventTO();
+        eventTO.setName(entity.getInitiate());
+        eventTO.setProjectChineseName("任务分配");
+        eventTO.setProjectEnglishName("taskallotment");
+        eventTO.setFunctionChineseName("任务分配");
+        eventTO.setFunctionEnglishName("toaskallotment");
+        eventTO.setContent("待确认完成");
+        eventTO.setPermissions(Permissions.CONFIRM);
+        eventTO.setEventId(entity.getId());
+        eventTO.setStatus("待确认");
+        eventAPI.save(eventTO);
     }
 
     @Override
@@ -2799,47 +2884,91 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return caseLastBO;
     }
 
+//    private CaseLastBO finishcounts(List<TaskNode> taskNodes) throws SerException {
+//        double planNum = taskNodes.stream ().mapToDouble ( TaskNode::getPlanNum ).sum ();
+//        double actualNum = taskNodes.stream ().filter ( taskNode -> (null != taskNode.getActualNum ()) ).mapToDouble ( TaskNode::getActualNum ).sum ();
+//        double unFinishNum = planNum - actualNum;
+//        double planMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getNeedType () ) ).mapToDouble ( TaskNode::getNeedTime ).sum ();
+//        double planHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getNeedType () ) ).mapToDouble ( TaskNode::getNeedTime ).sum ();
+//        double planDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getNeedType () ) ).mapToDouble ( TaskNode::getNeedTime ).sum ();
+//        double planTime = new BigDecimal ( planMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + planDay * 8 + planHour;     //计划总工时
+//        double actualMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getActualType () ) && FinishStatus.FINISH.equals ( taskNode.getFinishStatus () ) ).mapToDouble ( TaskNode::getActualTime ).sum ();
+//        double actualHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getActualType () ) && FinishStatus.FINISH.equals ( taskNode.getFinishStatus () ) ).mapToDouble ( TaskNode::getActualTime ).sum ();
+//        double actualDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getActualType () ) && FinishStatus.FINISH.equals ( taskNode.getFinishStatus () ) ).mapToDouble ( TaskNode::getActualTime ).sum ();
+//        double actualTime = new BigDecimal ( actualMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + actualDay * 8 + actualHour;     //已完成工时
+//        double undoneMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getUndoneType () ) ).mapToDouble ( TaskNode::getUndoneTime ).sum ();
+//        double undoneHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getUndoneType () ) ).mapToDouble ( TaskNode::getUndoneTime ).sum ();
+//        double undoneDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getUndoneType () ) ).mapToDouble ( TaskNode::getUndoneTime ).sum ();
+//        double undoneTime = new BigDecimal ( undoneMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + undoneDay * 8 + undoneHour;   //未完成工时
+//        double reportUnFinishMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getDelayType () ) && taskNode.getDelay () ).mapToDouble ( TaskNode::getDelayTime ).sum ();
+//        double reportUnFinishHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getDelayType () ) && taskNode.getDelay () ).mapToDouble ( TaskNode::getDelayTime ).sum ();
+//        double reportUnFinishDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getDelayType () ) && taskNode.getDelay () ).mapToDouble ( TaskNode::getDelayTime ).sum ();
+//        double reportUnFinish = new BigDecimal ( reportUnFinishMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + reportUnFinishDay * 8 + reportUnFinishHour;   //上报未完成工时
+//        double unReportUnFinishMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getActualType () ) && (null != taskNode.getReport ()) && (!taskNode.getReport ()) && (null != taskNode.getActualTime ()) ).mapToDouble ( TaskNode::getActualTime ).sum ();
+//        double unReportUnFinishHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getActualType () ) && (null != taskNode.getReport ()) && (!taskNode.getReport ()) && (null != taskNode.getActualTime ()) ).mapToDouble ( TaskNode::getActualTime ).sum ();
+//        double unReportUnFinishDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getActualType () ) && (null != taskNode.getReport ()) && (!taskNode.getReport ()) && (null != taskNode.getActualTime ()) ).mapToDouble ( TaskNode::getActualTime ).sum ();
+//        double unReportUnFinish = new BigDecimal ( unReportUnFinishMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + unReportUnFinishDay * 8 + unReportUnFinishHour;  //未上报未完成工时
+//        long admininstrationNum = taskNodes.stream ().filter ( taskNode -> TaskType.ADMININSTRATION.equals ( taskNode.getTaskType () ) ).count ();
+//        long engineeringNum = taskNodes.stream ().filter ( taskNode -> TaskType.ENGINEERING.equals ( taskNode.getTaskType () ) ).count ();
+//        long trainingNum = taskNodes.stream ().filter ( taskNode -> TaskType.TRAINING.equals ( taskNode.getTaskType () ) ).count ();
+//        long todayNum = admininstrationNum + engineeringNum + trainingNum;  //今日任务
+//        CaseLastBO caseLastBO = new CaseLastBO ();
+//        caseLastBO.setPlanNum ( planNum );
+//        caseLastBO.setActualNum ( actualNum );
+//        caseLastBO.setUnFinishNum ( unFinishNum );
+//        caseLastBO.setPlanTime ( planTime );
+//        caseLastBO.setActualTime ( actualTime );
+//        caseLastBO.setUnFinishTime ( undoneTime );
+//        caseLastBO.setReportUnFinish ( reportUnFinish );
+//        caseLastBO.setUnReportUnFinish ( unReportUnFinish );
+//        caseLastBO.setAdmininstrationNum ( admininstrationNum );
+//        caseLastBO.setEngineeringNum ( engineeringNum );
+//        caseLastBO.setTrainingNum ( trainingNum );
+//        caseLastBO.setTodayNum ( todayNum );
+//        return caseLastBO;
+//    }
+
     private CaseLastBO finishcounts(List<TaskNode> taskNodes) throws SerException {
-        double planNum = taskNodes.stream ().mapToDouble ( TaskNode::getPlanNum ).sum ();
-        double actualNum = taskNodes.stream ().filter ( taskNode -> (null != taskNode.getActualNum ()) ).mapToDouble ( TaskNode::getActualNum ).sum ();
+        double planNum = taskNodes.stream().mapToDouble(TaskNode::getPlanNum).sum();
+        double actualNum = taskNodes.stream().filter(taskNode -> (null != taskNode.getActualNum())).mapToDouble(TaskNode::getActualNum).sum();
         double unFinishNum = planNum - actualNum;
-        double planMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getNeedType () ) ).mapToDouble ( TaskNode::getNeedTime ).sum ();
-        double planHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getNeedType () ) ).mapToDouble ( TaskNode::getNeedTime ).sum ();
-        double planDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getNeedType () ) ).mapToDouble ( TaskNode::getNeedTime ).sum ();
-        double planTime = new BigDecimal ( planMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + planDay * 8 + planHour;     //计划总工时
-        double actualMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getActualType () ) && FinishStatus.FINISH.equals ( taskNode.getFinishStatus () ) ).mapToDouble ( TaskNode::getActualTime ).sum ();
-        double actualHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getActualType () ) && FinishStatus.FINISH.equals ( taskNode.getFinishStatus () ) ).mapToDouble ( TaskNode::getActualTime ).sum ();
-        double actualDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getActualType () ) && FinishStatus.FINISH.equals ( taskNode.getFinishStatus () ) ).mapToDouble ( TaskNode::getActualTime ).sum ();
-        double actualTime = new BigDecimal ( actualMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + actualDay * 8 + actualHour;     //已完成工时
-        double undoneMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getUndoneType () ) ).mapToDouble ( TaskNode::getUndoneTime ).sum ();
-        double undoneHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getUndoneType () ) ).mapToDouble ( TaskNode::getUndoneTime ).sum ();
-        double undoneDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getUndoneType () ) ).mapToDouble ( TaskNode::getUndoneTime ).sum ();
-        double undoneTime = new BigDecimal ( undoneMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + undoneDay * 8 + undoneHour;   //未完成工时
-        double reportUnFinishMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getDelayType () ) && taskNode.getDelay () ).mapToDouble ( TaskNode::getDelayTime ).sum ();
-        double reportUnFinishHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getDelayType () ) && taskNode.getDelay () ).mapToDouble ( TaskNode::getDelayTime ).sum ();
-        double reportUnFinishDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getDelayType () ) && taskNode.getDelay () ).mapToDouble ( TaskNode::getDelayTime ).sum ();
-        double reportUnFinish = new BigDecimal ( reportUnFinishMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + reportUnFinishDay * 8 + reportUnFinishHour;   //上报未完成工时
-        double unReportUnFinishMin = taskNodes.stream ().filter ( taskNode -> TimeType.MINUTE.equals ( taskNode.getActualType () ) && (null != taskNode.getReport ()) && (!taskNode.getReport ()) && (null != taskNode.getActualTime ()) ).mapToDouble ( TaskNode::getActualTime ).sum ();
-        double unReportUnFinishHour = taskNodes.stream ().filter ( taskNode -> TimeType.HOUR.equals ( taskNode.getActualType () ) && (null != taskNode.getReport ()) && (!taskNode.getReport ()) && (null != taskNode.getActualTime ()) ).mapToDouble ( TaskNode::getActualTime ).sum ();
-        double unReportUnFinishDay = taskNodes.stream ().filter ( taskNode -> TimeType.DAY.equals ( taskNode.getActualType () ) && (null != taskNode.getReport ()) && (!taskNode.getReport ()) && (null != taskNode.getActualTime ()) ).mapToDouble ( TaskNode::getActualTime ).sum ();
-        double unReportUnFinish = new BigDecimal ( unReportUnFinishMin / 60 ).setScale ( 2, BigDecimal.ROUND_HALF_UP ).doubleValue () + unReportUnFinishDay * 8 + unReportUnFinishHour;  //未上报未完成工时
-        long admininstrationNum = taskNodes.stream ().filter ( taskNode -> TaskType.ADMININSTRATION.equals ( taskNode.getTaskType () ) ).count ();
-        long engineeringNum = taskNodes.stream ().filter ( taskNode -> TaskType.ENGINEERING.equals ( taskNode.getTaskType () ) ).count ();
-        long trainingNum = taskNodes.stream ().filter ( taskNode -> TaskType.TRAINING.equals ( taskNode.getTaskType () ) ).count ();
+        double planMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType())).mapToDouble(TaskNode::getNeedTime).sum();
+        double planTime = new BigDecimal(planMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + planDay * 8 + planHour;     //计划总工时
+        double actualMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && FinishStatus.FINISH.equals(taskNode.getFinishStatus())).mapToDouble(TaskNode::getActualTime).sum();
+        double actualTime = new BigDecimal(actualMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + actualDay * 8 + actualHour;     //已完成工时
+        double undoneMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getUndoneType())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getUndoneType())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getUndoneType())).mapToDouble(TaskNode::getUndoneTime).sum();
+        double undoneTime = new BigDecimal(undoneMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + undoneDay * 8 + undoneHour;   //未完成工时
+        double reportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getDelayType()) && taskNode.getDelay()).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getDelayType()) && taskNode.getDelay()).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getDelayType()) && taskNode.getDelay()).mapToDouble(TaskNode::getDelayTime).sum();
+        double reportUnFinish = new BigDecimal(reportUnFinishMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + reportUnFinishDay * 8 + reportUnFinishHour;   //上报未完成工时
+        double unReportUnFinishMin = taskNodes.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && (null != taskNode.getActualTime())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishHour = taskNodes.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && (null != taskNode.getActualTime())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinishDay = taskNodes.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getActualType()) && (null != taskNode.getReport()) && (!taskNode.getReport()) && (null != taskNode.getActualTime())).mapToDouble(TaskNode::getActualTime).sum();
+        double unReportUnFinish = new BigDecimal(unReportUnFinishMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + unReportUnFinishDay * 8 + unReportUnFinishHour;  //未上报未完成工时
+        long admininstrationNum = taskNodes.stream().filter(taskNode -> TaskType.ADMININSTRATION.equals(taskNode.getTaskType())).count();
+        long engineeringNum = taskNodes.stream().filter(taskNode -> TaskType.ENGINEERING.equals(taskNode.getTaskType())).count();
+        long trainingNum = taskNodes.stream().filter(taskNode -> TaskType.TRAINING.equals(taskNode.getTaskType())).count();
         long todayNum = admininstrationNum + engineeringNum + trainingNum;  //今日任务
-        CaseLastBO caseLastBO = new CaseLastBO ();
-        caseLastBO.setPlanNum ( planNum );
-        caseLastBO.setActualNum ( actualNum );
-        caseLastBO.setUnFinishNum ( unFinishNum );
-        caseLastBO.setPlanTime ( planTime );
-        caseLastBO.setActualTime ( actualTime );
-        caseLastBO.setUnFinishTime ( undoneTime );
-        caseLastBO.setReportUnFinish ( reportUnFinish );
-        caseLastBO.setUnReportUnFinish ( unReportUnFinish );
-        caseLastBO.setAdmininstrationNum ( admininstrationNum );
-        caseLastBO.setEngineeringNum ( engineeringNum );
-        caseLastBO.setTrainingNum ( trainingNum );
-        caseLastBO.setTodayNum ( todayNum );
+        CaseLastBO caseLastBO = new CaseLastBO();
+        caseLastBO.setPlanNum(planNum);
+        caseLastBO.setActualNum(actualNum);
+        caseLastBO.setUnFinishNum(unFinishNum);
+        caseLastBO.setPlanTime(planTime);
+        caseLastBO.setActualTime(actualTime);
+        caseLastBO.setUnFinishTime(undoneTime);
+        caseLastBO.setReportUnFinish(reportUnFinish);
+        caseLastBO.setUnReportUnFinish(unReportUnFinish);
+        caseLastBO.setAdmininstrationNum(admininstrationNum);
+        caseLastBO.setEngineeringNum(engineeringNum);
+        caseLastBO.setTrainingNum(trainingNum);
+        caseLastBO.setTodayNum(todayNum);
         return caseLastBO;
     }
 
@@ -2865,10 +2994,16 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return new ArrayList<> ( s );
     }
 
+//    private List<String> projects() throws SerException {
+//        List<Project> list = projectSer.findAll ();
+//        Set<String> s = list.stream ().map ( project -> project.getProject () ).collect ( Collectors.toSet () );
+//        return new ArrayList<> ( s );
+//    }
+
     private List<String> projects() throws SerException {
-        List<Project> list = projectSer.findAll ();
-        Set<String> s = list.stream ().map ( project -> project.getProject () ).collect ( Collectors.toSet () );
-        return new ArrayList<> ( s );
+        List<Project> list = projectSer.findAll();
+        Set<String> s = list.stream().map(project -> project.getProject()).collect(Collectors.toSet());
+        return new ArrayList<>(s);
     }
 
     @Override
@@ -2877,10 +3012,25 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (entity == null) {
             throw new SerException ( "该对象不存在" );
         }
-        entity.setConfirm ( true );
-        entity.setTaskStatus ( TaskStatus.DOING );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
+        entity.setConfirm(true);
+        entity.setTaskStatus(TaskStatus.DOING);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
+        EventTO eventTO = new EventTO();
+        eventTO.setName(entity.getExecute());
+        eventTO.setProjectChineseName("任务分配");
+        eventTO.setProjectEnglishName("taskallotment");
+        eventTO.setFunctionChineseName("任务分配");
+        eventTO.setFunctionEnglishName("toaskallotment");
+        eventTO.setContent("执行任务中");
+        eventTO.setPermissions(Permissions.MAKE);
+        eventTO.setEventId(entity.getId());
+        eventTO.setStatus("待制作");
+        eventAPI.save(eventTO);
     }
 
     @Override
@@ -2889,11 +3039,15 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (entity == null) {
             throw new SerException ( "该对象不存在" );
         }
-        entity.setConfirm ( false );
-        entity.setReason ( to.getReason () );
-        entity.setTaskStatus ( TaskStatus.NOTRECEIVE );
-        entity.setModifyTime ( LocalDateTime.now () );
-        super.update ( entity );
+        entity.setConfirm(false);
+        entity.setReason(to.getReason());
+        entity.setTaskStatus(TaskStatus.NOTRECEIVE);
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
     }
 
     @Override
@@ -2955,10 +3109,10 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         return bos;
     }
 
-    private Double time(double time, TimeType type) throws SerException {
+    private Double time(double time, TimeType type) {
         switch (type) {
             case MINUTE:
-                time = time / 60;
+                time = new BigDecimal(time / 60).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
                 break;
             case DAY:
                 time = time * 8;
@@ -3453,24 +3607,24 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             row = sheet.createRow ( index );    // 每循环一次创建一行
             int callIndex = 0;
 //            row.createCell(callIndex++).setCellValue(index);//设置行的索引
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getName () );
-            row.createCell ( callIndex++ ).setCellValue ( Status.START.equals ( exportEntity.getStatus () ) ? "启用" : "禁用" );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getCreater () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getInitiate () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getTaskName () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getCharge () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getExecute () );
-            row.createCell ( callIndex++ ).setCellValue ( "" + exportEntity.getPlanTime () );
-            row.createCell ( callIndex++ ).setCellValue ( TaskType.ADMININSTRATION.equals ( exportEntity.getTaskType () ) ? "行政任务" : TaskType.ENGINEERING.equals ( exportEntity.getTaskType () ) ? "工程任务" : "培训任务" );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getType () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getContent () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getPlanNum () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getActualNum () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getNeedTime () );
-            row.createCell ( callIndex++ ).setCellValue ( TimeType.DAY.equals ( exportEntity.getNeedType () ) ? "天" : TimeType.HOUR.equals ( exportEntity.getNeedType () ) ? "小时" : "分钟" );
-            row.createCell ( callIndex++ ).setCellValue ( null == exportEntity.getStartTime () ? "" : "" + exportEntity.getStartTime () );
-            row.createCell ( callIndex++ ).setCellValue ( null == exportEntity.getEndTime () ? "" : "" + exportEntity.getEndTime () );
-            row.createCell ( callIndex++ ).setCellValue ( exportEntity.getRemark () );
+            row.createCell(callIndex++).setCellValue(exportEntity.getName());
+            row.createCell(callIndex++).setCellValue(Status.START.equals(exportEntity.getStatus()) ? "启用" : "禁用");
+            row.createCell(callIndex++).setCellValue(exportEntity.getCreater());
+            row.createCell(callIndex++).setCellValue(exportEntity.getInitiate() == null ? "" : exportEntity.getInitiate());
+            row.createCell(callIndex++).setCellValue(exportEntity.getTaskName());
+            row.createCell(callIndex++).setCellValue(exportEntity.getCharge() == null ? "" : exportEntity.getCharge());
+            row.createCell(callIndex++).setCellValue(exportEntity.getExecute() == null ? "" : exportEntity.getExecute());
+            row.createCell(callIndex++).setCellValue("" + exportEntity.getPlanTime());
+            row.createCell(callIndex++).setCellValue(TaskType.ADMININSTRATION.equals(exportEntity.getTaskType()) ? "行政任务" : TaskType.ENGINEERING.equals(exportEntity.getTaskType()) ? "工程任务" : "培训任务");
+            row.createCell(callIndex++).setCellValue(exportEntity.getType());
+            row.createCell(callIndex++).setCellValue(exportEntity.getContent());
+            row.createCell(callIndex++).setCellValue(exportEntity.getPlanNum());
+            row.createCell(callIndex++).setCellValue(exportEntity.getActualNum() == null ? "" : exportEntity.getActualNum() + "");
+            row.createCell(callIndex++).setCellValue(time(exportEntity.getNeedTime(), exportEntity.getNeedType()));
+            row.createCell(callIndex++).setCellValue(TimeType.DAY.equals(exportEntity.getNeedType()) ? "天" : TimeType.HOUR.equals(exportEntity.getNeedType()) ? "小时" : "分钟");
+            row.createCell(callIndex++).setCellValue(null == exportEntity.getStartTime() ? "" : DateUtil.dateToString(exportEntity.getStartTime()));
+            row.createCell(callIndex++).setCellValue(null == exportEntity.getEndTime() ? "" : DateUtil.dateToString(exportEntity.getStartTime()));
+            row.createCell(callIndex++).setCellValue(exportEntity.getRemark() == null ? "" : exportEntity.getExecute());
         }
 
     }

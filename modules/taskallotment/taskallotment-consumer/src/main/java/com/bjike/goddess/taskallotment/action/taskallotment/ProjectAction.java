@@ -556,6 +556,7 @@ public class ProjectAction extends BaseFileAction {
      * 根据项目组获取所有项目
      *
      * @param projectNameDTO 条件
+     * @return class ProjectVO
      * @throws ActException
      * @version v1
      */

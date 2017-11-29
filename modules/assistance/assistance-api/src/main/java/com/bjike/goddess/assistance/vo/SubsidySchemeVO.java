@@ -88,7 +88,7 @@ public class SubsidySchemeVO {
     /**
      * 补助单价/天
      */
-    private String schemePrice;
+    private Double schemePrice;
 
     /**
      * 补助发放形式
@@ -233,11 +233,11 @@ public class SubsidySchemeVO {
         this.schemeContent = schemeContent;
     }
 
-    public String getSchemePrice() {
+    public Double getSchemePrice() {
         return schemePrice;
     }
 
-    public void setSchemePrice(String schemePrice) {
+    public void setSchemePrice(Double schemePrice) {
         this.schemePrice = schemePrice;
     }
 

@@ -3,7 +3,9 @@ package com.bjike.goddess.attendance.entity.overtime;
 import com.bjike.goddess.attendance.enums.AuditStatus;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 
@@ -34,7 +36,7 @@ public class OverWork extends BaseEntity {
     /**
      * 任务下达人
      */
-    @Column(name = "tasker", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '任务下达人'")
+    @Column(name = "tasker", columnDefinition = "VARCHAR(255)   COMMENT '任务下达人'")
     private String tasker;
 
     /**
@@ -52,13 +54,13 @@ public class OverWork extends BaseEntity {
     /**
      * 部门
      */
-    @Column(name = "depart", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    @Column(name = "depart", columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String depart;
 
     /**
      * 职位
      */
-    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职位'")
+    @Column(name = "position", columnDefinition = "VARCHAR(255)   COMMENT '职位'")
     private String position;
 
     /**
@@ -94,7 +96,7 @@ public class OverWork extends BaseEntity {
     /**
      * 完成情况
      */
-    @Column(name = "completeCon", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '完成情况'")
+    @Column(name = "completeCon", columnDefinition = "VARCHAR(255)   COMMENT '完成情况'")
     private String completeCon;
 
     /**
@@ -112,12 +114,12 @@ public class OverWork extends BaseEntity {
     /**
      * 审核意见
      */
-    @Column(name = "auditAdvice",  columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
+    @Column(name = "auditAdvice", columnDefinition = "VARCHAR(255)   COMMENT '审核意见'")
     private String auditAdvice;
     /**
      * 审核时间
      */
-    @Column(name = "auditTime",  columnDefinition = "DATETIME   COMMENT '审核时间'")
+    @Column(name = "auditTime", columnDefinition = "DATETIME   COMMENT '审核时间'")
     private LocalDateTime auditTime;
 
     /**

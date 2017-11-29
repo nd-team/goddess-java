@@ -1,19 +1,15 @@
 package com.bjike.goddess.event.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.event.bo.*;
 import com.bjike.goddess.event.dto.EventDTO;
 import com.bjike.goddess.event.dto.FatherDTO;
-import com.bjike.goddess.event.enums.EventStatus;
-import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.entity.Event;
 import com.bjike.goddess.event.service.EventSer;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.event.to.GuidePermissionTO;
-import com.bjike.goddess.event.vo.AreaCountVO;
-import com.bjike.goddess.event.vo.ClassifyCountVO;
-import com.bjike.goddess.event.vo.ContentVO;
 import com.bjike.goddess.event.vo.SonPermissionObject;
-import com.bjike.goddess.user.entity.rbac.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +47,23 @@ public class EventApiImpl implements EventAPI {
     @Override
     public EventBO save(EventTO to) throws SerException {
         return eventSer.save(to);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        eventSer.remove(id);
+    }
+
+    @Override
+    public String findId(String eventId, String name) throws SerException {
+        EventDTO dto = new EventDTO();
+        dto.getConditions().add(Restrict.eq("name", name));
+        dto.getConditions().add(Restrict.eq("eventId", eventId));
+        Event event = eventSer.findOne(dto);
+        if (null != event) {
+            return event.getId();
+        }
+        return null;
     }
 
     @Override

@@ -57,6 +57,22 @@ public interface EventAPI {
     EventBO save(EventTO to) throws SerException;
 
     /**
+     * 删除
+     * @param id
+     * @throws SerException
+     */
+    void delete(String id) throws SerException;
+
+    /**
+     * 查找id
+     * @param eventId 事件id
+     * @param name 处理人
+     * @return
+     * @throws SerException
+     */
+    String findId(String eventId,String name) throws SerException;
+
+    /**
      * 编辑
      *
      * @param to

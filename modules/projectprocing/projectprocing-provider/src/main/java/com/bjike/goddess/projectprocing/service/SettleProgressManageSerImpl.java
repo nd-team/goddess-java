@@ -1087,41 +1087,241 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
-        List<String> internalProNames = new ArrayList<>();
+        List<String> internalProNames = findInternalProName();
         List<SettleProgressManageSummBO> settleProgressManageSummBOList = new ArrayList<>();
-        for (String name : internalProNames){
+        for (String name : internalProNames) {
             StringBuilder sql = new StringBuilder();
-            String[] filds = new String[]{"contractTotal","amountTotal","completedCount", "completedAmount",
-                    "uncompletedCount","uncompletedAmount","settleCompletedStart", "settleCompletedStartAmount",
-                    "settleCompletedNoStart","settleCompletedNoStartAmount", "settleUnCompletedStart","settleUnCompletedStartAmount",
-                    "unfinishedSettled","unfinishedSettledAmount", "returnedItemsNum","returnedItemsAmount","noReturnSingular"};
+            String[] filds = new String[]{"contractTotal", "amountTotal", "completedCount", "completedAmount",
+                    "uncompletedCount", "uncompletedAmount", "settleCompletedStart", "settleCompletedStartAmount",
+                    "settleCompletedNoStart", "settleCompletedNoStartAmount", "settleUnCompletedStart", "settleUnCompletedStartAmount",
+                    "unfinishedSettled", "unfinishedSettledAmount", "returnedItemsNum", "returnedItemsAmount", "noReturnSingular"};
             sql.append("SELECT * FROM ( ");
-            sql.append(" (SELECT count(*) as contractTotal  FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') a, ");
-            sql.append(" (SELECT sum(IFNULL(dispatAmount, IFNULL(estimSettleAmount, 0))) as amountTotal FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') b, ");
-            sql.append(" (SELECT count(*) as completedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0) c, ");
-            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as completedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0) d, ");
-            sql.append(" (SELECT count(*) as uncompletedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1) e, ");
-            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as uncompletedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1) f, ");
-            sql.append(" (SELECT count(*) as settleCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 1) g, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 1) h, ");
-            sql.append(" (SELECT count(*) as settleCompletedNoStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 0) i, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedNoStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 0 and settleMadeApple = 0) j, ");
-            sql.append(" (SELECT count(*) as settleUnCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 1) k, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleUnCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 1) l, ");
-            sql.append(" (SELECT count(*) as unfinishedSettled FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 0) m, ");
-            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as unfinishedSettledAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND actualCompletedState = 1 and settleMadeApple = 0) n, ");
-            sql.append(" (SELECT count(*) as returnedItemsNum FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND accountAmount is NOT NULL) o, ");
-            sql.append(" (SELECT IFNULL(sum(accountAmount),0) as returnedItemsAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"') p, ");
-            sql.append(" (SELECT count(*) as noReturnSingular FROM projectprocing_settleprogressmanage WHERE internalProName = '"+name+"' AND is_allSettleComple = 0) q ");
-            sql.append("} ");
+            sql.append(" (SELECT count(*) as contractTotal  FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') a, ");
+            sql.append(" (SELECT sum(IFNULL(dispatAmount, IFNULL(estimSettleAmount, 0))) as amountTotal FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') b, ");
+            sql.append(" (SELECT count(*) as completedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0) c, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as completedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0) d, ");
+            sql.append(" (SELECT count(*) as uncompletedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1) e, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as uncompletedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1) f, ");
+            sql.append(" (SELECT count(*) as settleCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 1) g, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 1) h, ");
+            sql.append(" (SELECT count(*) as settleCompletedNoStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 0) i, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedNoStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 0) j, ");
+            sql.append(" (SELECT count(*) as settleUnCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 1) k, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleUnCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 1) l, ");
+            sql.append(" (SELECT count(*) as unfinishedSettled FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 0) m, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as unfinishedSettledAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 0) n, ");
+            sql.append(" (SELECT count(*) as returnedItemsNum FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND accountAmount is NOT NULL) o, ");
+            sql.append(" (SELECT IFNULL(sum(accountAmount),0) as returnedItemsAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') p, ");
+            sql.append(" (SELECT count(*) as noReturnSingular FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND is_allSettleComple = 0) q ");
+            sql.append(") ");
 
-            List<SettleProgressManageSummBO> settleProgressManageSummBOS = super.findBySql(sql.toString(),SettleProgressManageSummBO.class,filds);
+            List<SettleProgressManageSummBO> settleProgressManageSummBOS = super.findBySql(sql.toString(), SettleProgressManageSummBO.class, filds);
             SettleProgressManageSummBO settleProgressManageSummBO = settleProgressManageSummBOS.get(0);
             settleProgressManageSummBO.setProject(name);
-            settleProgressManageSummBO.setNoReturnSingularAmount(settleProgressManageSummBO.getAmountTotal()-settleProgressManageSummBO.getReturnedItemsAmount());
+            settleProgressManageSummBO.setNoReturnSingularAmount(settleProgressManageSummBO.getAmountTotal() - settleProgressManageSummBO.getReturnedItemsAmount());
             settleProgressManageSummBOList.add(settleProgressManageSummBO);
         }
         return settleProgressManageSummBOList;
     }
 
+    @Override
+    public OptionBO settleProgressNum() throws SerException {
+        List<String> internalProNames = findInternalProName();
+        List<Integer> contractTotal_list = new ArrayList<>();
+        List<Integer> completedCount_list = new ArrayList<>();
+        List<Integer> uncompletedCount_list = new ArrayList<>();
+        List<Integer> settleCompletedStart_list = new ArrayList<>();
+        List<Integer> settleCompletedNoStart_list = new ArrayList<>();
+        List<Integer> settleUnCompletedStart_list = new ArrayList<>();
+        List<Integer> unfinishedSettled_list = new ArrayList<>();
+        List<Integer> returnedItemsNum_list = new ArrayList<>();
+        List<Integer> noReturnSingular_list = new ArrayList<>();
+
+        for (String name : internalProNames) {
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT * FROM ( ");
+            sql.append(" (SELECT count(*) as contractTotal  FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') a, ");
+            sql.append(" (SELECT count(*) as completedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0) c, ");
+            sql.append(" (SELECT count(*) as uncompletedCount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1) e, ");
+            sql.append(" (SELECT count(*) as settleCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 1) g, ");
+            sql.append(" (SELECT count(*) as settleCompletedNoStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 0) i, ");
+            sql.append(" (SELECT count(*) as settleUnCompletedStart FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 1) k, ");
+            sql.append(" (SELECT count(*) as unfinishedSettled FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 0) m, ");
+            sql.append(" (SELECT count(*) as returnedItemsNum FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND accountAmount is NOT NULL) o, ");
+            sql.append(" (SELECT count(*) as noReturnSingular FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND is_allSettleComple = 0) q ");
+            sql.append(") ");
+            List<Object> objectList = super.findBySql(sql.toString());
+            Object[] objects = (Object[]) objectList.get(0);
+            contractTotal_list.add(Integer.parseInt(String.valueOf(objects[0])));
+            completedCount_list.add(Integer.parseInt(String.valueOf(objects[1])));
+            uncompletedCount_list.add(Integer.parseInt(String.valueOf(objects[2])));
+            settleCompletedStart_list.add(Integer.parseInt(String.valueOf(objects[3])));
+            settleCompletedNoStart_list.add(Integer.parseInt(String.valueOf(objects[4])));
+            settleUnCompletedStart_list.add(Integer.parseInt(String.valueOf(objects[5])));
+            unfinishedSettled_list.add(Integer.parseInt(String.valueOf(objects[6])));
+            returnedItemsNum_list.add(Integer.parseInt(String.valueOf(objects[7])));
+            noReturnSingular_list.add(Integer.parseInt(String.valueOf(objects[8])));
+
+        }
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+        String[] ziduan_str = new String[]{"总合同数量","已完工数量","未完工数量","已完工已启动结算","已完工未启动结算"
+        ,"未完工已启动结算","未完工未结算","已回款单数","未回款单数"};
+
+
+        List<List<Integer>> data_list = new ArrayList<>();
+        data_list.add(contractTotal_list);
+        data_list.add(completedCount_list);
+        data_list.add(uncompletedCount_list);
+        data_list.add(settleCompletedStart_list);
+        data_list.add(settleCompletedNoStart_list);
+        data_list.add(settleUnCompletedStart_list);
+        data_list.add(unfinishedSettled_list);
+        data_list.add(returnedItemsNum_list);
+        data_list.add(noReturnSingular_list);
+
+        for (int i = 0; i < 9; i++) {
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(ziduan_str[i]);
+            seriesBO.setType("bar");
+            Integer[] str = new Integer[data_list.get(i).size()];
+            str = data_list.get(i).toArray(str);
+            seriesBO.setData(str);
+            seriesBOList.add(seriesBO);
+        }
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText("各项目组结算进度情况汇总");
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        legendBO.setData(ziduan_str);
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] internalName = new String[internalProNames.size()];
+        internalName = internalProNames.toArray(internalName);
+        xAxisBO.setData(internalName);
+
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+//        tooltipBO.setTrigger("axis");
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+
+    @Override
+    public OptionAmountBO settleProgressAmount() throws SerException {
+        List<String> internalProNames = findInternalProName();
+        List<Double> amountTotal_list = new ArrayList<>();
+        List<Double> completedAmount_list = new ArrayList<>();
+        List<Double> uncompletedAmount_list = new ArrayList<>();
+        List<Double> settleCompletedStartAmount_list = new ArrayList<>();
+        List<Double> settleUnCompletedStartAmount_list = new ArrayList<>();
+        List<Double> unfinishedSettledAmount_list = new ArrayList<>();
+        List<Double> returnedItemsAmount_list = new ArrayList<>();
+        List<Double> noReturnSingularAmount_list = new ArrayList<>();
+
+        for (String name : internalProNames) {
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT * FROM ( ");
+            sql.append(" (SELECT sum(IFNULL(dispatAmount, IFNULL(estimSettleAmount, 0))) as amountTotal FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') b, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as completedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0) d, ");
+            sql.append(" (SELECT IFNULL(sum(payableAmount),0) as uncompletedAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1) f, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 0 and settleMadeApple = 1) h, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as settleUnCompletedStartAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 1) l, ");
+            sql.append(" (SELECT IFNULL(sum(estimSettleAmount),0) as unfinishedSettledAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "' AND actualCompletedState = 1 and settleMadeApple = 0) n, ");
+            sql.append(" (SELECT IFNULL(sum(accountAmount),0) as returnedItemsAmount FROM projectprocing_settleprogressmanage WHERE internalProName = '" + name + "') p ");
+            sql.append(") ");
+            List<Object> objectList = super.findBySql(sql.toString());
+            Object[] objects = (Object[]) objectList.get(0);
+            amountTotal_list.add(Double.parseDouble(String.valueOf(objects[0])));
+            completedAmount_list.add(Double.parseDouble(String.valueOf(objects[1])));
+            uncompletedAmount_list.add(Double.parseDouble(String.valueOf(objects[2])));
+            settleCompletedStartAmount_list.add(Double.parseDouble(String.valueOf(objects[3])));
+            settleUnCompletedStartAmount_list.add(Double.parseDouble(String.valueOf(objects[4])));
+            unfinishedSettledAmount_list.add(Double.parseDouble(String.valueOf(objects[5])));
+            returnedItemsAmount_list.add(Double.parseDouble(String.valueOf(objects[6])));
+            noReturnSingularAmount_list.add(Double.parseDouble(String.valueOf(objects[0]))-Double.parseDouble(String.valueOf(objects[6])));
+
+        }
+        List<SeriesAmountBO> seriesAmountBOS = new ArrayList<>();
+        String[] ziduan_str = new String[]{"总金额/万","已完工金额","未完工金额","已完工已启动结算金额","未完工已启动结算金额"
+                ,"未完工未结算金额","已回款金额","未回款金额"};
+
+
+        List<List<Double>> data_list = new ArrayList<>();
+        data_list.add(amountTotal_list);
+        data_list.add(completedAmount_list);
+        data_list.add(uncompletedAmount_list);
+        data_list.add(settleCompletedStartAmount_list);
+        data_list.add(settleUnCompletedStartAmount_list);
+        data_list.add(unfinishedSettledAmount_list);
+        data_list.add(returnedItemsAmount_list);
+        data_list.add(noReturnSingularAmount_list);
+
+        for (int i = 0; i < 8; i++) {
+            SeriesAmountBO seriesAmountBO = new SeriesAmountBO();
+            seriesAmountBO.setName(ziduan_str[i]);
+            seriesAmountBO.setType("bar");
+            Double[] str = new Double[data_list.get(i).size()];
+            str = data_list.get(i).toArray(str);
+            seriesAmountBO.setData(str);
+            seriesAmountBOS.add(seriesAmountBO);
+        }
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText("各项目组结算进度金额情况");
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        legendBO.setData(ziduan_str);
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] internalName = new String[internalProNames.size()];
+        internalName = internalProNames.toArray(internalName);
+        xAxisBO.setData(internalName);
+
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+//        tooltipBO.setTrigger("axis");
+
+        SeriesAmountBO[] text_4 = new SeriesAmountBO[seriesAmountBOS.size()];
+        text_4 = seriesAmountBOS.toArray(text_4);
+        OptionAmountBO optionAmountBO = new OptionAmountBO();
+        optionAmountBO.setTitle(titleBO);
+        optionAmountBO.setTooltip(tooltipBO);
+        optionAmountBO.setLegend(legendBO);
+        optionAmountBO.setxAxis(xAxisBO);
+        optionAmountBO.setyAxis(yAxisBO);
+
+        optionAmountBO.setSeries(text_4);
+        return optionAmountBO;
+    }
 }

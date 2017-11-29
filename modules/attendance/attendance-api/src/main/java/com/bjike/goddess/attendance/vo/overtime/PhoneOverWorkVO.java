@@ -106,9 +106,18 @@ public class PhoneOverWorkVO {
     private AuditStatus auditStatus;
 
     /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
      * 手机版是否有权限审核
      */
     private Boolean hasAuditIs;
+    /**
+     * 手机版头像
+     */
+    private String pic;
 
 
     public String getId() {
@@ -263,11 +272,27 @@ public class PhoneOverWorkVO {
         this.auditTime = auditTime;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public Boolean getHasAuditIs() {
         return hasAuditIs;
     }
 
     public void setHasAuditIs(Boolean hasAuditIs) {
         this.hasAuditIs = hasAuditIs;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 }

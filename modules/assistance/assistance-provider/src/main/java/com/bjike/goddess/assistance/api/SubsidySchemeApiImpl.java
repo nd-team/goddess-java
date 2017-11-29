@@ -4,6 +4,7 @@ import com.bjike.goddess.assistance.bo.SubsidySchemeBO;
 import com.bjike.goddess.assistance.dto.SubsidySchemeDTO;
 import com.bjike.goddess.assistance.entity.SubsidyScheme;
 import com.bjike.goddess.assistance.service.SubsidySchemeSer;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.SubsidySchemeTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,17 @@ import java.util.List;
 public class SubsidySchemeApiImpl implements SubsidySchemeAPI {
     @Autowired
     private SubsidySchemeSer subsidySchemeSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return subsidySchemeSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return subsidySchemeSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countSubsidy(SubsidySchemeDTO subsidySchemeDTO) throws SerException {
         return subsidySchemeSer.countSubsidy(subsidySchemeDTO);

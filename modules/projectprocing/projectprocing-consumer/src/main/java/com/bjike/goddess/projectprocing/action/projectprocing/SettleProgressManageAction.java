@@ -13,20 +13,17 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.SettleProgressManageAPI;
 import com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI;
+import com.bjike.goddess.projectprocing.bo.OptionBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 import com.bjike.goddess.projectprocing.to.SiginManageDeleteFileTO;
-import com.bjike.goddess.projectprocing.vo.AllotmentNodeDataVO;
-import com.bjike.goddess.projectprocing.vo.ScreeningSettleProgressManageVO;
-import com.bjike.goddess.projectprocing.vo.SettleProgressManageVO;
-import com.bjike.goddess.projectprocing.vo.SettleProgressSummVO;
+import com.bjike.goddess.projectprocing.vo.*;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -59,6 +56,7 @@ public class SettleProgressManageAction extends BaseFileAction {
     private SettleWorkProgreManageAPI settleWorkProgreManageAPI;
     @Autowired
     private FileAPI fileAPI;
+
     /**
      * 结算进度管理总条数
      *
@@ -172,6 +170,7 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
+
     /**
      * 根据外包单位筛选信息
      *
@@ -197,7 +196,7 @@ public class SettleProgressManageAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/operatorName")
-    public Result findOperatorName( HttpServletRequest request) throws ActException {
+    public Result findOperatorName(HttpServletRequest request) throws ActException {
         try {
             List<String> operatorName = settleProgressManageAPI.findOperatorName();
             return ActResult.initialize(operatorName);
@@ -205,13 +204,14 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的地区
      *
      * @version v1
      */
     @GetMapping("v1/area")
-    public Result findArea( HttpServletRequest request) throws ActException {
+    public Result findArea(HttpServletRequest request) throws ActException {
         try {
             List<String> area = settleProgressManageAPI.findArea();
             return ActResult.initialize(area);
@@ -219,13 +219,14 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的外包单位
      *
      * @version v1
      */
     @GetMapping("v1/outUnit")
-    public Result findOutUnit( HttpServletRequest request) throws ActException {
+    public Result findOutUnit(HttpServletRequest request) throws ActException {
         try {
             List<String> outUnit = settleProgressManageAPI.findOutUnit();
             return ActResult.initialize(outUnit);
@@ -233,13 +234,14 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的销售合同
      *
      * @version v1
      */
     @GetMapping("v1/saleContractNo")
-    public Result findSaleContractNo( HttpServletRequest request) throws ActException {
+    public Result findSaleContractNo(HttpServletRequest request) throws ActException {
         try {
             List<String> saleContractNo = settleProgressManageAPI.findSaleContractNo();
             return ActResult.initialize(saleContractNo);
@@ -247,13 +249,14 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的外包合同号
      *
      * @version v1
      */
     @GetMapping("v1/contractNo")
-    public Result findContractNo( HttpServletRequest request) throws ActException {
+    public Result findContractNo(HttpServletRequest request) throws ActException {
         try {
             List<String> saleContractNo = settleProgressManageAPI.findContractNo();
             return ActResult.initialize(saleContractNo);
@@ -261,13 +264,14 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的进度
      *
      * @version v1
      */
     @GetMapping("v1/progress")
-    public Result findProgress( HttpServletRequest request) throws ActException {
+    public Result findProgress(HttpServletRequest request) throws ActException {
         try {
             List<String> saleContractNo = settleProgressManageAPI.findProgress();
             return ActResult.initialize(saleContractNo);
@@ -275,13 +279,14 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的派工名称
      *
      * @version v1
      */
     @GetMapping("v1/dispatName")
-    public Result findDispatName( HttpServletRequest request) throws ActException {
+    public Result findDispatName(HttpServletRequest request) throws ActException {
         try {
             List<String> dispatName = settleProgressManageAPI.findDispatName();
             return ActResult.initialize(dispatName);
@@ -289,6 +294,7 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据派工名称获取外包合同号
      *
@@ -303,8 +309,10 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据外包合同号获取对应字段信息
+     *
      * @return class BusinessContractsBO
      * @version v1
      */
@@ -317,8 +325,10 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 分配责任人
+     *
      * @param settleWorkProgreManageTO 结算工作进度管理
      * @version v1
      */
@@ -331,6 +341,7 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 上传附件
      *
@@ -413,15 +424,17 @@ public class SettleProgressManageAction extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+
     /**
      * 导出Excel
+     *
      * @version v1
      */
     @GetMapping("v1/exportExcel")
-    public Result exportExcel(@RequestParam String outUnit,HttpServletResponse response) throws ActException {
+    public Result exportExcel(@RequestParam String outUnit, HttpServletResponse response) throws ActException {
         try {
             String fileName = "结算进度管理.xlsx";
-            super.writeOutFile(response, settleProgressManageAPI.exportExcel(outUnit),fileName);
+            super.writeOutFile(response, settleProgressManageAPI.exportExcel(outUnit), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -432,12 +445,13 @@ public class SettleProgressManageAction extends BaseFileAction {
 
     /**
      * 导入
+     *
      * @param outUnit 外包单位
      * @return
      * @throws ActException
      */
     @PostMapping("v1/importExcel")
-    public Result importExcel(String outUnit,HttpServletRequest request) throws ActException {
+    public Result importExcel(String outUnit, HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = getInputStreams(request);
             settleProgressManageAPI.excelImport(inputStreams, outUnit);
@@ -446,15 +460,17 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 分配节点和进度延后的节点下拉值
+     *
      * @return class AllotmentNodeDataVO
      * @version v1
      */
     @GetMapping("v1/allotmentNodeData/{id}")
     public Result findAllotmentNodeData(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
-            List<AllotmentNodeDataVO> allotmentNodeDataVO = BeanTransform.copyProperties(settleProgressManageAPI.findAllNodeById(id),AllotmentNodeDataVO.class);
+            List<AllotmentNodeDataVO> allotmentNodeDataVO = BeanTransform.copyProperties(settleProgressManageAPI.findAllNodeById(id), AllotmentNodeDataVO.class);
             return ActResult.initialize(allotmentNodeDataVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -478,18 +494,84 @@ public class SettleProgressManageAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 结算进度汇总模板
+     *
      * @return class SettleProgressSummVO
      * @version v1
      */
     @GetMapping("v1/settleProgressSumm")
-    public Result settleProgressSumm(String area , String outUnit, HttpServletRequest request) throws ActException {
+    public Result settleProgressSumm(String area, String outUnit, HttpServletRequest request) throws ActException {
         try {
-            List<SettleProgressSummVO> settleProgressSummVOS = BeanTransform.copyProperties(settleProgressManageAPI.settleProgress(area,outUnit),SettleProgressSummVO.class);
+            List<SettleProgressSummVO> settleProgressSummVOS = BeanTransform.copyProperties(settleProgressManageAPI.settleProgress(area, outUnit), SettleProgressSummVO.class);
             return ActResult.initialize(settleProgressSummVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 结算进度管理汇总
+     *
+     * @return class SettleProgressManageSummVO
+     * @version v1
+     */
+    @GetMapping("v1/settleProgressManageSumm")
+    public Result settleProgressManageSumm(HttpServletRequest request) throws ActException {
+        try {
+            List<SettleProgressManageSummVO> settleProgressManageSummVOS = BeanTransform.copyProperties(settleProgressManageAPI.settleProgressManageSumm(), SettleProgressManageSummVO.class);
+            return ActResult.initialize(settleProgressManageSummVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有的内部项目名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findInternalProName")
+    public Result findInternalProName(HttpServletRequest request) throws ActException {
+        try {
+            List<String> internalName = settleProgressManageAPI.findInternalProName();
+            return ActResult.initialize(internalName);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 结算进度管理数量柱状图
+     *
+     * @return class OptionVO
+     * @version v1
+     */
+    @GetMapping("v1/settleProgressNum")
+    public Result settleProgressNum(HttpServletRequest request) throws ActException {
+        try {
+            OptionVO OptionVO = BeanTransform.copyProperties(settleProgressManageAPI.settleProgressNum(), OptionVO.class);
+            return ActResult.initialize(OptionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 结算进度管理金额柱状图
+     *
+     * @return class OptionAmountVO
+     * @version v1
+     */
+    @GetMapping("v1/settleProgressAmount")
+    public Result settleProgressAmount(HttpServletRequest request) throws ActException {
+        try {
+            OptionAmountVO optionAmountVO = BeanTransform.copyProperties(settleProgressManageAPI.settleProgressAmount(), OptionAmountVO.class);
+            return ActResult.initialize(optionAmountVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

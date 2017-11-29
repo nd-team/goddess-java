@@ -106,8 +106,8 @@ public class SubsidySchemeTO extends BaseTO {
     /**
      * 补助单价/天
      */
-    @NotBlank(message = "补助单价不能为空",groups = {ADD.class, EDIT.class})
-    private String schemePrice;
+    @NotNull(message = "补助单价不能为空",groups = {ADD.class, EDIT.class})
+    private Double schemePrice;
 
     /**
      * 补助发放形式
@@ -248,11 +248,11 @@ public class SubsidySchemeTO extends BaseTO {
         this.schemeContent = schemeContent;
     }
 
-    public String getSchemePrice() {
+    public Double getSchemePrice() {
         return schemePrice;
     }
 
-    public void setSchemePrice(String schemePrice) {
+    public void setSchemePrice(Double schemePrice) {
         this.schemePrice = schemePrice;
     }
 

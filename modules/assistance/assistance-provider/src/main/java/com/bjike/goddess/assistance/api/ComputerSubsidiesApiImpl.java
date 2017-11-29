@@ -6,6 +6,7 @@ import com.bjike.goddess.assistance.service.ComputerSubsidiesSer;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesAddTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
+import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ import java.util.List;
 public class ComputerSubsidiesApiImpl implements ComputerSubsidiesAPI {
     @Autowired
     private ComputerSubsidiesSer computerSubsidiesSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return computerSubsidiesSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return computerSubsidiesSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countComputer(ComputerSubsidiesDTO computerSubsidiesDTO) throws SerException {

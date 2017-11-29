@@ -39,6 +39,8 @@ dependencies {
 
     compile project(":modules:attendance:attendance-api")
     compile project(":modules:storage:storage-api")
+    compile project(":modules:event:event-api")
+
     compile group: 'com.caucho', name: 'hessian', version: "$hessian_version"
 
     compile("org.springframework.boot:spring-boot-starter-web")
