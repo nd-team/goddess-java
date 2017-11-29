@@ -26,6 +26,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
@@ -83,6 +86,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     private AuditTimeSetSer auditTimeSetSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private EventAPI eventAPI;
 
     private String content = "%s提交了%d天的请假申请，时间为%s至%s,请及时上系统查看审核";
     private String content1 = "%s提交了%d天的请假申请，时间为%s至%s,请注意工作交接情况";
@@ -371,6 +376,34 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
             send(title, content, receivers);
         }
+        for (String name : mains) {
+            EventTO eventTO = new EventTO();
+            eventTO.setName(name);
+            eventTO.setProjectChineseName("考勤");
+            eventTO.setProjectEnglishName("attendance");
+            eventTO.setFunctionChineseName("请假");
+            eventTO.setFunctionEnglishName("vacate");
+            eventTO.setContent("请假审核");
+            eventTO.setPermissions(Permissions.ADUIT);
+            eventTO.setEventId(entity.getId());
+            eventTO.setStatus("待审核");
+            eventAPI.save(eventTO);
+        }
+        if (null != carbons) {
+            for (String name : carbons) {
+                EventTO eventTO = new EventTO();
+                eventTO.setName(name);
+                eventTO.setProjectChineseName("考勤");
+                eventTO.setProjectEnglishName("attendance");
+                eventTO.setFunctionChineseName("请假");
+                eventTO.setFunctionEnglishName("vacate");
+                eventTO.setContent("请假查看");
+                eventTO.setPermissions(Permissions.SEE);
+                eventTO.setEventId(entity.getId());
+                eventTO.setStatus("待查看");
+                eventAPI.save(eventTO);
+            }
+        }
     }
 
     private void check(VacateTO to, double time, String userToken) throws SerException {
@@ -643,6 +676,10 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 messageAPI.send(messageTO);
             }
         }
+        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
     }
 
     @Override
@@ -696,6 +733,19 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 //            content = String.format(content, entity.getName(), time, to.getStartDate() + to.getStartTime().toString(), to.getEndDate() + to.getEndTime().toString());
             String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
             send(title, content, receivers);
+        }
+        for (String name : mains) {
+            EventTO eventTO = new EventTO();
+            eventTO.setName(name);
+            eventTO.setProjectChineseName("考勤");
+            eventTO.setProjectEnglishName("attendance");
+            eventTO.setFunctionChineseName("请假");
+            eventTO.setFunctionEnglishName("vacate");
+            eventTO.setContent("请假审核");
+            eventTO.setPermissions(Permissions.ADUIT);
+            eventTO.setEventId(entity.getId());
+            eventTO.setStatus("待审核");
+            eventAPI.save(eventTO);
         }
     }
 

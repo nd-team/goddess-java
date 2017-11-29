@@ -250,4 +250,13 @@ public class FinanceAttendanceAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    @GetMapping("v1/vacateDay")
+    public Result vacateDay(String name,String date) throws ActException {
+        try {
+            return ActResult.initialize(financeAttendanceAPI.vacateDay(name, date));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

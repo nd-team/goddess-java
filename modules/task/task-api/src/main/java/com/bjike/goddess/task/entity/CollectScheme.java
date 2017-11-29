@@ -2,6 +2,7 @@ package com.bjike.goddess.task.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.task.enums.DateType;
+import com.bjike.goddess.task.enums.SortType;
 import com.bjike.goddess.task.enums.TimeType;
 
 import javax.persistence.Column;
@@ -84,11 +85,24 @@ public class CollectScheme extends BaseEntity {
     private Boolean enable;
 
     /**
+     * 汇总表头排序
+     */
+    @Column(name = "sortType", nullable = false, columnDefinition = "TINYINT(2)  COMMENT '汇总表头排序'")
+    private SortType sortType;
+
+    /**
      * 是否抄送本部门
      */
     @Column(name = "is_sendDepart", nullable = false, columnDefinition = "TINYINT(1)  COMMENT '是否抄送本部门'")
     private Boolean sendDepart;
 
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
 
     public String getName() {
         return name;

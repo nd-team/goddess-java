@@ -286,7 +286,7 @@ public class PositionUserDetailSerImpl extends ServiceImpl<PositionUserDetail, P
                 "  WHERE position_id IN (" +
                 "    SELECT id" +
                 "    FROM organize_position_detail" +
-                "    WHERE position LIKE '项目经理'))";
+                "    WHERE position LIKE '%项目经理%'))";
         List<PositionDetailUserBO> list = super.findBySql(sql, PositionDetailUserBO.class, fields);
         if (null != list) {
             return list.stream().map(PositionDetailUserBO::getName).distinct().collect(Collectors.toList());

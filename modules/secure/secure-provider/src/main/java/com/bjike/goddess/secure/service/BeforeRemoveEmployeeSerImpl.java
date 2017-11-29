@@ -396,7 +396,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
             for (DimissionInfoBO bo : list) {
                 if (DimissionType.NORMAL.equals(bo.getType()) && HandleStatus.AFFIRM.equals(bo.getHandle())) {
                     LocalDate date = DateUtil.parseDate(bo.getDimissionDate());
-                    if (now == date) {
+                    if (now.isEqual(date)) {
                         b1 = true;
                         String employeeNumber = bo.getEmployeeNumber();
                         String name = bo.getUsername();
@@ -405,7 +405,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
                 }
                 if ((!DimissionType.NORMAL.equals(bo.getType())) && HandleStatus.AFFIRM.equals(bo.getHandle())) {
                     LocalDate date = DateUtil.parseDate(bo.getAdvanceDate());
-                    if (now == date) {
+                    if (now.isEqual(date)) {
                         b2 = true;
                         String employeeNumber = bo.getEmployeeNumber();
                         String name = bo.getUsername();

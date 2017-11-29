@@ -50,7 +50,6 @@ public class EventTO extends BaseTO {
     /**
      * 要求处理时间
      */
-    @NotBlank(groups = ADD.class, message = "要求处理时间不能为空")
     private String requestTime;
 
     /**

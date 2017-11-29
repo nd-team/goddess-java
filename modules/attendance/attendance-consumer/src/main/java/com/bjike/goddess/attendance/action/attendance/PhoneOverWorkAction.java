@@ -72,7 +72,10 @@ public class PhoneOverWorkAction extends BaseFileAction {
             RpcContext.getContext().setAttachment("userToken", userName);
             PositionDetailBO positionDetailBO = positionUserDetailAPI.getPosition(userName);
             RpcContext.getContext().setAttachment("userToken", userName);
-            if (positionDetailBO != null) {
+            if ("admin".equalsIgnoreCase(userName)){
+                overWorkIndentity = OverWorkIndentity.MANAGE;
+            }
+            else if (positionDetailBO != null) {
                 if (StringUtils.isBlank(positionDetailBO.getPosition())) {
                     return null;
                 } else {
@@ -83,10 +86,10 @@ public class PhoneOverWorkAction extends BaseFileAction {
                     } else {
                         overWorkIndentity = OverWorkIndentity.NOMAL;
                     }
-                    phoneOWIdentityVO.setName(userName);
-                    phoneOWIdentityVO.setOverWorkIndentity(overWorkIndentity);
                 }
             }
+            phoneOWIdentityVO.setName(userName);
+            phoneOWIdentityVO.setOverWorkIndentity(overWorkIndentity);
             return ActResult.initialize(phoneOWIdentityVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

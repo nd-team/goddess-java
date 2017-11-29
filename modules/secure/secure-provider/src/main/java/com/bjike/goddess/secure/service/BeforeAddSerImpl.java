@@ -425,7 +425,7 @@ public class BeforeAddSerImpl extends ServiceImpl<BeforeAdd, BeforeAddDTO> imple
             if ((boList != null) && (!boList.isEmpty())) {
                 for (RegularizationBO bo : boList) {
                     if (StringUtils.isNotBlank(bo.getPositiveDate())) {
-                        if (now == DateUtil.parseDate(bo.getPositiveDate())) {
+                        if (now.isEqual(DateUtil.parseDate(bo.getPositiveDate()))) {
                             b = true;
                             String name = bo.getName();
                             String empNo = bo.getEmpNo();

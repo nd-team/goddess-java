@@ -62,8 +62,8 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleSerImpl implements ScheduleSer {
     public static final Logger LOGGER = LoggerFactory.getLogger(ScheduleSerImpl.class);
-    @Autowired
-    private UserAPI userAPI;
+//    @Autowired
+//    private UserAPI userAPI;
     @Autowired
     private TableSer tableSer;
     @Autowired
@@ -72,10 +72,10 @@ public class ScheduleSerImpl implements ScheduleSer {
     private ModulesAPI modulesAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
-    @Autowired
-    private PositionDetailUserAPI positionDetailUserAPI;
-    @Autowired
-    private InternalContactsAPI internalContactsAPI;
+//    @Autowired
+//    private PositionDetailUserAPI positionDetailUserAPI;
+//    @Autowired
+//    private InternalContactsAPI internalContactsAPI;
     @Autowired
     private ProjectAPI projectAPI;
     @Autowired

@@ -65,8 +65,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     private CustomizeSonSer customizeSonSer;
     @Autowired
     private MessageAPI messageAPI;
-    @Autowired
-    private DepartmentDetailAPI departmentDetailAPI;
+//    @Autowired
+//    private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CommonalityAPI commonalityAPI;
 
@@ -285,13 +285,13 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             if (customize.getSendDepart()) {
                 String projectId = customize.getProjectId();
                 String depart = projectAPI.findByID(projectId).getDepart();
-                List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
-                if (null != departmentDetailBOS) {
-                    CommonalityBO commonalityBO = commonalityAPI.findByDepartment(departmentDetailBOS.get(0).getId());
+//                List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
+//                if (null != departmentDetailBOS) {
+                    CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
                     if (null != commonalityBO) {
                         departEmial = commonalityBO.getEmail();
                     }
-                }
+//                }
             }
             TimeType remindType = customize.getRemindType();
             int remidVal = customize.getDateVal();
@@ -549,7 +549,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 "WHERE table_id IN (" + tableId + ")" +
                 "      AND taskStatus=0 group by taskStatus";
         List<Object> objects = super.findBySql(sql);
-        if (null != objects) {
+        if (null != objects&&!objects.isEmpty()) {
             Object o = objects.get(0);
             Object[] obj = (Object[]) o;
             return Double.parseDouble(obj[0] + "");

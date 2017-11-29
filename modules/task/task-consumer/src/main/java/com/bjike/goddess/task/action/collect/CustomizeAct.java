@@ -18,6 +18,7 @@ import com.bjike.goddess.organize.vo.ActResultOrgan;
 import com.bjike.goddess.task.api.CustomizeAPI;
 import com.bjike.goddess.task.api.ScheduleAPI;
 import com.bjike.goddess.task.bo.CustomizeBO;
+import com.bjike.goddess.task.bo.CustomizeSonBO;
 import com.bjike.goddess.task.dto.CollectDTO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
 import com.bjike.goddess.task.to.CustomizeTO;
@@ -114,6 +115,10 @@ public class CustomizeAct {
     public Result customize(@PathVariable String id) throws ActException {
         try {
             CustomizeBO customizeBOS = customizeAPI.one(id);
+            List<CustomizeSonBO> sons=customizeBOS.getSons();
+            for (CustomizeSonBO son:sons){
+                son.setTypes(son.getType().split("、"));
+            }
             return ActResult.initialize(customizeBOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
