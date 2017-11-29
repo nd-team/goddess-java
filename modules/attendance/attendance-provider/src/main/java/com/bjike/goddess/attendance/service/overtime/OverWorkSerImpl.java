@@ -28,6 +28,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
@@ -76,6 +79,8 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private EventAPI eventAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -236,6 +241,17 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         overWork.setAuditStatus(AuditStatus.NONE);
         overWork.setEntryer(userBO.getUsername());
         super.save(overWork);
+        EventTO eventTO = new EventTO();
+        eventTO.setName(overWork.getCharger());
+        eventTO.setProjectChineseName("考勤");
+        eventTO.setProjectEnglishName("attendance");
+        eventTO.setFunctionChineseName("加班");
+        eventTO.setFunctionEnglishName("overwork");
+        eventTO.setContent("加班审核");
+        eventTO.setPermissions(Permissions.ADUIT);
+        eventTO.setEventId(overWork.getId());
+        eventTO.setStatus("待审核");
+        eventAPI.save(eventTO);
 
         //如果是项目经理下发的任务，则不用审核，将审核状态改为已通过
         RpcTransmit.transmitUserToken(userToken);
@@ -396,6 +412,10 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             overWork.setModifyTime(LocalDateTime.now());
             super.update(overWork);
         }
+        String eventId = eventAPI.findId(auditTO.getId(), userBO.getUsername());
+        if (null != eventId) {
+            eventAPI.delete(eventId);
+        }
         return BeanTransform.copyProperties(overWork, OverWorkBO.class);
     }
 
@@ -521,11 +541,11 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         List<OverWorkBO> bo = BeanTransform.copyProperties(list, OverWorkBO.class);
 
         UserDTO userDTO = new UserDTO();
-        userDTO.getConditions().add(Restrict.eq("username",phoneMyOverWorkDTO.getOverWorker()));
-        List<UserBO> listUserBO = userAPI.findByCis( userDTO );
-        if( listUserBO != null && listUserBO.size()>0 ){
-            for( OverWorkBO u : bo ){
-                u.setPic( listUserBO != null && listUserBO.size()>0 ? listUserBO.get(0).getHeadSculpture():"" );
+        userDTO.getConditions().add(Restrict.eq("username", phoneMyOverWorkDTO.getOverWorker()));
+        List<UserBO> listUserBO = userAPI.findByCis(userDTO);
+        if (listUserBO != null && null != bo && listUserBO.size() > 0) {
+            for (OverWorkBO u : bo) {
+                u.setPic(listUserBO != null && listUserBO.size() > 0 ? listUserBO.get(0).getHeadSculpture() : "");
 
             }
         }
@@ -560,17 +580,17 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         dto.getSorts().add("createTime=desc");
         List<OverWork> list = super.findByCis(dto, true);
         List<OverWorkBO> bo = BeanTransform.copyProperties(list, OverWorkBO.class);
-        if( bo != null && bo.size()>0 ) {
-            List<String> overerList = bo.stream().filter(str->StringUtils.isNotBlank(str.getOverWorker())).map(OverWorkBO::getOverWorker).collect(Collectors.toList());
+        if (bo != null && bo.size() > 0) {
+            List<String> overerList = bo.stream().filter(str -> StringUtils.isNotBlank(str.getOverWorker())).map(OverWorkBO::getOverWorker).collect(Collectors.toList());
             UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.in("username",overerList));
-            List<UserBO> listUserBO = userAPI.findByCis( userDTO );
-            if( listUserBO != null && listUserBO.size()>0 ){
-                for( OverWorkBO u : bo ){
+            userDTO.getConditions().add(Restrict.in("username", overerList));
+            List<UserBO> listUserBO = userAPI.findByCis(userDTO);
+            if (listUserBO != null && listUserBO.size() > 0) {
+                for (OverWorkBO u : bo) {
                     if (StringUtils.isNotBlank(u.getOverWorker())) {
-                        Optional<UserBO> temp = listUserBO.stream().findFirst().filter(str->u.getOverWorker().equals(str.getUsername()));
-                        if( temp.isPresent() ){
-                            u.setPic( temp.get().getHeadSculpture() );
+                        Optional<UserBO> temp = listUserBO.stream().findFirst().filter(str -> u.getOverWorker().equals(str.getUsername()));
+                        if (temp.isPresent()) {
+                            u.setPic(temp.get().getHeadSculpture());
                         }
                     }
                 }
@@ -609,17 +629,17 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         dto.getSorts().add("createTime=desc");
         List<OverWork> list = super.findByCis(dto, true);
         List<OverWorkBO> bo = BeanTransform.copyProperties(list, OverWorkBO.class);
-        if( bo != null && bo.size()>0 ) {
-            List<String> overerList = bo.stream().filter(str->StringUtils.isNotBlank(str.getOverWorker())).map(OverWorkBO::getOverWorker).collect(Collectors.toList());
+        if (bo != null && bo.size() > 0) {
+            List<String> overerList = bo.stream().filter(str -> StringUtils.isNotBlank(str.getOverWorker())).map(OverWorkBO::getOverWorker).collect(Collectors.toList());
             UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.in("username",overerList));
-            List<UserBO> listUserBO = userAPI.findByCis( userDTO );
-            if( listUserBO != null && listUserBO.size()>0 ){
-                for( OverWorkBO u : bo ){
+            userDTO.getConditions().add(Restrict.in("username", overerList));
+            List<UserBO> listUserBO = userAPI.findByCis(userDTO);
+            if (listUserBO != null && listUserBO.size() > 0) {
+                for (OverWorkBO u : bo) {
                     if (StringUtils.isNotBlank(u.getOverWorker())) {
-                        Optional<UserBO> temp = listUserBO.stream().findFirst().filter(str->u.getOverWorker().equals(str.getUsername()));
-                        if( temp.isPresent() ){
-                            u.setPic( temp.get().getHeadSculpture() );
+                        Optional<UserBO> temp = listUserBO.stream().findFirst().filter(str -> u.getOverWorker().equals(str.getUsername()));
+                        if (temp.isPresent()) {
+                            u.setPic(temp.get().getHeadSculpture());
                         }
                     }
                 }
@@ -627,7 +647,6 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         }
         return bo;
     }
-
 
 
     @Override
@@ -647,7 +666,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();
             }
-            if ( position.contains("项目经理")) {
+            if (position.contains("项目经理")) {
                 isManage = true;
             }
         }
@@ -659,9 +678,9 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         } else {
             bo.setHasAuditIs(false);
         }
-        if( StringUtils.isNotBlank(bo.getOverWorker())){
-            UserBO overer = userAPI.findByUsername( bo.getOverWorker());
-            bo.setPic( overer != null ?overer.getHeadSculpture():"");
+        if (StringUtils.isNotBlank(bo.getOverWorker())) {
+            UserBO overer = userAPI.findByUsername(bo.getOverWorker());
+            bo.setPic(overer != null ? overer.getHeadSculpture() : "");
         }
 
         return bo;

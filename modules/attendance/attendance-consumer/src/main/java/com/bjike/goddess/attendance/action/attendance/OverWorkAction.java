@@ -43,7 +43,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("overwork")
-public class OverWorkAction extends BaseFileAction{
+public class OverWorkAction extends BaseFileAction {
 
     @Autowired
     private OverWorkAPI overWorkAPI;
@@ -114,6 +114,25 @@ public class OverWorkAction extends BaseFileAction{
     @LoginAuth
     @PostMapping("v1/add")
     public Result addOverWork(@Validated(OverWorkTO.TESTAddAndEdit.class) OverWorkTO overWorkTO, BindingResult bindingResult) throws ActException {
+        try {
+            OverWorkBO overWorkBO1 = overWorkAPI.addOverWork(overWorkTO);
+            return ActResult.initialize(BeanTransform.copyProperties(overWorkBO1, OverWorkVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加(移动端)
+     *
+     * @param overWorkTO 加班基本信息数据to
+     * @return class OverWorkVO
+     * @des 添加加班
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/phone/add")
+    public Result phoneAdd(@Validated(OverWorkTO.PHONEADD.class) OverWorkTO overWorkTO, BindingResult bindingResult) throws ActException {
         try {
             OverWorkBO overWorkBO1 = overWorkAPI.addOverWork(overWorkTO);
             return ActResult.initialize(BeanTransform.copyProperties(overWorkBO1, OverWorkVO.class, true));
@@ -283,5 +302,5 @@ public class OverWorkAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
-    
+
 }

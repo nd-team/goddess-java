@@ -1,7 +1,10 @@
 package com.bjike.goddess.task.vo;
 
 import com.bjike.goddess.task.enums.DateType;
+import com.bjike.goddess.task.enums.SortType;
 import com.bjike.goddess.task.enums.TimeType;
+
+import java.util.List;
 
 /**
  * 汇总方案表现层对象
@@ -80,7 +83,27 @@ public class CollectSchemeVO {
      * 是否抄送本部门
      */
     private Boolean sendDepart;
+    private List<SchemeSonVO> sons;
+    /**
+     * 汇总表头排序
+     */
+    private SortType sortType;
 
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
+
+    public List<SchemeSonVO> getSons() {
+        return sons;
+    }
+
+    public void setSons(List<SchemeSonVO> sons) {
+        this.sons = sons;
+    }
 
     public String getId() {
         return id;

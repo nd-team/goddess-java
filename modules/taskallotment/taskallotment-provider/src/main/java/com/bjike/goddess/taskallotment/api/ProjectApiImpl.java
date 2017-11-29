@@ -212,24 +212,24 @@ public class ProjectApiImpl implements ProjectAPI {
 
     @Override
     public List<TableBO> tableByProjectId(String projectId) throws SerException {
-        TableDTO tableDTO=new TableDTO();
-        tableDTO.getConditions().add(Restrict.eq("projectId",projectId));
+        TableDTO tableDTO = new TableDTO();
+        tableDTO.getConditions().add(Restrict.eq("projectId", projectId));
         tableDTO.getConditions().add(Restrict.eq("status", Status.START));
         return BeanTransform.copyProperties(tableSer.findByCis(tableDTO), TableBO.class);
     }
 
     @Override
     public List<String> fileds(String[] tablesId) throws SerException {
-        Set<String> set=new HashSet<>();
-        TaskNodeDTO taskNodeDTO=new TaskNodeDTO();
-        taskNodeDTO.getConditions().add(Restrict.in("tableId",tablesId));
-        List<TaskNode> taskNodes=taskNodeSer.findByCis(taskNodeDTO);
-        Set<String> nodeIds=taskNodes.stream().map(TaskNode::getId).collect(Collectors.toSet());
-        if (!nodeIds.isEmpty()){
-            CustomTitleDTO customTitleDTO=new CustomTitleDTO();
-            customTitleDTO.getConditions().add(Restrict.in("taskNodeId",nodeIds));
-            List<CustomTitle> customTitles=customTitleSer.findByCis(customTitleDTO);
-            Set<String> titles=customTitles.stream().map(CustomTitle::getTitle).collect(Collectors.toSet());
+        Set<String> set = new HashSet<>();
+        TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+        taskNodeDTO.getConditions().add(Restrict.in("tableId", tablesId));
+        List<TaskNode> taskNodes = taskNodeSer.findByCis(taskNodeDTO);
+        Set<String> nodeIds = taskNodes.stream().map(TaskNode::getId).collect(Collectors.toSet());
+        if (!nodeIds.isEmpty()) {
+            CustomTitleDTO customTitleDTO = new CustomTitleDTO();
+            customTitleDTO.getConditions().add(Restrict.in("taskNodeId", nodeIds));
+            List<CustomTitle> customTitles = customTitleSer.findByCis(customTitleDTO);
+            Set<String> titles = customTitles.stream().map(CustomTitle::getTitle).collect(Collectors.toSet());
             set.addAll(titles);
         }
         return new ArrayList<>(set);

@@ -36,7 +36,7 @@ public class Event extends BaseEntity {
     /**
      * 要求处理时间
      */
-    @Column(name = "requestTime", nullable = false, columnDefinition = "DATETIME   COMMENT '要求处理时间'")
+    @Column(name = "requestTime", columnDefinition = "DATETIME   COMMENT '要求处理时间'")
     private LocalDateTime requestTime;
 
     /**

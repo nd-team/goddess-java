@@ -2,7 +2,10 @@ package com.bjike.goddess.task.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.task.enums.DateType;
+import com.bjike.goddess.task.enums.SortType;
 import com.bjike.goddess.task.enums.TimeType;
+
+import java.util.List;
 
 /**
  * 汇总方案业务传输对象
@@ -77,6 +80,29 @@ public class CollectSchemeBO extends BaseBO {
      * 是否抄送本部门
      */
     private Boolean sendDepart;
+
+    private List<SchemeSonBO> sons;
+    /**
+     * 汇总表头排序
+     */
+    private SortType sortType;
+
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
+
+    public List<SchemeSonBO> getSons() {
+        return sons;
+    }
+
+    public void setSons(List<SchemeSonBO> sons) {
+        this.sons = sons;
+    }
+
 
     public String[] getTable() {
         return table;

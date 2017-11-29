@@ -3,6 +3,8 @@ package com.bjike.goddess.task.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.task.enums.CollectSuitation;
 
+import java.util.List;
+
 /**
  * 自定义汇总子表业务传输对象
  *
@@ -35,10 +37,21 @@ public class CustomizeSonBO extends BaseBO {
     private String type;
 
     /**
+     * 任务类型1
+     */
+    private String[] types;
+    /**
      * 汇总表头字段
      */
     private String tableTitle;
 
+    public String[] getTypes() {
+        return types;
+    }
+
+    public void setTypes(String[] types) {
+        this.types = types;
+    }
 
     public String getCustomizeId() {
         return customizeId;

@@ -297,7 +297,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
 
     private Set<String> zhEmails() throws SerException {
         Set<String> set = new HashSet<>();
-        String token=RpcTransmit.getUserToken();
+        String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("organize")) {
             RpcTransmit.transmitUserToken(token);
             List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
@@ -306,7 +306,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
                     if (moduleAPI.isCheck("contacts")) {
                         RpcTransmit.transmitUserToken(token);
                         CommonalityBO commonality = commonalityAPI.findByDepartment(departmentDetailBO.getId());
-                        if (commonality != null&&commonality.getEmail()!=null) {
+                        if (commonality != null && commonality.getEmail() != null) {
                             set.add(commonality.getEmail());
                         }
                     }
@@ -329,7 +329,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
         for (AttachedBO bo : boList) {
             if (StringUtils.isNotBlank(bo.getEndTime())) {
                 LocalDate endTime = DateUtil.parseDate(bo.getEndTime());
-                if (now == (endTime.minusMonths(1))) {
+                if (now.isEqual(endTime.minusMonths(1))) {
                     b = true;
                     String name = bo.getAttachedName();
                     sb.append(name + "，");
@@ -352,6 +352,7 @@ public class AttachedEndSerImpl extends ServiceImpl<AttachedEnd, AttachedEndDTO>
             }
         }
     }
+
 
     @Override
     public Long count(AttachedEndDTO dto) throws SerException {

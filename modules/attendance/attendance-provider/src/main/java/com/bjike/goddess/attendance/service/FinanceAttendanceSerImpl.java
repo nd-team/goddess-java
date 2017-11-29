@@ -386,6 +386,78 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         return 0d;
     }
 
+    private Double annualVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.ANNUAL.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double matterVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.MATTER.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double sickVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.SICK.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double adjustVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.ADJUST.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double maternityVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.MATERNITY.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double paternityVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.PATERNITY.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double checkVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.CHECK.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double funeralVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.FUNERAL.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
+    private Double otherVacateDay(String name, String date) throws SerException {
+        List<VacateBO> list = vacateRecord(name, date);
+        if (null != list) {
+            return get(list.stream().filter(vacateBO -> VacateType.OTHER.equals(vacateBO.getVacateType())).collect(Collectors.toList()), date);
+        }
+        return 0d;
+    }
+
     private Double get(List<VacateBO> list, String date) throws SerException {
         double vacateDay = 0;   //当天的请假时长
         for (VacateBO vacateBO : list) {
@@ -1027,7 +1099,6 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
                         break;
                 }
                 String s = DateUtil.dateToString(start);
-                List<VacateBO> vacateRecord = vacateRecord(name, s);   //请假记录
                 double finishDay = taskNodeAPI.finishDay(s, name);  //任务完成天数
                 double vacateDay = vacateDay(name, s);   //请假天数
                 double absenteeismDay = 0;  //旷工天数
@@ -1050,30 +1121,21 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
                 double actualDay = (attendanceDay <= finishDay) ? attendanceDay : finishDay;
                 if (!(punchSonSer.festival(s) || (7 == weekValue && 0 == punchSonSer.extralWork(s)))) {  //正常工作日合计
                     normalAttendance += attendanceDay;
-                    List<VacateBO> annuals = vacateRecord.stream().filter(vacateBO -> VacateType.ANNUAL.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    annualVacate += get(annuals, s);
-                    List<VacateBO> matters = vacateRecord.stream().filter(vacateBO -> VacateType.MATTER.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    matterVacate += get(matters, s);
-                    List<VacateBO> sicks = vacateRecord.stream().filter(vacateBO -> VacateType.SICK.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    sickVacate += get(sicks, s);
-                    List<VacateBO> adjusts = vacateRecord.stream().filter(vacateBO -> VacateType.ADJUST.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    adjustVacate += get(adjusts, s);
-                    List<VacateBO> maternitys = vacateRecord.stream().filter(vacateBO -> VacateType.MATERNITY.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    maternityVacate += get(maternitys, s);
-                    List<VacateBO> paternitys = vacateRecord.stream().filter(vacateBO -> VacateType.PATERNITY.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    paternityVacate += get(paternitys, s);
-                    List<VacateBO> checks = vacateRecord.stream().filter(vacateBO -> VacateType.CHECK.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    checkVacate += get(checks, s);
-                    List<VacateBO> funerals = vacateRecord.stream().filter(vacateBO -> VacateType.FUNERAL.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    funeralVacate += get(funerals, s);
-                    List<VacateBO> others = vacateRecord.stream().filter(vacateBO -> VacateType.OTHER.equals(vacateBO.getVacateType())).collect(Collectors.toList());
-                    otherVacate += get(others, s);
+                    annualVacate += annualVacateDay(name, s);
+                    matterVacate += matterVacateDay(name, s);
+                    sickVacate += sickVacateDay(name, s);
+                    adjustVacate += adjustVacateDay(name, s);
+                    maternityVacate += maternityVacateDay(name, s);
+                    paternityVacate += paternityVacateDay(name, s);
+                    checkVacate += checkVacateDay(name, s);
+                    funeralVacate += funeralVacateDay(name, s);
+                    otherVacate += otherVacateDay(name, s);
                     normalOutWork += punchSonSer.outWorkTime(name, s);
                     List<ObjectBO> list = taskNodeAPI.taskSituation(new String[]{name}, s);
                     if (null != list) {
-                        double unFinishMin = list.stream().filter(objectBO ->null!=objectBO.getUndoneType()&& 0 == objectBO.getUndoneType().intValue()).mapToDouble(ObjectBO::getUndoneTime).sum();
-                        double unFinishHour = list.stream().filter(objectBO -> 1 == objectBO.getUndoneType().intValue()).mapToDouble(ObjectBO::getUndoneTime).sum();
-                        double unFinishDay = list.stream().filter(objectBO -> 2 == objectBO.getUndoneType().intValue()).mapToDouble(ObjectBO::getUndoneTime).sum();
+                        double unFinishMin = list.stream().filter(objectBO -> null != objectBO.getUndoneType() && null != objectBO.getUndoneTime() && 0 == objectBO.getUndoneType().intValue()).mapToDouble(ObjectBO::getUndoneTime).sum();
+                        double unFinishHour = list.stream().filter(objectBO -> null != objectBO.getUndoneType() && null != objectBO.getUndoneTime() && 1 == objectBO.getUndoneType().intValue()).mapToDouble(ObjectBO::getUndoneTime).sum();
+                        double unFinishDay = list.stream().filter(objectBO -> null != objectBO.getUndoneType() && null != objectBO.getUndoneTime() && 2 == objectBO.getUndoneType().intValue()).mapToDouble(ObjectBO::getUndoneTime).sum();
                         double time = new BigDecimal(unFinishMin / 60 / 24).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue() + new BigDecimal(unFinishHour / 24).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue() + unFinishDay;
                         normalUnFinish += time;
                     }
@@ -1126,16 +1188,16 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
                         financeAttendanceBO.setGreen(false);
                     }
                 }
-                remind = overWorkSer.overDay(name, end);
-                if (remind > 0 && vacate > 0) {
-                    offset = remind >= vacate ? vacate : remind;
-                }
-                lastRemind = remind - vacate;
-                workDay = normalAttendance + festival + offset;
-                paidDay = festival + noramlRest;
                 bos.add(financeAttendanceBO);
             }
             vacate = annualVacate + matterVacate + sickVacate + adjustVacate + maternityVacate + paternityVacate + checkVacate + funeralVacate + otherVacate;
+            remind = overWorkSer.overDay(name, end);
+            if (remind > 0 && vacate > 0) {
+                offset = remind >= vacate ? vacate : remind;
+            }
+            lastRemind = remind - vacate;
+            workDay = normalAttendance + festival + offset;
+            paidDay = festival + noramlRest;
             strings.add(normalAttendance + "");
             if (vacate > 0) {
                 StringBuilder sb = new StringBuilder();
