@@ -21,7 +21,7 @@ public class DeleteFileTO extends BaseTO {
     /**
      * 删除路径
      */
-    @NotNull(groups = {TestDEL.class}, message = "删除路径不能为空")
+    @NotNull(groups = {DeleteFileTO.TestDEL.class}, message = "删除路径不能为空")
     private String[] paths;
 
     public String[] getPaths() {

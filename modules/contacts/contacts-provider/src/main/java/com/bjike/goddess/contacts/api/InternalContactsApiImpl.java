@@ -2,6 +2,7 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.*;
+import com.bjike.goddess.contacts.dto.SearchDTO;
 import com.bjike.goddess.contacts.to.CollectTO;
 import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
@@ -192,5 +193,10 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     @Override
     public List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
         return internalContactsSer.mobileInfoByDepartment(dep);
+    }
+
+    @Override
+    public List<MobileSearchBO> mobileSearch(SearchDTO dto) throws SerException {
+        return internalContactsSer.mobileSearch(dto);
     }
 }

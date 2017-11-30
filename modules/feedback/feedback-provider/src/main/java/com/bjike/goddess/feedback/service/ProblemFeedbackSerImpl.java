@@ -6,9 +6,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
-import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
-import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.feedback.bo.ProblemAcceptBO;
 import com.bjike.goddess.feedback.bo.ProblemFeedbackBO;
 import com.bjike.goddess.feedback.dto.ProblemCodeRuleDTO;
@@ -29,8 +27,8 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -296,6 +294,9 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         return problemFeedbackBOS;
     }
 
+    private Logger log = Logger.getLogger(ProblemFeedbackSerImpl.class);
+
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ProblemFeedbackBO insert(ProblemFeedbackTO to) throws SerException {
@@ -317,52 +318,56 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         String s1 = s + "-" + String.valueOf(num);
         String name = to.getProblemExhibitor();
         List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.getPositionDetail(name);
-        for (PositionDetailBO positionDetailBO : positionDetailBOS) {
-            problemFeedback.setArea(positionDetailBO.getArea());
+        if (positionDetailBOS != null) {
+            for (PositionDetailBO positionDetailBO : positionDetailBOS) {
+                problemFeedback.setArea(positionDetailBO.getArea());
 //            positionDetailAPI.findStatus();
-            String departmentName = positionDetailBO.getDepartmentName();
-            String moduleName = positionDetailBO.getModuleName();
-            problemFeedback.setProjectGroup(departmentName);
-            if (departmentName != null) {
-                ProblemCodeRuleDTO problemCodeRuleDTO = new ProblemCodeRuleDTO();
-                problemCodeRuleDTO.getConditions().add(Restrict.eq("projectGroup", departmentName));
-                problemCodeRuleDTO.getConditions().add(Restrict.eq("module", moduleName));
-                List<ProblemCodeRule> problemCodeRule = problemCodeRuleSer.findByCis(problemCodeRuleDTO);
-                if (problemCodeRule != null) {
-                    problemFeedback.setProblemNum(problemCodeRule.get(0).getProblemCodeRule() + "Q" + s1);
+                String departmentName = positionDetailBO.getDepartmentName();
+                String moduleName = positionDetailBO.getModuleName();
+                problemFeedback.setProjectGroup(departmentName);
+                if (departmentName != null) {
+                    ProblemCodeRuleDTO problemCodeRuleDTO = new ProblemCodeRuleDTO();
+                    problemCodeRuleDTO.getConditions().add(Restrict.eq("projectGroup", departmentName));
+                    problemCodeRuleDTO.getConditions().add(Restrict.eq("module", moduleName));
+                    List<ProblemCodeRule> problemCodeRule = problemCodeRuleSer.findByCis(problemCodeRuleDTO);
+                    if (problemCodeRule != null) {
+                        problemFeedback.setProblemNum(problemCodeRule.get(0).getProblemCodeRule() + "Q" + s1);
 
+                    }
                 }
-            }
+                String passName = problemFeedback.getProblemExhibitor();
+                LocalDateTime getTime = problemFeedback.getGetTime();//获取时间(问题提出时间)
+                String area = problemFeedback.getArea();//所属地区
+                String projectGroup = problemFeedback.getProjectGroup(); //所属项目组/部门
+                String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
+                String problemDescription = problemFeedback.getProblemDescription(); //问题描述
+                LocalDateTime expectDealTime = problemFeedback.getExpectDealTime();//期望处理时间
+                StringBuffer content = new StringBuffer();
+                //设置发送内容
+                content.append("各位同事:");
+                content.append("本人是" + area + " " + projectGroup + " " + problemExhibitor + ",在" + getTime + "发现" + problemDescription + "请在" + expectDealTime + "前跟进处理,谢谢!");
+                MessageTO messageTO = new MessageTO();
+                messageTO.setContent(content.toString());
+                messageTO.setTitle("问题反馈");
+                messageTO.setMsgType(MsgType.SYS);
+                messageTO.setSendType(SendType.EMAIL);
+                messageTO.setRangeType(RangeType.SPECIFIED);
+                if (to.getPublicEmail() != null) {
+                    messageTO.setReceivers(to.getPublicEmail());
+                    messageAPI.send(messageTO);
+                }
+                if (to.getSendObject() != null) {
+                    List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
+                    if(!sendObject.isEmpty()){
+                        String[] strings = new String[sendObject.size()];
+                        strings = sendObject.toArray(strings);
+                        messageTO.setReceivers(strings);
+                        messageAPI.send(messageTO);
+                    }
+                }
 
+            }
             super.save(problemFeedback);
-            String passName = problemFeedback.getProblemExhibitor();
-            LocalDateTime getTime = problemFeedback.getGetTime();//获取时间(问题提出时间)
-            String area = problemFeedback.getArea();//所属地区
-            String projectGroup = problemFeedback.getProjectGroup(); //所属项目组/部门
-            String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
-            String problemDescription = problemFeedback.getProblemDescription(); //问题描述
-            LocalDateTime expectDealTime = problemFeedback.getExpectDealTime();//期望处理时间
-            StringBuffer content = new StringBuffer();
-//            设置发送内容
-            content.append("各位同事:");
-            content.append("本人是" + area + " " + projectGroup + " " + problemExhibitor + ",在" + getTime + "发现" + problemDescription + "请在" + expectDealTime + "前跟进处理,谢谢!");
-            MessageTO messageTO = new MessageTO();
-            messageTO.setContent(content.toString());
-            messageTO.setTitle("问题反馈");
-            messageTO.setMsgType(MsgType.SYS);
-            messageTO.setSendType(SendType.EMAIL);
-            messageTO.setRangeType(RangeType.SPECIFIED);
-            if(to.getPublicEmail()!=null){
-                messageTO.setReceivers(to.getPublicEmail());
-                messageAPI.send(messageTO);
-            }
-            if(to.getSendObject()!=null){
-                List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
-                String[] strings=new String[sendObject.size()];
-                strings=sendObject.toArray(strings);
-                messageTO.setReceivers(strings);
-                messageAPI.send(messageTO);
-            }
 
         }
         return BeanTransform.copyProperties(problemFeedback, ProblemFeedbackBO.class);
@@ -379,8 +384,6 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
             problemFeedback.setNotification(true);
             problemFeedback.setNotificationWay("邮件");
             problemFeedback.setNotificationTime(LocalDateTime.now());
-            super.update(problemFeedback);
-
             String passName = problemFeedback.getProblemExhibitor();
             String getTime = String.valueOf(problemFeedback.getGetTime());//获取时间(问题提出时间)
             String area = problemFeedback.getArea();//所属地区
@@ -403,18 +406,18 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
             messageTO.setSendType(SendType.EMAIL);
             messageTO.setRangeType(RangeType.SPECIFIED);
 
-            if(to.getPublicEmail()!=null){
+            if (to.getPublicEmail() != null) {
                 messageTO.setReceivers(to.getPublicEmail());
                 messageAPI.send(messageTO);
             }
-            if(to.getSendObject()!=null){
+            if (to.getSendObject() != null) {
                 List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
-                String[] strings=new String[sendObject.size()];
-                strings=sendObject.toArray(strings);
+                String[] strings = new String[sendObject.size()];
+                strings = sendObject.toArray(strings);
                 messageTO.setReceivers(strings);
                 messageAPI.send(messageTO);
             }
-
+            super.update(problemFeedback);
 
             return BeanTransform.copyProperties(problemFeedback, ProblemFeedbackBO.class);
         } else {
@@ -443,7 +446,6 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
                 problemAccept.setAcceptDepartment(positionDetailBO.getDepartmentName());
                 problemAccept.setAcceptModule(positionDetailBO.getModuleName());
             }
-            problemAcceptSer.save(problemAccept);
             String passName = problemFeedback.getProblemExhibitor();
             String getTime = String.valueOf(problemFeedback.getGetTime());//获取时间(问题提出时间)
             String problemExhibitor = problemFeedback.getProblemExhibitor();//问题提出人
@@ -464,17 +466,18 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
             messageTO.setSendType(SendType.EMAIL);
             messageTO.setRangeType(RangeType.SPECIFIED);
 
-            if(to.getPublicEmail()!=null){
+            if (to.getPublicEmail() != null) {
                 messageTO.setReceivers(to.getPublicEmail());
                 messageAPI.send(messageTO);
             }
-            if(to.getSendObject()!=null){
+            if (to.getSendObject() != null) {
                 List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
-                String[] strings=new String[sendObject.size()];
-                strings=sendObject.toArray(strings);
+                String[] strings = new String[sendObject.size()];
+                strings = sendObject.toArray(strings);
                 messageTO.setReceivers(strings);
                 messageAPI.send(messageTO);
             }
+            problemAcceptSer.save(problemAccept);
 
 
             return BeanTransform.copyProperties(problemAccept, ProblemAcceptBO.class);

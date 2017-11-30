@@ -1,7 +1,5 @@
 package com.bjike.goddess.contacts.action.contacts;
 
-import com.alibaba.dubbo.rpc.RpcContext;
-import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -15,9 +13,11 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
+import com.bjike.goddess.contacts.bo.MobileSearchBO;
 import com.bjike.goddess.contacts.bo.NameAndIdBO;
 import com.bjike.goddess.contacts.bo.PhoneNumberBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.dto.SearchDTO;
 import com.bjike.goddess.contacts.excel.InternalContactsExcel;
 import com.bjike.goddess.contacts.excel.InternalContactsTestExcel;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -496,6 +496,22 @@ public class InternalContactsAct extends BaseFileAction {
                 list.add(i);
             }
             return ActResult.initialize(list);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 手机端全局搜索
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/mobileSearch")
+    public Result mobileSearch(SearchDTO dto) throws ActException {
+        try {
+            List<MobileSearchBO> mobileSearchBOS = internalContactsAPI.mobileSearch(dto);
+            return ActResult.initialize(mobileSearchBOS);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }

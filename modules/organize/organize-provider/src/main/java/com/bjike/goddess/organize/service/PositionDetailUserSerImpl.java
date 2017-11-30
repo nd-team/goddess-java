@@ -312,16 +312,11 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         UserDTO userDTO = new UserDTO();
         userDTO.getConditions().add(Restrict.eq(ID, name));
         UserBO userBO = userAPI.findOne(userDTO);
-        logger.info("开始给user" + JSON.toJSONString(userBO));
         if (userBO != null) {
             PositionDetailUserDTO dto = new PositionDetailUserDTO();
             dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
             PositionDetailUser entity1 = super.findOne(dto);
-            logger.info("开始给position" + JSON.toJSONString(position_ids));
-            logger.info("开始给entity" + JSON.toJSONString(entity1));
-            logger.info("开始给" + JSON.toJSONString(entity1.getPositionSet()));
             if (null != entity1 && null != entity1.getPositionSet() && null != position_ids) {
-                logger.info("传进来的positionids" + JSON.toJSONString(entity1.getPositionSet()));
                 for (PositionDetail detail : entity1.getPositionSet())
                     for (String id : position_ids)
                         if (detail.getId().equals(id))
@@ -369,12 +364,20 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         userDTO.getConditions().add(Restrict.eq(ID, userId));
         UserBO userBO = userAPI.findOne(userDTO);
         if (userBO != null) {
-            PositionDetailUser entity = this.findByUser(userBO.getUsername());
-            if (null != entity && null != entity.getPositionSet() && null != moduleIds)
-                for (PositionDetail detail : entity.getPositionSet())
-                    for (String id : moduleIds)
-                        if (detail.getModule().getId().equals(id))
+            PositionDetailUserDTO dto = new PositionDetailUserDTO();
+            dto.getConditions().add(Restrict.eq("name", userBO.getUsername()));
+            PositionDetailUser entity = super.findOne(dto);
+
+//            PositionDetailUser entity = this.findByUser(userBO.getUsername());
+            if (null != entity && null != entity.getPositionSet() && null != moduleIds) {
+                for (PositionDetail detail : entity.getPositionSet()) {
+                    for (String id : moduleIds) {
+                        if (detail.getModule().getId().equals(id)) {
                             return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
