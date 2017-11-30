@@ -12,7 +12,12 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.bo.*;
+import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
+import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.dto.SearchDTO;
+import com.bjike.goddess.contacts.entity.CommerceContacts;
+import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.contacts.enums.ContactsStatus;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;
@@ -89,6 +94,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private ModuleAPI moduleAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
+    @Autowired
+    private ExternalContactsSer externalContactsSer;
+    @Autowired
+    private CommerceContactsSer commerceContactsSer;
 
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
@@ -749,7 +758,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 mobIn.setPhone(bo.getPhone());
                 mobIn.setPosition(bo.getPosition());
                 mobIn.setQq(bo.getQq());
-                mobIn.setPhoneNumber(bo.getPhoneNumberA());
+                mobIn.setPhoneNumberA(bo.getPhoneNumberA());
+                mobIn.setPhoneNumberB(bo.getPhoneNumberB());
+                mobIn.setPhoneNumberC(bo.getPhoneNumberC());
+                mobIn.setPhoneNumberD(bo.getPhoneNumberD());
                 mobIn.setStatus(bo.getStatus());
                 mobIn.setRemark(bo.getRemark());
                 mobIn.setWeChat(bo.getWeChat());
@@ -832,6 +844,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             mobIn.setUsername(bo.getName());
             mobIn.setDepartment(bo.getDepartment());
             mobIn.setPhone(bo.getPhone());
+            mobIn.setPhoneNumberA(bo.getPhoneNumberA());
+            mobIn.setPhoneNumberB(bo.getPhoneNumberB());
+            mobIn.setPhoneNumberC(bo.getPhoneNumberC());
+            mobIn.setPhoneNumberD(bo.getPhoneNumberD());
             mobIn.setPosition(bo.getPosition());
             if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
                 List<Integer> integerList = userNameSexBOs.stream().filter(str -> bo.getName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
@@ -1165,6 +1181,10 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                     }
                 }
             }
+            //联系电话
+            if(StringUtils.isNotBlank(dto.getPhone())){
+                dto.getConditions().add(Restrict.like("phone",dto.getPhone()));
+            }
         }
 //        /**
 //         * 用户性别
@@ -1238,6 +1258,116 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 //        if (dto.getStatus() != null) {
 //            dto.getConditions().add(Restrict.eq("status", dto.getStatus()));
 //        }
+    }
+
+    @Override
+    public List<MobileSearchBO> mobileSearch(SearchDTO dto) throws SerException {
+        List<MobileSearchBO> internalBOS = new ArrayList<>();
+        List<MobileSearchBO> externalBOS = new ArrayList<>();
+        List<MobileSearchBO> commerceBOS = new ArrayList<>();
+        InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
+        if(StringUtils.isNotBlank(dto.getUserName())){
+            internalContactsDTO.getConditions().add(Restrict.like("name",dto.getUserName()));
+        }
+        if(StringUtils.isNotBlank(dto.getPhone())){
+            internalContactsDTO.getConditions().add(Restrict.like("phone",dto.getPhone()));
+        }
+        List<InternalContacts> internalContacts = super.findByCis(internalContactsDTO);
+        List<String> userNames = internalContacts.stream().map(InternalContacts::getName).collect(Collectors.toList());
+        UserDTO userDTO = new UserDTO();
+        userDTO.getConditions().add(Restrict.in("username", userNames));
+        List<UserBO> userBOs = userAPI.findByCis(userDTO);
+
+        //查员工入职
+        EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+        entryRegisterDTO.getConditions().add(Restrict.in("username", userNames));
+        List<UserNameSexBO> userNameSexBOs = entryRegisterAPI.findSexByUserName((String[]) userNames.toArray(new String[userNames.size()]));
+        for(InternalContacts entity1:internalContacts){
+            MobileSearchBO searchBO = new MobileSearchBO();
+            if (null != userBOs && userBOs.size() > 0) {
+                searchBO.setHeadSculpture(userBOs.get(0).getHeadSculpture());
+            }
+            searchBO.setUserId(entity1.getId());
+            searchBO.setUsername(entity1.getName());
+            searchBO.setPhone(entity1.getPhone());
+            searchBO.setPosition(entity1.getPosition());
+            if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
+                List<Integer> integerList = userNameSexBOs.stream().filter(str -> entity1.getName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
+                if (null != integerList && integerList.size() > 0) {
+                    if (0 == integerList.get(0)) {
+                        searchBO.setSex(SexType.MAN);
+                    } else {
+                        searchBO.setSex(SexType.WOMAN);
+                    }
+                }
+            }
+            internalBOS.add(searchBO);
+
+        }
+
+        ExternalContactsDTO externalContactsDTO =new ExternalContactsDTO();
+        if(StringUtils.isNotBlank(dto.getUserName())){
+            externalContactsDTO.getConditions().add(Restrict.like("username",dto.getUserName()));
+        }
+        if(StringUtils.isNotBlank(dto.getPhone())){
+            externalContactsDTO.getConditions().add(Restrict.like("phone",dto.getPhone()));
+        }
+        List<ExternalContacts> externalContacts =externalContactsSer.findByCis(externalContactsDTO);
+        for(ExternalContacts entity2:externalContacts){
+            MobileSearchBO searchBO = new MobileSearchBO();
+            if (null != userBOs && userBOs.size() > 0) {
+                searchBO.setHeadSculpture(userBOs.get(0).getHeadSculpture());
+            }
+            searchBO.setUserId(entity2.getId());
+            searchBO.setUsername(entity2.getUsername());
+            searchBO.setPhone(entity2.getPhone());
+            searchBO.setPosition(entity2.getPosition());
+            if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
+                List<Integer> integerList = userNameSexBOs.stream().filter(str -> entity2.getUsername().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
+                if (null != integerList && integerList.size() > 0) {
+                    if (0 == integerList.get(0)) {
+                        searchBO.setSex(SexType.MAN);
+                    } else {
+                        searchBO.setSex(SexType.WOMAN);
+                    }
+                }
+            }
+            externalBOS.add(searchBO);
+
+        }
+        CommerceContactsDTO commerceContactsDTO = new CommerceContactsDTO();
+        if(StringUtils.isNotBlank(dto.getUserName())){
+            commerceContactsDTO.getConditions().add(Restrict.like("customerName",dto.getUserName()));
+        }
+        if(StringUtils.isNotBlank(dto.getPhone())){
+            commerceContactsDTO.getConditions().add(Restrict.like("tel",dto.getPhone()));
+        }
+        List<CommerceContacts> commerceContacts = commerceContactsSer.findByCis(commerceContactsDTO);
+        for(CommerceContacts entity3:commerceContacts){
+            MobileSearchBO searchBO = new MobileSearchBO();
+            if (null != userBOs && userBOs.size() > 0) {
+                searchBO.setHeadSculpture(userBOs.get(0).getHeadSculpture());
+            }
+            searchBO.setUserId(entity3.getId());
+            searchBO.setUsername(entity3.getCustomerName());
+            searchBO.setPhone(entity3.getPhone());
+            searchBO.setPosition(entity3.getWorkPosition());
+            if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
+                List<Integer> integerList = userNameSexBOs.stream().filter(str -> entity3.getCustomerName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
+                if (null != integerList && integerList.size() > 0) {
+                    if (0 == integerList.get(0)) {
+                        searchBO.setSex(SexType.MAN);
+                    } else {
+                        searchBO.setSex(SexType.WOMAN);
+                    }
+                }
+            }
+            commerceBOS.add(searchBO);
+
+        }
+        internalBOS.addAll(externalBOS);
+        internalBOS.addAll(commerceBOS);
+        return internalBOS;
     }
 
     @Override

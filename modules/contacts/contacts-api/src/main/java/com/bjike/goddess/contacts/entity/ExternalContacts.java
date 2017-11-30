@@ -120,6 +120,60 @@ public class ExternalContacts extends BaseEntity {
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+    /**
+     * 联系电话1
+     */
+    @Column(name = "phoneNumberA", columnDefinition = "VARCHAR(255)   COMMENT '联系电话1'")
+    private String phoneNumberA;
+    /**
+     * 联系电话2
+     */
+    @Column(name = "phoneNumberB", columnDefinition = "VARCHAR(255)   COMMENT '联系电话2'")
+    private String phoneNumberB;
+
+    /**
+     * 联系电话3
+     */
+    @Column(name = "phoneNumberC", columnDefinition = "VARCHAR(255)   COMMENT '联系电话3'")
+    private String phoneNumberC;
+
+    /**
+     * 联系电话4
+     */
+    @Column(name = "phoneNumberD", columnDefinition = "VARCHAR(255)   COMMENT '联系电话4'")
+    private String phoneNumberD;
+
+    public String getPhoneNumberA() {
+        return phoneNumberA;
+    }
+
+    public void setPhoneNumberA(String phoneNumberA) {
+        this.phoneNumberA = phoneNumberA;
+    }
+
+    public String getPhoneNumberB() {
+        return phoneNumberB;
+    }
+
+    public void setPhoneNumberB(String phoneNumberB) {
+        this.phoneNumberB = phoneNumberB;
+    }
+
+    public String getPhoneNumberC() {
+        return phoneNumberC;
+    }
+
+    public void setPhoneNumberC(String phoneNumberC) {
+        this.phoneNumberC = phoneNumberC;
+    }
+
+    public String getPhoneNumberD() {
+        return phoneNumberD;
+    }
+
+    public void setPhoneNumberD(String phoneNumberD) {
+        this.phoneNumberD = phoneNumberD;
+    }
 
     public LocalDate getUpdateTime() {
         return updateTime;

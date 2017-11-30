@@ -17,6 +17,18 @@ public class CommerceContactsDTO extends BaseDTO {
      * 客户姓名
      */
     private String customerName;
+    /**
+     * 手机号
+     */
+    private String tel;
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
 
     public String getCustomerName() {
         return customerName;

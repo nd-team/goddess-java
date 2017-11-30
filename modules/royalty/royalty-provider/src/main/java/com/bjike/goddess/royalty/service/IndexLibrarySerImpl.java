@@ -337,7 +337,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
             time = LocalDate.now();
         }
         List<RoyaltyCollectBO> boList = new ArrayList<>();
-        String sql = " SELECT a.area AS area,c.department AS department, " +
+        String sql = " SELECT a.area AS area,c.projectGroup AS department, " +
                 " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
                 " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
                 " WHERE betTime = '" + time + "' " +
@@ -404,7 +404,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
         LocalDate start = time[0];
         LocalDate end = time[1];
         List<RoyaltyCollectBO> boList = new ArrayList<>();
-        String sql = " SELECT a.area AS area,c.department AS department, " +
+        String sql = " SELECT a.area AS area,c.projectGroup AS department, " +
                 " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
                 " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
                 " WHERE betTime between '" + start + "' and '" + end + "' " +
@@ -457,7 +457,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
             month = LocalDate.now().getMonthValue();
         }
         List<RoyaltyCollectBO> boList = new ArrayList<>();
-        String sql = " SELECT a.area AS area,c.department AS department, " +
+        String sql = " SELECT a.area AS area,c.projectGroup AS department, " +
                 " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
                 " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
                 " WHERE year(betTime) = '" + year + "' and month(betTime) = '" + month + "' " +
@@ -507,7 +507,7 @@ public class IndexLibrarySerImpl extends ServiceImpl<IndexLibrary, IndexLibraryD
             end = LocalDate.now();
         }
         List<RoyaltyCollectBO> boList = new ArrayList<>();
-        String sql = " SELECT a.area AS area,c.department AS department, " +
+        String sql = " SELECT a.area AS area,c.projectGroup AS department, " +
                 " count(c.department) AS  bet ,sum(a.practiceProfit) AS practiceProfit " +
                 " FROM royalty_jobsbeta a,royalty_jobsbetc c " +
                 " WHERE betTime <= '" + end + "' " +

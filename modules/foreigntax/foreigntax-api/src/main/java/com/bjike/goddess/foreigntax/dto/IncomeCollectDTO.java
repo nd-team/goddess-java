@@ -15,12 +15,12 @@ public class IncomeCollectDTO extends BaseDTO {
     /**
      * 开始时间
      */
-    @NotBlank(message = "开始时间不能为空",groups = {collect.class})
+    @NotBlank(message = "开始时间不能为空",groups = {IncomeCollectDTO.collect.class})
     private String startTime;
     /**
      * 结束时间
      */
-    @NotBlank(message = "结束时间不能为空",groups = {collect.class})
+    @NotBlank(message = "结束时间不能为空",groups = {IncomeCollectDTO.collect.class})
     private String endTime;
 
 

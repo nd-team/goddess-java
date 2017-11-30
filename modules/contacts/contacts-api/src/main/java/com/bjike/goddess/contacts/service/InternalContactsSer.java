@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contacts.bo.*;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.dto.SearchDTO;
 import com.bjike.goddess.contacts.entity.InternalContacts;
 import com.bjike.goddess.contacts.to.CollectTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
@@ -310,6 +311,15 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
      * @throws SerException
      */
     default List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+        return null;
+    }
+    /**
+     * 全局搜索
+     *
+     * @return class MobileSearchBO
+     * @throws SerException
+     */
+    default List<MobileSearchBO> mobileSearch(SearchDTO dto) throws SerException {
         return null;
     }
 }

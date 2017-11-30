@@ -110,7 +110,7 @@ public class IncomeInvoiceAction extends BaseFileAction {
      * 进项发票列表
      *
      * @param dto 进项发票dto
-     * @return class OutputInvoiceVO
+     * @return class IncomeInvoiceVO
      * @des 获取所有进项发票
      * @version v1
      */

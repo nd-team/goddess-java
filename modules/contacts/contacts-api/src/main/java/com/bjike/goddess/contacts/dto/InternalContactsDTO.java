@@ -29,7 +29,18 @@ public class InternalContactsDTO extends BaseDTO {
      * 状态
      */
     private ContactsStatus status;
+    /**
+     * 联系电话
+     */
+    private String phone;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getUserName() {
         return userName;

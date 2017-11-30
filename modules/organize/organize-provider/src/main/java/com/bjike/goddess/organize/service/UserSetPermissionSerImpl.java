@@ -1,5 +1,6 @@
 package com.bjike.goddess.organize.service;
 
+import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -17,6 +18,7 @@ import com.bjike.goddess.organize.to.UserSetPermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -356,51 +358,115 @@ public class UserSetPermissionSerImpl extends ServiceImpl<UserSetPermission, Use
         return flag;
     }
 
+    private Logger log = Logger.getLogger(UserSetPermissionSerImpl.class);
     @Override
-    public Boolean checkSetPermission( ) throws SerException {
+    public Boolean checkSetPermission() throws SerException{
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
 
-        UserBO userBO = userAPI.currentUser( );
-        RpcTransmit.transmitUserToken( userToken );
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
-        if( "admin".equals( userName.toLowerCase())){
+        if ("admin".equals(userName.toLowerCase())) {
             flag = true;
 
-        }else {
+        } else {
 
             //但前用户
             String userId = userBO.getId();
 
-            UserSetPermissionDTO dto = new UserSetPermissionDTO();
-            dto.getConditions().add(Restrict.eq("idFlag", "1"));
-            UserSetPermission cusPermission = super.findOne(dto);
+            UserSetPermissionDTO departDto = new UserSetPermissionDTO();
+            departDto.getConditions().add(Restrict.eq("idFlag", "1"));
+//            UserSetPermission departCusPermission = super.findOne(departDto);
+            List<UserSetPermission> departCusPermission = super.findByCis(departDto);
 
-            //先查询获操作对象
-            List<String> idList = new ArrayList<>();
+            departDto = new UserSetPermissionDTO();
+            departDto.getConditions().add(Restrict.eq("idFlag", "2"));
+//            UserSetPermission moduleCusPermission = super.findOne(moduleDto);
+            List<UserSetPermission>  moduleCusPermission = super.findByCis(departDto);
+
+
+            departDto = new UserSetPermissionDTO();
+            departDto.getConditions().add(Restrict.eq("idFlag", "3"));
+//            UserSetPermission levelCusPermission = super.findOne(levelDto);
+            List<UserSetPermission>  levelCusPermission = super.findByCis(departDto);
+
+
+
+            //查询获操作对象
+            //部门
+            List<String> departIdList = new ArrayList<>();
             UserSetPermissionOperateDTO cpoDTO = new UserSetPermissionOperateDTO();
-            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
-            List<UserSetPermissionOperate> operateList = userSetPermissionOperateSer.findByCis(cpoDTO);
-            if (operateList != null && operateList.size() > 0) {
-                operateList.stream().forEach(op -> {
-                    idList.add(op.getOperator());
+            cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", departCusPermission.get(0).getId()));
+            List<UserSetPermissionOperate> departOperateList = userSetPermissionOperateSer.findByCis(cpoDTO);
+            if (departOperateList != null && departOperateList.size() > 0) {
+                departOperateList.stream().forEach(op -> {
+                    departIdList.add(op.getOperator());
                 });
             }
+            Boolean departFlag=false;
+            Boolean moduleFlag = false;
+            Boolean levelFlag = false;
 
+            String[] departOperateIds = null;
+            if (null != departIdList && departIdList.size() > 0) {
+                departOperateIds = new String[departIdList.size()];
+                for (int i = 0; i < departIdList.size(); i++) {
+                    departOperateIds[i] = departIdList.get(i);
+                }
+                departFlag= positionDetailUserSer.checkAsUserDepartment(userId, departOperateIds);
+            }
 
-            String[] operateIds = null;
-            if (null != idList && idList.size() > 0) {
-                operateIds = new String[idList.size()];
-                for (int i = 0; i < idList.size(); i++) {
-                    operateIds[i] = idList.get(i);
+            if (!departFlag) {
+                //模块
+                List<String> moduleIdList = new ArrayList<>();
+                UserSetPermissionOperateDTO moduleCpoDTO = new UserSetPermissionOperateDTO();
+                moduleCpoDTO.getConditions().add(Restrict.eq("cuspermissionId", moduleCusPermission.get(0).getId()));
+                List<UserSetPermissionOperate> moduleOperateList = userSetPermissionOperateSer.findByCis(moduleCpoDTO);
+                if (moduleOperateList != null && moduleOperateList.size() > 0) {
+                    moduleOperateList.stream().forEach(op -> {
+                        moduleIdList.add(op.getOperator());
+                    });
                 }
 
-            }
-            Boolean positionFlag = positionDetailUserSer.checkAsUserPosition(userId, operateIds);
 
+                String[] moduleOperateIds = null;
+                if (null != moduleIdList && moduleIdList.size() > 0) {
+                    moduleOperateIds = new String[moduleIdList.size()];
+                    for (int i = 0; i < moduleIdList.size(); i++) {
+                        moduleOperateIds[i] = moduleIdList.get(i);
+                    }
+
+                }
+                moduleFlag = positionDetailUserSer.checkAsUserModule(userId, moduleOperateIds);
+            }
+
+            if (!(departFlag && moduleFlag)) {
+                //层级
+                List<String> levelIdList = new ArrayList<>();
+                UserSetPermissionOperateDTO levelCpoDTO = new UserSetPermissionOperateDTO();
+                levelCpoDTO.getConditions().add(Restrict.eq("cuspermissionId", levelCusPermission.get(0).getId()));
+                List<UserSetPermissionOperate> levelOperateList = userSetPermissionOperateSer.findByCis(levelCpoDTO);
+                if (levelOperateList != null && levelOperateList.size() > 0) {
+                    levelOperateList.stream().forEach(op -> {
+                        levelIdList.add(op.getOperator());
+                    });
+                }
+
+
+                String[] levelOperateIds = null;
+                if (null != levelIdList && levelIdList.size() > 0) {
+                    levelOperateIds = new String[levelIdList.size()];
+                    for (int i = 0; i < levelIdList.size(); i++) {
+                        levelOperateIds[i] = levelIdList.get(i);
+                    }
+                    levelFlag = positionDetailUserSer.checkAsUserArrangement(userId, levelOperateIds);
+                }
+            }
 
             //TODO 岗位
-            if (positionFlag) {
+            //部门 模块 层级
+            if (departFlag || moduleFlag || levelFlag) {
                 flag = true;
             } else {
                 flag = false;

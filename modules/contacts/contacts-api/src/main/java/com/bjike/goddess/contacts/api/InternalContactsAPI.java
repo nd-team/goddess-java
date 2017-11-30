@@ -2,11 +2,12 @@ package com.bjike.goddess.contacts.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contacts.bo.*;
-import com.bjike.goddess.contacts.to.CollectTO;
-import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.dto.SearchDTO;
+import com.bjike.goddess.contacts.to.CollectTO;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
+import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 
 import java.util.List;
 
@@ -172,6 +173,7 @@ public interface InternalContactsAPI {
     default List<MobileInternalContactsBO> mobileList(InternalContactsDTO dto) throws SerException {
         return null;
     }
+
     /**
      * 移动端获取根据姓名获取所有电话号码
      *
@@ -217,6 +219,7 @@ public interface InternalContactsAPI {
     default InternalContactsConditionBO getByName(String name) throws SerException {
         return null;
     }
+
     /**
      * 通讯录信息管理日汇总
      *
@@ -252,6 +255,7 @@ public interface InternalContactsAPI {
      * @throws SerException
      */
     List<ContactsCollectBO> totalCollect(CollectTO to) throws SerException;
+
     /**
      * 员工信息管理日汇总图表
      *
@@ -287,6 +291,7 @@ public interface InternalContactsAPI {
      * @throws SerException
      */
     OptionBO totalCollectFigure(CollectTO to) throws SerException;
+
     /**
      * 检测邮箱是否通过
      *
@@ -294,6 +299,7 @@ public interface InternalContactsAPI {
      */
     default void checkEmail() throws SerException {
     }
+
     /**
      * 查询部门下所有人的信息
      *
@@ -301,6 +307,16 @@ public interface InternalContactsAPI {
      * @throws SerException
      */
     default List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+        return null;
+    }
+
+    /**
+     * 全局搜索
+     *
+     * @return class MobileSearchBO
+     * @throws SerException
+     */
+    default List<MobileSearchBO> mobileSearch(SearchDTO dto) throws SerException {
         return null;
     }
 }

@@ -314,6 +314,54 @@ public class PositionDetailUserAct {
     }
 
     /**
+     * 检测用户职位权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkAsUserDepart2")
+    public Result checkAsUserDepart2(String userid, String[] poids) throws ActException {
+        try {
+            Boolean userBOS = positionDetailUserAPI.checkAsUserDepartment(userid, poids);
+            return ActResult.initialize(userBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 检测用户职位权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkAsUserLevel2")
+    public Result checkAsUserLevel2(String userid, String[] poids) throws ActException {
+        try {
+            Boolean userBOS = positionDetailUserAPI.checkAsUserArrangement(userid, poids);
+            return ActResult.initialize(userBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 检测用户职位权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/checkAsUserModule2")
+    public Result checkAsUserModule2(String userid, String[] poids) throws ActException {
+        try {
+            Boolean userBOS = positionDetailUserAPI.checkAsUserModule(userid, poids);
+            return ActResult.initialize(userBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 获取组织结构中的用户列表
      *
      * @version v1
