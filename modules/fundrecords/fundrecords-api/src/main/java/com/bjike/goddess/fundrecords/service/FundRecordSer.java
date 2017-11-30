@@ -114,6 +114,14 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
 
     byte[] exportExcel(String startDate, String endDate) throws SerException;
 
+    /**
+     * 根据账户来源导出
+     * @param dataSource 账户来源
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcelLJT(String dataSource) throws SerException;
+
     byte[] exportExcelModule() throws SerException;
 
     List<SonPermissionObject> sonPermission() throws SerException;
@@ -178,6 +186,12 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
      * @throws SerException
      */
     default List<String> findAllArea() throws SerException{return null;}
+    /**
+     * 获取所有账户来源
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllDataSource() throws SerException{return null;}
 
     /**
      * 获取所有项目组

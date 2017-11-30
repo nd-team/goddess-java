@@ -74,6 +74,12 @@ public class TemperatureSubsidiesTO extends BaseTO {
     @NotNull(message = "补助单价不能为空",groups = {ADD.class, EDIT.class})
     private Double subsidiesPrice;
 
+    /**
+     * 补助状态
+     */
+    @NotNull(message = "补助状态不能为空",groups = {ADD.class, EDIT.class})
+    private SubsidiesStatus subsidiesStatus;
+
     public String getArea() {
         return area;
     }
@@ -144,5 +150,13 @@ public class TemperatureSubsidiesTO extends BaseTO {
 
     public void setSubsidiesPrice(Double subsidiesPrice) {
         this.subsidiesPrice = subsidiesPrice;
+    }
+
+    public SubsidiesStatus getSubsidiesStatus() {
+        return subsidiesStatus;
+    }
+
+    public void setSubsidiesStatus(SubsidiesStatus subsidiesStatus) {
+        this.subsidiesStatus = subsidiesStatus;
     }
 }

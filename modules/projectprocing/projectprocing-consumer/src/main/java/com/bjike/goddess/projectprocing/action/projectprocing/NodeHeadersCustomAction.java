@@ -102,7 +102,7 @@ public class NodeHeadersCustomAction {
      * @des 添加节点表头定制
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @PostMapping("v1/add")
     public Result addProjectCarry(@Validated({ADD.class}) NodeHeadersCustomTO nodeHeadersCustomTO, BindingResult bindingResult) throws ActException {
         try {

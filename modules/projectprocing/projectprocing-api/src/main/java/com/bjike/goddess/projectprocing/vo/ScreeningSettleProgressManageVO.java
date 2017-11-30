@@ -6,6 +6,7 @@ import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.enums.ActualCompletedState;
 import com.bjike.goddess.projectprocing.enums.DispatCondition;
 import com.bjike.goddess.projectprocing.enums.Kpi;
+import com.bjike.goddess.projectprocing.enums.SettlementPlan;
 
 import java.util.List;
 
@@ -258,17 +259,17 @@ public class ScreeningSettleProgressManageVO {
     /**
      * 是否可制作申请结算
      */
-    private Double settleMadeApple;
+    private Boolean settleMadeApple;
 
     /**
      * 是否影响结算
      */
-    private Double affectSettlement;
+    private Boolean affectSettlement;
 
     /**
      * 结算计划
      */
-    private String settlementPlan;
+    private SettlementPlan settlementPlan;
 
     /**
      * 正在执行项目
@@ -669,27 +670,27 @@ public class ScreeningSettleProgressManageVO {
         this.totalScaleNum = totalScaleNum;
     }
 
-    public Double getSettleMadeApple() {
+    public Boolean getSettleMadeApple() {
         return settleMadeApple;
     }
 
-    public void setSettleMadeApple(Double settleMadeApple) {
+    public void setSettleMadeApple(Boolean settleMadeApple) {
         this.settleMadeApple = settleMadeApple;
     }
 
-    public Double getAffectSettlement() {
+    public Boolean getAffectSettlement() {
         return affectSettlement;
     }
 
-    public void setAffectSettlement(Double affectSettlement) {
+    public void setAffectSettlement(Boolean affectSettlement) {
         this.affectSettlement = affectSettlement;
     }
 
-    public String getSettlementPlan() {
+    public SettlementPlan getSettlementPlan() {
         return settlementPlan;
     }
 
-    public void setSettlementPlan(String settlementPlan) {
+    public void setSettlementPlan(SettlementPlan settlementPlan) {
         this.settlementPlan = settlementPlan;
     }
 

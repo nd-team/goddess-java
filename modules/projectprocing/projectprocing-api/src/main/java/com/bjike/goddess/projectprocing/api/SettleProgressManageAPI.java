@@ -1,9 +1,7 @@
 package com.bjike.goddess.projectprocing.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.projectprocing.bo.AllotmentNodeDataBO;
-import com.bjike.goddess.projectprocing.bo.ScreeningSettleProgressManageBO;
-import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
+import com.bjike.goddess.projectprocing.bo.*;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
@@ -173,5 +171,40 @@ public interface SettleProgressManageAPI {
      */
     default void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
         return;
+    }
+    /**
+     * 结算进度汇总
+     */
+    default List<SettleProgressSummBO> settleProgress(String area , String outUnit) throws SerException {
+        return null;
+    }
+
+    /**
+     * 结算进度管理汇总
+     */
+    default List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
+        return null;
+    }
+    /**
+     * 获取所有的内部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findInternalProName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 结算进度管理数量柱状图
+     */
+    default OptionBO settleProgressNum() throws SerException {
+        return null;
+    }
+    /**
+     * 结算进度管理金额柱状图
+     */
+    default OptionAmountBO settleProgressAmount() throws SerException {
+        return null;
     }
 }

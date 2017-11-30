@@ -106,7 +106,9 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
     @Override
     public List<FundRecordBO> pageList(FundRecordDTO dto) throws SerException {
-
+        if(StringUtils.isNotBlank(dto.getDataSource())){
+            dto.getConditions().add(Restrict.like("dataSource",dto.getDataSource()));
+        }
         List<FundRecordBO> returnList = findAllBO(dto, new VoucherGenerateDTO());
         return sortPageList(returnList, dto);
     }
@@ -579,6 +581,29 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
     }
 
     @Override
+    public byte[] exportExcelLJT(String dataSource) throws SerException {
+        FundRecordDTO dto = new FundRecordDTO();
+        if(StringUtils.isNotBlank(dataSource)){
+            dto.getConditions().add(Restrict.eq("dataSource",dataSource));
+        }
+
+        List<FundRecord> list = super.findByCis(dto);
+        List<FundRecordExcel> excelList = new ArrayList<FundRecordExcel>();
+        if (!CollectionUtils.isEmpty(list)) {
+            for (FundRecord fundRecord : list) {
+                FundRecordExcel excel = new FundRecordExcel();
+                BeanUtils.copyProperties(fundRecord, excel);
+                excelList.add(excel);
+            }
+        } else {
+            excelList.add(new FundRecordExcel());
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+        return bytes;
+    }
+
+    @Override
     public byte[] exportExcelModule() throws SerException {
         Excel excel = new Excel(0, 2);
         List<FundRecordExcel> list = new ArrayList<FundRecordExcel>();
@@ -878,6 +903,16 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             return Collections.emptyList();
         }
         return fundRecordList.stream().distinct().map(FundRecord::getArea).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findAllDataSource() throws SerException {
+        List<FundRecord> fundRecordList = super.findAll();
+        if (CollectionUtils.isEmpty(fundRecordList)) {
+            return Collections.emptyList();
+        }
+        return fundRecordList.stream().distinct().map(FundRecord::getDataSource).collect(Collectors.toList());
+
     }
 
     @Override

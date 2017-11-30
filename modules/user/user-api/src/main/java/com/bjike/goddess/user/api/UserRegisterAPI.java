@@ -1,6 +1,7 @@
 package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.SmsCodeParameterTO;
 import com.bjike.goddess.user.to.UserRegisterTO;
 
@@ -52,5 +53,40 @@ public interface UserRegisterAPI {
     default Boolean verifyCode(String phone ,String code) throws SerException {
         return null;
     }
+    /**
+     * 验证密码
+     * lijuntao
+     *
+     * @param password   密码
+     * @param repassword 确认密码
+     * @return
+     * @throws SerException
+     */
+    default void checkPassword(String password, String repassword) throws SerException {
+        return;
+    }
 
+    /**
+     * 移动端用户注册
+     * lijuntao
+     *
+     * @param appUserRegisterTO 注册to
+     * @return
+     * @throws SerException
+     */
+    default void registerUser(AppUserRegisterTO appUserRegisterTO) throws SerException {
+        return;
+    }
+
+    /**
+     * 移动端填写前五位字母自动生成用户编号
+     * lijuntao
+     *
+     * @param startNumber 前五为字母
+     * @return
+     * @throws SerException
+     */
+    default String autogenerationNum(String startNumber) throws SerException {
+        return null;
+    }
 }

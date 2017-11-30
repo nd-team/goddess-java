@@ -103,7 +103,6 @@ public class CollectSchemeBO extends BaseBO {
         this.sons = sons;
     }
 
-
     public String[] getTable() {
         return table;
     }

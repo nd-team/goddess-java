@@ -43,6 +43,11 @@ public class UserBO extends BaseBO {
      * 昵称
      */
     private String nickname;
+
+    /**
+     * 企业/团体名称
+     */
+    private String enterpriseName;
     /**
      * 员工编号
      */
@@ -117,6 +122,14 @@ public class UserBO extends BaseBO {
 
     public void setEmployeeNumber(String employeeNumber) {
         this.employeeNumber = employeeNumber;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
     }
 
     public Status getStatus() {

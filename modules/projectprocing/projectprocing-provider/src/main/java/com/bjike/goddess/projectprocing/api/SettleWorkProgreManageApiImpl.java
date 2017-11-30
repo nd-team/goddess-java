@@ -1,6 +1,7 @@
 package com.bjike.goddess.projectprocing.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectprocing.bo.PersonalTasksSummBO;
 import com.bjike.goddess.projectprocing.bo.SettleWorkProgreManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.service.SettleProgressRecordSer;
@@ -63,5 +64,20 @@ public class SettleWorkProgreManageApiImpl implements SettleWorkProgreManageAPI 
     @Override
     public void fullFinishStatus(CompletionStatusTO completionStatusTO) throws SerException {
         settleWorkProgreManageSer.fullFinishStatus(completionStatusTO);
+    }
+
+    @Override
+    public PersonalTasksSummBO personalSummDay(String summDate) throws SerException {
+        return settleWorkProgreManageSer.personalSummDay(summDate);
+    }
+
+    @Override
+    public PersonalTasksSummBO personalSummWeek(Integer year, Integer month, Integer week) throws SerException {
+        return settleWorkProgreManageSer.personalSummWeek(year,month,week);
+    }
+
+    @Override
+    public PersonalTasksSummBO personalSummMonth(Integer year, Integer month) throws SerException {
+        return settleWorkProgreManageSer.personalSummMonth(year,month);
     }
 }

@@ -52,7 +52,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         NodeHeadersCustom nodeHeadersCustom = BeanTransform.copyProperties(nodeHeadersCustomTO, NodeHeadersCustom.class);
         nodeHeadersCustom.setCreateTime(LocalDateTime.now());
         super.save(nodeHeadersCustom);
-        return BeanTransform.copyProperties(nodeHeadersCustom, NodeHeadersCustom.class);
+        return BeanTransform.copyProperties(nodeHeadersCustom, NodeHeadersCustomBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -89,9 +89,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         List<NodeHeadersCustom> nodeHeadersCustoms = super.findByCis(nodeHeadersCustomDTO);
         if(nodeHeadersCustoms!=null && nodeHeadersCustoms.size()>0){
             for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustoms){
-                NodeHeadersCustomDTO nodeHeadersCustomDTO1 = new NodeHeadersCustomDTO();
-                nodeHeadersCustomDTO1.getConditions().add(Restrict.eq("fatherId",nodeHeadersCustom.getFatherId()));
-                NodeHeadersCustom nodeHeadersCustom1 = super.findOne(nodeHeadersCustomDTO1);
+                NodeHeadersCustom nodeHeadersCustom1 = super.findById(nodeHeadersCustom.getFatherId());
                 nodeHeadersCustom.setNodeOneName(nodeHeadersCustom1.getNodeOneName());
                 nodeHeadersCustom.setNodeOneHeader(nodeHeadersCustom1.getNodeOneHeader());
                 nodeHeadersCustom.setNodeTwoHeader(nodeHeadersCustom1.getNodeTwoHeader());
@@ -99,6 +97,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
                 nodeHeadersCustom.setNodeThreeHeader(nodeHeadersCustom1.getNodeThreeHeader());
                 nodeHeadersCustom.setNodeThreeInterDate(nodeHeadersCustom1.getNodeThreeInterDate());
                 nodeHeadersCustom.setNodeFourInterDate(nodeHeadersCustom1.getNodeFourInterDate());
+                nodeHeadersCustom.setNodeFourHeader(nodeHeadersCustom1.getNodeFourHeader());
             }
         }
         return BeanTransform.copyProperties(nodeHeadersCustoms, NodeHeadersCustomBO.class);
@@ -136,7 +135,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     @Override
     public NodeHeadersCustomBO getByFatherId(String fatherId) throws SerException {
         NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
-        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("fatherId",fatherId));
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("id",fatherId));
         NodeHeadersCustom nodeHeadersCustom = super.findOne(nodeHeadersCustomDTO);
         return BeanTransform.copyProperties(nodeHeadersCustom,NodeHeadersCustomBO.class);
     }

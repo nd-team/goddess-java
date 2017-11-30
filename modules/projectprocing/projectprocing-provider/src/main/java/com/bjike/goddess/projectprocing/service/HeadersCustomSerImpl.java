@@ -86,9 +86,7 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
         List<HeadersCustom> headersCustoms = super.findByCis(headersCustomDTO);
         if(headersCustoms!=null && headersCustoms.size()>0){
             for (HeadersCustom headersCustom : headersCustoms){
-                HeadersCustomDTO headersCustomDTO1 = new HeadersCustomDTO();
-                headersCustomDTO1.getConditions().add(Restrict.eq("fatherId",headersCustom.getFatherId()));
-                HeadersCustom headersCustom1 = super.findOne(headersCustomDTO1);
+                HeadersCustom headersCustom1 = super.findById(headersCustom.getFatherId());
                 headersCustom.setHeader(headersCustom1.getHeader());
                 headersCustom.setOutUnit(headersCustom1.getOutUnit());
                 headersCustom.setRemark(headersCustom1.getRemark());

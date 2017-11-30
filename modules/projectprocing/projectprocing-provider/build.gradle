@@ -30,5 +30,7 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:projectprocing:projectprocing-api")
     compile project(":common:common-utils")
+    compile(group: 'cglib', name: 'cglib-nodep', version: '3.2.5')
+
 }
 

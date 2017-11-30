@@ -12,8 +12,6 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.CustomizeBO;
 import com.bjike.goddess.task.bo.CustomizeSonBO;
 import com.bjike.goddess.task.dto.CollectDTO;
@@ -25,7 +23,6 @@ import com.bjike.goddess.task.entity.CustomizeSon;
 import com.bjike.goddess.task.enums.CollectSuitation;
 import com.bjike.goddess.task.enums.DateType;
 import com.bjike.goddess.task.enums.TimeType;
-import com.bjike.goddess.task.quartz.TaskSession;
 import com.bjike.goddess.task.to.CustomizeTO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.api.TableAPI;
@@ -42,7 +39,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: [liguiqin]
@@ -65,7 +61,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     private CustomizeSonSer customizeSonSer;
     @Autowired
     private MessageAPI messageAPI;
-//    @Autowired
+    //    @Autowired
 //    private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private CommonalityAPI commonalityAPI;
@@ -203,10 +199,14 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         if (null == entity) {
             throw new SerException("该对象不存在");
         }
+
         CustomizeSonDTO sonDTO = new CustomizeSonDTO();
-        sonDTO.getConditions().add(Restrict.eq("customizeId", id));
+        sonDTO.getConditions().
+
+                add(Restrict.eq("customizeId", id));
         List<CustomizeSon> sons = customizeSonSer.findByCis(sonDTO);
-        if (!sons.isEmpty()) {
+        if (!sons.isEmpty()
+        {
             customizeSonSer.remove(sons);
         }
         super.remove(id);
@@ -287,11 +287,61 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 String depart = projectAPI.findByID(projectId).getDepart();
 //                List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
 //                if (null != departmentDetailBOS) {
-                    CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
-                    if (null != commonalityBO) {
-                        departEmial = commonalityBO.getEmail();
-                    }
+                CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
+                if (null != commonalityBO) {
+                    departEmial = commonalityBO.getEmail();
+                }
 //                }
+            }
+            TimeType remindType = customize.getRemindType();
+            int remidVal = customize.getDateVal();
+            LocalDateTime lastTime = customize.getLastTime();
+            LocalDateTime time = null;
+            switch (remindType) {
+                case MINTUE:   //每天
+                    time = lastTime.plusMinutes(remidVal);
+                    break;
+                case HOUR:
+                    time = lastTime.plusHours(remidVal);
+                    break;
+                case DAY:
+                    time = lastTime.plusDays(remidVal);
+                    break;
+                case WEEK:
+                    time = lastTime.plusWeeks(remidVal);
+                    break;
+                case MONTH:
+                    time = lastTime.plusMonths(remidVal);
+                    break;
+            }
+            if (null != time && DateUtil.mis(LocalDateTime.now(), time) >= 0) {
+                String[] recivers = customize.getCollectObjec().split(",");
+                if (null != recivers && recivers.length > 0) {
+                    List<String> set = Arrays.asList(recivers);
+                    MessageTO messageTO = new MessageTO();
+                    messageTO.setTitle("自定义汇总");
+                    messageTO.setContent(html(customize));
+                    messageTO.setMsgType(MsgType.SYS);
+                    messageTO.setSendType(SendType.EMAIL);
+                    messageTO.setRangeType(RangeType.SPECIFIED);
+                    //定时发送必须写
+                    messageTO.setSenderId("SYSTEM");
+                    messageTO.setSenderName("SYSTEM");
+                    if (null != departEmial) {
+                        if (!set.contains(departEmial)) {
+                            set.add(departEmial);
+                        }
+                        String[] strings = new String[set.size()];
+                        strings = set.toArray(strings);
+                        messageTO.setReceivers(strings);
+                    } else {
+                        messageTO.setReceivers(recivers);
+                    }
+                    messageAPI.send(messageTO);
+                }
+                customize.setLastTime(LocalDateTime.now());
+                customize.setModifyTime(LocalDateTime.now());
+                super.update(customize);
             }
             TimeType remindType = customize.getRemindType();
             int remidVal = customize.getDateVal();
@@ -549,7 +599,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 "WHERE table_id IN (" + tableId + ")" +
                 "      AND taskStatus=0 group by taskStatus";
         List<Object> objects = super.findBySql(sql);
-        if (null != objects&&!objects.isEmpty()) {
+        if (null != objects && !objects.isEmpty()) {
             Object o = objects.get(0);
             Object[] obj = (Object[]) o;
             return Double.parseDouble(obj[0] + "");
@@ -590,8 +640,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         }
         result.append("<td rowspan='" + sons.size() + "'>" + projectAPI.findByID(entity.getProjectId()).getProject() + "</td>");
         StringBuilder tableNames = new StringBuilder();
-        int a=0;
-        for (String tableId :entity.getTablesId().split(",")) {
+        int a = 0;
+        for (String tableId : entity.getTablesId().split(",")) {
             if (a == entity.getTablesId().split(",").length - 1) {
                 tableNames.append(projectAPI.table(tableId).getName());
             } else {
@@ -600,14 +650,14 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             a++;
         }
         result.append("<td rowspan='" + sons.size() + "'>" + tableNames.toString() + "</td>");
-        for (int i=0;i<sons.size();i++){
-            if (0!=i){
+        for (int i = 0; i < sons.size(); i++) {
+            if (0 != i) {
                 result.append(valTr);
             }
-            result.append("<td>"+sons.get(i).getTitle()+"</td>");
-            result.append("<td>"+sons.get(i).getCollectSuitation().toString()+"</td>");
-            result.append("<td>"+sons.get(i).getType()+"</td>");
-            result.append("<td>"+sons.get(i).getTableTitle()+"</td>");
+            result.append("<td>" + sons.get(i).getTitle() + "</td>");
+            result.append("<td>" + sons.get(i).getCollectSuitation().toString() + "</td>");
+            result.append("<td>" + sons.get(i).getType() + "</td>");
+            result.append("<td>" + sons.get(i).getTableTitle() + "</td>");
             result.append(endTr);
         }
         result.append("</table>");

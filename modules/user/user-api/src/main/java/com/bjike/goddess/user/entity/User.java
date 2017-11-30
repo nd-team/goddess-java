@@ -66,6 +66,12 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255) COMMENT '用户员工编号'")
     private String employeeNumber;
 
+    /**
+     * 企业/团体名称
+     */
+    @Column(unique = true,  columnDefinition = "VARCHAR(255) COMMENT '企业/团体名称'")
+    private String enterpriseName;
+
     /*
      * 用户状态
      */
@@ -140,6 +146,14 @@ public class User extends BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
     }
 
     public String getEmployeeNumber() {

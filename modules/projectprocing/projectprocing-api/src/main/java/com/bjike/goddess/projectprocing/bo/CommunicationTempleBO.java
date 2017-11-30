@@ -1,98 +1,159 @@
 package com.bjike.goddess.projectprocing.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.projectprocing.entity.SendFrequency;
-import com.bjike.goddess.projectprocing.enums.SummTableName;
-
-import java.time.LocalDate;
 
 /**
- * 各类沟通模板业务传输对象
+ * 各类沟通交流模板业务传输对象
  *
  * @Author: [ lijuntao ]
- * @Date: [ 2017-11-18 03:26 ]
- * @Description: [ 各类沟通模板业务传输对象 ]
+ * @Date: [ 2017-11-25 05:41 ]
+ * @Description: [ 各类沟通交流模板业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class CommunicationTempleBO extends BaseBO {
 
     /**
-     * 汇总表名
+     * 模板编号
      */
-    private SummTableName summTableName;
+    private Integer templateNum;
 
     /**
-     * 创建/修改人
+     * 所属类型
      */
-    private String modifier;
+    private String belongType;
 
     /**
-     * 发送频率
+     * 分类
      */
-    private SendFrequency sendFrequency;
+    private String type;
 
     /**
-     * 发送时间节点
+     * 触发字段
      */
-    private LocalDate sendTimeNode;
+    private String triggerField;
 
     /**
-     * 发送对象
+     * 标题
      */
-    private String sendObject;
+    private String title;
 
     /**
-     * 是否发送项目组/部门全部人
+     * 邮件内容模板
      */
-    private Boolean sendSectoral;
+    private String contentTemplate;
+
+    /**
+     * 例子
+     */
+    private String examples;
+
+    /**
+     * 附件
+     */
+    private String attachment;
+
+    /**
+     * 主送对象
+     */
+    private String mainObject;
+
+    /**
+     * 抄送对象
+     */
+    private String ccObject;
+
+    /**
+     * 途径
+     */
+    private String way;
 
 
-    public SummTableName getSummTableName() {
-        return summTableName;
+    public Integer getTemplateNum() {
+        return templateNum;
     }
 
-    public void setSummTableName(SummTableName summTableName) {
-        this.summTableName = summTableName;
+    public void setTemplateNum(Integer templateNum) {
+        this.templateNum = templateNum;
     }
 
-    public String getModifier() {
-        return modifier;
+    public String getBelongType() {
+        return belongType;
     }
 
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
+    public void setBelongType(String belongType) {
+        this.belongType = belongType;
     }
 
-    public SendFrequency getSendFrequency() {
-        return sendFrequency;
+    public String getType() {
+        return type;
     }
 
-    public void setSendFrequency(SendFrequency sendFrequency) {
-        this.sendFrequency = sendFrequency;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public LocalDate getSendTimeNode() {
-        return sendTimeNode;
+    public String getTriggerField() {
+        return triggerField;
     }
 
-    public void setSendTimeNode(LocalDate sendTimeNode) {
-        this.sendTimeNode = sendTimeNode;
+    public void setTriggerField(String triggerField) {
+        this.triggerField = triggerField;
     }
 
-    public String getSendObject() {
-        return sendObject;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSendObject(String sendObject) {
-        this.sendObject = sendObject;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public Boolean getSendSectoral() {
-        return sendSectoral;
+    public String getContentTemplate() {
+        return contentTemplate;
     }
 
-    public void setSendSectoral(Boolean sendSectoral) {
-        this.sendSectoral = sendSectoral;
+    public void setContentTemplate(String contentTemplate) {
+        this.contentTemplate = contentTemplate;
+    }
+
+    public String getExamples() {
+        return examples;
+    }
+
+    public void setExamples(String examples) {
+        this.examples = examples;
+    }
+
+    public String getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
+    }
+
+    public String getMainObject() {
+        return mainObject;
+    }
+
+    public void setMainObject(String mainObject) {
+        this.mainObject = mainObject;
+    }
+
+    public String getCcObject() {
+        return ccObject;
+    }
+
+    public void setCcObject(String ccObject) {
+        this.ccObject = ccObject;
+    }
+
+    public String getWay() {
+        return way;
+    }
+
+    public void setWay(String way) {
+        this.way = way;
     }
 }

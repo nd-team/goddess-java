@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.NodeHeadersCustomDTO;
+import com.bjike.goddess.projectprocing.service.NodeHeadersCustomSer;
 import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,54 +22,54 @@ import java.util.List;
 @Service("nodeHeadersCustomApiImpl")
 public class NodeHeadersCustomApiImpl implements NodeHeadersCustomAPI {
     @Autowired
-    private NodeHeadersCustomAPI nodeHeadersCustomAPI;
+    private NodeHeadersCustomSer nodeHeadersCustomSer;
     @Override
     public Long countNode(NodeHeadersCustomDTO nodeHeadersCustomDTO) throws SerException {
-        return nodeHeadersCustomAPI.countNode(nodeHeadersCustomDTO);
+        return nodeHeadersCustomSer.countNode(nodeHeadersCustomDTO);
     }
 
     @Override
     public NodeHeadersCustomBO getOneById(String id) throws SerException {
-        return nodeHeadersCustomAPI.getOneById(id);
+        return nodeHeadersCustomSer.getOneById(id);
     }
 
     @Override
     public List<NodeHeadersCustomBO> listNode(NodeHeadersCustomDTO nodeHeadersCustomDTO) throws SerException {
-        return nodeHeadersCustomAPI.listNode(nodeHeadersCustomDTO);
+        return nodeHeadersCustomSer.listNode(nodeHeadersCustomDTO);
     }
 
     @Override
     public NodeHeadersCustomBO addNode(NodeHeadersCustomTO nodeHeadersCustomTO) throws SerException {
-        return nodeHeadersCustomAPI.addNode(nodeHeadersCustomTO);
+        return nodeHeadersCustomSer.addNode(nodeHeadersCustomTO);
     }
 
     @Override
     public NodeHeadersCustomBO editNode(NodeHeadersCustomTO nodeHeadersCustomTO) throws SerException {
-        return nodeHeadersCustomAPI.editNode(nodeHeadersCustomTO);
+        return nodeHeadersCustomSer.editNode(nodeHeadersCustomTO);
     }
 
     @Override
     public void deleteNode(String id) throws SerException {
-        nodeHeadersCustomAPI.deleteNode(id);
+        nodeHeadersCustomSer.deleteNode(id);
     }
 
     @Override
     public List<NodeHeadersCustomBO> getNodeByOutUnit(String outUnit) throws SerException {
-        return nodeHeadersCustomAPI.getNodeByOutUnit(outUnit);
+        return nodeHeadersCustomSer.getNodeByOutUnit(outUnit);
     }
 
     @Override
     public List<NodeHeadersCustomBO> getByManageId(String passManageId) throws SerException {
-        return nodeHeadersCustomAPI.getByManageId(passManageId);
+        return nodeHeadersCustomSer.getByManageId(passManageId);
     }
 
     @Override
     public void removeByManageId(String passManageId) throws SerException {
-        nodeHeadersCustomAPI.removeByManageId(passManageId);
+        nodeHeadersCustomSer.removeByManageId(passManageId);
     }
 
     @Override
     public void checkNodeCutoff() throws SerException {
-        nodeHeadersCustomAPI.checkNodeCutoff();
+        nodeHeadersCustomSer.checkNodeCutoff();
     }
 }

@@ -13,6 +13,7 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.task.bo.CollectSchemeBO;
 import com.bjike.goddess.task.bo.SchemeSonBO;
 import com.bjike.goddess.task.dto.*;
@@ -53,7 +54,6 @@ import java.util.stream.Collectors;
 @Service
 public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSchemeDTO> implements CollectSchemeSer {
     public static final Logger LOGGER = LoggerFactory.getLogger(CollectSchemeSerImpl.class);
-
     @Autowired
     private SchemeSonSer schemeSonSer;
     @Autowired

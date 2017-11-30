@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 结算工作进度管理
  *
@@ -48,7 +50,7 @@ public class SettleWorkProgreManageTO extends BaseTO {
     /**
      * 可结算金额
      */
-    @NotBlank(message = "可结算金额不能为空", groups = {ADD.class})
+    @NotNull(message = "可结算金额不能为空", groups = {ADD.class})
     private Double payAmount;
 
     /**
