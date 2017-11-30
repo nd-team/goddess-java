@@ -351,7 +351,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/pass")
-    public Result pass(TaskNodeTO to) throws ActException {
+    public Result pass(@Validated(TaskNodeTO.PASS.class) TaskNodeTO to,BindingResult result) throws ActException {
         try {
             taskNodeAPI.pass(to);
             return new ActResult("上报审核通过成功");
@@ -368,7 +368,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/notPass")
-    public Result notPass(TaskNodeTO to) throws ActException {
+    public Result notPass(@Validated(TaskNodeTO.NOTPASS.class) TaskNodeTO to,BindingResult result) throws ActException {
         try {
             taskNodeAPI.notPass(to);
             return new ActResult("上报审核不通过成功");
@@ -1157,7 +1157,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/phone/Execute")
+    @GetMapping("v1/phone/execute")
     public Result Execute(TaskNodeDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<TaskNodeBO> list = taskNodeAPI.myExecute(dto);
@@ -1197,6 +1197,100 @@ public class TaskNodeAction extends BaseFileAction {
         try {
             CaseLastBO caseLastBO= taskNodeAPI.phoneCount(dto);
             return ActResult.initialize(BeanTransform.copyProperties(caseLastBO, FinishCaseVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 填写任务完成情况(phone)
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/phone/write")
+    public Result writes(@Validated(TaskNodeTO.WRITES.class) TaskNodeTO to, BindingResult result) throws ActException {
+        try {
+            taskNodeAPI.writes(to);
+            return new ActResult("填写成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 确认完成（phone）
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/phone/finish")
+    public Result finishs(@Validated(TaskNodeTO.CONFIRM.class) TaskNodeTO to, BindingResult result) throws ActException {
+        try {
+            taskNodeAPI.finish(to);
+            return new ActResult("确认完成成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 确认接收任务(phone)
+     *
+     * @param id id
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/phone/confirm/{id}")
+    public Result confirms(@PathVariable String id) throws ActException {
+        try {
+            taskNodeAPI.confirm(id);
+            return new ActResult("确认接收任务成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 再次分发我执行的任务(phone)
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/phone/initiateAgain")
+    public Result initiateAgains(@Validated(TaskNodeTO.AGAIN.class) TaskNodeTO to, BindingResult result) throws ActException {
+        try {
+            taskNodeAPI.initiateAgain(to);
+            return new ActResult("再次分发成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看任务节点详细内容（通过id查找）
+     *
+     * @param id 任务节点id(phone)
+     * @return class TaskNodeVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/taskNode/{id}")
+    public Result TaskNodes(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            TaskNodeBO bo = taskNodeAPI.findByID(id);
+            List<FileVO> fileVOS = files(id, request);
+            if (fileVOS == null) {
+                bo.setAttachment(false);
+            } else {
+                if (!fileVOS.isEmpty()) {
+                    bo.setAttachment(true);
+                }
+            }
+            return ActResult.initialize(BeanTransform.copyProperties(bo, TaskNodeVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

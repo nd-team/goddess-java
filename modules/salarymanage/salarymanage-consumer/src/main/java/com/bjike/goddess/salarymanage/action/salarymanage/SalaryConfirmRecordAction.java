@@ -9,16 +9,23 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.recruit.api.InterviewInforAPI;
+import com.bjike.goddess.recruit.bo.InterviewInforBO;
+import com.bjike.goddess.recruit.vo.InterviewInforVO;
 import com.bjike.goddess.salarymanage.api.SalaryConfirmRecordAPI;
 import com.bjike.goddess.salarymanage.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.salarymanage.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordDeleteFileTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.salarymanage.vo.SalaryConfirmRecordVO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,14 +52,20 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     @Autowired
     private FileAPI fileAPI;
 
+    @Autowired
+    private InterviewInforAPI interviewInforAPI;
+
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
+
     /**
      * 添加
      * @param to 招聘面谈薪资确认记录
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/add")
-    public Result add(@Validated(ADD.class) SalaryConfirmRecordTO to) throws ActException{
+    @PostMapping("v1/add")
+    public Result add(@Validated(ADD.class) SalaryConfirmRecordTO to, BindingResult result) throws ActException{
         try {
             salaryConfirmRecordAPI.add(to);
             return new ActResult("添加成功");
@@ -94,6 +107,56 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
         }
     }
 
+    /**
+     * 根据姓名获取通过面试的信息
+     * @param dto
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/findByName")
+    public Result findByName(SalaryConfirmRecordDTO dto) throws ActException{
+        try {
+            InterviewInforBO bo = interviewInforAPI.findByName ( dto.getUserName () );
+            InterviewInforVO vo = BeanTransform.copyProperties(bo,InterviewInforVO.class);
+            return ActResult.initialize ( vo );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取信息
+     * @param dto
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/findEntryRegisterByName")
+    public Result findEntryRegisterByName(SalaryConfirmRecordDTO dto) throws ActException{
+        try {
+            List<EntryRegisterBO> boList = entryRegisterAPI.getEntryRegisterByName ( dto.getUserName () );
+            List<EntryRegisterVO> vo = BeanTransform.copyProperties(boList,InterviewInforVO.class);
+            return ActResult.initialize ( vo );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据员工编号查找员工入职登记
+     * @param dto
+     * @return
+     * @throws ActException
+     */
+    @GetMapping("v1/findByNumber")
+    public Result findByNumber(SalaryConfirmRecordDTO dto) throws ActException{
+        try {
+            EntryRegisterBO bo = entryRegisterAPI.getByNumber ( dto.getEmployeeID () );
+            EntryRegisterVO vo = BeanTransform.copyProperties(bo,InterviewInforVO.class);
+            return ActResult.initialize ( vo );
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -230,6 +293,25 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
             Long count = salaryConfirmRecordAPI.count(dto);
             return ActResult.initialize(count);
         }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个薪资确认记录
+     *
+     * @param id
+     * @return class SalaryConfirmRecordVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException {
+        try {
+            SalaryConfirmRecordBO bo = salaryConfirmRecordAPI.findOne(id);
+            SalaryConfirmRecordVO vo = BeanTransform.copyProperties(bo, SalaryConfirmRecordVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

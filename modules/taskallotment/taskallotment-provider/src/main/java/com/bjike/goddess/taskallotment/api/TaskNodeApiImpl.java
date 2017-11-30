@@ -132,6 +132,11 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
+    public void writes(TaskNodeTO to) throws SerException {
+        taskNodeSer.writes ( to );
+    }
+
+    @Override
     public List<PersonCountBO> personCount(TaskNodeDTO dto) throws SerException {
         return taskNodeSer.personCount ( dto );
     }

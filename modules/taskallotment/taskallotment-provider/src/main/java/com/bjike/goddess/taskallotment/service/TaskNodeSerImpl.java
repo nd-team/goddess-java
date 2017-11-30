@@ -378,17 +378,24 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         QuestionDTO questionDTO = new QuestionDTO ();
         questionDTO.getConditions ().add ( Restrict.eq ( "taskNodeId", id ) );
         List<Question> questions = questionSer.findByCis ( questionDTO );
-        questionSer.remove ( questions );
-        TaskNodeDTO dto = new TaskNodeDTO ();
-        dto.getConditions ().add ( Restrict.eq ( "fatherId", id ) );
-        List<TaskNode> sons = super.findByCis ( dto );
-        for (TaskNode son : sons) {
-            QuestionDTO questionDTO1 = new QuestionDTO ();
-            questionDTO1.getConditions ().add ( Restrict.eq ( "taskNodeId", son.getId () ) );
-            List<Question> questions1 = questionSer.findByCis ( questionDTO1 );
-            questionSer.remove ( questions1 );
+        if (!questions.isEmpty ()) {
+            questionSer.remove ( questions );
         }
-        super.remove ( sons );
+//        TaskNodeDTO dto = new TaskNodeDTO ();
+//        dto.getConditions ().add ( Restrict.eq ( "fatherId", id ) );
+//        List<TaskNode> sons = super.findByCis ( dto );
+//        for (TaskNode son : sons) {
+//            QuestionDTO questionDTO1 = new QuestionDTO ();
+//            questionDTO1.getConditions ().add ( Restrict.eq ( "taskNodeId", son.getId () ) );
+//            List<Question> questions1 = questionSer.findByCis ( questionDTO1 );
+//            questionSer.remove ( questions1 );
+//        }
+        CustomTitleDTO titleDTO = new CustomTitleDTO ();
+        titleDTO.getConditions ().add ( Restrict.eq ( "taskNodeId", id ) );
+        List<CustomTitle> titles = customTitleSer.findByCis ( titleDTO );
+        if (!titles.isEmpty ()) {
+            customTitleSer.remove ( titles );
+        }
         super.remove ( id );
     }
 
@@ -1155,6 +1162,30 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         eventTO.setEventId(entity.getId());
         eventTO.setStatus("待确认");
         eventAPI.save(eventTO);
+    }
+
+    @Transactional(rollbackFor = {SerException.class})
+    public void writes(TaskNodeTO to) throws SerException {
+        TaskNode entity = super.findById ( to.getId () );
+        if (entity == null) {
+            throw new SerException ( "该对象不存在" );
+        }
+        entity.setStartExecute ( DateUtil.parseDateTime ( to.getStartExecute () ) );
+        entity.setEndExecute ( DateUtil.parseDateTime ( to.getEndExecute () ) );
+        entity.setReimbursement ( to.getReimbursement () );
+        entity.setQuestion ( to.getQuestion () );
+        entity.setSummary ( to.getSummary () );
+        if (entity.getQuestion ()) {
+            if (null != to.getQuestions ()) {
+                for (QuestionTO questionTO : to.getQuestions ()) {
+                    Question question = BeanTransform.copyProperties ( questionTO, Question.class, true );
+                    question.setTaskNodeId ( entity.getId () );
+                    questionSer.save ( question );
+                }
+            }
+        }
+        entity.setModifyTime ( LocalDateTime.now () );
+        super.update ( entity );
     }
 
     @Override
@@ -3759,6 +3790,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (!taskNodeList.isEmpty ()) {
                 for (TaskNode t : taskNodeList) {
                     t.setTaskStatus ( taskStatus );
+                    if (taskStatus.equals ( TaskStatus.FINISH )) {
+                        t.setFinishStatus ( FinishStatus.FINISH );
+                    } else if (taskStatus.equals ( TaskStatus.UNFINISHED )) {
+                        t.setFinishStatus ( FinishStatus.UNFINISHED );
+                    }
                     t.setModifyTime ( LocalDateTime.now () );
                 }
                 super.update ( taskNodeList );

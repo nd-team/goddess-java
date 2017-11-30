@@ -269,6 +269,14 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
     void write(TaskNodeTO to) throws SerException;
 
     /**
+     * 填写任务完成情况(phone)
+     *
+     * @param to
+     * @throws SerException
+     */
+    void writes(TaskNodeTO to) throws SerException;
+
+    /**
      * 个人汇总
      *
      * @param dto

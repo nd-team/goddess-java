@@ -192,6 +192,7 @@ public class SalaryTestCollectSerImpl extends ServiceImpl<SalaryTestCollect, Sal
         List<SalaryCalculateDetailBO> salaryCalculateDetailBOS = salaryCalculateDetailSer.findList(detailDTO);
         List<AreaBO> areaBOList = new ArrayList<>();
         Set<String> areas = salaryCalculateDetailBOS.stream().map(salaryCalculateDetail -> salaryCalculateDetail.getArea()).collect(Collectors.toSet());
+        if(areas.size () > 0 && areas != null)
         if(salaryCalculateDetailBOS !=null && salaryCalculateDetailBOS.size() >0){
             for(String area : areas){
                 AreaBO areaBO = new AreaBO();
