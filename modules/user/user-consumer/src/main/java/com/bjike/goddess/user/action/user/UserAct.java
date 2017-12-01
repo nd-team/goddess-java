@@ -241,7 +241,8 @@ public class UserAct extends BaseFileAction {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
             //上传图片-头像图片
-            String userToken = RpcContext.getContext().getAttachment("userToken");
+            String userToken = request.getParameter("token");
+//                    RpcContext.getContext().getAttachment("userToken");
 //            UserBO userBO = userAPI.currentUser();
             UserBO userBO = userAPI.findByUsername(username);
             RpcContext.getContext().setAttachment("userToken", userToken);

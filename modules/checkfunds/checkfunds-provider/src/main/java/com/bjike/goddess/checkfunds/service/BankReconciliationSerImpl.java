@@ -19,12 +19,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.financeinit.dto.AccountDTO;
 import com.bjike.goddess.fundrecords.api.FundRecordAPI;
 import com.bjike.goddess.fundrecords.bo.ConditionCollectBO;
 import com.bjike.goddess.fundrecords.bo.MonthCollectBO;
 import com.bjike.goddess.fundrecords.to.CollectTO;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
@@ -73,6 +76,10 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private MessageAPI messageAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -360,9 +367,19 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         notPassAuditTO.setAuditStatus("审批不通过");
         notPassAuditTO.setBankReconciliationId(id);
         notPassAuditSer.save(notPassAuditTO);
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle("审批不通过");
+        messageTO.setContent("审\n" +
+                "批不通过,请重新\n" +
+                "经办");
+        String handler = super.findById(id).getHandler();
+        String email = internalContactsAPI.getEmail(handler);
+        if (null != email) {
+            messageTO.setReceivers(new String[]{email});
+            messageAPI.send(messageTO);
+        }
     }
 
-    @Transactional(rollbackFor = SerException.class)
     private void aduit(String id) throws SerException {
         checkAddIdentity();
         String userToken = RpcTransmit.getUserToken();
@@ -498,11 +515,11 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
         RemainAdjustBO lastBO = new RemainAdjustBO();
         lastBO.setMoneyWaterProject("余额");
         Double fundSum = fundBalance + addFund - removeFund;
-        double a=new BigDecimal(fundSum).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        double a = new BigDecimal(fundSum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         lastBO.setMoneyWaterSum(a);
         lastBO.setBankWaterProject("余额");
         Double bankSum = bankBalance + addBank - removeBank;
-        double b=new BigDecimal(bankSum).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        double b = new BigDecimal(bankSum).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         lastBO.setBankWaterSum(b);
         boList.add(lastBO);
         return boList;
@@ -511,7 +528,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
     @Override
     public List<BankReconciliationBO> list(BankReconciliationDTO dto) throws SerException {
         checkSeeIdentity();
-        List<BankReconciliation> list = super.findByCis(dto,true);
+        List<BankReconciliation> list = super.findByCis(dto, true);
         List<BankReconciliationBO> boList = new ArrayList<BankReconciliationBO>();
         for (BankReconciliation b : list) {
             BankReconciliationBO bo = BeanTransform.copyProperties(b, BankReconciliationBO.class);
@@ -641,7 +658,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
             }
         }
         if ((debtorDifferBOs != null) && (!debtorDifferBOs.isEmpty())) {
-            for (int i = 0; i < debtorDifferBOs.size()&&i<bankRecordPageListBOs.size(); i++) {
+            for (int i = 0; i < debtorDifferBOs.size() && i < bankRecordPageListBOs.size(); i++) {
                 BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
                 String bankRecorId = bankRecordPageListBO.getId();
                 List<Detail> detailList = bankRecordPageListBO.getDetailList();
@@ -681,7 +698,7 @@ public class BankReconciliationSerImpl extends ServiceImpl<BankReconciliation, B
             }
         }
         if ((creditorDifferBOs != null) && (!creditorDifferBOs.isEmpty())) {
-            for (int i = 0; i < creditorDifferBOs.size()&&i<bankRecordPageListBOs.size(); i++) {
+            for (int i = 0; i < creditorDifferBOs.size() && i < bankRecordPageListBOs.size(); i++) {
                 BankRecordPageListBO bankRecordPageListBO = bankRecordPageListBOs.get(i);
                 String bankRecorId = bankRecordPageListBO.getId();
                 List<Detail> detailList = bankRecordPageListBO.getDetailList();

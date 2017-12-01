@@ -94,7 +94,7 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("6");
+            flag = cusPermissionSer.busCusPermission("6");
             if (!flag) {
                 throw new SerException("您不是相应岗位的人员，不可以操作");
             }
@@ -130,7 +130,7 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("6");
+            flag = cusPermissionSer.busCusPermission("6");
         } else {
             flag = true;
         }
