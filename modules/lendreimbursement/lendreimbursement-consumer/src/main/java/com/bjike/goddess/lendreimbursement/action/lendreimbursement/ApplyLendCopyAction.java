@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 申请借款副本
+ * 申请借款副本(不用了)
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-04-06 10:02 ]

@@ -1284,4 +1284,11 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
     default BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
         return null;
     }
+
+    /**
+     * 获取市场编号(市场信息编号)
+     */
+    default List<String> findMarkNum() throws SerException {
+        return null;
+    }
 }

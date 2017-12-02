@@ -15,10 +15,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
-import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.projectroyalty.api.WeightalsAPI;
@@ -27,17 +25,10 @@ import com.bjike.goddess.projectroyalty.enums.Type;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -267,6 +258,16 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
     }
 
     @Override
+    public List<String> listInnerProject() throws SerException {
+        List<String> list = new ArrayList<>(0);
+        List<Proportion> proportions = proportionSer.findAll();
+        if (null != proportions && proportions.size() > 0) {
+            list = proportions.stream().map(Proportion::getProjectName).collect(Collectors.toList());
+        }
+        return list;
+    }
+
+    @Override
     public void addQuota(QuotaTO to) throws SerException {
         Quota entity = BeanTransform.copyProperties(to, Quota.class, true);
         entity = getData(entity);
@@ -312,9 +313,11 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
 
     @Override
     public List<QuotaBO> listQuota(QuotaDTO dto) throws SerException {
-        searchCondition(dto);
-        List<Quota> quotas = super.findByPage(dto);
-        return BeanTransform.copyProperties(quotas, QuotaBO.class, false);
+//        searchCondition(dto);
+//        List<Quota> quotas = super.findByPage(dto);
+        List<Quota> quotas1 = super.findByCis(dto, true);
+        List<QuotaBO> quotaBOList = BeanTransform.copyProperties(quotas1, QuotaBO.class);
+        return quotaBOList;
     }
 
     @Override
@@ -381,8 +384,11 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
 
     //判断是否是市场专业人员
     private Boolean isMarker(String name) throws SerException {
+        String userId = "";
         UserBO userBO = userAPI.findByUsername(name);
-        String userId = userBO.getId();
+        if (null != userBO) {
+            userId = userBO.getId();
+        }
         return positionDetailUserAPI.isMarker(userId);
     }
 

@@ -18,12 +18,14 @@ import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
 import com.bjike.goddess.projectroyalty.to.WeightalsTO;
 import com.bjike.goddess.projectroyalty.vo.CollectVO;
 import com.bjike.goddess.projectroyalty.vo.WeightalsVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -224,11 +226,11 @@ public class WeightalsAction {
     @GetMapping("v1/find/projectName")
     public Result findProjectName() throws ActException {
         try {
-            if (moduleAPI.isCheck("businessproject")) {
-                List<String> projectNames = siginManageAPI.listInnerProject();
-                return ActResult.initialize(projectNames);
-            }
-            return ActResult.initialize(null);
+//            if (moduleAPI.isCheck("businessproject")) {
+            List<String> projectNames = siginManageAPI.listInnerProject();
+            return ActResult.initialize(projectNames);
+//            }
+//            return ActResult.initialize(null);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -293,10 +295,11 @@ public class WeightalsAction {
     /**
      * 项目提成管理日汇总
      *
+     * @return class CollectVO
      * @version v1
      */
     @GetMapping("v1/dayCollect")
-    public Result dayCollect(String time) throws ActException{
+    public Result dayCollect(String time) throws ActException {
         try {
             List<CollectBO> list = weightalsAPI.dayCollect(time);
             return ActResult.initialize(BeanTransform.copyProperties(list, CollectVO.class));
@@ -308,10 +311,11 @@ public class WeightalsAction {
     /**
      * 项目提成管理周汇总
      *
+     * @return class CollectVO
      * @version v1
      */
     @GetMapping("v1/weekCollect")
-    public Result weekCollect(Integer year, Integer month, Integer week) throws ActException{
+    public Result weekCollect(Integer year, Integer month, Integer week) throws ActException {
         try {
             List<CollectBO> list = weightalsAPI.weekCollect(year, month, week);
             return ActResult.initialize(BeanTransform.copyProperties(list, CollectVO.class));
@@ -323,10 +327,11 @@ public class WeightalsAction {
     /**
      * 项目提成管理月汇总
      *
+     * @return class CollectVO
      * @version v1
      */
     @GetMapping("v1/monthCollect")
-    public Result monthCollect(String month) throws ActException{
+    public Result monthCollect(String month) throws ActException {
         try {
             List<CollectBO> list = weightalsAPI.monthCollect(month);
             return ActResult.initialize(BeanTransform.copyProperties(list, CollectVO.class));
@@ -338,10 +343,11 @@ public class WeightalsAction {
     /**
      * 项目提成管理累计汇总
      *
+     * @return class CollectVO
      * @version v1
      */
     @GetMapping("v1/totalCollect")
-    public Result totalCollect() throws ActException{
+    public Result totalCollect() throws ActException {
         try {
             List<CollectBO> list = weightalsAPI.totalCollect();
             return ActResult.initialize(BeanTransform.copyProperties(list, CollectVO.class));
@@ -349,4 +355,26 @@ public class WeightalsAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据年份和月份获取周数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findCountWeek")
+    public Result findCountWeek(@RequestParam String year, @RequestParam String month) throws ActException {
+        try {
+            Integer num = 0;
+            if (StringUtils.isNotBlank(year) && StringUtils.isNotBlank(month)) {
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.YEAR, Integer.valueOf(year)); // 2010年
+                c.set(Calendar.MONTH, (Integer.valueOf(month) - 1)); // 6 月
+                num = c.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            }
+            return ActResult.initialize(num);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

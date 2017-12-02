@@ -108,11 +108,12 @@ public class QuotaAction extends BaseFileAction {
             //List<QuotaBO> list = quotaAPI.listQuota(quotaDTO);
             List<QuotaBO> list = quotaAPI.listQuota(quotaDTO);
             List<QuotaVO> quotaVOList = new ArrayList<>();
-            list.stream().forEach(str -> {
-                QuotaVO vo = BeanTransform.copyProperties(str, QuotaVO.class);
-                quotaVOList.add(vo);
-            });
-
+            if(null != list && list.size() > 0) {
+                list.stream().forEach(str -> {
+                    QuotaVO vo = BeanTransform.copyProperties(str, QuotaVO.class);
+                    quotaVOList.add(vo);
+                });
+            }
             return ActResult.initialize(quotaVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -394,11 +395,16 @@ public class QuotaAction extends BaseFileAction {
     @GetMapping("v1/find/projectName")
     public Result findProjectName() throws ActException {
         try {
+            List<String> list = new ArrayList<>(0);
             if (moduleAPI.isCheck("businessproject")) {
                 List<String> projectNames = siginManageAPI.listInnerProject();
-                return ActResult.initialize(projectNames);
+                list.addAll(projectNames);
+//                return ActResult.initialize(projectNames);
             }
-            return ActResult.initialize(null);
+            //获取比例表中的内部项目名称
+            List<String> projectNames = quotaAPI.listInnerProject();
+            list.addAll(projectNames);
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

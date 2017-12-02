@@ -12,7 +12,6 @@ import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.contacts.bo.ExternalContactsBO;
 import com.bjike.goddess.contacts.bo.MobileExternalContactsBO;
-import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
 import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.enums.GuideAddrStatus;

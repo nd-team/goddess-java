@@ -21,127 +21,127 @@ public class QuotaTO extends BaseTO {
     /**
      * 地区
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "地区不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "地区不能为空")
     private String area;
 
     /**
      * 项目组/部门
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "项目组/部门不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "项目组/部门不能为空")
     private String department;
 
     /**
      * 内部项目名称
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "内部项目名称不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "内部项目名称不能为空")
     private String projectName;
 
     /**
      * 是否立项
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "是否立项不能为空")
+    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "是否立项不能为空")
     private Boolean isBuild;
 
     /**
      * 立项时间
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "立项时间不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "立项时间不能为空")
     private String buildTime;
 
     /**
      * 是否完工
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "是否完工不能为空")
+    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "是否完工不能为空")
     private Boolean isComplete;
 
     /**
      * 目标业务提成额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "目标业务提成额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "目标业务提成额不能为空")
     private Double aimAmount;
 
     /**
      * 计划业务提成额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "计划业务提成额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "计划业务提成额不能为空")
     private Double planAmount;
 
     /**
      * 实际业务提成额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "实际业务提成额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "实际业务提成额不能为空")
     private Double actualAmount;
 
     /**
      * 信息提供人
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "信息提供人不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "信息提供人不能为空")
     private String informationProvide;
 
     /**
      * 信息提供占比
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "信息提供占比不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "信息提供占比不能为空")
     private Double messageProportion;
 
     /**
      * 信息提供占额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "信息提供占额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "信息提供占额不能为空")
     private Double provideAccount;
 
     /**
      * 业务揽接人
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "业务揽接人不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "业务揽接人不能为空")
     private String businessContracting;
 
     /**
      * 业务揽接占比
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "业务揽接占比不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "业务揽接占比不能为空")
     private Double businessProportion;
 
     /**
      * 业务揽接占额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "业务揽接占额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "业务揽接占额不能为空")
     private Double contractAccount;
 
     /**
      * 业务洽谈人
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "业务洽谈人不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "业务洽谈人不能为空")
     private String businessNegotiation;
 
     /**
      * 业务洽谈占比
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "业务洽谈占比不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "业务洽谈占比不能为空")
     private Double talkProportion;
 
     /**
      * 业务洽谈占额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "业务洽谈占额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "业务洽谈占额不能为空")
     private Double negotiationAccount;
 
     /**
      * 维护人
      */
-    @NotBlank(groups = {WeightAllotTO.TestAdd.class}, message = "维护人不能为空")
+    @NotBlank(groups = {QuotaTO.TestAdd.class}, message = "维护人不能为空")
     private String maintenance;
 
     /**
      * 维护占比
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "维护占比不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "维护占比不能为空")
     private Double maintainProportion;
 
     /**
      * 维护占额
      */
-    @NotNull(groups = {WeightAllotTO.TestAdd.class}, message = "维护占额不能为空")
+//    @NotNull(groups = {QuotaTO.TestAdd.class}, message = "维护占额不能为空")
     private Double maintenanceAccount;
 
     /**

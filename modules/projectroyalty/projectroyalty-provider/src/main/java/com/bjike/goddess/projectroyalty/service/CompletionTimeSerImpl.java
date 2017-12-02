@@ -245,4 +245,15 @@ public class CompletionTimeSerImpl extends ServiceImpl<CompletionTime, Completio
         CompletionTimeDTO dto = new CompletionTimeDTO();
         return super.count(dto);
     }
+
+    @Override
+    public Double findImportain(Integer month) throws SerException {
+        CompletionTimeDTO dto = new CompletionTimeDTO();
+        dto.getConditions().add(Restrict.eq("completion", month));
+        List<CompletionTime> completionTimes = super.findByCis(dto);
+        if(null != completionTimes && completionTimes.size() > 0){
+            return completionTimes.get(0).getImportance();
+        }
+        return 0d;
+    }
 }

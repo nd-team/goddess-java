@@ -22,6 +22,7 @@
     <dubbo:service interface="com.bjike.goddess.projectroyalty.api.CollectionPeriodAPI"
                    ref="collectionPeriodApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.projectroyalty.api.CompletionTimeAPI" ref="completionTimeApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.projectroyalty.api.ProjectFactorsAPI" ref="projectFactorsApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.projectroyalty.api.ContractAmountAPI" ref="contractAmountApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.projectroyalty.api.FacilityAPI" ref="facilityApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.projectroyalty.api.RatioAPI" ref="ratioApiImpl"/>

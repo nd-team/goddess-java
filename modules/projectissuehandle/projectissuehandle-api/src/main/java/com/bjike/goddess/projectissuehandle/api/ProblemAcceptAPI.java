@@ -1,6 +1,7 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectissuehandle.bo.ProblemAcceBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.enums.AffectedDepartment;
@@ -34,6 +35,7 @@ public interface ProblemAcceptAPI {
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 项目执行中的问题受理列表总条数
      */
@@ -101,6 +103,7 @@ public interface ProblemAcceptAPI {
     default List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return null;
     }
+
     /**
      * 根据项目问题编号查找项目执行中的问题受理
      *
@@ -110,8 +113,9 @@ public interface ProblemAcceptAPI {
     default ProblemAcceptBO getProjectNum(String projectNum) throws SerException {
         return null;
     }
+
     /**
-     * 获取内部项目编号
+     * 获取内部项目问题编号
      *
      * @return class String
      */
@@ -127,12 +131,15 @@ public interface ProblemAcceptAPI {
     default String degree(ProblemProcessingTime problemProcessingTime, AffectedDepartment affectedDepartment) throws SerException {
         return null;
     }
+
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(ProblemAcceptDTO dto ) throws SerException;
+    byte[] exportExcel(ProblemAcceptDTO dto) throws SerException;
+
     /**
      * 获取内部项目名称
      *
@@ -141,12 +148,20 @@ public interface ProblemAcceptAPI {
     default List<String> getName() throws SerException {
         return null;
     }
+
     /**
      * 获取工程类型
      *
      * @return class String
      */
     default List<String> getType() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据问题受理编号获取数据
+     */
+    default ProblemAcceBO findProblemAcce(String projectNum) throws SerException {
         return null;
     }
 }

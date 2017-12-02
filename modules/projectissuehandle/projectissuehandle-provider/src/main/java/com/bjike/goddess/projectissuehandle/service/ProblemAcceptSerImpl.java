@@ -7,6 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.projectissuehandle.bo.ProblemAcceBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
@@ -516,6 +517,22 @@ public class ProblemAcceptSerImpl extends ServiceImpl<ProblemAccept, ProblemAcce
 
 
         return collectList;
+    }
+
+    @Override
+    public ProblemAcceBO findProblemAcce(String projectNum) throws SerException {
+        if (StringUtils.isBlank(projectNum)) {
+            return null;
+        }
+        ProblemAcceptDTO dto = new ProblemAcceptDTO();
+        dto.getConditions().add(Restrict.eq("projectNum", projectNum));
+        ProblemAccept problemAccept = super.findOne(dto);
+        if (null != problemAccept) {
+            ProblemAcceBO bo = new ProblemAcceBO();
+            BeanTransform.copyProperties(problemAccept, bo);
+            return bo;
+        }
+        return null;
     }
 
 }

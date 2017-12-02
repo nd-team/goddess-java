@@ -153,4 +153,14 @@ public interface QuotaSer extends Ser<Quota, QuotaDTO> {
     default List<QuotaCollectBO> totalCollect() throws SerException {
         return null;
     }
+
+    /**
+     * 获取比例表中的内部项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> listInnerProject() throws SerException {
+        return null;
+    }
 }

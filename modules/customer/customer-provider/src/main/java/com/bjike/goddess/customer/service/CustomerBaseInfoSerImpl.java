@@ -1966,12 +1966,26 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 //        int limit = customerBaseInfoDTO.getLimit();
 //        int start = limit * customerBaseInfoDTO.getPage();
 //        List<CustomerBaseInfo> customerBaseInfoList = customerBaseInfos.stream().skip(start).limit(limit).collect(Collectors.toList());
-       Collections.sort(customerBaseInfos, new Comparator<CustomerBaseInfo>() {
-           @Override
-           public int compare(CustomerBaseInfo o1, CustomerBaseInfo o2) {
-               return o2.getFinalWeight().compareTo(o1.getFinalWeight());
-           }
-       });
+        Collections.sort(customerBaseInfos, new Comparator<CustomerBaseInfo>() {
+            @Override
+            public int compare(CustomerBaseInfo o1, CustomerBaseInfo o2) {
+                return o2.getFinalWeight().compareTo(o1.getFinalWeight());
+            }
+        });
         return BeanTransform.copyProperties(customerBaseInfos, CustomerBaseInfoBO.class);
+    }
+
+    @Override
+    public CustomerInfoBO findByNum(String customerNum) throws SerException {
+        if (StringUtils.isBlank(customerNum)) {
+            return null;
+        }
+        CustomerBaseInfoDTO dto = new CustomerBaseInfoDTO();
+        dto.getConditions().add(Restrict.eq("customerNum", customerNum));
+        List<CustomerBaseInfo> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            return BeanTransform.copyProperties(list.get(0), CustomerBaseInfoBO.class, false);
+        }
+        return null;
     }
 }

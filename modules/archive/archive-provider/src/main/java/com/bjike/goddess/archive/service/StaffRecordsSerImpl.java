@@ -39,6 +39,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -831,13 +833,59 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         if (tar) {
             sql.append(" , area as area ");
         }
-        sql.append(" from archive_staff_records ");
+        sql.append(" from archive_staff_records order by project,area asc ");
         List<StaffRecordsConditionBO> list = super.findBySql(sql.toString(), StaffRecordsConditionBO.class, files);
-        Set<StaffRecordsConditionBO> set = new HashSet<>(0);
-        set.addAll(list);
+
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (((null == list.get(i).getProject() && null == list.get(j).getProject()) || list.get(i).getProject().equals(list.get(j).getProject())) && ((null == list.get(i).getArea() && null == list.get(j).getArea()) || list.get(i).getArea().equals(list.get(j).getArea()))) {
+                    list.remove(list.get(j));
+                }
+            }
+        }
+
+        Set<StaffRecordsConditionBO> treeSet = filter();
+        treeSet.addAll(list);
+
         List<StaffRecordsConditionBO> staffRecordsConditionBOs = new ArrayList<>(0);
-        staffRecordsConditionBOs.addAll(set);
+        staffRecordsConditionBOs.addAll(treeSet);
         return staffRecordsConditionBOs;
+    }
+
+    private <T> TreeSet<T> filter() throws SerException {
+        TreeSet<T> treeSet = new TreeSet<>(new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                Field[] field = o1.getClass().getDeclaredFields();//获取实体类的所有属性，返回field数组
+                int num = 0;   //用于识别属性相同的个数
+                int sum = 0;    //用于识别该对象除了集合的属性值个数
+                for (Field f : field) {//遍历所有的属性
+                    String type = f.getGenericType().toString();//获取属性的类型
+                    if (type.indexOf("java.util.List") < 0) {
+                        sum++;
+                        String name = f.getName(); // 获取属性的名字
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1);// 将属性的首字符大写，方便构造get，set方法
+                        try {
+                            Method m = o1.getClass().getMethod("get" + name);
+                            Object value = m.invoke(o1);// 调用getter方法获取属性值
+                            Method m1 = o2.getClass().getMethod("get" + name);
+                            Object value1 = m1.invoke(o2);
+                            if (value.equals(value1)) {    //判断该属性值是否相同
+                                num++;
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+                if (num == sum) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return treeSet;
     }
 
 

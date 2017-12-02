@@ -7,17 +7,18 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.lendreimbursement.api.LendAuditDetailAPI;
 import com.bjike.goddess.lendreimbursement.dto.LendAuditDetailDTO;
-import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
 import com.bjike.goddess.lendreimbursement.vo.LendAuditDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 借款审核人员
+ * 借款审核人员(不用了)
  *
  * @Author: [ tanghaixiang ]
  * @Date: [ 2017-04-06 10:06 ]

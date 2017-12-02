@@ -1210,6 +1210,7 @@ public interface BusinessContractAPI {
     default OptionMakeBO yearPersonFigure(PersonTO to) throws SerException {
         return null;
     }
+
     /**
      * 部门图表周汇总
      *
@@ -1253,26 +1254,32 @@ public interface BusinessContractAPI {
     default OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的单次合同名
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findSingleContractName() throws SerException {
         return null;
     }
+
     /**
      * 根据单次合同名获取单次合同编号
      * lijuntao
+     *
      * @param singName 单次合同名
      * @throws SerException
      */
     default List<String> findSingleNumByName(String singName) throws SerException {
         return null;
     }
+
     /**
      * 根据单次合同编号获取对应信息
      * lijuntao
+     *
      * @param singleNum 单次合同编号
      * @return class BusinessContractsBO
      * @throws SerException
@@ -1280,4 +1287,15 @@ public interface BusinessContractAPI {
     default BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
         return null;
     }
+
+    /**
+     * 获取市场编号(市场信息编号)
+     */
+    default List<String> findMarkNum() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据市场编号(市场信息编号)获取
+     */
 }

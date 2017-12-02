@@ -1,7 +1,6 @@
 package com.bjike.goddess.marketdevelopment.vo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +12,12 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class BusinessCourseVO extends BaseBO {
+public class BusinessCourseVO implements Serializable {
+
+    /**
+     * id
+     */
+    private String id;
 
     /**
      * 业务方向编号
@@ -52,5 +56,13 @@ public class BusinessCourseVO extends BaseBO {
 
     public void setBusinessSubjectVOs(List<BusinessSubjectVO> businessSubjectVOs) {
         this.businessSubjectVOs = businessSubjectVOs;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
