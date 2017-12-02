@@ -366,6 +366,16 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return empNumber;
     }
 
+    @Override
+    public String nextEmpNumber(String empNum) throws SerException {
+        empNum = empNum.substring(0,5);
+        String[] fields = new String[]{"employeeNumber"};
+        String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '"+empNum+"%'  ";
+        List<User> list = super.findBySql(sql, User.class, fields);
+        String max = list != null && list.size() > 0 ? list.get(0).getEmployeeNumber() : "";
+        String empNumber = SeqUtil.appGenerateEmp(max);
+        return empNumber;
+    }
 
     @Override
     //chenjunhao

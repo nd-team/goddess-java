@@ -3,7 +3,10 @@ package com.bjike.goddess.announcement.entity;
 import com.bjike.goddess.announcement.enums.Status;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -87,6 +90,11 @@ public class Announcement extends BaseEntity {
      */
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '公告状态'")
     private Status status;
+    /**
+     * uuid
+     */
+    @Column(name = "uuid", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT 'uuid'")
+    private String uuid;
 
     /**
      * 公告对应的发布对象
@@ -94,6 +102,14 @@ public class Announcement extends BaseEntity {
 //    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "announcement")
     @Transient
     private Set<AnnouncementUser> announcementUsers = new HashSet<AnnouncementUser>();
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public Set<AnnouncementUser> getAnnouncementUsers() {
         return announcementUsers;

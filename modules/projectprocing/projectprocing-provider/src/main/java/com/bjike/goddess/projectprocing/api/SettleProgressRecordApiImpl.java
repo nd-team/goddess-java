@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.SettleProgressRecordBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressRecordDTO;
 import com.bjike.goddess.projectprocing.service.SettleProgressRecordSer;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressRecordTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,17 @@ import java.util.List;
 public class SettleProgressRecordApiImpl implements SettleProgressRecordAPI {
     @Autowired
     private SettleProgressRecordSer settleProgressRecordSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return settleProgressRecordSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return settleProgressRecordSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countManage(SettleProgressRecordDTO settleProgressRecordDTO) throws SerException {
         return settleProgressRecordSer.countManage(settleProgressRecordDTO);

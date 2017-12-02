@@ -304,9 +304,11 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     public void editTempera(TemperatureSubsidiesTO temperatureSubsidiesTO) throws SerException {
         checkSeeIdentity();
         TemperatureSubsidies temperatureSubsidies = super.findById(temperatureSubsidiesTO.getId());
+        LocalDateTime dateTime = temperatureSubsidies.getCreateTime();
         if (!temperatureSubsidies.getConfirm()) {
             BeanTransform.copyProperties(temperatureSubsidies, temperatureSubsidies, true);
-            temperatureSubsidies.setCreateTime(LocalDateTime.now());
+            temperatureSubsidies.setCreateTime(dateTime);
+            temperatureSubsidies.setModifyTime(LocalDateTime.now());
             temperatureSubsidies.setSubsidiesAmount(temperatureSubsidiesTO.getDays() * temperatureSubsidiesTO.getSubsidiesPrice());
             super.update(temperatureSubsidies);
         } else {

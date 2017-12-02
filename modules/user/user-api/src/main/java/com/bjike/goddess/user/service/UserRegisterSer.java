@@ -93,5 +93,14 @@ public interface UserRegisterSer {
     default String autogenerationNum(String startNumber) throws SerException {
         return null;
     }
-
+    /**
+     * 移动端邀请员工注册
+     * lijuntao
+     *
+     * @param inviteUrl 邀请链接
+     * @throws SerException
+     */
+    default void inviteReg(String inviteUrl,AppUserRegisterTO appUserRegisterTO) throws SerException {
+        return;
+    }
 }

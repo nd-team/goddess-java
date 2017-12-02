@@ -15,7 +15,6 @@ import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
 import com.bjike.goddess.user.utils.SmsCodeUtil;
 import com.bjike.goddess.user.vo.SmsReceiveCodeVO;
-import com.mysql.cj.mysqlx.protobuf.MysqlxDatatypes;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -92,7 +91,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                 user.setUserType(UserType.ADMIN);
                 user.setCreateTime(LocalDateTime.now());
                 user.setStatus(Status.THAW);
-                user.setEmployeeNumber(SeqUtil.generateEmp(employeeNumber));
+                user.setEmployeeNumber(employeeNumber);
                 user.setSystemNO(SeqUtil.generateSys(sysNO));
                 userSer.save(user);
             } else {
@@ -119,12 +118,12 @@ public class UserRegisterSerImpl implements UserRegisterSer {
         try {
             //调用阿里的短信
             smsReceiveCodeVO = SmsCodeUtil.mainEnter(smsCodeParameterTO);
-            if( null != smsReceiveCodeVO ){
+            if (null != smsReceiveCodeVO) {
                 code = smsReceiveCodeVO.getCode();
                 if (StringUtils.isNotBlank(code) && "ok".equals(code.toLowerCase())) {
                     //说明发送成功
                     Pattern expression = Pattern.compile("[0-9]{" + Integer.parseInt(smsCodeParameterTO.getRandomNum()) + "}");//创建匹配模式
-                    Matcher matcher2 = expression.matcher( smsReceiveCodeVO.getContent() );//通过匹配模式得到匹配器
+                    Matcher matcher2 = expression.matcher(smsReceiveCodeVO.getContent());//通过匹配模式得到匹配器
                     if (matcher2.find()) {
                         String smsCode = matcher2.group();
                         //将验证码存session，这里使用5分钟失效
@@ -144,12 +143,12 @@ public class UserRegisterSerImpl implements UserRegisterSer {
     @Override
     public Boolean verifyCode(String phone, String code) throws SerException {
         Boolean verifyFlag = false;
-        String sessionCode = AuthCodeSession.get( phone );
-        if( StringUtils.isBlank( code ) || StringUtils.isBlank( sessionCode)){
+        String sessionCode = AuthCodeSession.get(phone);
+        if (StringUtils.isBlank(code) || StringUtils.isBlank(sessionCode)) {
             throw new SerException("验证码不正确");
-        }else if( code.equals( sessionCode)){
+        } else if (code.equals(sessionCode)) {
             verifyFlag = true;
-        }else if( !code.equals( sessionCode) ){
+        } else if (!code.equals(sessionCode)) {
             throw new SerException("验证码不正确");
         }
         return verifyFlag;
@@ -166,16 +165,21 @@ public class UserRegisterSerImpl implements UserRegisterSer {
         }
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void registerUser(AppUserRegisterTO appUserRegisterTO) throws SerException {
         try {
             UserBO bo = userSer.findByUsername(appUserRegisterTO.getUsername());
             if (null == bo) {
-                String employeeNumber = userSer.maxUserEmpNumber();
+//                String employeeNumber = userSer.maxUserEmpNumber();
                 String sysNO = userSer.findByMaxField("systemNO", User.class);
                 User user = new User();
-                if(!appUserRegisterTO.getRegisterType().equals("个人")){
-                    user.setEnterpriseName(appUserRegisterTO.getEnterpriseName());
+                if (!appUserRegisterTO.getRegisterType().equals("个人")) {
+                    if (StringUtils.isNotBlank(appUserRegisterTO.getEnterpriseName())) {
+                        user.setEnterpriseName(appUserRegisterTO.getEnterpriseName());
+                    } else {
+                        throw new SerException("请填写企业/组织名称");
+                    }
                 }
                 user.setUsername(appUserRegisterTO.getUsername());
                 user.setPhone(appUserRegisterTO.getPhone());
@@ -183,9 +187,10 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                 user.setUserType(UserType.ADMIN);
                 user.setCreateTime(LocalDateTime.now());
                 user.setStatus(Status.THAW);
-                user.setEmployeeNumber(SeqUtil.generateEmp(employeeNumber));
+                user.setEmployeeNumber(appUserRegisterTO.getEmployeeNumber());
                 user.setSystemNO(SeqUtil.generateSys(sysNO));
                 userSer.save(user);
+
             } else {
                 throw new SerException(appUserRegisterTO.getUsername() + "已被注册!");
             }
@@ -197,16 +202,44 @@ public class UserRegisterSerImpl implements UserRegisterSer {
 
     @Override
     public String autogenerationNum(String startNumber) throws SerException {
+        if (!startNumber.matches("[a-zA-Z]{5}")) {
+            throw new SerException("请输入五位数的字母获取对应编号");
+        }
         String sql = "SELECT substring(employeeNumber,1,5) as employeeNumber FROM user";
         List<Object> objectList = userSer.findBySql(sql);
-        if(objectList!=null && objectList.size()>0){
-            for (Object obj : objectList){
-                Object[] o = (Object[]) obj;
-                if(String.valueOf(o[0]).equalsIgnoreCase(startNumber)){
+        if (objectList != null && objectList.size() > 0) {
+            for (Object obj : objectList) {
+                if (String.valueOf(obj).equalsIgnoreCase(startNumber)) {
                     throw new SerException("该编号已存在");
                 }
             }
         }
         return SeqUtil.appAutogeneration(startNumber);
     }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void inviteReg(String inviteUrl, AppUserRegisterTO appUserRegisterTO) throws SerException {
+        String userId = inviteUrl.substring(inviteUrl.lastIndexOf("/") + 1, inviteUrl.length());
+        User user = userSer.findById(userId);
+        //填用户表
+        if (user != null) {
+            String sysNO = user.getSystemNO();
+            User user1 = new User();
+            user1.setEmployeeNumber(userSer.nextEmpNumber(user.getEmployeeNumber()));
+            user1.setUsername(appUserRegisterTO.getUsername());
+            user1.setPhone(appUserRegisterTO.getPhone());
+            user1.setUserType(UserType.EMPLOYEE);
+            user1.setCreateTime(LocalDateTime.now());
+            user1.setSystemNO(sysNO);
+            user1.setStatus(Status.THAW);
+            try {
+                user1.setPassword(PasswordHash.createHash(appUserRegisterTO.getPassword()));
+            } catch (Exception e) {
+                throw new SerException(e.getMessage());
+            }
+            userSer.save(user1);
+        }
+    }
+
 }

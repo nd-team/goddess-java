@@ -71,7 +71,8 @@ public class MyInterceptor implements HandlerInterceptor {
         }
 //        if (announcementAPI.checkRequired()) {
 //            String path = request.getServletPath();
-//            if (path.startsWith("/announcement/v1/read") || path.startsWith("/announcement/v1/requiredReads") || path.startsWith("/announcement/v1/requiredCount")|| path.startsWith("/announcement/v1/checkByClass")) {   //todo:获取阅读必读公告路径
+//            //是关于读必读公告的接口路径,就放行
+//            if (path.startsWith("/announcement/v1/read") || path.startsWith("/announcement/v1/requiredReads") || path.startsWith("/announcement/v1/requiredCount")|| path.startsWith("/announcement/v1/checkByClass")) {
 //                return true;  //放行
 //            } else {
 //                throw new ActException("您有必读公告未读，请先阅读必读公告，否则不能操作");

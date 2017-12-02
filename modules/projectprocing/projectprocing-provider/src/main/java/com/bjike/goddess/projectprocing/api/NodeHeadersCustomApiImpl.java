@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.NodeHeadersCustomDTO;
 import com.bjike.goddess.projectprocing.service.NodeHeadersCustomSer;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,17 @@ import java.util.List;
 public class NodeHeadersCustomApiImpl implements NodeHeadersCustomAPI {
     @Autowired
     private NodeHeadersCustomSer nodeHeadersCustomSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return nodeHeadersCustomSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return nodeHeadersCustomSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countNode(NodeHeadersCustomDTO nodeHeadersCustomDTO) throws SerException {
         return nodeHeadersCustomSer.countNode(nodeHeadersCustomDTO);

@@ -243,3 +243,19 @@ include ':modules:fundrecords:fundrecords-provider'
 include ':modules:projectprocing:projectprocing-api'
 include ':modules:projectprocing:projectprocing-consumer'
 include ':modules:projectprocing:projectprocing-provider'
+//#qualifications
+include ':modules:qualifications:qualifications-api'
+include ':modules:qualifications:qualifications-consumer'
+include ':modules:qualifications:qualifications-provider'
+//#taskallotment
+include ':modules:taskallotment:taskallotment-api'
+include ':modules:taskallotment:taskallotment-consumer'
+include ':modules:taskallotment:taskallotment-provider'
+//#announcement
+include ':modules:announcement:announcement-api'
+include ':modules:announcement:announcement-consumer'
+include ':modules:announcement:announcement-provider'
+//#push
+include ':modules:push:push-api'
+include ':modules:push:push-consumer'
+include ':modules:push:push-provider'

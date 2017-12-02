@@ -204,6 +204,11 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     }
 
     @Override
+    public String findManageByDepart(String department) throws SerException {
+        return positionDetailUserSer.findManageByDepart(department);
+    }
+
+    @Override
     public String[] budgetPerson() throws SerException {
         return positionDetailUserSer.budgetPerson();
     }

@@ -54,4 +54,9 @@ public class UserRegisterApiImpl implements UserRegisterAPI {
     public String autogenerationNum(String startNumber) throws SerException {
         return userRegisterSer.autogenerationNum(startNumber);
     }
+
+    @Override
+    public void inviteReg(String inviteUrl, AppUserRegisterTO appUserRegisterTO) throws SerException {
+        userRegisterSer.inviteReg(inviteUrl,appUserRegisterTO);
+    }
 }
