@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("annualapply")
 public class AnnualApplyAct {
-
     @Autowired
     private AnnualApplyAPI annualApplyAPI;
 

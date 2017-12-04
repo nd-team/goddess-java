@@ -379,7 +379,7 @@ public class BeforeRemoveEmployeeSerImpl extends ServiceImpl<BeforeRemoveEmploye
     }
 
     @Override
-    //每12小时执行一次
+    //每24小时执行一次
     public void send() throws SerException {
         String token = RpcTransmit.getUserToken();
         if (moduleAPI.isCheck("dimission")) {
