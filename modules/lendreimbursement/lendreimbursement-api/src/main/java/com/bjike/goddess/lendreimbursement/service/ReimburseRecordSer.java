@@ -66,6 +66,13 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     }
 
     /**
+     * 报销列表总条数
+     */
+    default Long countReimburseRecords(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 申请报销列表
      *
      * @return class ReimburseRecordBO

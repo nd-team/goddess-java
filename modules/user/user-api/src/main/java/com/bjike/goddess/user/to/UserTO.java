@@ -18,6 +18,8 @@ public class UserTO extends BaseTO {
 
     public interface UPDATEPWD{}
 
+    public interface UPDATEPHONE{}
+
     /**
      * 用户名
      */
@@ -26,6 +28,7 @@ public class UserTO extends BaseTO {
     /**
      * 登录手机(注册验证手机)
      */
+    @NotBlank(groups ={ UserTO.UPDATEPHONE.class} , message = "手机号不能为空")
     private String phone;
     /**
      * 登录邮箱

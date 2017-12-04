@@ -78,6 +78,22 @@ public class EventAction {
     }
 
     /**
+     * 待办事件总条数(phone)
+     *
+     * @param dto 事件数据传输
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/count")
+    public Result counts(FatherDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(eventAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 通过日历查看待办事件
      *
      * @param dto dto

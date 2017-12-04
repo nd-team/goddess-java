@@ -136,6 +136,26 @@ public interface UserAPI {
     default void updatePassword(UserTO userTO) throws SerException {
     }
 
+    /**
+     * 忘记密码修改密码
+     * chenyang
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePasswords(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 修改手机号码
+     * chenyang
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePhone(UserTO userTO) throws SerException {
+    }
+
 
     /**
      * 通过用户名查询用户

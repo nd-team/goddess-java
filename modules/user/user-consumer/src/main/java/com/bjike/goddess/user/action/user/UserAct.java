@@ -1,6 +1,8 @@
 package com.bjike.goddess.user.action.user;
 
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.attendance.api.VacateAPI;
+import com.bjike.goddess.attendance.dto.VacateDTO;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -8,10 +10,12 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.event.api.EventAPI;
+import com.bjike.goddess.event.dto.FatherDTO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.to.FileInfo;
-import com.bjike.goddess.storage.vo.FileVO;
+
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.to.UserTO;
@@ -48,6 +52,10 @@ public class UserAct extends BaseFileAction {
     private UserAPI userAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private EventAPI eventAPI;
+
+    private VacateAPI vacateAPI;
 
     /**
      * 手机号码是否存在
@@ -111,6 +119,22 @@ public class UserAct extends BaseFileAction {
         try {
             userAPI.updatePassword(userTO);
             return new ActResult("修改密码成功！");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 当前用户修改手机号码
+     *
+     * @param userTO 用户
+     * @version v1
+     */
+    @PostMapping("v1/update/phone")
+    public Result updatePhone(@Validated(UserTO.UPDATEPHONE.class) UserTO userTO, BindingResult bindingResult) throws ActException {
+        try {
+            userAPI.updatePhone(userTO);
+            return new ActResult("修改手机号码成功！");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -266,6 +290,36 @@ public class UserAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 待办事件总条数(phone)
+     *
+     * @param dto 事件数据传输
+     * @throws ActException
+     * @version v1
+     */
+//    @GetMapping("v1/event/count")
+//    public Result count(FatherDTO dto) throws ActException {
+//        try {
+//            return ActResult.initialize(eventAPI.count(dto));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
+    /**
+     * 请假总条数(phone)
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+//    @GetMapping("v1/vacate/count")
+//    public Result vacate(VacateDTO dto) throws ActException {
+//        try {
+//            return ActResult.initialize(vacateAPI.count(dto));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 }

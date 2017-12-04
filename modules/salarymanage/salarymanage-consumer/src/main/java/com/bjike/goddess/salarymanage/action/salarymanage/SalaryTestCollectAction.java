@@ -8,15 +8,18 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.salarymanage.api.SalaryTestCollectAPI;
 import com.bjike.goddess.salarymanage.bo.AreaBO;
+import com.bjike.goddess.salarymanage.bo.ResultAreaBO;
 import com.bjike.goddess.salarymanage.bo.SalaryTestCollectBO;
 import com.bjike.goddess.salarymanage.dto.SalaryTestCollectDTO;
 import com.bjike.goddess.salarymanage.to.SalaryTestCollectTO;
 import com.bjike.goddess.salarymanage.vo.AreaVO;
+import com.bjike.goddess.salarymanage.vo.SalaryTestCollectVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 /**
 * 薪资测算汇总表
@@ -44,6 +47,9 @@ public class SalaryTestCollectAction {
     public Result pageList(SalaryTestCollectDTO dto) throws ActException{
         try {
             List<AreaBO> areaBOList = salaryTestCollectAPI.pageList(dto);
+            for(AreaBO bo:areaBOList){
+                bo.setId( UUID.randomUUID().toString());
+            }
             List<AreaVO> voList = BeanTransform.copyProperties(areaBOList,AreaVO.class);
             return ActResult.initialize(voList);
         }catch (SerException e){
@@ -63,6 +69,25 @@ public class SalaryTestCollectAction {
             salaryTestCollectAPI.makeSalary(to);
             return new ActResult("薪资标准制定成功");
         }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个薪资汇总
+     *
+     * @param id
+     * @return class AreaVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException {
+        try {
+            SalaryTestCollectBO bo = salaryTestCollectAPI.findOne(id);
+            SalaryTestCollectVO vo = BeanTransform.copyProperties(bo, SalaryTestCollectVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

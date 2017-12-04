@@ -578,7 +578,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 startTime = DateUtil.dateToString ( DateUtil.getStartMonth () );
                 endTime = DateUtil.dateToString ( DateUtil.getEndMonth () );
                 break;
-            case THISquarter:
+            case THISQUARTER:
                 startTime = DateUtil.dateToString ( DateUtil.getStartQuart () );
                 endTime = DateUtil.dateToString ( DateUtil.getEndQuart () );
                 break;

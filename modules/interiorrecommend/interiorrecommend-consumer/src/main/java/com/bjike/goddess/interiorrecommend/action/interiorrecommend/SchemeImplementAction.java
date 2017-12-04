@@ -20,13 +20,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-* 内部推荐方案实施
-* @Author:			[ jiangzaixuan ]
-* @Date:			[  2017-09-12 11:29 ]
-* @Description:	[ 内部推荐方案实施 ]
-* @Version:		[ v1.0.0 ]
-* @Copy:   		[ com.bjike ]
-*/
+ * 内部推荐方案实施
+ *
+ * @Author: [ jiangzaixuan ]
+ * @Date: [ 2017-09-12 11:29 ]
+ * @Description: [ 内部推荐方案实施 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 @RestController
 @RequestMapping("schemeimplement")
 public class SchemeImplementAction {
@@ -59,137 +60,145 @@ public class SchemeImplementAction {
 
     /**
      * 我要推荐
+     *
      * @param to 推荐方案实施内容
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/add")
-    public Result add(@Validated(ADD.class) SchemeImplementTO to,BindingResult bindingResult) throws ActException{
+    public Result add(@Validated(ADD.class) SchemeImplementTO to, BindingResult bindingResult) throws ActException {
         try {
-            schemeImplementAPI.add(to);
-            return new ActResult("添加成功");
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            schemeImplementAPI.add ( to );
+            return new ActResult ( "添加成功" );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
 
     /**
      * 删除
+     *
      * @param id 推荐id
      * @throws ActException
      * @version v1
      */
     @DeleteMapping("v1/delete")
-    public Result delete(@RequestParam String id) throws ActException{
+    public Result delete(@RequestParam String id) throws ActException {
         try {
-            schemeImplementAPI.delete(id);
-            return new ActResult("删除成功");
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            schemeImplementAPI.delete ( id );
+            return new ActResult ( "删除成功" );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
     /**
      * 修改
+     *
      * @param to 推荐方案实施内容
      * @throws ActException
      * @version v1
      */
     @PutMapping("v1/modify")
-    public Result modify(@Validated(EDIT.class) SchemeImplementTO to,BindingResult bindingResult) throws ActException{
+    public Result modify(@Validated(EDIT.class) SchemeImplementTO to, BindingResult bindingResult) throws ActException {
         try {
-            schemeImplementAPI.modify(to);
-            return new ActResult("修改成功");
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            schemeImplementAPI.modify ( to );
+            return new ActResult ( "修改成功" );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
     /**
      * 列表
+     *
      * @param dto 查询条件
      * @return class SchemeImplementVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/pageList")
-    public Result pageList(SchemeImplementDTO dto) throws ActException{
+    public Result pageList(SchemeImplementDTO dto) throws ActException {
         try {
-            List<SchemeImplementBO> boList = schemeImplementAPI.pageList(dto);
-            List<SchemeImplementVO> voList = BeanTransform.copyProperties(boList,SchemeImplementVO.class);
-            return ActResult.initialize(voList);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            List<SchemeImplementBO> boList = schemeImplementAPI.pageList ( dto );
+            List<SchemeImplementVO> voList = BeanTransform.copyProperties ( boList, SchemeImplementVO.class );
+            return ActResult.initialize ( voList );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
     /**
      * 获取列表总条数
+     *
      * @param dto
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(SchemeImplementDTO dto) throws ActException{
+    public Result count(SchemeImplementDTO dto) throws ActException {
         try {
-            Long count = schemeImplementAPI.count(dto);
-            return ActResult.initialize(count);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            Long count = schemeImplementAPI.count ( dto );
+            return ActResult.initialize ( count );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
 
     /**
      * 根据id查询单条数据
+     *
      * @param id 内部推荐实施id
      * @return class SchemeImplementVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/one")
-    public Result findOne(@RequestParam String id) throws ActException{
+    public Result findOne(@RequestParam String id) throws ActException {
         try {
-            SchemeImplementBO schemeImplementBO = schemeImplementAPI.findOne(id);
-            SchemeImplementVO vo =  BeanTransform.copyProperties(schemeImplementBO,SchemeImplementVO.class);
-            return ActResult.initialize(vo);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            SchemeImplementBO schemeImplementBO = schemeImplementAPI.findOne ( id );
+            SchemeImplementVO vo = BeanTransform.copyProperties ( schemeImplementBO, SchemeImplementVO.class );
+            return ActResult.initialize ( vo );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
     /**
      * 根据方案名称和岗位获取推荐奖金额
-     * @param type 方案名称
+     *
+     * @param type              方案名称
      * @param recommendPosition 岗位
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/award")
-    public Result findAward(@RequestParam String type,@RequestParam String recommendPosition) throws ActException{
+    public Result findAward(@RequestParam String type, @RequestParam String recommendPosition) throws ActException {
         try {
-            Integer award = schemeImplementAPI.findAward(type,recommendPosition);
-            return ActResult.initialize(award);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            Integer award = schemeImplementAPI.findAward ( type, recommendPosition );
+            return ActResult.initialize ( award );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
 
     /**
      * 根据方案名称查找推荐岗位
+     *
      * @param type 方案名称
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/position")
-    public Result findPosition(@RequestParam String type) throws ActException{
+    public Result findPosition(@RequestParam String type) throws ActException {
         try {
-            String position  = schemeImplementAPI.findPosition(type);
-            return ActResult.initialize(position);
-        }catch (SerException e){
-            throw new ActException(e.getMessage());
+            String position = schemeImplementAPI.findPosition ( type );
+            return ActResult.initialize ( position );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -211,4 +220,4 @@ public class SchemeImplementAction {
 //        }
 //    }
 
- }
+}

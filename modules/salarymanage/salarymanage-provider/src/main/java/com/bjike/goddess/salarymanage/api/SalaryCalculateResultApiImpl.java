@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.salarymanage.bo.ResultAreaBO;
+import com.bjike.goddess.salarymanage.bo.SalaryCalculateResultBO;
 import com.bjike.goddess.salarymanage.dto.SalaryCalculateResultDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryCalculateResult;
 import com.bjike.goddess.salarymanage.service.SalaryCalculateResultSer;
@@ -47,5 +48,10 @@ public class SalaryCalculateResultApiImpl implements SalaryCalculateResultAPI  {
     @Override
     public void makeShare(SalaryCalculateResultTO to) throws SerException {
         salaryCalculateResultSer.makeShare(to);
+    }
+
+    @Override
+    public SalaryCalculateResultBO findOne(String id) throws SerException {
+        return salaryCalculateResultSer.findOne ( id );
     }
 }

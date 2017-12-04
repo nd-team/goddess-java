@@ -7,12 +7,10 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.salarymanage.api.SalaryCalculateResultAPI;
-import com.bjike.goddess.salarymanage.bo.ResultAreaBO;
-import com.bjike.goddess.salarymanage.bo.ResultDepartmentBO;
-import com.bjike.goddess.salarymanage.bo.ResultDirectionBO;
-import com.bjike.goddess.salarymanage.bo.ResultSkillPositionBO;
+import com.bjike.goddess.salarymanage.bo.*;
 import com.bjike.goddess.salarymanage.to.SalaryCalculateResultTO;
 import com.bjike.goddess.salarymanage.vo.ResultAreaVO;
+import com.bjike.goddess.salarymanage.vo.SalaryCalculateResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +18,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
 * 薪资测算结果
@@ -47,6 +46,9 @@ public class SalaryCalculateResultAction {
     public Result pageList() throws ActException{
         try {
             List<ResultAreaBO> resultAreaBOS = salaryCalculateResultAPI.pageList();
+//            for(ResultAreaBO bo:resultAreaBOS){
+//                bo.setId( UUID.randomUUID().toString());
+//            }
             List<ResultAreaVO> resultAreaVOS = BeanTransform.copyProperties(resultAreaBOS,ResultAreaVO.class);
             return ActResult.initialize(resultAreaVOS);
         }catch (SerException e){
@@ -66,6 +68,25 @@ public class SalaryCalculateResultAction {
             salaryCalculateResultAPI.makeShare(to);
             return new ActResult("制定等级份额成功");
         }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id来查询单个薪资测算结果
+     *
+     * @param id
+     * @return class SalaryCalculateResultVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/find/one/{id}")
+    public Result findOne(@PathVariable String id) throws ActException {
+        try {
+            SalaryCalculateResultBO bo = salaryCalculateResultAPI.findOne(id);
+            SalaryCalculateResultVO vo = BeanTransform.copyProperties(bo, SalaryCalculateResultVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

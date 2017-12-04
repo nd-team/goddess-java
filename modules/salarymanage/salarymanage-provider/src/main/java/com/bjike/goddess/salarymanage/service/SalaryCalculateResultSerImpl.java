@@ -19,7 +19,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import scala.util.parsing.combinator.testing.Str;
+
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -46,6 +46,9 @@ public class SalaryCalculateResultSerImpl extends ServiceImpl<SalaryCalculateRes
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private SalaryCalculateResultSer salaryCalculateResultSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -199,9 +202,11 @@ public class SalaryCalculateResultSerImpl extends ServiceImpl<SalaryCalculateRes
 //        });
         List<ResultAreaBO> resultAreaBOS = new ArrayList<>();
         Set<String> areas = salaryCalculateDetails.stream().map(salaryCalculateDetail -> salaryCalculateDetail.getArea()).collect(Collectors.toSet());
+        Set<String> id = salaryCalculateDetails.stream().map(salaryCalculateDetail -> salaryCalculateDetail.getId ()).collect(Collectors.toSet());
         for (String area : areas) {
             ResultAreaBO resultAreaBO = new ResultAreaBO();
             resultAreaBO.setArea(area);
+            resultAreaBO.setId (id);
             SalaryCalculateDetailDTO detailDTO = new SalaryCalculateDetailDTO();
             detailDTO.getConditions().add(Restrict.eq("area", area));
             List<SalaryCalculateDetail> salaryCalculateDetails1 = salaryCalculateDetailSer.findByCis(detailDTO);
@@ -462,6 +467,13 @@ public class SalaryCalculateResultSerImpl extends ServiceImpl<SalaryCalculateRes
         }else{
             super.save(model);
         }
+    }
+
+    @Override
+    public SalaryCalculateResultBO findOne(String id) throws SerException {
+        SalaryCalculateResult salaryCalculateResult = super.findById ( id );
+        SalaryCalculateResultBO bo = BeanTransform.copyProperties(salaryCalculateResult, SalaryCalculateResultBO.class);
+        return bo;
     }
 
 

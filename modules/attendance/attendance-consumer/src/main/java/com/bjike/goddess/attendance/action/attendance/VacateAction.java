@@ -272,6 +272,22 @@ public class VacateAction extends BaseFileAction {
     }
 
     /**
+     * 请假总条数(phone)
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/count")
+    public Result vacates(VacateDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(vacateAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 获取请假人的主送人
      *
      * @param name 请假人

@@ -175,6 +175,23 @@ public class ReimburseRecordAction extends BaseFileAction {
     }
 
     /**
+     * 报销列表总条数(phone)
+     *
+     * @param reimburseRecordDTO 申请报销信息dto
+     * @des 获取所有申请报销信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result counts(ReimburseRecordDTO reimburseRecordDTO) throws ActException {
+        try {
+            Long count = reimburseRecordAPI.countReimburseRecords(reimburseRecordDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 申请报销列表
      *
      * @param reimburseRecordDTO 申请报销信息dto

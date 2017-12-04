@@ -110,8 +110,9 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     /**
      * 根据姓名获取通过面试的信息
      * @param dto
-     * @return
+     * @return class InterviewInforVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findByName")
     public Result findByName(SalaryConfirmRecordDTO dto) throws ActException{
@@ -127,8 +128,9 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     /**
      * 根据姓名获取信息
      * @param dto
-     * @return
+     * @return  class InterviewInforVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findEntryRegisterByName")
     public Result findEntryRegisterByName(SalaryConfirmRecordDTO dto) throws ActException{
@@ -144,8 +146,9 @@ public class SalaryConfirmRecordAction extends BaseFileAction{
     /**
      * 根据员工编号查找员工入职登记
      * @param dto
-     * @return
+     * @return  class InterviewInforVO
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findByNumber")
     public Result findByNumber(SalaryConfirmRecordDTO dto) throws ActException{

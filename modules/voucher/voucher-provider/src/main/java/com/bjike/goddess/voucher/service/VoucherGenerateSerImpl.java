@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.service;
 
+import java.io.*;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -1205,7 +1206,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         searchCondition ( voucherGenerateDTO );
         voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
         voucherGenerateDTO.getSorts ().add ( "voucherDate=desc" );
-//        voucherGenerateDTO.getSorts().add("totalId=desc");
+        voucherGenerateDTO.getSorts().add("totalId=desc");
         voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "auditStatus", AuditStatus.NONE ) );
 
         List<VoucherGenerate> list = super.findByCis ( voucherGenerateDTO, true );
@@ -1213,7 +1214,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (listBO != null && listBO.size () > 0) {
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById ( str.getTotalId () );
-                str.setMoneyTotal ( vt.getMoney () );
+                if(vt != null) {
+                    str.setMoneyTotal ( vt.getMoney () );
+                }
             }
         }
         return listBO;
