@@ -1,10 +1,10 @@
 package com.bjike.goddess.common.api.entity;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -48,15 +48,15 @@ public abstract class BaseEntity implements Serializable{
     }
 
     public LocalDateTime getCreateTime() {
-        return createTime;
+        return LocalDateTime.from(LocalDate.from(createTime));
     }
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public LocalDate getModifyTime() {
+        return LocalDate.from(modifyTime);
     }
 
     public void setModifyTime(LocalDateTime modifyTime) {
