@@ -1039,7 +1039,7 @@ public class PromotionApplySerImpl extends ServiceImpl<PromotionApply, Promotion
     }
 
     @Override
-    //每月21号定时发邮件给总经办  //todo:
+    //每月21号定时发邮件给总经办
     public void send() throws SerException {
         String token = RpcTransmit.getUserToken();
         List<PromotionApplyBO> list = rank();

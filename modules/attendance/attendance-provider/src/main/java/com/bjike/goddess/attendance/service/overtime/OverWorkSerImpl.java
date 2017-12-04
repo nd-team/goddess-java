@@ -92,7 +92,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("5");
+            flag = cusPermissionSer.busCusPermission("5");
             if (!flag) {
                 throw new SerException("您不是相应岗位的人员，不可以操作");
             }
@@ -128,7 +128,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("5");
+            flag = cusPermissionSer.busCusPermission("5");
         } else {
             flag = true;
         }
@@ -661,7 +661,10 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         Map<String, String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
         Boolean isManage = false;
-        if (null != positMap) {
+        if(userBO.getUsername().equalsIgnoreCase("admin")){
+            isManage = true;
+        }
+        else if (null != positMap) {
             String position = "";
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();

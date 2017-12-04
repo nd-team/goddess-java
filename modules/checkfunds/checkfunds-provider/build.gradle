@@ -35,6 +35,9 @@ dependencies {
     compile project(":modules:financeinit:financeinit-api")
     compile project(":modules:voucher:voucher-api")
     compile project(":modules:organize:organize-api")
+    compile project(":modules:message:message-api")
+    compile project(":modules:contacts:contacts-api")
+
     compile project(":common:common-utils")
 }
 
