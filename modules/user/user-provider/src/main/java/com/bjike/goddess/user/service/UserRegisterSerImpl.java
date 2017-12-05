@@ -15,7 +15,6 @@ import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
 import com.bjike.goddess.user.utils.SmsCodeUtil;
 import com.bjike.goddess.user.vo.SmsReceiveCodeVO;
-import com.mysql.cj.mysqlx.protobuf.MysqlxDatatypes;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -112,7 +111,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             throw new SerException("手机号不能为空");
         }
         if (null != userSer.findByPhone(smsCodeParameterTO.getPhoneNumber())) {
-            throw new SerException("改手机号已经注册");
+            throw new SerException("该手机号已经注册");
         }
         String code = "";
         SmsReceiveCodeVO smsReceiveCodeVO = new SmsReceiveCodeVO();
@@ -129,6 +128,38 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                         String smsCode = matcher2.group();
                         //将验证码存session，这里使用5分钟失效
                         AuthCodeSession.put(smsCodeParameterTO.getPhoneNumber(), smsCode);
+                    }
+                }
+            }
+        } catch (ClientException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return code;
+    }
+
+    @Override
+    public String sendSmsVerifyCodes(SmsCodeParameterTO to) throws SerException {
+        if (StringUtils.isBlank(to.getPhoneNumber())) {
+            throw new SerException("手机号不能为空");
+        }
+        String code = "";
+        SmsReceiveCodeVO smsReceiveCodeVO = new SmsReceiveCodeVO();
+        try {
+            //调用阿里的短信
+            smsReceiveCodeVO = SmsCodeUtil.mainEnter(to);
+            if( null != smsReceiveCodeVO ){
+                code = smsReceiveCodeVO.getCode();
+                if (StringUtils.isNotBlank(code) && "ok".equals(code.toLowerCase())) {
+                    //说明发送成功
+                    Pattern expression = Pattern.compile("[0-9]{" + Integer.parseInt(to.getRandomNum()) + "}");//创建匹配模式
+                    Matcher matcher2 = expression.matcher( smsReceiveCodeVO.getContent() );//通过匹配模式得到匹配器
+                    if (matcher2.find()) {
+                        String smsCode = matcher2.group();
+                        //将验证码存session，这里使用5分钟失效
+                        AuthCodeSession.put(to.getPhoneNumber(), smsCode);
                     }
                 }
             }

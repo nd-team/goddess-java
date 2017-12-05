@@ -60,6 +60,32 @@ public class RegisterAct {
         }
     }
 
+    /**
+     * 发送短信验证码(修改手机号码)
+     *
+     * @param phone 手机号
+     * @des 发送短信验证码
+     * @version v1
+     */
+    @GetMapping("v2/phone/sendSmsCode/{phone}")
+    public Result sendSmsCodes(@PathVariable String phone ) throws ActException {
+        try {
+            SmsCodeParameterTO smsCodeParameterTO = new SmsCodeParameterTO();
+            smsCodeParameterTO.setProduct(environment.getProperty("sms.product"));
+            smsCodeParameterTO.setDomain(environment.getProperty("sms.domain"));
+            smsCodeParameterTO.setAccessKeyId(environment.getProperty("sms.accessKeyId"));
+            smsCodeParameterTO.setAccessKeySecret(environment.getProperty("sms.accessKeySecret"));
+            smsCodeParameterTO.setSignName(environment.getProperty("sms.signName"));
+            smsCodeParameterTO.setTemplateCode(environment.getProperty("sms.templateCode"));
+            smsCodeParameterTO.setRandomNum(environment.getProperty("sms.randomNum"));
+            smsCodeParameterTO.setPhoneNumber( phone );
+            userRegisterAPI.sendSmsVerifyCodes(smsCodeParameterTO);
+            return new ActResult("send success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 注册

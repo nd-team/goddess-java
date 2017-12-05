@@ -17,7 +17,6 @@ import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.to.FileInfo;
-
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.to.UserTO;
@@ -56,9 +55,9 @@ public class UserAct extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private EventAPI eventAPI;
-
+    @Autowired
     private VacateAPI vacateAPI;
-
+    @Autowired
     private ReimburseRecordAPI reimburseRecordAPI;
 
     /**
