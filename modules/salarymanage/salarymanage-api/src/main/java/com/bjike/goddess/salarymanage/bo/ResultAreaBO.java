@@ -2,7 +2,9 @@ package com.bjike.goddess.salarymanage.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [jiangzaixuan]
@@ -11,7 +13,11 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class ResultAreaBO extends BaseBO{
+public class ResultAreaBO implements Serializable {
+    /**
+     * id
+     */
+    private Set<String> id;
     /**
      * 地区
      */
@@ -36,5 +42,15 @@ public class ResultAreaBO extends BaseBO{
 
     public void setResultDepartment(List<ResultDepartmentBO> resultDepartment) {
         this.resultDepartment = resultDepartment;
+    }
+
+
+    public Set<String> getId() {
+        return id;
+    }
+
+
+    public void setId(Set<String> id) {
+        this.id = id;
     }
 }

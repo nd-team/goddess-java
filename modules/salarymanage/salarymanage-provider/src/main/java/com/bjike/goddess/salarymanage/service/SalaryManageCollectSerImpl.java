@@ -229,7 +229,7 @@ public class SalaryManageCollectSerImpl extends ServiceImpl<SalaryManageCollect,
                         }
                         SalaryInformationDTO salaryInformationDTO = new SalaryInformationDTO();
                         salaryInformationDTO.getConditions().add(Restrict.eq("area",manageAreaBO.getArea()));
-                        salaryInformationDTO.getConditions().add(Restrict.eq("department",manageDepartmentBO.getDepartment()));
+//                        salaryInformationDTO.getConditions().add(Restrict.eq("department",manageDepartmentBO.getDepartment()));
                         List<SalaryInformation> salaryInformations = salaryInformationSer.findByCis(salaryInformationDTO);
                         if(salaryInformations !=null && salaryInformations.size() > 0){
                             Double salary = salaryInformations.stream().filter(p-> null != p.getSalary()).mapToDouble(p-> p.getSalary()).sum();
@@ -282,7 +282,7 @@ public class SalaryManageCollectSerImpl extends ServiceImpl<SalaryManageCollect,
                         }
                         SalaryInformationDTO salaryInformationDTO = new SalaryInformationDTO();
                         salaryInformationDTO.getConditions().add(Restrict.eq("area",manageAreaBO.getArea()));
-                        salaryInformationDTO.getConditions().add(Restrict.eq("department",manageDepartmentBO.getDepartment()));
+//                        salaryInformationDTO.getConditions().add(Restrict.eq("department",manageDepartmentBO.getDepartment()));
                         List<SalaryInformation> salaryInformations = salaryInformationSer.findByCis(salaryInformationDTO);
                         if(salaryInformations !=null && salaryInformations.size() > 0){
                             Double salary = salaryInformations.stream().filter(p-> null != p.getSalary()).mapToDouble(p-> p.getSalary()).sum();

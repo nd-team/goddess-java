@@ -11,6 +11,11 @@ import java.util.Set;
  * @Copy: [com.bjike]
  */
 public class AreaVO {
+
+    /**
+     * id
+     */
+    private String id;
     /**
      * 地区
      */
@@ -35,5 +40,13 @@ public class AreaVO {
 
     public void setSalaryTestDepartmentSet(List<DepartmentVO> salaryTestDepartmentSet) {
         this.salaryTestDepartmentSet = salaryTestDepartmentSet;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

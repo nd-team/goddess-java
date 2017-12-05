@@ -9,7 +9,6 @@ import com.bjike.goddess.salarymanage.bo.*;
 import com.bjike.goddess.salarymanage.dto.SalaryCalculateDetailDTO;
 import com.bjike.goddess.salarymanage.dto.SalaryTestCollectDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryCalculateDetail;
-import com.bjike.goddess.salarymanage.entity.SalaryCalculateResult;
 import com.bjike.goddess.salarymanage.entity.SalaryTestCollect;
 import com.bjike.goddess.salarymanage.enums.GuideAddrStatus;
 import com.bjike.goddess.salarymanage.enums.WorkAge;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.awt.geom.Area;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -45,6 +45,9 @@ public class SalaryTestCollectSerImpl extends ServiceImpl<SalaryTestCollect, Sal
 
     @Autowired
     private CusPermissionSer cusPermissionSer;
+
+    @Autowired
+    private  SalaryTestCollectSer salaryTestCollectSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -192,6 +195,7 @@ public class SalaryTestCollectSerImpl extends ServiceImpl<SalaryTestCollect, Sal
         List<SalaryCalculateDetailBO> salaryCalculateDetailBOS = salaryCalculateDetailSer.findList(detailDTO);
         List<AreaBO> areaBOList = new ArrayList<>();
         Set<String> areas = salaryCalculateDetailBOS.stream().map(salaryCalculateDetail -> salaryCalculateDetail.getArea()).collect(Collectors.toSet());
+        if(areas.size () > 0 && areas != null)
         if(salaryCalculateDetailBOS !=null && salaryCalculateDetailBOS.size() >0){
             for(String area : areas){
                 AreaBO areaBO = new AreaBO();
@@ -340,6 +344,13 @@ public class SalaryTestCollectSerImpl extends ServiceImpl<SalaryTestCollect, Sal
             super.save(model);
         }
 
+    }
+
+    @Override
+    public SalaryTestCollectBO findOne(String id) throws SerException {
+        SalaryTestCollect salaryTestCollect = super.findById ( id );
+        SalaryTestCollectBO bo = BeanTransform.copyProperties(salaryTestCollect, SalaryTestCollectBO.class);
+        return bo;
     }
 
     private <T> TreeSet<T> filter() throws SerException {

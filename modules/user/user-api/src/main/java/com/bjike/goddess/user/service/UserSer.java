@@ -165,6 +165,15 @@ public interface UserSer extends Ser<User, UserDTO> {
     default void updatePassword(UserTO userTO) throws SerException {
     }
 
+    /**
+     * 修改手机号码
+     * chenayng
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePhone(UserTO userTO) throws SerException {
+    }
 
     /**
      * 通过组查寻用户

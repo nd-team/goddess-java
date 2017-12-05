@@ -8,9 +8,9 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.recruit.api.InterviewInforAPI;
-import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.salarymanage.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.salarymanage.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.salarymanage.entity.SalaryConfirmRecord;
@@ -19,7 +19,6 @@ import com.bjike.goddess.salarymanage.enums.Probation;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryConfirmRecordTO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +54,8 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
 
+    @Autowired
+    private PositionUserDetailAPI positionUserDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
 
@@ -205,49 +206,62 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
 
     @Override
     public void add(SalaryConfirmRecordTO to) throws SerException {
-        SalaryConfirmRecord model = BeanTransform.copyProperties ( to, SalaryConfirmRecord.class );
-        String userToken = RpcTransmit.getUserToken ();
-        UserBO user = userAPI.currentUser ();
-        RpcTransmit.transmitUserToken ( userToken );
-        InterviewInforBO interviewInforBO = new InterviewInforBO ();
-        if (moduleAPI.isCheck ( "recruit" )) {
-            interviewInforBO = interviewInforAPI.findByName ( user.getUsername () );
+        SalaryConfirmRecord model = BeanTransform.copyProperties ( to, SalaryConfirmRecord.class, true );
+        model.setIfconfirm ( false );
+        LocalDateTime nowTime = LocalDateTime.now ();
+        LocalDate entryDate = DateUtil.parseDate ( to.getEntryDate () );
+        LocalDateTime entryTime = DateUtil.parseDateTime ( entryDate + " 00:00:00" );
+        long time = nowTime.atZone ( ZoneId.systemDefault () ).toInstant ().toEpochMilli ()
+                - entryTime.atZone ( ZoneId.systemDefault () ).toInstant ().toEpochMilli ();
+        if (time > 0) {
+            model.setIsEntry ( true );
         } else {
-            throw new SerException ( "请去关联模块管理设置模块关联" );
+            model.setIsEntry ( false );
         }
-        if ("".equals ( interviewInforBO ) && interviewInforBO != null) {
-            model.setUserName ( interviewInforBO.getName () );
-            model.setArea ( interviewInforBO.getArea () );
-            model.setPosition ( interviewInforBO.getPosition () );
-            model.setDepartment ( interviewInforBO.getDepartment () );
-            List<EntryRegisterBO> boList = entryRegisterAPI.getEntryRegisterByName ( user.getUsername () );
-            if (boList != null && boList.size () > 0) {
-                LocalDateTime nowTime = LocalDateTime.now ();
-                LocalDate entryDate = DateUtil.parseDate ( boList.get ( 0 ).getInductionDate () );
-                LocalDateTime entryTime = DateUtil.parseDateTime ( entryDate + " 00:00:00" );
-                long time = nowTime.atZone ( ZoneId.systemDefault () ).toInstant ().toEpochMilli ()
-                        - entryTime.atZone ( ZoneId.systemDefault () ).toInstant ().toEpochMilli ();
-                if (time > 0) {
-                    model.setIsEntry ( true );
-                } else {
-                    model.setIsEntry ( false );
-                }
-                model.setEmployeeID ( boList.get ( 0 ).getEmpNumber () );
-                EntryRegisterBO entryRegisterBO = new EntryRegisterBO ();
-                if (moduleAPI.isCheck ( "staffentry" )) {
-                    entryRegisterBO = entryRegisterAPI.getByNumber ( boList.get ( 0 ).getEmpNumber () );
-                } else {
-                    throw new SerException ( "请去模块关联管理设置模块关联" );
-                }
-                model.setNativePlace ( entryRegisterBO.getNativePlace () );
-                model.setEntryDate ( DateUtil.parseDate ( boList.get ( 0 ).getInductionDate () ) );
-                model.setIfconfirm ( false );
-            } else {
-                throw new SerException ( "面试模块没有获取到数据" );
-            }
-        } else {
-            throw new SerException ( "登录用户不是公司成员" );
-        }
+        model.setCreateTime ( LocalDateTime.now () );
+        super.save ( model );
+//        String userToken = RpcTransmit.getUserToken ();
+//        UserBO user = userAPI.currentUser ();
+//        RpcTransmit.transmitUserToken ( userToken );
+//        InterviewInforBO interviewInforBO = new InterviewInforBO ();
+//        if (moduleAPI.isCheck ( "recruit" )) {
+//            interviewInforBO = interviewInforAPI.findByName ( to.getUserName () );
+//        } else {
+//            throw new SerException ( "请去关联模块管理设置模块关联" );
+//        }
+//        if ("".equals ( interviewInforBO ) && interviewInforBO != null) {
+//            model.setUserName ( interviewInforBO.getName () );
+//            model.setArea ( interviewInforBO.getArea () );
+//            model.setPosition ( interviewInforBO.getPosition () );
+//            model.setDepartment ( interviewInforBO.getDepartment () );
+//            List<EntryRegisterBO> boList = entryRegisterAPI.getEntryRegisterByName ( to.getUserName () );
+//            if (boList != null && boList.size () > 0) {
+//                LocalDateTime nowTime = LocalDateTime.now ();
+//                LocalDate entryDate = DateUtil.parseDate ( boList.get ( 0 ).getInductionDate () );
+//                LocalDateTime entryTime = DateUtil.parseDateTime ( entryDate + " 00:00:00" );
+//                long time = nowTime.atZone ( ZoneId.systemDefault () ).toInstant ().toEpochMilli ()
+//                        - entryTime.atZone ( ZoneId.systemDefault () ).toInstant ().toEpochMilli ();
+//                if (time > 0) {
+//                    model.setIsEntry ( true );
+//                } else {
+//                    model.setIsEntry ( false );
+//                }
+//                model.setEmployeeID ( boList.get ( 0 ).getEmpNumber () );
+//                EntryRegisterBO entryRegisterBO = new EntryRegisterBO ();
+//                if (moduleAPI.isCheck ( "staffentry" )) {
+//                    entryRegisterBO = entryRegisterAPI.getByNumber ( boList.get ( 0 ).getEmpNumber () );
+//                } else {
+//                    throw new SerException ( "请去模块关联管理设置模块关联" );
+//                }
+//                model.setNativePlace ( entryRegisterBO.getNativePlace () );
+//                model.setEntryDate ( DateUtil.parseDate ( boList.get ( 0 ).getInductionDate () ) );
+//                model.setIfconfirm ( false );
+//            } else {
+//                throw new SerException ( "面试模块没有获取到数据" );
+//            }
+//        } else {
+//            throw new SerException ( "登录用户不是公司成员" );
+//        }
 
     }
 
@@ -273,11 +287,16 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
         String userToken = RpcTransmit.getUserToken ();
         UserBO userBO = userAPI.currentUser ();
         RpcTransmit.transmitUserToken ( userToken );
-        List<PositionDetailBO> positionDetailUser = positionDetailUserAPI.findPositionByUser ( userBO.getId () );
+        PositionDetailBO positionDetailUser = positionUserDetailAPI.getPosition ( userBO.getUsername () );
         List<SalaryConfirmRecord> list = new ArrayList<> ();
-        if (positionDetailUser.get ( 0 ).getPosition ().equals ( "综合资源部规划模块负责人" )) {
-            list = super.findByPage ( dto );
-        } else {
+        boolean flag = true;
+        if ( positionDetailUser != null) {
+            if (positionDetailUser.getPosition ().equals ( "综合资源部规划模块负责人" )) {
+                list = super.findByPage ( dto );
+                flag = false;
+            }
+        }
+        if (flag) {
             dto.getConditions ().add ( Restrict.eq ( "userName", userBO.getUsername () ) );
             list = super.findByPage ( dto );
         }
@@ -287,13 +306,26 @@ public class SalaryConfirmRecordSerImpl extends ServiceImpl<SalaryConfirmRecord,
 
     @Override
     public Long count(SalaryConfirmRecordDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken ();
+        UserBO userBO = userAPI.currentUser ();
+        RpcTransmit.transmitUserToken ( userToken );
+        PositionDetailBO positionDetailUser = positionUserDetailAPI.getPosition ( userBO.getUsername () );
+        boolean flag = true;
+        if ( positionDetailUser != null) {
+            if (positionDetailUser.getPosition ().equals ( "综合资源部规划模块负责人" )) {
+                flag = false;
+            }
+        }
+        if (flag) {
+            dto.getConditions ().add ( Restrict.eq ( "userName", userBO.getUsername () ) );
+        }
         Long count = super.count ( dto );
         return count;
     }
 
     @Override
     public List<UserBO> findUserList() throws SerException {
-        List<UserBO> boList = positionDetailUserAPI.findUserList ();
+        List<UserBO> boList = positionDetailUserAPI.findUserListInOrgan ();
         return boList;
     }
 

@@ -223,6 +223,7 @@ public class OutputInvoiceSerImpl extends ServiceImpl<OutputInvoice, OutputInvoi
             outputInvoice = BeanTransform.copyProperties(to, OutputInvoice.class, true);
             outputInvoice.setCreateTime(createTime);
             outputInvoice.setModifyTime(LocalDateTime.now());
+            super.update(outputInvoice);
             OutputInvoiceBO bo = BeanTransform.copyProperties(outputInvoice, OutputInvoiceBO.class);
             return bo;
         } else {

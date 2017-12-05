@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -472,8 +473,11 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
 
     @Override
     public Set<String> findPosition() throws SerException {
-        List<InterviewInforBO> boList = interviewInforAPI.findInterview();
-        Set<String> strings=boList.stream().map(interviewInforBO -> interviewInforBO.getPosition()).collect(Collectors.toSet());
+        List<InterviewInforBO> boList = interviewInforAPI.findInterview ();
+        Set<String> strings = new HashSet<>();
+        if (boList.size () > 0 && boList != null) {
+            strings = boList.stream ().map ( interviewInforBO -> interviewInforBO.getPosition () ).collect ( Collectors.toSet () );
+        }
         return strings;
     }
 }

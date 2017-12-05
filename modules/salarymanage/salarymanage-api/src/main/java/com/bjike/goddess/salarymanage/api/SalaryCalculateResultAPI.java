@@ -2,6 +2,7 @@ package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.salarymanage.bo.ResultAreaBO;
+import com.bjike.goddess.salarymanage.bo.SalaryCalculateResultBO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryCalculateResultTO;
 
@@ -40,6 +41,14 @@ public interface SalaryCalculateResultAPI  {
      * 制定等级份额
      */
     void makeShare(SalaryCalculateResultTO to) throws SerException;
+
+    /**
+     * 根据id来查询单个薪资测算结果
+     *
+     * @param id
+     * @throws SerException
+     */
+    SalaryCalculateResultBO findOne(String id) throws SerException;
 
 
 }

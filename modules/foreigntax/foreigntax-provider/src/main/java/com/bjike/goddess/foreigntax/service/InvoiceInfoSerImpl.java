@@ -223,6 +223,7 @@ public class InvoiceInfoSerImpl extends ServiceImpl<InvoiceInfo, InvoiceInfoDTO>
             invoiceInfo = BeanTransform.copyProperties(to, InvoiceInfo.class, true);
             invoiceInfo.setCreateTime(createTime);
             invoiceInfo.setModifyTime(LocalDateTime.now());
+            super.update(invoiceInfo);
             InvoiceInfoBO bo = BeanTransform.copyProperties(invoiceInfo, InvoiceInfoBO.class);
             return bo;
         } else {

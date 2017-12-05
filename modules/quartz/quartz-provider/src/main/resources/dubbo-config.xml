@@ -96,5 +96,6 @@
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CustomizeAPI" id="customizeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.task.api.CollectSchemeAPI" id="collectSchemeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.managementpromotion.api.PromotionApplyAPI" id="promotionApplyApiImpl"/>
 
 </beans>

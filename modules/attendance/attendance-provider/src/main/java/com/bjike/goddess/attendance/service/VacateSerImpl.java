@@ -103,7 +103,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3");
             if (!flag) {
                 throw new SerException("您不是相应岗位的人员，不可以查看");
             }
@@ -141,7 +141,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3");
         } else {
             flag = true;
         }

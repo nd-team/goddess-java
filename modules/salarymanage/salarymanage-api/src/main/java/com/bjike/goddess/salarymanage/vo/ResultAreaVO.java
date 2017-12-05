@@ -12,6 +12,10 @@ import java.util.Set;
  */
 public class ResultAreaVO {
     /**
+     * id
+     */
+    private Set<String> id;
+    /**
      * 地区
      */
     private String area;
@@ -35,5 +39,13 @@ public class ResultAreaVO {
 
     public void setResultDepartment(List<ResultDepartmentVO> resultDepartment) {
         this.resultDepartment = resultDepartment;
+    }
+
+    public Set<String> getId() {
+        return id;
+    }
+
+    public void setId(Set<String> id) {
+        this.id = id;
     }
 }

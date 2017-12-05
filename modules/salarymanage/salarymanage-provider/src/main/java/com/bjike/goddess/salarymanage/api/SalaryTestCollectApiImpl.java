@@ -2,6 +2,7 @@ package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.salarymanage.bo.AreaBO;
+import com.bjike.goddess.salarymanage.bo.SalaryTestCollectBO;
 import com.bjike.goddess.salarymanage.dto.SalaryTestCollectDTO;
 import com.bjike.goddess.salarymanage.service.SalaryTestCollectSer;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
@@ -43,5 +44,10 @@ public class SalaryTestCollectApiImpl implements SalaryTestCollectAPI  {
     @Override
     public void makeSalary(SalaryTestCollectTO to) throws SerException {
         salaryTestCollectSer.makeSalary(to);
+    }
+
+    @Override
+    public SalaryTestCollectBO findOne(String id) throws SerException {
+        return salaryTestCollectSer.findOne ( id );
     }
 }

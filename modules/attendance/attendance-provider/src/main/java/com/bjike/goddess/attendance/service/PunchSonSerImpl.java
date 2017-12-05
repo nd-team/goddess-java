@@ -1212,7 +1212,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             }
             punchExportBOs.add(punchExportBO1);
         }
-        List<PunchExportExcel> punchExportExcels = BeanTransform.copyProperties(punchExportBOs,PunchExportExcel.class,"serialVersionUID" );
+        List<PunchExportExcel> punchExportExcels = BeanTransform.copyProperties(punchExportBOs, PunchExportExcel.class, "serialVersionUID");
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(punchExportExcels, excel);
         return bytes;
@@ -1246,15 +1246,15 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             punchDTO1.getConditions().add(Restrict.eq("name", punchSonImportBO.getName()));
             punchDTO1.getConditions().add(Restrict.eq("date", punchSonImportBO.getDate()));
             List<Punch> punches1 = punchSer.findByCis(punchDTO1);
-            if(null != punches1 && punches1.size() > 0){
+            if (null != punches1 && punches1.size() > 0) {
                 PunchSon punchSon = BeanTransform.copyProperties(punchSonImportBO, PunchSon.class, true, "punchSource", "punchType");
                 punchSon.setPunchSource(transPunchSource1(punchSonImportBO.getPunchSource()));
                 punchSon.setPunchType(transPunchType(punchSonImportBO.getPunchType()));
                 punchSon.setPunchId(punches1.get(0).getId());
-                punchSon  = punchSonSer.save(punchSon);
+                punchSon = punchSonSer.save(punchSon);
 
                 String[] punchStatus = punchSonImportBO.getPunchStatus().split(",");
-                for(String str : punchStatus){
+                for (String str : punchStatus) {
                     PunchGrandSon punchGrandSon = BeanTransform.copyProperties(punchSonImportBO, PunchGrandSon.class, true, "punchStatus");
                     punchGrandSon.setPunchSonId(punchSon.getId());
                     punchGrandSon.setPunchStatus(transPunchStatus1(str));
@@ -1339,7 +1339,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
         return punchSource;
     }
 
-    private PunchType transPunchType(String string) throws SerException{
+    private PunchType transPunchType(String string) throws SerException {
         PunchType punchType = null;
         switch (string) {
             case "上班":

@@ -66,7 +66,7 @@ public class AuditTimeSetSerImpl extends ServiceImpl<AuditTimeSet, AuditTimeSetD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("8");
+            flag = cusPermissionSer.getCusPermission("8");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -101,7 +101,7 @@ public class AuditTimeSetSerImpl extends ServiceImpl<AuditTimeSet, AuditTimeSetD
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("8");
+            flag = cusPermissionSer.getCusPermission("8");
         } else {
             flag = true;
         }
