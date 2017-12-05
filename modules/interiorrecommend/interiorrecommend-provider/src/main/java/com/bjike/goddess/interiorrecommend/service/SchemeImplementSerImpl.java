@@ -15,7 +15,9 @@ import com.bjike.goddess.interiorrecommend.enums.GuideAddrStatus;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,8 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
     @Autowired
     private RecommendSchemeSer recommendSchemeSer;
 
-//    @Autowired
-//    private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
     @Autowired
     private RegularizationAPI regularizationAPI;
 
@@ -193,28 +195,28 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
     @Override
     public void add(SchemeImplementTO to) throws SerException {
         SchemeImplement schemeImplement = BeanTransform.copyProperties(to,SchemeImplement.class,true);
-//        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.getEntryBasicInfoByName(to.getBeRecommender());
-//        if(boList !=null && boList.size() > 0){
-//            schemeImplement.setIsEntry(true);
-//            Boolean isRegular = regularizationAPI.checkTran(to.getBeRecommender());
-//            schemeImplement.setIsRegular(isRegular);
-//            if(isRegular == true){
-//                schemeImplement.setIsAcquire(true);
-//            }else{
-//                schemeImplement.setIsAcquire(false);
-//            }
-//
-//        }else{
-//            schemeImplement.setIsEntry(false);
-//            schemeImplement.setIsRegular(false);
-//            schemeImplement.setIsAcquire(false);
-//        }
-//        RecommendSchemeDTO dto = new RecommendSchemeDTO();
-//        dto.getConditions().add(Restrict.eq("recommendPosition",to.getRecommendPosition()));
-//        dto.getConditions().add(Restrict.eq("type",to.getType()));
-//        RecommendScheme recommendScheme = recommendSchemeSer.findOne(dto);
-//        schemeImplement.setReferralBonus(recommendScheme.getAwardMoney());
-//        super.save(schemeImplement);
+        List<EntryRegisterBO> boList = entryRegisterAPI.getEntryRegisterByName(to.getBeRecommender());
+        if(boList !=null && boList.size() > 0){
+            schemeImplement.setIsEntry(true);
+            Boolean isRegular = regularizationAPI.checkTran(to.getBeRecommender());
+            schemeImplement.setIsRegular(isRegular);
+            if(isRegular == true){
+                schemeImplement.setIsAcquire(true);
+            }else{
+                schemeImplement.setIsAcquire(false);
+            }
+
+        }else{
+            schemeImplement.setIsEntry(false);
+            schemeImplement.setIsRegular(false);
+            schemeImplement.setIsAcquire(false);
+        }
+        RecommendSchemeDTO dto = new RecommendSchemeDTO();
+        dto.getConditions().add(Restrict.eq("recommendPosition",to.getRecommendPosition()));
+        dto.getConditions().add(Restrict.eq("type",to.getType()));
+        RecommendScheme recommendScheme = recommendSchemeSer.findOne(dto);
+        schemeImplement.setReferralBonus(recommendScheme.getAwardMoney());
+        super.save(schemeImplement);
     }
 
     @Override

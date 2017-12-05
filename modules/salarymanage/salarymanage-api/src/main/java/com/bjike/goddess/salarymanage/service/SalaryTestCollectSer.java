@@ -3,6 +3,7 @@ package com.bjike.goddess.salarymanage.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.salarymanage.bo.AreaBO;
+import com.bjike.goddess.salarymanage.bo.SalaryTestCollectBO;
 import com.bjike.goddess.salarymanage.entity.SalaryTestCollect;
 import com.bjike.goddess.salarymanage.dto.SalaryTestCollectDTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
@@ -43,4 +44,12 @@ public interface SalaryTestCollectSer extends Ser<SalaryTestCollect, SalaryTestC
      * 薪资标准制定
      */
     void makeSalary(SalaryTestCollectTO to) throws SerException;
+
+    /**
+     * 根据id来查询单个薪资汇总
+     *
+     * @param id
+     * @throws SerException
+     */
+    SalaryTestCollectBO findOne(String id) throws SerException;
  }

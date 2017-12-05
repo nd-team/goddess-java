@@ -2,8 +2,6 @@ package com.bjike.goddess.salarymanage.vo;
 
 import com.bjike.goddess.salarymanage.enums.Probation;
 
-import java.time.LocalDate;
-
 /**
 * 招聘面谈薪资确认记录业务接口
 * @Author:			[ jiangzaixuan ]
@@ -70,7 +68,7 @@ public class SalaryConfirmRecordVO {
     /**
      * 入职时间
      */
-    private LocalDate  entryDate;
+    private String  entryDate;
 
     /**
      * 入职前居住地
@@ -250,10 +248,10 @@ public class SalaryConfirmRecordVO {
     public void setNativePlace (String nativePlace ) {
         this.nativePlace = nativePlace ;
     }
-    public LocalDate getEntryDate () {
+    public String getEntryDate () {
         return entryDate;
     }
-    public void setEntryDate (LocalDate entryDate ) {
+    public void setEntryDate (String entryDate ) {
         this.entryDate = entryDate ;
     }
     public String getBeforePlace () {

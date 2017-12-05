@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.service;
 
+import java.io.*;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -21,6 +22,7 @@ import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
@@ -76,6 +78,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private VoucherTotalSer voucherTotalSer;
     @Autowired
@@ -188,6 +192,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         obj = new SonPermissionObject ();
         obj.setName ( "voucherRecord" );
         obj.setDescribesion ( "记账凭证记录" );
+        if (flagSeeSign || flagAddSign) {
+            obj.setFlag ( true );
+        } else {
+            obj.setFlag ( false );
+        }
+        list.add ( obj );
+
+        obj = new SonPermissionObject ();
+        obj.setName ( "subjectCollect" );
+        obj.setDescribesion ( "科目汇总表" );
         if (flagSeeSign || flagAddSign) {
             obj.setFlag ( true );
         } else {
@@ -1192,7 +1206,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         searchCondition ( voucherGenerateDTO );
         voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
         voucherGenerateDTO.getSorts ().add ( "voucherDate=desc" );
-//        voucherGenerateDTO.getSorts().add("totalId=desc");
+        voucherGenerateDTO.getSorts().add("totalId=desc");
         voucherGenerateDTO.getConditions ().add ( Restrict.eq ( "auditStatus", AuditStatus.NONE ) );
 
         List<VoucherGenerate> list = super.findByCis ( voucherGenerateDTO, true );
@@ -1200,7 +1214,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (listBO != null && listBO.size () > 0) {
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById ( str.getTotalId () );
-                str.setMoneyTotal ( vt.getMoney () );
+                if(vt != null) {
+                    str.setMoneyTotal ( vt.getMoney () );
+                }
             }
         }
         return listBO;
@@ -4005,7 +4021,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO ();
         voucherGenerateDTO.getConditions ().add ( Restrict.between ( "voucherDate", dates ) );
         voucherGenerateDTO.getSorts ().add ( "createTime=desc" );
-        List<VoucherGenerateBO> boList = listNoPage ( voucherGenerateDTO );
+        List<VoucherGenerateBO> boList = voucherGenerateAPI.listNoPage ( voucherGenerateDTO );
         List<FirstSubjectBO> firstSubjectBOS = new ArrayList<> ();
         if (boList != null && boList.size () > 0) {
             Set<String> firstSubjects = boList.stream ().map ( p -> p.getFirstSubject () ).collect ( Collectors.toSet () );
@@ -4030,7 +4046,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         VoucherGenerateDTO voucherGenerateDTO1 = new VoucherGenerateDTO ();
         voucherGenerateDTO1.getConditions ().add ( Restrict.eq ( "firstSubject", firstSubject ) );
         voucherGenerateDTO1.getConditions ().add ( Restrict.eq ( "voucherDate", voucherDate ) );
-        List<VoucherGenerateBO> voucherGenerateBOS = listNoPage ( voucherGenerateDTO1 );
+        List<VoucherGenerateBO> voucherGenerateBOS = voucherGenerateAPI.listNoPage ( voucherGenerateDTO1 );
         Set<String> areas = voucherGenerateBOS.stream ().map ( p -> p.getArea () ).collect ( Collectors.toSet () );
         List<AreaSubjectBO> areaSubjectBOS = new ArrayList<> ();
         for (String area : areas) {

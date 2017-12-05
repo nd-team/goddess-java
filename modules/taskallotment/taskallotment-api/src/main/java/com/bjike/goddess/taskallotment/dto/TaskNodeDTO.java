@@ -46,6 +46,7 @@ public class TaskNodeDTO extends BaseDTO {
     /**
      * 汇总时间类型
      */
+    @NotNull(groups = {TaskNodeDTO.COUNT.class}, message = "汇总时间类型不能为空")
     private DataType datatype;
     /**
      * 开始时间

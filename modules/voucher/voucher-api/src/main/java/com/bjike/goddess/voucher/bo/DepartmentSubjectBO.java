@@ -1,5 +1,7 @@
 package com.bjike.goddess.voucher.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class DepartmentSubjectBO {
+public class DepartmentSubjectBO extends BaseBO{
     /**
      * 部门
      */

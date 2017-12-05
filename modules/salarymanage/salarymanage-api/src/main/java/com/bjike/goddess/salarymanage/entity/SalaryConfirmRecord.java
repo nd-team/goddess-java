@@ -64,7 +64,7 @@ public class SalaryConfirmRecord extends BaseEntity {
     /**
      * 是否入职
      */
-    @Column(name = "is_isEntry",nullable = false,columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否入职'"  , insertable = false  )
+    @Column(name = "is_isEntry",nullable = false,columnDefinition = "TINYINT(1)   COMMENT '是否入职'"   )
     private Boolean  isEntry;
 
     /**
