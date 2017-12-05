@@ -43,6 +43,16 @@ public interface UserRegisterAPI {
     }
 
     /**
+     * 获取发送短信验证码(修改手机号码)
+     * tanghaixiang
+     * @return
+     * @throws SerException
+     */
+    default String sendSmsVerifyCodes(SmsCodeParameterTO smsCodeParameterTO ) throws SerException {
+        return null;
+    }
+
+    /**
      * 校验手机短信验证码
      * tanghaixiang
      * @param phone 手机号

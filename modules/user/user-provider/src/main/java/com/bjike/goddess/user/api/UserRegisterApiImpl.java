@@ -36,6 +36,11 @@ public class UserRegisterApiImpl implements UserRegisterAPI {
     }
 
     @Override
+    public String sendSmsVerifyCodes(SmsCodeParameterTO smsCodeParameterTO) throws SerException {
+        return userRegisterSer.sendSmsVerifyCodes( smsCodeParameterTO );
+    }
+
+    @Override
     public Boolean verifyCode(String phone,String code ) throws SerException {
         return userRegisterSer.verifyCode( phone ,code );
     }

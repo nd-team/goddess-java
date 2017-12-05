@@ -18,6 +18,7 @@ import com.bjike.goddess.regularization.api.RegularizationAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -288,10 +289,9 @@ public class SchemeImplementSerImpl extends ServiceImpl<SchemeImplement, SchemeI
     }
 
     @Override
-    public List<EntryBasicInfoBO> findEntry() throws SerException {
-//        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo();
-//        return boList;
-        return null;
+    public List<EntryRegisterBO> findEntry(EntryRegisterDTO dto) throws SerException {
+        List<EntryRegisterBO> boList = entryRegisterAPI.listEntryRegister ( dto );
+        return boList;
     }
 
 

@@ -43,6 +43,16 @@ public interface UserRegisterSer {
         return null;
     }
 
+    /**
+     * 获取短信验证码(修改手机号码)
+     *
+     * @return
+     * @throws SerException
+     */
+    default String sendSmsVerifyCodes(SmsCodeParameterTO smsCodeParameterTOO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 校验手机短信验证码

@@ -37,4 +37,5 @@
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="eventAPIApiImpl" interface="com.bjike.goddess.event.api.EventAPI" />
 	<dubbo:reference  validation="true" id="vacateAPIApiImpl" interface="com.bjike.goddess.attendance.api.VacateAPI" />
+	<dubbo:reference  validation="true" id="reimburseRecordApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI" />
 </beans>

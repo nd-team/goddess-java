@@ -10,13 +10,18 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.interiorrecommend.api.SchemeImplementAPI;
 import com.bjike.goddess.interiorrecommend.bo.SchemeImplementBO;
 import com.bjike.goddess.interiorrecommend.dto.SchemeImplementDTO;
+import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
 import com.bjike.goddess.interiorrecommend.vo.SchemeImplementVO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
+import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,28 +39,28 @@ public class SchemeImplementAction {
     @Autowired
     private SchemeImplementAPI schemeImplementAPI;
 
-//    /**
-//     * 功能导航权限
-//     *
-//     * @param guidePermissionTO 导航类型数据
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @GetMapping("v1/guidePermission")
-//    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-//        try {
-//
-//            Boolean isHasPermission = schemeImplementAPI.guidePermission(guidePermissionTO);
-//            if (!isHasPermission) {
-//                //int code, String msg
-//                return new ActResult(0, "没有权限", false);
-//            } else {
-//                return new ActResult(0, "有权限", true);
-//            }
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = schemeImplementAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
     /**
@@ -205,19 +210,19 @@ public class SchemeImplementAction {
 
     /**
      * 获取所有入职员工姓名
-     * @return class EntryBasicInfoVO
+     * @return class EntryRegisterVO
      * @throws ActException
      * @version v1
      */
-//    @GetMapping("v1/find/entry")
-//    public Result findEntry() throws ActException{
-//        try {
-//            List<EntryBasicInfoBO> boList = schemeImplementAPI.findEntry();
-//            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
-//            return ActResult.initialize(voList);
-//        }catch (SerException e){
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    @GetMapping("v1/find/entry")
+    public Result findEntry(EntryRegisterDTO dto) throws ActException{
+        try {
+            List<EntryRegisterBO> boList = schemeImplementAPI.findEntry(dto);
+            List<EntryRegisterVO> voList = BeanTransform.copyProperties(boList,EntryRegisterVO.class);
+            return ActResult.initialize(voList);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

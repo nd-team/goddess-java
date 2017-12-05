@@ -8,6 +8,8 @@ import com.bjike.goddess.interiorrecommend.dto.SchemeImplementDTO;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 
 import java.util.List;
 import java.util.Set;
@@ -77,7 +79,7 @@ public interface SchemeImplementSer extends Ser<SchemeImplement, SchemeImplement
     /**
      * 获取所有入职员工姓名
      */
-    List<EntryBasicInfoBO> findEntry() throws SerException;
+    List<EntryRegisterBO> findEntry(EntryRegisterDTO dto) throws SerException;
 
 
  }
