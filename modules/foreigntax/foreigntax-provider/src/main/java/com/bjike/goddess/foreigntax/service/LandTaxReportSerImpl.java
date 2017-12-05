@@ -220,6 +220,7 @@ public class LandTaxReportSerImpl extends ServiceImpl<LandTaxReport, LandTaxRepo
         landTaxReport = BeanTransform.copyProperties(to, LandTaxReport.class, true);
         landTaxReport.setCreateTime(createTime);
         landTaxReport.setModifyTime(LocalDateTime.now());
+        super.update(landTaxReport);
         LandTaxReportBO bo = BeanTransform.copyProperties(landTaxReport, LandTaxReportBO.class);
         return bo;
     }
