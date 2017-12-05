@@ -13,10 +13,7 @@ import com.bjike.goddess.projectroyalty.dto.*;
 import com.bjike.goddess.projectroyalty.entity.*;
 import com.bjike.goddess.projectroyalty.enums.GuideAddrStatus;
 import com.bjike.goddess.projectroyalty.enums.Type;
-import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
-import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
-import com.bjike.goddess.projectroyalty.to.WeightalTypeTO;
-import com.bjike.goddess.projectroyalty.to.WeightalsTO;
+import com.bjike.goddess.projectroyalty.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -253,7 +250,7 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
     }
 
     @Override
-    public Double findAimAmount(String projectName,Type type) throws SerException {
+    public Double findAimAmount(String projectName, Type type) throws SerException {
         WeightalsDTO dto = new WeightalsDTO();
         dto.getConditions().add(Restrict.eq("project", projectName));
         List<Weightals> weightalses = super.findByCis(dto);
@@ -266,10 +263,10 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
                 return weightalTypes.get(0).getBusiness();
             }
         }
-        return null;
+        return 0d;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void save(WeightalsTO to) throws SerException {
         Weightals entity = BeanTransform.copyProperties(to, Weightals.class, true, "time", "weightalTypeTOs");
@@ -288,7 +285,7 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void update(WeightalsTO to) throws SerException {
         Weightals entity = super.findById(to.getId());
@@ -315,7 +312,7 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
         Weightals entity = super.findById(id);
@@ -379,38 +376,47 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
     }
 
     @Override
-    public void adjust(WeightalAdjustTO to) throws SerException {
-        Weightals entity = super.findById(to.getId());
-        if (null == entity) {
-            throw new SerException("目标数据对象不能为空");
-        }
-        WeightalTypeDTO weightalTypeDTO = new WeightalTypeDTO();
-        weightalTypeDTO.getConditions().add(Restrict.eq("weightalsId", to.getId()));
-        weightalTypeDTO.getConditions().add(Restrict.eq("type", to.getType()));
-        List<WeightalType> weightalTypes = weightalTypeSer.findByCis(weightalTypeDTO);
-        if (null != weightalTypes && weightalTypes.size() > 0) {
-            WeightalType weightalType = weightalTypes.get(0);
+    public void adjust(WeightalAdjustsTO weightalAdjustsTO) throws SerException {
+        List<WeightalAdjustTO> tos = weightalAdjustsTO.getWeightalAdjustTOs();
+        if (null != tos && tos.size() > 0) {
+            for (WeightalAdjustTO to : tos) {
 
-            weightalType.setAdjCompreRatio(to.getAdjCompreRatio());
-            weightalType.setAdjBusCompRatio(to.getAdjBusCompRatio());
-            weightalType.setAdjMeCompreRatio(to.getAdjMeCompreRatio());
-            weightalType.setAdjCaCompreRatio(to.getAdjCaCompreRatio());
+                Weightals entity = super.findById(weightalAdjustsTO.getId());
+                if (null == entity) {
+                    throw new SerException("目标数据对象不能为空");
+                }
+                WeightalTypeDTO weightalTypeDTO = new WeightalTypeDTO();
+                weightalTypeDTO.getConditions().add(Restrict.eq("weightalsId", weightalAdjustsTO.getId()));
+                weightalTypeDTO.getConditions().add(Restrict.eq("type", to.getType()));
+                List<WeightalType> weightalTypes = weightalTypeSer.findByCis(weightalTypeDTO);
+                if (null != weightalTypes && weightalTypes.size() > 0) {
+                    WeightalType weightalType = weightalTypes.get(0);
 
-            weightalType.setAmountProfit(weightalType.getProfit() * weightalType.getAdjCompreRatio());
-            weightalType.setBusiness(weightalType.getProfit() * weightalType.getAdjBusCompRatio());
-            weightalType.setMenage(weightalType.getProfit() * weightalType.getAdjMeCompreRatio());
-            weightalType.setCapital(weightalType.getProfit() * weightalType.getAdjCaCompreRatio());
+                    weightalType.setAdjCompreRatio(to.getAdjCompreRatio());
+                    weightalType.setAdjBusCompRatio(to.getAdjBusCompRatio());
+                    weightalType.setAdjMeCompreRatio(to.getAdjMeCompreRatio());
+                    weightalType.setAdjCaCompreRatio(to.getAdjCaCompreRatio());
 
-            weightalType.setAllRatio(weightalType.getAdjCompreRatio() + weightalType.getAdjBusCompRatio() + weightalType.getAdjMeCompreRatio() + weightalType.getAdjCaCompreRatio());
+                    weightalType.setAmountProfit(weightalType.getProfit() * weightalType.getAdjCompreRatio());
+                    weightalType.setBusiness(weightalType.getProfit() * weightalType.getAdjBusCompRatio());
+                    weightalType.setMenage(weightalType.getProfit() * weightalType.getAdjMeCompreRatio());
+                    weightalType.setCapital(weightalType.getProfit() * weightalType.getAdjCaCompreRatio());
 
-            weightalType.setModifyTime(LocalDateTime.now());
-            weightalTypeSer.update(weightalType);
-        }
+                    weightalType.setAllRatio(weightalType.getAdjCompreRatio() + weightalType.getAdjBusCompRatio() + weightalType.getAdjMeCompreRatio() + weightalType.getAdjCaCompreRatio());
+
+                    weightalType.setModifyTime(LocalDateTime.now());
+                    weightalTypeSer.update(weightalType);
+                }
 //        super.update(entity);
-        //生成差异类型
-        WeightalType weightalType = differenceType(entity);
-        if (null != weightalType) {
-            weightalTypeSer.save(weightalType);
+                //生成差异类型
+                WeightalType weightalType = differenceType(entity);
+                if (null != weightalType) {
+                    weightalTypeSer.save(weightalType);
+                }
+
+            }
+        }else {
+            throw new SerException("比例调整不可为空");
         }
     }
 
@@ -426,7 +432,7 @@ public class WeightalsSerImpl extends ServiceImpl<Weightals, WeightalsDTO> imple
         projectFactorsDTO.getConditions().add(Restrict.eq("code", weightalType.getProgram()));
         ProjectFactors projectFactors = projectFactorsSer.findOne(projectFactorsDTO);
         if (null == projectFactors) {
-            throw new SerException("所选方案无数据");
+            throw new SerException("所选方案无数据,请先前往项目提成分配因素表中填写对应的所选方案数据");
         }
 //        weightalType.setTime(LocalDateTime.now());
         Double contract = weightalType.getContract();

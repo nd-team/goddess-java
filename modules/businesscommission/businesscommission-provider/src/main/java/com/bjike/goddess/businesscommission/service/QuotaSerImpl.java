@@ -280,7 +280,7 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
         if (null == entity) {
             throw new SerException("目标数据不能为空");
         }
-        BeanTransform.copyProperties(to, entity);
+        BeanTransform.copyProperties(to, entity,true);
         entity = getData(entity);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
@@ -404,7 +404,7 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
 
         List<Proportion> proportions = proportionSer.findAll();
         List<ProportionRatio> proportionRatios = proportionRatioSer.findAll();
-        ProportionRatio proportionRatio = null;
+        ProportionRatio proportionRatio = new ProportionRatio();
         List<String> ids = new ArrayList<>(0);
         if (isAll) {
             if (null != proportions && proportions.size() > 0) {
@@ -572,10 +572,10 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
             String area = collectBO.getArea();
             String department = collectBO.getDepartment();
             String[] fields = new String[]{"ratioNum"};
-            StringBuilder sql = new StringBuilder(" SELECT count(time) as ratioNum FROM businesscommission_proportion a ");
+            StringBuilder sql = new StringBuilder(" SELECT count(a.time1) as ratioNum FROM businesscommission_proportion a ");
             sql.append(" WHERE a.area = '" + area + "' and a.department = '" + department + "' ");
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql.append(" and a.time BETWEEN '" + startTime + "' AND '" + endTime + "' ");
+                sql.append(" and a.time1 BETWEEN '" + startTime + "' AND '" + endTime + "' ");
             }
             List<QuotaCollectBO> quotaCollectBOs = super.findBySql(sql.toString(), QuotaCollectBO.class, fields);
             if (null != quotaCollectBOs && quotaCollectBOs.size() > 0) {
@@ -587,31 +587,33 @@ public class QuotaSerImpl extends ServiceImpl<Quota, QuotaDTO> implements QuotaS
             // TODO: 17-9-27 已回款项目
             //相同地区和项目组的目标业务提成额总和
             String[] fildes = new String[]{"aimAmount", "planAmount", "actualAmount", "remainingAccount"};
-            StringBuilder sql1 = new StringBuilder(" select sum(aimAmount) as aimAmount, ");
-            sql1.append(" sum(planAmount) as planAmount, ");
-            sql1.append(" sum(actualAmount) as actualAmount, ");
-            sql1.append(" sum(remainingAccount) as remainingAccount ");
+            StringBuilder sql1 = new StringBuilder(" select ifnull(sum(aimAmount),0) as aimAmount, ");
+            sql1.append(" ifnull(sum(planAmount),0) as planAmount, ");
+            sql1.append(" ifnull(sum(actualAmount),0) as actualAmount, ");
+            sql1.append(" ifnull(sum(remainingAccount),0) as remainingAccount ");
             sql1.append(" from businesscommission_quota a, ");
             sql1.append(" businesscommission_proportion b ");
             sql1.append(" WHERE a.area = '" + area + "' and a.department = '" + department + "' ");
             sql1.append(" and a.projectName=b.projectName ");
             if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-                sql1.append(" and b.time BETWEEN '" + startTime + "' AND '" + endTime + "' ");
+                sql1.append(" and b.time1 BETWEEN '" + startTime + "' AND '" + endTime + "' ");
             }
-            List<QuotaCollectBO> quotaCollectBOs1 = super.findBySql(sql.toString(), QuotaCollectBO.class, fields);
-            if (null != quotaCollectBOs1 && quotaCollectBOs1.size() > 0) {
-                quotaCollectBO.setAimAmount(quotaCollectBOs1.get(0).getAimAmount());
-                quotaCollectBO.setPlanAmount(quotaCollectBOs1.get(0).getPlanAmount());
-                quotaCollectBO.setActualAmount(quotaCollectBOs1.get(0).getActualAmount());
-                quotaCollectBO.setRemainingAccount(quotaCollectBOs1.get(0).getRemainingAccount());
+//            List<Object> objectList = super.
+            List<Object> objectList = proportionRatioSer.findBySql(sql1.toString());
+//            if (null != quotaCollectBOs1 && quotaCollectBOs1.size() > 0) {
+            Object[] objects = (Object[]) objectList.get(0);
+                quotaCollectBO.setAimAmount(Double.parseDouble(String.valueOf(objects[0])));
+                quotaCollectBO.setPlanAmount(Double.parseDouble(String.valueOf(objects[1])));
+                quotaCollectBO.setActualAmount(Double.parseDouble(String.valueOf(objects[2])));
+                quotaCollectBO.setRemainingAccount(Double.parseDouble(String.valueOf(objects[3])));
                 quotaCollectBO.setDifferenceAmount(quotaCollectBO.getActualAmount() - quotaCollectBO.getPlanAmount());
-            } else {
-                quotaCollectBO.setAimAmount(0d);
-                quotaCollectBO.setPlanAmount(0d);
-                quotaCollectBO.setActualAmount(0d);
-                quotaCollectBO.setRemainingAccount(0d);
-                quotaCollectBO.setDifferenceAmount(quotaCollectBO.getActualAmount() - quotaCollectBO.getPlanAmount());
-            }
+//            } else {
+//                quotaCollectBO.setAimAmount(0d);
+//                quotaCollectBO.setPlanAmount(0d);
+//                quotaCollectBO.setActualAmount(0d);
+//                quotaCollectBO.setRemainingAccount(0d);
+//                quotaCollectBO.setDifferenceAmount(quotaCollectBO.getActualAmount() - quotaCollectBO.getPlanAmount());
+//            }
             quotaCollectBOList.add(quotaCollectBO);
         }
         return quotaCollectBOList;

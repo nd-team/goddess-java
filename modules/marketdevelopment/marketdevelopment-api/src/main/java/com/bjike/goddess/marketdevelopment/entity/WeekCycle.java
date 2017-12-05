@@ -1,6 +1,7 @@
 package com.bjike.goddess.marketdevelopment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.marketdevelopment.enums.DateType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +39,12 @@ public class WeekCycle extends BaseEntity {
     @Column(name = "radio", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '各周工作量在整月占比'")
     private String radio;
 
+    /**
+     * 类型
+     */
+    @Column(name = "weekType", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0   COMMENT '类型'")
+    private DateType weekType;
+
 
     public String getSubjectDataId() {
         return subjectDataId;
@@ -61,5 +68,13 @@ public class WeekCycle extends BaseEntity {
 
     public void setRadio(String radio) {
         this.radio = radio;
+    }
+
+    public DateType getWeekType() {
+        return weekType;
+    }
+
+    public void setWeekType(DateType weekType) {
+        this.weekType = weekType;
     }
 }

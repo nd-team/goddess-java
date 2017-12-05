@@ -2,8 +2,11 @@ package com.bjike.goddess.marketdevelopment.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.marketdevelopment.entity.WeekCycle;
+import com.bjike.goddess.marketdevelopment.bo.WeekMonthMoneyBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekCycleDTO;
+import com.bjike.goddess.marketdevelopment.entity.WeekCycle;
+
+import java.util.List;
 
 /**
 * 周计划的周期业务接口
@@ -13,6 +16,16 @@ import com.bjike.goddess.marketdevelopment.dto.WeekCycleDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface WeekCycleSer extends Ser<WeekCycle, WeekCycleDTO> { 
+public interface WeekCycleSer extends Ser<WeekCycle, WeekCycleDTO> {
 
- }
+    /**
+     * 列表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<WeekMonthMoneyBO> maps(WeekCycleDTO dto) throws SerException {
+        return null;
+    }
+}

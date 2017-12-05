@@ -160,4 +160,20 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
      * @param accountanCourseTOS 会计科目
      */
     void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException;
+
+    /**
+     * 根据一级科目代码获取二级科目名称
+     * zhuangkaiqin
+     */
+    default List<String> findSecondName(String code) throws SerException{
+        return null;
+    }
+
+    /**
+     * 根据二级科目代码获取三级科目
+     * zhuangkaiqin
+     */
+    default List<String> findThirdName(String secondCode) throws SerException{
+        return null;
+    }
 }

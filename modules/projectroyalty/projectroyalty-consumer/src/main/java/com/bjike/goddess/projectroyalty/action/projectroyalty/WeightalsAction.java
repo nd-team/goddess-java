@@ -14,7 +14,7 @@ import com.bjike.goddess.projectroyalty.api.WeightalsAPI;
 import com.bjike.goddess.projectroyalty.bo.CollectBO;
 import com.bjike.goddess.projectroyalty.dto.WeightalsDTO;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
-import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
+import com.bjike.goddess.projectroyalty.to.WeightalAdjustsTO;
 import com.bjike.goddess.projectroyalty.to.WeightalsTO;
 import com.bjike.goddess.projectroyalty.vo.CollectVO;
 import com.bjike.goddess.projectroyalty.vo.WeightalsVO;
@@ -170,12 +170,13 @@ public class WeightalsAction {
     /**
      * 比例调整
      *
+     * @param tos
      * @version v1
      */
     @PutMapping("v1/adjust/{id}")
-    public Result adjust(@Validated(EDIT.class) WeightalAdjustTO to, BindingResult result) throws ActException {
+    public Result adjust(@Validated(EDIT.class) WeightalAdjustsTO tos, BindingResult result) throws ActException {
         try {
-            weightalsAPI.adjust(to);
+            weightalsAPI.adjust(tos);
             return ActResult.initialize("ADJUST SUCCESS");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

@@ -63,6 +63,8 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         }
 
         MonthMoneyDTO monthMoneyDTO = new MonthMoneyDTO();
+        monthMoneyDTO.getConditions().add(Restrict.eq("year",year));
+        monthMoneyDTO.getConditions().add(Restrict.eq("month",month));
         List<MonthMoney> monthMoneys = monthMoneySer.findByCis(monthMoneyDTO);
         List<MonthMoneyBO> monthMoneyBOs = new ArrayList<>(0);
         MonthMoneyBO monthMoneyBO = new MonthMoneyBO();
@@ -516,8 +518,11 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         FilesDataDTO filesDataDTO = new FilesDataDTO();
         filesDataDTO.getConditions().add(Restrict.eq("dateDataId", dateDataId));
         List<FilesData> filesDatas = filesDataSer.findByCis(filesDataDTO);
-        if(null != filesDatas && filesDatas.size() > 0){
-
+        if (null != filesDatas && filesDatas.size() > 0) {
+            List<FilesDataBO> filesDataBOs = BeanTransform.copyProperties(filesDatas, FilesDataBO.class);
+            filesDataBO.getFilesDataVO1s().addAll(filesDataBOs);
         }
+        bo.setFilesDataVO(filesDataBO);
+        return bo;
     }
 }
