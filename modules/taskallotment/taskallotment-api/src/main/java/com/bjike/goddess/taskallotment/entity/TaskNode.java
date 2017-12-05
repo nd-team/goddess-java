@@ -142,12 +142,12 @@ public class TaskNode extends BaseEntity {
     @Column(name = "executeType", columnDefinition = "TINYINT(2)   COMMENT '执行时长时间类型'")
     private TimeType executeType;
     /**
-     * 开始执行时间
+     * 实际开始执行时间
      */
     @Column(name = "startExecute", columnDefinition = "DATETIME   COMMENT '开始执行时间'")
     private LocalDateTime startExecute;
     /**
-     * 结束执行时间
+     * 实际结束执行时间
      */
     @Column(name = "endExecute", columnDefinition = "DATETIME   COMMENT '结束执行时间'")
     private LocalDateTime endExecute;

@@ -12,6 +12,8 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.event.api.EventAPI;
 import com.bjike.goddess.event.dto.FatherDTO;
+import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
+import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -56,6 +58,8 @@ public class UserAct extends BaseFileAction {
     private EventAPI eventAPI;
 
     private VacateAPI vacateAPI;
+
+    private ReimburseRecordAPI reimburseRecordAPI;
 
     /**
      * 手机号码是否存在
@@ -298,14 +302,14 @@ public class UserAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-//    @GetMapping("v1/event/count")
-//    public Result count(FatherDTO dto) throws ActException {
-//        try {
-//            return ActResult.initialize(eventAPI.count(dto));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    @GetMapping("v1/event/count")
+    public Result count(FatherDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(eventAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 请假总条数(phone)
@@ -314,13 +318,30 @@ public class UserAct extends BaseFileAction {
      * @throws ActException
      * @version v1
      */
-//    @GetMapping("v1/vacate/count")
-//    public Result vacate(VacateDTO dto) throws ActException {
-//        try {
-//            return ActResult.initialize(vacateAPI.count(dto));
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    @GetMapping("v1/vacate/count")
+    public Result vacate(VacateDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(vacateAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 报销列表总条数(phone)
+     *
+     * @param reimburseRecordDTO 申请报销信息dto
+     * @des 获取所有申请报销信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/count")
+    public Result counts(ReimburseRecordDTO reimburseRecordDTO) throws ActException {
+        try {
+            Long count = reimburseRecordAPI.countReimburseRecords(reimburseRecordDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

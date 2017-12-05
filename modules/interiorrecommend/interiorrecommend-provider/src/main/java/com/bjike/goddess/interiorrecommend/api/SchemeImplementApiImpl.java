@@ -6,12 +6,12 @@ import com.bjike.goddess.interiorrecommend.dto.SchemeImplementDTO;
 import com.bjike.goddess.interiorrecommend.service.SchemeImplementSer;
 import com.bjike.goddess.interiorrecommend.to.GuidePermissionTO;
 import com.bjike.goddess.interiorrecommend.to.SchemeImplementTO;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 /**
 * 内部推荐方案实施业务接口实现
@@ -78,7 +78,7 @@ public class SchemeImplementApiImpl implements SchemeImplementAPI  {
     }
 
     @Override
-    public List<EntryBasicInfoBO> findEntry() throws SerException {
-        return schemeImplementSer.findEntry();
+    public List<EntryRegisterBO> findEntry(EntryRegisterDTO dto) throws SerException {
+        return schemeImplementSer.findEntry ( dto );
     }
 }
