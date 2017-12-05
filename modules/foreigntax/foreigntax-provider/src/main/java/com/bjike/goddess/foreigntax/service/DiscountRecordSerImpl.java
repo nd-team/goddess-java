@@ -223,6 +223,7 @@ public class DiscountRecordSerImpl extends ServiceImpl<DiscountRecord, DiscountR
         discountRecord = BeanTransform.copyProperties(to, DiscountRecord.class, true);
         discountRecord.setCreateTime(createTime);
         discountRecord.setModifyTime(LocalDateTime.now());
+        super.update(discountRecord);
         DiscountRecordBO bo = BeanTransform.copyProperties(discountRecord, DiscountRecordBO.class);
         return bo;
     }

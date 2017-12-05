@@ -1,6 +1,7 @@
 package com.bjike.goddess.contractcommunicat.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.contractcommunicat.bo.HistoryAppraiseBO;
 import com.bjike.goddess.contractcommunicat.bo.SkillLibraryBO;
 import com.bjike.goddess.contractcommunicat.dto.SkillLibraryDTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
@@ -97,7 +98,18 @@ public interface SkillLibraryAPI {
      * @param to to
      * @throws SerException
      */
-    default void appraise(SkillLibraryTO to) throws SerException {
-
+    default SkillLibraryBO appraise(SkillLibraryTO to) throws SerException {
+        return null;
     }
+    /**
+     * 查看历史评价
+     *
+     * @param id id
+     * @return class SkillLibraryBO
+     * @throws SerException
+     */
+    default List<HistoryAppraiseBO> historyAppraise(String id) throws SerException {
+        return null;
+    }
+
 }

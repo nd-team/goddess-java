@@ -220,9 +220,12 @@ public class IncomeInvoiceSerImpl extends ServiceImpl<IncomeInvoice, IncomeInvoi
     public IncomeInvoiceBO edit(IncomeInvoiceTO to) throws SerException {
         checkAddIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
-            IncomeInvoice incomeInvoice = BeanTransform.copyProperties(to, IncomeInvoice.class, true);
-            incomeInvoice.setCreateTime(LocalDateTime.now());
-            super.save(incomeInvoice);
+            IncomeInvoice incomeInvoice = super.findById(to.getId());
+            LocalDateTime createTime = incomeInvoice.getCreateTime();
+            incomeInvoice = BeanTransform.copyProperties(to, IncomeInvoice.class, true);
+            incomeInvoice.setCreateTime(createTime);
+            incomeInvoice.setModifyTime(LocalDateTime.now());
+            super.update(incomeInvoice);
             IncomeInvoiceBO bo = BeanTransform.copyProperties(incomeInvoice, IncomeInvoiceBO.class);
             return bo;
         } else {
@@ -268,20 +271,22 @@ public class IncomeInvoiceSerImpl extends ServiceImpl<IncomeInvoice, IncomeInvoi
     public List<IncomeInvoiceBO> checkCollect(IncomeInvoiceDTO dto) throws SerException {
         String startTime = dto.getStartTime();
         String endTime = dto.getEndTime();
-        String[] cond = new String[]{startTime,endTime};
-        dto.getConditions().add(Restrict.between("invoicingTime",cond));
+        String[] cond = new String[]{startTime, endTime};
+        dto.getConditions().add(Restrict.between("invoicingTime", cond));
         dto.getConditions().add(Restrict.in("id", dto.getId()));
         List<IncomeInvoice> incomeInvoices = super.findByCis(dto);
         List<IncomeInvoiceBO> incomeInvoiceBOS = BeanTransform.copyProperties(incomeInvoices, IncomeInvoiceBO.class);
-        //不含税金额
-        Double notTax = incomeInvoiceBOS.stream().filter(p -> p.getNotTax() != null).mapToDouble(p -> p.getNotTax()).sum();
-        //税金
-        Double tax = incomeInvoiceBOS.stream().filter(p -> p.getTax() != null).mapToDouble(p -> p.getTax()).sum();
-        IncomeInvoiceBO bo = new IncomeInvoiceBO();
-        bo.setCompany("合计");
-        bo.setNotTax(notTax);
-        bo.setTax(tax);
-        incomeInvoiceBOS.add(bo);
+        if (incomeInvoiceBOS != null) {
+            //不含税金额
+            Double notTax = incomeInvoiceBOS.stream().filter(p -> p.getNotTax() != null).mapToDouble(p -> p.getNotTax()).sum();
+            //税金
+            Double tax = incomeInvoiceBOS.stream().filter(p -> p.getTax() != null).mapToDouble(p -> p.getTax()).sum();
+            IncomeInvoiceBO bo = new IncomeInvoiceBO();
+            bo.setCompany("合计");
+            bo.setNotTax(notTax);
+            bo.setTax(tax);
+            incomeInvoiceBOS.add(bo);
+        }
         return incomeInvoiceBOS;
     }
 
@@ -313,8 +318,8 @@ public class IncomeInvoiceSerImpl extends ServiceImpl<IncomeInvoice, IncomeInvoi
         compareCollectBOS.add(bo);
         CompareCollectBO collectBO = new CompareCollectBO();
         collectBO.setInvoicingTime("差异");
-        collectBO.setOutputNotTax(outputNotTax-incomeNotTax);
-        collectBO.setOutputTax(outputTax-incomeTax);
+        collectBO.setOutputNotTax(outputNotTax - incomeNotTax);
+        collectBO.setOutputTax(outputTax - incomeTax);
         compareCollectBOS.add(collectBO);
         return compareCollectBOS;
     }

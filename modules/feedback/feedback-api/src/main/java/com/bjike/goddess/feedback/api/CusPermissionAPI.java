@@ -1,10 +1,11 @@
 package com.bjike.goddess.feedback.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.feedback.bo.CusPermissionBO;
 import com.bjike.goddess.feedback.dto.CusPermissionDTO;
 import com.bjike.goddess.feedback.to.CusPermissionTO;
+import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -89,7 +90,7 @@ public interface CusPermissionAPI {
      * @param idFlag 权限idFlag
      * @throws SerException
      */
-    default Boolean getCusPermission(String idFlag) throws SerException {
+    default Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
 
@@ -99,7 +100,7 @@ public interface CusPermissionAPI {
      * @param idFlag 权限idFlag
      * @throws SerException
      */
-    default Boolean busCusPermission(String idFlag) throws SerException {
+    default Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
 

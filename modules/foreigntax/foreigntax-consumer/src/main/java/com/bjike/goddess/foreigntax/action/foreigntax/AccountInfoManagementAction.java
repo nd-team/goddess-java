@@ -117,9 +117,8 @@ public class AccountInfoManagementAction extends BaseFileAction {
     @GetMapping("v1/list")
     public Result list(AccountInfoManagementDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<AccountInfoManagementVO> accountInfoManagementVOS = BeanTransform.copyProperties
-                    (accountInfoManagementAPI.list(dto), AccountInfoManagementVO.class, request);
-            return ActResult.initialize(accountInfoManagementVOS);
+            List<AccountInfoManagementBO> accountInfoManagementBOS =accountInfoManagementAPI.list(dto);
+            return ActResult.initialize( BeanTransform.copyProperties (accountInfoManagementBOS,AccountInfoManagementVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
