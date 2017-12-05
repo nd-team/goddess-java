@@ -1,6 +1,7 @@
 package com.bjike.goddess.projectissuehandle.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.projectissuehandle.bo.ProblemAcceBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.enums.AffectedDepartment;
@@ -27,6 +28,7 @@ import java.util.List;
 public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     @Autowired
     private ProblemAcceptSer problemAcceptSer;
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return problemAcceptSer.sonPermission();
@@ -34,8 +36,9 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
 
     @Override
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return problemAcceptSer.guidePermission( guidePermissionTO );
+        return problemAcceptSer.guidePermission(guidePermissionTO);
     }
+
     @Override
     public Long countProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return problemAcceptSer.countProblemAccept(problemAcceptDTO);
@@ -71,10 +74,12 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     public List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return problemAcceptSer.searchProblemAccept(problemAcceptDTO);
     }
+
     @Override
     public ProblemAcceptBO getProjectNum(String projectNum) throws SerException {
         return problemAcceptSer.getProjectNum(projectNum);
     }
+
     @Override
     public List<String> getProjectNum() throws SerException {
         return problemAcceptSer.getProjectNum();
@@ -84,17 +89,25 @@ public class ProblemAcceptApiImpl implements ProblemAcceptAPI {
     public String degree(ProblemProcessingTime problemProcessingTime, AffectedDepartment affectedDepartment) throws SerException {
         return problemAcceptSer.degree(problemProcessingTime, affectedDepartment);
     }
+
     @Override
     public byte[] exportExcel(ProblemAcceptDTO dto) throws SerException {
         return problemAcceptSer.exportExcel(dto);
     }
+
     @Override
     public List<String> getName() throws SerException {
         return problemAcceptSer.getName();
     }
+
     @Override
     public List<String> getType() throws SerException {
         return problemAcceptSer.getType();
+    }
+
+    @Override
+    public ProblemAcceBO findProblemAcce(String projectNum) throws SerException {
+        return problemAcceptSer.findProblemAcce(projectNum);
     }
 
 }

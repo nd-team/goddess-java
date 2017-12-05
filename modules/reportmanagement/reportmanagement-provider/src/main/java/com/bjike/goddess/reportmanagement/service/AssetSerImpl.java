@@ -75,7 +75,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     private AccountanCourseAPI accountanCourseAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
-
+    @Autowired
+    private CashFlowSer cashFlowSer;
 
 
     /**
@@ -267,6 +268,19 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         obj.setName("repayanalyzeadvice");
         obj.setDescribesion("偿还能力分析管理建议设计");
         if (flagSeeDis7) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeDis8 = cashFlowSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("cashflow");
+        obj.setDescribesion("现金流量表");
+        if (flagSeeDis8) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

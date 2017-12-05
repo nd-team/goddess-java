@@ -2,8 +2,8 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
-import com.bjike.goddess.marketdevelopment.bo.MarketMeasureCollectBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
+import com.bjike.goddess.marketdevelopment.excel.BusinessCourseImportExcel;
 import com.bjike.goddess.marketdevelopment.service.BusinessCourseSer;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
@@ -78,12 +78,27 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
     }
 
     @Override
-    public Integer getTotal() throws SerException {
-        return businessCourseSer.findAll().size();
+    public Integer getTotal(BusinessCourseDTO dto) throws SerException {
+        return Integer.valueOf(businessCourseSer.count(dto).toString());
     }
 
     @Override
     public List<String> getProjectName() throws SerException {
         return businessCourseSer.getProjectName();
+    }
+
+    @Override
+    public byte[] templateExcel() throws SerException {
+        return businessCourseSer.templateExcel();
+    }
+
+    @Override
+    public void upload(List<BusinessCourseImportExcel> tos) throws SerException {
+        businessCourseSer.upload(tos);
+    }
+
+    @Override
+    public byte[] exportExcel(BusinessCourseDTO dto) throws SerException {
+        return businessCourseSer.exportExcel(dto);
     }
 }

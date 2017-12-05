@@ -59,85 +59,85 @@ public class ArchiveDetail extends BaseEntity {
     /**
      * 劳动合同
      */
-    @Column(name = "is_contractLabor", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '劳动合同'", insertable = false)
+    @Column(name = "is_contractLabor", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '劳动合同'")
     private Boolean contractLabor;
 
     /**
      * 培训协议
      */
-    @Column(name = "is_learnerShip", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '培训协议'", insertable = false)
+    @Column(name = "is_learnerShip", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '培训协议'")
     private Boolean learnerShip;
 
     /**
      * 保密协议
      */
-    @Column(name = "is_secrecyAgreement", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '保密协议'", insertable = false)
+    @Column(name = "is_secrecyAgreement", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '保密协议'")
     private Boolean secrecyAgreement;
 
     /**
      * 竞业协议
      */
-    @Column(name = "is_protocol", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '竞业协议'", insertable = false)
+    @Column(name = "is_protocol", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '竞业协议'")
     private Boolean protocol;
 
     /**
      * 简历
      */
-    @Column(name = "is_resume", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '简历'", insertable = false)
+    @Column(name = "is_resume", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '简历'")
     private Boolean resume;
 
     /**
      * 照片
      */
-    @Column(name = "is_photo", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '照片'", insertable = false)
+    @Column(name = "is_photo", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '照片'")
     private Boolean photo;
 
     /**
      * 身份证
      */
-    @Column(name = "is_identityCard", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '身份证'", insertable = false)
+    @Column(name = "is_identityCard", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '身份证'")
     private Boolean identityCard;
 
     /**
      * 学历证
      */
-    @Column(name = "is_education", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '学历证'", insertable = false)
+    @Column(name = "is_education", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '学历证'")
     private Boolean education;
 
     /**
      * 银行卡
      */
-    @Column(name = "is_bankCard", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '银行卡'", insertable = false)
+    @Column(name = "is_bankCard", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '银行卡'")
     private Boolean bankCard;
 
     /**
      * 求职登记表
      */
-    @Column(name = "is_rollCall", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '求职登记表'", insertable = false)
+    @Column(name = "is_rollCall", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '求职登记表'")
     private Boolean rollCall;
 
     /**
      * 入职登记表
      */
-    @Column(name = "is_entryCall", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '入职登记表'", insertable = false)
+    @Column(name = "is_entryCall", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '入职登记表'")
     private Boolean entryCall;
 
     /**
      * 面谈确认单
      */
-    @Column(name = "is_interviewConfirmation", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '面谈确认单'", insertable = false)
+    @Column(name = "is_interviewConfirmation", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '面谈确认单'")
     private Boolean interviewConfirmation;
 
     /**
      * 转正审批表
      */
-    @Column(name = "is_positiveApproval", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '转正审批表'", insertable = false)
+    @Column(name = "is_positiveApproval", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '转正审批表'")
     private Boolean positiveApproval;
 
     /**
      * 资格证书
      */
-    @Column(name = "is_qualification", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '资格证书'", insertable = false)
+    @Column(name = "is_qualification", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '资格证书'")
     private Boolean qualification;
 
     /**

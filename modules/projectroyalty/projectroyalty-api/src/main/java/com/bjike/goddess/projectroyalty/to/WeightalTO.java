@@ -405,4 +405,6 @@ public class WeightalTO extends BaseTO {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+
 }

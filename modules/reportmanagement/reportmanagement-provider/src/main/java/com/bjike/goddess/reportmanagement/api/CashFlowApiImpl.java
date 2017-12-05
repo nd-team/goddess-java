@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.reportmanagement.service.CashFlowSer;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,18 @@ import org.springframework.stereotype.Service;
 * @Copy:   		[ com.bjike ]
 */
 @Service("cashFlowApiImpl")
-public class CashFlowApiImpl implements CashFlowAPI  { 
+public class CashFlowApiImpl implements CashFlowAPI  {
+    
+    @Autowired
+    private CashFlowSer cashFlowSer;
 
- }
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return cashFlowSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return cashFlowSer.guidePermission(guidePermissionTO);
+    }
+}

@@ -201,7 +201,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             }
         }
 
-        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class,true);
+        InternalContacts entity = BeanTransform.copyProperties(to, InternalContacts.class, true);
 
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("name", to.getName()));
@@ -880,7 +880,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         dto.getConditions().add(Restrict.eq("id", id));
         InternalContacts entity = super.findOne(dto);
         if (null == entity) {
-            throw new SerException("目标数据对象不能为空");
+            return null;
         }
         InternalContactsBO bo = this.transformBO(entity);
         if (null != bo) {
@@ -1182,8 +1182,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                 }
             }
             //联系电话
-            if(StringUtils.isNotBlank(dto.getPhone())){
-                dto.getConditions().add(Restrict.like("phone",dto.getPhone()));
+            if (StringUtils.isNotBlank(dto.getPhone())) {
+                dto.getConditions().add(Restrict.like("phone", dto.getPhone()));
             }
         }
 //        /**
@@ -1266,11 +1266,11 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         List<MobileSearchBO> externalBOS = new ArrayList<>();
         List<MobileSearchBO> commerceBOS = new ArrayList<>();
         InternalContactsDTO internalContactsDTO = new InternalContactsDTO();
-        if(StringUtils.isNotBlank(dto.getUserName())){
-            internalContactsDTO.getConditions().add(Restrict.like("name",dto.getUserName()));
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            internalContactsDTO.getConditions().add(Restrict.like("name", dto.getUserName()));
         }
-        if(StringUtils.isNotBlank(dto.getPhone())){
-            internalContactsDTO.getConditions().add(Restrict.like("phone",dto.getPhone()));
+        if (StringUtils.isNotBlank(dto.getPhone())) {
+            internalContactsDTO.getConditions().add(Restrict.like("phone", dto.getPhone()));
         }
         List<InternalContacts> internalContacts = super.findByCis(internalContactsDTO);
         List<String> userNames = internalContacts.stream().map(InternalContacts::getName).collect(Collectors.toList());
@@ -1282,7 +1282,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
         entryRegisterDTO.getConditions().add(Restrict.in("username", userNames));
         List<UserNameSexBO> userNameSexBOs = entryRegisterAPI.findSexByUserName((String[]) userNames.toArray(new String[userNames.size()]));
-        for(InternalContacts entity1:internalContacts){
+        for (InternalContacts entity1 : internalContacts) {
             MobileSearchBO searchBO = new MobileSearchBO();
             if (null != userBOs && userBOs.size() > 0) {
                 searchBO.setHeadSculpture(userBOs.get(0).getHeadSculpture());
@@ -1305,15 +1305,15 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
         }
 
-        ExternalContactsDTO externalContactsDTO =new ExternalContactsDTO();
-        if(StringUtils.isNotBlank(dto.getUserName())){
-            externalContactsDTO.getConditions().add(Restrict.like("username",dto.getUserName()));
+        ExternalContactsDTO externalContactsDTO = new ExternalContactsDTO();
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            externalContactsDTO.getConditions().add(Restrict.like("username", dto.getUserName()));
         }
-        if(StringUtils.isNotBlank(dto.getPhone())){
-            externalContactsDTO.getConditions().add(Restrict.like("phone",dto.getPhone()));
+        if (StringUtils.isNotBlank(dto.getPhone())) {
+            externalContactsDTO.getConditions().add(Restrict.like("phone", dto.getPhone()));
         }
-        List<ExternalContacts> externalContacts =externalContactsSer.findByCis(externalContactsDTO);
-        for(ExternalContacts entity2:externalContacts){
+        List<ExternalContacts> externalContacts = externalContactsSer.findByCis(externalContactsDTO);
+        for (ExternalContacts entity2 : externalContacts) {
             MobileSearchBO searchBO = new MobileSearchBO();
             if (null != userBOs && userBOs.size() > 0) {
                 searchBO.setHeadSculpture(userBOs.get(0).getHeadSculpture());
@@ -1336,14 +1336,14 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
 
         }
         CommerceContactsDTO commerceContactsDTO = new CommerceContactsDTO();
-        if(StringUtils.isNotBlank(dto.getUserName())){
-            commerceContactsDTO.getConditions().add(Restrict.like("customerName",dto.getUserName()));
+        if (StringUtils.isNotBlank(dto.getUserName())) {
+            commerceContactsDTO.getConditions().add(Restrict.like("customerName", dto.getUserName()));
         }
-        if(StringUtils.isNotBlank(dto.getPhone())){
-            commerceContactsDTO.getConditions().add(Restrict.like("tel",dto.getPhone()));
+        if (StringUtils.isNotBlank(dto.getPhone())) {
+            commerceContactsDTO.getConditions().add(Restrict.like("tel", dto.getPhone()));
         }
         List<CommerceContacts> commerceContacts = commerceContactsSer.findByCis(commerceContactsDTO);
-        for(CommerceContacts entity3:commerceContacts){
+        for (CommerceContacts entity3 : commerceContacts) {
             MobileSearchBO searchBO = new MobileSearchBO();
             if (null != userBOs && userBOs.size() > 0) {
                 searchBO.setHeadSculpture(userBOs.get(0).getHeadSculpture());

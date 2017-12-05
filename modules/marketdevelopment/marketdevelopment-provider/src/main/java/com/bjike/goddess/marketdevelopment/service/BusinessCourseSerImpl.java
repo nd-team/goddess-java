@@ -2,24 +2,34 @@ package com.bjike.goddess.marketdevelopment.service;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
+import com.bjike.goddess.marketdevelopment.bo.BusinessSubjectBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
 import com.bjike.goddess.marketdevelopment.entity.BusinessCourse;
 import com.bjike.goddess.marketdevelopment.enums.GuideAddrStatus;
+import com.bjike.goddess.marketdevelopment.enums.Status;
+import com.bjike.goddess.marketdevelopment.excel.BusinessCourseExportExcel;
+import com.bjike.goddess.marketdevelopment.excel.BusinessCourseImportExcel;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +163,89 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
         return null;
     }
 
+    @Override
+    public byte[] templateExcel() throws SerException {
+        BusinessCourseImportExcel businessCourseImportExcel = new BusinessCourseImportExcel();
+        List<BusinessCourseImportExcel> list = new ArrayList<>(0);
+        list.add(businessCourseImportExcel);
+        Excel excel = new Excel(0, 2);
+        byte bytes[] = ExcelUtil.clazzToExcel(list, excel);
+        return bytes;
+    }
+
+    @Override
+    public void upload(List<BusinessCourseImportExcel> tos) throws SerException {
+        List<BusinessCourseTO> businessCourseTOs = BeanTransform.copyProperties(tos, BusinessCourseTO.class);
+        for (BusinessCourseTO to : businessCourseTOs) {
+            this.save(to);
+        }
+    }
+
+    @Override
+    public byte[] exportExcel(BusinessCourseDTO dto) throws SerException {
+        dto.getSorts().add("businessNum=asc");
+        dto.getSorts().add("subjectNum=asc");
+        List<BusinessCourse> list = super.findByCis(dto);
+        List<BusinessCourseExportExcel> businessCourseExportExcels = BeanTransform.copyProperties(list, BusinessCourseExportExcel.class);
+
+        List<Integer> mainTableLen = new ArrayList<>(0);
+        List<String> stringList = list.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
+        if (null != stringList && stringList.size() > 0) {
+            for (String str : stringList) {
+                BusinessCourseDTO dto1 = new BusinessCourseDTO();
+                dto1.getConditions().add(Restrict.eq("businessType", str));
+                List<BusinessCourse> businessCourseList = super.findByCis(dto1);
+                mainTableLen.add(businessCourseList.size());
+            }
+        }
+
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(businessCourseExportExcels, excel);
+
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+            //主表行数
+            int rowSize = list.size();
+
+
+            int index = 0;
+            int lastRow = 0;
+            for (int j = 0; j < rowSize; j++) {
+
+                //List<int> maxList所有子表的长度
+                if (null != mainTableLen && mainTableLen.size() > 0) {
+                    int mergeRowCount = mainTableLen.get(j);
+                    //5
+                    if (mergeRowCount != 1) {
+
+                        int firstRow = index;
+                        lastRow = firstRow + mergeRowCount - 1;
+                        if (firstRow == 0) {
+                            firstRow += 1;
+                            lastRow += 1;
+                        }
+                        //合并主表共33列
+                        for (int i = 0; i < 2; i++) {
+                            //1,5
+                            sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
+                        }
+
+                        os = new ByteArrayOutputStream();
+                        wb.write(os);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return os.toByteArray();
+    }
+
     /**
      * 转换业务方向科目传输对象
      *
@@ -174,11 +267,25 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
      * @param list 业务方向科目实体集合
      * @return
      */
-    private List<BusinessCourseBO> transformBOList(List<BusinessCourse> list) {
+    private List<BusinessCourseBO> transformBOList(List<BusinessCourse> list) throws SerException {
+        List<BusinessCourseBO> bos = new ArrayList<>(0);
+        if (null == list || list.size() < 1) {
+            return null;
+        }
 
-        List<BusinessCourseBO> bos = new ArrayList<>(list.size());
-        for (BusinessCourse entity : list)
-            bos.add(this.transformBO(entity));
+        List<String> stringList = list.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
+        for (String string : stringList) {
+            BusinessCourseDTO dto = new BusinessCourseDTO();
+            dto.getConditions().add(Restrict.eq("businessType", string));
+            List<BusinessCourse> businessCourses = super.findByCis(dto);
+            BusinessCourseBO bo = new BusinessCourseBO();
+            bo.setBusinessNum(businessCourses.get(0).getBusinessNum());
+            bo.setBusinessType(businessCourses.get(0).getBusinessType());
+            List<BusinessSubjectBO> businessSubjectBOs = BeanTransform.copyProperties(businessCourses, BusinessSubjectBO.class);
+            bo.setBusinessSubjectVOs(businessSubjectBOs);
+            bos.add(bo);
+        }
+
         return bos;
     }
 
@@ -187,8 +294,36 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     public BusinessCourseBO save(BusinessCourseTO to) throws SerException {
         BusinessCourse entity = BeanTransform.copyProperties(to, BusinessCourse.class);
 
-        //entity.setType(typeSer.findById(to.getTypeId()));
+        List<BusinessCourse> businessCourses = super.findAll();
+        int businessNum = 0;
+        int subjectNum = 0;
+        if (null != businessCourses && businessCourses.size() > 0) {
+            for (BusinessCourse businessCourse : businessCourses) {
+                if (entity.getBusinessType().equals(businessCourse.getBusinessType())) {
+                    businessNum = Integer.valueOf(businessCourse.getBusinessNum());
+                }
+            }
+            if (businessNum == 0) {
+                List<String> stringList = businessCourses.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
+                businessNum = stringList.size() + 1;
+                subjectNum = 1;
+            } else {
+                BusinessCourseDTO businessCourseDTO = new BusinessCourseDTO();
+                businessCourseDTO.getConditions().add(Restrict.eq("businessType", entity.getBusinessType()));
+                List<BusinessCourse> businessCourses1 = super.findByCis(businessCourseDTO);
+                List<String> stringList = businessCourses1.stream().map(BusinessCourse::getCourse).distinct().collect(Collectors.toList());
+                subjectNum = stringList.size() + 1;
+            }
+
+            entity.setBusinessNum(String.valueOf(businessNum));
+            entity.setSubjectNum(String.valueOf(businessNum) + "." + String.valueOf(subjectNum));
+
+        } else {
+            entity.setBusinessNum("1");
+            entity.setSubjectNum("1.1");
+        }
         entity.setStatus(Status.THAW);
+
         super.save(entity);
         return this.transformBO(entity);
     }
@@ -196,31 +331,53 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO update(BusinessCourseTO to) throws SerException {
-//        if (!marPermissionSer.getMarPermission(marketManage))
-//            throw new SerException("您的帐号没有权限");
-        if (StringUtils.isNotBlank(to.getId())) {
-            BusinessCourse entity = super.findById(to.getId());
-            if (null == entity)
-                throw new SerException("数据对象不能为空");
-            BeanTransform.copyProperties(to, entity, true);
-            //entity.setType(typeSer.findById(to.getTypeId()));
-            if (entity.getType() == null)
-                throw new SerException("业务类型不存在");
+        int businessNum = 0;
+        int subjectNum = 0;
+        BusinessCourse entity = super.findById(to.getId());
+        if (null == entity) {
+            throw new SerException("目标数据不能为空");
+        }
+
+        BeanTransform.copyProperties(to, entity);
+//        List<BusinessCourse> businessCourses3 = super.findAll();
+//        if (businessCourses3.size() == 1) {
+//            entity.setModifyTime(LocalDateTime.now());
+//            super.update(entity);
+//        } else {
+//            BusinessCourseDTO dto = new BusinessCourseDTO();
+//            dto.getConditions().add(Restrict.eq("businessType", entity.getBusinessType()));
+//            List<BusinessCourse> businessCourses = super.findByCis(dto);
+//            if (null != businessCourses && businessCourses.size() > 0) {
+//                businessNum = Integer.valueOf(businessCourses.get(0).getBusinessNum());
+//                List<BusinessCourse> businessCourses2 = businessCourses.stream().filter(obj -> entity.getCourse().equals(obj.getCourse())).distinct().collect(Collectors.toList());
+//                if (null != businessCourses2 && businessCourses2.size() > 0) {
+//                    subjectNum = Integer.valueOf(businessCourses2.get(0).getSubjectNum());
+//                } else {
+//                    subjectNum = businessCourses.size() + 1;
+//                }
+//            } else {
+//                List<BusinessCourse> businessCourses1 = super.findAll();
+//                List<String> stringList = businessCourses1.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
+//                businessNum = stringList.size() + 1;
+//                subjectNum = 1;
+//            }
+//            entity.setBusinessNum(String.valueOf(businessNum));
+//            entity.setSubjectNum(String.valueOf(businessNum) + "." + String.valueOf(subjectNum));
             entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
-            return this.transformBO(entity);
-        } else
-            throw new SerException("数据ID不能为空");
+//        }
+        return this.transformBO(entity);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessCourseBO congeal(BusinessCourseTO to) throws SerException {
-        if (!marPermissionSer.getMarPermission(marketManage))
-            throw new SerException("您的帐号没有权限");
+//        if (!marPermissionSer.getMarPermission(marketManage))
+//            throw new SerException("您的帐号没有权限");
         BusinessCourse entity = super.findById(to.getId());
-        if (entity == null)
+        if (entity == null) {
             throw new SerException("数据对象不能为空");
+        }
         entity.setStatus(Status.CONGEAL);
         super.update(entity);
         return this.transformBO(entity);

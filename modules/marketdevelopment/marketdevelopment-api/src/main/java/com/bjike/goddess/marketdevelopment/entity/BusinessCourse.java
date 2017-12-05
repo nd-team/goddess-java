@@ -1,7 +1,7 @@
 package com.bjike.goddess.marketdevelopment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.marketdevelopment.enums.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,7 +54,7 @@ public class BusinessCourse extends BaseEntity {
     /**
      * 可以做的具体业务
      */
-    @Column(name = "business", nullable = false, columnDefinition = "TEXT  COMMENT '可以做的具体业务'")
+    @Column(name = "business", nullable = true, columnDefinition = "TEXT  COMMENT '可以做的具体业务'")
     private String business;
 
     /**

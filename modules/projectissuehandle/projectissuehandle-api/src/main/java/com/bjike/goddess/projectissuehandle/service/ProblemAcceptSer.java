@@ -2,6 +2,7 @@ package com.bjike.goddess.projectissuehandle.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.projectissuehandle.bo.ProblemAcceBO;
 import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
 import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import com.bjike.goddess.projectissuehandle.entity.ProblemAccept;
@@ -104,6 +105,7 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     default List<ProblemAcceptBO> searchProblemAccept(ProblemAcceptDTO problemAcceptDTO) throws SerException {
         return null;
     }
+
     /**
      * 根据项目问题编号查找项目执行中的问题受理
      *
@@ -113,6 +115,7 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     default ProblemAcceptBO getProjectNum(String projectNum) throws SerException {
         return null;
     }
+
     /**
      * 获取内部项目编号
      *
@@ -161,10 +164,12 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
 
     /**
      * 导出Excel
+     *
      * @param dto
      * @throws SerException
      */
-    byte[] exportExcel(ProblemAcceptDTO dto ) throws SerException;
+    byte[] exportExcel(ProblemAcceptDTO dto) throws SerException;
+
     /**
      * 获取内部项目名称
      *
@@ -173,6 +178,7 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
     default List<String> getName() throws SerException {
         return null;
     }
+
     /**
      * 获取工程类型
      *
@@ -182,4 +188,10 @@ public interface ProblemAcceptSer extends Ser<ProblemAccept, ProblemAcceptDTO> {
         return null;
     }
 
+    /**
+     * 根据问题受理编号获取数据
+     */
+    default ProblemAcceBO findProblemAcce(String projectNum) throws SerException {
+        return null;
+    }
 }

@@ -407,4 +407,40 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
             }
         }
     }
+
+    @Override
+    public List<String> findSecondName(String code) throws SerException {
+        StringBuilder sql = new StringBuilder("SELECT substring(code,1,6) as code,accountanName  FROM financeinit_accountancourse ");
+        List<Object> objectList = super.findBySql(sql.toString());
+        List<String> list = new ArrayList<>(0);
+        if (null != objectList && objectList.size() > 0) {
+            for (Object obj : objectList) {
+                Object[] objects = (Object[]) obj;
+                String code1 = String.valueOf(objects[0]);
+                if(code1.length() == 6 && code1.substring(0,4).equals(code)){
+                    list.add(String.valueOf(objects[1]));
+                }
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<String> findThirdName(String secondCode) throws SerException {
+        StringBuilder sql = new StringBuilder("SELECT substring(code,1,8) as code,accountanName  FROM financeinit_accountancourse ");
+        List<Object> objectList = super.findBySql(sql.toString());
+        List<String> list = new ArrayList<>(0);
+        if (null != objectList && objectList.size() > 0) {
+            for (Object obj : objectList) {
+                Object[] objects = (Object[]) obj;
+                String code1 = String.valueOf(objects[0]);
+                if(code1.length() == 8 && code1.substring(0,6).equals(secondCode)){
+                    list.add(String.valueOf(objects[1]));
+                }
+            }
+        }
+
+        return list;
+    }
 }

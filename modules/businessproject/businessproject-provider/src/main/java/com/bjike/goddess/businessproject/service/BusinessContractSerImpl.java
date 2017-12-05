@@ -4066,5 +4066,16 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         return BeanTransform.copyProperties(businessContract, BusinessContractsBO.class);
     }
 
+    @Override
+    public List<String> findMarkNum() throws SerException {
+        List<String> stringList = new ArrayList<>(0);
+        List<BusinessContract> list = super.findAll();
+        if (null != list && list.size() > 0) {
+            stringList = list.stream().map(BusinessContract::getMarketNum).distinct().collect(Collectors.toList());
+            return stringList;
+        }
+        return null;
+    }
+
 
 }

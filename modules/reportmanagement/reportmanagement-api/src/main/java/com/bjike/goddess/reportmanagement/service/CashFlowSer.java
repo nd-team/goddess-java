@@ -2,8 +2,9 @@ package com.bjike.goddess.reportmanagement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.reportmanagement.entity.CashFlow;
 import com.bjike.goddess.reportmanagement.dto.CashFlowDTO;
+import com.bjike.goddess.reportmanagement.entity.CashFlow;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 
 /**
 * 现金流量表业务接口
@@ -13,6 +14,19 @@ import com.bjike.goddess.reportmanagement.dto.CashFlowDTO;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface CashFlowSer extends Ser<CashFlow, CashFlowDTO> { 
+public interface CashFlowSer extends Ser<CashFlow, CashFlowDTO> {
 
- }
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+}

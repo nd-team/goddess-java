@@ -90,4 +90,9 @@ public class QuotaApiImpl implements QuotaAPI {
     public List<QuotaCollectBO> totalCollect() throws SerException {
         return quotaSer.totalCollect();
     }
+
+    @Override
+    public List<String> listInnerProject() throws SerException {
+        return quotaSer.listInnerProject();
+    }
 }
