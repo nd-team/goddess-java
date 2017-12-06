@@ -1,4 +1,4 @@
-package com.bjike.goddess.projectprocing.entity;
+package com.bjike.goddess.projectprocing.enums;
 
 public enum  SendFrequency {
     /**

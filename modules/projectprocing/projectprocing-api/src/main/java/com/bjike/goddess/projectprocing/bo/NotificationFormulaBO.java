@@ -2,10 +2,8 @@ package com.bjike.goddess.projectprocing.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.projectprocing.entity.SendFrequency;
+import com.bjike.goddess.projectprocing.enums.SendFrequency;
 import com.bjike.goddess.projectprocing.enums.SummTableName;
-
-import java.time.LocalDate;
 
 /**
  * 通报机制制定业务传输对象

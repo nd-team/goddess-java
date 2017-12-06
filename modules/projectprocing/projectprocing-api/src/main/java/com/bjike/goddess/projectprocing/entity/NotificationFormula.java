@@ -2,12 +2,12 @@ package com.bjike.goddess.projectprocing.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.projectprocing.enums.SendFrequency;
 import com.bjike.goddess.projectprocing.enums.SummTableName;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 

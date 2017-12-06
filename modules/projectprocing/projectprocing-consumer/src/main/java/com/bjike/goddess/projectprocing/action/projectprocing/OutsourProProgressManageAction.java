@@ -13,6 +13,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.api.OutsourProProgressManageAPI;
 import com.bjike.goddess.projectprocing.bo.OutsourProProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.OutsourProProgressManageDTO;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.OutsourProProgressManageTO;
 import com.bjike.goddess.projectprocing.vo.OutsourProProgressManageVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 外包,半外包项目结算进度管理
+ * 外包半外包项目结算进度管理
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-11-18 03:03 ]
- * @Description: [ 外包,半外包项目结算进度管理 ]
+ * @Description: [ 外包半外包项目结算进度管理 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -40,11 +41,34 @@ public class OutsourProProgressManageAction {
     @Autowired
     private OutsourcBusinessContractAPI outsourcBusinessContractAPI;
 
+
     /**
-     * 外包,半外包项目结算进度管理总条数
+     * 功能导航权限
      *
-     * @param outsourProProgressManageDTO 外包,半外包项目结算进度管理dto
-     * @des 获取所有外包, 半外包项目结算进度管理总条数
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = outsourProProgressManageAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 外包半外包项目结算进度管理总条数
+     *
+     * @param outsourProProgressManageDTO 外包半外包项目结算进度管理dto
+     * @des 获取所有外包半外包项目结算进度管理总条数
      * @version v1
      */
     @GetMapping("v1/count")
@@ -59,9 +83,9 @@ public class OutsourProProgressManageAction {
     }
 
     /**
-     * 一个外包,半外包项目结算进度管理
+     * 一个外包半外包项目结算进度管理
      *
-     * @param id 外包,半外包项目结算进度管理id
+     * @param id 外包半外包项目结算进度管理id
      * @return class OutsourProProgressManageVO
      * @des 根据id获取节点表头定制
      * @version v1
@@ -79,11 +103,11 @@ public class OutsourProProgressManageAction {
 
 
     /**
-     * 外包,半外包项目结算进度管理列表
+     * 外包半外包项目结算进度管理列表
      *
      * @param outsourProProgressManageDTO 外包,半外包项目结算进度管理dto
      * @return class OutsourProProgressManageVO
-     * @des 获取所有外包, 半外包项目结算进度管理
+     * @des 获取所有外包半外包项目结算进度管理
      * @version v1
      */
     @GetMapping("v1/list")
@@ -98,11 +122,11 @@ public class OutsourProProgressManageAction {
     }
 
     /**
-     * 添加外包,半外包项目结算进度管理
+     * 添加外包半外包项目结算进度管理
      *
-     * @param outsourProProgressManageTO 外包,半外包项目结算进度管理数据to
+     * @param outsourProProgressManageTO 外包半外包项目结算进度管理数据to
      * @return class OutsourProProgressManageVO
-     * @des 添加外包, 半外包项目结算进度管理
+     * @des 添加外包半外包项目结算进度管理
      * @version v1
      */
     @LoginAuth
@@ -118,11 +142,11 @@ public class OutsourProProgressManageAction {
 
 
     /**
-     * 编辑外包,半外包项目结算进度管理
+     * 编辑外包半外包项目结算进度管理
      *
-     * @param outsourProProgressManageTO 外包,半外包项目结算进度管理bo
+     * @param outsourProProgressManageTO 外包半外包项目结算进度管理bo
      * @return class OutsourProProgressManageVO
-     * @des 添加外包, 半外包项目结算进度管理
+     * @des 添加外包半外包项目结算进度管理
      * @version v1
      */
     @LoginAuth
@@ -140,7 +164,7 @@ public class OutsourProProgressManageAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除外包, 半外包项目结算进度管理
+     * @des 根据id删除外包半外包项目结算进度管理
      * @version v1
      */
     @LoginAuth
@@ -223,7 +247,7 @@ public class OutsourProProgressManageAction {
     /**
      * 回款确认
      *
-     * @param outsourProProgressManageTO 外包,半外包项目结算进度管理bo
+     * @param outsourProProgressManageTO 外包半外包项目结算进度管理bo
      * @des 回款确认
      * @version v1
      */
@@ -241,7 +265,7 @@ public class OutsourProProgressManageAction {
     /**
      * 增值税发票通报
      *
-     * @param outsourProProgressManageTO 外包,半外包项目结算进度管理bo
+     * @param outsourProProgressManageTO 外包半外包项目结算进度管理bo
      * @des 增值税发票通报
      * @version v1
      */
@@ -259,7 +283,7 @@ public class OutsourProProgressManageAction {
     /**
      * 付款
      *
-     * @param outsourProProgressManageTO 外包,半外包项目结算进度管理bo
+     * @param outsourProProgressManageTO 外包半外包项目结算进度管理bo
      * @des 付款
      * @version v1
      */
@@ -277,7 +301,7 @@ public class OutsourProProgressManageAction {
     /**
      * 进度确认
      *
-     * @param outsourProProgressManageTO 外包,半外包项目结算进度管理bo
+     * @param outsourProProgressManageTO 外包半外包项目结算进度管理bo
      * @des 进度确认
      * @version v1
      */

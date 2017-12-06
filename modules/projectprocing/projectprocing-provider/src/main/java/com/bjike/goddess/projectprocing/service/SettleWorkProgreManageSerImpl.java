@@ -162,6 +162,97 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
         }
         list.add(obj);
 
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagHeadCust = headersCustomSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("headerscustom");
+        obj.setDescribesion("自定义表头设置");
+        if (flagHeadCust) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagNodeHeadCust = nodeHeadersCustomSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("nodeheaderscustom");
+        obj.setDescribesion("自定义节点表头设置");
+        if (flagNodeHeadCust) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagNotiForm = notificationFormulaSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("notificationfFormula");
+        obj.setDescribesion("通报机制制定");
+        if (flagNotiForm) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagOutProgress = outsourProProgressManageSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("outsourproprogressmanage");
+        obj.setDescribesion("通报机制制定");
+        if (flagOutProgress) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSettProcess = settlementProcessSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("settlementprocess");
+        obj.setDescribesion("结算流程存储记录");
+        if (flagSettProcess) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSettManage = settleProgressManageSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("settleprogressmanage");
+        obj.setDescribesion("结算进度管理");
+        if (flagSettManage) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSettRecord = settleProgressRecordSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("settleprogressrecord");
+        obj.setDescribesion("结算进度调整记录&结算问题汇总");
+        if (flagSettRecord) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
         return list;
     }
 
@@ -210,6 +301,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
 
     @Override
     public List<SettleWorkProgreManageBO> listSettleWork(SettleWorkProgreManageDTO settleWorkProgreManageDTO) throws SerException {
+       checkPermission();
         seachCondi(settleWorkProgreManageDTO);
         List<SettleWorkProgreManage> settleWorkProgreManageList = super.findByCis(settleWorkProgreManageDTO, true);
         return BeanTransform.copyProperties(settleWorkProgreManageList, SettleWorkProgreManageBO.class);
@@ -230,6 +322,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SettleWorkProgreManageBO addSettleWork(SettleWorkProgreManageTO settleWorkProgreManageTO) throws SerException {
+       checkPermission();
         SettleWorkProgreManage settleWorkProgreManage = BeanTransform.copyProperties(settleWorkProgreManageTO, SettleWorkProgreManage.class, true);
         settleWorkProgreManage.setCreateTime(LocalDateTime.now());
         super.save(settleWorkProgreManage);
@@ -247,6 +340,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteSettleWork(String id) throws SerException {
+        checkPermission();
         super.remove(id);
     }
 
@@ -276,10 +370,14 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
     @Override
     public void fullFinishStatus(CompletionStatusTO completionStatusTO) throws SerException {
         SettleWorkProgreManage settleWorkProgreManage = super.findById(completionStatusTO.getId());
-        SettleProgressManageBO settleProgressManageBO = settleProgressManageSer.findByContractNo(settleWorkProgreManage.getContractNo());
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
+        if(!settleWorkProgreManage.getResponsible().equals(userBO.getUsername())){
+            throw new SerException("您不是责任人,没有权限进行填写完成任务");
+        }
+        SettleProgressManageBO settleProgressManageBO = settleProgressManageSer.findByContractNo(settleWorkProgreManage.getContractNo());
+
         if (!completionStatusTO.getComplete()) {
             checkUpdateZD(settleWorkProgreManage, completionStatusTO.getDateTime());//修改节点数据
             //添加至结算进度调整记录&结算问题汇总表中
@@ -346,6 +444,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
 
     @Override
     public PersonalTasksSummBO personalSummDay(String summDate) throws SerException {
+//        checkPermission();
         if (StringUtils.isBlank(summDate)) {
             summDate = LocalDate.now().toString();
         }
