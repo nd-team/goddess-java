@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.vo;
 
+import com.bjike.goddess.marketdevelopment.enums.Status;
+
 /**
  * 日计划表现层对象
  *
@@ -113,7 +115,7 @@ public class PlanDayVO {
     /**
      * 推荐的拜访时间
      */
-    private LocalDateTime visitTime;
+    private String visitTime;
 
     /**
      * 是否需要外出
@@ -123,12 +125,12 @@ public class PlanDayVO {
     /**
      * 计划日期
      */
-    private LocalDate planTime;
+    private String planTime;
 
     /**
      * 实际日期
      */
-    private LocalDate actualTime;
+    private String actualTime;
 
     /**
      * 是否进行
@@ -366,11 +368,11 @@ public class PlanDayVO {
         this.internalProject = internalProject;
     }
 
-    public LocalDateTime getVisitTime() {
+    public String getVisitTime() {
         return visitTime;
     }
 
-    public void setVisitTime(LocalDateTime visitTime) {
+    public void setVisitTime(String visitTime) {
         this.visitTime = visitTime;
     }
 
@@ -382,19 +384,19 @@ public class PlanDayVO {
         this.needOut = needOut;
     }
 
-    public LocalDate getPlanTime() {
+    public String getPlanTime() {
         return planTime;
     }
 
-    public void setPlanTime(LocalDate planTime) {
+    public void setPlanTime(String planTime) {
         this.planTime = planTime;
     }
 
-    public LocalDate getActualTime() {
+    public String getActualTime() {
         return actualTime;
     }
 
-    public void setActualTime(LocalDate actualTime) {
+    public void setActualTime(String actualTime) {
         this.actualTime = actualTime;
     }
 

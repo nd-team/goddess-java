@@ -174,6 +174,22 @@ public class ReimburseRecordAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 报销列表总条数(phone)
+     *
+     * @param reimburseRecordDTO 申请报销信息dto
+     * @des 获取所有申请报销信息总条数
+     * @version v1
+     */
+    @GetMapping("v1/counts")
+    public Result counts(ReimburseRecordDTO reimburseRecordDTO) throws ActException {
+        try {
+            Long count = reimburseRecordAPI.countReimburseRecords(reimburseRecordDTO);
+            return ActResult.initialize(count);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 申请报销列表
@@ -951,7 +967,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     @GetMapping("v1/listSecondSubject/{code}")
     public Result listSecondByCode(@PathVariable String code ) throws ActException {
         try {
-            List<String> list = accountanCourseAPI.findSecondName( code );
+            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName( code );
 
             return ActResult.initialize(list);
         } catch (SerException e) {
@@ -961,13 +977,13 @@ public class ReimburseRecordAction extends BaseFileAction {
     /**
      * 获取所有三级科目
      *
-     * @des 根据一级科目的代码获取所有三级科目
+     * @des 根据二级科目的代码获取所有三级科目
      * @version v1
      */
     @GetMapping("v1/listThirdSubject/{code}")
     public Result listThirdByCode(@PathVariable String code ) throws ActException {
         try {
-            List<String> list = accountanCourseAPI.findThirdName( code );
+            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName( code );
 
             return ActResult.initialize(list);
         } catch (SerException e) {

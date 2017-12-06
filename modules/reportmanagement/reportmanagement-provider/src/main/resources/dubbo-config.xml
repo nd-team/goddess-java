@@ -17,6 +17,7 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.AssetAPI" ref="assetApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.DataAPI" ref="dataApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.AssetDebtAPI" ref="assetDebtApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.AssetStructureAdviceAPI" ref="assetStructureAdviceApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.reportmanagement.api.DebtAPI" ref="debtApiImpl"/>
