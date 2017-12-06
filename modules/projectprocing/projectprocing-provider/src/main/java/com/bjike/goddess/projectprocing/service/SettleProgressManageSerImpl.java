@@ -991,7 +991,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public List<SettleProgressSummBO> settleProgress(String area, String outUnit) throws SerException {
-        checkPermission();
+//        checkPermission();
         List<String> areas = findArea();
         if (StringUtils.isNotBlank(area)) {
             areas = new ArrayList<>();

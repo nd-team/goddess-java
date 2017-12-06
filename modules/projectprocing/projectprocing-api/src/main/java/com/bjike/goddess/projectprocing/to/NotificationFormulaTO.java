@@ -3,12 +3,10 @@ package com.bjike.goddess.projectprocing.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.projectprocing.entity.SendFrequency;
+import com.bjike.goddess.projectprocing.enums.SendFrequency;
 import com.bjike.goddess.projectprocing.enums.SummTableName;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.List;
 
 /**

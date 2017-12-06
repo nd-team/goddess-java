@@ -197,8 +197,9 @@ public class SettlementProcessSerImpl extends ServiceImpl<SettlementProcess, Set
     public void updateSettProceAttach(String id) throws SerException {
         SettlementProcess settlementProcess = super.findById(id);
         if (settlementProcess != null) {
-            if (!settlementProcess.getSettProceAttach()) {
+            if (settlementProcess.getSettProceAttach()==null || !settlementProcess.getSettProceAttach()) {
                 settlementProcess.setSettProceAttach(true);
+                settlementProcess.setModifyTime(LocalDateTime.now());
                 super.update(settlementProcess);
             }
         }

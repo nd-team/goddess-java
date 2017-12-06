@@ -1,10 +1,8 @@
 package com.bjike.goddess.projectprocing.vo;
 
 import com.bjike.goddess.common.api.type.Status;
-import com.bjike.goddess.projectprocing.entity.SendFrequency;
+import com.bjike.goddess.projectprocing.enums.SendFrequency;
 import com.bjike.goddess.projectprocing.enums.SummTableName;
-
-import java.time.LocalDate;
 
 /**
  * 通报机制制定表现层对象

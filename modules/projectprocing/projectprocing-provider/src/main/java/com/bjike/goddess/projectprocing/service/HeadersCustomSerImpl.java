@@ -144,7 +144,7 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
     @Override
     public HeadersCustomBO addHeaders(HeadersCustomTO headersCustomTO) throws SerException {
         checkPermission();
-        HeadersCustom headersCustom = BeanTransform.copyProperties(headersCustomTO, HeadersCustomBO.class, true);
+        HeadersCustom headersCustom = BeanTransform.copyProperties(headersCustomTO, HeadersCustom.class, true);
         headersCustom.setCreateTime(LocalDateTime.now());
         super.save(headersCustom);
         return BeanTransform.copyProperties(headersCustom, HeadersCustomBO.class);

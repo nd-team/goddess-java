@@ -208,7 +208,7 @@ public class NotificationFormulaSerImpl extends ServiceImpl<NotificationFormula,
 
     @Override
     public NotificationFormulaBO editCollectEmail(NotificationFormulaTO notificationFormulaTO) throws SerException {
-       checkPermission();
+        checkPermission();
         List<String> sendObjectList = new ArrayList<>();
         if (notificationFormulaTO.getSendSectoral() == null || !notificationFormulaTO.getSendSectoral()) {
             sendObjectList = notificationFormulaTO.getSendObjects();
@@ -249,7 +249,7 @@ public class NotificationFormulaSerImpl extends ServiceImpl<NotificationFormula,
 
     @Override
     public void deleteCollectEmail(String id) throws SerException {
-       checkPermission();
+        checkPermission();
         super.remove(id);
     }
 
@@ -263,7 +263,7 @@ public class NotificationFormulaSerImpl extends ServiceImpl<NotificationFormula,
 
     @Override
     public void thawCollectEmail(String id) throws SerException {
-       checkPermission();
+        checkPermission();
         NotificationFormula notificationFormula = super.findById(id);
         notificationFormula.setStatus(Status.THAW);
         super.update(notificationFormula);
@@ -279,9 +279,9 @@ public class NotificationFormulaSerImpl extends ServiceImpl<NotificationFormula,
                 switch (notificationFormula.getSendFrequency()) {
                     case EVERYDAY:
                         LocalDateTime sendTimeNode = notificationFormula.getSendTimeNode();
-//                        if (sendTimeNode.getHour() == LocalDateTime.now().getHour() && sendTimeNode.getMinute() == LocalDateTime.now().getMinute()) {
-                        sendEmail(notificationFormula);
-//                        }
+                        if (sendTimeNode.getHour() == LocalDateTime.now().getHour() && sendTimeNode.getMinute() == LocalDateTime.now().getMinute()) {
+                            sendEmail(notificationFormula);
+                        }
                         break;
                     case EVERYWEEK:
                         if (notificationFormula.getSendTimeNode().getDayOfWeek().getValue() == LocalDate.now().getDayOfWeek().getValue()) {
@@ -317,7 +317,7 @@ public class NotificationFormulaSerImpl extends ServiceImpl<NotificationFormula,
         if (StringUtils.isNotBlank(notificationFormula.getSendObject())) {
             MessageTO messageTO = new MessageTO();
             messageTO.setContent(content);
-            messageTO.setTitle("定时发送拜访日程表");
+            messageTO.setTitle("定时发送项目结算验收签字汇总");
             messageTO.setMsgType(MsgType.SYS);
             messageTO.setSendType(SendType.EMAIL);
 //        messageTO.setRangeType(RangeType.SPECIFIED);
@@ -432,39 +432,91 @@ public class NotificationFormulaSerImpl extends ServiceImpl<NotificationFormula,
             //结算进度汇总模板
             List<SettleProgressSummBO> settleProgressSummBOList = settleProgressManageSer.settleProgress(null, null);
             sb = new StringBuffer("<h4>结算进度汇总模板:</h4>");
-            sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+            sb.append("<table width=\"2500px\" border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
 
             sb.append("<tr>");
-            sb.append("<td>地区</td>");
-            sb.append("<td>统计</td>");
-            sb.append("<td>外包单位</td>");
-            sb.append("<td>总计</td>");
-            sb.append("<td>派工情况</td>");
-            sb.append("<td>汇总</td>");
-            sb.append("<td>完工状态</td>");
-            sb.append("<td>合计</td>");
-            sb.append("<td>验收情况</td>");
-            sb.append("<td>计数</td>");
+            sb.append("<td width=\"3%\">地区</td>");
+            sb.append("<td width=\"3%\">统计</td>");
+            sb.append("<td width=\"6%\">外包单位</td>");
+            sb.append("<td width=\"6%\">总计</td>");
+            sb.append("<td width=\"6%\">派工情况</td>");
+            sb.append("<td width=\"6%\">汇总</td>");
+            sb.append("<td width=\"6%\">完工状态</td>");
+            sb.append("<td width=\"6%\">合计</td>");
+            sb.append("<td width=\"6%\">验收情况</td>");
+            sb.append("<td width=\"6%\">计数</td>");
 
             sb.append("</tr>");
 
             //拼body部分
             if (settleProgressSummBOList != null && settleProgressSummBOList.size() > 0) {
-                for (SettleProgressSummBO settleProgressSummBO : settleProgressSummBOList) {
-                    sb.append("<tr>");
-                    sb.append("<td rowspan=\"" + settleProgressSummBO.getOutUnitSummBOS().size() + "\">" + settleProgressSummBO.getArea() + "</td>");
-                    sb.append("<td rowspan=\"" + settleProgressSummBO.getOutUnitSummBOS().size() + "\">" + settleProgressSummBO.getAreaStatistics() + "</td>");
-                    sb.append("<td>");
-                    for (OutUnitSummBO outUnitSummBO : settleProgressSummBO.getOutUnitSummBOS()) {
-                        sb.append("<tr>");
-                        sb.append("<td>" + outUnitSummBO.getOutUnit() + "</td>");
-                        sb.append("<td>" + outUnitSummBO.getOutUnitTotal() + "</td>");
-                        sb.append("</tr>");
+                Boolean i = true;
+                for (int a = 0; a < settleProgressSummBOList.size(); a++) {
+                    Boolean j = true;
+                    Boolean s = true;
+                    List<OutUnitSummBO> outUnitSummBOList = settleProgressSummBOList.get(a).getOutUnitSummBOS();
+                    for (int b = 0; b < outUnitSummBOList.size(); b++) {
+                        Boolean k = true;
+                        List<DispatchingConditionBO> dispatchingConditionBOList = outUnitSummBOList.get(b).getDispatchingConditionBOS();
+                        List<NodeDataBO> nodeDataBOList = outUnitSummBOList.get(b).getNodeDataBOS();
+                        for (int c = 0; c < dispatchingConditionBOList.size(); c++) {
+                            Boolean l = true;
+                            List<CompletionStateBO> completionStateBOList = dispatchingConditionBOList.get(c).getCompletionStateBOS();
+                            for (int d = 0; d < completionStateBOList.size(); d++) {
+                                List<AcceptSituationBO> acceptSituationBOList = completionStateBOList.get(d).getAcceptSituationBOS();
+                                for (int e = 0; e < 6; e++) {
+                                    sb.append("<tr>");
+                                    if (i) {
+                                        i = false;
+                                        sb.append("<td  rowspan=\"" + settleProgressSummBOList.get(a).getOutUnitSummBOS().size() * 2 * 2 * 6 + "\">" + settleProgressSummBOList.get(a).getArea() + "</td>");
+                                        sb.append("<td  rowspan=\"" + settleProgressSummBOList.get(a).getOutUnitSummBOS().size() * 2 * 2 * 6 + "\">" + settleProgressSummBOList.get(a).getAreaStatistics() + "</td>");
+                                    }
+                                    if (j) {
+                                        j = false;
+                                        sb.append("<td  rowspan=\"" + 2 * 2 * 6 + "\">" + outUnitSummBOList.get(b).getOutUnit() + "</td>");
+                                        sb.append("<td  rowspan=\"" + 2 * 2 * 6 + "\">" + outUnitSummBOList.get(b).getOutUnitTotal() + "</td>");
+                                    }
+                                    if (k) {
+                                        k = false;
+                                        sb.append("<td  rowspan=\"" + 2 * 6 + "\">" + dispatchingConditionBOList.get(c).getCompletedAmount() + "</td>");
+                                        sb.append("<td  rowspan=\"" + 2 * 6 + "\">" + dispatchingConditionBOList.get(c).getCompletedAmountTot() + "</td>");
+                                    }
+                                    if (l) {
+                                        l = false;
+                                        sb.append("<td  rowspan=\"" + 6 + "\">" + completionStateBOList.get(d).getCompletedAmount() + "</td>");
+                                        sb.append("<td  rowspan=\"" + 6 + "\">" + completionStateBOList.get(d).getCompletedAmountTot() + "</td>");
+                                    }
+                                    if (acceptSituationBOList != null && acceptSituationBOList.size() > 0) {
+                                        sb.append("<td >" + acceptSituationBOList.get(e).getCompletedAmount() + "</td>");
+                                        sb.append("<td >" + acceptSituationBOList.get(e).getCompletedAmountCount() + "</td>");
+                                        if (nodeDataBOList != null && nodeDataBOList.size() > 0) {
+                                            if (s && e == 5) {
+                                                s = false;
+                                                for (NodeDataBO nodeDataBO : nodeDataBOList) {
+                                                    sb.append("<td >" + nodeDataBO.getNode() + "</td>");
+                                                    sb.append("<td >" + (nodeDataBO.getNodeAmount() == null ? "" : nodeDataBO.getNodeAmount()) + "</td>");
+                                                }
+                                            }
+                                        }
+                                        sb.append("</tr>");
+                                    } else {
+                                        if (e == 0) {
+                                            sb.append("<td colspan=\"2\" rowspan=\"6\"></td>");
+                                        }
+                                    }
+                                }
+                                l = true;
+                            }
+                            k = true;
+                        }
+                        j = true;
+                        s = true;
                     }
-                    sb.append("</td>");
-                    sb.append("</tr>");
+                    i = true;
                 }
             }
+            //结束
+            sb.append("</table>");
         }
 
         return sb.toString();
