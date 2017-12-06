@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -109,7 +110,7 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -145,7 +146,7 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
         } else {
             flag = true;
         }
@@ -472,8 +473,11 @@ public class RecommendSchemeSerImpl extends ServiceImpl<RecommendScheme, Recomme
 
     @Override
     public Set<String> findPosition() throws SerException {
-        List<InterviewInforBO> boList = interviewInforAPI.findInterview();
-        Set<String> strings=boList.stream().map(interviewInforBO -> interviewInforBO.getPosition()).collect(Collectors.toSet());
+        List<InterviewInforBO> boList = interviewInforAPI.findInterview ();
+        Set<String> strings = new HashSet<>();
+        if (boList.size () > 0 && boList != null) {
+            strings = boList.stream ().map ( interviewInforBO -> interviewInforBO.getPosition () ).collect ( Collectors.toSet () );
+        }
         return strings;
     }
 }

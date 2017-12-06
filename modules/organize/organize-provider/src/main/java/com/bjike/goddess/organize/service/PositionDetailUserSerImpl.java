@@ -698,6 +698,9 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public Boolean isMarker(String userId) throws SerException {
+        if (StringUtils.isBlank(userId)) {
+            return false;
+        }
         Boolean tar = false;
         String[] fildes = new String[]{"id"};
 //        userId = "3348a9a1-bfcb-4799-8d43-834e13c55bf2";
@@ -913,8 +916,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         List<Object> nameBOS = super.findBySql(sql);
         List<String> strs = new ArrayList<>();
         if (nameBOS != null) {
-            for(Object o:nameBOS){
-                Object[] obj = (Object[])o;
+            for (Object o : nameBOS) {
+                Object[] obj = (Object[]) o;
                 strs.add((String) obj[0]);
             }
         }

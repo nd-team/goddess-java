@@ -142,6 +142,23 @@ public interface AccountanCourseAPI {
     default List<String> findSendNameByCode(String code) throws SerException{
         return null;
     }
+
+    /**
+     * 根据一级科目代码获取二级科目名称
+     * zhuangkaiqin
+     */
+    default List<String> findSecondName(String code) throws SerException{
+        return null;
+    }
+
+    /**
+     * 根据二级科目代码获取三级科目
+     * zhuangkaiqin
+     */
+    default List<String> findThirdName( String secondCode) throws SerException{
+        return null;
+    }
+
     /**
      * 根据一级科目代码获取三级会计科目名称
      * @param code

@@ -1,50 +1,13 @@
-模块名:contractcommunicat
-类名:BusinessNegotiation
-作者:xiazhili
-描述:商务洽谈
+模块名:marketdevelopment
+类名:WeekFiles
+作者:zhuangkaiqin
+描述:周计划的表头数据
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
-String marketNum 市场编号;
-String projectNum 内部项目编号;
-String innerProject 内部项目名称;
-String businessType 业务类型;
-String area 地区;
-String department 项目组/部门;
-String problemNum 问题受理编号(对内);
-String problemBelong 问题归属;
-Integer source 洽谈轮次;
-String source 计划洽谈时间;
-String source 实际洽谈时间;
-String source 洽谈人;
-String source 记录人;
-String source 客户编号;
-String source 洽谈公司;
+String weekCycleId 周计划的周期id;
+Integer index 表头下标;
+String table 表头;
+String context 内容;
+String fatherId 父级id;
 )
-					字段名称_16:洽谈对象
-					字段名称_17:洽谈方式
-					字段名称_18:洽谈地点
-					字段名称_19:问题归类
-					字段名称_20:洽谈内容
-					字段名称_21:洽谈目的
-					字段名称_22:是否有洽谈准备
-					字段名称_23:涉及金额
-					字段名称_24:是否洽谈
-					字段名称_25:洽谈结果
-					字段名称_26:是否达到洽谈目的
-					字段名称_27:是否有洽谈到其他问题
-					字段名称_28:话题记录
-					字段名称_29:是否有录音
-					字段名称_30:是否转入合同管理-已立项
-					字段名称_31:是否转入合同管理-市场费用
-					字段名称_32:是否转换市场招待
-					字段名称_33:是否持续跟进
-					字段名称_34:是否闭环
-					字段名称_35:是否需要协助
-					字段名称_36:需协助部门
-					字段名称_37:协助内容
-					字段名称_38:是否已发协助函
-					字段名称_39:协助函单号
-					字段名称_40:计划跟进时间
-					字段名称_41:是否产生路费
-					字段名称_42:路费

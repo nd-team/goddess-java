@@ -28,7 +28,7 @@ public enum DataType {
     /**
      * 本季度年任务汇总
      */
-    THISquarter(4),
+    THISQUARTER(4),
     /**
      * 本年任务汇总
      */

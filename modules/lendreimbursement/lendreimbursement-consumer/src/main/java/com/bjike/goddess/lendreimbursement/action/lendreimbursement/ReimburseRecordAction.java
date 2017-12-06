@@ -174,6 +174,7 @@ public class ReimburseRecordAction extends BaseFileAction {
         }
     }
 
+
     /**
      * 申请报销列表
      *
@@ -950,7 +951,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     @GetMapping("v1/listSecondSubject/{code}")
     public Result listSecondByCode(@PathVariable String code ) throws ActException {
         try {
-            List<String> list = accountanCourseAPI.findSendNameByCode( code );
+            List<String> list = accountanCourseAPI.findSecondName( code );
 
             return ActResult.initialize(list);
         } catch (SerException e) {
@@ -966,7 +967,7 @@ public class ReimburseRecordAction extends BaseFileAction {
     @GetMapping("v1/listThirdSubject/{code}")
     public Result listThirdByCode(@PathVariable String code ) throws ActException {
         try {
-            List<String> list = accountanCourseAPI.findThirdNameByCode( code );
+            List<String> list = accountanCourseAPI.findThirdName( code );
 
             return ActResult.initialize(list);
         } catch (SerException e) {

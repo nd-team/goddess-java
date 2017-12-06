@@ -166,8 +166,8 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         entity.setGetTime(LocalDateTime.now());
         entity.setFather(father);
         entity.setEventStatus(EventStatus.NOSEENODEAL);
-        entity.setYear(entity.getRequestTime().getYear());
-        entity.setYear(entity.getRequestTime().getMonthValue());
+        entity.setYear(LocalDateTime.now().getYear());
+        entity.setMonth(LocalDateTime.now().getMonthValue());
         super.save(entity);
         return BeanTransform.copyProperties(entity, EventBO.class);
     }

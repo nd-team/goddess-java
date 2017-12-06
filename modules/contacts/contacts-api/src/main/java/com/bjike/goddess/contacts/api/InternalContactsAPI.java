@@ -319,4 +319,5 @@ public interface InternalContactsAPI {
     default List<MobileSearchBO> mobileSearch(SearchDTO dto) throws SerException {
         return null;
     }
+
 }

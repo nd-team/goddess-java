@@ -553,6 +553,8 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
 
     @Override
     public List<String> listInnerProject() throws SerException {
+
+
         String[] fields = new String[]{"innerProject"};
         List<SiginManageBO> siginManageBOS = super.findBySql("select innerProject from businessproject_siginmanage group by innerProject order by innerProject asc ", SiginManageBO.class, fields);
 

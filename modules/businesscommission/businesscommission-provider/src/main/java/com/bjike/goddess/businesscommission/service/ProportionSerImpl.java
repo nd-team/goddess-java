@@ -134,9 +134,9 @@ public class ProportionSerImpl extends ServiceImpl<Proportion, ProportionDTO> im
     @Transactional
     @Override
     public void editProportion(ProportionTO to) throws SerException {
-        if (isExist(to.getProjectName())) {
-            throw new SerException("该项目名称已存在");
-        }
+//        if (isExist(to.getProjectName())) {
+//            throw new SerException("该项目名称已存在");
+//        }
         Proportion entity = super.findById(to.getId());
         if (null == entity) {
             throw new SerException("目标数据为空");

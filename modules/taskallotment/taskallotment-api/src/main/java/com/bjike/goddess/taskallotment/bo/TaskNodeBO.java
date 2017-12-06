@@ -140,6 +140,11 @@ public class TaskNodeBO extends BaseBO {
     private String executeTime;
 
     /**
+     * 任务创建时间
+     */
+    private String createTime;
+
+    /**
      * 开始执行时间
      */
     private String startExecute;
@@ -259,6 +264,19 @@ public class TaskNodeBO extends BaseBO {
      * 问题信息
      */
     private List<QuestionBO> questions;
+
+    /**
+     * 图片路径
+     */
+    private List<String> photos;
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
 
     public String getArea() {
         return area;
@@ -706,5 +724,13 @@ public class TaskNodeBO extends BaseBO {
 
     public void setQuestions(List<QuestionBO> questions) {
         this.questions = questions;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

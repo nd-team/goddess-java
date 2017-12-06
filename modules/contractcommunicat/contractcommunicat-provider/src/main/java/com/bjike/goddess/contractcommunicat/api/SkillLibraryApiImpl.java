@@ -1,6 +1,7 @@
 package com.bjike.goddess.contractcommunicat.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.contractcommunicat.bo.HistoryAppraiseBO;
 import com.bjike.goddess.contractcommunicat.bo.SkillLibraryBO;
 import com.bjike.goddess.contractcommunicat.dto.SkillLibraryDTO;
 import com.bjike.goddess.contractcommunicat.service.SkillLibrarySer;
@@ -66,7 +67,12 @@ public class SkillLibraryApiImpl implements SkillLibraryAPI {
     }
 
     @Override
-    public void appraise(SkillLibraryTO to) throws SerException {
-        skillLibrarySer.appraise(to);
+    public SkillLibraryBO appraise(SkillLibraryTO to) throws SerException {
+        return skillLibrarySer.appraise(to);
+    }
+
+    @Override
+    public List<HistoryAppraiseBO> historyAppraise(String id) throws SerException {
+        return skillLibrarySer.historyAppraise(id);
     }
 }

@@ -595,4 +595,9 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
         return businessContractSer.findBySingleNum(singleNum);
     }
+
+    @Override
+    public List<String> findMarkNum() throws SerException {
+        return businessContractSer.findMarkNum();
+    }
 }

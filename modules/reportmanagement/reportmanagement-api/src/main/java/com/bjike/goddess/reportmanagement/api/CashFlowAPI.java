@@ -1,5 +1,8 @@
 package com.bjike.goddess.reportmanagement.api;
 
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
+
 /**
 * 现金流量表业务接口
 * @Author:			[ zhuangkaiqin ]
@@ -8,6 +11,19 @@ package com.bjike.goddess.reportmanagement.api;
 * @Version:		[ v1.0.0 ]
 * @Copy:   		[ com.bjike ]
 */
-public interface CashFlowAPI  { 
+public interface CashFlowAPI  {
 
- }
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+}

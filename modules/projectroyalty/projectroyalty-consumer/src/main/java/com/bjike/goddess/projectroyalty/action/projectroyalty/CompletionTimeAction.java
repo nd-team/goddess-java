@@ -170,4 +170,18 @@ public class CompletionTimeAction {
         }
     }
 
+    /**
+     * 根据完工时间获取重要性
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findImportain")
+    public Result findImportain(@RequestParam Integer month) throws ActException {
+        try {
+            return ActResult.initialize(completionTimeAPI.findImportain(month));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

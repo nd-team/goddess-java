@@ -1,6 +1,5 @@
 package com.bjike.goddess.supplier.service;
 
-import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;

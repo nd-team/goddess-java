@@ -15,7 +15,7 @@ public class JapiTest {
 
     public static void main(String[] args) {
 //        JapiClient.delete(true);
-        JapiClient.setPrefixPath("/media/data4/jzx/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
 
         JapiClient.setProjectJavaPath("modules/salarymanage/salarymanage-consumer");//主项目位置

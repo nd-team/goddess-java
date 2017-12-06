@@ -82,7 +82,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -101,7 +101,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -120,7 +120,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -137,7 +137,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -147,17 +147,27 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
+        Boolean flag1 = false;
+        Boolean flag2 = false;
+
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeInfo = guideSeeIdentity();
+        UserBO userBO  = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddInfo = guideAddIdentity();
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag1 = cusPermissionSer.getCusPermission("1",userBO);
+            flag2 = cusPermissionSer.getCusPermission("2",userBO);
+        } else {
+            flag1 = true;
+            flag2 = true;
+        }
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("problemfeedback");
         obj.setDescribesion("问题反馈模块");
-        if (flagSeeInfo || flagAddInfo) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -165,49 +175,40 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         list.add(obj);
 
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeAnswer = receivedFeedbackSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("receivedfeedback");
         obj.setDescribesion("已受理的反馈");
-        if (flagSeeAnswer) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeWeb = problemResultSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("problemresult");
         obj.setDescribesion("问题处理结果");
-        if (flagSeeWeb) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeConnect = connectSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("connect");
         obj.setDescribesion("各类沟通模板");
-        if (flagSeeConnect) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeCode = problemCodeRuleSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("problemcoderule");
         obj.setDescribesion("问题编码规则");
-        if (flagSeeCode) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

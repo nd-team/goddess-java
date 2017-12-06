@@ -7,7 +7,7 @@ import com.bjike.goddess.projectroyalty.dto.WeightalsDTO;
 import com.bjike.goddess.projectroyalty.enums.Type;
 import com.bjike.goddess.projectroyalty.service.WeightalsSer;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
-import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
+import com.bjike.goddess.projectroyalty.to.WeightalAdjustsTO;
 import com.bjike.goddess.projectroyalty.to.WeightalsTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,8 +59,8 @@ public class WeightalsApiImpl implements WeightalsAPI {
     }
 
     @Override
-    public void adjust(WeightalAdjustTO to) throws SerException {
-        weightalsSer.adjust(to);
+    public void adjust(WeightalAdjustsTO tos) throws SerException {
+        weightalsSer.adjust(tos);
     }
 
     @Override

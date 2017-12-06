@@ -295,6 +295,27 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     }
 
     @Override
+    public void updatePhone(UserTO userTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
+        if( null== userBO ){
+            throw new SerException("不存在该用户");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+        User user = super.findById( userBO.getId() );
+        if( null == user){
+            throw new SerException("该用户不存在");
+        }
+        try {
+            user.setPhone (userTO.getPhone ());
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+        super.update( user );
+    }
+
+    @Override
     public List<UserBO> findByGroup(String... groups) throws SerException {
         UserDetailDTO detailDTO = new UserDetailDTO();
         detailDTO.getConditions().add(Restrict.in("group.id", groups));

@@ -221,6 +221,7 @@ public class InvoiceReceiveSerImpl extends ServiceImpl<InvoiceReceive, InvoiceRe
             invoiceReceive = BeanTransform.copyProperties(to, InvoiceReceive.class, true);
             invoiceReceive.setCreateTime(createTime);
             invoiceReceive.setModifyTime(LocalDateTime.now());
+            super.update(invoiceReceive);
             InvoiceReceiveBO bo = BeanTransform.copyProperties(invoiceReceive, InvoiceReceiveBO.class);
             return bo;
         } else {

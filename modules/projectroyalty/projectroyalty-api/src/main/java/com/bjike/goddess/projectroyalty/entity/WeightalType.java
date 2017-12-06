@@ -210,7 +210,7 @@ public class WeightalType extends BaseEntity {
     /**
      * 备注
      */
-    @Column(name = "remark", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
+    @Column(name = "remark", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
 

@@ -6,7 +6,7 @@ import com.bjike.goddess.projectroyalty.bo.WeightalsBO;
 import com.bjike.goddess.projectroyalty.dto.WeightalsDTO;
 import com.bjike.goddess.projectroyalty.enums.Type;
 import com.bjike.goddess.projectroyalty.to.GuidePermissionTO;
-import com.bjike.goddess.projectroyalty.to.WeightalAdjustTO;
+import com.bjike.goddess.projectroyalty.to.WeightalAdjustsTO;
 import com.bjike.goddess.projectroyalty.to.WeightalsTO;
 
 import java.util.List;
@@ -88,10 +88,10 @@ public interface WeightalsAPI {
     /**
      * 比例调整
      *
-     * @param to
+     * @param tos
      * @throws SerException
      */
-    default void adjust(WeightalAdjustTO to) throws SerException {
+    default void adjust(WeightalAdjustsTO tos) throws SerException {
         return;
     }
 

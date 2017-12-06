@@ -19,6 +19,11 @@ import javax.validation.constraints.NotNull;
 public class WeightalAdjustTO extends BaseTO {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 类型
      */
     @NotNull(message = "类型不能为空", groups = {ADD.class, EDIT.class})
@@ -88,5 +93,15 @@ public class WeightalAdjustTO extends BaseTO {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 }
