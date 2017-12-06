@@ -50,6 +50,19 @@ public class BusinessContractDTO extends BaseDTO {
      */
     private String[] areas;
 
+    /**
+     * 内部合同编号
+     */
+    private String internalContractNum;
+
+    public String getInternalContractNum() {
+        return internalContractNum;
+    }
+
+    public void setInternalContractNum(String internalContractNum) {
+        this.internalContractNum = internalContractNum;
+    }
+
     public String[] getAreas() {
         return areas;
     }

@@ -1266,6 +1266,38 @@ public interface BusinessContractAPI {
     }
 
     /**
+     * 获取所有所属项目组
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProjectGroup() throws SerException { return null;}
+
+    /**
+     * 根据所属项目组获取所有内部项目名称
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    default List<String> findInnerProject(String projcetGroup) throws SerException { return null;}
+
+    /**
+     * 根据内部项目名称获取所有内部合同编号
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    default List<String> findInternalContractNum(String innerProject) throws SerException { return null;}
+
+    /**
+     * 根据内部合同编号获取立项情况
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    Set<String> findMakeContract(String internalContractNum) throws SerException;
+
+    /**
      * 根据单次合同名获取单次合同编号
      * lijuntao
      *

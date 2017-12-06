@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.bo;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
@@ -107,7 +108,7 @@ public class BusinessContractsBO extends BaseBO {
     /**
      * 是否有合同派工合同
      */
-    private Boolean taskContract;
+    private TaskContract taskContract;
 
     /**
      * 市场编号
@@ -532,14 +533,6 @@ public class BusinessContractsBO extends BaseBO {
 
     public void setMajor(String major) {
         this.major = major;
-    }
-
-    public Boolean getTaskContract() {
-        return taskContract;
-    }
-
-    public void setTaskContract(Boolean taskContract) {
-        this.taskContract = taskContract;
     }
 
     public String getMarketNum() {
@@ -988,5 +981,13 @@ public class BusinessContractsBO extends BaseBO {
 
     public void setStorageLocation(String storageLocation) {
         this.storageLocation = storageLocation;
+    }
+
+    public TaskContract getTaskContract() {
+        return taskContract;
+    }
+
+    public void setTaskContract(TaskContract taskContract) {
+        this.taskContract = taskContract;
     }
 }

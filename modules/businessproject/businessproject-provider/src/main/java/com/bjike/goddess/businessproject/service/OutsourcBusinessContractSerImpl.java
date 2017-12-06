@@ -236,7 +236,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
                 //所属项目组
                 outsourcBusinessContract.setProjectGroup(businessContract.getProjectGroup());
                 //是否有合同派工
-                outsourcBusinessContract.setTaskContract(businessContract.getTaskContract());
+                outsourcBusinessContract.setTaskContract(businessContract.getTaskContract ( ));
                 //市场编号
                 outsourcBusinessContract.setMarketNum(businessContract.getMarketNum());
                 //类型

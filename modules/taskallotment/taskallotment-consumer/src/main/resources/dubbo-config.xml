@@ -37,6 +37,7 @@
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
 	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<dubbo:reference  validation="true" id="businessContracApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
 
 </beans>
 

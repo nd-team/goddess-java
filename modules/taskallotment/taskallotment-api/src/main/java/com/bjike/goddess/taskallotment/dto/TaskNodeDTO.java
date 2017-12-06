@@ -39,6 +39,9 @@ public class TaskNodeDTO extends BaseDTO {
     public interface EXPORT {
     }
 
+    public interface COUNTS {
+    }
+
     /**
      * 汇总类型
      */
@@ -46,17 +49,17 @@ public class TaskNodeDTO extends BaseDTO {
     /**
      * 汇总时间类型
      */
-    @NotNull(groups = {TaskNodeDTO.COUNT.class}, message = "汇总时间类型不能为空")
+    @NotNull(groups = {TaskNodeDTO.COUNTS.class}, message = "汇总时间类型不能为空")
     private DataType datatype;
     /**
      * 开始时间
      */
-    @NotBlank(groups = {TaskNodeDTO.COUNT.class, TaskNodeDTO.PERSON.class}, message = "开始时间不能为空")
+    @NotBlank(groups = {TaskNodeDTO.COUNT.class, TaskNodeDTO.PERSON.class,TaskNodeDTO.COUNTS.class}, message = "开始时间不能为空")
     private String startTime;
     /**
      * 结束时间
      */
-    @NotBlank(groups = {TaskNodeDTO.COUNT.class, TaskNodeDTO.PERSON.class}, message = "结束时间不能为空")
+    @NotBlank(groups = {TaskNodeDTO.COUNT.class, TaskNodeDTO.PERSON.class,TaskNodeDTO.COUNTS.class}, message = "结束时间不能为空")
     private String endTime;
     /**
      * 地区
