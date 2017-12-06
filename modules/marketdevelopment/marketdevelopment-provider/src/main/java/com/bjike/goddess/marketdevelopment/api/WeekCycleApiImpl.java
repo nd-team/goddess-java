@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekMonthMoneyBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekCycleDTO;
 import com.bjike.goddess.marketdevelopment.service.WeekCycleSer;
+import com.bjike.goddess.marketdevelopment.to.WeekCycleTO;
+import com.bjike.goddess.marketdevelopment.to.WeekCycleUpdateTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +27,15 @@ public class WeekCycleApiImpl implements WeekCycleAPI  {
     @Override
     public List<WeekMonthMoneyBO> maps(WeekCycleDTO dto) throws SerException {
         return weekCycleSer.maps(dto);
+    }
+
+    @Override
+    public void save(WeekCycleTO to) throws SerException {
+        weekCycleSer.save(to);
+    }
+
+    @Override
+    public void update(WeekCycleUpdateTO to) throws SerException {
+        weekCycleSer.update(to);
     }
 }

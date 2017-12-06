@@ -63,8 +63,8 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         }
 
         MonthMoneyDTO monthMoneyDTO = new MonthMoneyDTO();
-        monthMoneyDTO.getConditions().add(Restrict.eq("year",year));
-        monthMoneyDTO.getConditions().add(Restrict.eq("month",month));
+        monthMoneyDTO.getConditions().add(Restrict.eq("year", year));
+        monthMoneyDTO.getConditions().add(Restrict.eq("month", month));
         List<MonthMoney> monthMoneys = monthMoneySer.findByCis(monthMoneyDTO);
         List<MonthMoneyBO> monthMoneyBOs = new ArrayList<>(0);
         MonthMoneyBO monthMoneyBO = new MonthMoneyBO();
@@ -157,6 +157,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
             MonthMoney monthMoney1 = monthMoneys.get(0);
             BeanUtils.copyProperties(monthMoney, monthMoney1);
             monthMoney1.setModifyTime(LocalDateTime.now());
+            monthMoney1.setDiferenceMoney(monthMoney1.getTargetMoney() - monthMoney1.getActualMoney());
             monthMoneySer.update(monthMoney1);
             moneyMonthId = monthMoney1.getId();
         } else {
@@ -177,6 +178,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         if (null != businessDatas && businessDatas.size() > 0) {
             BusinessData businessData1 = businessDatas.get(0);
             BeanUtils.copyProperties(businessData, businessData1);
+            businessData1.setDifference(businessData1.getTargerMoney() - businessData1.getActualMoney());
             businessDataSer.update(businessData1);
             businessDataId = businessData1.getId();
         } else {
@@ -230,6 +232,8 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                 List<DateData> dateDatas1 = dateDataSer.findByCis(dateDataDTO);
                 if (null != dateDatas1 && dateDatas1.size() > 0) {
                     dateId = dateDatas1.get(0).getId();
+                    BeanUtils.copyProperties(dateData, dateDatas1);
+                    dateDataSer.update(dateDatas1);
                 } else {
                     dateData.setCycleId(cycleId);
                     dateData = dateDataSer.save(dateData);
@@ -238,8 +242,9 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
 
                 if (null != dateDataCopyTO.getFilesDataTOs() && dateDataCopyTO.getFilesDataTOs().size() > 0) {
                     for (FilesDataTO filesDataTO : dateDataCopyTO.getFilesDataTOs()) {
+                        int i = 1;
                         if (null == filesDataTO.getIndex()) {
-                            throw new SerException("表头下表不能为空");
+                            throw new SerException("表头下标不能为空");
                         }
                         if (StringUtils.isBlank(filesDataTO.getTable())) {
                             throw new SerException("表头不能为空");
@@ -251,6 +256,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                         FilesData filesData = BeanTransform.copyProperties(filesDataTO, FilesData.class, true);
                         FilesDataDTO filesDataDTO = new FilesDataDTO();
                         filesDataDTO.getConditions().add(Restrict.eq("dateDataId", dateId));
+                        filesDataDTO.getConditions().add(Restrict.eq("index", i++));
                         FilesData filesData1 = filesDataSer.findOne(filesDataDTO);
                         if (null != filesData1) {
                             BeanUtils.copyProperties(filesData, filesData1, "id");
@@ -297,9 +303,18 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                     List<FilesData> filesDatas2 = filesDataSer.findByCis(filesDataDTO2);
 
                     if (null != filesDatas1 && filesDatas1.size() > 0 && null != filesDatas2 && filesDatas2.size() > 0) {
+                        //先删除
+                        FilesDataDTO filesDataDTO7 = new FilesDataDTO();
+                        filesDataDTO7.getConditions().add(Restrict.eq("dateDataId", dateData1.getId()));
+                        filesDataDTO7.getSorts().add("index=asc");
+                        List<FilesData> filesDatas7 = filesDataSer.findByCis(filesDataDTO7);
+                        if (null != filesDatas7 && filesDatas7.size() > 0) {
+                            filesDataSer.remove(filesDatas7);
+                        }
+
                         int num = 0;
                         for (FilesData filesData1 : filesDatas1) {
-                            String context = filesDatas2.stream().filter(obj -> filesData1.getTable().equals(obj)).map(FilesData::getContext).collect(Collectors.toList()).get(0);
+                            String context = filesDatas2.stream().filter(obj -> filesData1.getTable().equals(obj.getTable())).map(FilesData::getContext).collect(Collectors.toList()).get(0);
                             FilesData filesData = new FilesData();
                             filesData.setIndex(++num);
                             filesData.setDateDataId(dateData1.getId());
@@ -312,6 +327,13 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                 }
 
                 //计算合计
+                FilesDataTotalDTO filesDataTotalDTO = new FilesDataTotalDTO();
+                filesDataTotalDTO.getConditions().add(Restrict.eq("dateDataId",dateId));
+                List<FilesDataTotal> filesDataTotals = filesDataTotalSer.findByCis(filesDataTotalDTO);
+                if (null != filesDataTotals && filesDataTotals.size() > 0) {
+                    filesDataTotalSer.remove(filesDataTotals);
+                }
+
                 FilesDataTotal filesDataTotal = new FilesDataTotal();
                 filesDataTotal.setDateDataId(dateId);
                 FilesDataDTO filesDataDTO = new FilesDataDTO();
@@ -342,7 +364,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                             try {
                                 total += Double.valueOf(con);
                             } catch (Exception e) {
-                                throw new SerException("同一个日期对应的阶段数据第二行至第四行填写的应为数字");
+                                throw new SerException("同一个日期对应的阶段数据第二行至第三行填写的应为数字");
                             }
                         }
                     }
