@@ -31,7 +31,6 @@ import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -456,7 +455,7 @@ public class BusinessContractAction extends BaseFileAction {
             List<BusinessContractTO> tocs = new ArrayList<>();
             for (BusinessContractExcel str : tos) {
                 BusinessContractTO contractTO = BeanTransform.copyProperties(str, BusinessContractTO.class,
-                        "measurePass", "notification", "commonSubcontractor", "taskFinish", "taskContract",
+                        "measurePass", "notification", "commonSubcontractor", "taskFinish",
                         "scaleBalance", "solutionBalance", "implement", "partial",
                         "persist", "settlementProcess", "account", "closeSingle", "archive");
                 //测算是否通过
@@ -491,14 +490,7 @@ public class BusinessContractAction extends BaseFileAction {
                         contractTO.setTaskFinish(false);
                     }
                 }
-                //是否有合同派工合同
-                if (null != str.getTaskContract()){
-                    if (str.getTaskContract().equals("是")) {
-                        contractTO.setTaskContract(true);
-                    } else {
-                        contractTO.setTaskContract(false);
-                    }
-                }
+
                 //合同规模数是否有差异
                 if (null != str.getScaleBalance()) {
                     if (str.getScaleBalance().equals("是")) {

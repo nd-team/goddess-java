@@ -23,6 +23,7 @@ import com.bjike.goddess.task.entity.CustomizeSon;
 import com.bjike.goddess.task.enums.CollectSuitation;
 import com.bjike.goddess.task.enums.DateType;
 import com.bjike.goddess.task.enums.TimeType;
+import com.bjike.goddess.task.quartz.TaskSession;
 import com.bjike.goddess.task.to.CustomizeTO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.api.TableAPI;
@@ -39,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: [liguiqin]
@@ -205,8 +207,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
 
                 add(Restrict.eq("customizeId", id));
         List<CustomizeSon> sons = customizeSonSer.findByCis(sonDTO);
-        if (!sons.isEmpty()
-        {
+        if (!sons.isEmpty()){
             customizeSonSer.remove(sons);
         }
         super.remove(id);
@@ -343,10 +344,10 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 customize.setModifyTime(LocalDateTime.now());
                 super.update(customize);
             }
-            TimeType remindType = customize.getRemindType();
-            int remidVal = customize.getDateVal();
-            LocalDateTime lastTime = customize.getLastTime();
-            LocalDateTime time = null;
+            remindType = customize.getRemindType ();
+            remidVal = customize.getDateVal ();
+            lastTime = customize.getLastTime ();
+            time = null;
             switch (remindType) {
                 case MINTUE:   //每天
                     time = lastTime.plusMinutes(remidVal);

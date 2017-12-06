@@ -8,7 +8,6 @@ import com.bjike.goddess.businessproject.entity.OutsourcBusinessContract;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.excel.OutsourcBusinessContractExport;
 import com.bjike.goddess.businessproject.excel.OutsourcBusinessContractTemplateExcel;
-import com.bjike.goddess.businessproject.to.DispatchSheetTO;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.OutsourcBusinessContractTO;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -16,19 +15,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -242,7 +237,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
                 //所属项目组
                 outsourcBusinessContract.setProjectGroup(businessContract.getProjectGroup());
                 //是否有合同派工
-                outsourcBusinessContract.setTaskContract(businessContract.getTaskContract());
+                outsourcBusinessContract.setTaskContract(businessContract.getTaskContract ( ));
                 //市场编号
                 outsourcBusinessContract.setMarketNum(businessContract.getMarketNum());
                 //类型

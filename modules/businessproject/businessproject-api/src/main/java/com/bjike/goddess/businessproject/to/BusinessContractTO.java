@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.to;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,6 +17,14 @@ import javax.validation.constraints.NotNull;
  * @Copy: [ com.bjike ]
  */
 public class BusinessContractTO extends BaseTO {
+    public TaskContract getTaskContract() {
+        return taskContract;
+    }
+
+    public void setTaskContract(TaskContract taskContract) {
+        this.taskContract = taskContract;
+    }
+
     public interface ManagerIdea {
     }
 
@@ -122,7 +131,7 @@ public class BusinessContractTO extends BaseTO {
     /**
      * 是否有合同派工合同
      */
-    private Boolean taskContract;
+    private TaskContract taskContract;
 
     /**
      * 市场编号
@@ -564,14 +573,6 @@ public class BusinessContractTO extends BaseTO {
 
     public void setMajor(String major) {
         this.major = major;
-    }
-
-    public Boolean getTaskContract() {
-        return taskContract;
-    }
-
-    public void setTaskContract(Boolean taskContract) {
-        this.taskContract = taskContract;
     }
 
     public String getMarketNum() {

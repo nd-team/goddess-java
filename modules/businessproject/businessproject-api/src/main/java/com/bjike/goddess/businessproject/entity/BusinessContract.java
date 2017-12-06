@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.entity;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.Column;
@@ -131,10 +132,10 @@ public class BusinessContract extends BaseEntity {
     private String major;
 
     /**
-     * 是否有合同派工合同
+     * 合同派工合同
      */
     @Column(name = "is_taskContract",  columnDefinition = "TINYINT(1)    COMMENT '是否有合同派工合同'")
-    private Boolean taskContract;
+    private TaskContract taskContract;
 
     /**
      * 市场编号
@@ -155,9 +156,9 @@ public class BusinessContract extends BaseEntity {
     private String internalContractNum;
 
     /**
-     * 是否有合同立项
+     * 合同立项
      */
-    @Column(name = "makeContract",  columnDefinition = "TINYINT(1)   COMMENT '是否有合同立项'")
+    @Column(name = "makeContract",  columnDefinition = "TINYINT(1)   COMMENT '合同立项'")
     private MakeContract makeContract;
 
     /**
@@ -629,14 +630,6 @@ public class BusinessContract extends BaseEntity {
         this.major = major;
     }
 
-    public Boolean getTaskContract() {
-        return taskContract;
-    }
-
-    public void setTaskContract(Boolean taskContract) {
-        this.taskContract = taskContract;
-    }
-
     public String getMarketNum() {
         return marketNum;
     }
@@ -1083,5 +1076,13 @@ public class BusinessContract extends BaseEntity {
 
     public void setStorageLocation(String storageLocation) {
         this.storageLocation = storageLocation;
+    }
+
+    public TaskContract getTaskContract() {
+        return taskContract;
+    }
+
+    public void setTaskContract(TaskContract taskContract) {
+        this.taskContract = taskContract;
     }
 }

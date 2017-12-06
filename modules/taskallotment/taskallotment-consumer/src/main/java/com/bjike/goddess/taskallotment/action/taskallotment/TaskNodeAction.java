@@ -1227,7 +1227,7 @@ public class TaskNodeAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/phone/finishCounts")
-    public Result finishCounts(@Validated(TaskNodeDTO.COUNT.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result finishCounts(@Validated(TaskNodeDTO.COUNTS.class) TaskNodeDTO dto, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             CaseLastBO caseLastBO = taskNodeAPI.phoneCount ( dto );
             return ActResult.initialize ( BeanTransform.copyProperties ( caseLastBO, CaseLastVO.class, request ) );
@@ -1347,4 +1347,40 @@ public class TaskNodeAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 语音识别
+     *
+     * @param request httpRequest 语音流
+     * @version v1
+     * @desc 只识别pcm格式且语音时间60秒内的语音
+     */
+//    @PostMapping("v1/latSpeech/recogize")
+//    public Result latSpeechRecogize( javax.servlet.http.HttpServletRequest request) throws ActException {
+//        try {
+//            //跟前端约定好 ，文件路径是列表id
+//            // /id/....
+//            //上传图片-发票图片
+//            String result = "";
+//            String path = "/latspeech";
+//            List<InputStream> inputStreams = getInputStreams(request, path);
+//            if( inputStreams == null ){
+//                throw new ActException("请传一个音频流文件");
+//            }else{
+//                int fileCount = 1;
+//                int count = inputStreams.size();
+//                if (count >= 2) {
+//                    count /= 2;
+//                }
+//                for (int i = 0; i < count; i++) {
+//                    InputStream o_file =  inputStreams.get(fileCount); //获取上传文件bytes
+//                    result = LatSpeechViewUtil.recognize(o_file);
+//                    fileCount += 2;
+//                }
+//            }
+//            return ActResult.initialize(result);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 }
