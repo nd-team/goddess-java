@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.HeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.HeadersCustomDTO;
 import com.bjike.goddess.projectprocing.service.HeadersCustomSer;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.HeadersCustomTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,17 @@ import java.util.List;
 public class HeadersCustomApiImpl implements HeadersCustomAPI {
     @Autowired
     private HeadersCustomSer headersCustomSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return headersCustomSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return headersCustomSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countHeaders(HeadersCustomDTO headersCustomDTO) throws SerException {
         return headersCustomSer.countHeaders(headersCustomDTO);

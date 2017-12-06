@@ -33,6 +33,11 @@ public class AppUserRegisterTO extends BaseTO {
      */
     @NotBlank(message = "密码不能为空",groups = {ADD.class})
     private String password;
+    /**
+     * 编号
+     */
+    @NotBlank(message = "编号不能为空",groups = {ADD.class})
+    private String employeeNumber;
 
     /**
      * 企业/团体名称
@@ -90,5 +95,13 @@ public class AppUserRegisterTO extends BaseTO {
 
     public void setEnterpriseName(String enterpriseName) {
         this.enterpriseName = enterpriseName;
+    }
+
+    public String getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 }

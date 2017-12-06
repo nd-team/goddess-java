@@ -1,9 +1,8 @@
-package com.bjike.goddess.projectprocing.entity;
+package com.bjike.goddess.projectprocing.enums;
 
 public enum  SendFrequency {
-//    (每天/每周/每月/每年
     /**
-     *
+     * 每天
      */
     EVERYDAY(0),
     /**

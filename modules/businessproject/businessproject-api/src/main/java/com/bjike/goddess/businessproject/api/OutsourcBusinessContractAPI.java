@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.OutsourcBusinessContractBO;
 import com.bjike.goddess.businessproject.dto.OutsourcBusinessContractDTO;
+import com.bjike.goddess.businessproject.entity.OutsourcBusinessContract;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.OutsourcBusinessContractTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -129,5 +130,35 @@ public interface OutsourcBusinessContractAPI {
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+    /**
+     * 获取所有的供应商名称
+     * lijuntao
+     *
+     * @throws SerException
+     */
+    default List<String> findSupplierName() throws SerException {
+        return null;
+    }
 
+    /**
+     * 根据供应商名称获取所有的供应商编号
+     * lijuntao
+     *
+     * @param supplierName
+     * @throws SerException
+     */
+    default List<String> findSupplierNum(String supplierName) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据供应商编号获取信息
+     * lijuntao
+     *
+     * @param supplierNum
+     * @throws SerException
+     */
+    default OutsourcBusinessContract findBySupplierNum(String supplierNum) throws SerException {
+        return null;
+    }
 }

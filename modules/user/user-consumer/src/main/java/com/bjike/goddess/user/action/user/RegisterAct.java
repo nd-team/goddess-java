@@ -192,5 +192,21 @@ public class RegisterAct {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 移动端邀请员工注册
+     *
+     * @param appUserRegisterTO 注册to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/inviteReg")
+    public Result inviteReg(@RequestParam String inviteReg, @Validated AppUserRegisterTO appUserRegisterTO, BindingResult bindingResult ) throws ActException {
+        try {
+            userRegisterAPI.inviteReg(inviteReg,appUserRegisterTO );
+            return new ActResult("注册成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

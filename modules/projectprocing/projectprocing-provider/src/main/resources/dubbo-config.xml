@@ -18,11 +18,6 @@
 
 	<!--发布接口,供其他模块调用-->
 	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
-	<dubbo:service  ref="projectAcceptanceApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectAcceptanceAPI" />
-	<dubbo:service  ref="projectCarryApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectCarryAPI" />
-	<dubbo:service  ref="projectCarryAuditAuditApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectCarryAuditAPI" />
-	<dubbo:service  ref="projectSettlementFollowApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectSettlementFollowAPI" />
-	<dubbo:service  ref="projectSituationApiImpl" interface="com.bjike.goddess.projectprocing.api.ProjectSituationAPI" />
 	<dubbo:service  ref="communicationTempleApiImpl" interface="com.bjike.goddess.projectprocing.api.CommunicationTempleAPI" />
 	<dubbo:service  ref="headersCustomApiImpl" interface="com.bjike.goddess.projectprocing.api.HeadersCustomAPI" />
 	<dubbo:service  ref="nodeHeadersCustomApiImpl" interface="com.bjike.goddess.projectprocing.api.NodeHeadersCustomAPI" />
@@ -50,6 +45,9 @@
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
 	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
+	<dubbo:reference  validation="true" id="outsourcBusinessContractApiImpl" interface="com.bjike.goddess.businessproject.api.OutsourcBusinessContractAPI" />
+	<dubbo:reference  validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.projectprocing.api.CusPermissionAPI" />
 	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.projectprocing.api.CusPermissionOperateAPI" />

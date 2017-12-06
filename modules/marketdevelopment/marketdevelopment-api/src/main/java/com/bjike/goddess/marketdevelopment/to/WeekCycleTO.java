@@ -3,7 +3,6 @@ package com.bjike.goddess.marketdevelopment.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.marketdevelopment.enums.DateType;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -106,35 +105,12 @@ public class WeekCycleTO extends BaseTO {
     private String subject;
 
 
-
-//    /**
-//     * 业务方向科目id
-//     */
-//    private String subjectDataId;
-
     /**
-     * 周期
+     * 周期集合
      */
-    @NotBlank(message = "周期不能为空", groups = {ADD.class, EDIT.class})
-    private String cycle;
-
-//    /**
-//     * 各周工作量在整月占比
-//     */
-//    @NotBlank(message = "周期不能为空", groups = {ADD.class, EDIT.class})
-//    private String radio;
-
-    /**
-     * 类型
-     */
-    @NotNull(message = "类型不能为空", groups = {ADD.class, EDIT.class})
-    private DateType weekType;
+    private List<WeekCycleCopyTO> weekCycleCopyTOs;
 
 
-    /**
-     * 表头数据集合
-     */
-    private List<WeekFilesTO> weekFilesTOs;
 
 
     public String getYear() {
@@ -217,27 +193,11 @@ public class WeekCycleTO extends BaseTO {
         this.subject = subject;
     }
 
-    public String getCycle() {
-        return cycle;
+    public List<WeekCycleCopyTO> getWeekCycleCopyTOs() {
+        return weekCycleCopyTOs;
     }
 
-    public void setCycle(String cycle) {
-        this.cycle = cycle;
-    }
-
-    public DateType getWeekType() {
-        return weekType;
-    }
-
-    public void setWeekType(DateType weekType) {
-        this.weekType = weekType;
-    }
-
-    public List<WeekFilesTO> getWeekFilesTOs() {
-        return weekFilesTOs;
-    }
-
-    public void setWeekFilesTOs(List<WeekFilesTO> weekFilesTOs) {
-        this.weekFilesTOs = weekFilesTOs;
+    public void setWeekCycleCopyTOs(List<WeekCycleCopyTO> weekCycleCopyTOs) {
+        this.weekCycleCopyTOs = weekCycleCopyTOs;
     }
 }

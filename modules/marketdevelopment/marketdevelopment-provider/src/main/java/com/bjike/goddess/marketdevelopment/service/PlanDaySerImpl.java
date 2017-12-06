@@ -200,6 +200,6 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
 
     @Override
     public List<String> findMarkCode() throws SerException {
-
+        return null;
     }
 }

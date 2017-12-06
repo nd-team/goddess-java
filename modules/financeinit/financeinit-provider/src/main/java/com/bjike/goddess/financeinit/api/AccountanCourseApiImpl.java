@@ -104,12 +104,12 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     }
 
     @Override
-    public List<String> findSecondName(String code) throws SerException {
+    public List<AccountAddDateBO> findSecondName(String code) throws SerException {
         return accountanCourseSer.findSecondName(code);
     }
 
     @Override
-    public List<String> findThirdName(String secondCode) throws SerException {
+    public List<AccountAddDateBO> findThirdName(String secondCode) throws SerException {
         return accountanCourseSer.findThirdName(secondCode);
     }
 

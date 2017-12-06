@@ -338,11 +338,11 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-        Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean position = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
 
-        //TODO 部门
-        if ( depart) {
+        //TODO 岗位
+        if ( position) {
             flag = true;
         } else {
             flag = false;
@@ -389,7 +389,56 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean department = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+
+        if (department) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        RpcTransmit.transmitUserToken(userToken);
+        String aa = RpcTransmit.getUserToken();
+        return flag;
+    }
+
+    @Override
+    public Boolean busModulPermission(String idFlag) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flag = false;
+        //但前用户
+        UserBO userBO = userAPI.currentUser();
+        String userId = userBO.getId();
+        if (StringUtils.isBlank(idFlag)) {
+            throw new SerException("idFlag不能为空");
+        }
+        CusPermissionDTO dto = new CusPermissionDTO();
+        dto.getConditions().add(Restrict.eq("idFlag", idFlag));
+        CusPermission cusPermission = super.findOne(dto);
+
+
+        //先查询操作对象
+        List<String> idList = new ArrayList<>();
+        CusPermissionOperateDTO cpoDTO = new CusPermissionOperateDTO();
+        cpoDTO.getConditions().add(Restrict.eq("cuspermissionId", cusPermission.getId()));
+        List<CusPermissionOperate> operateList = cusPermissionOperateSer.findByCis(cpoDTO);
+        if (operateList != null && operateList.size() > 0) {
+            operateList.stream().forEach(op -> {
+                idList.add(op.getOperator());
+            });
+        }
+        String[] operateIds = null;
+        if (null != idList && idList.size() > 0) {
+            operateIds = new String[idList.size()];
+            for (int i = 0; i < idList.size(); i++) {
+                operateIds[i] = idList.get(i);
+            }
+
+        }
+
+
+        //TODO 部门id 商务部
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
+        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 
         if (moduleFlag) {
             flag = true;

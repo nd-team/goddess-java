@@ -147,7 +147,7 @@ public interface AccountanCourseAPI {
      * 根据一级科目代码获取二级科目名称
      * zhuangkaiqin
      */
-    default List<String> findSecondName(String code) throws SerException{
+    default List<AccountAddDateBO>  findSecondName(String code) throws SerException{
         return null;
     }
 
@@ -155,7 +155,7 @@ public interface AccountanCourseAPI {
      * 根据二级科目代码获取三级科目
      * zhuangkaiqin
      */
-    default List<String> findThirdName( String secondCode) throws SerException{
+    default List<AccountAddDateBO> findThirdName( String secondCode) throws SerException{
         return null;
     }
 

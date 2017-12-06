@@ -19,6 +19,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,10 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 外包半外包项目合同管理业务实现
@@ -62,7 +61,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -80,7 +79,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -99,7 +98,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -129,7 +128,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -215,9 +214,9 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         OutsourcBusinessContract outsourcBusinessContract = new OutsourcBusinessContract();
         BusinessContractDTO businessContractDTO = new BusinessContractDTO();
         List<BusinessContract> businessContracts = businessContractSer.findByCis(businessContractDTO);
-        for(BusinessContract businessContract:businessContracts){
-            if(businessContract.getMeasurePass().equals("外包") || businessContract.getMeasurePass().equals("半外包")
-                    && (businessContract.getStatus()==null)){
+        for (BusinessContract businessContract : businessContracts) {
+            if (businessContract.getMeasurePass().equals("外包") || businessContract.getMeasurePass().equals("半外包")
+                    && (businessContract.getStatus() == null)) {
                 //测算分类
                 outsourcBusinessContract.setMeasureClassify(businessContract.getMeasureClassify());
                 //测算是否通过
@@ -260,26 +259,27 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
     @Override
     public OutsourcBusinessContractBO add(OutsourcBusinessContractTO to) throws SerException {
         checkAddIdentity();
-        OutsourcBusinessContract contract = BeanTransform.copyProperties(to,OutsourcBusinessContract.class);
+        OutsourcBusinessContract contract = BeanTransform.copyProperties(to, OutsourcBusinessContract.class);
         contract.setCreateTime(LocalDateTime.now());
         super.save(contract);
-        OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract,OutsourcBusinessContractBO.class);
+        OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract, OutsourcBusinessContractBO.class);
         return bo;
     }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public OutsourcBusinessContractBO supplier(OutsourcBusinessContractTO to) throws SerException {
         checkAddIdentity();
-        if(StringUtils.isNotBlank(to.getId())){
+        if (StringUtils.isNotBlank(to.getId())) {
             OutsourcBusinessContract contract = super.findById(to.getId());
             LocalDateTime createTime = contract.getCreateTime();
-            contract = BeanTransform.copyProperties(to,OutsourcBusinessContract.class,true);
+            contract = BeanTransform.copyProperties(to, OutsourcBusinessContract.class, true);
             contract.setCreateTime(createTime);
             contract.setModifyTime(LocalDateTime.now());
             super.update(contract);
-            OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract,OutsourcBusinessContractBO.class);
+            OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract, OutsourcBusinessContractBO.class);
             return bo;
-        }else {
+        } else {
             throw new SerException("id不能为空");
         }
     }
@@ -288,16 +288,16 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
     @Override
     public OutsourcBusinessContractBO edit(OutsourcBusinessContractTO to) throws SerException {
         checkAddIdentity();
-        if(StringUtils.isNotBlank(to.getId())){
+        if (StringUtils.isNotBlank(to.getId())) {
             OutsourcBusinessContract contract = super.findById(to.getId());
             LocalDateTime createTime = contract.getCreateTime();
-            contract = BeanTransform.copyProperties(to,OutsourcBusinessContract.class,true);
+            contract = BeanTransform.copyProperties(to, OutsourcBusinessContract.class, true);
             contract.setCreateTime(createTime);
             contract.setModifyTime(LocalDateTime.now());
             super.update(contract);
-            OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract,OutsourcBusinessContractBO.class);
+            OutsourcBusinessContractBO bo = BeanTransform.copyProperties(contract, OutsourcBusinessContractBO.class);
             return bo;
-        }else {
+        } else {
             throw new SerException("id不能为空");
         }
     }
@@ -306,146 +306,147 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
     @Override
     public void delete(String id) throws SerException {
         checkAddIdentity();
-        if(StringUtils.isNotBlank(id)){
+        if (StringUtils.isNotBlank(id)) {
             super.remove(id);
-        }else {
+        } else {
             throw new SerException("不能为空");
         }
     }
+
     @Override
     public Set<String> areas() throws SerException {
-        Set<String>set = new HashSet<>();
+        Set<String> set = new HashSet<>();
         List<OutsourcBusinessContract> list = super.findAll();
-        for (OutsourcBusinessContract contract:list){
+        for (OutsourcBusinessContract contract : list) {
             set.add(contract.getArea());
         }
         return set;
     }
 
-    private void search(OutsourcBusinessContractDTO dto)throws SerException{
+    private void search(OutsourcBusinessContractDTO dto) throws SerException {
         //签订时间
-        if(StringUtils.isNotBlank(dto.getSignedTime())){
-            dto.getConditions().add(Restrict.eq("signedTime",dto.getSignedTime()));
+        if (StringUtils.isNotBlank(dto.getSignedTime())) {
+            dto.getConditions().add(Restrict.eq("signedTime", dto.getSignedTime()));
         }
         //地区
-        if(StringUtils.isNotBlank(dto.getArea())){
-            dto.getConditions().add(Restrict.like("area",dto.getArea()));
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto.getConditions().add(Restrict.like("area", dto.getArea()));
         }
         //业务类型
-        if(StringUtils.isNotBlank(dto.getBusinessType())){
-            dto.getConditions().add(Restrict.like("businessType",dto.getBusinessType()));
+        if (StringUtils.isNotBlank(dto.getBusinessType())) {
+            dto.getConditions().add(Restrict.like("businessType", dto.getBusinessType()));
         }
         //总包单位名称
-        if(StringUtils.isNotBlank(dto.getMajorCompany())){
-            dto.getConditions().add(Restrict.like("majorCompany",dto.getMajorCompany()));
+        if (StringUtils.isNotBlank(dto.getMajorCompany())) {
+            dto.getConditions().add(Restrict.like("majorCompany", dto.getMajorCompany()));
         }
         //所属项目组
-        if(StringUtils.isNotBlank(dto.getProjectGroup())) {
-            dto.getConditions().add(Restrict.like("projectGroup",dto.getProjectGroup()));
+        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
+            dto.getConditions().add(Restrict.like("projectGroup", dto.getProjectGroup()));
         }
         //验收是否通过
-        if(null != dto.getAcceptorPass()){
-            dto.getConditions().add(Restrict.eq("acceptorPass",dto.getAcceptorPass()));
+        if (null != dto.getAcceptorPass()) {
+            dto.getConditions().add(Restrict.eq("acceptorPass", dto.getAcceptorPass()));
         }
         //结算流程进度
-        if(StringUtils.isNotBlank(dto.getSettlementProgress())){
-            dto.getConditions().add(Restrict.like("settlementProgress",dto.getSettlementProgress()));
+        if (StringUtils.isNotBlank(dto.getSettlementProgress())) {
+            dto.getConditions().add(Restrict.like("settlementProgress", dto.getSettlementProgress()));
         }
     }
 
     @Override
     public OutsourcBusinessContractBO importExcel(List<OutsourcBusinessContractTO> contractTOS) throws SerException {
         List<OutsourcBusinessContract> contracts = new ArrayList<>(contractTOS.size());
-        for(OutsourcBusinessContractTO to:contractTOS){
-            OutsourcBusinessContract contract = BeanTransform.copyProperties(to,OutsourcBusinessContract.class,true);
+        for (OutsourcBusinessContractTO to : contractTOS) {
+            OutsourcBusinessContract contract = BeanTransform.copyProperties(to, OutsourcBusinessContract.class, true);
             contracts.add(contract);
         }
         super.save(contracts);
-        OutsourcBusinessContractBO bo = BeanTransform.copyProperties(new OutsourcBusinessContract(),OutsourcBusinessContractBO.class);
+        OutsourcBusinessContractBO bo = BeanTransform.copyProperties(new OutsourcBusinessContract(), OutsourcBusinessContractBO.class);
         return bo;
     }
 
     @Override
     public byte[] exportExcel(OutsourcBusinessContractDTO dto) throws SerException {
-        if(null != dto.getAreas()){
-            dto.getConditions().add(Restrict.eq("area",dto.getAreas()));
+        if (null != dto.getAreas()) {
+            dto.getConditions().add(Restrict.eq("area", dto.getAreas()));
         }
         List<OutsourcBusinessContract> list = super.findByCis(dto);
         List<OutsourcBusinessContractExport> exports = new ArrayList<>();
-        list.stream().forEach(str->{
-            OutsourcBusinessContractExport export = BeanTransform.copyProperties(str,OutsourcBusinessContractExport.class,
-                    "measurePass","taskContract","makeContract","cooperation","complete",
-                    "qualifiedGist","accept","acceptorPass","account","pay","closedLoop");
+        list.stream().forEach(str -> {
+            OutsourcBusinessContractExport export = BeanTransform.copyProperties(str, OutsourcBusinessContractExport.class,
+                    "measurePass", "taskContract", "makeContract", "cooperation", "complete",
+                    "qualifiedGist", "accept", "acceptorPass", "account", "pay", "closedLoop");
             //测算是否通过
-            if(str.getMeasurePass().equals(true)){
+            if (str.getMeasurePass().equals(true)) {
                 export.setMeasurePass("是");
-            }else {
+            } else {
                 export.setMeasurePass("否");
             }
             //是否有合同派工
-            if(str.getTaskContract().equals(true)){
+            if (str.getTaskContract().equals(true)) {
                 export.setTaskContract("是");
-            }else {
+            } else {
                 export.setTaskContract("否");
             }
             //是否有合同立项
-            if(str.getMakeContract().equals(true)){
+            if (str.getMakeContract().equals(true)) {
                 export.setMakeContract("是");
-            }else {
+            } else {
                 export.setMakeContract("否");
             }
             //是否确定合作
-            if(str.getCooperation().equals(true)){
+            if (str.getCooperation().equals(true)) {
                 export.setCooperation("是");
-            }else {
+            } else {
                 export.setCooperation("否");
             }
             //是否完工
             if (str.getComplete().equals(true)) {
                 export.setComplete("是");
-            }else {
+            } else {
                 export.setComplete("否");
             }
             //是否提供完工合格依据
-            if(str.getQualifiedGist().equals(true)){
+            if (str.getQualifiedGist().equals(true)) {
                 export.setQualifiedGist("是");
-            }else {
+            } else {
                 export.setQualifiedGist("否");
             }
             //是否验收
-            if(str.getAccept().equals(true)){
+            if (str.getAccept().equals(true)) {
                 export.setAccept("是");
-            }else {
+            } else {
                 export.setAccept("否");
             }
             //验收是否通过
-            if(str.getAcceptorPass().equals(true)){
+            if (str.getAcceptorPass().equals(true)) {
                 export.setAcceptorPass("是");
-            }else {
+            } else {
                 export.setAcceptorPass("否");
             }
             //是否到账
-            if(str.getAccount().equals(true)){
+            if (str.getAccount().equals(true)) {
                 export.setAccount("是");
-            }else {
+            } else {
                 export.setAccount("否");
             }
             //是否付款成功
-            if(str.getPay().equals(true)){
+            if (str.getPay().equals(true)) {
                 export.setPay("是");
-            }else {
+            } else {
                 export.setPay("否");
             }
             //是否闭环
-            if(str.getClosedLoop().equals(true)){
+            if (str.getClosedLoop().equals(true)) {
                 export.setClosedLoop("是");
-            }else {
+            } else {
                 export.setClosedLoop("否");
             }
             exports.add(export);
         });
-        Excel excel = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         return bytes;
     }
 
@@ -497,8 +498,36 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         templateExcel.setClosedLoop("是");
 
         templateExcels.add(templateExcel);
-        Excel excel = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels, excel);
         return bytes;
+    }
+
+    @Override
+    public List<String> findSupplierName() throws SerException {
+        List<OutsourcBusinessContract> outsourcBusinessContractList = super.findAll();
+        if (CollectionUtils.isEmpty(outsourcBusinessContractList)) {
+            return Collections.emptyList();
+        }
+        return outsourcBusinessContractList.stream().map(OutsourcBusinessContract::getSupplierName).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findSupplierNum(String supplierName) throws SerException {
+        OutsourcBusinessContractDTO outsourcBusinessContractDTO = new OutsourcBusinessContractDTO();
+        outsourcBusinessContractDTO.getConditions().add(Restrict.eq("supplierName", supplierName));
+        List<OutsourcBusinessContract> outsourcBusinessContractList = super.findByCis(outsourcBusinessContractDTO);
+        if (CollectionUtils.isEmpty(outsourcBusinessContractList)) {
+            return Collections.emptyList();
+        }
+        return outsourcBusinessContractList.stream().map(OutsourcBusinessContract::getSupplierNum).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public OutsourcBusinessContract findBySupplierNum(String supplierNum) throws SerException {
+        OutsourcBusinessContractDTO outsourcBusinessContractDTO = new OutsourcBusinessContractDTO();
+        outsourcBusinessContractDTO.getConditions().add(Restrict.eq("supplierNum", supplierNum));
+        OutsourcBusinessContract outsourcBusinessContract = super.findOne(outsourcBusinessContractDTO);
+        return BeanTransform.copyProperties(outsourcBusinessContract, OutsourcBusinessContractBO.class);
     }
 }

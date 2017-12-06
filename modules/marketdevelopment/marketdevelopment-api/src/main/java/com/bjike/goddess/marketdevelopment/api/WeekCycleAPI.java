@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.WeekMonthMoneyBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekCycleDTO;
 import com.bjike.goddess.marketdevelopment.to.WeekCycleTO;
+import com.bjike.goddess.marketdevelopment.to.WeekCycleUpdateTO;
 
 import java.util.List;
 
@@ -36,6 +37,16 @@ public interface WeekCycleAPI {
      * @throws SerException
      */
     default void save(WeekCycleTO to) throws SerException {
+        return;
+    }
+
+    /**
+     * 修改周计划数据
+     *
+     * @param to
+     * @throws SerException
+     */
+    default void update(WeekCycleUpdateTO to) throws SerException {
         return;
     }
 }

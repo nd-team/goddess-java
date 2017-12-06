@@ -4,9 +4,11 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.PersonalTasksSummBO;
 import com.bjike.goddess.projectprocing.bo.SettleWorkProgreManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
+import com.bjike.goddess.projectprocing.excel.SonPermissionObject;
 import com.bjike.goddess.projectprocing.service.SettleProgressRecordSer;
 import com.bjike.goddess.projectprocing.service.SettleWorkProgreManageSer;
 import com.bjike.goddess.projectprocing.to.CompletionStatusTO;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,17 @@ import java.util.List;
 public class SettleWorkProgreManageApiImpl implements SettleWorkProgreManageAPI {
     @Autowired
     private SettleWorkProgreManageSer settleWorkProgreManageSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return settleWorkProgreManageSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return settleWorkProgreManageSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countSettleWork(SettleWorkProgreManageDTO settleWorkProgreManageDTO) throws SerException {
         return settleWorkProgreManageSer.countSettleWork(settleWorkProgreManageDTO);

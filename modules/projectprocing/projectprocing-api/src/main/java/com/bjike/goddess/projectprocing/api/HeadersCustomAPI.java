@@ -3,6 +3,7 @@ package com.bjike.goddess.projectprocing.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.HeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.HeadersCustomDTO;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.HeadersCustomTO;
 
 import java.util.List;
@@ -17,6 +18,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface HeadersCustomAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 表头定制总条数
      */

@@ -30,10 +30,10 @@ public interface AnnouncementUserSer extends Ser<AnnouncementUser, AnnouncementU
      * 读取公告
      *
      * @param announcementId
-     * @param userId
+     * @param name
      * @throws SerException
      */
-    void read(String announcementId, String userId) throws SerException;
+    void read(String announcementId, String name) throws SerException;
 
     /**
      * 查看该公告是否已经读取
