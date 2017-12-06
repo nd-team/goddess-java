@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.SettlementProcessBO;
 import com.bjike.goddess.projectprocing.dto.SettlementProcessDTO;
 import com.bjike.goddess.projectprocing.service.SettlementProcessSer;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.SettlementProcessTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,17 @@ import java.util.List;
 public class SettlementProcessApiImpl implements SettlementProcessAPI {
     @Autowired
     private SettlementProcessSer settlementProcessSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return settlementProcessSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return settlementProcessSer.guidePermission(guidePermissionTO);
+    }
+
     @Override
     public Long countSetProcess(SettlementProcessDTO settlementProcessDTO) throws SerException {
         return settlementProcessSer.countSetProcess(settlementProcessDTO);

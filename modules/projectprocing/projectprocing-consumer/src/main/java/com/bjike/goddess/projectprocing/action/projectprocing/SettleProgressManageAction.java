@@ -455,7 +455,7 @@ public class SettleProgressManageAction extends BaseFileAction {
         try {
             List<InputStream> inputStreams = getInputStreams(request);
             settleProgressManageAPI.excelImport(inputStreams, outUnit);
-            return ActResult.initialize(true);
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

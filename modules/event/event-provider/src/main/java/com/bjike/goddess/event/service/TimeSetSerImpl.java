@@ -11,7 +11,7 @@ import com.bjike.goddess.event.enums.IntervalType;
 import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.enums.Status;
 import com.bjike.goddess.event.to.TimeSetTO;
-import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -39,7 +39,7 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
     @Autowired
     private UserAPI userAPI;
     @Autowired
-    private PositionDetailUserAPI positionDetailUserAPI;
+    private PositionUserDetailAPI positionUserDetailAPI;
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
@@ -132,7 +132,7 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
             bo.setIntervalTime(intervalTime);
             return bo;
         }
-        TimeSetBO bo=new TimeSetBO();
+        TimeSetBO bo = new TimeSetBO();
         bo.setPermissions(permissions);
         return bo;
     }
@@ -169,22 +169,19 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
 
     @Override
     public List<TimeSetBO> list(TimeSetDTO dto) throws SerException {
-        String name = userAPI.currentUser().getUsername();
-        UserBO userBO = userAPI.findByUsername(name);
-        List<PositionDetailBO> positionDetailBOs = null;
-        if (userBO != null) {
-            positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
-        }
+        UserBO userBO = userAPI.currentUser();
+        String name = userBO.getUsername();
+        PositionDetailBO positionDetailBOs = positionUserDetailAPI.getPosition(userBO.getId());
         dto.getConditions().add(Restrict.eq("name", name));
         List<TimeSet> list = super.findByCis(dto);
         List<TimeSetBO> bos = new ArrayList<>();
         if (list.isEmpty()) {
             for (Permissions permissions : permissionses()) {
                 TimeSetBO bo = new TimeSetBO();
-                if (!positionDetailBOs.isEmpty()) {
-                    bo.setArea(positionDetailBOs.get(0).getArea());
-                    bo.setDepart(positionDetailBOs.get(0).getDepartmentName());
-                    bo.setModule(positionDetailBOs.get(0).getModuleName());
+                if (null != positionDetailBOs) {
+                    bo.setArea(positionDetailBOs.getArea());
+                    bo.setDepart(positionDetailBOs.getDepartmentName());
+                    bo.setModule(positionDetailBOs.getModuleName());
                 }
                 bo.setName(name);
                 bo.setPermissions(permissions);
@@ -214,10 +211,10 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
                     }
                 }
                 timeSetBO.setIntervalTime(intervalTime);
-                if (positionDetailBOs != null && !positionDetailBOs.isEmpty()) {
-                    timeSetBO.setArea(positionDetailBOs.get(0).getArea());
-                    timeSetBO.setDepart(positionDetailBOs.get(0).getDepartmentName());
-                    timeSetBO.setModule(positionDetailBOs.get(0).getModuleName());
+                if (null != positionDetailBOs) {
+                    timeSetBO.setArea(positionDetailBOs.getArea());
+                    timeSetBO.setDepart(positionDetailBOs.getDepartmentName());
+                    timeSetBO.setModule(positionDetailBOs.getModuleName());
                 }
                 bos.add(timeSetBO);
                 permissionses.add(timeSet.getPermissions());
@@ -225,10 +222,10 @@ public class TimeSetSerImpl extends ServiceImpl<TimeSet, TimeSetDTO> implements 
             if (all.removeAll(permissionses)) {
                 for (Permissions permissions : all) {
                     TimeSetBO bo = new TimeSetBO();
-                    if (positionDetailBOs != null && !positionDetailBOs.isEmpty()) {
-                        bo.setArea(positionDetailBOs.get(0).getArea());
-                        bo.setDepart(positionDetailBOs.get(0).getDepartmentName());
-                        bo.setModule(positionDetailBOs.get(0).getModuleName());
+                    if (positionDetailBOs != null) {
+                        bo.setArea(positionDetailBOs.getArea());
+                        bo.setDepart(positionDetailBOs.getDepartmentName());
+                        bo.setModule(positionDetailBOs.getModuleName());
                     }
                     bo.setName(name);
                     bo.setPermissions(permissions);

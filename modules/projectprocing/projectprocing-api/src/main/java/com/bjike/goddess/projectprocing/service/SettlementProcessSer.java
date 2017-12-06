@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectprocing.bo.SettlementProcessBO;
 import com.bjike.goddess.projectprocing.dto.SettlementProcessDTO;
 import com.bjike.goddess.projectprocing.entity.SettlementProcess;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.SettlementProcessTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SettlementProcessSer extends Ser<SettlementProcess, SettlementProcessDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 结算流程存储记录总条数
      */

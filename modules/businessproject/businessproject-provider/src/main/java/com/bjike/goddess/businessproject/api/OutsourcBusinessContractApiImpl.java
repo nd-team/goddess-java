@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.api;
 
 import com.bjike.goddess.businessproject.bo.OutsourcBusinessContractBO;
 import com.bjike.goddess.businessproject.dto.OutsourcBusinessContractDTO;
+import com.bjike.goddess.businessproject.entity.OutsourcBusinessContract;
 import com.bjike.goddess.businessproject.service.OutsourcBusinessContractSer;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
 import com.bjike.goddess.businessproject.to.OutsourcBusinessContractTO;
@@ -87,5 +88,20 @@ public class OutsourcBusinessContractApiImpl implements OutsourcBusinessContract
     @Override
     public byte[] templateExport() throws SerException {
         return outsourcBusinessContractSer.templateExport();
+    }
+
+    @Override
+    public List<String> findSupplierName() throws SerException {
+        return outsourcBusinessContractSer.findSupplierName();
+    }
+
+    @Override
+    public List<String> findSupplierNum(String supplierName) throws SerException {
+        return outsourcBusinessContractSer.findSupplierNum(supplierName);
+    }
+
+    @Override
+    public OutsourcBusinessContract findBySupplierNum(String supplierNum) throws SerException {
+        return outsourcBusinessContractSer.findBySupplierNum(supplierNum);
     }
 }

@@ -1,7 +1,11 @@
 package com.bjike.goddess.projectprocing.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -14,6 +18,12 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 public class OutsourProProgressManageTO extends BaseTO {
+
+    public interface testManageOpinion{}
+    public interface testReceivaConfir{}
+    public interface testNoticeInvoice{}
+    public interface testPayMoney{}
+    public interface testScheduleConfirm{}
 
     /**
      * 测算分类
@@ -33,216 +43,255 @@ public class OutsourProProgressManageTO extends BaseTO {
     /**
      * 地区
      */
+    @NotBlank(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
      * 业务类型
      */
+    @NotBlank(message = "业务类型不能为空",groups = {ADD.class, EDIT.class})
     private String bussType;
 
     /**
      * 业务方向科目
      */
+    @NotBlank(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String bussDirection;
 
     /**
      * 总包单位名称
      */
+    @NotBlank(message = "总包单位名称不能为空",groups = {ADD.class, EDIT.class})
     private String unitTotalPackage;
 
     /**
      * 分包单位名称
      */
+    @NotBlank(message = "分包单位名称不能为空",groups = {ADD.class, EDIT.class})
     private String subcontractorName;
 
     /**
      * 所属项目组
      */
+    @NotBlank(message = "所属项目组不能为空",groups = {ADD.class, EDIT.class})
     private String projectTeam;
 
     /**
      * 内部项目名称
      */
+    @NotBlank(message = "内部项目名称不能为空",groups = {ADD.class, EDIT.class})
     private String internalName;
 
     /**
      * 是否有合同派工
      */
-    private String contractDispa;
+    @NotNull(message = "是否有合同派工不能为空",groups = {ADD.class, EDIT.class})
+    private Boolean contractDispa;
 
     /**
      * 市场编号
      */
+    @NotBlank(message = "市场编号不能为空",groups = {ADD.class, EDIT.class})
     private String marketNum;
 
     /**
      * 类型
      */
+    @NotBlank(message = "类型不能为空",groups = {ADD.class, EDIT.class})
     private String type;
 
     /**
      * 专业/工期
      */
+    @NotBlank(message = "专业/工期不能为空",groups = {ADD.class, EDIT.class})
     private String majors;
 
     /**
      * 是否有合同立项
      */
+    @NotNull(message = "是否有合同立项不能为空",groups = {ADD.class, EDIT.class})
     private Boolean contractTerm;
 
     /**
      * 供应商编号
      */
+    @NotBlank(message = "供应商编号不能为空",groups = {ADD.class, EDIT.class})
     private String supplierNum;
 
     /**
      * 供应商地区
      */
+    @NotBlank(message = "供应商地区不能为空",groups = {ADD.class, EDIT.class})
     private String supplierArea;
 
     /**
      * 供应商名称
      */
+    @NotBlank(message = "供应商名称不能为空",groups = {ADD.class, EDIT.class})
     private String supplierName;
 
     /**
      * 供应商类型
      */
+    @NotBlank(message = "供应商类型不能为空",groups = {ADD.class, EDIT.class})
     private String supplierType;
 
     /**
      * 业务联络人
      */
+    @NotBlank(message = "业务联络人不能为空",groups = {ADD.class, EDIT.class})
     private String bussLiaison;
 
     /**
      * 是否确定合作
      */
+    @NotNull(message = "是否确定合作不能为空",groups = {ADD.class, EDIT.class})
     private Boolean cooperation;
 
     /**
      * 外包合同签订时间
      */
-    private LocalDate contractSigningDate;
+    @NotBlank(message = "外包合同签订时间不能为空",groups = {ADD.class, EDIT.class})
+    private String contractSigningDate;
 
     /**
      * 外包界面
      */
+    @NotBlank(message = "外包界面不能为空",groups = {ADD.class, EDIT.class})
     private String outInterface;
 
     /**
      * 外包金额
      */
+    @NotNull(message = "外包金额不能为空",groups = {ADD.class, EDIT.class})
     private Double outsourAmount;
 
     /**
      * 税点
      */
+    @NotBlank(message = "税点不能为空",groups = {ADD.class, EDIT.class})
     private String taxPoint;
 
     /**
      * 增值税发票额
      */
+    @NotNull(message = "增值税发票额不能为空",groups = {ADD.class, EDIT.class})
     private Double vatInvoice;
 
     /**
      * 管理费
      */
+    @NotNull(message = "管理费不能为空",groups = {ADD.class, EDIT.class})
     private Double manageFee;
 
     /**
      * 付款方式
      */
+    @NotBlank(message = "付款方式不能为空",groups = {ADD.class, EDIT.class})
     private String payTerms;
 
     /**
      * 结算批次
      */
+    @NotNull(message = "地区不能为空",groups = {ADD.class, EDIT.class})
     private Integer settleBatch;
 
     /**
      * 预估开工时间
      */
-    private LocalDate estimatedDate;
+    private String estimatedDate;
 
     /**
      * 实际开工日期
      */
-    private LocalDate actualCommDate;
+    private String actualCommDate;
 
     /**
      * 实际完工日期
      */
-    private LocalDate actualDate;
+    private String actualDate;
 
     /**
      * 预计完工时间
      */
-    private LocalDate estimatedComDate;
+    private String estimatedComDate;
 
     /**
      * 项目经理意见
      */
+    @NotBlank(message = "项目经理意见不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private String projectManOpinion;
 
     /**
      * 是否完工
      */
+    @NotNull(message = "是否完工不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private Boolean completion;
 
     /**
      * 是否提供完工合格依据
      */
+    @NotNull(message = "是否提供完工合格依据不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private Boolean provideQualified;
 
     /**
      * 是否验收
      */
+    @NotNull(message = "是否验收不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private Boolean acceptance;
 
     /**
      * 验收人
      */
+    @NotNull(message = "验收人不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private String acceptancetor;
 
     /**
      * 验收是否通过
      */
+    @NotBlank(message = "验收是否通过不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private Boolean acceptanceThrough;
 
     /**
      * 是否到账
      */
+    @NotNull(message = "是否到账不能为空",groups = {OutsourProProgressManageTO.testReceivaConfir.class})
     private Boolean account;
 
     /**
      * 结算流程进度
      */
+    @NotBlank(message = "结算流程进度不能为空",groups = {OutsourProProgressManageTO.testNoticeInvoice.class})
     private String settlementProcess;
 
     /**
      * 是否收到增值税发票
      */
+    @NotNull(message = "是否收到增值税发票不能为空",groups = {OutsourProProgressManageTO.testNoticeInvoice.class})
     private Boolean receivedInvoice;
 
     /**
      * 到账务模块发票时间
      */
-    private LocalDate accoutModuleDate;
+    @NotBlank(message = "到账务模块发票时间不能为空",groups = {OutsourProProgressManageTO.testNoticeInvoice.class})
+    private String accoutModuleDate;
 
     /**
      * 是否付款完成
      */
+    @NotNull(message = "是否付款完成不能为空",groups = {OutsourProProgressManageTO.testPayMoney.class})
     private Boolean payDone;
 
     /**
      * 结算完成时间
      */
-    private LocalDate clearDate;
+    @NotBlank(message = "结算完成时间不能为空",groups = {OutsourProProgressManageTO.testPayMoney.class})
+    private String clearDate;
 
     /**
      * 是否闭环
      */
+    @NotNull(message = "是否闭环不能为空",groups = {OutsourProProgressManageTO.testScheduleConfirm.class})
     private Boolean closedLoop;
 
     public String getMeasureType() {
@@ -325,11 +374,11 @@ public class OutsourProProgressManageTO extends BaseTO {
         this.internalName = internalName;
     }
 
-    public String getContractDispa() {
+    public Boolean getContractDispa() {
         return contractDispa;
     }
 
-    public void setContractDispa(String contractDispa) {
+    public void setContractDispa(Boolean contractDispa) {
         this.contractDispa = contractDispa;
     }
 
@@ -413,11 +462,11 @@ public class OutsourProProgressManageTO extends BaseTO {
         this.cooperation = cooperation;
     }
 
-    public LocalDate getContractSigningDate() {
+    public String getContractSigningDate() {
         return contractSigningDate;
     }
 
-    public void setContractSigningDate(LocalDate contractSigningDate) {
+    public void setContractSigningDate(String contractSigningDate) {
         this.contractSigningDate = contractSigningDate;
     }
 
@@ -477,35 +526,35 @@ public class OutsourProProgressManageTO extends BaseTO {
         this.settleBatch = settleBatch;
     }
 
-    public LocalDate getEstimatedDate() {
+    public String getEstimatedDate() {
         return estimatedDate;
     }
 
-    public void setEstimatedDate(LocalDate estimatedDate) {
+    public void setEstimatedDate(String estimatedDate) {
         this.estimatedDate = estimatedDate;
     }
 
-    public LocalDate getActualCommDate() {
+    public String getActualCommDate() {
         return actualCommDate;
     }
 
-    public void setActualCommDate(LocalDate actualCommDate) {
+    public void setActualCommDate(String actualCommDate) {
         this.actualCommDate = actualCommDate;
     }
 
-    public LocalDate getActualDate() {
+    public String getActualDate() {
         return actualDate;
     }
 
-    public void setActualDate(LocalDate actualDate) {
+    public void setActualDate(String actualDate) {
         this.actualDate = actualDate;
     }
 
-    public LocalDate getEstimatedComDate() {
+    public String getEstimatedComDate() {
         return estimatedComDate;
     }
 
-    public void setEstimatedComDate(LocalDate estimatedComDate) {
+    public void setEstimatedComDate(String estimatedComDate) {
         this.estimatedComDate = estimatedComDate;
     }
 
@@ -581,11 +630,11 @@ public class OutsourProProgressManageTO extends BaseTO {
         this.receivedInvoice = receivedInvoice;
     }
 
-    public LocalDate getAccoutModuleDate() {
+    public String getAccoutModuleDate() {
         return accoutModuleDate;
     }
 
-    public void setAccoutModuleDate(LocalDate accoutModuleDate) {
+    public void setAccoutModuleDate(String accoutModuleDate) {
         this.accoutModuleDate = accoutModuleDate;
     }
 
@@ -597,11 +646,11 @@ public class OutsourProProgressManageTO extends BaseTO {
         this.payDone = payDone;
     }
 
-    public LocalDate getClearDate() {
+    public String getClearDate() {
         return clearDate;
     }
 
-    public void setClearDate(LocalDate clearDate) {
+    public void setClearDate(String clearDate) {
         this.clearDate = clearDate;
     }
 

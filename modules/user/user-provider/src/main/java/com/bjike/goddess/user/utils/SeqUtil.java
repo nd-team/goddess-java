@@ -77,6 +77,26 @@ public class SeqUtil {
      * @param startNumber 初始字母(五位)
      */
     public static synchronized String appAutogeneration(String startNumber) throws SerException {
-        return startNumber + "000001"; //自动生成编号
+        return startNumber + "100001"; //自动生成编号
+    }
+
+    /**
+     * app生成下一个编号
+     *
+     * @param employeeNumber 最大员工编号
+     */
+    public static synchronized String appGenerateEmp(String employeeNumber) throws SerException {
+        String empNumber = employeeNumber.substring(0, 5);
+        int empLength = empNumber.length() + EMP_ZERO.length();
+        Integer number = Integer.parseInt(StringUtils.substringAfter(employeeNumber, empNumber)) + 1;
+        Integer length = empLength - (String.valueOf(number).length());
+        if (length > 0) {
+            employeeNumber = empNumber + EMP_ZERO.substring(0, length - empNumber.length());
+        } else if (0 == length) {
+            employeeNumber = empNumber + number;
+        } else {
+            throw new SerException("员工编号超出长度:" + length);
+        }
+        return employeeNumber + number;
     }
 }

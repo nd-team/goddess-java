@@ -31,6 +31,7 @@
 	<dubbo:reference  validation="true" id="settleProgressManageApiImpl" interface="com.bjike.goddess.projectprocing.api.SettleProgressManageAPI" />
 	<dubbo:reference  validation="true" id="settleProgressRecordApiImpl" interface="com.bjike.goddess.projectprocing.api.SettleProgressRecordAPI" />
 	<dubbo:reference  validation="true" id="settleWorkProgreManageApiImpl" interface="com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI" />
+	<dubbo:reference  validation="true" id="outsourcBusinessContractApiImpl" interface="com.bjike.goddess.businessproject.api.OutsourcBusinessContractAPI" />
 
 
 
