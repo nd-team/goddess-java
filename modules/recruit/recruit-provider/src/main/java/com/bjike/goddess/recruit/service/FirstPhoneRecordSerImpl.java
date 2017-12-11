@@ -80,7 +80,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -191,7 +191,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
     public List<FirstPhoneRecordBO> list(FirstPhoneRecordDTO dto) throws SerException {
         checkSeeIdentity();
         search(dto);
-        List<FirstPhoneRecord> list = super.findByCis(dto);
+        List<FirstPhoneRecord> list = super.findByCis(dto,true);
         List<FirstPhoneRecordBO> listBO = BeanTransform.copyProperties(list, FirstPhoneRecordBO.class);
         return listBO;
     }
@@ -246,6 +246,7 @@ public class FirstPhoneRecordSerImpl extends ServiceImpl<FirstPhoneRecord, First
                 }
             }
         }
+
         return bo;
     }
 

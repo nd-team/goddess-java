@@ -39,6 +39,7 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ReflectAPI" id="reflectApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.WorkRangeAPI" id="workRangeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
+    <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.MobileVersionAPI" id="mobileVersionApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionWorkDetailsAPI"
                      id="positionWorkDetailsApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.PositionUserDetailAPI"
