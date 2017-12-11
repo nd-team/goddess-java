@@ -175,6 +175,17 @@ public interface InternalContactsAPI {
     }
 
     /**
+     * 根据姓名获取个人信息
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default List<InternalContactsBO> getInfoByName(String name) throws SerException {
+        return null;
+    }
+
+    /**
      * 移动端获取根据姓名获取所有电话号码
      *
      * @return class PhoneNumberBO

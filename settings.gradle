@@ -27,27 +27,31 @@ include ':modules:storage:storage-provider'
 include ':modules:organize:organize-api'
 include ':modules:organize:organize-consumer'
 include ':modules:organize:organize-provider'
-//#contacts
-include ':modules:contacts:contacts-api'
-include ':modules:contacts:contacts-consumer'
-include ':modules:contacts:contacts-provider'
-//#dimission
+
+include ':modules:dispatchcar:dispatchcar-api'
+include ':modules:dispatchcar:dispatchcar-consumer'
+include ':modules:dispatchcar:dispatchcar-provider'
+////#contacts
+//include ':modules:contacts:contacts-api'
+//include ':modules:contacts:contacts-consumer'
+//include ':modules:contacts:contacts-provider'
+////#dimission
 include ':modules:dimission:dimission-api'
 include ':modules:dimission:dimission-consumer'
 include ':modules:dimission:dimission-provider'
-//#staffentry
+////#staffentry
 include ':modules:staffentry:staffentry-api'
 include ':modules:staffentry:staffentry-consumer'
 include ':modules:staffentry:staffentry-provider'
-//#archive
+////#archive
 include ':modules:archive:archive-api'
 include ':modules:archive:archive-consumer'
 include ':modules:archive:archive-provider'
-//#annual
+////#annual
 include ':modules:annual:annual-api'
 include ':modules:annual:annual-consumer'
 include ':modules:annual:annual-provider'
-//#voucher
+////#voucher
 include ':modules:voucher:voucher-api'
 include ':modules:voucher:voucher-consumer'
 include ':modules:voucher:voucher-provider'
@@ -55,7 +59,7 @@ include ':modules:voucher:voucher-provider'
 include ':modules:customer:customer-api'
 include ':modules:customer:customer-consumer'
 include ':modules:customer:customer-provider'
-//#financeinit
+////#financeinit
 include ':modules:financeinit:financeinit-api'
 include ':modules:financeinit:financeinit-consumer'
 include ':modules:financeinit:financeinit-provider'
@@ -63,59 +67,59 @@ include ':modules:financeinit:financeinit-provider'
 include ':modules:assemble:assemble-api'
 include ':modules:assemble:assemble-consumer'
 include ':modules:assemble:assemble-provider'
-//#business -工商注册-年检-变更
-include ':modules:business:business-api'
-include ':modules:business:business-consumer'
-include ':modules:business:business-provider'
-//#intromanage --公司简介
+////#business -工商注册-年检-变更
+//include ':modules:business:business-api'
+//include ':modules:business:business-consumer'
+//include ':modules:business:business-provider'
+////#intromanage --公司简介
 include ':modules:intromanage:intromanage-api'
 include ':modules:intromanage:intromanage-consumer'
 include ':modules:intromanage:intromanage-provider'
-//#materialsummary --物质汇总
-include ':modules:materialsummary:materialsummary-api'
-include ':modules:materialsummary:materialsummary-consumer'
-include ':modules:materialsummary:materialsummary-provider'
-//#materialinstock --物质入库
-include ':modules:materialinstock:materialinstock-api'
-include ':modules:materialinstock:materialinstock-consumer'
-include ':modules:materialinstock:materialinstock-provider'
-//#materialreceive --物质领用
-include ':modules:materialreceive:materialreceive-api'
-include ':modules:materialreceive:materialreceive-consumer'
-include ':modules:materialreceive:materialreceive-provider'
-//#materialbuy --物质购买
-include ':modules:materialbuy:materialbuy-api'
-include ':modules:materialbuy:materialbuy-consumer'
-include ':modules:materialbuy:materialbuy-provider'
-//#materialcheck --物质盘点
-include ':modules:materialcheck:materialcheck-api'
-include ':modules:materialcheck:materialcheck-consumer'
-include ':modules:materialcheck:materialcheck-provider'
-//#materialtransfer --物质调动
-include ':modules:materialtransfer:materialtransfer-api'
-include ':modules:materialtransfer:materialtransfer-consumer'
-include ':modules:materialtransfer:materialtransfer-provider'
-//#devicerepair --物质维修
-include ':modules:devicerepair:devicerepair-api'
-include ':modules:devicerepair:devicerepair-consumer'
-include ':modules:devicerepair:devicerepair-provider'
-//#shareholdersmanage --股东管理
-include ':modules:shareholdersmanage:shareholdersmanage-api'
-include ':modules:shareholdersmanage:shareholdersmanage-consumer'
-include ':modules:shareholdersmanage:shareholdersmanage-provider'
-//#firmreward --公司奖励
-include ':modules:firmreward:firmreward-api'
-include ':modules:firmreward:firmreward-consumer'
-include ':modules:firmreward:firmreward-provider'
-//#bonusmoneyperparepay --奖金资金准备与支付
-include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-api'
-include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-consumer'
-include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-provider'
-//#assistance
+////#materialsummary --物质汇总
+//include ':modules:materialsummary:materialsummary-api'
+//include ':modules:materialsummary:materialsummary-consumer'
+//include ':modules:materialsummary:materialsummary-provider'
+////#materialinstock --物质入库
+//include ':modules:materialinstock:materialinstock-api'
+//include ':modules:materialinstock:materialinstock-consumer'
+//include ':modules:materialinstock:materialinstock-provider'
+////#materialreceive --物质领用
+//include ':modules:materialreceive:materialreceive-api'
+//include ':modules:materialreceive:materialreceive-consumer'
+//include ':modules:materialreceive:materialreceive-provider'
+////#materialbuy --物质购买
+//include ':modules:materialbuy:materialbuy-api'
+//include ':modules:materialbuy:materialbuy-consumer'
+//include ':modules:materialbuy:materialbuy-provider'
+////#materialcheck --物质盘点
+//include ':modules:materialcheck:materialcheck-api'
+//include ':modules:materialcheck:materialcheck-consumer'
+//include ':modules:materialcheck:materialcheck-provider'
+////#materialtransfer --物质调动
+//include ':modules:materialtransfer:materialtransfer-api'
+//include ':modules:materialtransfer:materialtransfer-consumer'
+//include ':modules:materialtransfer:materialtransfer-provider'
+////#devicerepair --物质维修
+//include ':modules:devicerepair:devicerepair-api'
+//include ':modules:devicerepair:devicerepair-consumer'
+//include ':modules:devicerepair:devicerepair-provider'
+////#shareholdersmanage --股东管理
+//include ':modules:shareholdersmanage:shareholdersmanage-api'
+//include ':modules:shareholdersmanage:shareholdersmanage-consumer'
+//include ':modules:shareholdersmanage:shareholdersmanage-provider'
+////#firmreward --公司奖励
+//include ':modules:firmreward:firmreward-api'
+//include ':modules:firmreward:firmreward-consumer'
+//include ':modules:firmreward:firmreward-provider'
+////#bonusmoneyperparepay --奖金资金准备与支付
+//include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-api'
+//include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-consumer'
+//include ':modules:bonusmoneyperparepay:bonusmoneyperparepay-provider'
+////#assistance
 include ':modules:assistance:assistance-api'
 include ':modules:assistance:assistance-consumer'
 include ':modules:assistance:assistance-provider'
-//#managementpromotion
+////#managementpromotion
 include ':modules:managementpromotion:managementpromotion-api'
 include ':modules:managementpromotion:managementpromotion-consumer'
 include ':modules:managementpromotion:managementpromotion-provider'
@@ -123,23 +127,23 @@ include ':modules:managementpromotion:managementpromotion-provider'
 include ':modules:employee-contract:employee-contract-api'
 include ':modules:employee-contract:employee-contract-consumer'
 include ':modules:employee-contract:employee-contract-provider'
-//#bonus
+////#bonus
 include ':modules:bonus:bonus-api'
 include ':modules:bonus:bonus-consumer'
 include ':modules:bonus:bonus-provider'
-//#businessproject
-include ':modules:businessproject:businessproject-api'
-include ':modules:businessproject:businessproject-consumer'
-include ':modules:businessproject:businessproject-provider'
-//#regularization
+////#businessproject
+//include ':modules:businessproject:businessproject-api'
+//include ':modules:businessproject:businessproject-consumer'
+//include ':modules:businessproject:businessproject-provider'
+////#regularization
 include ':modules:regularization:regularization-api'
 include ':modules:regularization:regularization-consumer'
 include ':modules:regularization:regularization-provider'
-//#event
+////#event
 include ':modules:event:event-api'
 include ':modules:event:event-consumer'
 include ':modules:event:event-provider'
-//#marketdevelopment
+////#marketdevelopment
 include ':modules:marketdevelopment:marketdevelopment-api'
 include ':modules:marketdevelopment:marketdevelopment-consumer'
 include ':modules:marketdevelopment:marketdevelopment-provider'
@@ -147,42 +151,42 @@ include ':modules:marketdevelopment:marketdevelopment-provider'
 include ':modules:market:market-api'
 include ':modules:market:market-consumer'
 include ':modules:market:market-provider'
-//#competitormanage
-include ':modules:competitormanage:competitormanage-api'
-include ':modules:competitormanage:competitormanage-consumer'
-include ':modules:competitormanage:competitormanage-provider'
-//#staffactivity
-include ':modules:staffactivity:staffactivity-api'
-include ':modules:staffactivity:staffactivity-consumer'
-include ':modules:staffactivity:staffactivity-provider'
-//#buyticket --火车票飞机票
-include ':modules:buyticket:buyticket-api'
-include ':modules:buyticket:buyticket-consumer'
-include ':modules:buyticket:buyticket-provider'
-//#projectmeasure --项目测算
-include ':modules:projectmeasure:projectmeasure-api'
-include ':modules:projectmeasure:projectmeasure-consumer'
-include ':modules:projectmeasure:projectmeasure-provider'
-//#marketactivitymanage --市场活动
-include ':modules:marketactivitymanage:marketactivitymanage-api'
-include ':modules:marketactivitymanage:marketactivitymanage-consumer'
-include ':modules:marketactivitymanage:marketactivitymanage-provider'
-//#costdetail --成本明细
-include ':modules:costdetail:costdetail-api'
-include ':modules:costdetail:costdetail-consumer'
-include ':modules:costdetail:costdetail-provider'
-//#contractquotemanager --合同单价
-include ':modules:contractquotemanager:contractquotemanager-api'
-include ':modules:contractquotemanager:contractquotemanager-consumer'
-include ':modules:contractquotemanager:contractquotemanager-provider'
-//#salarymanage
+////#competitormanage
+//include ':modules:competitormanage:competitormanage-api'
+//include ':modules:competitormanage:competitormanage-consumer'
+//include ':modules:competitormanage:competitormanage-provider'
+////#staffactivity
+//include ':modules:staffactivity:staffactivity-api'
+//include ':modules:staffactivity:staffactivity-consumer'
+//include ':modules:staffactivity:staffactivity-provider'
+////#buyticket --火车票飞机票
+//include ':modules:buyticket:buyticket-api'
+//include ':modules:buyticket:buyticket-consumer'
+//include ':modules:buyticket:buyticket-provider'
+////#projectmeasure --项目测算
+//include ':modules:projectmeasure:projectmeasure-api'
+//include ':modules:projectmeasure:projectmeasure-consumer'
+//include ':modules:projectmeasure:projectmeasure-provider'
+////#marketactivitymanage --市场活动
+//include ':modules:marketactivitymanage:marketactivitymanage-api'
+//include ':modules:marketactivitymanage:marketactivitymanage-consumer'
+//include ':modules:marketactivitymanage:marketactivitymanage-provider'
+////#costdetail --成本明细
+//include ':modules:costdetail:costdetail-api'
+//include ':modules:costdetail:costdetail-consumer'
+//include ':modules:costdetail:costdetail-provider'
+////#contractquotemanager --合同单价
+//include ':modules:contractquotemanager:contractquotemanager-api'
+//include ':modules:contractquotemanager:contractquotemanager-consumer'
+//include ':modules:contractquotemanager:contractquotemanager-provider'
+////#salarymanage
 include ':modules:salarymanage:salarymanage-api'
 include ':modules:salarymanage:salarymanage-consumer'
 include ':modules:salarymanage:salarymanage-provider'
-//#projectmarketfee
-include ':modules:projectmarketfee:projectmarketfee-api'
-include ':modules:projectmarketfee:projectmarketfee-consumer'
-include ':modules:projectmarketfee:projectmarketfee-provider'
+////#projectmarketfee
+//include ':modules:projectmarketfee:projectmarketfee-api'
+//include ':modules:projectmarketfee:projectmarketfee-consumer'
+//include ':modules:projectmarketfee:projectmarketfee-provider'
 //#reimbursementprepare
 include ':modules:reimbursementprepare:reimbursementprepare-api'
 include ':modules:reimbursementprepare:reimbursementprepare-consumer'
@@ -191,71 +195,141 @@ include ':modules:reimbursementprepare:reimbursementprepare-provider'
 include ':modules:lendreimbursement:lendreimbursement-api'
 include ':modules:lendreimbursement:lendreimbursement-consumer'
 include ':modules:lendreimbursement:lendreimbursement-provider'
-//#managepromotion
+////#managepromotion
 include ':modules:managepromotion:managepromotion-api'
 include ':modules:managepromotion:managepromotion-consumer'
 include ':modules:managepromotion:managepromotion-provider'
-//#salaryconfirm
+////#salaryconfirm
 include ':modules:salaryconfirm:salaryconfirm-api'
 include ':modules:salaryconfirm:salaryconfirm-consumer'
 include ':modules:salaryconfirm:salaryconfirm-provider'
-//#secure
+////#secure
 include ':modules:secure:secure-api'
 include ':modules:secure:secure-consumer'
 include ':modules:secure:secure-provider'
-//#rentutilitiespay
+////#rentutilitiespay
 include ':modules:rentutilitiespay:rentutilitiespay-api'
 include ':modules:rentutilitiespay:rentutilitiespay-consumer'
 include ':modules:rentutilitiespay:rentutilitiespay-provider'
-//#businsurance --商业保险
-include ':modules:businsurance:businsurance-api'
-include ':modules:businsurance:businsurance-consumer'
-include ':modules:businsurance:businsurance-provider'
-//#rentcar
+////#businsurance --商业保险
+//include ':modules:businsurance:businsurance-api'
+//include ':modules:businsurance:businsurance-consumer'
+//include ':modules:businsurance:businsurance-provider'
+////#rentcar
 include ':modules:rentcar:rentcar-api'
 include ':modules:rentcar:rentcar-consumer'
 include ':modules:rentcar:rentcar-provider'
-//#salarymanage
-include ':modules:salarymanage:salarymanage-api'
-include ':modules:salarymanage:salarymanage-consumer'
-include ':modules:salarymanage:salarymanage-provider'
-//#recruit
+////#salarymanage
+//include ':modules:salarymanage:salarymanage-api'
+//include ':modules:salarymanage:salarymanage-consumer'
+//include ':modules:salarymanage:salarymanage-provider'
+////#recruit
 include ':modules:recruit:recruit-api'
 include ':modules:recruit:recruit-consumer'
 include ':modules:recruit:recruit-provider'
-//#accommodation
+
+include ':modules:progressmanage:progressmanage-api'
+include ':modules:progressmanage:progressmanage-consumer'
+include ':modules:progressmanage:progressmanage-provider'
+////#accommodation
 include ':modules:accommodation:accommodation-api'
 include ':modules:accommodation:accommodation-consumer'
 include ':modules:accommodation:accommodation-provider'
-//#budget
-include ':modules:budget:budget-api'
-include ':modules:budget:budget-consumer'
-include ':modules:budget:budget-provider'
-//#carinfo
+////#budget
+//include ':modules:budget:budget-api'
+//include ':modules:budget:budget-consumer'
+//include ':modules:budget:budget-provider'
+////#carinfo
 include ':modules:carinfo:carinfo-api'
 include ':modules:carinfo:carinfo-consumer'
 include ':modules:carinfo:carinfo-provider'
-//#fundrecords
-include ':modules:fundrecords:fundrecords-api'
-include ':modules:fundrecords:fundrecords-consumer'
-include ':modules:fundrecords:fundrecords-provider'
-//#projectprocing
-include ':modules:projectprocing:projectprocing-api'
-include ':modules:projectprocing:projectprocing-consumer'
-include ':modules:projectprocing:projectprocing-provider'
-//#qualifications
+
+//oilcardmanage 油卡管理
+include ':modules:oilcardmanage:oilcardmanage-api'
+include ':modules:oilcardmanage:oilcardmanage-consumer'
+include ':modules:oilcardmanage:oilcardmanage-provider'
+
+//workhandover 工作交接
+include ':modules:workhandover:workhandover-api'
+include ':modules:workhandover:workhandover-consumer'
+include ':modules:workhandover:workhandover-provider'
+
+//subjectcollect 油卡管理
+include ':modules:subjectcollect:subjectcollect-api'
+include ':modules:subjectcollect:subjectcollect-consumer'
+include ':modules:subjectcollect:subjectcollect-provider'
+
+//contractware
+include ':modules:contractware:contractware-api'
+include ':modules:contractware:contractware-consumer'
+include ':modules:contractware:contractware-provider'
+//businessproject
+include ':modules:businessproject:businessproject-api'
+include ':modules:businessproject:businessproject-consumer'
+include ':modules:businessproject:businessproject-provider'
+//contracts
+include ':modules:contacts:contacts-api'
+include ':modules:contacts:contacts-consumer'
+include ':modules:contacts:contacts-provider'
+
+//business
+include ':modules:business:business-api'
+include ':modules:business:business-consumer'
+include ':modules:business:business-provider'
+
+//qualifications
 include ':modules:qualifications:qualifications-api'
 include ':modules:qualifications:qualifications-consumer'
 include ':modules:qualifications:qualifications-provider'
-//#taskallotment
+
+//qualifications
 include ':modules:taskallotment:taskallotment-api'
 include ':modules:taskallotment:taskallotment-consumer'
 include ':modules:taskallotment:taskallotment-provider'
-//#announcement
-include ':modules:announcement:announcement-api'
-include ':modules:announcement:announcement-consumer'
-include ':modules:announcement:announcement-provider'
-//#push
+
+include ':modules:task:task-api'
+include ':modules:task:task-consumer'
+include ':modules:task:task-provider'
+
+include ':modules:interiorrecommend:interiorrecommend-api'
+include ':modules:interiorrecommend:interiorrecommend-consumer'
+include ':modules:interiorrecommend:interiorrecommend-provider'
+
+
+include ':modules:attendance:attendance-api'
+include ':modules:attendance:attendance-consumer'
+include ':modules:attendance:attendance-provider'
+
+include ':modules:attendance:attendance-api'
+include ':modules:attendance:attendance-consumer'
+include ':modules:attendance:attendance-provider'
+
 include ':modules:push:push-api'
 include ':modules:push:push-consumer'
 include ':modules:push:push-provider'
+
+//contractcommunicat
+include ':modules:contractcommunicat:contractcommunicat-api'
+include ':modules:contractcommunicat:contractcommunicat-consumer'
+include ':modules:contractcommunicat:contractcommunicat-provider'
+
+//competitormanage
+include ':modules:competitormanage:competitormanage-api'
+include ':modules:competitormanage:competitormanage-consumer'
+include ':modules:competitormanage:competitormanage-provider'
+
+
+//fundrecords
+include ':modules:competitormanage:competitormanage-api'
+include ':modules:competitormanage:competitormanage-consumer'
+include ':modules:competitormanage:competitormanage-provider'
+
+//projectissuehandle
+include ':modules:projectissuehandle:projectissuehandle-api'
+include ':modules:projectissuehandle:projectissuehandle-consumer'
+include ':modules:projectissuehandle:projectissuehandle-provider'
+
+//enterpriseculturemanage
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
+include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'

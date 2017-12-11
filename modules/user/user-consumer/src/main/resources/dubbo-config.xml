@@ -38,4 +38,6 @@
 	<dubbo:reference  validation="true" id="eventAPIApiImpl" interface="com.bjike.goddess.event.api.EventAPI" />
 	<dubbo:reference  validation="true" id="vacateAPIApiImpl" interface="com.bjike.goddess.attendance.api.VacateAPI" />
 	<dubbo:reference  validation="true" id="reimburseRecordApiImpl" interface="com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI" />
+	<dubbo:reference interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>
+
 </beans>

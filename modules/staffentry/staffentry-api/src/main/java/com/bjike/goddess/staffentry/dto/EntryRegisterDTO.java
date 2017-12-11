@@ -17,11 +17,24 @@ public class EntryRegisterDTO extends BaseDTO {
      */
     private String username;
 
+    /**
+     * 员工编号
+     */
+    private String empNumber;
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmpNumber() {
+        return empNumber;
+    }
+
+    public void setEmpNumber(String empNumber) {
+        this.empNumber = empNumber;
     }
 }

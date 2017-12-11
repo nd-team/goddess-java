@@ -12,5 +12,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class BusinessNegotiationDTO extends BaseDTO {
+    /**
+     * 所属项目组
+     */
+    private String customerName;
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 }

@@ -314,4 +314,14 @@ public interface EntryRegisterSer extends Ser<EntryRegister, EntryRegisterDTO> {
      * @param firmIntroTOS 公司简介
      */
 //    void importExcel(List<FirmIntroTO> firmIntroTOS) throws SerException;
+
+    /**
+     * 我的团队
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<EntryRegisterBO> myTeam(EntryRegisterDTO dto) throws SerException {
+        return null;
+    }
 }
