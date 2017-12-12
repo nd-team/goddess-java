@@ -68,7 +68,7 @@ public class OutsourProProgressManageBO extends BaseBO {
     /**
      * 是否有合同派工
      */
-    private String contractDispa;
+    private Boolean contractDispa;
 
     /**
      * 市场编号
@@ -325,11 +325,11 @@ public class OutsourProProgressManageBO extends BaseBO {
         this.internalName = internalName;
     }
 
-    public String getContractDispa() {
+    public Boolean getContractDispa() {
         return contractDispa;
     }
 
-    public void setContractDispa(String contractDispa) {
+    public void setContractDispa(Boolean contractDispa) {
         this.contractDispa = contractDispa;
     }
 

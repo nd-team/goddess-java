@@ -202,7 +202,10 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
         checkPermission();
         HeadersCustomDTO headersCustomDTO = new HeadersCustomDTO();
         headersCustomDTO.getConditions().add(Restrict.eq("prossManageId", prossManageId));
-        HeadersCustom headersCustom = super.findOne(headersCustomDTO);
-        super.remove(headersCustom);
+        List<HeadersCustom> headersCustoms = super.findByCis(headersCustomDTO);
+//        if (headersCustoms != null && headersCustoms.size() > 0) {
+
+            super.remove(headersCustoms);
+//        }
     }
 }

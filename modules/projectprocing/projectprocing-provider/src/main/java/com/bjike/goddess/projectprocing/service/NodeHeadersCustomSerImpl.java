@@ -206,6 +206,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
         nodeHeadersCustomDTO.getConditions().add(Restrict.eq("prossManageId", passManageId));
         List<NodeHeadersCustom> nodeHeadersCustoms = super.findByCis(nodeHeadersCustomDTO);
+
         super.remove(nodeHeadersCustoms);
     }
 
