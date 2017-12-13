@@ -38,7 +38,7 @@ public class OutsourProProgressManageTO extends BaseTO {
     /**
      * 签订时间
      */
-    private LocalDate signedTime;
+    private String signedTime;
 
     /**
      * 地区
@@ -243,13 +243,13 @@ public class OutsourProProgressManageTO extends BaseTO {
     /**
      * 验收人
      */
-    @NotNull(message = "验收人不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
+    @NotBlank(message = "验收人不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private String acceptancetor;
 
     /**
      * 验收是否通过
      */
-    @NotBlank(message = "验收是否通过不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
+    @NotNull(message = "验收是否通过不能为空",groups = {OutsourProProgressManageTO.testManageOpinion.class})
     private Boolean acceptanceThrough;
 
     /**
@@ -310,11 +310,11 @@ public class OutsourProProgressManageTO extends BaseTO {
         this.measureThrough = measureThrough;
     }
 
-    public LocalDate getSignedTime() {
+    public String getSignedTime() {
         return signedTime;
     }
 
-    public void setSignedTime(LocalDate signedTime) {
+    public void setSignedTime(String signedTime) {
         this.signedTime = signedTime;
     }
 

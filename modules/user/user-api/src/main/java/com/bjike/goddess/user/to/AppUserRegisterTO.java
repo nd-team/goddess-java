@@ -36,7 +36,6 @@ public class AppUserRegisterTO extends BaseTO {
     /**
      * 编号
      */
-    @NotBlank(message = "编号不能为空",groups = {ADD.class})
     private String employeeNumber;
 
     /**

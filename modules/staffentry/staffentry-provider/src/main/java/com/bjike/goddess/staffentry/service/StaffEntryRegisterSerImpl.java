@@ -412,7 +412,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public String maxEmpNumber() throws SerException {
-        String empNumber = userAPI.maxUserEmpNumber();
+        String userTocken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userTocken);
+        String empNumber = userAPI.nextEmpNumber(userBO.getEmployeeNumber());
         return empNumber;
 //        if(moduleAPI.isCheck("organize")){
 //            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
