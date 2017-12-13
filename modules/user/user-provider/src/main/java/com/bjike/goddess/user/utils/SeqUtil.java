@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 public class SeqUtil {
 
     private static final String EMP_NUMBER = "IKE"; // 员工编号格式
-    private static final String EMP_ZERO = "100000"; // 员工编号开始与位数
+    private static final String EMP_ZERO = "000000"; // 员工编号开始与位数
     private static final String SYS_NUMBER = "SYS.NO"; // 系统编号格式
     private static final String SYS_ZERO = "000000"; //系统编号开始与位数
 
@@ -42,6 +42,7 @@ public class SeqUtil {
         }
 
     }
+
 
     /**
      * 生成下一个编号
@@ -77,26 +78,41 @@ public class SeqUtil {
      * @param startNumber 初始字母(五位)
      */
     public static synchronized String appAutogeneration(String startNumber) throws SerException {
-        return startNumber + "100001"; //自动生成编号
+        return startNumber + "000001"; //自动生成编号
     }
 
     /**
-     * app生成下一个编号
+     * 员工入职生成下一个编号(个人注册)
      *
      * @param employeeNumber 最大员工编号
      */
-    public static synchronized String appGenerateEmp(String employeeNumber) throws SerException {
-        String empNumber = employeeNumber.substring(0, 5);
-        int empLength = empNumber.length() + EMP_ZERO.length();
-        Integer number = Integer.parseInt(StringUtils.substringAfter(employeeNumber, empNumber)) + 1;
-        Integer length = empLength - (String.valueOf(number).length());
-        if (length > 0) {
-            employeeNumber = empNumber + EMP_ZERO.substring(0, length - empNumber.length());
-        } else if (0 == length) {
-            employeeNumber = empNumber + number;
-        } else {
-            throw new SerException("员工编号超出长度:" + length);
+    public static synchronized String appGenerateEmp(String employeeNumber, Boolean bool) throws SerException {
+        if (StringUtils.isNotBlank(employeeNumber)) {
+            StringBuffer s = new StringBuffer();
+            for (int i = 0; i < employeeNumber.length(); i++) {
+                char c = employeeNumber.charAt(i);
+                if ((c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')) {
+                    s.append(c);
+                }
+            }
+            String empNumber = s.toString();
+            if (bool) {
+                int empLength = empNumber.length() + EMP_ZERO.length();
+                Integer number = Integer.parseInt(StringUtils.substringAfter(employeeNumber, empNumber)) + 1;
+                Integer length = empLength - (String.valueOf(number).length());
+                if (length > 0) {
+                    employeeNumber = empNumber + EMP_ZERO.substring(0, length - empNumber.length());
+                } else if (0 == length) {
+                    employeeNumber = empNumber + number;
+                } else {
+                    throw new SerException("员工编号超出长度:" + length);
+                }
+                return employeeNumber + number;
+            } else {
+                return appGenerateEmp(empNumber + EMP_ZERO, true);
+            }
         }
-        return employeeNumber + number;
+        return null;
     }
+
 }

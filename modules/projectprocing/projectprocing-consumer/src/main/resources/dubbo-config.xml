@@ -42,6 +42,7 @@
 	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
 	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="commonalityApiImpl" interface="com.bjike.goddess.contacts.api.CommonalityAPI" />
 
 
 
