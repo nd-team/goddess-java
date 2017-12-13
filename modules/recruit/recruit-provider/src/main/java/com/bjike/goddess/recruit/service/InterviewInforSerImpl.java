@@ -190,7 +190,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         checkSeeIdentity();
         search(dto);
         FirstPhoneRecordDTO firstPhoneRecordDTO = new FirstPhoneRecordDTO();
-        List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
+        List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO,true);
         InterviewInfor interviewInfor = new InterviewInfor();
         for (FirstPhoneRecord record : firstPhoneRecords) {
             if (Boolean.TRUE.equals(record.getWhetherFirstInterview()) && record.getStatus() == null) {

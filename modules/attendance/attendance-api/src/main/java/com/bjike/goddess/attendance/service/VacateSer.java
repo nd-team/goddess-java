@@ -9,6 +9,7 @@ import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
 import com.bjike.goddess.attendance.entity.Vacate;
 import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
+import com.bjike.goddess.attendance.to.VacatePhoneTO;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;

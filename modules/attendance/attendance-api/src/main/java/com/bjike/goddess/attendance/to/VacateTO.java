@@ -22,16 +22,17 @@ import javax.validation.constraints.NotNull;
  */
 public class VacateTO extends BaseTO {
     public interface GETTIME{}
+    public interface PHONEADD{}
     /**
      * 员工编号
      */
-    @NotBlank(groups = {ADD.class},message = "员工编号不能为空")
+    @NotBlank(groups = {ADD.class,VacateTO.PHONEADD.class},message = "员工编号不能为空")
     private String employeeNumber;
 
     /**
      * 请假人
      */
-    @NotBlank(groups = {ADD.class},message = "请假人不能为空")
+    @NotBlank(groups = {ADD.class,VacateTO.PHONEADD.class},message = "请假人不能为空")
     private String name;
     /**
      * 地区
@@ -52,40 +53,40 @@ public class VacateTO extends BaseTO {
     /**
      * 请假类型
      */
-    @NotNull(groups = {ADD.class},message = "请假类型不能为空")
+    @NotNull(groups = {ADD.class,VacateTO.PHONEADD.class},message = "请假类型不能为空")
     private VacateType vacateType;
     /**
      * 开始日期
      */
-    @NotBlank(groups = {ADD.class,VacateTO.GETTIME.class},message = "开始日期不能为空")
+    @NotBlank(groups = {ADD.class,VacateTO.GETTIME.class,VacateTO.PHONEADD.class},message = "开始日期不能为空")
     private String startDate;
     /**
      * 结束日期
      */
-    @NotBlank(groups = {ADD.class,VacateTO.GETTIME.class},message = "结束日期不能为空")
+    @NotBlank(groups = {ADD.class,VacateTO.GETTIME.class,VacateTO.PHONEADD.class},message = "结束日期不能为空")
     private String endDate;
     /**
      * 开始时间
      */
-    @NotNull(groups = {ADD.class,VacateTO.GETTIME.class},message = "开始时间不能为空")
+    @NotNull(groups = {ADD.class,VacateTO.GETTIME.class,VacateTO.PHONEADD.class},message = "开始时间不能为空")
     private StartTime startTime;
 
     /**
      * 结束时间
      */
-    @NotNull(groups = {ADD.class,VacateTO.GETTIME.class},message = "结束时间不能为空")
+    @NotNull(groups = {ADD.class,VacateTO.GETTIME.class,VacateTO.PHONEADD.class},message = "结束时间不能为空")
     private EndTime endTime;
 
     /**
      * 请假原因
      */
-    @NotBlank(groups = {ADD.class},message = "请假原因不能为空")
+    @NotBlank(groups = {ADD.class,VacateTO.PHONEADD.class},message = "请假原因不能为空")
     private String reason;
 
     /**
      * 主送人
      */
-    @NotNull(groups = {ADD.class},message = "主送人不能为空")
+    @NotNull(groups = {ADD.class,VacateTO.PHONEADD.class},message = "主送人不能为空")
     private String[] mains;
 
     /**
@@ -106,7 +107,7 @@ public class VacateTO extends BaseTO {
     /**
      * uuid
      */
-    @NotBlank(groups = {ADD.class},message = "uuid不能为空")
+    @NotBlank(groups = {ADD.class,VacateTO.PHONEADD.class},message = "uuid不能为空")
     private String uuid;
 
     /**

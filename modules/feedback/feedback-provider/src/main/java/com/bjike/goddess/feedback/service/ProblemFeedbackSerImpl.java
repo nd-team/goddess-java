@@ -289,7 +289,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
     @Override
     public List<ProblemFeedbackBO> list(ProblemFeedbackDTO dto) throws SerException {
         checkSeeIdentity();
-        List<ProblemFeedback> problemFeedbacks = super.findByCis(dto);
+        List<ProblemFeedback> problemFeedbacks = super.findByCis(dto,true);
         List<ProblemFeedbackBO> problemFeedbackBOS = BeanTransform.copyProperties(problemFeedbacks, ProblemFeedbackBO.class);
 
         return problemFeedbackBOS;
