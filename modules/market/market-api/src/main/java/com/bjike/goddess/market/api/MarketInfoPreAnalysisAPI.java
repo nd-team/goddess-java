@@ -95,4 +95,6 @@ public interface MarketInfoPreAnalysisAPI {
     default void removeAnalysis(String id) throws SerException {
 
     }
+
+    List<MarketInfoPreAnalysisBO> getconversionBuissOpp() throws SerException;
 }

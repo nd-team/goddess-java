@@ -1,5 +1,7 @@
 package com.bjike.goddess.market.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 合作方式
  *
@@ -13,10 +15,12 @@ public enum CooperationWay {
     /**
      * 人员租赁
      */
+    @ExcelValue(name = "人员租赁")
     PERSONNELLEASE(0),
     /**
      * 分包合作
      */
+    @ExcelValue(name = "分包合作")
     SUBCONTRACTCOOPERATION(1);
     private int code;
 

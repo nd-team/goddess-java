@@ -1,6 +1,7 @@
 package com.bjike.goddess.customer.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.type.Status;
 
 /**
  * 地区权重设置业务传输对象
