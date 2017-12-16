@@ -158,6 +158,7 @@ public interface UserSer extends Ser<User, UserDTO> {
     /**
      * 修改密码
      * tanghaixiang
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -165,6 +166,16 @@ public interface UserSer extends Ser<User, UserDTO> {
     default void updatePassword(UserTO userTO) throws SerException {
     }
 
+    /**
+     * 修改手机号码
+     * chenayng
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePhone(UserTO userTO) throws SerException {
+    }
 
     /**
      * 通过组查寻用户
@@ -231,6 +242,17 @@ public interface UserSer extends Ser<User, UserDTO> {
     }
 
     /**
+     * 移动端获取下一个员工编号(个人注册的下一个编号)
+     * lijuntao
+     *
+     * @param empNum 企业人(邀请人编号)
+     * @throws SerException
+     */
+    default String nextEmpNumber(String empNum) throws SerException {
+        return null;
+    }
+
+    /**
      * chenjunhao
      * 通过用户id查找用户名
      *
@@ -246,7 +268,7 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return UserBO
      * @throws SerException
      */
-    default List<UserBO> findByDept(String ... department  ) throws SerException {
+    default List<UserBO> findByDept(String... department) throws SerException {
         return null;
     }
 }

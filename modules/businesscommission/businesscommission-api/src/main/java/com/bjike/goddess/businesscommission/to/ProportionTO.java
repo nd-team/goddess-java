@@ -46,11 +46,11 @@ public class ProportionTO extends BaseTO {
     @NotNull(groups = {ProportionTO.TestAdd.class}, message = "参与协商人不能为空")
     private String consultants;
 
-    /**
-     * 确认
-     */
-    @NotNull(groups = {ProportionTO.TestEdit.class}, message = "确认不能为空")
-    private Boolean confirm;
+//    /**
+//     * 确认
+//     */
+//    @NotNull(groups = {ProportionTO.TestEdit.class}, message = "确认不能为空")
+//    private Boolean confirm;
 
     /**
      * 因素集合
@@ -73,13 +73,13 @@ public class ProportionTO extends BaseTO {
         this.consultants = consultants;
     }
 
-    public Boolean getConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(Boolean confirm) {
-        this.confirm = confirm;
-    }
+//    public Boolean getConfirm() {
+//        return confirm;
+//    }
+//
+//    public void setConfirm(Boolean confirm) {
+//        this.confirm = confirm;
+//    }
 
     public List<ProportionRatioTO> getProportionRatioTOs() {
         return proportionRatioTOs;

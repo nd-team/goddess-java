@@ -1,6 +1,5 @@
 package com.bjike.goddess.user.service;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.common.api.dto.Condition;
 import com.bjike.goddess.common.api.dto.Restrict;
@@ -45,8 +44,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -274,24 +271,45 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
     public void updatePassword(UserTO userTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = this.currentUser();
-        if( null== userBO ){
+        if (null == userBO) {
             throw new SerException("不存在该用户");
         }
         RpcTransmit.transmitUserToken(userToken);
 
-        User user = super.findById( userBO.getId() );
-        if( null == user){
+        User user = super.findById(userBO.getId());
+        if (null == user) {
             throw new SerException("该用户不存在");
         }
         try {
             user.setPassword(PasswordHash.createHash(userTO.getPassword()));
-            super.update( user );
+            super.update(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void updatePhone(UserTO userTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
+        if (null == userBO) {
+            throw new SerException("不存在该用户");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+        User user = super.findById(userBO.getId());
+        if (null == user) {
+            throw new SerException("该用户不存在");
+        }
+        try {
+            user.setPhone(userTO.getPhone());
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+        super.update(user);
     }
 
     @Override
@@ -366,6 +384,29 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         return empNumber;
     }
 
+    @Override
+    public String nextEmpNumber(String empNum) throws SerException {
+       String empNumber = "";
+        if (StringUtils.isNotBlank(empNum)) {
+            StringBuffer s = new StringBuffer();
+            for (int i = 0; i < empNum.length(); i++) {
+                char c = empNum.charAt(i);
+                if ((c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')) {
+                    s.append(c);
+                }
+            }
+            String[] fields = new String[]{"employeeNumber"};
+            String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '" + s.toString() + "%'  ";
+            List<User> list = super.findBySql(sql, User.class, fields);
+            String max = list != null && list.size() > 0 ? list.get(0).getEmployeeNumber() : "";
+            if(StringUtils.isNotBlank(max)){
+                empNumber = SeqUtil.appGenerateEmp(max,true);
+            }else {
+                empNumber = SeqUtil.appGenerateEmp(empNum,false);
+            }
+        }
+        return empNumber;
+    }
 
     @Override
     //chenjunhao

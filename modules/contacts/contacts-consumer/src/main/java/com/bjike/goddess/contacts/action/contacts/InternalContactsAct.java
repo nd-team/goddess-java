@@ -11,11 +11,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.contacts.api.CommerceContactsAPI;
+import com.bjike.goddess.contacts.api.ExternalContactsAPI;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
-import com.bjike.goddess.contacts.bo.MobileInternalContactsBO;
-import com.bjike.goddess.contacts.bo.MobileSearchBO;
-import com.bjike.goddess.contacts.bo.NameAndIdBO;
-import com.bjike.goddess.contacts.bo.PhoneNumberBO;
+import com.bjike.goddess.contacts.bo.*;
 import com.bjike.goddess.contacts.dto.InternalContactsDTO;
 import com.bjike.goddess.contacts.dto.SearchDTO;
 import com.bjike.goddess.contacts.excel.InternalContactsExcel;
@@ -23,6 +22,8 @@ import com.bjike.goddess.contacts.excel.InternalContactsTestExcel;
 import com.bjike.goddess.contacts.to.GuidePermissionTO;
 import com.bjike.goddess.contacts.to.InternalContactsTO;
 import com.bjike.goddess.contacts.vo.InternalContactsVO;
+import com.bjike.goddess.contacts.vo.MobileCommerceContactsVO;
+import com.bjike.goddess.contacts.vo.MobileExternalContactsVO;
 import com.bjike.goddess.contacts.vo.MobileInternalContactsVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
@@ -57,6 +58,10 @@ public class InternalContactsAct extends BaseFileAction {
     private InternalContactsAPI internalContactsAPI;
     @Autowired
     private DepartmentDetailAPI departmentDetailAPI;
+    @Autowired
+    private ExternalContactsAPI externalContactsAPI;
+    @Autowired
+    private CommerceContactsAPI commerceContactsAPI;
 
     /**
      * 保存
@@ -516,5 +521,33 @@ public class InternalContactsAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 手机端根据id查询全局信息
+     *
+     * @version v1
+     */
+    @GetMapping("v1/mobileFindById/{id}")
+    public Result mobileFindById(@PathVariable String id) throws ActException {
+        try {
+            MobileInternalContactsBO bo = internalContactsAPI.findByMobileID(id);
+            if (null != bo) {
+                return ActResult.initialize(BeanTransform.copyProperties(bo, MobileInternalContactsVO.class));
+            }
+
+            MobileExternalContactsBO bo1 = externalContactsAPI.findByMobileID(id);
+            if (null != bo1) {
+                return ActResult.initialize(BeanTransform.copyProperties(bo1, MobileExternalContactsVO.class));
+            }
+            MobileCommerceContactsBO bo2 = commerceContactsAPI.findByMobileID(id);
+            if (null != bo2) {
+                return ActResult.initialize(BeanTransform.copyProperties(bo2, MobileCommerceContactsVO.class));
+            }
+            return ActResult.initialize(null);
+        } catch (Exception e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

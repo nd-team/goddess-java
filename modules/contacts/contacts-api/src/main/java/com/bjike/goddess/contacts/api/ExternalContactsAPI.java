@@ -152,4 +152,5 @@ public interface ExternalContactsAPI {
     default MobileExternalContactsBO findByMobileID(String id) throws SerException {
         return null;
     }
+
 }

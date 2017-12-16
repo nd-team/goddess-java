@@ -54,7 +54,7 @@ public class SettlementProcess extends BaseEntity {
     /**
      * 是否有结算流程附件
      */
-    @Column(name = "is_settProceAttach", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否有结算流程附件'", insertable = false)
+    @Column(name = "is_settProceAttach", columnDefinition = "TINYINT(1)  COMMENT '是否有结算流程附件'")
     private Boolean settProceAttach;
 
     /**

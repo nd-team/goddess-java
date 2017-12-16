@@ -72,4 +72,9 @@ public class CompletionTimeApiImpl implements CompletionTimeAPI {
     public Long getTotal() throws SerException {
         return completionTimeSer.getTotal();
     }
+
+    @Override
+    public Double findImportain(Integer month) throws SerException {
+        return completionTimeSer.findImportain(month);
+    }
 }

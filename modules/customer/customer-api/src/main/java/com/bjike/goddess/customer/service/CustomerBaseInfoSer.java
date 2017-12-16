@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.customer.bo.*;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.entity.CustomerBaseInfo;
-import com.bjike.goddess.customer.enums.Origin;
 import com.bjike.goddess.customer.to.CustomerBaseInfoTO;
 import com.bjike.goddess.customer.to.GuidePermissionTO;
 import org.hibernate.validator.constraints.NotBlank;
@@ -417,4 +416,10 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
         return null;
     }
 
+    /**
+     * 根据客户编号查询公司名称,职务,姓名,电话
+     */
+    default CustomerInfoBO findByNum(String customerNum) throws SerException {
+        return null;
+    }
 }

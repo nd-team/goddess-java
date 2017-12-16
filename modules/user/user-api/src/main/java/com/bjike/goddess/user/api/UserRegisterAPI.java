@@ -43,6 +43,16 @@ public interface UserRegisterAPI {
     }
 
     /**
+     * 获取发送短信验证码(修改手机号码)
+     * tanghaixiang
+     * @return
+     * @throws SerException
+     */
+    default String sendSmsVerifyCodes(SmsCodeParameterTO smsCodeParameterTO ) throws SerException {
+        return null;
+    }
+
+    /**
      * 校验手机短信验证码
      * tanghaixiang
      * @param phone 手机号
@@ -88,5 +98,15 @@ public interface UserRegisterAPI {
      */
     default String autogenerationNum(String startNumber) throws SerException {
         return null;
+    }
+    /**
+     * 移动端邀请员工注册
+     * lijuntao
+     *
+     * @param inviteUrl 邀请链接
+     * @throws SerException
+     */
+    default void inviteReg(String inviteUrl,AppUserRegisterTO appUserRegisterTO) throws SerException {
+        return;
     }
 }

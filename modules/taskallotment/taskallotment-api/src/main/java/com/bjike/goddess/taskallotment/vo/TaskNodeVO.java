@@ -73,6 +73,11 @@ public class TaskNodeVO {
     private String planTime;
 
     /**
+     * 任务创建时间
+     */
+    private String createTime;
+
+    /**
      * 任务类型
      */
     private TaskType taskType;
@@ -265,6 +270,18 @@ public class TaskNodeVO {
      * 问题信息
      */
     private List<QuestionBO> questions;
+    /**
+     * 图片路径
+     */
+    private List<String> photos;
+
+    public List<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
 
     public String getArea() {
         return area;
@@ -720,5 +737,13 @@ public class TaskNodeVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

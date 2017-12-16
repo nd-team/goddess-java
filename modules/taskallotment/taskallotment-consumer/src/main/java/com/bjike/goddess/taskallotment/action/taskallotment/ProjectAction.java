@@ -1,6 +1,7 @@
 package com.bjike.goddess.taskallotment.action.taskallotment;
 
 import com.bjike.goddess.businessproject.api.BaseInfoManageAPI;
+import com.bjike.goddess.businessproject.api.BusinessContractAPI;
 import com.bjike.goddess.businessproject.api.DispatchSheetAPI;
 import com.bjike.goddess.businessproject.api.SiginManageAPI;
 import com.bjike.goddess.common.api.entity.ADD;
@@ -78,6 +79,8 @@ public class ProjectAction extends BaseFileAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private TableAPI tableAPI;
+    @Autowired
+    private BusinessContractAPI businessContractAPI;
 
     /**
      * 模块设置导航权限
@@ -284,6 +287,80 @@ public class ProjectAction extends BaseFileAction {
             projectAPI.editTable(to);
             return new ActResult("编辑成功");
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有所属项目组
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findProjectGroup")
+    public Result findProjectGroup(HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = businessContractAPI.findProjectGroup ();
+            return ActResult.initialize ( list );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
+        }
+    }
+
+    /**
+     * 根据所属项目组获取所有内部项目名称
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findInnerProject")
+    public Result findInnerProject(String internalContractNum,HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = businessContractAPI.findInnerProject (internalContractNum);
+            return ActResult.initialize ( list );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
+        }
+    }
+
+    /**
+     * 根据内部项目名称获取所有内部合同编号
+     *
+     * @param request
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findInternalContractNum")
+    public Result findInternalContractNum(String innerProject,HttpServletRequest request) throws ActException {
+        try {
+            List<String> list = businessContractAPI.findInternalContractNum (innerProject);
+            return ActResult.initialize ( list );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
+        }
+    }
+
+    /**
+     * 根据内部合同编号获取立项情况
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findMakeContract")
+    public Result findMakeContract(String internalContractNum,HttpServletRequest request) throws ActException {
+        try {
+            Set<String> set = null;
+            try {
+                set = businessContractAPI.findMakeContract ( internalContractNum );
+            } catch (Exception e) {
+                if (e.getMessage().indexOf("Forbid consumer") != -1) {
+                    LOGGER.error("businessproject模块服务不可用!");
+                }
+            }
+            return ActResult.initialize(set);
+        } catch (Exception e) {
             throw new ActException(e.getMessage());
         }
     }

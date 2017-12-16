@@ -136,6 +136,26 @@ public interface UserAPI {
     default void updatePassword(UserTO userTO) throws SerException {
     }
 
+    /**
+     * 忘记密码修改密码
+     * chenyang
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePasswords(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 修改手机号码
+     * chenyang
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void updatePhone(UserTO userTO) throws SerException {
+    }
+
 
     /**
      * 通过用户名查询用户
@@ -242,6 +262,17 @@ public interface UserAPI {
      * @throws SerException
      */
     default String maxUserEmpNumber( ) throws SerException {
+        return null;
+    }
+
+    /**
+     * 移动端获取下一个员工编号(个人注册的下一个编号)
+     * lijuntao
+     *
+     * @param empNum 企业人(邀请人编号)
+     * @throws SerException
+     */
+    default String nextEmpNumber(String empNum) throws SerException {
         return null;
     }
 

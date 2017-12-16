@@ -698,6 +698,9 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public Boolean isMarker(String userId) throws SerException {
+        if (StringUtils.isBlank(userId)) {
+            return false;
+        }
         Boolean tar = false;
         String[] fildes = new String[]{"id"};
 //        userId = "3348a9a1-bfcb-4799-8d43-834e13c55bf2";
@@ -855,6 +858,20 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
     }
 
     @Override
+    public String findManageByDepart(String department) throws SerException {
+        String sql = "SELECT name FROM organize_position_detail_user WHERE id = "+
+                " (SELECT userId FROM organize_position_user_detail WHERE positionId = "+
+                " (SELECT id FROM organize_position_detail WHERE department_id = "+
+                " (SELECT id FROM organize_department_detail WHERE department = '"+department+"') AND position LIKE '%项目经理%') AND workStatus = 0) ";
+        List<Object> objs = arrangementSer.findBySql(sql);
+        if (objs != null && objs.size() > 0) {
+            String name = String.valueOf(objs.get(0));
+            return name;
+        }
+        return null;
+    }
+
+    @Override
     public String[] budgetPerson() throws SerException {
         String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '预算模块'))) ";
         List<Object> nameBOS = arrangementSer.findBySql(sql);
@@ -899,8 +916,8 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         List<Object> nameBOS = super.findBySql(sql);
         List<String> strs = new ArrayList<>();
         if (nameBOS != null) {
-            for(Object o:nameBOS){
-                Object[] obj = (Object[])o;
+            for (Object o : nameBOS) {
+                Object[] obj = (Object[]) o;
                 strs.add((String) obj[0]);
             }
         }

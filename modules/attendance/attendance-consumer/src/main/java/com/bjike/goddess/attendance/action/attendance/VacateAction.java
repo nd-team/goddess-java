@@ -187,6 +187,24 @@ public class VacateAction extends BaseFileAction {
     }
 
     /**
+     * 手机端添加
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/phone/save")
+    public Result savePhone(@Validated(VacateTO.PHONEADD.class) VacateTO to, BindingResult result) throws ActException {
+        try {
+            vacateAPI.save(to);
+            return new ActResult("添加成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 补录
      *
      * @param to to
@@ -264,6 +282,22 @@ public class VacateAction extends BaseFileAction {
      */
     @GetMapping("v1/count")
     public Result vacate(VacateDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(vacateAPI.count(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 请假总条数(phone)
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/phone/count")
+    public Result vacates(VacateDTO dto) throws ActException {
         try {
             return ActResult.initialize(vacateAPI.count(dto));
         } catch (SerException e) {
@@ -631,9 +665,9 @@ public class VacateAction extends BaseFileAction {
     @GetMapping("v1/check/permission")
     public Result checkPermission() throws ActException {
         try {
-            String name=userAPI.currentUser().getUsername();
+            String name = userAPI.currentUser().getUsername();
             boolean flag = false;
-            if ("admin".equalsIgnoreCase(name)){
+            if ("admin".equalsIgnoreCase(name)) {
                 flag = true;
             }
             PositionDetailBO detailBO = positionUserDetailAPI.getPosition(name);

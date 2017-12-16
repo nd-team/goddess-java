@@ -7,6 +7,7 @@ import com.bjike.goddess.businessproject.entity.BusinessContract;
 import com.bjike.goddess.businessproject.entity.CollectUpdate;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.businessproject.excel.BusinessContractExport;
 import com.bjike.goddess.businessproject.excel.BusinessContractTemplateExcel;
 import com.bjike.goddess.businessproject.to.BusinessContractTO;
@@ -353,7 +354,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         dto.getSorts().add("createTime=desc");
         checkSeeIdentity();
         search(dto);
-        List<BusinessContract> contracts = super.findByCis(dto);
+        List<BusinessContract> contracts = super.findByCis (dto,true);
         List<BusinessContractsBO> contractBOS = BeanTransform.copyProperties(contracts, BusinessContractsBO.class);
         return contractBOS;
     }
@@ -2276,15 +2277,18 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                     export.setTaskFinish("否");
                 }
             }
+            //合同派工合同
+            export.setTaskContract( TaskContract.exportStrConvert(str.getTaskContract()));
+            exports.add(export);
             //是否有合同派工合同
-            if (null != str.getTaskContract()) {
-                if (str.getTaskContract().equals(true)) {
-                    export.setTaskContract("是");
-                } else {
-                    export.setTaskContract("否");
-                }
-
-            }
+//            if (null != str.getTaskContract()) {
+//                if (str.getTaskContract().equals(true)) {
+//                    export.setTaskContract("是");
+//                } else {
+//                    export.setTaskContract("否");
+//                }
+//
+//            }
 
             //合同规模数是否有差异
             if (null != str.getScaleBalance()) {
@@ -3788,7 +3792,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 scaleContract.add(figureBO.getScaleContract());
 //                finishScale.add(figureBO.getFinishScale());
             }
-            List<List<Integer>> nums = new ArrayList<>();
+            List<List<Integer>> nums = new ArrayList<> ();
             nums.add(scaleContract);
 //            nums.add(finishScale);
             String[] ziduan = new String[]{"规模数量(总规模数量)", "实际规模数量"};
@@ -4048,6 +4052,27 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
+    public List<String> findProjectGroup() throws SerException {
+        Set<String> set = new HashSet<> ();
+        List<BusinessContract> businessContracts = super.findAll ();
+        for (BusinessContract businessContract : businessContracts) {
+            set.add ( businessContract.getProjectGroup () );
+        }
+        return new ArrayList<> ( set );
+    }
+
+    @Override
+    public List<String> findInnerProject(String projcetGroup) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("projectGroup", projcetGroup));
+        List<BusinessContract> businessContractList = super.findByCis(businessContractDTO);
+        if (CollectionUtils.isEmpty(businessContractList)) {
+            return Collections.emptyList();
+        }
+        return businessContractList.stream().map(BusinessContract::getInnerProject).distinct().collect(Collectors.toList());
+    }
+
+    @Override
     public List<String> findSingleNumByName(String singName) throws SerException {
         BusinessContractDTO businessContractDTO = new BusinessContractDTO();
         businessContractDTO.getConditions().add(Restrict.eq("singleContractName", singName));
@@ -4059,11 +4084,45 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     @Override
+    public List<String> findInternalContractNum(String innerProject) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("innerProject", innerProject));
+        List<BusinessContract> businessContractList = super.findByCis(businessContractDTO);
+        if (CollectionUtils.isEmpty(businessContractList)) {
+            return Collections.emptyList();
+        }
+        return businessContractList.stream().map(BusinessContract::getInternalContractNum).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<String> findMakeContract(String internalContractNum) throws SerException {
+        BusinessContractDTO businessContractDTO = new BusinessContractDTO();
+        businessContractDTO.getConditions().add(Restrict.eq("internalContractNum", internalContractNum));
+        Set<String> makeProjects = new HashSet<>();
+        List<BusinessContract> list = super.findByCis ( businessContractDTO );
+        for (BusinessContract businessContract : list) {
+            makeProjects.add(String.valueOf(businessContract.getMakeContract ()));
+        }
+        return makeProjects;
+    }
+
+    @Override
     public BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
         BusinessContractDTO businessContractDTO = new BusinessContractDTO();
         businessContractDTO.getConditions().add(Restrict.eq("singleContractNum", singleNum));
         BusinessContract businessContract = super.findOne(businessContractDTO);
         return BeanTransform.copyProperties(businessContract, BusinessContractsBO.class);
+    }
+
+    @Override
+    public List<String> findMarkNum() throws SerException {
+        List<String> stringList = new ArrayList<>(0);
+        List<BusinessContract> list = super.findAll();
+        if (null != list && list.size() > 0) {
+            stringList = list.stream().map(BusinessContract::getMarketNum).distinct().collect(Collectors.toList());
+            return stringList;
+        }
+        return null;
     }
 
 

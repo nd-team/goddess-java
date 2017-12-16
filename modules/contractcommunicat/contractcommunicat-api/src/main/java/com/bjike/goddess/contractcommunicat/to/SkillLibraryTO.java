@@ -1,6 +1,10 @@
 package com.bjike.goddess.contractcommunicat.to;
 
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.message.entity.Message;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.swing.*;
 
 /**
  * 谈判技巧库
@@ -12,6 +16,7 @@ import com.bjike.goddess.common.api.to.BaseTO;
  * @Copy: [ com.bjike ]
  */
 public class SkillLibraryTO extends BaseTO {
+    public interface APPRAISE{}
 
     /**
      * 阶段
@@ -41,6 +46,7 @@ public class SkillLibraryTO extends BaseTO {
     /**
      * 评价
      */
+    @NotBlank(message = "评价不能为空",groups = {SkillLibraryTO.APPRAISE.class})
     private String appraise;
 
     /**

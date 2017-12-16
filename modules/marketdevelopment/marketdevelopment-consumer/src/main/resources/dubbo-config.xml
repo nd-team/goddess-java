@@ -17,6 +17,7 @@
 
     <!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" id="businessCourseApiImpl"/>
+    <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.BusinessAPI" id="businessApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" id="businessTypeApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.DemandAnalysisAPI" id="demandAnalysisApiImpl"/>
     <dubbo:reference interface="com.bjike.goddess.marketdevelopment.api.MarketChannelAPI" id="marketChannelApiImpl"/>

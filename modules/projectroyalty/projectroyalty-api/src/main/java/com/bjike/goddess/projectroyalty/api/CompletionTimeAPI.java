@@ -26,6 +26,7 @@ public interface CompletionTimeAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -109,4 +110,13 @@ public interface CompletionTimeAPI {
     }
 
 
+    /**
+     * 根据完工时间获取重要性
+     *
+     * @return
+     * @throws SerException
+     */
+    default Double findImportain(Integer month) throws SerException {
+        return null;
+    }
 }

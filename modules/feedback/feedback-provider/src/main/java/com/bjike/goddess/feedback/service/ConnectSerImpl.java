@@ -50,7 +50,7 @@ public class ConnectSerImpl extends ServiceImpl<Connect, ConnectDTO> implements 
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -68,7 +68,7 @@ public class ConnectSerImpl extends ServiceImpl<Connect, ConnectDTO> implements 
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -86,7 +86,7 @@ public class ConnectSerImpl extends ServiceImpl<Connect, ConnectDTO> implements 
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -103,7 +103,7 @@ public class ConnectSerImpl extends ServiceImpl<Connect, ConnectDTO> implements 
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -195,7 +195,7 @@ public class ConnectSerImpl extends ServiceImpl<Connect, ConnectDTO> implements 
     @Override
     public List<ConnectBO> list(ConnectDTO dto) throws SerException {
         checkSeeIdentity();
-        List<Connect> connects = super.findByCis(dto);
+        List<Connect> connects = super.findByCis(dto,true);
         List<ConnectBO> connectBOS = BeanTransform.copyProperties(connects, ConnectBO.class);
         return connectBOS;
     }

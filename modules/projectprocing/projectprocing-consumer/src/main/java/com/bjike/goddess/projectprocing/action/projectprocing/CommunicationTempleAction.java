@@ -12,6 +12,7 @@ import com.bjike.goddess.projectprocing.api.CommunicationTempleAPI;
 import com.bjike.goddess.projectprocing.bo.CommunicationTempleBO;
 import com.bjike.goddess.projectprocing.dto.CommunicationTempleDTO;
 import com.bjike.goddess.projectprocing.to.CommunicationTempleTO;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.vo.CommunicationTempleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -35,7 +36,28 @@ import java.util.List;
 public class CommunicationTempleAction {
     @Autowired
     private CommunicationTempleAPI communicationTempleAPI;
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
 
+            Boolean isHasPermission = communicationTempleAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 各类沟通交流模板总条数
      *
@@ -58,7 +80,7 @@ public class CommunicationTempleAction {
      * 一个各类沟通交流模板
      *
      * @param id 各类沟通交流模板id
-     * @return class HeadersCustomVO
+     * @return class CommunicationTempleVO
      * @des 根据id获取各类沟通交流模板
      * @version v1
      */

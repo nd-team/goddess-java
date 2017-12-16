@@ -43,6 +43,16 @@ public interface UserRegisterSer {
         return null;
     }
 
+    /**
+     * 获取短信验证码(修改手机号码)
+     *
+     * @return
+     * @throws SerException
+     */
+    default String sendSmsVerifyCodes(SmsCodeParameterTO smsCodeParameterTOO) throws SerException {
+        return null;
+    }
+
 
     /**
      * 校验手机短信验证码
@@ -93,5 +103,14 @@ public interface UserRegisterSer {
     default String autogenerationNum(String startNumber) throws SerException {
         return null;
     }
-
+    /**
+     * 移动端邀请员工注册
+     * lijuntao
+     *
+     * @param inviteUrl 邀请链接
+     * @throws SerException
+     */
+    default void inviteReg(String inviteUrl,AppUserRegisterTO appUserRegisterTO) throws SerException {
+        return;
+    }
 }

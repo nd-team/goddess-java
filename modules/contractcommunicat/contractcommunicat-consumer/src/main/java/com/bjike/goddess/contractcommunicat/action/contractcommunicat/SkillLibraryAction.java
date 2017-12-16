@@ -1,6 +1,5 @@
 package com.bjike.goddess.contractcommunicat.action.contractcommunicat;
 
-<<<<<<< Updated upstream
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
@@ -10,18 +9,14 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.contractcommunicat.api.ProjectOutsourcingAPI;
 import com.bjike.goddess.contractcommunicat.api.SkillLibraryAPI;
-import com.bjike.goddess.contractcommunicat.dto.ProjectOutsourcingDTO;
+import com.bjike.goddess.contractcommunicat.bo.HistoryAppraiseBO;
 import com.bjike.goddess.contractcommunicat.dto.SkillLibraryDTO;
-import com.bjike.goddess.contractcommunicat.entity.SkillLibrary;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
-import com.bjike.goddess.contractcommunicat.to.ProjectOutsourcingTO;
 import com.bjike.goddess.contractcommunicat.to.SkillLibraryTO;
 import com.bjike.goddess.contractcommunicat.vo.InProjectsVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingVO;
 import com.bjike.goddess.contractcommunicat.vo.SkillLibraryVO;
-import com.bjike.goddess.storage.api.FileAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -29,10 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-=======
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
->>>>>>> Stashed changes
 
 /**
  * 谈判技巧库
@@ -91,9 +84,9 @@ public class SkillLibraryAction {
     }
 
     /**
-     * 根据id查询项目外包洽谈
+     * 根据id查询谈判技巧库
      *
-     * @param id 项目外包洽谈id
+     * @param id 谈判技巧库id
      * @return class SkillLibraryVO
      * @version v1
      */
@@ -106,14 +99,15 @@ public class SkillLibraryAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
-     * 内部项目名称列表
+     * 谈判技巧库列表
      *
      * @return class SkillLibraryVO
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(SkillLibraryDTO dto,HttpServletRequest request) throws ActException {
+    public Result list(SkillLibraryDTO dto, HttpServletRequest request) throws ActException {
         try {
             List<SkillLibraryVO> vo = BeanTransform.copyProperties(skillLibraryAPI.list(dto), InProjectsVO.class);
             return ActResult.initialize(vo);
@@ -149,15 +143,65 @@ public class SkillLibraryAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) SkillLibraryTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result edit(@Validated({EDIT.class}) SkillLibraryTO to, BindingResult bindingResult) throws ActException {
         try {
-            ProjectOutsourcingVO vo = BeanTransform.copyProperties(skillLibraryAPI.edit(to), ProjectOutsourcingVO.class, request);
+            ProjectOutsourcingVO vo = BeanTransform.copyProperties(skillLibraryAPI.edit(to), ProjectOutsourcingVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-=======
->>>>>>> Stashed changes
 
+    /**
+     * 删除项目承包洽谈
+     *
+     * @param id id
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/remove")
+    public Result remove(@PathVariable String id) throws ActException {
+        try {
+            skillLibraryAPI.remove(id);
+            return new ActResult("delete success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 评价
+     *
+     * @param to 评价
+     * @return class SkillLibraryVO
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/appraise")
+    public Result appraise(@Validated({SkillLibraryTO.APPRAISE.class}) SkillLibraryTO to, BindingResult bindingResult) throws ActException {
+        try {
+            SkillLibraryVO vo = BeanTransform.copyProperties(skillLibraryAPI.appraise(to), SkillLibraryVO.class);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看历史评价
+     *
+     * @param id id
+     * @return class HistoryAppraiseBO
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/historyAppraise")
+    public Result historyAppraise(@PathVariable String id) throws ActException {
+        try {
+            List<HistoryAppraiseBO> boList = BeanTransform.copyProperties(skillLibraryAPI.historyAppraise(id), HistoryAppraiseBO.class);
+            return ActResult.initialize(boList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

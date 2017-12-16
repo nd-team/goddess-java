@@ -35,7 +35,7 @@ public class SettleProgressManage extends BaseEntity {
     /**
      * 是否更改日期
      */
-    @Column(name = "is_isChangeDate", nullable = false, columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否更改日期'", insertable = false)
+    @Column(name = "is_isChangeDate",  columnDefinition = "TINYINT(1)  DEFAULT 0  COMMENT '是否更改日期'", insertable = false)
     private Boolean isChangeDate;
 
     /**

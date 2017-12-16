@@ -15,7 +15,10 @@ import javax.persistence.Column;
  * @Copy: [ com.bjike ]
  */
 public class SalaryCalculateDetailBO extends BaseBO {
-
+    /**
+     * id
+     */
+    private String id;
     /**
      * 姓名
      */
@@ -184,5 +187,15 @@ public class SalaryCalculateDetailBO extends BaseBO {
 
     public void setBoss(Integer boss) {
         this.boss = boss;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -62,6 +62,11 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     }
 
     @Override
+    public Long countReimburseRecords(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        return reimburseRecordSer.countReimburseRecords(reimburseRecordDTO);
+    }
+
+    @Override
     public List<ReimburseRecordBO> listReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return reimburseRecordSer.listReimburseRecord(reimburseRecordDTO);
     }

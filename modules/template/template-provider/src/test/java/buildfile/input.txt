@@ -1,10 +1,11 @@
-模块名:contractcommunicat
-类名:BusinessNegotiation
-作者:xiazhili
-描述:商务洽谈
+模块名:marketdevelopment
+类名:WeekFiles
+作者:zhuangkaiqin
+描述:周计划的表头数据
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
+<<<<<<< HEAD
 String marketNum 市场编号;
 String projectNum 内部项目编号;
 String innerProject 内部项目名称;
@@ -48,3 +49,11 @@ String source 洽谈公司;
 					字段名称_40:计划跟进时间
 					字段名称_41:是否产生路费
 					字段名称_42:路费
+=======
+String weekCycleId 周计划的周期id;
+Integer index 表头下标;
+String table 表头;
+String context 内容;
+String fatherId 父级id;
+)
+>>>>>>> upstream/develop

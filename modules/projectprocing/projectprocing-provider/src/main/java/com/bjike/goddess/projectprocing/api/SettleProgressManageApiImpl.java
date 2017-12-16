@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.projectprocing.bo.*;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.service.SettleProgressManageSer;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,16 @@ import java.util.List;
 public class SettleProgressManageApiImpl implements SettleProgressManageAPI {
     @Autowired
     private SettleProgressManageSer settleProgressManageSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return settleProgressManageSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return settleProgressManageSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public void excelImport(List<InputStream> is, String outUnit) throws SerException {

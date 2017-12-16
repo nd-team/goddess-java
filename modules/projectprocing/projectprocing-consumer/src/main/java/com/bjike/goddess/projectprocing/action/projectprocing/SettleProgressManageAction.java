@@ -16,10 +16,7 @@ import com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI;
 import com.bjike.goddess.projectprocing.bo.OptionBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
-import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
-import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
-import com.bjike.goddess.projectprocing.to.SettleWorkProgreManageTO;
-import com.bjike.goddess.projectprocing.to.SiginManageDeleteFileTO;
+import com.bjike.goddess.projectprocing.to.*;
 import com.bjike.goddess.projectprocing.vo.*;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
@@ -56,6 +53,29 @@ public class SettleProgressManageAction extends BaseFileAction {
     private SettleWorkProgreManageAPI settleWorkProgreManageAPI;
     @Autowired
     private FileAPI fileAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = settleWorkProgreManageAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 结算进度管理总条数
@@ -447,15 +467,15 @@ public class SettleProgressManageAction extends BaseFileAction {
      * 导入
      *
      * @param outUnit 外包单位
-     * @return
      * @throws ActException
+     * @version v1
      */
     @PostMapping("v1/importExcel")
     public Result importExcel(String outUnit, HttpServletRequest request) throws ActException {
         try {
             List<InputStream> inputStreams = getInputStreams(request);
             settleProgressManageAPI.excelImport(inputStreams, outUnit);
-            return ActResult.initialize(true);
+            return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

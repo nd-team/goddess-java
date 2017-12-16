@@ -350,10 +350,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 //        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 //        Boolean arrangementFlag = positionDetailUserAPI.checkAsUserArrangement(userId, operateIds);
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
-        String token = RpcTransmit.getUserToken();
-        RpcTransmit.transmitUserToken(token);
         Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-        RpcTransmit.transmitUserToken(token);
 
         //TODO 部门
         if (depart ) {
@@ -409,7 +406,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        RpcTransmit.transmitUserToken(userToken);
         Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId, operateIds);
 
         if (moduleFlag) {
@@ -464,8 +460,6 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
 
         //TODO 部门id 商务部
-//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        RpcTransmit.transmitUserToken(userToken);
         Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
         if (positionFlag) {

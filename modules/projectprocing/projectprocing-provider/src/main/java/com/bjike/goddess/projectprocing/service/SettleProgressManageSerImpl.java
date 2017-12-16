@@ -20,10 +20,8 @@ import com.bjike.goddess.projectprocing.entity.HeadersCustom;
 import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
 import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
 import com.bjike.goddess.projectprocing.entity.SettleProgressRecord;
-import com.bjike.goddess.projectprocing.to.HeadersCustomTO;
-import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
-import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
-import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
+import com.bjike.goddess.projectprocing.enums.GuideAddrStatus;
+import com.bjike.goddess.projectprocing.to.*;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -70,13 +68,136 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     @Autowired
     private BusinessContractAPI businessContractAPI;
     @Autowired
-    private UserAPI userAPI;
-    @Autowired
     private SettleProgressRecordSer settleProgressRecordSer;
     @Autowired
     private PositionUserDetailAPI positionUserDetailAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private UserAPI userAPI;
+
+    /**
+     * 检查权限(部门)
+     *
+     * @throws SerException
+     */
+    private void checkPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        if (!flag) {
+            throw new SerException("您不是本部门人员,没有该操作权限");
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 分配责任人权限（部门级别）
+     */
+    private Boolean guideAllotmentIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("7");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAllotment = guideAllotmentIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAllotment) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideIdentity() || guideAllotmentIdentity();
+                break;
+            case ADD:
+                flag = guideIdentity();
+                break;
+            case EDIT:
+                flag = guideIdentity();
+                break;
+            case DELETE:
+                flag = guideIdentity();
+                break;
+            case UPLOAD:
+                flag = guideIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideIdentity();
+                break;
+            case SEEFILE:
+                flag = guideIdentity();
+                break;
+            case COLLECT:
+                flag = guideIdentity();
+                break;
+            case ASSIGNEDPERSON:
+                flag = guideAllotmentIdentity();
+                break;
+            case IMPORT:
+                flag = guideIdentity();
+                break;
+            case EXPORT:
+                flag = guideIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
 
     @Override
     public Long countManage(SettleProgressManageDTO settleProgressManageDTO) throws SerException {
@@ -131,6 +252,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SettleProgressManageBO addManage(SettleProgressManageTO settleProgressManageTO) throws SerException {
+        checkPermission();
         SettleProgressManage settleProgressManage = BeanTransform.copyProperties(settleProgressManageTO, SettleProgressManage.class, true);
         settleProgressManage.setCreateTime(LocalDateTime.now());
         settleProgressManage.setUpdateDate(LocalDateTime.now());
@@ -171,6 +293,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     @Transactional(rollbackFor = SerException.class)
     @Override
     public SettleProgressManageBO editManage(SettleProgressManageTO settleProgressManageTO) throws SerException {
+        checkPermission();
         SettleProgressManage settleProgressManage = super.findById(settleProgressManageTO.getId());
         LocalDateTime dateTime = settleProgressManage.getCreateTime();
         settleProgressManage = BeanTransform.copyProperties(settleProgressManageTO, SettleProgressManage.class, true);
@@ -216,6 +339,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteManage(String id) throws SerException {
+        checkPermission();
         headersCustomSer.removeByManageId(id);
         nodeHeadersCustomSer.removeByManageId(id);
         super.remove(id);
@@ -377,6 +501,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public byte[] exportExcel(String outUnit) throws SerException {
+        checkPermission();
         List<String> titles = new ArrayList<>();
         titles.add("更改日期");
         titles.add("是否更改日期");
@@ -469,7 +594,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         SettleProgressManageDTO dto = new SettleProgressManageDTO();
         dto.getConditions().add(Restrict.eq("outUnit", outUnit));
         List<ScreeningSettleProgressManageBO> settleProgressManages = listByOutUnit(outUnit);//固定
-        if (settleProgressManages.size() > 0) {
+        if (settleProgressManages != null && settleProgressManages.size() > 0) {
             XSSFWorkbook wb = new XSSFWorkbook(); // 创建一个工作execl文档
             XSSFSheet sheet = wb.createSheet("test");
             headerRow = sheet.createRow(0);
@@ -516,31 +641,34 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 int sum = titles.size();
                 for (int index = nodeStartSize; index < sum; index++) {
                     String title = titles.get(index);
-                    for (NodeHeadersCustomBO nhc : spm.getNodeHeadersCustomBOList()) {
-                        if (title.equals(nhc.getNodeOneName())) {
-                            XSSFCell cell = row.createCell(index);
-                            cell.setCellValue(nhc.getNodeOneNameContent() == null ? "" : nhc.getNodeOneNameContent().toString());
+                    if (spm.getNodeHeadersCustomBOList() != null) {
 
-                        }
-                        if (title.equals(nhc.getNodeOneHeader())) {
-                            XSSFCell cell = row.createCell(index);
-                            cell.setCellValue(nhc.getNodeOneContent() == null ? "" : nhc.getNodeOneContent().toString());
+                        for (NodeHeadersCustomBO nhc : spm.getNodeHeadersCustomBOList()) {
+                            if (title.equals(nhc.getNodeOneName())) {
+                                XSSFCell cell = row.createCell(index);
+                                cell.setCellValue(nhc.getNodeOneNameContent() == null ? "" : nhc.getNodeOneNameContent().toString());
 
-                        }
-                        if (title.equals(nhc.getNodeTwoHeader())) {
-                            XSSFCell cell = row.createCell(index);
-                            cell.setCellValue(nhc.getNodeTwoContent() == null ? "" : nhc.getNodeTwoContent().toString());
+                            }
+                            if (title.equals(nhc.getNodeOneHeader())) {
+                                XSSFCell cell = row.createCell(index);
+                                cell.setCellValue(nhc.getNodeOneContent() == null ? "" : nhc.getNodeOneContent().toString());
 
-                        }
-                        if (title.equals(nhc.getNodeThreeHeader())) {
-                            XSSFCell cell = row.createCell(index);
-                            cell.setCellValue(nhc.getNodeThreeContent() == null ? "" : nhc.getNodeThreeContent().toString());
+                            }
+                            if (title.equals(nhc.getNodeTwoHeader())) {
+                                XSSFCell cell = row.createCell(index);
+                                cell.setCellValue(nhc.getNodeTwoContent() == null ? "" : nhc.getNodeTwoContent().toString());
 
-                        }
-                        if (title.equals(nhc.getNodeFourHeader())) {
-                            XSSFCell cell = row.createCell(index);
-                            cell.setCellValue(nhc.getNodeFourContent() == null ? "" : nhc.getNodeFourContent().toString());
+                            }
+                            if (title.equals(nhc.getNodeThreeHeader())) {
+                                XSSFCell cell = row.createCell(index);
+                                cell.setCellValue(nhc.getNodeThreeContent() == null ? "" : nhc.getNodeThreeContent().toString());
 
+                            }
+                            if (title.equals(nhc.getNodeFourHeader())) {
+                                XSSFCell cell = row.createCell(index);
+                                cell.setCellValue(nhc.getNodeFourContent() == null ? "" : nhc.getNodeFourContent().toString());
+
+                            }
                         }
                     }
 
@@ -562,6 +690,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void importExcel(List<InputStream> inputStreams, String outUnit) throws SerException {
+        checkPermission();
         if (null != inputStreams && inputStreams.size() > 0) {
             List<String> titles = new ArrayList<>();
             titles.add("更改日期");
@@ -660,11 +789,10 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 }
             }
             //开始插入数据
-            int rowCount = sheet.getLastRowNum()+1;
+            int rowCount = sheet.getLastRowNum() + 1;
             List<String> str_titles = new ArrayList<>();
             List<Field> fields = ClazzUtils.getFields(SettleProgressManage.class);
             for (Field field : fields) {
-                //TODO 这里改了你看一下(这个导入为什么excel里面有两条数据可是只导入成功一条)
                 if (!field.getName().equals("id") && !field.getName().equals("createTime") && !field.getName().equals("modifyTime")) {
                     str_titles.add(field.getName());
                 }
@@ -694,11 +822,11 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                                     if (StringUtils.isBlank(cellVal)) {
                                         if (field.getType().getSimpleName().equals("LocalDateTime")) {
                                             cellVal = DateUtil.dateToString(LocalDateTime.now());
-                                        }else if(field.getType().getSimpleName().equals("LocalDate")){
+                                        } else if (field.getType().getSimpleName().equals("LocalDate")) {
                                             cellVal = DateUtil.dateToString(LocalDate.now());
-                                        }else if(field.getType().getSimpleName().equals("LocalTime")){
+                                        } else if (field.getType().getSimpleName().equals("LocalTime")) {
                                             cellVal = DateUtil.dateToString(LocalTime.now());
-                                        } else if(field.getType().getSimpleName().equals("Boolean")){
+                                        } else if (field.getType().getSimpleName().equals("Boolean")) {
                                             cellVal = "true";
                                         }
                                     }
@@ -735,18 +863,14 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                 }
 
 //                //自定义节点表头添加数据(跟导出处理相反操作)
-                //TODO 这里的添加大概是这样写的还没测(然后再优化一下代码)
                 if (ncs.size() > 0) {
                     XSSFRow xr = sheet.getRow(rowIndex);
                     for (NodeHeadersCustom ncm : ncs) {
                         NodeHeadersCustom nhc = new NodeHeadersCustom();
-//                        nhc.setNodeFourInterDate(1);
-//                        nhc.setNodeTwoInterDate(1);
-//                        nhc.setNodeThreeInterDate(1);
                         nhc.setFatherId(ncm.getId());
                         nhc.setProssManageId(spm.getId());
-//                        nhc.setOutUnit(outUnit);
-                        for (int z = nodeSize; nodeSize < titles.size(); z++) {
+                        Boolean bool = true;
+                        for (int z = nodeSize; z < titles.size(); z++) {
                             String head = titles.get(z);
                             String val = null;
                             try {
@@ -756,24 +880,31 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                             }
 
                             if (ncm.getNodeOneName().equals(head)) {
-//                                nhc.setNodeOneName(head);
                                 nhc.setNodeOneNameContent(val == null ? 1 : Integer.parseInt(val));
                             } else if (ncm.getNodeOneHeader().equals(head)) {
-//                                nhc.setNodeOneHeader(head);
-                                nhc.setNodeOneContent(val == null ? LocalDate.now() : DateUtil.parseDate(val));
+                                if (StringUtils.isBlank(val)) {
+                                    bool = false;
+                                } else {
+                                    nhc.setNodeOneContent(DateUtil.parseDate(val));
+                                }
                             } else if (ncm.getNodeTwoHeader().equals(head)) {
-//                                nhc.setNodeTwoHeader(head);
-                                nhc.setNodeTwoContent(val == null ? nhc.getNodeOneContent().plusDays(ncm.getNodeTwoInterDate()) : DateUtil.parseDate(val));
+                                if (nhc.getNodeOneContent() != null) {
+                                    nhc.setNodeTwoContent(val == null ? nhc.getNodeOneContent().plusDays(ncm.getNodeTwoInterDate()) : DateUtil.parseDate(val));
+                                }
                             } else if (ncm.getNodeThreeHeader().equals(head)) {
-//                                nhc.setNodeThreeHeader(head);
-                                nhc.setNodeThreeContent(val == null ? nhc.getNodeTwoContent().plusDays(ncm.getNodeThreeInterDate()) : DateUtil.parseDate(val));
+                                if (nhc.getNodeTwoContent() != null) {
+                                    nhc.setNodeThreeContent(val == null ? nhc.getNodeTwoContent().plusDays(ncm.getNodeThreeInterDate()) : DateUtil.parseDate(val));
+                                }
                             } else if (ncm.getNodeFourHeader().equals(head)) {
-//                                nhc.setNodeFourHeader(head);
-                                nhc.setNodeFourContent(val == null ? nhc.getNodeThreeContent().plusDays(ncm.getNodeFourInterDate()) : DateUtil.parseDate(val));
+                                if (nhc.getNodeThreeContent() != null) {
+                                    nhc.setNodeFourContent(val == null ? nhc.getNodeThreeContent().plusDays(ncm.getNodeFourInterDate()) : DateUtil.parseDate(val));
+                                }
                             }
-                            break;
+//                            break;
                         }
-                        nodeHeadersCustomSer.save(nhc);
+                        if (bool) {
+                            nodeHeadersCustomSer.save(nhc);
+                        }
                     }
 
                 }
@@ -798,6 +929,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public void scheduleDelay(ScheduleDelayDataTO scheduleDelayDataTO) throws SerException {
+        checkPermission();
         SettleProgressManage settleProgressManage = super.findById(scheduleDelayDataTO.getId());
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
@@ -859,6 +991,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public List<SettleProgressSummBO> settleProgress(String area, String outUnit) throws SerException {
+//        checkPermission();
         List<String> areas = findArea();
         if (StringUtils.isNotBlank(area)) {
             areas = new ArrayList<>();
@@ -1044,29 +1177,31 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                     if (encapsulationNodeBOList != null && encapsulationNodeBOList.size() > 0) {
                         for (EncapsulationNodeBO encapsulationNodeBO : encapsulationNodeBOList) {
                             for (NodeDataBO nodeDataBO : nodeDataBOList) {
-                                switch (encapsulationNodeBO.getNodeOneNameContent()) {
-                                    case 1:
-                                        if (encapsulationNodeBO.getNodeOneHeader().equals(nodeDataBO.getNode())) {
-                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
-                                        }
-                                        break;
-                                    case 2:
-                                        if (encapsulationNodeBO.getNodeTwoHeader().equals(nodeDataBO.getNode())) {
-                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
-                                        }
-                                        break;
-                                    case 3:
-                                        if (encapsulationNodeBO.getNodeThreeHeader().equals(nodeDataBO.getNode())) {
-                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
-                                        }
-                                        break;
-                                    case 4:
-                                        if (encapsulationNodeBO.getNodeFourHeader().equals(nodeDataBO.getNode())) {
-                                            nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
-                                        }
-                                        break;
-                                    default:
-                                        break;
+                                if (encapsulationNodeBO.getNodeOneNameContent() != null) {
+                                    switch (encapsulationNodeBO.getNodeOneNameContent()) {
+                                        case 1:
+                                            if (encapsulationNodeBO.getNodeOneHeader().equals(nodeDataBO.getNode())) {
+                                                nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                            }
+                                            break;
+                                        case 2:
+                                            if (encapsulationNodeBO.getNodeTwoHeader().equals(nodeDataBO.getNode())) {
+                                                nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                            }
+                                            break;
+                                        case 3:
+                                            if (encapsulationNodeBO.getNodeThreeHeader().equals(nodeDataBO.getNode())) {
+                                                nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                            }
+                                            break;
+                                        case 4:
+                                            if (encapsulationNodeBO.getNodeFourHeader().equals(nodeDataBO.getNode())) {
+                                                nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 }
                             }
                         }
@@ -1093,6 +1228,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public List<SettleProgressManageSummBO> settleProgressManageSumm() throws SerException {
+        checkPermission();
         List<String> internalProNames = findInternalProName();
         List<SettleProgressManageSummBO> settleProgressManageSummBOList = new ArrayList<>();
         for (String name : internalProNames) {
@@ -1171,8 +1307,8 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
         }
         List<SeriesBO> seriesBOList = new ArrayList<>();
-        String[] ziduan_str = new String[]{"总合同数量","已完工数量","未完工数量","已完工已启动结算","已完工未启动结算"
-        ,"未完工已启动结算","未完工未结算","已回款单数","未回款单数"};
+        String[] ziduan_str = new String[]{"总合同数量", "已完工数量", "未完工数量", "已完工已启动结算", "已完工未启动结算"
+                , "未完工已启动结算", "未完工未结算", "已回款单数", "未回款单数"};
 
 
         List<List<Integer>> data_list = new ArrayList<>();
@@ -1236,6 +1372,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public OptionAmountBO settleProgressAmount() throws SerException {
+        checkPermission();
         List<String> internalProNames = findInternalProName();
         List<Double> amountTotal_list = new ArrayList<>();
         List<Double> completedAmount_list = new ArrayList<>();
@@ -1266,12 +1403,12 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
             settleUnCompletedStartAmount_list.add(Double.parseDouble(String.valueOf(objects[4])));
             unfinishedSettledAmount_list.add(Double.parseDouble(String.valueOf(objects[5])));
             returnedItemsAmount_list.add(Double.parseDouble(String.valueOf(objects[6])));
-            noReturnSingularAmount_list.add(Double.parseDouble(String.valueOf(objects[0]))-Double.parseDouble(String.valueOf(objects[6])));
+            noReturnSingularAmount_list.add(Double.parseDouble(String.valueOf(objects[0])) - Double.parseDouble(String.valueOf(objects[6])));
 
         }
         List<SeriesAmountBO> seriesAmountBOS = new ArrayList<>();
-        String[] ziduan_str = new String[]{"总金额/万","已完工金额","未完工金额","已完工已启动结算金额","未完工已启动结算金额"
-                ,"未完工未结算金额","已回款金额","未回款金额"};
+        String[] ziduan_str = new String[]{"总金额/万", "已完工金额", "未完工金额", "已完工已启动结算金额", "未完工已启动结算金额"
+                , "未完工未结算金额", "已回款金额", "未回款金额"};
 
 
         List<List<Double>> data_list = new ArrayList<>();

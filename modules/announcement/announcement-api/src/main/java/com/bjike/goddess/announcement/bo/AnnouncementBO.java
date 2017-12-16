@@ -69,6 +69,18 @@ public class AnnouncementBO extends BaseBO {
      * 是否已经读取
      */
     private Boolean haveRead;
+    /**
+     * uuid
+     */
+    private String uuid;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public Boolean getHaveRead() {
         return haveRead;

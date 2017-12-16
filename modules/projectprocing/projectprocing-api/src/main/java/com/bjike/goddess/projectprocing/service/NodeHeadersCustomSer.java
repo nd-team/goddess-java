@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.NodeHeadersCustomDTO;
 import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
 
 import java.util.List;
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface NodeHeadersCustomSer extends Ser<NodeHeadersCustom, NodeHeadersCustomDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 节点表头定制总条数
      */

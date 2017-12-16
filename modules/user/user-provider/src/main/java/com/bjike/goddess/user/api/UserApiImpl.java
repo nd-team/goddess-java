@@ -75,6 +75,11 @@ public class UserApiImpl implements UserAPI {
     }
 
     @Override
+    public void updatePhone(UserTO userTO) throws SerException {
+        userSer.updatePhone ( userTO );
+    }
+
+    @Override
     public UserBO findByUsername(String username) throws SerException {
         return userSer.findByUsername(username);
     }
@@ -132,6 +137,11 @@ public class UserApiImpl implements UserAPI {
     @Override
     public String maxUserEmpNumber() throws SerException {
         return userSer.maxUserEmpNumber();
+    }
+
+    @Override
+    public String nextEmpNumber(String empNum) throws SerException {
+        return userSer.nextEmpNumber(empNum);
     }
 
     @Override

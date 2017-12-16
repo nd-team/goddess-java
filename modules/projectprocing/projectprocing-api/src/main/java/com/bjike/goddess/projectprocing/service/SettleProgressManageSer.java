@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.projectprocing.bo.*;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
 import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.ScheduleDelayDataTO;
 import com.bjike.goddess.projectprocing.to.SettleProgressManageTO;
 
@@ -21,6 +22,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SettleProgressManageSer extends Ser<SettleProgressManage, SettleProgressManageDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 结算进度管理总条数
      */

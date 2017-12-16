@@ -5,7 +5,6 @@ import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
 import com.bjike.goddess.financeinit.bo.CourseDateBO;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
-import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.service.AccountanCourseSer;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
@@ -102,6 +101,16 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     @Override
     public List<String> findSendNameByCode(String code) throws SerException {
         return accountanCourseSer.findSendNameByCode(code);
+    }
+
+    @Override
+    public List<AccountAddDateBO> findSecondName(String code) throws SerException {
+        return accountanCourseSer.findSecondName(code);
+    }
+
+    @Override
+    public List<AccountAddDateBO> findThirdName(String secondCode) throws SerException {
+        return accountanCourseSer.findThirdName(secondCode);
     }
 
     @Override

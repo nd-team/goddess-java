@@ -3,6 +3,7 @@ package com.bjike.goddess.marketdevelopment.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessCourseDTO;
+import com.bjike.goddess.marketdevelopment.excel.BusinessCourseImportExcel;
 import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
@@ -130,7 +131,7 @@ public interface BusinessCourseAPI {
      * @return
      * @throws SerException
      */
-    default Integer getTotal() throws SerException {
+    default Integer getTotal(BusinessCourseDTO dto) throws SerException {
         return null;
     }
 
@@ -138,6 +139,37 @@ public interface BusinessCourseAPI {
      * 查询正常数据的业务方向科目
      */
     default List<String> getProjectName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导出导入的excel模板
+     *
+     * @return
+     * @throws SerException
+     */
+    default byte[] templateExcel() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导入
+     *
+     * @param tos
+     * @throws SerException
+     */
+    default void upload(List<BusinessCourseImportExcel> tos) throws SerException {
+        return;
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(BusinessCourseDTO dto) throws SerException {
         return null;
     }
 }

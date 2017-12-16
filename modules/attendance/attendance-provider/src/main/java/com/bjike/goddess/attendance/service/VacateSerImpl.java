@@ -14,6 +14,7 @@ import com.bjike.goddess.attendance.excel.VacateExportExcel;
 import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
+import com.bjike.goddess.attendance.to.VacatePhoneTO;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
@@ -31,7 +32,9 @@ import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -88,6 +91,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private EventAPI eventAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private String content = "%s提交了%d天的请假申请，时间为%s至%s,请及时上系统查看审核";
     private String content1 = "%s提交了%d天的请假申请，时间为%s至%s,请注意工作交接情况";
@@ -332,6 +337,10 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             }
         }
         Vacate entity = BeanTransform.copyProperties(to, Vacate.class, true, "startTime", "endTime");
+        InternalContactsConditionBO bo = positionDetailUserAPI.getByName(entity.getName());
+        entity.setArea(bo.getArea());
+        entity.setDepart(bo.getDepartment());
+        entity.setPosition(bo.getPosition());
         entity.setMain(toString(mains));
         title = String.format(title, entity.getName());
         List<String> carbon = new ArrayList<>();
@@ -405,6 +414,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             }
         }
     }
+
 
     private void check(VacateTO to, double time, String userToken) throws SerException {
         VacateSetDTO dto = new VacateSetDTO();
@@ -589,7 +599,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     @Override
     public List<VacateBO> auditList(VacateDTO dto) throws SerException {
         checkSeeIdentity();
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
         vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
         List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
@@ -608,7 +620,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public List<VacateBO> auditListPhone(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
         vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
         List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
@@ -627,7 +641,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public Long auditListCount(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
         vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
         List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
@@ -648,7 +664,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         if (null == entity) {
             throw new SerException("该对象不存在");
         }
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO dto = new VacateAuditDTO();
         dto.getConditions().add(Restrict.eq("vacate.id", entity.getId()));
         dto.getConditions().add(Restrict.eq("name", name));
@@ -676,7 +694,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 messageAPI.send(messageTO);
             }
         }
-        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+        String eventId = eventAPI.findId(to.getId(), name);
         if (null != eventId) {
             eventAPI.delete(eventId);
         }
@@ -751,7 +769,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public List<VacateBO> list(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("name", name));
         List<Vacate> list = super.findByCis(dto, true);
@@ -764,7 +784,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public List<VacateBO> listPhone(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("name", name));
         List<Vacate> list = super.findByCis(dto, true);
@@ -810,7 +832,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public Long count(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getConditions().add(Restrict.eq("name", name));
         return super.count(dto);
     }

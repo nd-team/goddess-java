@@ -685,7 +685,7 @@ public class AnnouncementAct extends BaseFileAction {
             List<AnnouncementBO> list = announcementAPI.phoneList();
             for (AnnouncementBO bo : list) {
                 AnnouncementVO vo = BeanTransform.copyProperties(bo, AnnouncementVO.class, request);
-                List<String> photos = photos(vo.getId(), request);
+                List<String> photos = photos(bo.getUuid(), request);
                 vo.setPhotos(photos);
                 vos.add(vo);
             }

@@ -336,6 +336,14 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      */
     String moneyModulePerson() throws SerException;
     /**
+     * lijuntao
+     * 根据所属项目组获取对应的项目经理
+     *
+     * @return
+     * @throws SerException
+     */
+    String findManageByDepart(String department) throws SerException;
+    /**
      * xiazhili
      * 获取预算模块负责人
      *

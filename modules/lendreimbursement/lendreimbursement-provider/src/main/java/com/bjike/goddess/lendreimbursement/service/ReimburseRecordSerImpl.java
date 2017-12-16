@@ -448,6 +448,32 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
     }
 
     @Override
+    public Long countReimburseRecords(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        String userName = userBO.getUsername();
+        reimburseRecordDTO.getSorts().add("createTime=desc");
+        reimburseRecordDTO.getConditions().add(Restrict.eq("payCondition", "否"));
+
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimer())) {
+            reimburseRecordDTO.getConditions().add(Restrict.eq("reimer", userName));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getReimNumber())) {
+            reimburseRecordDTO.getConditions().add(Restrict.eq("reimNumber", reimburseRecordDTO.getReimNumber()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getStartTime())) {
+            reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getStartTime()));
+        }
+        if (StringUtils.isNotBlank(reimburseRecordDTO.getEndTime())) {
+            reimburseRecordDTO.getConditions().add(Restrict.eq("occureDate", reimburseRecordDTO.getEndTime()));
+        }
+
+        reimburseRecordDTO = addCondition(reimburseRecordDTO);
+
+        Long count = super.count(reimburseRecordDTO);
+        return count;
+    }
+
+    @Override
     public List<ReimburseRecordBO> listReimburseRecord(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
 
         reimburseRecordDTO.getSorts().add("createTime=desc");

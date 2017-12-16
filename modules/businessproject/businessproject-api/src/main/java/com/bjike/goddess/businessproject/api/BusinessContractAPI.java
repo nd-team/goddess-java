@@ -1210,6 +1210,7 @@ public interface BusinessContractAPI {
     default OptionMakeBO yearPersonFigure(PersonTO to) throws SerException {
         return null;
     }
+
     /**
      * 部门图表周汇总
      *
@@ -1253,26 +1254,64 @@ public interface BusinessContractAPI {
     default OptionMakeBO yearDepartFigure(PersonTO to) throws SerException {
         return null;
     }
+
     /**
      * 获取所有的单次合同名
      * lijuntao
+     *
      * @throws SerException
      */
     default List<String> findSingleContractName() throws SerException {
         return null;
     }
+
+    /**
+     * 获取所有所属项目组
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProjectGroup() throws SerException { return null;}
+
+    /**
+     * 根据所属项目组获取所有内部项目名称
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    default List<String> findInnerProject(String projcetGroup) throws SerException { return null;}
+
+    /**
+     * 根据内部项目名称获取所有内部合同编号
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    default List<String> findInternalContractNum(String innerProject) throws SerException { return null;}
+
+    /**
+     * 根据内部合同编号获取立项情况
+     * chenyang
+     * @return
+     * @throws SerException
+     */
+    Set<String> findMakeContract(String internalContractNum) throws SerException;
+
     /**
      * 根据单次合同名获取单次合同编号
      * lijuntao
+     *
      * @param singName 单次合同名
      * @throws SerException
      */
     default List<String> findSingleNumByName(String singName) throws SerException {
         return null;
     }
+
     /**
      * 根据单次合同编号获取对应信息
      * lijuntao
+     *
      * @param singleNum 单次合同编号
      * @return class BusinessContractsBO
      * @throws SerException
@@ -1280,4 +1319,15 @@ public interface BusinessContractAPI {
     default BusinessContractsBO findBySingleNum(String singleNum) throws SerException {
         return null;
     }
+
+    /**
+     * 获取市场编号(市场信息编号)
+     */
+    default List<String> findMarkNum() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据市场编号(市场信息编号)获取
+     */
 }

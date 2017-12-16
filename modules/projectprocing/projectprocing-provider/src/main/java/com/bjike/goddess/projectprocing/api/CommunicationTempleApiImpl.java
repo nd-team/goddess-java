@@ -5,6 +5,7 @@ import com.bjike.goddess.projectprocing.bo.CommunicationTempleBO;
 import com.bjike.goddess.projectprocing.dto.CommunicationTempleDTO;
 import com.bjike.goddess.projectprocing.service.CommunicationTempleSer;
 import com.bjike.goddess.projectprocing.to.CommunicationTempleTO;
+import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ import java.util.List;
 public class CommunicationTempleApiImpl implements CommunicationTempleAPI {
     @Autowired
     private CommunicationTempleSer communicationTempleSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return communicationTempleSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return communicationTempleSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countCommuni(CommunicationTempleDTO communicationTempleDTO) throws SerException {
