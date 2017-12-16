@@ -259,3 +259,15 @@ include ':modules:announcement:announcement-provider'
 include ':modules:push:push-api'
 include ':modules:push:push-consumer'
 include ':modules:push:push-provider'
+//#attendance
+include ':modules:attendance:attendance-api'
+include ':modules:attendance:attendance-consumer'
+include ':modules:attendance:attendance-provider'
+//#projectissuehandle
+include ':modules:projectissuehandle:projectissuehandle-api'
+include ':modules:projectissuehandle:projectissuehandle  -consumer'
+include ':modules:projectissuehandle:projectissuehandle-provider'
+//#supplier
+include ':modules:supplier:supplier-api'
+include ':modules:supplier:supplier-consumer'
+include ':modules:supplier:supplier-provider'
