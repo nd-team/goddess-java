@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:provider timeout="${dubbo.provider.timeout}"  filter="userFilter"/>
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--发布接口,供其他模块调用-->
+	<!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
+
+	<!--<dubbo:service  ref="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
+	<dubbo:service  ref="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
+	<dubbo:service  ref="collectUpdateApiImpl" interface="com.bjike.goddess.businessproject.api.CollectUpdateAPI" />
+	<dubbo:service  ref="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
+	<dubbo:service  ref="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
+	<dubbo:service  ref="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
+	<dubbo:service  ref="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
+	<dubbo:service  ref="outsourcBusinessContractApiImpl" interface="com.bjike.goddess.businessproject.api.OutsourcBusinessContractAPI" />-->
+	<dubbo:service  ref="businessContractProApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.BusinessContractProAPI" />
+	<dubbo:service  ref="communicationTemplateApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.CommunicationTemplateAPI" />
+	<dubbo:service  ref="notificationFormulaApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.NotificationFormulaAPI" />
+	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.CusPermissionAPI" />
+	<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.CusPermissionOperateAPI" />
+
+
+	<!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
+	否则不需要配置-->
+
+	<dubbo:reference validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+
+
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<!--<dubbo:reference  validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />-->
+	<!--<dubbo:reference  validation="true" id="taskNodeApiImpl" interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" />-->
+
+	<!--<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />-->
+	<!--<dubbo:service  ref="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />-->
+	<!--<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />-->
+
+</beans>
