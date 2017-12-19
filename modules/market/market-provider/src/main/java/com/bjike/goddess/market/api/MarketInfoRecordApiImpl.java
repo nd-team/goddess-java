@@ -75,10 +75,10 @@ public class MarketInfoRecordApiImpl implements MarketInfoRecordAPI {
         return marketInfoRecordSer.findallUser();
     }
 
-    @Override
-    public List<CustomerNameNumBO> getNameNum() throws SerException {
-        return marketInfoRecordSer.getNameNum();
-    }
+//    @Override
+//    public List<CustomerNameNumBO> getNameNum() throws SerException {
+//        return marketInfoRecordSer.getNameNum();
+//    }
 
     @Override
     public List<String> getCompetName() throws SerException {

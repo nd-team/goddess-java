@@ -9,5 +9,6 @@ dependencies {
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:contacts:contacts-api")
     compile project(":modules:taskallotment:taskallotment-api")
+    compile project(":modules:projectcalculation:projectcalculation-api")
 
 }

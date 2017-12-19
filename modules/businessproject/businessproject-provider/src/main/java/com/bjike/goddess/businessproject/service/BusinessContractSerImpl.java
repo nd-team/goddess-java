@@ -29,6 +29,9 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.projectcalculation.entity.InterfaceCalculationDetail;
+import com.bjike.goddess.projectcalculation.service.CalculationDecisionsSer;
+import com.bjike.goddess.projectcalculation.service.InterfaceCalculationDetailSer;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
@@ -75,7 +78,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     private CollectUpdateSer collectUpdateSer;
     @Autowired
     private TaskNodeAPI taskNodeAPI;
-
+    @Autowired
+    private InterfaceCalculationDetailSer interfaceCalculationDetailSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -387,6 +391,11 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 //        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
         messageAPI.send(messageTO);
         super.save(contract);
+
+//      projectcalculation
+        InterfaceCalculationDetail interfaceCalculationDetail = BeanTransform.copyProperties(contract, InterfaceCalculationDetail.class,"calculationTime","makeContract","taxPoint","invoice","paymentMethod","settlementBatch","calculationProgress","epiboly"+
+                "implementingParty","interfaceContent","entry","outsourcedUnitPrice","entryMoney","interfaceAssignment","totalAmountOfOutsourced","note");
+        interfaceCalculationDetailSer.save(interfaceCalculationDetail);
 
         BusinessContractsBO bo = BeanTransform.copyProperties(contract, BusinessContractsBO.class);
         return bo;

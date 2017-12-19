@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("annualapply")
 public class AnnualApplyAct {
-
     @Autowired
     private AnnualApplyAPI annualApplyAPI;
 
@@ -59,6 +58,7 @@ public class AnnualApplyAct {
             throw new ActException(e.getMessage());
         }
     }
+
 
     /**
      * 年假申请
