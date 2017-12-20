@@ -14,7 +14,7 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SupplierInfoRegistraBO extends BaseBO {
+public class SupplierInfoRegistraDataBO extends BaseBO {
 
     /**
      * 供应商名称
@@ -100,6 +100,24 @@ public class SupplierInfoRegistraBO extends BaseBO {
      * 信用等级
      */
     private String creditRating;
+
+    /**
+     * 企业资质
+     */
+    private List<EnterpriseQualificaBO> enterpriseQualificaBOList;
+
+    /**
+     * 获奖情况
+     */
+    private List<AwardsBO> awardsBOList;
+    /**
+     * 联络情况
+     */
+    private List<ContactSituationBO> contactSituationBOList;
+    /**
+     * 针对拟为我公司提供产品
+     */
+    private List<ProvideProductBO> provideProductBOList;
 
 
     public String getSupplierName() {
@@ -238,4 +256,35 @@ public class SupplierInfoRegistraBO extends BaseBO {
         this.creditRating = creditRating;
     }
 
+    public List<EnterpriseQualificaBO> getEnterpriseQualificaBOList() {
+        return enterpriseQualificaBOList;
+    }
+
+    public void setEnterpriseQualificaBOList(List<EnterpriseQualificaBO> enterpriseQualificaBOList) {
+        this.enterpriseQualificaBOList = enterpriseQualificaBOList;
+    }
+
+    public List<AwardsBO> getAwardsBOList() {
+        return awardsBOList;
+    }
+
+    public void setAwardsBOList(List<AwardsBO> awardsBOList) {
+        this.awardsBOList = awardsBOList;
+    }
+
+    public List<ContactSituationBO> getContactSituationBOList() {
+        return contactSituationBOList;
+    }
+
+    public void setContactSituationBOList(List<ContactSituationBO> contactSituationBOList) {
+        this.contactSituationBOList = contactSituationBOList;
+    }
+
+    public List<ProvideProductBO> getProvideProductBOList() {
+        return provideProductBOList;
+    }
+
+    public void setProvideProductBOList(List<ProvideProductBO> provideProductBOList) {
+        this.provideProductBOList = provideProductBOList;
+    }
 }

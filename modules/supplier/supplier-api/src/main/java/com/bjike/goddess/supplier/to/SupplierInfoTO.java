@@ -7,6 +7,8 @@ import com.bjike.goddess.supplier.enums.InfoSource;
 import com.bjike.goddess.supplier.enums.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 供应商信息管理
  *
@@ -27,7 +29,7 @@ public class SupplierInfoTO extends BaseTO {
     /**
      * 供应商信息来源
      */
-    @NotBlank(message = "供应商信息来源不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "供应商信息来源不能为空", groups = {ADD.class, EDIT.class})
     private InfoSource infoSource;
 
     /**
@@ -151,7 +153,7 @@ public class SupplierInfoTO extends BaseTO {
     /**
      * 状态
      */
-    @NotBlank(message = "状态不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "状态不能为空", groups = {ADD.class, EDIT.class})
     private Status status;
 
     /**
@@ -162,7 +164,7 @@ public class SupplierInfoTO extends BaseTO {
     /**
      * 供应商信息是否完善
      */
-    @NotBlank(message = "供应商信息是否完善不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "供应商信息是否完善不能为空", groups = {ADD.class, EDIT.class})
     private Boolean infoPerfecting;
 
     public String getInfoCollectDate() {

@@ -2,9 +2,12 @@ package com.bjike.goddess.supplier.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
+import com.bjike.goddess.supplier.bo.SummationBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
 import com.bjike.goddess.supplier.dto.SupplierInfoDTO;
 import com.bjike.goddess.supplier.entity.SupplierInfo;
+import com.bjike.goddess.supplier.to.SupplierInfoRegistraDataTO;
 import com.bjike.goddess.supplier.to.SupplierInfoTO;
 
 import java.util.List;
@@ -90,4 +93,94 @@ public interface SupplierInfoSer extends Ser<SupplierInfo, SupplierInfoDTO> {
      */
     void importExcel(List<SupplierInfoTO> supplierInfoTOList) throws SerException;
 
+    /**
+     * 供应商信息详情获取数据
+     *
+     * @param id 供应商信息管理id
+     * @return class SupplierInfoRegistraDataBO
+     */
+    default SupplierInfoRegistraDataBO linkSupplierData(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 供应商信息详情编辑
+     *
+     * @param supplierInfoRegistraDataTO 供应商信息详情
+     */
+    default void addSupplierDetail(SupplierInfoRegistraDataTO supplierInfoRegistraDataTO) throws SerException {
+        return;
+    }
+    /**
+     * 供应商信息日汇总
+     *
+     * @param summDate 日期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaDay(String summDate) throws SerException {
+        return null;
+    }
+
+    /**
+     * 供应商信息周汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息月汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaMonth(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息季度汇总
+     *
+     * @param quarter 季度
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaQuarter(Integer year,Integer quarter) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息年度汇总
+     *
+     * @param year 年度
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaYear(Integer year) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息累计汇总
+     *
+     * @param endDate 截止日期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaTotal(String endDate) throws SerException {
+        return null;
+    }
 }

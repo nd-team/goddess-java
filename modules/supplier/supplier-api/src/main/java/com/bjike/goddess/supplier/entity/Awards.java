@@ -20,6 +20,11 @@ import java.time.LocalDate;
 public class Awards extends BaseEntity {
 
     /**
+     * 供应商信息登记id
+     */
+    @Column(name = "supplierInfoRegiId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '供应商信息登记id'")
+    private String supplierInfoRegiId;
+    /**
      * 奖励名称
      */
     @Column(name = "rewardName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '奖励名称'")
@@ -46,5 +51,13 @@ public class Awards extends BaseEntity {
 
     public void setForTime(LocalDate forTime) {
         this.forTime = forTime;
+    }
+
+    public String getSupplierInfoRegiId() {
+        return supplierInfoRegiId;
+    }
+
+    public void setSupplierInfoRegiId(String supplierInfoRegiId) {
+        this.supplierInfoRegiId = supplierInfoRegiId;
     }
 }

@@ -14,12 +14,17 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.supplier.api.QualificationLevelSetAPI;
 import com.bjike.goddess.supplier.api.SupplierInfoAPI;
+import com.bjike.goddess.supplier.api.SupplierTypeSetAPI;
 import com.bjike.goddess.supplier.bo.SupplierInfoBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
 import com.bjike.goddess.supplier.dto.SupplierInfoDTO;
 import com.bjike.goddess.supplier.excel.SupplierInfoExcel;
 import com.bjike.goddess.supplier.to.SiginManageDeleteFileTO;
+import com.bjike.goddess.supplier.to.SupplierInfoRegistraDataTO;
 import com.bjike.goddess.supplier.to.SupplierInfoTO;
+import com.bjike.goddess.supplier.vo.SupplierInfoRegistraDataVO;
 import com.bjike.goddess.supplier.vo.SupplierInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +56,10 @@ public class SupplierInfoAction extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private SupplierInfoAPI supplierInfoAPI;
+    @Autowired
+    private SupplierTypeSetAPI supplierTypeSetAPI;
+    @Autowired
+    private QualificationLevelSetAPI qualificationLevelSetAPI;
 
     /**
      * 根据id查询供应商信息管理
@@ -107,24 +116,6 @@ public class SupplierInfoAction extends BaseFileAction {
         }
     }
 
-//    /**
-//     * 根据id查询供应商信息管理
-//     *
-//     * @param id
-//     * @return class MarketServeApplyVO
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @GetMapping("v1/findDetailById/{id}")
-//    public Result findDetailById(@PathVariable String id, HttpServletRequest request) throws ActException {
-//        try {
-//            SupplierInfoBO bo = supplierInfoAPI.checkDetails(id);
-//            SupplierInfoVO vo = BeanTransform.copyProperties(bo, SupplierInfoVO.class, request);
-//            return ActResult.initialize(vo);
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
 
     /**
      * 添加供应商信息管理
@@ -165,9 +156,9 @@ public class SupplierInfoAction extends BaseFileAction {
     }
 
     /**
-     * 编辑市场招待申请
+     * 编辑供应商信息管理
      *
-     * @param to 市场招待申请to信息
+     * @param to 供应商信息管理to信息
      * @throws ActException
      * @version v1
      */
@@ -182,6 +173,8 @@ public class SupplierInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
 
     /**
      * 上传附件
@@ -357,6 +350,71 @@ public class SupplierInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+    /**
+     * 供应商信息详情获取数据
+     *
+     * @param id 供应商信息管理id
+     * @return class SupplierInfoVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/linkSupplierData")
+    public Result linkSupplierData(@RequestParam String id, HttpServletRequest request) throws ActException {
+        try {
+            SupplierInfoRegistraDataBO bo = supplierInfoAPI.linkSupplierData(id);
+            SupplierInfoRegistraDataVO vo = BeanTransform.copyProperties(bo, SupplierInfoRegistraDataVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 供应商信息详情编辑
+     *
+     * @param supplierInfoRegistraDataTO 供应商信息管理to信息
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/addSupplierDetail")
+    public Result addSupplierDetail(@Validated(value = {ADD.class}) SupplierInfoRegistraDataTO supplierInfoRegistraDataTO, HttpServletRequest request, BindingResult result) throws ActException {
+        try {
+            supplierInfoAPI.addSupplierDetail(supplierInfoRegistraDataTO);
+            return new  ActResult("add success");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有的资质等级设置
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllLevel")
+    public Result findAllLevel() throws ActException {
+        try {
+            List<String> types = qualificationLevelSetAPI.findAllLevel();
+            return ActResult.initialize(types);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有的供应商类型
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllType")
+    public Result findAllType() throws ActException {
+        try {
+            List<String> types = supplierTypeSetAPI.findAllType();
+            return ActResult.initialize(types);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

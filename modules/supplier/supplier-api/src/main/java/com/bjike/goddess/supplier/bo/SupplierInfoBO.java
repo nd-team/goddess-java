@@ -144,6 +144,11 @@ public class SupplierInfoBO extends BaseBO {
      * 已合作次数
      */
     private Integer cooperationNum;
+    /**
+     * 供应商信息是否完善
+
+     */
+    private Boolean infoPerfecting;
 
     public String getInfoCollectDate() {
         return infoCollectDate;
@@ -361,11 +366,7 @@ public class SupplierInfoBO extends BaseBO {
         this.infoPerfecting = infoPerfecting;
     }
 
-    /**
-     * 供应商信息是否完善
 
-     */
-    private Boolean infoPerfecting;
 
 
 }

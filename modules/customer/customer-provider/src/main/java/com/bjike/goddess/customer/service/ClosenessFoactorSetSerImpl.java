@@ -183,7 +183,7 @@ public class ClosenessFoactorSetSerImpl extends ServiceImpl<ClosenessFoactorSet,
     @Override
     public ClosenessFoactorSetBO getOneCloseness(String id) throws SerException {
         ClosenessFoactorSet closenessFoactorSet = super.findById(id);
-        return BeanTransform.copyProperties(closenessFoactorSet,ClosenessFoactorSet.class);
+        return BeanTransform.copyProperties(closenessFoactorSet,ClosenessFoactorSetBO.class);
     }
 
     @Override

@@ -1,6 +1,14 @@
-package com.bjike.goddess.supplier.bo;
+package com.bjike.goddess.supplier.to;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.supplier.bo.AwardsBO;
+import com.bjike.goddess.supplier.bo.ContactSituationBO;
+import com.bjike.goddess.supplier.bo.EnterpriseQualificaBO;
+import com.bjike.goddess.supplier.bo.ProvideProductBO;
+import com.bjike.goddess.supplier.entity.EnterpriseQualifica;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,16 +22,18 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class SupplierInfoRegistraBO extends BaseBO {
+public class SupplierInfoRegistraDataTO extends BaseTO {
 
     /**
      * 供应商名称
      */
+    @NotBlank(message = "供应商名称不能为空",groups = {ADD.class})
     private String supplierName;
 
     /**
      * 供应商类型
      */
+    @NotBlank(message = "供应商名称不能为空",groups = {ADD.class})
     private String supplierType;
 
     /**
@@ -39,11 +49,13 @@ public class SupplierInfoRegistraBO extends BaseBO {
     /**
      * 公司类型
      */
+    @NotBlank(message = "供应商名称不能为空",groups = {ADD.class})
     private String companyType;
 
     /**
      * 地址
      */
+    @NotBlank(message = "供应商名称不能为空",groups = {ADD.class})
     private String area;
 
     /**
@@ -54,6 +66,7 @@ public class SupplierInfoRegistraBO extends BaseBO {
     /**
      * 法定代表人
      */
+    @NotBlank(message = "供应商名称不能为空",groups = {ADD.class})
     private String legalRepresen;
 
     /**
@@ -69,7 +82,7 @@ public class SupplierInfoRegistraBO extends BaseBO {
     /**
      * 成立时间
      */
-    private LocalDate establishDate;
+    private String establishDate;
 
     /**
      * 邮编
@@ -101,6 +114,23 @@ public class SupplierInfoRegistraBO extends BaseBO {
      */
     private String creditRating;
 
+    /**
+     * 企业资质
+     */
+    private List<EnterpriseQualificaTO> enterpriseQualificaTOList;
+
+    /**
+     * 获奖情况
+     */
+    private List<AwardsTO> awardsTOList;
+    /**
+     * 联络情况
+     */
+    private List<ContactSituationTO> contactSituationTOList;
+    /**
+     * 针对拟为我公司提供产品
+     */
+    private List<ProvideProductTO> provideProductTOList;
 
     public String getSupplierName() {
         return supplierName;
@@ -182,11 +212,11 @@ public class SupplierInfoRegistraBO extends BaseBO {
         this.registraCapital = registraCapital;
     }
 
-    public LocalDate getEstablishDate() {
+    public String getEstablishDate() {
         return establishDate;
     }
 
-    public void setEstablishDate(LocalDate establishDate) {
+    public void setEstablishDate(String establishDate) {
         this.establishDate = establishDate;
     }
 
@@ -238,4 +268,35 @@ public class SupplierInfoRegistraBO extends BaseBO {
         this.creditRating = creditRating;
     }
 
+    public List<EnterpriseQualificaTO> getEnterpriseQualificaTOList() {
+        return enterpriseQualificaTOList;
+    }
+
+    public void setEnterpriseQualificaTOList(List<EnterpriseQualificaTO> enterpriseQualificaTOList) {
+        this.enterpriseQualificaTOList = enterpriseQualificaTOList;
+    }
+
+    public List<AwardsTO> getAwardsTOList() {
+        return awardsTOList;
+    }
+
+    public void setAwardsTOList(List<AwardsTO> awardsTOList) {
+        this.awardsTOList = awardsTOList;
+    }
+
+    public List<ContactSituationTO> getContactSituationTOList() {
+        return contactSituationTOList;
+    }
+
+    public void setContactSituationTOList(List<ContactSituationTO> contactSituationTOList) {
+        this.contactSituationTOList = contactSituationTOList;
+    }
+
+    public List<ProvideProductTO> getProvideProductTOList() {
+        return provideProductTOList;
+    }
+
+    public void setProvideProductTOList(List<ProvideProductTO> provideProductTOList) {
+        this.provideProductTOList = provideProductTOList;
+    }
 }

@@ -2,8 +2,10 @@ package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierInfoBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
 import com.bjike.goddess.supplier.dto.SupplierInfoDTO;
 import com.bjike.goddess.supplier.service.SupplierInfoSer;
+import com.bjike.goddess.supplier.to.SupplierInfoRegistraDataTO;
 import com.bjike.goddess.supplier.to.SupplierInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,5 +69,15 @@ public class SupplierInfoApiImpl implements SupplierInfoAPI {
     @Override
     public void importExcel(List<SupplierInfoTO> supplierInfoTOList) throws SerException {
         supplierInfoSer.importExcel(supplierInfoTOList);
+    }
+
+    @Override
+    public SupplierInfoRegistraDataBO linkSupplierData(String id) throws SerException {
+       return supplierInfoSer.linkSupplierData(id);
+    }
+
+    @Override
+    public void addSupplierDetail(SupplierInfoRegistraDataTO supplierInfoRegistraDataTO) throws SerException {
+        supplierInfoSer.addSupplierDetail(supplierInfoRegistraDataTO);
     }
 }

@@ -15,7 +15,10 @@ import java.time.LocalDate;
  * @Copy: [ com.bjike ]
  */
 public class ProvideProductBO extends BaseBO {
-
+    /**
+     * 供应商信息登记id
+     */
+    private String supplierInfoRegiId;
     /**
      * 公司名称
      */
@@ -29,13 +32,21 @@ public class ProvideProductBO extends BaseBO {
     /**
      * 合作时间
      */
-    private LocalDate cooperationDate;
+    private String cooperationDate;
 
     /**
      * 合作期限
      */
     private String cooperationTimeLimit;
 
+
+    public String getSupplierInfoRegiId() {
+        return supplierInfoRegiId;
+    }
+
+    public void setSupplierInfoRegiId(String supplierInfoRegiId) {
+        this.supplierInfoRegiId = supplierInfoRegiId;
+    }
 
     public String getCompanyName() {
         return companyName;
@@ -53,11 +64,11 @@ public class ProvideProductBO extends BaseBO {
         this.productContent = productContent;
     }
 
-    public LocalDate getCooperationDate() {
+    public String getCooperationDate() {
         return cooperationDate;
     }
 
-    public void setCooperationDate(LocalDate cooperationDate) {
+    public void setCooperationDate(String cooperationDate) {
         this.cooperationDate = cooperationDate;
     }
 

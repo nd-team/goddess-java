@@ -20,18 +20,10 @@
     <!--发布接口,供其他模块调用-->
     <!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
     <dubbo:service interface="com.bjike.goddess.supplier.api.ContactSituationAPI" ref="contactSituationApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.CooperationSituationAPI"
-                   ref="cooperationSituationApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.EnterpriseQualificationAPI"
-                   ref="enterpriseQualificationApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.RewardSituationAPI" ref="rewardSituationApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.SupplierTypeAPI" ref="supplierTypeApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.SupplierInformationAPI" ref="supplierInformationApiImpl"/>
 
     <dubbo:service interface="com.bjike.goddess.supplier.api.SupCusPermissionAPI" ref="supCusPermissionApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.supplier.api.SupCusPermissionOperateAPI"
                    ref="supCusPermissionOperateApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.supplier.api.CollectSendAPI" ref="collectSendApiImpl"/>
 
     <dubbo:service interface="com.bjike.goddess.supplier.api.AwardsAPI" ref="awardsApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.supplier.api.EnterpriseQualificaAPI" ref="enterpriseQualificaApiImpl"/>
@@ -56,11 +48,5 @@
                      interface="com.bjike.goddess.organize.api.PositionDetailAPI"/>
     <dubbo:reference validation="true" id="positionDetailUserApiImpl"
                      interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.CommonalityAPI"
-                     id="commonalityApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.contacts.api.InternalContactsAPI"
-                     id="internalContactsApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
-    <dubbo:reference validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 
 </beans>

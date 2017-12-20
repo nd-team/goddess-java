@@ -2,7 +2,9 @@ package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierInfoBO;
+import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
 import com.bjike.goddess.supplier.dto.SupplierInfoDTO;
+import com.bjike.goddess.supplier.to.SupplierInfoRegistraDataTO;
 import com.bjike.goddess.supplier.to.SupplierInfoTO;
 
 import java.util.List;
@@ -91,5 +93,22 @@ public interface SupplierInfoAPI {
      * @param supplierInfoTOList 工龄补助
      */
     void importExcel(List<SupplierInfoTO> supplierInfoTOList) throws SerException;
+    /**
+     * 供应商信息详情获取数据
+     *
+     * @param id 供应商信息管理id
+     * @return class SupplierInfoRegistraDataBO
+     */
+    default SupplierInfoRegistraDataBO linkSupplierData(String id) throws SerException {
+        return null;
+    }
 
+    /**
+     * 供应商信息详情编辑
+     *
+     * @param supplierInfoRegistraDataTO 供应商信息详情
+     */
+    default void addSupplierDetail(SupplierInfoRegistraDataTO supplierInfoRegistraDataTO) throws SerException {
+        return;
+    }
 }
