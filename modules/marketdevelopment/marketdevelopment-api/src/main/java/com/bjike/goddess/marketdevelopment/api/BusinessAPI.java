@@ -4,8 +4,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.BusinessBO;
 import com.bjike.goddess.marketdevelopment.bo.BusinessReturnBO;
 import com.bjike.goddess.marketdevelopment.dto.BusinessDTO;
+import com.bjike.goddess.marketdevelopment.entity.SonPermissionObject;
 import com.bjike.goddess.marketdevelopment.excel.BusinessImportExcel;
 import com.bjike.goddess.marketdevelopment.to.BusinessTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -131,6 +133,21 @@ public interface BusinessAPI {
      * @throws SerException
      */
     default byte[] exportExcel(BusinessDTO dto) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
 }

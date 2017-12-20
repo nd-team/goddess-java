@@ -29,14 +29,14 @@ public class WeekFiles extends BaseEntity {
     /**
      * 表头下标
      */
-    @Column(name = "index", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '表头下标'")
-    private Integer index;
+    @Column(name = "tableIndex", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '表头下标'")
+    private Integer tableIndex;
 
     /**
      * 表头
      */
-    @Column(name = "table", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '表头'")
-    private String table;
+    @Column(name = "tableName", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '表头'")
+    private String tableName;
 
     /**
      * 内容
@@ -59,20 +59,20 @@ public class WeekFiles extends BaseEntity {
         this.weekCycleId = weekCycleId;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getTableIndex() {
+        return tableIndex;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setTableIndex(Integer tableIndex) {
+        this.tableIndex = tableIndex;
     }
 
-    public String getTable() {
-        return table;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public String getContext() {

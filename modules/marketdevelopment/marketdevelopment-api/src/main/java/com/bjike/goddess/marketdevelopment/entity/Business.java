@@ -60,7 +60,7 @@ public class Business extends BaseEntity {
     /**
      * 状态
      */
-    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态' ", nullable = false)
+    @Column(columnDefinition = "TINYINT(2) DEFAULT 0 COMMENT '状态' ", nullable = false,insertable = false)
     private Status status;
 
 

@@ -1,9 +1,7 @@
 package com.bjike.goddess.financeinit.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
-import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
-import com.bjike.goddess.financeinit.bo.CourseDateBO;
+import com.bjike.goddess.financeinit.bo.*;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.service.AccountanCourseSer;
@@ -121,5 +119,20 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     @Override
     public List<AccountAddDateBO> findFirstNameCode() throws SerException {
         return accountanCourseSer.findFirstNameCode();
+    }
+
+    @Override
+    public SubjectDataBO findSubjects(String name) throws SerException {
+        return accountanCourseSer.findSubjects(name);
+    }
+
+    @Override
+    public SubjectDatasBO findSubjects1(String name) throws SerException {
+        return accountanCourseSer.findSubjects1(name);
+    }
+
+    @Override
+    public List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
+        return accountanCourseSer.findSecondSubject(firstSubjectCode);
     }
 }

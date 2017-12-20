@@ -233,4 +233,9 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     public CustomerInfoBO findByNum(String customerNum) throws SerException {
         return customerBaseInfoSer.findByNum(customerNum);
     }
+
+    @Override
+    public List<String> findCode() throws SerException {
+        return customerBaseInfoSer.findCode();
+    }
 }

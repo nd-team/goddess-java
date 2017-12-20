@@ -1,7 +1,7 @@
 package com.bjike.goddess.marketdevelopment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.marketdevelopment.enums.Status;
 
 /**
  * 业务方向科目业务传输对象

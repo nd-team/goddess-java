@@ -2,10 +2,12 @@ package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.marketdevelopment.bo.DateDataBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthBusinessDataBO;
 import com.bjike.goddess.marketdevelopment.bo.MonthMoneyBO;
 import com.bjike.goddess.marketdevelopment.dto.DateDataDTO;
 import com.bjike.goddess.marketdevelopment.to.DateDataTO;
 import com.bjike.goddess.marketdevelopment.to.DateDataUpdateTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface DateDataAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表
@@ -79,6 +88,44 @@ public interface DateDataAPI {
      * @throws SerException
      */
     default DateDataBO getById(String dateDataId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据年份月份获取目标计划实际差异金额
+     *
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default MonthMoneyBO findMoneyData(String year, String month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据年份月份业务方向类型获取权重金额
+     *
+     * @param year
+     * @param month
+     * @param businessType
+     * @return
+     * @throws SerException
+     */
+    default MonthBusinessDataBO findBusinessData(String year, String month, String businessType) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前周的日期时间
+     *
+     * @param year
+     * @param month
+     * @param cycle
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDate(String year, String month, String cycle) throws SerException {
         return null;
     }
 }

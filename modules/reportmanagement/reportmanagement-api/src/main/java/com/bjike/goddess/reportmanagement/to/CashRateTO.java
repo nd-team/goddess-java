@@ -2,7 +2,8 @@ package com.bjike.goddess.reportmanagement.to;
 
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 现金流量比率表
@@ -23,14 +24,14 @@ public class CashRateTO extends BaseTO {
     /**
      * 比率
      */
-    @NotBlank(message = "比率不能为空", groups = {EDIT.class})
+    @NotNull(message = "比率不能为空", groups = {EDIT.class})
     private Double rate;
 
-    /**
-     * 对应的公式
-     */
-    @NotBlank(message = "对应的公式不能为空", groups = {EDIT.class})
-    private String formula;
+//    /**
+//     * 对应的公式
+//     */
+//    @NotBlank(message = "对应的公式不能为空", groups = {EDIT.class})
+//    private String formula;
 
 
     public String getProjectId() {
@@ -49,11 +50,11 @@ public class CashRateTO extends BaseTO {
         this.rate = rate;
     }
 
-    public String getFormula() {
-        return formula;
-    }
-
-    public void setFormula(String formula) {
-        this.formula = formula;
-    }
+//    public String getFormula() {
+//        return formula;
+//    }
+//
+//    public void setFormula(String formula) {
+//        this.formula = formula;
+//    }
 }

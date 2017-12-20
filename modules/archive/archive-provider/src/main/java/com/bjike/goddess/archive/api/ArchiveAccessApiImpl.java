@@ -55,6 +55,11 @@ public class ArchiveAccessApiImpl implements ArchiveAccessAPI {
     }
 
     @Override
+    public List<String> findUserName() throws SerException {
+        return archiveAccessSer.findUserName();
+    }
+
+    @Override
     public ArchiveAccessBO save(ArchiveAccessTO to) throws SerException {
         return archiveAccessSer.save(to);
     }

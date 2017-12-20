@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.bo.PlanDayBO;
 import com.bjike.goddess.marketdevelopment.dto.PlanDayDTO;
 import com.bjike.goddess.marketdevelopment.excel.PlanDayImportExcel;
 import com.bjike.goddess.marketdevelopment.service.PlanDaySer;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.PlanDayTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,11 @@ import java.util.List;
 public class PlanDayApiImpl implements PlanDayAPI  {
     @Autowired
     private PlanDaySer planDaySer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return planDaySer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<PlanDayBO> maps(PlanDayDTO dto) throws SerException {
@@ -103,5 +109,10 @@ public class PlanDayApiImpl implements PlanDayAPI  {
     @Override
     public List<String> findMarkCode() throws SerException {
         return planDaySer.findMarkCode();
+    }
+
+    @Override
+    public String findInnerProject(String marketNum) throws SerException {
+        return planDaySer.findInnerProject(marketNum);
     }
 }

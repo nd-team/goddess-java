@@ -6,7 +6,7 @@ import com.bjike.goddess.reportmanagement.bo.CashFormulaBO;
 import com.bjike.goddess.reportmanagement.bo.CashRateBO;
 import com.bjike.goddess.reportmanagement.bo.ReturnCashBO;
 import com.bjike.goddess.reportmanagement.dto.CashFlowProjectDTO;
-import com.bjike.goddess.reportmanagement.to.CashRateTO;
+import com.bjike.goddess.reportmanagement.to.CashRateListTO;
 
 import java.util.List;
 
@@ -89,7 +89,7 @@ public interface CashFlowProjectAPI {
      * @param to
      * @throws SerException
      */
-    default void editRate(CashRateTO to) throws SerException {
+    default void editRate(CashRateListTO to) throws SerException {
         return;
     }
 }

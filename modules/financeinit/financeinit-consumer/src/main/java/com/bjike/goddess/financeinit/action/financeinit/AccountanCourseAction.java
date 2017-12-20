@@ -15,6 +15,7 @@ import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
 import com.bjike.goddess.financeinit.bo.CourseDateBO;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
@@ -22,6 +23,7 @@ import com.bjike.goddess.financeinit.to.AccountanCourseTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.vo.AccountanCourseVO;
 import com.bjike.goddess.financeinit.vo.CourseDateVO;
+import com.bjike.goddess.financeinit.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -45,9 +47,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("accountancourse")
-public class AccountanCourseAction extends BaseFileAction{
+public class AccountanCourseAction extends BaseFileAction {
     @Autowired
     private AccountanCourseAPI accountanCourseAPI;
+
     /**
      * 功能导航权限
      *
@@ -70,6 +73,7 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 资产类总条数
      *
@@ -86,6 +90,7 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 负债类总条数
      *
@@ -102,6 +107,7 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 共同类总条数
      *
@@ -118,6 +124,7 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 权益类总条数
      *
@@ -134,6 +141,7 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 成本类总条数
      *
@@ -150,6 +158,7 @@ public class AccountanCourseAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 损益类总条数
      *
@@ -198,12 +207,13 @@ public class AccountanCourseAction extends BaseFileAction{
     public Result findListAccoun(AccountanCourseDTO accountanCourseDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountanCourseVO> companyBasicInfoVOS = BeanTransform.copyProperties(
-                    accountanCourseAPI.listCourse(accountanCourseDTO,CategoryName.ASSETS), AccountanCourseVO.class, request);
+                    accountanCourseAPI.listCourse(accountanCourseDTO, CategoryName.ASSETS), AccountanCourseVO.class, request);
             return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 负债类列表
      *
@@ -216,12 +226,13 @@ public class AccountanCourseAction extends BaseFileAction{
     public Result findliabiList(AccountanCourseDTO accountanCourseDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountanCourseVO> companyBasicInfoVOS = BeanTransform.copyProperties(
-                    accountanCourseAPI.listCourse(accountanCourseDTO,CategoryName.LIABILITIES), AccountanCourseVO.class, request);
+                    accountanCourseAPI.listCourse(accountanCourseDTO, CategoryName.LIABILITIES), AccountanCourseVO.class, request);
             return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 共同类列表
      *
@@ -234,12 +245,13 @@ public class AccountanCourseAction extends BaseFileAction{
     public Result findCommonList(AccountanCourseDTO accountanCourseDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountanCourseVO> companyBasicInfoVOS = BeanTransform.copyProperties(
-                    accountanCourseAPI.listCourse(accountanCourseDTO,CategoryName.COMMON), AccountanCourseVO.class, request);
+                    accountanCourseAPI.listCourse(accountanCourseDTO, CategoryName.COMMON), AccountanCourseVO.class, request);
             return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 权益类列表
      *
@@ -252,12 +264,13 @@ public class AccountanCourseAction extends BaseFileAction{
     public Result findRightList(AccountanCourseDTO accountanCourseDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountanCourseVO> companyBasicInfoVOS = BeanTransform.copyProperties(
-                    accountanCourseAPI.listCourse(accountanCourseDTO,CategoryName.RIGHTSINTERESTS), AccountanCourseVO.class, request);
+                    accountanCourseAPI.listCourse(accountanCourseDTO, CategoryName.RIGHTSINTERESTS), AccountanCourseVO.class, request);
             return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 成本类列表
      *
@@ -270,12 +283,13 @@ public class AccountanCourseAction extends BaseFileAction{
     public Result findCostList(AccountanCourseDTO accountanCourseDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountanCourseVO> companyBasicInfoVOS = BeanTransform.copyProperties(
-                    accountanCourseAPI.listCourse(accountanCourseDTO,CategoryName.COST), AccountanCourseVO.class, request);
+                    accountanCourseAPI.listCourse(accountanCourseDTO, CategoryName.COST), AccountanCourseVO.class, request);
             return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 损益类列表
      *
@@ -288,7 +302,7 @@ public class AccountanCourseAction extends BaseFileAction{
     public Result findProfitList(AccountanCourseDTO accountanCourseDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<AccountanCourseVO> companyBasicInfoVOS = BeanTransform.copyProperties(
-                    accountanCourseAPI.listCourse(accountanCourseDTO,CategoryName.PROFITLOSS), AccountanCourseVO.class, request);
+                    accountanCourseAPI.listCourse(accountanCourseDTO, CategoryName.PROFITLOSS), AccountanCourseVO.class, request);
             return ActResult.initialize(companyBasicInfoVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -368,7 +382,7 @@ public class AccountanCourseAction extends BaseFileAction{
             List<AccountanCourseExport> tos = ExcelUtil.excelToClazz(is, AccountanCourseExport.class, excel);
             List<AccountanCourseTO> tocs = new ArrayList<>();
             for (AccountanCourseExport str : tos) {
-                AccountanCourseTO accountanCourseTO = BeanTransform.copyProperties(str, AccountanCourseTO.class, "effectiveDate", "surrInsurApplyDate","birthDate");
+                AccountanCourseTO accountanCourseTO = BeanTransform.copyProperties(str, AccountanCourseTO.class, "effectiveDate", "surrInsurApplyDate", "birthDate");
                 tocs.add(accountanCourseTO);
             }
             //注意序列化
@@ -388,7 +402,7 @@ public class AccountanCourseAction extends BaseFileAction{
      */
     @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport(HttpServletResponse response,@RequestParam CategoryName belongCategory) throws ActException {
+    public Result exportReport(HttpServletResponse response, @RequestParam CategoryName belongCategory) throws ActException {
         try {
             String fileName = "会计科目.xlsx";
             super.writeOutFile(response, accountanCourseAPI.exportExcel(belongCategory), fileName);
@@ -422,33 +436,85 @@ public class AccountanCourseAction extends BaseFileAction{
 
     /**
      * 根据会计科目名称获取所属类型
+     *
      * @param accountanName 会计科目名称
-     * @version v1
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/belongByName")
-    public Result belongByName(@RequestParam String accountanName)throws ActException{
+    public Result belongByName(@RequestParam String accountanName) throws ActException {
         try {
             CategoryName categoryName = accountanCourseAPI.belongByName(accountanName);
             return ActResult.initialize(categoryName);
         } catch (SerException e) {
-            throw new ActException( e.getMessage());
+            throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据代码获取会计科目名称和方向
+     *
      * @param code 代码
-     * @version v1
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findByCode")
-    public Result findByCode(@RequestParam String code)throws ActException{
+    public Result findByCode(@RequestParam String code) throws ActException {
         try {
             CourseDateBO courseDateBO = accountanCourseAPI.findByCode(code);
-            CourseDateVO courseDateVO = BeanTransform.copyProperties(courseDateBO,CourseDateVO.class);
+            CourseDateVO courseDateVO = BeanTransform.copyProperties(courseDateBO, CourseDateVO.class);
             return ActResult.initialize(courseDateVO);
         } catch (SerException e) {
-            throw new ActException( e.getMessage());
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 根据报销人获取一级二级三级科目
+     *
+     * @param name 报销人姓名
+     * @return class SubjectDataVO
+     * @version v1
+     */
+    @GetMapping("v1/findSubjects")
+    public Result findSubjects(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(accountanCourseAPI.findSubjects(name), SubjectDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 借款根据报销人获取三级科目和一级科目
+     *
+     * @param name 报销人姓名
+     * @return class SubjectDataVO
+     * @version v1
+     */
+    @GetMapping("v1/findSubjects1")
+    public Result findSubjects1(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(accountanCourseAPI.findSubjects1(name), SubjectDatasVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据一级科目代码获取二级科目
+     *
+     * @param firstSubjectCode 一级科目代码
+     * @version v1
+     */
+    @GetMapping("v1/findSecondSubject")
+    public Result findSecondSubject(@RequestParam String firstSubjectCode) throws ActException {
+        try {
+            List<SecondSubjectDataBO> list = accountanCourseAPI.findSecondSubject(firstSubjectCode);
+            return ActResult.initialize(BeanTransform.copyProperties(list, SecondSubjectDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 

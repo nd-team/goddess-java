@@ -448,12 +448,15 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
 
     private String get(List<PositionUserDetail> list) throws SerException {
 //        StringBuilder sb = new StringBuilder();
-        if( list != null && list.size()>0 ){
+        if (list != null && list.size() > 0) {
             UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.in(ID,list.stream().map(PositionUserDetail::getUserId).collect(Collectors.toList())));
-            List<UserBO> userBOs = userAPI.findByCis( userDTO );
-            return userBOs.stream().map(UserBO::getUsername).collect(Collectors.toList()).get(0);
-        }else{
+            userDTO.getConditions().add(Restrict.in(ID, list.stream().map(PositionUserDetail::getUserId).collect(Collectors.toList())));
+            List<UserBO> userBOs = userAPI.findByCis(userDTO);
+            if (null != userBOs && userBOs.size() > 0) {
+                return userBOs.stream().map(UserBO::getUsername).collect(Collectors.toList()).get(0);
+            }
+            return null;
+        } else {
             return "";
         }
 //        for (int i = 0; i < list.size(); i++) {

@@ -9,9 +9,13 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.DateDataAPI;
+import com.bjike.goddess.marketdevelopment.bo.MonthBusinessDataBO;
+import com.bjike.goddess.marketdevelopment.bo.MonthMoneyBO;
 import com.bjike.goddess.marketdevelopment.dto.DateDataDTO;
 import com.bjike.goddess.marketdevelopment.to.DateDataTO;
 import com.bjike.goddess.marketdevelopment.to.DateDataUpdateTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
+import com.bjike.goddess.marketdevelopment.vo.MonthBusinessDataVO;
 import com.bjike.goddess.marketdevelopment.vo.MonthMoneyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -19,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 日期数据
@@ -31,31 +36,31 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("datedata")
-public class DateDataAction extends BaseFileAction{
+public class DateDataAction extends BaseFileAction {
     @Autowired
     private DateDataAPI dateDataAPI;
 
     /**
-     //     * 功能导航权限
-     //     *
-     //     * @param guidePermissionTO 导航类型数据
-     //     * @throws ActException
-     //     * @version v1
-     //     */
-//    @GetMapping("v1/guidePermission")
-//    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-//        try {
-//            Boolean isHasPermission = dateDataAPI.guidePermission(guidePermissionTO);
-//            if (!isHasPermission) {
-//                //int code, String msg
-//                return new ActResult(0, "没有权限", false);
-//            } else {
-//                return new ActResult(0, "有权限", true);
-//            }
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            Boolean isHasPermission = dateDataAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -150,4 +155,58 @@ public class DateDataAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据年份月份获取目标计划实际差异金额
+     *
+     * @param year  年份
+     * @param month 月份
+     * @version v1
+     */
+    @GetMapping("v1/findMoneyData")
+    public Result findMoneyData(@RequestParam String year, @RequestParam String month) throws ActException {
+        try {
+            MonthMoneyBO bo = dateDataAPI.findMoneyData(year, month);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, MonthMoneyVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据年份月份业务方向类型获取权重金额
+     *
+     * @param year         年份
+     * @param month        月份
+     * @param businessType 业务类型
+     * @version v1
+     */
+    @GetMapping("v1/findBusinessData")
+    public Result findBusinessData(@RequestParam String year, @RequestParam String month, @RequestParam String businessType) throws ActException {
+        try {
+            MonthBusinessDataBO bo = dateDataAPI.findBusinessData(year, month, businessType);
+            return ActResult.initialize(BeanTransform.copyProperties(bo, MonthBusinessDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前周的日期时间
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param cycle 周期
+     * @version v1
+     */
+    @GetMapping("v1/findDate")
+    public Result findDate(@RequestParam String year, @RequestParam String month, @RequestParam String cycle) throws ActException {
+        try {
+            List<String> list = dateDataAPI.findDate(year, month, cycle);
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

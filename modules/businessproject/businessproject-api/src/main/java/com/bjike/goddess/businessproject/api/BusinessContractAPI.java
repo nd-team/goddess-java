@@ -1328,6 +1328,42 @@ public interface BusinessContractAPI {
     }
 
     /**
-     * 根据市场编号(市场信息编号)获取
+     * 根据市场编号(市场信息编号)获取内部项目名称
      */
+    default String findProjectName(String marketNum) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据年份获取派工金额
+     */
+    default Double findMoney(String year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据业务类型和年份获取各业务类型实际金额
+     *
+     * @param businessType
+     * @param year
+     * @return
+     * @throws SerException
+     */
+    default Double moneyByType(String businessType, String year) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据年月份获取立项金额
+     */
+    default Double findMakeMoney(String month) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据年月份和业务类型获取立项金额
+     */
+    default Double findMakeMoney(String month, String businessType) throws SerException {
+        return null;
+    }
 }

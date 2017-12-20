@@ -16,6 +16,7 @@
 
 	<!--配置暴露的公共接口-->
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.AssetAPI" id="assetApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.CashAnalyseAPI" id="cashAnalyseApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.AssetDebtAPI" id="assetDebtApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.AssetStructureAdviceAPI" id="assetStructureAdviceApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.reportmanagement.api.DebtAPI" id="debtApiImpl"/>

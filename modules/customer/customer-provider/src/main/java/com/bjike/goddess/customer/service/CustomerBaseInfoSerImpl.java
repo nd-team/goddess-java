@@ -91,7 +91,6 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
     @Autowired
     private DifficultyFoactorWeightSer difficultyFoactorWeightSer;
 
-
     /**
      * 核对查看权限（部门级别）
      */
@@ -1985,6 +1984,16 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         List<CustomerBaseInfo> list = super.findByCis(dto);
         if (null != list && list.size() > 0) {
             return BeanTransform.copyProperties(list.get(0), CustomerBaseInfoBO.class, false);
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> findCode() throws SerException {
+        List<CustomerBaseInfo> customerBaseInfos = super.findAll();
+        if (null != customerBaseInfos && customerBaseInfos.size() > 0) {
+            List<String> stringList = customerBaseInfos.stream().map(CustomerBaseInfo::getCustomerNum).distinct().collect(Collectors.toList());
+            return stringList;
         }
         return null;
     }

@@ -623,4 +623,29 @@ public class BusinessContractApiImpl implements BusinessContractAPI {
     public List<String> findMarkNum() throws SerException {
         return businessContractSer.findMarkNum();
     }
+
+    @Override
+    public String findProjectName(String markNum) throws SerException {
+        return businessContractSer.findProjectName(markNum);
+    }
+
+    @Override
+    public Double findMoney(String year) throws SerException {
+        return businessContractSer.findMoney(year);
+    }
+
+    @Override
+    public Double moneyByType(String businessType, String year) throws SerException {
+        return businessContractSer.moneyByType(businessType, year);
+    }
+
+    @Override
+    public Double findMakeMoney(String month) throws SerException {
+        return businessContractSer.findMakeMoney(month);
+    }
+
+    @Override
+    public Double findMakeMoney(String month, String businessType) throws SerException {
+        return businessContractSer.findMakeMoney(month, businessType);
+    }
 }

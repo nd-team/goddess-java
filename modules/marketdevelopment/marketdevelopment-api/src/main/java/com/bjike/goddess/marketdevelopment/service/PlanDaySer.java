@@ -7,6 +7,7 @@ import com.bjike.goddess.marketdevelopment.bo.PlanDayBO;
 import com.bjike.goddess.marketdevelopment.dto.PlanDayDTO;
 import com.bjike.goddess.marketdevelopment.entity.PlanDay;
 import com.bjike.goddess.marketdevelopment.excel.PlanDayImportExcel;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.PlanDayTO;
 
 import java.util.List;
@@ -21,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface PlanDaySer extends Ser<PlanDay, PlanDayDTO> {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表
@@ -184,6 +199,17 @@ public interface PlanDaySer extends Ser<PlanDay, PlanDayDTO> {
      * @throws SerException
      */
     default List<String> findMarkCode() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据市场信息编号获取内部项目名称
+     *
+     * @param marketNum
+     * @return
+     * @throws SerException
+     */
+    default String findInnerProject(String marketNum) throws SerException {
         return null;
     }
 }

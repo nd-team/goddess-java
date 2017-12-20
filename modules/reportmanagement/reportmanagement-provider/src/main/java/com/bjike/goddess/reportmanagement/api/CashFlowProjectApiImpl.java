@@ -7,7 +7,7 @@ import com.bjike.goddess.reportmanagement.bo.CashRateBO;
 import com.bjike.goddess.reportmanagement.bo.ReturnCashBO;
 import com.bjike.goddess.reportmanagement.dto.CashFlowProjectDTO;
 import com.bjike.goddess.reportmanagement.service.CashFlowProjectSer;
-import com.bjike.goddess.reportmanagement.to.CashRateTO;
+import com.bjike.goddess.reportmanagement.to.CashRateListTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +59,7 @@ public class CashFlowProjectApiImpl implements CashFlowProjectAPI {
     }
 
     @Override
-    public void editRate(CashRateTO to) throws SerException {
+    public void editRate(CashRateListTO to) throws SerException {
         cashFlowProjectSer.editRate(to);
     }
 }

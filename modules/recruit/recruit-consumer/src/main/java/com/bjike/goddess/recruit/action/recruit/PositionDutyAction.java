@@ -13,9 +13,7 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI;
-import com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI;
 import com.bjike.goddess.marketdevelopment.bo.BusinessCourseBO;
-import com.bjike.goddess.marketdevelopment.bo.BusinessTypeBO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessCourseVO;
 import com.bjike.goddess.marketdevelopment.vo.BusinessTypeChoiceVO;
 import com.bjike.goddess.organize.api.HierarchyAPI;
@@ -73,8 +71,8 @@ public class PositionDutyAction extends BaseFileAction {
     private HierarchyAPI hierarchyAPI;
     @Autowired
     private BusinessCourseAPI businessCourseAPI;
-    @Autowired
-    private BusinessTypeAPI businessTypeAPI;
+//    @Autowired
+//    private BusinessTypeAPI businessTypeAPI;
     @Autowired
     private FileAPI fileAPI;
 
@@ -281,12 +279,12 @@ public class PositionDutyAction extends BaseFileAction {
     public Result direction(HttpServletRequest request) throws ActException {
         try {
             String token = request.getHeader(RpcCommon.USER_TOKEN).toString();
-            List<BusinessTypeBO> businessTypeBOS = new ArrayList<>();
+//            List<BusinessTypeBO> businessTypeBOS = new ArrayList<>();
             if (moduleAPI.isCheck("marketdevelopment")) {
                 RpcContext.getContext().setAttachment(RpcCommon.USER_TOKEN, token);
-                businessTypeBOS = businessTypeAPI.findThaw();
+//                businessTypeBOS = businessTypeAPI.findThaw();
             }
-            return ActResult.initialize(BeanTransform.copyProperties(businessTypeBOS, BusinessTypeChoiceVO.class, request));
+            return ActResult.initialize(BeanTransform.copyProperties(null, BusinessTypeChoiceVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

@@ -144,4 +144,14 @@ public interface ArchiveAccessSer extends Ser<ArchiveAccess, ArchiveAccessDTO> {
     default void upload(List<ArchiveAccessImportExcel> tos) throws SerException {
         return;
     }
+
+    /**
+     * 导出时获取的姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findUserName() throws SerException {
+        return null;
+    }
 }
