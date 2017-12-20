@@ -197,7 +197,7 @@ public class ResponsibleIdeaSerImpl extends ServiceImpl<ResponsibleIdea, Respons
     @Override
     public List<ResponsibleIdeaBO> list(ResponsibleIdeaDTO dto) throws SerException {
         checkSeeIdentity();
-        List<ResponsibleIdea> responsibleIdeas = super.findByCis(dto);
+        List<ResponsibleIdea> responsibleIdeas = super.findByCis(dto,true);
         ResponsibleIdea responsibleIdea = new ResponsibleIdea();
         String name = responsibleIdea.getResponsibleIdea();
         List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.getPositionDetail(name);

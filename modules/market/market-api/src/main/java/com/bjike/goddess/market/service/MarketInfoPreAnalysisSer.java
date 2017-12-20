@@ -101,4 +101,6 @@ public interface MarketInfoPreAnalysisSer extends Ser<MarketInfoPreAnalysis, Mar
 
     }
 
+    List<MarketInfoPreAnalysisBO> getconversionBuissOpp() throws SerException;
+
 }

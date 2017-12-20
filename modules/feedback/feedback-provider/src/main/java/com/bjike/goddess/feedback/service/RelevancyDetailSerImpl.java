@@ -194,7 +194,7 @@ public class RelevancyDetailSerImpl extends ServiceImpl<RelevancyDetail, Relevan
     @Override
     public List<RelevancyDetailBO> list(RelevancyDetailDTO dto) throws SerException {
         checkSeeIdentity();
-        List<RelevancyDetail> relevancyDetails = super.findByCis(dto);
+        List<RelevancyDetail> relevancyDetails = super.findByCis(dto,true);
         List<RelevancyDetailBO> relevancyDetailBOS = BeanTransform.copyProperties(relevancyDetails, RelevancyDetailBO.class);
         return relevancyDetailBOS;
     }

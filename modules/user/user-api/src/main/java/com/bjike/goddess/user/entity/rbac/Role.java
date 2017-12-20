@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "rbac_role")
 public class Role extends BaseEntity {
-    /**
+    /**git
      * 系统编号
      */
     @Column(nullable = false, columnDefinition = "VARCHAR(12) COMMENT '系统编号' ")
@@ -88,7 +89,7 @@ public class Role extends BaseEntity {
     }
 
     public LocalDateTime getCreateTime() {
-        return createTime;
+        return LocalDateTime.from(LocalDate.from(createTime));
     }
 
     public void setCreateTime(LocalDateTime createTime) {

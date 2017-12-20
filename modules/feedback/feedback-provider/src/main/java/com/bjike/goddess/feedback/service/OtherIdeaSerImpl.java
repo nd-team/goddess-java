@@ -186,7 +186,7 @@ public class OtherIdeaSerImpl extends ServiceImpl<OtherIdea, OtherIdeaDTO> imple
     @Override
     public List<OtherIdeaBO> list(OtherIdeaDTO dto) throws SerException {
         checkSeeIdentity();
-        List<OtherIdea> otherIdeas = super.findByCis(dto);
+        List<OtherIdea> otherIdeas = super.findByCis(dto,true);
         List<OtherIdeaBO> otherIdeaBOS = BeanTransform.copyProperties(otherIdeas, OtherIdeaBO.class);
         return otherIdeaBOS;
     }

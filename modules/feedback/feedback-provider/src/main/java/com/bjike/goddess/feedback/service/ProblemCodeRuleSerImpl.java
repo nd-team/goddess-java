@@ -285,7 +285,7 @@ public class ProblemCodeRuleSerImpl extends ServiceImpl<ProblemCodeRule, Problem
 
             }
         }
-        List<ProblemCodeRule> list = super.findByCis(dto);
+        List<ProblemCodeRule> list = super.findByCis(dto,true);
         List<ProblemCodeRuleBO> problemCodeRuleBOS = BeanTransform.copyProperties(list, ProblemCodeRuleBO.class);
         return problemCodeRuleBOS;
     }

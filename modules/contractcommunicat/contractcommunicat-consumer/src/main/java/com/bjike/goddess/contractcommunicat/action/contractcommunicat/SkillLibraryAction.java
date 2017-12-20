@@ -1,5 +1,6 @@
 package com.bjike.goddess.contractcommunicat.action.contractcommunicat;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 谈判技巧库
@@ -36,6 +39,7 @@ import java.util.List;
 @RestController
 @RequestMapping("skilllibrary")
 public class SkillLibraryAction {
+<<<<<<< Updated upstream
     @Autowired
     private SkillLibraryAPI skillLibraryAPI;
 

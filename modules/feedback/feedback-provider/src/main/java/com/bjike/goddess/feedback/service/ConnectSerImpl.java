@@ -195,7 +195,7 @@ public class ConnectSerImpl extends ServiceImpl<Connect, ConnectDTO> implements 
     @Override
     public List<ConnectBO> list(ConnectDTO dto) throws SerException {
         checkSeeIdentity();
-        List<Connect> connects = super.findByCis(dto);
+        List<Connect> connects = super.findByCis(dto,true);
         List<ConnectBO> connectBOS = BeanTransform.copyProperties(connects, ConnectBO.class);
         return connectBOS;
     }

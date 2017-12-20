@@ -206,7 +206,7 @@ public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, Recei
     public List<ReceivedFeedbackBO> list(ReceivedFeedbackDTO dto) throws SerException {
         checkSeeIdentity();
         ProblemAcceptDTO problemAcceptDTO = new ProblemAcceptDTO();
-        List<ProblemAccept> problemAccepts = problemAcceptSer.findByCis(problemAcceptDTO);
+        List<ProblemAccept> problemAccepts = problemAcceptSer.findByCis(problemAcceptDTO,true);
         List<ReceivedFeedbackBO> receivedFeedbackBOS = new ArrayList<>();
         for (ProblemAccept problemAccept : problemAccepts) {
             ReceivedFeedbackBO receivedFeedbackBO = new ReceivedFeedbackBO();

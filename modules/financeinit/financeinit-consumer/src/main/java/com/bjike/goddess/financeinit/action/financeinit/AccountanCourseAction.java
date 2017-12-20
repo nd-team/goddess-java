@@ -16,12 +16,10 @@ import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
 import com.bjike.goddess.financeinit.bo.CourseDateBO;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
-import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
-import com.bjike.goddess.financeinit.vo.AccountAddDateVO;
 import com.bjike.goddess.financeinit.vo.AccountanCourseVO;
 import com.bjike.goddess.financeinit.vo.CourseDateVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -451,6 +449,41 @@ public class AccountanCourseAction extends BaseFileAction{
             return ActResult.initialize(courseDateVO);
         } catch (SerException e) {
             throw new ActException( e.getMessage());
+        }
+    }
+
+
+
+    /**
+     * 获取所有二级科目
+     *
+     * @des 根据一级科目的代码获取所有二级科目
+     * @version v1
+     */
+    @GetMapping("v1/listSecondSubject/{code}")
+    public Result listSecondByCode(@PathVariable String code ) throws ActException {
+        try {
+            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName( code );
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取所有三级科目
+     *
+     * @des 根据二级科目的代码获取所有三级科目
+     * @version v1
+     */
+    @GetMapping("v1/listThirdSubject/{code}")
+    public Result listThirdByCode(@PathVariable String code ) throws ActException {
+        try {
+            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName( code );
+
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

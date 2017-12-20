@@ -2,11 +2,12 @@ package com.bjike.goddess.businessproject.entity;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
 import com.bjike.goddess.businessproject.enums.TaskContract;
+import com.bjike.goddess.businessprojectmanage.entity.BusinessContractPro;
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.type.Status;
+import com.bjike.goddess.customer.entity.CustomerDetail;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -22,6 +23,19 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "businessproject_businesscontract")
 public class BusinessContract extends BaseEntity {
+
+//    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "businessContract", fetch = FetchType.LAZY)
+////    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+////    @JoinColumn(name = "businessContractId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '商务合同信息对象'")
+//    private BusinessContractPro businessContractPro;
+//
+//    public BusinessContractPro getBusinessContractPro() {
+//        return businessContractPro;
+//    }
+//
+//    public void setBusinessContractPro(BusinessContractPro businessContractPro) {
+//        this.businessContractPro = businessContractPro;
+//    }
 
     /**
      * 测算分类
@@ -132,7 +146,7 @@ public class BusinessContract extends BaseEntity {
     private String major;
 
     /**
-     * 合同派工合同
+     * 是否有合同派工合同
      */
     @Column(name = "is_taskContract",  columnDefinition = "TINYINT(1)    COMMENT '是否有合同派工合同'")
     private TaskContract taskContract;
@@ -156,9 +170,9 @@ public class BusinessContract extends BaseEntity {
     private String internalContractNum;
 
     /**
-     * 合同立项
+     * 是否有合同立项
      */
-    @Column(name = "makeContract",  columnDefinition = "TINYINT(1)   COMMENT '合同立项'")
+    @Column(name = "makeContract",  columnDefinition = "TINYINT(1)   COMMENT '是否有合同立项'")
     private MakeContract makeContract;
 
     /**
@@ -444,10 +458,10 @@ public class BusinessContract extends BaseEntity {
     private String businessReplyFeedback;
 
     /**
-     * 项目负责人
+     * projectCharge
      */
     @Column(name = "projectCharge",  columnDefinition = "VARCHAR(255)   COMMENT '项目负责人'")
-    private String projectCharge;
+    private  String projectCharge;
 
     /**
      * 经手人
@@ -628,6 +642,14 @@ public class BusinessContract extends BaseEntity {
 
     public void setMajor(String major) {
         this.major = major;
+    }
+
+    public TaskContract getTaskContract() {
+        return taskContract;
+    }
+
+    public void setTaskContract(TaskContract taskContract) {
+        this.taskContract = taskContract;
     }
 
     public String getMarketNum() {
@@ -1076,13 +1098,5 @@ public class BusinessContract extends BaseEntity {
 
     public void setStorageLocation(String storageLocation) {
         this.storageLocation = storageLocation;
-    }
-
-    public TaskContract getTaskContract() {
-        return taskContract;
-    }
-
-    public void setTaskContract(TaskContract taskContract) {
-        this.taskContract = taskContract;
     }
 }

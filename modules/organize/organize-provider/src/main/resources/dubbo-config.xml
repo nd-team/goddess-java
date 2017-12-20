@@ -28,6 +28,7 @@
     <dubbo:service interface="com.bjike.goddess.organize.api.InstructionClassifyAPI" ref="instructionClassifyApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.OperateAPI" ref="operateApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.ModulesAPI" ref="modulesApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.organize.api.MobileVersionAPI" ref="mobileVersionApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.PositionDetailAPI" ref="positionDetailApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.PositionInstructionAPI" ref="positionInstructionApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.organize.api.PositionInstructionsLogAPI"
