@@ -202,4 +202,9 @@ public class StaffRecordsApiImpl implements StaffRecordsAPI {
     public StaffRecordsDataBO findDataByName(String name) throws SerException {
         return staffRecordsSer.findDataByName(name);
     }
+
+    @Override
+    public List<String> findUserName() throws SerException {
+        return staffRecordsSer.findUserName();
+    }
 }

@@ -422,4 +422,14 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
     default CustomerInfoBO findByNum(String customerNum) throws SerException {
         return null;
     }
+
+    /**
+     * 获取客户编号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findCode() throws SerException {
+        return null;
+    }
 }

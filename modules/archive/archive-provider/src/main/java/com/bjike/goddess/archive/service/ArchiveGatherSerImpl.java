@@ -22,6 +22,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -202,7 +203,7 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
         ArchiveGatherBO bo = BeanTransform.copyProperties(entity, ArchiveGatherBO.class);
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null != user) {
-            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getUsername());
             bo.setArea("");
             bo.setPosition("");
             bo.setProject("");
@@ -247,7 +248,7 @@ public class ArchiveGatherSerImpl extends ServiceImpl<ArchiveGather, ArchiveGath
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 ArchiveGather entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
+                BeanUtils.copyProperties(to, entity);
                 entity.setModifyTime(LocalDateTime.now());
                 entity.setEvaluate(to.getEvaluate());
                 entity.setOther(to.getOther());

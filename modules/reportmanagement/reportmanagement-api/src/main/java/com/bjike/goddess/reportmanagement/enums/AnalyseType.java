@@ -1,30 +1,27 @@
 package com.bjike.goddess.reportmanagement.enums;
 
-/**
- * 现金流量表分析类型
- */
 public enum AnalyseType {
 
     /**
-     * 流动资产
+     * 经营活动产生的现金流量分析
      */
-    AFLOW(0),
+    MANAGEMENT(0),
+
     /**
-     * 长期资产
+     * 投资活动产生的现金流量分析
      */
-    BLONG(1),
+    INVESTMENT(1),
+
     /**
-     * 固定资产
+     * 筹资活动产生的现金流量分析
      */
-    CFIX(2),
+    FINANCING(2),
+
     /**
-     * 无形资产及其他资产
+     * 现金流量构成分析
      */
-    DINVISIBLE(3),
-    /**
-     * 递延税款
-     */
-    ETAX(4);
+    CASH(3);
+
     private int code;
 
     AnalyseType(int code) {

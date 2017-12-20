@@ -41,7 +41,7 @@ public class CashFlow extends BaseEntity {
     /**
      * 行次
      */
-    @Column(name = "", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '行次'")
+    @Column(name = "num", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '行次'")
     private Integer num;
 
     /**

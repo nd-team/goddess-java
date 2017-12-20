@@ -12,6 +12,7 @@ import com.bjike.goddess.reportmanagement.bo.ReturnCashBO;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.*;
 import com.bjike.goddess.reportmanagement.enums.ProjectType;
+import com.bjike.goddess.reportmanagement.to.CashRateListTO;
 import com.bjike.goddess.reportmanagement.to.CashRateTO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.SubjectCollectBO;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -52,6 +54,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     @Autowired
     private CashFormulaSer cashFormulaSer;
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public List<CashFlowProjectBO> list(CashFlowProjectDTO dto) throws SerException {
         List<CashFlowProjectBO> bos = new ArrayList<>(0);
@@ -63,7 +66,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         CashFlowDTO cashFlowDTO = new CashFlowDTO();
         cashFlowDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
-        cashFlowDTO.getSorts().add("seqNum=asc");
+        cashFlowDTO.getSorts().add("num=asc");
+//        cashFlowDTO.getSorts().add("seqNum=asc");
         List<CashFlow> cashFlows = cashFlowSer.findByCis(cashFlowDTO);
         if (null != cashFlows && cashFlows.size() > 0) {
             for (CashFlow cashFlow : cashFlows) {
@@ -169,6 +173,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CashFormulaBO findFormula(String id) throws SerException {
         CashFormulaDTO cashFormulaDTO = new CashFormulaDTO();
@@ -184,6 +189,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return projectSer.count(projectDTO) + 3;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public ReturnCashBO findMoney(CashFlowProjectDTO dto) throws SerException {
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
@@ -202,6 +208,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return null;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void editMoney(CashFlowProjectDTO dto) throws SerException {
         CashFlowDTO cashFlowDTO = new CashFlowDTO();
@@ -234,22 +241,26 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
-    public void editRate(CashRateTO to) throws SerException {
-        CashRateDTO cashRateDTO = new CashRateDTO();
-        cashRateDTO.getConditions().add(Restrict.eq("projectId", to.getProjectId()));
-        String formula = to.getFormula();
-        formula = formula.substring(0, formula.lastIndexOf("+") - 2);
-
-        cashRateDTO.getConditions().add(Restrict.eq("formula", formula));
-        CashRate cashRate = cashRateSer.findOne(cashRateDTO);
-        cashRate.setRate(to.getRate());
-        cashRate.setModifyTime(LocalDateTime.now());
-        cashRateSer.update(cashRate);
+    public void editRate(CashRateListTO tos) throws SerException {
+        try {
+            if (null == tos.getCashRateTOs() || tos.getCashRateTOs().size() < 1) {
+                throw new SerException("传入数据不能为空");
+            }
+            for (CashRateTO to : tos.getCashRateTOs()) {
+                CashRate cashRate = cashRateSer.findById(to.getId());
+                cashRate.setRate(to.getRate());
+                cashRate.setModifyTime(LocalDateTime.now());
+                cashRateSer.update(cashRate);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //根据科目查询金额
-    private Double findCashByProject(String projectName, CashFlowProjectDTO dto) throws SerException {
+    public Double findCashByProject(String projectName, CashFlowProjectDTO dto) throws SerException {
         Double cash = 0d;
         if ("销售商品、提供劳务收到的现金".equals(projectName)) {
             cash = findCash(dto);
@@ -359,7 +370,10 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.getConditions().add(Restrict.eq("projectName", "销售商品、提供劳务收到的现金"));
         Project project = projectSer.findOne(projectDTO);
-        String projectId = project.getId();
+        String projectId = "";
+        if (null != project) {
+            projectId = project.getId();
+        }
         CashRateDTO cashRateDTO = new CashRateDTO();
         cashRateDTO.getConditions().add(Restrict.eq("projectId", projectId));
         cashRateDTO.getConditions().add(Restrict.eq("formula", "利润表中主营业务收入*"));
@@ -388,7 +402,6 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
             cashRateSer.save(cashRate1);
         }
         cash2 = cash2 / (1 + cashRate1.getRate() / 100);
-
         //应收票据期初余额-应收票据期末余额
         Double cash3 = 0d;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();

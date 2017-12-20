@@ -9,7 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.api.CashFlowProjectAPI;
 import com.bjike.goddess.reportmanagement.bo.CashFlowProjectBO;
 import com.bjike.goddess.reportmanagement.dto.CashFlowProjectDTO;
-import com.bjike.goddess.reportmanagement.to.CashRateTO;
+import com.bjike.goddess.reportmanagement.to.CashRateListTO;
 import com.bjike.goddess.reportmanagement.vo.CashFlowProjectVO;
 import com.bjike.goddess.reportmanagement.vo.CashFormulaVO;
 import com.bjike.goddess.reportmanagement.vo.CashRateVO;
@@ -133,8 +133,8 @@ public class CashFlowProjectAction {
      *
      * @version v1
      */
-    @PutMapping("v1/editRate/{projectId}")
-    public Result editRate(@Validated(EDIT.class) CashRateTO to) throws ActException {
+    @PostMapping("v1/editRate/{projectId}")
+    public Result editRate( CashRateListTO to) throws ActException {
         try {
             cashFlowProjectAPI.editRate(to);
             return ActResult.initialize("修改成功");

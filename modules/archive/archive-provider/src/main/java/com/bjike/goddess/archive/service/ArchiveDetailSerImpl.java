@@ -26,6 +26,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -214,7 +215,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
         bo.setArea("");
         UserBO user = userAPI.findByUsername(entity.getUsername());
         if (null != user) {
-            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getId());
+            PositionDetailUserBO detailBO = positionDetailUserAPI.findOneByUser(user.getUsername());
             if (null != detailBO) {
                 List<PositionUserDetailBO> positionUserDetailBOSList = detailBO.getDetailS();
                 if (null != positionUserDetailBOSList) {
@@ -268,7 +269,7 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 ArchiveDetail entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
+                BeanUtils.copyProperties(to, entity);
                 if (moduleAPI.isCheck("managementpromotion")) {
                     LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
                     if (null != levelShow) {

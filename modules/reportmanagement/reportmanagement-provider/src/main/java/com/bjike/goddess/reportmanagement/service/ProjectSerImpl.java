@@ -167,6 +167,7 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
 
     @Override
     public List<ProjectBO> list(ProjectDTO dto) throws SerException {
+        dto.getSorts().add("createTime=asc");
         List<Project> projects = super.findByPage(dto);
         List<ProjectBO> projectBOs = BeanTransform.copyProperties(projects, ProjectBO.class);
         return projectBOs;

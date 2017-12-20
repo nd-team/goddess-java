@@ -334,4 +334,20 @@ public class PersonnelQualificationAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 人员资质导出时的姓名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findUserName")
+    public Result findUserName() throws ActException {
+        try {
+            List<String> list = personnelQualificationAPI.findUserName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

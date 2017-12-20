@@ -5,6 +5,7 @@ import com.bjike.goddess.marketdevelopment.bo.CustomerBO;
 import com.bjike.goddess.marketdevelopment.dto.CustomerDTO;
 import com.bjike.goddess.marketdevelopment.excel.CustomerImportExcel;
 import com.bjike.goddess.marketdevelopment.to.CustomerTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -131,5 +132,22 @@ public interface CustomerAPI {
      */
     default void upload(List<CustomerImportExcel> tos) throws SerException {
         return;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取阶段
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findStage() throws SerException {
+        return null;
     }
 }

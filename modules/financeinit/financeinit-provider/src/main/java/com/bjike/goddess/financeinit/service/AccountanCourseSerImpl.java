@@ -7,9 +7,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
-import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
-import com.bjike.goddess.financeinit.bo.CourseDateBO;
+import com.bjike.goddess.financeinit.bo.*;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.entity.InitDateEntry;
@@ -19,6 +17,8 @@ import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExportTemple;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 会计科目业务实现
@@ -50,6 +51,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -451,4 +454,138 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
         return list;
     }
+
+    @Override
+    public SubjectDataBO findSubjects(String name) throws SerException {
+        SubjectDataBO bo = new SubjectDataBO();
+        //获取部门
+        List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(name);
+        if (null != positionDetailBOs && positionDetailBOs.size() > 0) {
+            String department = positionDetailBOs.get(0).getDepartmentName();
+            if (StringUtils.isBlank(department)) {
+                return null;
+            }
+            AccountanCourseDTO dto = new AccountanCourseDTO();
+            dto.getConditions().add(Restrict.eq("accountanName", department));
+            List<AccountanCourse> accountanCourses = super.findByCis(dto);
+            if (null != accountanCourses && accountanCourses.size() > 0) {
+                List<AccountanCourse> accountanCourses1 = accountanCourses.stream().filter(obj -> obj.getCode().length() == 8).collect(Collectors.toList());
+
+                if (null != accountanCourses1 && accountanCourses1.size() > 0) {
+                    bo.setThirdSubject(accountanCourses1.get(0).getAccountanName());
+                    bo.setThirdSubjectCode(accountanCourses1.get(0).getCode());
+                    //根据三级科目获取一级科目
+                    AccountanCourseDTO dto1 = new AccountanCourseDTO();
+                    dto1.getConditions().add(Restrict.eq("code", bo.getThirdSubjectCode().substring(0, 4)));
+                    List<AccountanCourse> accountanCourses2 = super.findByCis(dto1);
+                    if (null != accountanCourses2 && accountanCourses2.size() > 0) {
+//                        accountanCourses2 = accountanCourses2.stream().filter(obj -> "管理费用".equals(obj.getAccountanName()) || "主营业务成本".equals(obj.getAccountanName()) || "营业费用".equals(obj.getAccountanName())).collect(Collectors.toList());
+                        if (null != accountanCourses2 && accountanCourses2.size() > 0) {
+                            bo.setFirstSubject(accountanCourses2.get(0).getAccountanName());
+                            bo.setFirstSubjectCode(accountanCourses2.get(0).getCode());
+                        }
+                    }
+                    //根据三级科目获取二级科目
+                    AccountanCourseDTO dto2 = new AccountanCourseDTO();
+                    dto2.getConditions().add(Restrict.eq("code", bo.getThirdSubjectCode().substring(0, 6)));
+                    List<AccountanCourse> accountanCourses3 = super.findByCis(dto2);
+                    if (null != accountanCourses3 && accountanCourses3.size() > 0) {
+                        bo.setSecondSubject(accountanCourses3.get(0).getAccountanName());
+                        bo.setSecondSubjectCode(accountanCourses3.get(0).getCode());
+                    }
+                }
+            }
+        }
+        return bo;
+    }
+
+    @Override
+    public SubjectDatasBO findSubjects1(String name) throws SerException {
+        SubjectDatasBO bo = new SubjectDatasBO();
+        //获取部门
+        List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(name);
+        if (null != positionDetailBOs && positionDetailBOs.size() > 0) {
+            String department = positionDetailBOs.get(0).getDepartmentName();
+            if (StringUtils.isBlank(department)) {
+                return null;
+            }
+            AccountanCourseDTO dto = new AccountanCourseDTO();
+            dto.getConditions().add(Restrict.eq("accountanName", department));
+            List<AccountanCourse> accountanCourses = super.findByCis(dto);
+            if (null != accountanCourses && accountanCourses.size() > 0) {
+                List<AccountanCourse> accountanCourses1 = accountanCourses.stream().filter(obj -> obj.getCode().length() == 8).collect(Collectors.toList());
+                if (null != accountanCourses1 && accountanCourses1.size() > 0) {
+                    bo.setThirdSubject(accountanCourses1.get(0).getAccountanName());
+                    bo.setThirdSubjectCode(accountanCourses1.get(0).getCode());
+                    //根据三级科目获取一级科目
+                    List<FirstSubjectDataBO> firstSubjectDataBOList = new ArrayList<>(0);
+                    AccountanCourseDTO dto1 = new AccountanCourseDTO();
+                    dto1.getConditions().add(Restrict.eq("code", bo.getThirdSubjectCode().substring(0, 4)));
+                    dto1.getSorts().add("accountanName=asc");
+                    List<AccountanCourse> accountanCourses2 = super.findByCis(dto1);
+                    if (null != accountanCourses2 && accountanCourses2.size() > 0) {
+                        for (AccountanCourse accountanCourse : accountanCourses2) {
+                            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+                            firstSubjectDataBO.setFirstSubjectCode(accountanCourse.getCode());
+                            firstSubjectDataBO.setFirstSubject(accountanCourse.getAccountanName());
+                            firstSubjectDataBOList.add(firstSubjectDataBO);
+                        }
+                    }
+                    //如果三级科目是职能部门,一级科目加上其他应收款,其他应付款
+                    if ("职能部门".equals(department)) {
+                        findOtherFirstSubject(firstSubjectDataBOList);
+                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
+                    } else if ("商务发展部".equals(department)) {
+                        findOtherFirstSubject(firstSubjectDataBOList);
+                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
+                    } else if ("一线项目".equals(department)) {
+                        firstSubjectDataBOList = new ArrayList<>(0);
+                        findOtherFirstSubject(firstSubjectDataBOList);
+                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
+                    }
+                }
+            }
+        }
+        return bo;
+    }
+
+    @Override
+    public List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
+        if (StringUtils.isBlank(firstSubjectCode)) {
+            return null;
+        }
+        String[] files = new String[]{"secondSubjectCode", "secondSubject"};
+        //查询二级科目代码
+        StringBuilder sql = new StringBuilder("select code as secondSubjectCode ,accountanName as secondSubject from financeinit_accountancourse ");
+        sql.append(" where substring(code,1,4) = '" + firstSubjectCode + "' ");
+        sql.append(" and LENGTH(code) = 6 ");
+        List<SecondSubjectDataBO> bos = super.findBySql(sql.toString(), SecondSubjectDataBO.class, files);
+        return bos;
+
+    }
+
+    //获取其他应收款和其他应付款
+    private void findOtherFirstSubject(List<FirstSubjectDataBO> firstSubjectDataBOList) throws SerException {
+        //获取其他应收款和其他应付款
+        AccountanCourseDTO dto = new AccountanCourseDTO();
+        dto.getConditions().add(Restrict.eq("accountanName", "其他应收款"));
+        List<AccountanCourse> accountanCourses3 = super.findByCis(dto);
+        if (null != accountanCourses3 && accountanCourses3.size() > 0) {
+            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+            firstSubjectDataBO.setFirstSubject(accountanCourses3.get(0).getAccountanName());
+            firstSubjectDataBO.setFirstSubjectCode(accountanCourses3.get(0).getCode());
+            firstSubjectDataBOList.add(firstSubjectDataBO);
+        }
+        dto = new AccountanCourseDTO();
+        dto.getConditions().add(Restrict.eq("accountanName", "其他应付款"));
+        List<AccountanCourse> accountanCourses4 = super.findByCis(dto);
+        if (null != accountanCourses4 && accountanCourses4.size() > 0) {
+            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+            firstSubjectDataBO.setFirstSubject(accountanCourses4.get(0).getAccountanName());
+            firstSubjectDataBO.setFirstSubjectCode(accountanCourses4.get(0).getCode());
+            firstSubjectDataBOList.add(firstSubjectDataBO);
+        }
+    }
+
+
 }

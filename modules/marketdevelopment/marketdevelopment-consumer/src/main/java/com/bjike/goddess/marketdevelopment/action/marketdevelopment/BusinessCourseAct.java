@@ -38,7 +38,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("businesscourse")
-public class BusinessCourseAct extends BaseFileAction{
+public class BusinessCourseAct extends BaseFileAction {
 
     @Autowired
     private BusinessCourseAPI businessCourseAPI;
@@ -255,7 +255,7 @@ public class BusinessCourseAct extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
-    
+
 
     /**
      * 导出excel
@@ -293,6 +293,48 @@ public class BusinessCourseAct extends BaseFileAction{
             List<BusinessCourseImportExcel> tos = ExcelUtil.mergeExcelToClazz(is, BusinessCourseImportExcel.class, excel);
             businessCourseAPI.upload(tos);
             return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部的业务方向名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/find/businessType")
+    public Result findBusinessType() throws ActException {
+        try {
+            return ActResult.initialize(businessCourseAPI.findBusinessType());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据业务方向分类查询业务方向科目
+     *
+     * @version v1
+     */
+    @GetMapping("v1/find/subject")
+    public Result findSubject(@RequestParam String businessType) throws ActException {
+        try {
+            return ActResult.initialize(businessCourseAPI.findSubject(businessType));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部的业务方向科目
+     *
+     * @version v1
+     */
+    @GetMapping("v1/find/allSubject")
+    public Result findAllSubject() throws ActException {
+        try {
+            return ActResult.initialize(businessCourseAPI.findAllSubject());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

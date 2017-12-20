@@ -1,10 +1,12 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.marketdevelopment.bo.InformationBO;
 import com.bjike.goddess.marketdevelopment.bo.OutBillBO;
 import com.bjike.goddess.marketdevelopment.dto.OutBillDTO;
 import com.bjike.goddess.marketdevelopment.excel.OutBillImportExcel;
 import com.bjike.goddess.marketdevelopment.service.OutBillSer;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.OutBillTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,11 @@ public class OutBillApiImpl implements OutBillAPI  {
 
     @Autowired
     private OutBillSer outBillSer;
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return outBillSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<OutBillBO> maps(OutBillDTO dto) throws SerException {
@@ -78,5 +85,15 @@ public class OutBillApiImpl implements OutBillAPI  {
     @Override
     public void upload(List<OutBillImportExcel> tos) throws SerException {
         outBillSer.upload(tos);
+    }
+
+    @Override
+    public List<String> findName() throws SerException {
+        return outBillSer.findName();
+    }
+
+    @Override
+    public InformationBO findDataByName(String name) throws SerException {
+        return outBillSer.findDataByName(name);
     }
 }

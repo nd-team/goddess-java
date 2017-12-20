@@ -23,12 +23,12 @@ public class FilesDataBO extends BaseBO {
     /**
      * 表头下标
      */
-    private Integer index;
+    private Integer tableIndex;
 
     /**
      * 表头
      */
-    private String table;
+    private String tableName;
 
     /**
      * 内容
@@ -51,20 +51,20 @@ public class FilesDataBO extends BaseBO {
         this.dateDataId = dateDataId;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getTableIndex() {
+        return tableIndex;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setTableIndex(Integer tableIndex) {
+        this.tableIndex = tableIndex;
     }
 
-    public String getTable() {
-        return table;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public String getContext() {

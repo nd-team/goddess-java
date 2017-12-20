@@ -432,4 +432,13 @@ public interface CustomerBaseInfoAPI {
         return null;
     }
 
+    /**
+     * 获取客户编号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findCode() throws SerException {
+        return null;
+    }
 }

@@ -27,6 +27,8 @@ import com.bjike.goddess.organize.utils.IndicatorA;
 import com.bjike.goddess.organize.utils.ModuleA;
 import com.bjike.goddess.organize.utils.PositionWorkDetailsA;
 import com.bjike.goddess.organize.vo.ActResultOrgan;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -74,6 +76,8 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
     private DepartmentDetailSer departmentDetailSer;
     @Autowired
     private PositionDetailSer positionDetailSer;
+    @Autowired
+    private UserAPI userAPI;
 
     @Transactional
     @Override
@@ -1307,7 +1311,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                             Modules modules = BeanTransform.copyProperties(bo, Modules.class);
                             modules.setWorkDetailsId(entity.getId());
                             modules = modulesSer.save(modules);
-                            if (null != bo && modules != null&& bo.getIndicatorBOList().size() > 0 && bo.getIndicatorBOList() != null) {
+                            if (null != bo && modules != null && bo.getIndicatorBOList().size() > 0 && bo.getIndicatorBOList() != null) {
                                 for (IndicatorBO indicatorBO : bo.getIndicatorBOList()) {
                                     Indicator indicator = BeanTransform.copyProperties(indicatorBO, Indicator.class);
                                     indicator.setModulesId(modules.getId());
@@ -1333,6 +1337,80 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(toList, excel);
         return bytes;
+    }
+
+    @Override
+    public OptionAnnularBO figureShow() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+//        String userName = "李杨";
+        //获取本部门的人数
+        String[] files = new String[]{"value"};
+        StringBuilder sql1 = new StringBuilder("SELECT count(DISTINCT c.user_id) as value ");
+        sql1.append(" FROM organize_department_detail a, ");
+        sql1.append(" organize_position_detail b, ");
+        sql1.append(" organize_position_detail_user_table c, ");
+        sql1.append(" (SELECT id FROM organize_position_detail_user ");
+        sql1.append(" WHERE name = '" + userName + "') d ");
+        sql1.append(" WHERE a.id = b.department_id ");
+        sql1.append(" AND b.id = c.position_id ");
+        sql1.append(" and c.user_id = d.id; ");
+        List<DataBO> objects = super.findBySql(sql1.toString(),DataBO.class,files);
+//        Object[] obj1 = (Object[]) objects.get(0);
+        Long num = Long.valueOf(objects.get(0).getValue());
+
+
+        //查询所有的部门人数
+        StringBuilder sql = new StringBuilder("SELECT count(DISTINCT c.user_id) as value FROM ");
+        sql.append(" organize_department_detail a,organize_position_detail b, ");
+        sql.append(" organize_position_detail_user_table c ");
+        sql.append(" WHERE a.id = b.department_id AND b.id = c.position_id ");
+        List<DataBO> objectList = super.findBySql(sql.toString(),DataBO.class,files);
+//        Object[] obj = (Object[]) objectList.get(0);
+        Long totalNum = Long.valueOf(String.valueOf(objectList.get(0).getValue()));
+
+        OptionAnnularBO bo = new OptionAnnularBO();
+        TooltipBO tooltip = new TooltipBO();
+        bo.setTooltip(tooltip);
+
+        LegendBO legendBO = new LegendBO();
+        String[] data = new String[]{"本部门人数", "全部人数"};
+        legendBO.setData(data);
+        bo.setLegend(legendBO);
+
+        SeriesAnnularBO seriesBO = new SeriesAnnularBO();
+        seriesBO.setName("访问来源");
+        seriesBO.setType("pie");
+        seriesBO.setRadius(new String[]{"50%", "70%"});
+
+        NormalBO normalBO = new NormalBO();
+        normalBO.setShow(false);
+        normalBO.setPosition("center");
+
+        LabelBO labelBO = new LabelBO();
+        labelBO.setNormal(normalBO);
+
+        seriesBO.setLabel(labelBO);
+
+        DataBO dataBO = new DataBO();
+        dataBO.setName("本部门人数");
+        dataBO.setValue(num);
+
+        DataBO dataBO1 = new DataBO();
+        dataBO1.setName("全部人数");
+        dataBO1.setValue(totalNum);
+
+        List<DataBO> dataBOs = new ArrayList<>(0);
+        dataBOs.add(dataBO);
+        dataBOs.add(dataBO1);
+
+        seriesBO.setData(dataBOs);
+
+        SeriesAnnularBO[] seriesBOs = new SeriesAnnularBO[]{seriesBO};
+        bo.setSeries(seriesBOs);
+        return bo;
     }
 
     //判断两个对象中的第j张模块表的数据是否相同
@@ -1433,7 +1511,7 @@ public class PositionWorkDetailsSerImpl extends ServiceImpl<PositionWorkDetails,
                 valList2.add(val);
             }
             ModulesBO modulesBO = transToModuleBO(valList1, valList2, tar, j, modulesBOList0);
-            if (null != modulesBO  && modulesBO.getIndicatorBOList() != null&& modulesBO.getIndicatorBOList().size() > 0) {
+            if (null != modulesBO && modulesBO.getIndicatorBOList() != null && modulesBO.getIndicatorBOList().size() > 0) {
                 modulesBOList0.add(modulesBO);
             }
 //

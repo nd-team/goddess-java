@@ -1,6 +1,7 @@
 package com.bjike.goddess.marketdevelopment.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.marketdevelopment.enums.Status;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,6 +57,11 @@ public class MonthMoney extends BaseEntity {
     @Column(name = "diferenceMoney", nullable = true, columnDefinition = "DECIMAL(10,2)   COMMENT '差异金额（万元）'")
     private Double diferenceMoney;
 
+    /**
+     * 状态
+     */
+    @Column(name = "status", nullable = false, columnDefinition = "TINYINT(2) DEFAULT 0   COMMENT '状态'",insertable = false)
+    private Status status;
 
     public String getYear() {
         return year;
@@ -103,5 +109,13 @@ public class MonthMoney extends BaseEntity {
 
     public void setDiferenceMoney(Double diferenceMoney) {
         this.diferenceMoney = diferenceMoney;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

@@ -4,7 +4,6 @@ import com.bjike.goddess.archive.bo.PersonnelQuaDataBO;
 import com.bjike.goddess.archive.bo.PersonnelQualificationBO;
 import com.bjike.goddess.archive.dto.PersonnelQualificationDTO;
 import com.bjike.goddess.archive.excel.PersonnelQualificationImportExcel;
-import com.bjike.goddess.archive.excel.ResumeInfoImportExcel;
 import com.bjike.goddess.archive.service.PersonnelQualificationSer;
 import com.bjike.goddess.archive.to.GuidePermissionTO;
 import com.bjike.goddess.archive.to.PersonnelQualificationTO;
@@ -92,6 +91,11 @@ public class PersonnelQualificationApiImpl implements PersonnelQualificationAPI 
     @Override
     public void upload(List<PersonnelQualificationImportExcel> tos) throws SerException {
         personnelQualificationSer.upload(tos);
+    }
+
+    @Override
+    public List<String> findUserName() throws SerException {
+        return personnelQualificationSer.findUserName();
     }
 
 }

@@ -314,6 +314,16 @@ public class ResumeInfoSerImpl extends ServiceImpl<ResumeInfo, ResumeInfoDTO> im
         return bytes;
     }
 
+    @Override
+    public List<String> findUserName() throws SerException {
+        List<ResumeInfo> resumeInfos = super.findAll();
+        if (null != resumeInfos && resumeInfos.size() > 0) {
+            List<String> list = resumeInfos.stream().map(ResumeInfo::getUsername).collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
     private List<ResumeInfoExportExcel> transExcel(List<ResumeInfoBO> bos, List<ResumeInfoExportExcel> resumeInfoExportExcels) throws SerException {
         if (null != bos && bos.size() > 0) {
             BeanUtils.copyProperties(bos, resumeInfoExportExcels, "status");

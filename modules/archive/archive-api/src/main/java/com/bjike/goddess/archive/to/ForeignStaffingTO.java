@@ -58,25 +58,25 @@ public class ForeignStaffingTO extends BaseTO {
     /**
      * 资质/认证证书
      */
-    @NotBlank(message = "学历不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "资质/认证证书不能为空", groups = {ADD.class, EDIT.class})
     private String litterae;
 
     /**
      * 是否购买社保
      */
-    @NotNull(message = "学历不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否购买社保不能为空", groups = {ADD.class, EDIT.class})
     private Boolean buySecurity;
 
     /**
      * 社保购买类型
      */
-    @NotBlank(message = "学历不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "社保购买类型不能为空", groups = {ADD.class, EDIT.class})
     private String securityType;
 
     /**
      * 购买社保所属公司
      */
-    @NotBlank(message = "学历不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "购买社保所属公司不能为空", groups = {ADD.class, EDIT.class})
     private String company;
 
     /**

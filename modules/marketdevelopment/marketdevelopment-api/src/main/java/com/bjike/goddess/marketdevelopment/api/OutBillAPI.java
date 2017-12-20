@@ -1,9 +1,11 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.marketdevelopment.bo.InformationBO;
 import com.bjike.goddess.marketdevelopment.bo.OutBillBO;
 import com.bjike.goddess.marketdevelopment.dto.OutBillDTO;
 import com.bjike.goddess.marketdevelopment.excel.OutBillImportExcel;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.OutBillTO;
 
 import java.util.List;
@@ -18,6 +20,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface OutBillAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表
@@ -131,5 +140,26 @@ public interface OutBillAPI {
      */
     default void upload(List<OutBillImportExcel> tos) throws SerException {
         return;
+    }
+
+    /**
+     * 从日计划中获取姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据日计划中的名称获取日计划中的公司名称职位电话
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default InformationBO findDataByName(String name) throws SerException {
+        return null;
     }
 }

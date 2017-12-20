@@ -29,6 +29,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.enums.SexType;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 人员资质业务实现
@@ -246,7 +248,7 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         if (StringUtils.isNotBlank(to.getId())) {
             try {
                 PersonnelQualification entity = super.findById(to.getId());
-                BeanTransform.copyProperties(to, entity, true);
+                BeanUtils.copyProperties(to, entity);
                 entity.setModifyTime(LocalDateTime.now());
                 entity.setLabor(laborRelationSer.findById(to.getLaborId()));
                 entity.setSocial(socialSecurityTypeSer.findById(to.getSocialId()));
@@ -333,9 +335,15 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
         dto = findData(dto);
         searchCondition(dto);
         List<PersonnelQualification> personnelQualifications = super.findByCis(dto);
-        List<PersonnelQualificationBO> bos = BeanTransform.copyProperties(personnelQualifications, PersonnelQualificationBO.class, false);
-        List<PersonnelQualificationExportExcel> personnelQualificationExportExcels = new ArrayList<>(0);
-        BeanTransform.copyProperties(bos, personnelQualificationExportExcels);
+        List<PersonnelQualificationBO> bos = new ArrayList<>(0);
+//                BeanTransform.copyProperties(personnelQualifications, PersonnelQualificationBO.class, false);
+        for (PersonnelQualification personnelQualification : personnelQualifications) {
+            PersonnelQualificationBO bo = BeanTransform.copyProperties(personnelQualification, PersonnelQualificationBO.class, false);
+            bo.setSocialName(personnelQualification.getSocial().getName());
+            bo.setLaborName(personnelQualification.getLabor().getName());
+            bos.add(bo);
+        }
+        List<PersonnelQualificationExportExcel> personnelQualificationExportExcels = BeanTransform.copyProperties(bos, PersonnelQualificationExportExcel.class);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(personnelQualificationExportExcels, excel);
         return bytes;
@@ -376,6 +384,16 @@ public class PersonnelQualificationSerImpl extends ServiceImpl<PersonnelQualific
                 this.save(to);
             }
         }
+    }
+
+    @Override
+    public List<String> findUserName() throws SerException {
+        List<PersonnelQualification> personnelQualifications = super.findAll();
+        if (null != personnelQualifications && personnelQualifications.size() > 0) {
+            List<String> list = personnelQualifications.stream().map(PersonnelQualification::getUsername).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
     }
 
     private void searchCondition(PersonnelQualificationDTO dto) throws SerException {

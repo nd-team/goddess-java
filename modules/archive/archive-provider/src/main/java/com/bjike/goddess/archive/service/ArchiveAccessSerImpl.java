@@ -25,7 +25,6 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.api.UserDetailAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -469,12 +468,12 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
 
     @Override
     public byte[] exportExcel(ArchiveAccessDTO dto) throws SerException {
-        dto = findData(dto);
+        dto.setUsername("admin");
+//        dto = findData(dto);
         searchCondition(dto);
         List<ArchiveAccess> archiveAccesses = super.findByCis(dto);
         List<ArchiveAccessBO> bos = BeanTransform.copyProperties(archiveAccesses, ArchiveAccessBO.class, false);
-        List<ArchiveAccessExportExcel> archiveAccessExportExcels = new ArrayList<>(0);
-        archiveAccessExportExcels = transExcel(bos, archiveAccessExportExcels);
+        List<ArchiveAccessExportExcel> archiveAccessExportExcels = transExcel(bos);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(archiveAccessExportExcels, excel);
         return bytes;
@@ -513,9 +512,19 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
         }
     }
 
-    private List<ArchiveAccessExportExcel> transExcel(List<ArchiveAccessBO> bos, List<ArchiveAccessExportExcel> archiveAccessExportExcels) throws SerException {
+    @Override
+    public List<String> findUserName() throws SerException {
+        List<ArchiveAccess> archiveAccesses = super.findAll();
+        if (null != archiveAccesses && archiveAccesses.size() > 0) {
+            List<String> list = archiveAccesses.stream().map(ArchiveAccess::getUsername).collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    private List<ArchiveAccessExportExcel> transExcel(List<ArchiveAccessBO> bos) throws SerException {
         if (null != bos && bos.size() > 0) {
-            BeanUtils.copyProperties(bos, archiveAccessExportExcels, "audit", "overdue");
+            List<ArchiveAccessExportExcel> archiveAccessExportExcels = BeanTransform.copyProperties(bos, ArchiveAccessExportExcel.class, "audit", "overdue");
             for (ArchiveAccessExportExcel archiveAccessExportExcel : archiveAccessExportExcels) {
                 if (isOrder(archiveAccessExportExcel.getEnd(), DateUtil.dateToString(LocalDate.now()))) {
                     archiveAccessExportExcel.setOverdue("是");
@@ -529,8 +538,9 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
                     archiveAccessExportExcels.get(i).setAudit(transAudit(list.get(i)));
                 }
             }
+            return archiveAccessExportExcels;
         }
-        return archiveAccessExportExcels;
+        return null;
     }
 
     private String transAudit(AuditType auditType) throws SerException {

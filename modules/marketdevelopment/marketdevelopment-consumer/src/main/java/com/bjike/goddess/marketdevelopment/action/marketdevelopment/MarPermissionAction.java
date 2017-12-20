@@ -39,6 +39,7 @@ public class MarPermissionAction {
     @Autowired
     private MarPermissionAPI cusPermissionAPI;
 
+
     /**
      * 列表总条数
      *

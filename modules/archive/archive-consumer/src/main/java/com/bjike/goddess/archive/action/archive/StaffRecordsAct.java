@@ -659,5 +659,20 @@ public class StaffRecordsAct extends BaseFileAction {
         }
     }
 
+    /**
+     * 导出时获取的姓名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findUserName")
+    public Result findUserName() throws ActException {
+        try {
+            List<String> list = staffRecordsAPI.findUserName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }
