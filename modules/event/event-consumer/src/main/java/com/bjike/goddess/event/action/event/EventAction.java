@@ -143,4 +143,18 @@ public class EventAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 当前用户事件总条数
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/currentUserEvenCount")
+    public Result currentUserEvenCount() throws ActException {
+        try {
+            return ActResult.initialize(eventAPI.currentUserEvenCount());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

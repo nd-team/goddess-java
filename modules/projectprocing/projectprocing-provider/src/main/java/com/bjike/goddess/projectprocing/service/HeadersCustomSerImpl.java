@@ -123,6 +123,7 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
 
     @Override
     public Long countHeaders(HeadersCustomDTO headersCustomDTO) throws SerException {
+        headersCustomDTO.getConditions().add(Restrict.isNull("prossManageId"));
         Long count = super.count(headersCustomDTO);
         return count;
     }
@@ -136,6 +137,7 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
     @Override
     public List<HeadersCustomBO> listHeaders(HeadersCustomDTO headersCustomDTO) throws SerException {
         checkPermission();
+        headersCustomDTO.getConditions().add(Restrict.isNull("prossManageId"));
         List<HeadersCustom> headersCustoms = super.findByCis(headersCustomDTO, true);
         return BeanTransform.copyProperties(headersCustoms, HeadersCustomBO.class);
     }
@@ -166,6 +168,10 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteHeaders(String id) throws SerException {
+        HeadersCustomDTO headersCustomDTO = new HeadersCustomDTO();
+        headersCustomDTO.getConditions().add(Restrict.eq("fatherId", id));
+        List<HeadersCustom> headersCustomList = super.findByCis(headersCustomDTO);
+        super.remove(headersCustomList);
         super.remove(id);
     }
 
@@ -205,7 +211,7 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
         List<HeadersCustom> headersCustoms = super.findByCis(headersCustomDTO);
 //        if (headersCustoms != null && headersCustoms.size() > 0) {
 
-            super.remove(headersCustoms);
+        super.remove(headersCustoms);
 //        }
     }
 }

@@ -94,4 +94,12 @@ public interface HeadersCustomAPI {
     default List<HeadersCustomBO> getHeaderByOutUnit(String outUnit) throws SerException {
         return null;
     }
+    /**
+     * 查找对应的字段和内容
+     *
+     * @return class HeadersCustomBO
+     */
+    default List<HeadersCustomBO> getByManageId(String prossManageId) throws SerException {
+        return null;
+    }
 }
