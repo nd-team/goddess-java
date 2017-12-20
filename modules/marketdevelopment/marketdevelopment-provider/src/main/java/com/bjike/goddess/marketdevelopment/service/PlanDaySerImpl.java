@@ -16,9 +16,6 @@ import com.bjike.goddess.marketdevelopment.enums.Status;
 import com.bjike.goddess.marketdevelopment.excel.PlanDayExportExcel;
 import com.bjike.goddess.marketdevelopment.excel.PlanDayImportExcel;
 import com.bjike.goddess.marketdevelopment.to.PlanDayTO;
-import com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI;
-import com.bjike.goddess.projectissuehandle.bo.ProblemAcceBO;
-import com.bjike.goddess.projectissuehandle.enums.ProblemTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -45,8 +42,8 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
     private BusinessCourseSer businessCourseSer;
     @Autowired
     private ModuleAPI moduleAPI;
-    @Autowired
-    private ProblemAcceptAPI problemAcceptAPI;
+//    @Autowired
+//    private ProblemAcceptAPI problemAcceptAPI;
 
     @Override
     public List<PlanDayBO> maps(PlanDayDTO dto) throws SerException {
@@ -175,28 +172,28 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
         return list;
     }
 
-    @Override
-    public List<String> findInterCode() throws SerException {
-        List<String> list = new ArrayList<>(0);
-        if (moduleAPI.isCheck("projectissuehandle")) {
-            list = problemAcceptAPI.getProjectNum();
-        }
-        return list;
-    }
+//    @Override
+//    public List<String> findInterCode() throws SerException {
+//        List<String> list = new ArrayList<>(0);
+//        if (moduleAPI.isCheck("projectissuehandle")) {
+//            list = problemAcceptAPI.getProjectNum();
+//        }
+//        return list;
+//    }
 
-    @Override
-    public MarkProblemAcceBO findProblemAcce(String interCode) throws SerException {
-        if (moduleAPI.isCheck("projectissuehandle")) {
-            ProblemAcceBO problemAcceBO = problemAcceptAPI.findProblemAcce(interCode);
-            if (null != problemAcceBO) {
-                MarkProblemAcceBO bo = new MarkProblemAcceBO();
-                BeanTransform.copyProperties(problemAcceBO, bo, "problemTypes");
-                bo.setProblemTypes(ProblemTypes.exportStrConvert(problemAcceBO.getProblemTypes()));
-                return bo;
-            }
-        }
-        return null;
-    }
+//    @Override
+//    public MarkProblemAcceBO findProblemAcce(String interCode) throws SerException {
+//        if (moduleAPI.isCheck("projectissuehandle")) {
+//            ProblemAcceBO problemAcceBO = problemAcceptAPI.findProblemAcce(interCode);
+//            if (null != problemAcceBO) {
+//                MarkProblemAcceBO bo = new MarkProblemAcceBO();
+//                BeanTransform.copyProperties(problemAcceBO, bo, "problemTypes");
+//                bo.setProblemTypes(ProblemTypes.exportStrConvert(problemAcceBO.getProblemTypes()));
+//                return bo;
+//            }
+//        }
+//        return null;
+//    }
 
     @Override
     public List<String> findMarkCode() throws SerException {

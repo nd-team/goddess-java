@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://code.alibabatech.com/schema/dubbo 
+		  http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<context:property-placeholder location="classpath:dubbo.properties"/>
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:registry address="${dubbo.registry.address}" />
+
+	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
+
+	<!--<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
+	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.businessproject.api.CollectEmailAPI" />
+	<dubbo:reference  validation="true" id="contractCategoryApiImpl" interface="com.bjike.goddess.businessproject.api.ContractCategoryAPI" />
+	<dubbo:reference  validation="true" id="dispatchSheetApiImpl" interface="com.bjike.goddess.businessproject.api.DispatchSheetAPI" />
+	<dubbo:reference  validation="true" id="collectUpdateApiImpl" interface="com.bjike.goddess.businessproject.api.CollectUpdateAPI" />
+	<dubbo:reference  validation="true" id="businessContractApiImpl" interface="com.bjike.goddess.businessproject.api.SiginManageAPI" />
+	<dubbo:reference  validation="true" id="siginManageApiImpl" interface="com.bjike.goddess.businessproject.api.BusinessContractAPI" />
+	<dubbo:reference  validation="true" id="outsourcBusinessContractApiImpl" interface="com.bjike.goddess.businessproject.api.OutsourcBusinessContractAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessproject.api.CusPermissionOperateAPI" />
+-->
+	<dubbo:reference  validation="true" id="businessContractProApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.BusinessContractProAPI" />
+	<dubbo:reference  validation="true" id="communicationTemplateApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.CommunicationTemplateAPI" />
+	<dubbo:reference  validation="true" id="notificationFormulaApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.NotificationFormulaAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.CusPermissionAPI" />
+	<dubbo:reference  validation="true" id="cusPermissionOperateApiImpl" interface="com.bjike.goddess.businessprojectmanage.api.CusPermissionOperateAPI" />
+
+
+	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
+	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
+	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
+	<dubbo:reference  validation="true" id="arrangementApiImpl" interface="com.bjike.goddess.organize.api.ArrangementAPI" />
+	<dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />
+	<dubbo:reference  validation="true" id="positionDetailApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailAPI" />
+	<dubbo:reference  validation="true" id="positionDetailUserApiImpl" interface="com.bjike.goddess.organize.api.PositionDetailUserAPI" />
+	<dubbo:reference  validation="true" id="userSetPermissionApiImpl" interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" />
+	<!--<dubbo:reference  validation="true" id="internalContactsApiImpl" interface="com.bjike.goddess.contacts.api.InternalContactsAPI" />-->
+	<!--<dubbo:reference  validation="true" id="taskNodeApiImpl" interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" />-->
+
+
+	<dubbo:reference  validation="true" id="fileApiImpl" interface="com.bjike.goddess.storage.api.FileAPI" />
+	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
+	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
+	<!--<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />-->
+
+
+</beans>

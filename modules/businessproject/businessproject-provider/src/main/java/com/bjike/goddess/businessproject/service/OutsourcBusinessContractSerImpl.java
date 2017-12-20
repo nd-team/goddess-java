@@ -209,13 +209,13 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
     @Override
     public List<OutsourcBusinessContractBO> list(OutsourcBusinessContractDTO dto) throws SerException {
         dto.getSorts().add("createTime=desc");
-        checkSeeIdentity();
+//        checkSeeIdentity();
         search(dto);
         OutsourcBusinessContract outsourcBusinessContract = new OutsourcBusinessContract();
         BusinessContractDTO businessContractDTO = new BusinessContractDTO();
         List<BusinessContract> businessContracts = businessContractSer.findByCis(businessContractDTO);
         for (BusinessContract businessContract : businessContracts) {
-            if (businessContract.getMeasurePass().equals("外包") || businessContract.getMeasurePass().equals("半外包")
+            if ("外包".equals(businessContract.getMeasurePass()) || "半外包".equals(businessContract.getMeasurePass())
                     && (businessContract.getStatus() == null)) {
                 //测算分类
                 outsourcBusinessContract.setMeasureClassify(businessContract.getMeasureClassify());
@@ -236,7 +236,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
                 //所属项目组
                 outsourcBusinessContract.setProjectGroup(businessContract.getProjectGroup());
                 //是否有合同派工
-                outsourcBusinessContract.setTaskContract(businessContract.getTaskContract ( ));
+                outsourcBusinessContract.setTaskContract(businessContract.getTaskContract());
                 //市场编号
                 outsourcBusinessContract.setMarketNum(businessContract.getMarketNum());
                 //类型
