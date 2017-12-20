@@ -31,4 +31,5 @@
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionUserDetailAPI" id="positionUserDetailApiImpl"/>
 </beans>

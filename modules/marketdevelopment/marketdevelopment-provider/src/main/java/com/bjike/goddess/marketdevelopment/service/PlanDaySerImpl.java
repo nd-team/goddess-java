@@ -141,7 +141,7 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
 
     @Override
     public void upload(List<PlanDayImportExcel> tos) throws SerException {
-        for(PlanDayImportExcel excel : tos){
+        for (PlanDayImportExcel excel : tos) {
             PlanDayTO to = BeanTransform.copyProperties(excel, PlanDayTO.class, false);
             save(to);
         }
@@ -172,17 +172,17 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
         return list;
     }
 
-//    @Override
-//    public List<String> findInterCode() throws SerException {
-//        List<String> list = new ArrayList<>(0);
+    @Override
+    public List<String> findInterCode() throws SerException {
+        List<String> list = new ArrayList<>(0);
 //        if (moduleAPI.isCheck("projectissuehandle")) {
 //            list = problemAcceptAPI.getProjectNum();
 //        }
-//        return list;
-//    }
+        return list;
+    }
 
-//    @Override
-//    public MarkProblemAcceBO findProblemAcce(String interCode) throws SerException {
+    @Override
+    public MarkProblemAcceBO findProblemAcce(String interCode) throws SerException {
 //        if (moduleAPI.isCheck("projectissuehandle")) {
 //            ProblemAcceBO problemAcceBO = problemAcceptAPI.findProblemAcce(interCode);
 //            if (null != problemAcceBO) {
@@ -192,8 +192,8 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
 //                return bo;
 //            }
 //        }
-//        return null;
-//    }
+        return null;
+    }
 
     @Override
     public List<String> findMarkCode() throws SerException {

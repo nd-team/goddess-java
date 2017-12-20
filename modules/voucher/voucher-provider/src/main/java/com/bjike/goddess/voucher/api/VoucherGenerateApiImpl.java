@@ -98,8 +98,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO audit(String id) throws SerException {
-        return voucherGenerateSer.audit(id);
+    public void audit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        voucherGenerateSer.audit(voucherGenerateTO);
     }
 
     @Override
@@ -118,8 +118,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO antiAudit(String id) throws SerException {
-        return voucherGenerateSer.antiAudit(id);
+    public void antiAudit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        voucherGenerateSer.antiAudit(voucherGenerateTO);
     }
 
     @Override
@@ -373,8 +373,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public List<VoucherGenerateBO> antiCheckAccount(String[] ids) throws SerException {
-        return voucherGenerateSer.antiCheckAccount(ids);
+    public void antiCheckAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        voucherGenerateSer.antiCheckAccount(voucherGenerateTO);
     }
 
     @Override

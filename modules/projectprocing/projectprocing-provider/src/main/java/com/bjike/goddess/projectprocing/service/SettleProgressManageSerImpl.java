@@ -940,7 +940,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         String moneyModuleName = positionDetailUserAPI.moneyModulePerson();
         List<PositionDetailUserBO> positionDetailUserBOS = positionUserDetailAPI.findManager();
         settleProgressRecord.setOutUnit(settleProgressManage.getOutUnit());
-        settleProgressRecord.setDispatchingName(settleProgressManage.getDispatchingItems());
+        settleProgressRecord.setDispatchingName(settleProgressManage.getDispatName());
         settleProgressRecord.setInternalName(settleProgressManage.getInternalProName());
         settleProgressRecord.setModifier(userBO.getUsername());
         settleProgressRecord.setUpdateDate(LocalDateTime.now());

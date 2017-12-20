@@ -192,4 +192,11 @@ public interface EventSer extends Ser<Event, EventDTO> {
      */
     FatherBO findFatherById(String id) throws SerException;
 
+    /**
+     * 首页当前用户待办事件总条数
+     * @return
+     * @throws SerException
+     */
+    Long currentUserEvenCount() throws SerException;
+
 }

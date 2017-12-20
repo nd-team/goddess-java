@@ -1,11 +1,11 @@
 package com.bjike.goddess.supplier.vo;
 
 /**
- * 联系情况表现层对象
+ * 联络情况表现层对象
  *
- * @Author: [ dengjunren ]
- * @Date: [ 2017-03-20T11:03:21.701 ]
- * @Description: [ 联系情况表现层对象 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-12-15 04:03 ]
+ * @Description: [ 联络情况表现层对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -16,24 +16,23 @@ public class ContactSituationVO {
      */
     private String id;
     /**
-     * 供应商基本信息
+     * 供应商信息登记id
      */
-    private String informationId;
-
+    private String supplierInfoRegiId;
     /**
-     * 业务联系人
+     * 业务联络人
      */
-    private String contacts;
+    private String bussLiaison;
 
     /**
      * 职务
      */
-    private String duties;
+    private String duty;
 
     /**
      * 联系电话
      */
-    private String telephone;
+    private String contactNum;
 
     /**
      * 邮箱
@@ -43,7 +42,7 @@ public class ContactSituationVO {
     /**
      * 传真
      */
-    private String fax;
+    private String facsimile;
 
 
     public String getId() {
@@ -54,36 +53,36 @@ public class ContactSituationVO {
         this.id = id;
     }
 
-    public String getInformationId() {
-        return informationId;
+    public String getSupplierInfoRegiId() {
+        return supplierInfoRegiId;
     }
 
-    public void setInformationId(String informationId) {
-        this.informationId = informationId;
+    public void setSupplierInfoRegiId(String supplierInfoRegiId) {
+        this.supplierInfoRegiId = supplierInfoRegiId;
     }
 
-    public String getContacts() {
-        return contacts;
+    public String getBussLiaison() {
+        return bussLiaison;
     }
 
-    public void setContacts(String contacts) {
-        this.contacts = contacts;
+    public void setBussLiaison(String bussLiaison) {
+        this.bussLiaison = bussLiaison;
     }
 
-    public String getDuties() {
-        return duties;
+    public String getDuty() {
+        return duty;
     }
 
-    public void setDuties(String duties) {
-        this.duties = duties;
+    public void setDuty(String duty) {
+        this.duty = duty;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getContactNum() {
+        return contactNum;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setContactNum(String contactNum) {
+        this.contactNum = contactNum;
     }
 
     public String getEmail() {
@@ -94,11 +93,11 @@ public class ContactSituationVO {
         this.email = email;
     }
 
-    public String getFax() {
-        return fax;
+    public String getFacsimile() {
+        return facsimile;
     }
 
-    public void setFax(String fax) {
-        this.fax = fax;
+    public void setFacsimile(String facsimile) {
+        this.facsimile = facsimile;
     }
 }

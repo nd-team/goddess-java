@@ -69,4 +69,9 @@ public class HeadersCustomApiImpl implements HeadersCustomAPI {
     public List<HeadersCustomBO> getHeaderByOutUnit(String outUnit) throws SerException {
         return headersCustomSer.getHeaderByOutUnit(outUnit);
     }
+
+    @Override
+    public List<HeadersCustomBO> getByManageId(String prossManageId) throws SerException {
+        return headersCustomSer.getByManageId(prossManageId);
+    }
 }

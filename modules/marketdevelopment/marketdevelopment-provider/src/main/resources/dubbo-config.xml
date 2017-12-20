@@ -50,8 +50,8 @@
                      interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
     <dubbo:reference validation="true" id="moduleApiImpl"
                      interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
-    <dubbo:reference validation="true" id="problemAcceptApiImpl"
-                     interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI"/>
+    <!--<dubbo:reference validation="true" id="problemAcceptApiImpl"-->
+                     <!--interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI"/>-->
 
 
 </beans>
