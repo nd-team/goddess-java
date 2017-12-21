@@ -667,7 +667,10 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
     public List<AnalyzeBO> combination(List<AnalyzeBO> boList, List<AnalyzeBO> lastBOList, ConditionTO to) throws SerException {
 
         for (AnalyzeBO bo : boList) {
+            bo.setYear(to.getYear());
+            bo.setMonth(to.getMonth());
             for (AnalyzeBO lastBO : lastBOList) {
+
                 if (!StringUtils.isEmpty(to.getArea())) {
                     if (bo.getArea().equals(lastBO.getArea())) {
                         setProperties(bo, lastBO);
