@@ -1,6 +1,5 @@
 package com.bjike.goddess.contacts.service;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -669,7 +668,9 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
                     List<InternalContacts> list = super.findByCis(dto);
                     if (!list.isEmpty()) {
 //                        strings.add(list.get(0).getEmail());
-                        strings.add(list.get(0).getWorkEmail());
+                        if (null != list.get(0).getWorkEmail()) {
+                            strings.add(list.get(0).getWorkEmail());
+                        }
                     }
                 } catch (Exception e) {
                     throw new SerException(e.getMessage());
@@ -697,7 +698,11 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             dto.getConditions().add(Restrict.eq("name", name));
             List<InternalContacts> list = super.findByCis(dto);
             if (!list.isEmpty()) {
-                return list.get(0).getWorkEmail();
+                if (null != list.get(0).getWorkEmail()) {
+                    return list.get(0).getWorkEmail();
+                } else {
+                    return null;
+                }
             }
         }
         return null;
@@ -822,7 +827,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         dto.getConditions().add(Restrict.eq("department", dep));
         List<InternalContacts> list = super.findByCis(dto);
 
-        if (list != null  && list.size()>0) {
+        if (list != null && list.size() > 0) {
             List<String> userNames = list.stream().map(InternalContacts::getName).collect(Collectors.toList());
             UserDTO userDTO = new UserDTO();
             userDTO.getConditions().add(Restrict.in("username", userNames));

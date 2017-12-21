@@ -807,4 +807,11 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
         }
         return set;
     }
+
+    @Override
+    public Long currentUserRoyalty() throws SerException {
+        long count = 0l;
+
+        return null;
+    }
 }

@@ -15,7 +15,6 @@ import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.utils.Utils;
-import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
@@ -46,8 +45,8 @@ import java.util.List;
 @CacheConfig(cacheNames = "reportmanagementSerCache")
 @Service
 public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements FormulaSer {
-    @Autowired
-    private SubjectCollectAPI subjectCollectAPI;
+//    @Autowired
+//    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired

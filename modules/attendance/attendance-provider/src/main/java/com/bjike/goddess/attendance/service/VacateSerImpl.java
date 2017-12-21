@@ -14,7 +14,6 @@ import com.bjike.goddess.attendance.excel.VacateExportExcel;
 import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
-import com.bjike.goddess.attendance.to.VacatePhoneTO;
 import com.bjike.goddess.attendance.to.VacateTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
@@ -338,13 +337,14 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         }
         Vacate entity = BeanTransform.copyProperties(to, Vacate.class, true, "startTime", "endTime");
         InternalContactsConditionBO bo = positionDetailUserAPI.getByName(entity.getName());
-        entity.setArea(bo.getArea());
-        entity.setDepart(bo.getDepartment());
-        entity.setPosition(bo.getPosition());
-        entity.setMain(toString(mains));
+        if (null != bo) {
+            entity.setArea(bo.getArea());
+            entity.setDepart(bo.getDepartment());
+            entity.setPosition(bo.getPosition());
+            entity.setMain(toString(mains));
+        }
         title = String.format(title, entity.getName());
         List<String> carbon = new ArrayList<>();
-        if (null != carbons) {
             entity.setCarbon(toString(carbons));
             carbon = internalContactsAPI.getEmails(carbons);
             if (!carbon.isEmpty()) {
@@ -354,7 +354,6 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
                 send(title, content, receivers);
             }
-        }
         if (time < 3) {
             LocalDate s = DateUtil.parseDate(startDate);
             long days = Math.abs(s.toEpochDay() - LocalDate.now().toEpochDay());
@@ -372,10 +371,12 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 to.getEndTime() + ":00");
         entity.setEndTime(end);
         List<VacateAudit> sons = getSon(entity);
-        entity.setVacateAudits(sons);
-        entity.setDate(LocalDate.now());
-        entity.setCreateTime(LocalDateTime.now());
-        entity.setModifyTime(LocalDateTime.now());
+        if (null != sons && sons.size() > 0) {
+            entity.setDate(LocalDate.now());
+            entity.setVacateAudits(sons);
+            entity.setCreateTime(LocalDateTime.now());
+            entity.setModifyTime(LocalDateTime.now());
+        }
         super.save(entity);
         List<String> main = internalContactsAPI.getEmails(mains);
         if (!main.isEmpty()) {
@@ -385,34 +386,34 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
             send(title, content, receivers);
         }
-        for (String name : mains) {
-            EventTO eventTO = new EventTO();
-            eventTO.setName(name);
-            eventTO.setProjectChineseName("考勤");
-            eventTO.setProjectEnglishName("attendance");
-            eventTO.setFunctionChineseName("请假");
-            eventTO.setFunctionEnglishName("vacate");
-            eventTO.setContent("请假审核");
-            eventTO.setPermissions(Permissions.ADUIT);
-            eventTO.setEventId(entity.getId());
-            eventTO.setStatus("待审核");
-            eventAPI.save(eventTO);
-        }
-        if (null != carbons) {
-            for (String name : carbons) {
-                EventTO eventTO = new EventTO();
-                eventTO.setName(name);
-                eventTO.setProjectChineseName("考勤");
-                eventTO.setProjectEnglishName("attendance");
-                eventTO.setFunctionChineseName("请假");
-                eventTO.setFunctionEnglishName("vacate");
-                eventTO.setContent("请假查看");
-                eventTO.setPermissions(Permissions.SEE);
-                eventTO.setEventId(entity.getId());
-                eventTO.setStatus("待查看");
-                eventAPI.save(eventTO);
-            }
-        }
+//        for (String name : mains) {
+//            EventTO eventTO = new EventTO();
+//            eventTO.setName(name);
+//            eventTO.setProjectChineseName("考勤");
+//            eventTO.setProjectEnglishName("attendance");
+//            eventTO.setFunctionChineseName("请假");
+//            eventTO.setFunctionEnglishName("vacate");
+//            eventTO.setContent("请假审核");
+//            eventTO.setPermissions(Permissions.ADUIT);
+//            eventTO.setEventId(entity.getId());
+//            eventTO.setStatus("待审核");
+//            eventAPI.save(eventTO);
+//        }
+//        if (null != carbons) {
+//            for (String name : carbons) {
+//                EventTO eventTO = new EventTO();
+//                eventTO.setName(name);
+//                eventTO.setProjectChineseName("考勤");
+//                eventTO.setProjectEnglishName("attendance");
+//                eventTO.setFunctionChineseName("请假");
+//                eventTO.setFunctionEnglishName("vacate");
+//                eventTO.setContent("请假查看");
+//                eventTO.setPermissions(Permissions.SEE);
+//                eventTO.setEventId(entity.getId());
+//                eventTO.setStatus("待查看");
+//                eventAPI.save(eventTO);
+//            }
+//        }
     }
 
 
@@ -439,14 +440,17 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     }
 
     private List<VacateAudit> getSon(Vacate entity) throws SerException {
-        String[] mains = entity.getMain().split(",");
+
         List<VacateAudit> list = new ArrayList<>();
-        for (String s : mains) {
-            VacateAudit vacateAudit = new VacateAudit();
-            vacateAudit.setName(s);
-            vacateAudit.setVacate(entity);
-            vacateAudit.setAduitStatus(AduitStatus.DOING);
-            list.add(vacateAudit);
+        if (StringUtils.isNotBlank(entity.getMain())) {
+            String[] mains = entity.getMain().split(",");
+            for (String s : mains) {
+                VacateAudit vacateAudit = new VacateAudit();
+                vacateAudit.setName(s);
+                vacateAudit.setVacate(entity);
+                vacateAudit.setAduitStatus(AduitStatus.DOING);
+                list.add(vacateAudit);
+            }
         }
         return list;
     }
@@ -1575,5 +1579,23 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             tar = true;
         }
         return tar;
+    }
+
+    @Override
+    public Long currentUserVacate() throws SerException {
+        Long count = 0l;
+        List<Vacate> vacateList = super.findAll();
+        if (vacateList != null && vacateList.size() > 0) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            for (Vacate vacate : vacateList) {
+                if (userBO.getUsername().equals(vacate.getName())) {
+                    count += 1;
+                }
+            }
+
+        }
+        return count;
     }
 }

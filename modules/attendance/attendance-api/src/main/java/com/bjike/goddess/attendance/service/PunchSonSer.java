@@ -25,6 +25,7 @@ import java.util.List;
  */
 public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
     Boolean sonPermission() throws SerException;
+
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
 
     /**
@@ -76,6 +77,7 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
 
     /**
      * 考勤情况汇总明细
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -119,11 +121,14 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
 
     /**
      * 某人当前周从周一至周日请假次数或某个季度分别未打卡次数
+     *
      * @param overTimesDTO
      * @return
      * @throws SerException
      */
-    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -156,4 +161,12 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
     default void upload(List<PunchImportExcel> tos) throws SerException {
         return;
     }
+
+    /**
+     * 当前用户迟到总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    Long currentUserLateCount() throws SerException;
 }

@@ -1,6 +1,5 @@
 package com.bjike.goddess.attendance.action.attendance;
 
-import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.attendance.api.PunchSonAPI;
 import com.bjike.goddess.attendance.bo.CaseCountBO;
 import com.bjike.goddess.attendance.bo.PunchBO;
@@ -273,6 +272,20 @@ public class PunchAction extends BaseFileAction {
             List<PunchImportExcel> tos = ExcelUtil.excelToClazz(is, PunchImportExcel.class, excel);
             punchSonAPI.upload(tos);
             return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 当前用户迟到总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/lateCount")
+    public Result currentUserLateCount() throws ActException {
+        try {
+            return ActResult.initialize(punchSonAPI.currentUserLateCount());
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

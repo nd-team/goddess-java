@@ -52,7 +52,7 @@ public class ResponsibleIdeaSerImpl extends ServiceImpl<ResponsibleIdea, Respons
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -70,7 +70,7 @@ public class ResponsibleIdeaSerImpl extends ServiceImpl<ResponsibleIdea, Respons
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -88,7 +88,7 @@ public class ResponsibleIdeaSerImpl extends ServiceImpl<ResponsibleIdea, Respons
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -105,7 +105,7 @@ public class ResponsibleIdeaSerImpl extends ServiceImpl<ResponsibleIdea, Respons
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -197,15 +197,16 @@ public class ResponsibleIdeaSerImpl extends ServiceImpl<ResponsibleIdea, Respons
     @Override
     public List<ResponsibleIdeaBO> list(ResponsibleIdeaDTO dto) throws SerException {
         checkSeeIdentity();
-        List<ResponsibleIdea> responsibleIdeas = super.findByCis(dto,true);
         ResponsibleIdea responsibleIdea = new ResponsibleIdea();
         String name = responsibleIdea.getResponsibleIdea();
         List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.getPositionDetail(name);
-
-        for (PositionDetailBO positionDetailBO : positionDetailBOS) {
-            responsibleIdea.setArea(positionDetailBO.getArea());
-            responsibleIdea.setProjectGroup(positionDetailBO.getDepartmentName());
+        if (positionDetailBOS != null && positionDetailBOS.size() > 0) {
+            for (PositionDetailBO positionDetailBO : positionDetailBOS) {
+                responsibleIdea.setArea(positionDetailBO.getArea());
+                responsibleIdea.setProjectGroup(positionDetailBO.getDepartmentName());
+            }
         }
+        List<ResponsibleIdea> responsibleIdeas = super.findByCis(dto, true);
         List<ResponsibleIdeaBO> responsibleIdeaBOS = BeanTransform.copyProperties(responsibleIdeas, ResponsibleIdeaBO.class);
         return responsibleIdeaBOS;
     }

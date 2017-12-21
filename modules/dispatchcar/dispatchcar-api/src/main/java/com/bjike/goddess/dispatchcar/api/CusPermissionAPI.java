@@ -5,6 +5,7 @@ import com.bjike.goddess.dispatchcar.bo.CusPermissionBO;
 import com.bjike.goddess.dispatchcar.dto.CusPermissionDTO;
 import com.bjike.goddess.dispatchcar.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -87,7 +88,7 @@ public interface CusPermissionAPI {
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean getCusPermission(String idFlag) throws SerException {
+    default Boolean getCusPermission(String idFlag,UserBO user) throws SerException {
         return null;
     }
 

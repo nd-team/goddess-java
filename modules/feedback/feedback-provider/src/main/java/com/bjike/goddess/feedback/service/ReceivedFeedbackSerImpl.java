@@ -371,7 +371,7 @@ public class ReceivedFeedbackSerImpl extends ServiceImpl<ReceivedFeedback, Recei
         if (StringUtils.isNotBlank(to.getId())) {
             ReceivedFeedback receivedFeedback = super.findById(to.getId());
             ProblemResult problemResult = new ProblemResult();
-            BeanTransform.copyProperties(problemResult, receivedFeedback, true);
+            problemResult.setReceivedFeedback(receivedFeedback);
             problemResult.setFinalSolution(to.getFinalSolution());
             problemResult.setProblemSolveTime(DateUtil.parseDateTime(to.getProblemSolveTime()));
             problemResultSer.update(problemResult);

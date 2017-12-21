@@ -214,4 +214,12 @@ public interface VacateAPI {
     default void upload(List<VacateImportExcel> tos) throws SerException {
         return;
     }
+    /**
+     * 当前用户请假总条数
+     *
+     * @throws SerException
+     */
+    default Long currentUserVacate() throws SerException {
+        return null;
+    }
 }

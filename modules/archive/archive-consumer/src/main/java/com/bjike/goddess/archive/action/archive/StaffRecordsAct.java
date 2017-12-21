@@ -25,9 +25,6 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.qualifications.api.QualificationsCollectAPI;
-import com.bjike.goddess.secure.api.EmployeeSecureAPI;
-import com.bjike.goddess.secure.vo.SecureVO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
@@ -65,10 +62,10 @@ public class StaffRecordsAct extends BaseFileAction {
     private FileAPI fileAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
-    @Autowired
-    private QualificationsCollectAPI qualificationsCollectAPI;
-    @Autowired
-    private EmployeeSecureAPI employeeSecureAPI;
+//    @Autowired
+//    private QualificationsCollectAPI qualificationsCollectAPI;
+//    @Autowired
+//    private EmployeeSecureAPI employeeSecureAPI;
 
     /**
      * 功能导航权限
@@ -475,34 +472,34 @@ public class StaffRecordsAct extends BaseFileAction {
         }
     }
 
-    /**
-     * 获取资质认证证书
-     *
-     * @version v1
-     */
-    @GetMapping("v1/find/qualifications")
-    public Result findAllQualifications() throws ActException {
-        try {
-            return ActResult.initialize(qualificationsCollectAPI.findAllQualifications());
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 获取资质认证证书
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/find/qualifications")
+//    public Result findAllQualifications() throws ActException {
+//        try {
+//            return ActResult.initialize(qualificationsCollectAPI.findAllQualifications());
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
-    /**
-     * 根据姓名获取是否购买社保社保所属类型社保所属公司
-     *
-     * @return class SecureVO
-     * @version v1
-     */
-    @GetMapping("v1/findSecureBO")
-    public Result findSecureBO(@RequestParam String name) throws ActException {
-        try {
-            return ActResult.initialize(BeanTransform.copyProperties(employeeSecureAPI.findSecureBO(name), SecureVO.class));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 根据姓名获取是否购买社保社保所属类型社保所属公司
+//     *
+//     * @return class SecureVO
+//     * @version v1
+//     */
+//    @GetMapping("v1/findSecureBO")
+//    public Result findSecureBO(@RequestParam String name) throws ActException {
+//        try {
+//            return ActResult.initialize(BeanTransform.copyProperties(employeeSecureAPI.findSecureBO(name), SecureVO.class));
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 员工信息管理进度日汇总

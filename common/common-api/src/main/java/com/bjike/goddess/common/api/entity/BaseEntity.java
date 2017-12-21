@@ -48,15 +48,15 @@ public abstract class BaseEntity implements Serializable{
     }
 
     public LocalDateTime getCreateTime() {
-        return LocalDateTime.from(LocalDate.from(createTime));
+        return createTime;
     }
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public LocalDate getModifyTime() {
-        return LocalDate.from(modifyTime);
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
     public void setModifyTime(LocalDateTime modifyTime) {

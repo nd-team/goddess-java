@@ -3,6 +3,8 @@ package com.bjike.goddess.contractcommunicat.excel;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
+import java.time.LocalDate;
+
 /**
  * 商务洽谈业务传输对象
  *
@@ -72,13 +74,13 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 计划洽谈时间
      */
     @ExcelHeader(name = "计划洽谈时间")
-    private String planNegotiationTime;
+    private LocalDate planNegotiationTime;
 
     /**
      * 实际洽谈时间
      */
     @ExcelHeader(name = "实际洽谈时间")
-    private String practiceNegotiationTime;
+    private LocalDate practiceNegotiationTime;
 
     /**
      * 洽谈人
@@ -144,7 +146,7 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 是否有洽谈准备
      */
     @ExcelHeader(name = "是否有洽谈准备")
-    private Boolean discussPrepare;
+    private String discussPrepare;
 
     /**
      * 涉及金额
@@ -156,7 +158,7 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 是否洽谈
      */
     @ExcelHeader(name = "是否洽谈")
-    private Boolean discuss;
+    private String discuss;
 
     /**
      * 洽谈结果
@@ -168,13 +170,13 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 是否达到洽谈目的
      */
     @ExcelHeader(name = "是否达到洽谈目的")
-    private Boolean attainDiscussIdea;
+    private String attainDiscussIdea;
 
     /**
      * 是否有洽谈到其他问题
      */
     @ExcelHeader(name = "是否有洽谈到其他问题")
-    private Boolean discussProblem;
+    private String discussProblem;
 
     /**
      * 话题记录
@@ -186,43 +188,43 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 是否有录音
      */
     @ExcelHeader(name = "是否有录音")
-    private Boolean soundRecord;
+    private String soundRecord;
 
     /**
      * 是否转入合同管理-已立项
      */
     @ExcelHeader(name = "是否转入合同管理-已立项")
-    private Boolean hasProject;
+    private String hasProject;
 
     /**
      * 是否转入合同管理-市场费用
      */
     @ExcelHeader(name = "是否转入合同管理-市场费用")
-    private Boolean marketCost;
+    private String marketCost;
 
     /**
      * 是否转换市场招待
      */
     @ExcelHeader(name = "是否转换市场招待")
-    private Boolean marketFor;
+    private String marketFor;
 
     /**
      * 是否持续跟进
      */
     @ExcelHeader(name = "是否持续跟进")
-    private Boolean continueFollowUp;
+    private String continueFollowUp;
 
     /**
      * 是否闭环
      */
     @ExcelHeader(name = "是否闭环")
-    private Boolean closedLoop;
+    private String closedLoop;
 
     /**
      * 是否需要协助
      */
     @ExcelHeader(name = "是否需要协助")
-    private Boolean needAssist;
+    private String needAssist;
 
     /**
      * 需协助部门
@@ -240,7 +242,7 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 是否已发协助函
      */
     @ExcelHeader(name = "是否已发协助函")
-    private Boolean assistLetter;
+    private String assistLetter;
 
     /**
      * 协助函单号
@@ -258,7 +260,7 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 是否产生路费
      */
     @ExcelHeader(name = "是否产生路费")
-    private Boolean produceTrip;
+    private String produceTrip;
 
     /**
      * 路费
@@ -339,19 +341,19 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.rounds = rounds;
     }
 
-    public String getPlanNegotiationTime() {
+    public LocalDate getPlanNegotiationTime() {
         return planNegotiationTime;
     }
 
-    public void setPlanNegotiationTime(String planNegotiationTime) {
+    public void setPlanNegotiationTime(LocalDate planNegotiationTime) {
         this.planNegotiationTime = planNegotiationTime;
     }
 
-    public String getPracticeNegotiationTime() {
+    public LocalDate getPracticeNegotiationTime() {
         return practiceNegotiationTime;
     }
 
-    public void setPracticeNegotiationTime(String practiceNegotiationTime) {
+    public void setPracticeNegotiationTime(LocalDate practiceNegotiationTime) {
         this.practiceNegotiationTime = practiceNegotiationTime;
     }
 
@@ -435,11 +437,11 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.discussIdea = discussIdea;
     }
 
-    public Boolean getDiscussPrepare() {
+    public String getDiscussPrepare() {
         return discussPrepare;
     }
 
-    public void setDiscussPrepare(Boolean discussPrepare) {
+    public void setDiscussPrepare(String discussPrepare) {
         this.discussPrepare = discussPrepare;
     }
 
@@ -451,11 +453,11 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.amountInvolved = amountInvolved;
     }
 
-    public Boolean getDiscuss() {
+    public String getDiscuss() {
         return discuss;
     }
 
-    public void setDiscuss(Boolean discuss) {
+    public void setDiscuss(String discuss) {
         this.discuss = discuss;
     }
 
@@ -467,19 +469,19 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.discussResult = discussResult;
     }
 
-    public Boolean getAttainDiscussIdea() {
+    public String getAttainDiscussIdea() {
         return attainDiscussIdea;
     }
 
-    public void setAttainDiscussIdea(Boolean attainDiscussIdea) {
+    public void setAttainDiscussIdea(String attainDiscussIdea) {
         this.attainDiscussIdea = attainDiscussIdea;
     }
 
-    public Boolean getDiscussProblem() {
+    public String getDiscussProblem() {
         return discussProblem;
     }
 
-    public void setDiscussProblem(Boolean discussProblem) {
+    public void setDiscussProblem(String discussProblem) {
         this.discussProblem = discussProblem;
     }
 
@@ -491,59 +493,59 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.subjectRecord = subjectRecord;
     }
 
-    public Boolean getSoundRecord() {
+    public String getSoundRecord() {
         return soundRecord;
     }
 
-    public void setSoundRecord(Boolean soundRecord) {
+    public void setSoundRecord(String soundRecord) {
         this.soundRecord = soundRecord;
     }
 
-    public Boolean getHasProject() {
+    public String getHasProject() {
         return hasProject;
     }
 
-    public void setHasProject(Boolean hasProject) {
+    public void setHasProject(String hasProject) {
         this.hasProject = hasProject;
     }
 
-    public Boolean getMarketCost() {
+    public String getMarketCost() {
         return marketCost;
     }
 
-    public void setMarketCost(Boolean marketCost) {
+    public void setMarketCost(String marketCost) {
         this.marketCost = marketCost;
     }
 
-    public Boolean getMarketFor() {
+    public String getMarketFor() {
         return marketFor;
     }
 
-    public void setMarketFor(Boolean marketFor) {
+    public void setMarketFor(String marketFor) {
         this.marketFor = marketFor;
     }
 
-    public Boolean getContinueFollowUp() {
+    public String getContinueFollowUp() {
         return continueFollowUp;
     }
 
-    public void setContinueFollowUp(Boolean continueFollowUp) {
+    public void setContinueFollowUp(String continueFollowUp) {
         this.continueFollowUp = continueFollowUp;
     }
 
-    public Boolean getClosedLoop() {
+    public String getClosedLoop() {
         return closedLoop;
     }
 
-    public void setClosedLoop(Boolean closedLoop) {
+    public void setClosedLoop(String closedLoop) {
         this.closedLoop = closedLoop;
     }
 
-    public Boolean getNeedAssist() {
+    public String getNeedAssist() {
         return needAssist;
     }
 
-    public void setNeedAssist(Boolean needAssist) {
+    public void setNeedAssist(String needAssist) {
         this.needAssist = needAssist;
     }
 
@@ -563,11 +565,11 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.assistContent = assistContent;
     }
 
-    public Boolean getAssistLetter() {
+    public String getAssistLetter() {
         return assistLetter;
     }
 
-    public void setAssistLetter(Boolean assistLetter) {
+    public void setAssistLetter(String assistLetter) {
         this.assistLetter = assistLetter;
     }
 
@@ -587,11 +589,11 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.planFollowUp = planFollowUp;
     }
 
-    public Boolean getProduceTrip() {
+    public String getProduceTrip() {
         return produceTrip;
     }
 
-    public void setProduceTrip(Boolean produceTrip) {
+    public void setProduceTrip(String produceTrip) {
         this.produceTrip = produceTrip;
     }
 

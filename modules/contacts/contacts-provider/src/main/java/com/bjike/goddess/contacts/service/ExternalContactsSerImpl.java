@@ -139,7 +139,7 @@ public class ExternalContactsSerImpl extends ServiceImpl<ExternalContacts, Exter
     public List<ExternalContactsBO> maps(ExternalContactsDTO dto) throws SerException {
         dto.getSorts().add("writeTime=desc");
         search(dto);
-        List<ExternalContacts> list = super.findByCis(dto);
+        List<ExternalContacts> list = super.findByCis(dto,true);
         return BeanTransform.copyProperties(list, ExternalContactsBO.class);
     }
 

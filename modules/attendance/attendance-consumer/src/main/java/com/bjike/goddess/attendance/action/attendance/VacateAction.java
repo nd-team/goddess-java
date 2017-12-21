@@ -755,4 +755,18 @@ public class VacateAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 当前用户请假总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/vacateCount")
+    public Result currentUserVacate() throws ActException {
+        try {
+            return ActResult.initialize(vacateAPI.currentUserVacate());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

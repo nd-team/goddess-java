@@ -140,4 +140,9 @@ public class VacateApiImpl implements VacateAPI {
     public void upload(List<VacateImportExcel> tos) throws SerException {
         vacateSer.upload(tos);
     }
+
+    @Override
+    public Long currentUserVacate() throws SerException {
+        return vacateSer.currentUserVacate();
+    }
 }

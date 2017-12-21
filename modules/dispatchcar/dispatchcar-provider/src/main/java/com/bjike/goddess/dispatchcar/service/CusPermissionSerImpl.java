@@ -3,6 +3,7 @@ package com.bjike.goddess.dispatchcar.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.bo.CusOperateBO;
 import com.bjike.goddess.dispatchcar.bo.CusPermissionBO;
@@ -295,10 +296,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
+    public Boolean getCusPermission(String idFlag,UserBO user) throws SerException {
+        String ss = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
-        UserBO userBO = userAPI.currentUser();
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -329,9 +336,9 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         }
 
         //checkAsUserPosition
-        Boolean positionFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean depFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
-        if (positionFlag) {
+        if (depFlag) {
             flag = true;
         } else {
             flag = false;

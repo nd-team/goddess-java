@@ -67,4 +67,9 @@ public class ProblemFeedbackApiImpl implements ProblemFeedbackAPI {
     public ProblemAcceptBO problemAccept(ProblemFeedbackTO to) throws SerException {
         return problemFeedbackSer.problemAccept(to);
     }
+
+    @Override
+    public Long currentUserProblemCount() throws SerException {
+        return problemFeedbackSer.currentUserProblemCount();
+    }
 }
