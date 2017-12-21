@@ -7,6 +7,7 @@ import com.bjike.goddess.dispatchcar.dto.CusPermissionDTO;
 import com.bjike.goddess.dispatchcar.service.CusPermissionSer;
 import com.bjike.goddess.dispatchcar.to.CusPermissionTO;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,8 +59,8 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
-        return cusPermissionSer.getCusPermission(idFlag);
+    public Boolean getCusPermission(String idFlag,UserBO user) throws SerException {
+        return cusPermissionSer.getCusPermission(idFlag,user);
     }
 
 }

@@ -112,4 +112,13 @@ public interface DepartmentBetSer extends Ser<DepartmentBet, DepartmentBetDTO> {
     default List<DepartmentBetABO> departmentCollect(ProjectNameTO to) throws SerException {
         return null;
     }
+
+    /**
+     * 根据当前用户所在部门获得管理提成的总条数
+     *
+     * @throws SerException
+     */
+    default Long currentUserRoyalty() throws SerException {
+        return null;
+    }
 }

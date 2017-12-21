@@ -303,4 +303,18 @@ public class OverWorkAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 当前用户加班总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/overWorkCount")
+    public Result currentUserCount() throws ActException {
+        try {
+            return ActResult.initialize(overWorkAPI.currentUserCount());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -1381,4 +1381,34 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
         System.out.println(bo.getName());
 
     }
+
+    @Override
+    public Long currentUserLateCount() throws SerException {
+        Long count =0l;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        PunchDTO punchDTO = new PunchDTO();
+        punchDTO.getConditions().add(Restrict.eq("name",userBO.getUsername()));
+        List<Punch> punchs = punchSer.findByCis(punchDTO);
+        if(punchs!=null && punchs.size()>0){
+            for (Punch punch:punchs){
+                PunchSonDTO punchSonDTO = new PunchSonDTO();
+                punchSonDTO.getConditions().add(Restrict.eq("punchId",punch.getId()));
+                List<PunchSon> punchSonList = super.findByCis(punchSonDTO);
+                if(punchSonList!=null && punchSonList.size()>0){
+                    for (PunchSon punchSon:punchSonList ){
+                        PunchGrandSonDTO punchGrandSonDTO = new PunchGrandSonDTO();
+                        punchGrandSonDTO.getConditions().add(Restrict.eq("punchSonId",punchSon.getId()));
+                        punchGrandSonDTO.getConditions().add(Restrict.eq("punchStatus",PunchStatus.LATE));
+                        List<PunchGrandSon> punchGrandSonList = punchGrandSonSer.findByPage(punchGrandSonDTO);
+                        if(punchGrandSonList!=null && punchGrandSonList.size()>0){
+                            count += punchGrandSonList.size();
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
 }

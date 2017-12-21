@@ -2,7 +2,6 @@ package com.bjike.goddess.businessproject.entity;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
 import com.bjike.goddess.businessproject.enums.TaskContract;
-import com.bjike.goddess.businessprojectmanage.entity.BusinessContractPro;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.customer.entity.CustomerDetail;

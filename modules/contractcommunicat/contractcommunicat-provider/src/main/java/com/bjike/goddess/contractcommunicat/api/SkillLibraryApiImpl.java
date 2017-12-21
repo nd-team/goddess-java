@@ -1,6 +1,5 @@
 package com.bjike.goddess.contractcommunicat.api;
 
-<<<<<<< Updated upstream
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.HistoryAppraiseBO;
 import com.bjike.goddess.contractcommunicat.bo.SkillLibraryBO;
@@ -13,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-=======
-import org.springframework.stereotype.Service;
 
->>>>>>> Stashed changes
 /**
  * 谈判技巧库业务接口实现
  *
@@ -28,7 +24,6 @@ import org.springframework.stereotype.Service;
  */
 @Service("skillLibraryApiImpl")
 public class SkillLibraryApiImpl implements SkillLibraryAPI {
-<<<<<<< Updated upstream
     @Autowired
     private SkillLibrarySer skillLibrarySer;
 
@@ -81,7 +76,4 @@ public class SkillLibraryApiImpl implements SkillLibraryAPI {
     public List<HistoryAppraiseBO> historyAppraise(String id) throws SerException {
         return skillLibrarySer.historyAppraise(id);
     }
-=======
-
->>>>>>> Stashed changes
 }

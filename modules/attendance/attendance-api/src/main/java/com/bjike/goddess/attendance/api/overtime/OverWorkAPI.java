@@ -229,4 +229,10 @@ public interface OverWorkAPI {
     default void upload(List<OverWorkImportExcel> tos) throws SerException {
         return;
     }
+    /**
+     * 当前用户加班总条数
+     *
+     * @throws SerException
+     */
+    Long currentUserCount() throws SerException;
 }

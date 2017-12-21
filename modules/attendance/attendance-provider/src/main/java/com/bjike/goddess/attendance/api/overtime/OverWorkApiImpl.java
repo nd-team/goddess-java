@@ -160,4 +160,9 @@ public class OverWorkApiImpl implements OverWorkAPI {
     public void upload(List<OverWorkImportExcel> tos) throws SerException {
         overWorkSer.upload(tos);
     }
+
+    @Override
+    public Long currentUserCount() throws SerException {
+        return overWorkSer.currentUserCount();
+    }
 }

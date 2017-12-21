@@ -3,9 +3,12 @@ package com.bjike.goddess.contractcommunicat.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.bo.BusinessNegotiationBO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
 import com.bjike.goddess.contractcommunicat.entity.BusinessNegotiation;
+import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationTemplateExcel;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +119,42 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
 
     @Override
     public byte[] templateExcel() throws SerException {
-        return new byte[0];
+        List<BusinessNegotiationTemplateExcel> templateExcels = new ArrayList<>();
+        BusinessNegotiationTemplateExcel templateExcel = new BusinessNegotiationTemplateExcel();
+        templateExcel.setMarketNum("test");
+        templateExcel.setProjectNum("test");
+        templateExcel.setInnerProject("test");
+        templateExcel.setBusinessType("test");
+        templateExcel.setArea("广州");
+        templateExcel.setDepartment("项目组");
+        templateExcel.setProblemBelong("市场信息管理");
+        templateExcel.setRounds(1);
+        templateExcel.setPlanNegotiationTime(LocalDate.now());
+        templateExcel.setPracticeNegotiationTime(LocalDate.now());
+        templateExcel.setDiscussPeople("test");
+        templateExcel.setRecorder("test");
+        templateExcel.setCustomerNum("test");
+        templateExcel.setDiscussCompany("test");
+        templateExcel.setDiscussObject("test");
+        templateExcel.setDiscussWay("微信");
+        templateExcel.setDiscussPlace("test");
+        templateExcel.setProblemCategorize("市场信息初步分析");
+        templateExcel.setDiscussIdea("test");
+        templateExcel.setDiscussPrepare("是");
+        templateExcel.setAmountInvolved("12");
+        templateExcel.setDiscuss("是");
+        templateExcel.setDiscussResult("test");
+        templateExcel.setAttainDiscussIdea("是");
+        templateExcel.setDiscussProblem("是");
+        templateExcel.setSubjectRecord("test");
+        templateExcel.setSoundRecord("是");
+        templateExcel.setHasProject("是");
+        templateExcel.setMarketCost("是");
+        templateExcel.setMarketFor("是");
+
+        templateExcels.add(templateExcel);
+        Excel excel = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,excel);
+        return bytes;
     }
 }

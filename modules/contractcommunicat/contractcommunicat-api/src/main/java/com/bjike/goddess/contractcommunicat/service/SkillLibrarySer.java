@@ -1,22 +1,15 @@
 package com.bjike.goddess.contractcommunicat.service;
 
-<<<<<<< Updated upstream
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractcommunicat.bo.HistoryAppraiseBO;
 import com.bjike.goddess.contractcommunicat.bo.SkillLibraryBO;
 import com.bjike.goddess.contractcommunicat.dto.SkillLibraryDTO;
-import com.bjike.goddess.contractcommunicat.entity.HistoryAppraise;
 import com.bjike.goddess.contractcommunicat.entity.SkillLibrary;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.SkillLibraryTO;
 
 import java.util.List;
-=======
-import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.contractcommunicat.dto.SkillLibraryDTO;
-import com.bjike.goddess.contractcommunicat.entity.SkillLibrary;
->>>>>>> Stashed changes
 
 /**
  * 谈判技巧库业务接口
@@ -28,7 +21,7 @@ import com.bjike.goddess.contractcommunicat.entity.SkillLibrary;
  * @Copy: [ com.bjike ]
  */
 public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
-<<<<<<< Updated upstream
+
     /**
      * 下拉导航权限
      */
@@ -112,6 +105,7 @@ public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
     default SkillLibraryBO appraise(SkillLibraryTO to) throws SerException {
         return null;
     }
+
     /**
      * 查看历史评价
      *
@@ -123,7 +117,5 @@ public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
         return null;
     }
 
-=======
->>>>>>> Stashed changes
 
 }

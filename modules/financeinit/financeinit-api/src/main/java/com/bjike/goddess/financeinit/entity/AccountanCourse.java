@@ -25,13 +25,13 @@ public class AccountanCourse extends BaseEntity {
     /**
      * 代码
      */
-    @Column(name = "code", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '代码'")
+    @Column(name = "code", nullable = false,unique = true, columnDefinition = "VARCHAR(255)   COMMENT '代码'")
     private String code;
 
     /**
      * 会计科目名称
      */
-    @Column(name = "accountanName", nullable = false, unique = true,columnDefinition = "VARCHAR(255)   COMMENT '会计科目名称'")
+    @Column(name = "accountanName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会计科目名称'")
     private String accountanName;
 
     /**

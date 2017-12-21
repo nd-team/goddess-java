@@ -661,10 +661,9 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         Map<String, String> positMap = positionUserDetailAPI.departPosition(userBO.getUsername());
         RpcTransmit.transmitUserToken(userToken);
         Boolean isManage = false;
-        if(userBO.getUsername().equalsIgnoreCase("admin")){
+        if (userBO.getUsername().equalsIgnoreCase("admin")) {
             isManage = true;
-        }
-        else if (null != positMap) {
+        } else if (null != positMap) {
             String position = "";
             for (Map.Entry str : positMap.entrySet()) {
                 position = (String) str.getValue();
@@ -1092,5 +1091,21 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         return auditStatus;
     }
 
+    @Override
+    public Long currentUserCount() throws SerException {
+        Long count = 0l;
+        List<OverWork> overWorkList = super.findAll();
+        if (overWorkList != null && overWorkList.size() > 0) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            for (OverWork overWork : overWorkList) {
+                if (userBO.getUsername().equals(overWork.getOverWorker())) {
+                    count += 1;
+                }
+            }
 
+        }
+        return count;
+    }
 }

@@ -26,6 +26,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -59,10 +60,12 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
     private GroupMessageSer groupMessageSer;
     @Autowired
     private UserMessageSer userMessageSer;
+    private static Logger log = Logger.getLogger(MessageImpl.class);
 
     @Transactional
     @Override
     public void send(MessageTO messageTO) throws SerException {
+        log.info("发送消息。。。。。。。。。。。。");
         if (StringUtils.isBlank(messageTO.getCreateTime())) {
             messageTO.setCreateTime(DateUtil.dateToString(LocalDateTime.now()));
         }
@@ -113,6 +116,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             case EMAIL:
                 messageTO.setReceivers(receiversEmail);
                 kafkaProducer.produce(messageTO);
+                log.info("读取消息。。。。。。。。。。1");
                 break;
             case MSG:
                 saveMsgToRedis(messageTO, message.getId(), receivers); //保存到redis
@@ -120,6 +124,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
                 saveMsgToRedis(messageTO, message.getId(), receivers);//保存到redis
                 messageTO.setReceivers(receiversEmail);
                 kafkaProducer.produce(messageTO);
+                log.info("读取消息。。。。。。。。。。2");
                 break;
         }
     }
@@ -132,6 +137,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     @Override
     public List<MessageBO> list(MessageDTO dto) throws SerException {
+        log.info("读取消息。。。。。。。。。。。");
         UserDetailBO detailBO = userDetailAPI.findByUserId(dto.getUserId());
         String groupId = "-1";
         if (null != detailBO) {

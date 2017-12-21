@@ -19,7 +19,6 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
-import com.bjike.goddess.projectcalculation.api.CalculationDetailAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +47,8 @@ public class MarketInfoPreAnalysisSerImpl extends ServiceImpl<MarketInfoPreAnaly
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private CalculationDetailAPI calculationDetailAPI;
+//    @Autowired
+//    private CalculationDetailAPI calculationDetailAPI;
     @Autowired
     private MessageAPI messageAPI;
 
@@ -259,7 +258,7 @@ public class MarketInfoPreAnalysisSerImpl extends ServiceImpl<MarketInfoPreAnaly
 
 //        projectcalculation
         if (marketInfoPreAnalysisTO.getConversionBuissOpp()) {
-            calculationDetailAPI.saveMarket(marketInfoPreAnalysisTO);
+//            calculationDetailAPI.saveMarket(marketInfoPreAnalysisTO);
             MessageTO messageTO = new MessageTO();
             messageTO.setMsgType(MsgType.SYS);
             messageTO.setSendType(SendType.MSG);

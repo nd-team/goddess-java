@@ -96,4 +96,14 @@ public interface ProblemFeedbackSer extends Ser<ProblemFeedback, ProblemFeedback
         return null;
     }
 
+    /**
+     * 当前用户的反馈总条数
+     *
+     * @return class ProblemAcceptBO
+     * @throws SerException
+     */
+    default Long currentUserProblemCount() throws SerException {
+        return null;
+    }
+
 }
