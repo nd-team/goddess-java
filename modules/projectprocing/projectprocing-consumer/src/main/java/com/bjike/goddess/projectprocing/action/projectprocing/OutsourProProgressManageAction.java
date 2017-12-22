@@ -214,6 +214,7 @@ public class OutsourProProgressManageAction {
      * 根据供应商编号获取对应数据
      *
      * @des 根据供应商编号获取对应数据
+     * @return class OutsourcBusinessContractVO
      * @version v1
      */
     @GetMapping("v1/findBySupplierNum")

@@ -101,4 +101,19 @@ public class BusinessCourseApiImpl implements BusinessCourseAPI {
     public byte[] exportExcel(BusinessCourseDTO dto) throws SerException {
         return businessCourseSer.exportExcel(dto);
     }
+
+    @Override
+    public List<String> findBusinessType() throws SerException {
+        return businessCourseSer.findBusinessType();
+    }
+
+    @Override
+    public List<String> findSubject(String businessType) throws SerException {
+        return businessCourseSer.findSubject(businessType);
+    }
+
+    @Override
+    public List<String> findAllSubject() throws SerException {
+        return businessCourseSer.findAllSubject();
+    }
 }

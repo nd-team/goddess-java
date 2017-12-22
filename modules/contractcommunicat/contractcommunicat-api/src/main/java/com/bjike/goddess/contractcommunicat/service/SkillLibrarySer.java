@@ -5,7 +5,6 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractcommunicat.bo.HistoryAppraiseBO;
 import com.bjike.goddess.contractcommunicat.bo.SkillLibraryBO;
 import com.bjike.goddess.contractcommunicat.dto.SkillLibraryDTO;
-import com.bjike.goddess.contractcommunicat.entity.HistoryAppraise;
 import com.bjike.goddess.contractcommunicat.entity.SkillLibrary;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.to.SkillLibraryTO;
@@ -22,6 +21,7 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
+
     /**
      * 下拉导航权限
      */
@@ -105,6 +105,7 @@ public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
     default SkillLibraryBO appraise(SkillLibraryTO to) throws SerException {
         return null;
     }
+
     /**
      * 查看历史评价
      *

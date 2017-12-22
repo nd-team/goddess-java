@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.entity.EDIT;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 现金流量资料表数据传输对象
  *
@@ -36,7 +38,7 @@ public class CashFlowDataDTO extends BaseDTO {
     /**
      * 金额
      */
-    @NotBlank(message = "金额不能为空", groups = {EDIT.class})
+    @NotNull(message = "金额不能为空", groups = {EDIT.class})
     private Double money;
 
     public String getStartTime() {

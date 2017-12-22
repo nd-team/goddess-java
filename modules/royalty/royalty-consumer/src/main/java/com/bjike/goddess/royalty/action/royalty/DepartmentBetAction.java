@@ -225,4 +225,18 @@ public class DepartmentBetAction {
         }
     }
 
+    /**
+     * 根据当前用户所在部门获得管理提成的总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/royaltyCount")
+    public Result currentUserRoyalty() throws ActException {
+        try {
+            return ActResult.initialize(departmentBetAPI.currentUserRoyalty());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

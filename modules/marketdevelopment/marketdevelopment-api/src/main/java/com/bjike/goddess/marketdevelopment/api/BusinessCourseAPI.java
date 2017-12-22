@@ -172,4 +172,35 @@ public interface BusinessCourseAPI {
     default byte[] exportExcel(BusinessCourseDTO dto) throws SerException {
         return null;
     }
+
+    /**
+     * 获取全部的业务方向名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findBusinessType() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据业务方向分类查询业务方向科目
+     *
+     * @param businessType
+     * @return
+     * @throws SerException
+     */
+    default List<String> findSubject(String businessType) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的业务方向科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllSubject() throws SerException {
+        return null;
+    }
 }

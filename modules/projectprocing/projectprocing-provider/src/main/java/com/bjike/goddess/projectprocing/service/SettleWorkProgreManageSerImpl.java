@@ -363,7 +363,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
         SettleWorkProgreManageDTO settleWorkProgreManageDTO = new SettleWorkProgreManageDTO();
         int limit = settleWorkProgreManageDTO.getLimit();
         int start = limit * settleWorkProgreManageDTO.getPage();
-        return settleWorkProgreManageBOList.stream().skip(start).skip(limit).collect(Collectors.toList());
+        return settleWorkProgreManageBOList.stream().skip(start).limit(limit).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -385,7 +385,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
             String moneyModuleName = positionDetailUserAPI.moneyModulePerson();
             List<PositionDetailUserBO> positionDetailUserBOS = positionUserDetailAPI.findManager();
             settleProgressRecord.setOutUnit(settleProgressManageBO.getOutUnit());
-            settleProgressRecord.setDispatchingName(settleProgressManageBO.getDispatchingItems());
+            settleProgressRecord.setDispatchingName(settleProgressManageBO.getDispatName());
             settleProgressRecord.setInternalName(settleProgressManageBO.getInternalProName());
             settleProgressRecord.setModifier(userBO.getUsername());
             settleProgressRecord.setUpdateDate(LocalDateTime.now());

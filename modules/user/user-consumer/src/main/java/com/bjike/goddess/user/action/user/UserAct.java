@@ -381,5 +381,23 @@ public class UserAct extends BaseFileAction {
             throw new ActException ( e.getMessage () );
         }
     }
+    /**
+     * 测试token是否过期
+     *
+     * @return class UserBO
+     * @des 总经办审核
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/testToken")
+    public Result testToken( ) throws ActException {
+        try {
+            UserBO userBO = userAPI.currentUser();
+
+            return  ActResult.initialize(userBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

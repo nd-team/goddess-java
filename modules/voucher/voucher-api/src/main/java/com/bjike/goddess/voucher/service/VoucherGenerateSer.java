@@ -145,11 +145,11 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 审核
      *
-     * @param id 记账凭证信息id
+     * @param voucherGenerateTO 记账凭证信息
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO audit(String id) throws SerException {
-        return null;
+    default void audit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return;
     }
 
 
@@ -183,11 +183,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 反审核
      *
-     * @param id 记账凭证信息id
-     * @return class VoucherGenerateBO
+     * @param voucherGenerateTO 记账凭证信息
      */
-    default VoucherGenerateBO antiAudit(String id) throws SerException {
-        return null;
+    default void antiAudit(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return;
     }
 
     /**
@@ -658,12 +657,12 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 反结账
      *
-     * @param id
+     * @param voucherGenerateTO
      * @return
      * @throws SerException
      */
-    default List<VoucherGenerateBO> antiCheckAccount(String[] id) throws SerException {
-        return null;
+    default void antiCheckAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
+        return;
     }
 
     /**

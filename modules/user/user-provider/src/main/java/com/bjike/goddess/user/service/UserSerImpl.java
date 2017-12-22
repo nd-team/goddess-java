@@ -270,20 +270,20 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public void updatePassword(UserTO userTO) throws SerException {
-        String userToken = RpcTransmit.getUserToken ();
-        UserBO userBO = this.currentUser ();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
         if (null == userBO) {
-            throw new SerException ( "不存在该用户" );
+            throw new SerException("不存在该用户");
         }
         RpcTransmit.transmitUserToken ( userToken );
 
-        User user = super.findById ( userBO.getId () );
+        User user = super.findById(userBO.getId());
         if (null == user) {
-            throw new SerException ( "该用户不存在" );
+            throw new SerException("该用户不存在");
         }
         try {
-            user.setPassword ( PasswordHash.createHash ( userTO.getPassword () ) );
-            super.update ( user );
+            user.setPassword(PasswordHash.createHash(userTO.getPassword()));
+            super.update(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace ();
         } catch (InvalidKeySpecException e) {
@@ -294,23 +294,23 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public void updatePhone(UserTO userTO) throws SerException {
-        String userToken = RpcTransmit.getUserToken ();
-        UserBO userBO = this.currentUser ();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = this.currentUser();
         if (null == userBO) {
-            throw new SerException ( "不存在该用户" );
+            throw new SerException("不存在该用户");
         }
         RpcTransmit.transmitUserToken ( userToken );
 
-        User user = super.findById ( userBO.getId () );
+        User user = super.findById(userBO.getId());
         if (null == user) {
-            throw new SerException ( "该用户不存在" );
+            throw new SerException("该用户不存在");
         }
         try {
-            user.setPhone ( userTO.getPhone () );
+            user.setPhone(userTO.getPhone());
         } catch (Exception e) {
             throw new SerException ( e.getMessage () );
         }
-        super.update ( user );
+        super.update(user);
     }
 
     @Override
@@ -387,12 +387,31 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
     @Override
     public String nextEmpNumber(String empNum) throws SerException {
-        empNum = empNum.substring ( 0, 5 );
-        String[] fields = new String[]{"employeeNumber"};
-        String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '" + empNum + "%'  ";
-        List<User> list = super.findBySql ( sql, User.class, fields );
-        String max = list != null && list.size () > 0 ? list.get ( 0 ).getEmployeeNumber () : "";
-        String empNumber = SeqUtil.appGenerateEmp ( max );
+//        empNum = empNum.substring ( 0, 5 );
+//        String[] fields = new String[]{"employeeNumber"};
+//        String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '" + empNum + "%'  ";
+//        List<User> list = super.findBySql ( sql, User.class, fields );
+//        String max = list != null && list.size () > 0 ? list.get ( 0 ).getEmployeeNumber () : "";
+//        String empNumber = SeqUtil.appGenerateEmp ( max );
+       String empNumber = "";
+        if (StringUtils.isNotBlank(empNum)) {
+            StringBuffer s = new StringBuffer();
+            for (int i = 0; i < empNum.length(); i++) {
+                char c = empNum.charAt(i);
+                if ((c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A')) {
+                    s.append(c);
+                }
+            }
+            String[] fields = new String[]{"employeeNumber"};
+            String sql = " select max(employeeNumber) as employeeNumber from user where employeeNumber LIKE '" + s.toString() + "%'  ";
+            List<User> list = super.findBySql(sql, User.class, fields);
+            String max = list != null && list.size() > 0 ? list.get(0).getEmployeeNumber() : "";
+            if(StringUtils.isNotBlank(max)){
+                empNumber = SeqUtil.appGenerateEmp(max,true);
+            }else {
+                empNumber = SeqUtil.appGenerateEmp(empNum,false);
+            }
+        }
         return empNumber;
     }
 

@@ -8,6 +8,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.projectprocing.api.NotificationFormulaAPI;
 import com.bjike.goddess.projectprocing.bo.NotificationFormulaBO;
 import com.bjike.goddess.projectprocing.dto.NotificationFormulaDTO;
@@ -38,6 +39,8 @@ public class NotificationFormulaAction {
 
     @Autowired
     private NotificationFormulaAPI notificationFormulaAPI;
+    @Autowired
+    private CommonalityAPI commonalityAPI;
 
     /**
      * 功能导航权限
@@ -176,6 +179,42 @@ public class NotificationFormulaAction {
     }
 
     /**
+     * 解冻通报机制制定
+     *
+     * @param id 通报机制制定唯一标识
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/thaw/{id}")
+    public Result thaw(@PathVariable(value = "id") String id) throws ActException {
+        try {
+            notificationFormulaAPI.thawCollectEmail(id);
+            return new ActResult("thaw success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 冻结通报机制制定
+     *
+     * @param id 通报机制制定唯一标识
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/congeal/{id}")
+    public Result congeal(@PathVariable(value = "id") String id) throws ActException {
+        try {
+            notificationFormulaAPI.congealCollectEmail(id);
+            return new ActResult("congeal success!");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 检测发送邮件
      *
      * @des 检测发送邮件
@@ -186,6 +225,20 @@ public class NotificationFormulaAction {
         try {
             notificationFormulaAPI.checkEmail();
             return new ActResult("发送成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取公邮
+     *
+     * @version v1
+     */
+    @GetMapping("v1/emails")
+    public Result findArea(HttpServletRequest request) throws ActException {
+        try {
+            List<String> emails = commonalityAPI.getEmails();
+            return ActResult.initialize(emails);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

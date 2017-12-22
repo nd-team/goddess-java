@@ -127,7 +127,6 @@ public class BusinessContractTO extends BaseTO {
      * 专业/工期
      */
     private String major;
-
     /**
      * 是否有合同派工合同
      */

@@ -172,7 +172,6 @@ public class SiginManageSerImpl extends ServiceImpl<SiginManage, SiginManageDTO>
         }
         list.add(obj);
 
-
         obj = new SonPermissionObject();
         obj.setName("dispatchsheet");
         obj.setDescribesion("商务项目派工单信息管理");

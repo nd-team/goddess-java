@@ -37,7 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 事件业务实现
@@ -917,7 +920,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
                 default:
                     break;
             }
-            eventList = super.findByCis(eventDTO,true);
+            eventList = super.findByCis(eventDTO, true);
         }
         List<AppListDataBO> appListDataBOList = new ArrayList<>();
         if (eventList != null && eventList.size() > 0) {
@@ -936,7 +939,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
                 appListDataBO.setGetTime(event.getGetTime().toString());
                 appListDataBO.setContent(event.getContent());
                 appListDataBO.setContents(event.getContent().split("&"));
-                appListDataBO.setFatherBO(BeanTransform.copyProperties(event.getFather(),FatherBO.class));
+                appListDataBO.setFatherBO(BeanTransform.copyProperties(event.getFather(), FatherBO.class));
                 appListDataBO.setStatus(event.getStatus());
                 appListDataBOList.add(appListDataBO);
             }
@@ -947,6 +950,24 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
     @Override
     public FatherBO findFatherById(String id) throws SerException {
         Event event = super.findById(id);
-        return BeanTransform.copyProperties(event.getFather(),FatherBO.class);
+        return BeanTransform.copyProperties(event.getFather(), FatherBO.class);
+    }
+
+    @Override
+    public Long currentUserEvenCount() throws SerException {
+        Long count = 0l;
+        List<Event> eventList = super.findAll();
+        if (eventList != null && eventList.size() > 0) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            for (Event event : eventList) {
+                if (userBO.getUsername().equals(event.getName())) {
+                    count += 1;
+                }
+            }
+
+        }
+        return count;
     }
 }

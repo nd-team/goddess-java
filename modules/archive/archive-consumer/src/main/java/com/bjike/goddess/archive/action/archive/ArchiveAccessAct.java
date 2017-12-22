@@ -375,4 +375,19 @@ public class ArchiveAccessAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 导出时获取的姓名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findUserName")
+    public Result findUserName() throws ActException {
+        try {
+            List<String> list = archiveAccessAPI.findUserName();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

@@ -69,4 +69,9 @@ public class MarketInfoPreAnalysisApiImpl implements MarketInfoPreAnalysisAPI {
     public void removeAnalysis(String id) throws SerException {
         marketInfoPreAnalysisSer.removeAnalysis(id);
     }
+
+    @Override
+    public List<MarketInfoPreAnalysisBO> getconversionBuissOpp() throws SerException {
+        return marketInfoPreAnalysisSer.getconversionBuissOpp();
+    }
 }

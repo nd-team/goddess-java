@@ -3,15 +3,17 @@ package com.bjike.goddess.marketdevelopment.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.marketdevelopment.bo.*;
 import com.bjike.goddess.marketdevelopment.dto.*;
 import com.bjike.goddess.marketdevelopment.entity.*;
 import com.bjike.goddess.marketdevelopment.enums.DateType;
-import com.bjike.goddess.marketdevelopment.to.DateDataCopyTO;
-import com.bjike.goddess.marketdevelopment.to.DateDataTO;
-import com.bjike.goddess.marketdevelopment.to.DateDataUpdateTO;
-import com.bjike.goddess.marketdevelopment.to.FilesDataTO;
+import com.bjike.goddess.marketdevelopment.enums.GuideAddrStatus;
+import com.bjike.goddess.marketdevelopment.to.*;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,18 +57,136 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
     @Autowired
     private FilesDataTotalSer filesDataTotalSer;
 
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private MarPermissionSer marPermissionSer;
+
+    private static final String marketCheck = "market-check";
+
+    private static final String marketManage = "market-manage";
+
+    private static final String planManage = "plan-manage";
+
+    private static final String planCheck = "plan-check";
+
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = marPermissionSer.getMarPermission(marketCheck);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 核对添加修改删除审核权限（岗位级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = marPermissionSer.getMarPermission(marketManage);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
     @Override
-    public List<MonthMoneyBO> maps(DateDataDTO dto) throws SerException {
-        String year = LocalDate.now().getYear() + "年";
-        String month = LocalDate.now().getMonthValue() + "月";
-        if (StringUtils.isNotBlank(dto.getYear()) && StringUtils.isNotBlank(dto.getMonth())) {
-            year = dto.getYear();
-            month = dto.getMonth();
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case AUDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case CONGEL:
+                flag = guideAddIdentity();
+                break;
+            case THAW:
+                flag = guideAddIdentity();
+                break;
+            case COLLECT:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
         }
 
+        RpcTransmit.transmitUserToken(userToken);
+        return flag;
+    }
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = marPermissionSer.getMarPermission(marketCheck);
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = marPermissionSer.getMarPermission(marketManage);
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public List<MonthMoneyBO> maps(DateDataDTO dto) throws SerException {
+//        String year = LocalDate.now().getYear() + "年";
+//        String month = LocalDate.now().getMonthValue() + "月";
+//        if (StringUtils.isNotBlank(dto.getYear()) && StringUtils.isNotBlank(dto.getMonth())) {
+//            year = dto.getYear();
+//            month = dto.getMonth();
+//        }
+
         MonthMoneyDTO monthMoneyDTO = new MonthMoneyDTO();
-        monthMoneyDTO.getConditions().add(Restrict.eq("year", year));
-        monthMoneyDTO.getConditions().add(Restrict.eq("month", month));
+//        monthMoneyDTO.getConditions().add(Restrict.eq("year", year));
+//        monthMoneyDTO.getConditions().add(Restrict.eq("month", month));
         List<MonthMoney> monthMoneys = monthMoneySer.findByCis(monthMoneyDTO);
         List<MonthMoneyBO> monthMoneyBOs = new ArrayList<>(0);
         MonthMoneyBO monthMoneyBO = new MonthMoneyBO();
@@ -109,7 +231,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                                         List<FilesData> filesDatas = filesDataSer.findByCis(filesDataDTO);
 
                                         FilesDataBO filesDataBO = new FilesDataBO();
-                                        filesDataBO.setTable("阶段");
+                                        filesDataBO.setTableName("阶段");
                                         List<FilesDataBO> filesDataBOs = new ArrayList<>(0);
                                         for (FilesData filesData : filesDatas) {
                                             FilesDataBO filesDataBO1 = BeanTransform.copyProperties(filesData, FilesDataBO.class);
@@ -243,10 +365,10 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                 if (null != dateDataCopyTO.getFilesDataTOs() && dateDataCopyTO.getFilesDataTOs().size() > 0) {
                     for (FilesDataTO filesDataTO : dateDataCopyTO.getFilesDataTOs()) {
                         int i = 1;
-                        if (null == filesDataTO.getIndex()) {
+                        if (null == filesDataTO.getTableIndex()) {
                             throw new SerException("表头下标不能为空");
                         }
-                        if (StringUtils.isBlank(filesDataTO.getTable())) {
+                        if (StringUtils.isBlank(filesDataTO.getTableName())) {
                             throw new SerException("表头不能为空");
                         }
                         if (StringUtils.isBlank(filesDataTO.getContext())) {
@@ -314,11 +436,11 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
 
                         int num = 0;
                         for (FilesData filesData1 : filesDatas1) {
-                            String context = filesDatas2.stream().filter(obj -> filesData1.getTable().equals(obj.getTable())).map(FilesData::getContext).collect(Collectors.toList()).get(0);
+                            String context = filesDatas2.stream().filter(obj -> filesData1.getTableName().equals(obj.getTableName())).map(FilesData::getContext).collect(Collectors.toList()).get(0);
                             FilesData filesData = new FilesData();
-                            filesData.setIndex(++num);
+                            filesData.setTableIndex(++num);
                             filesData.setDateDataId(dateData1.getId());
-                            filesData.setTable(filesData1.getTable());
+                            filesData.setTableName(filesData1.getTableName());
                             filesData.setContext(String.valueOf(Double.valueOf(filesData1.getContext()) - Double.valueOf(context)));
                             filesDataSer.save(filesData);
                         }
@@ -328,7 +450,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
 
                 //计算合计
                 FilesDataTotalDTO filesDataTotalDTO = new FilesDataTotalDTO();
-                filesDataTotalDTO.getConditions().add(Restrict.eq("dateDataId",dateId));
+                filesDataTotalDTO.getConditions().add(Restrict.eq("dateDataId", dateId));
                 List<FilesDataTotal> filesDataTotals = filesDataTotalSer.findByCis(filesDataTotalDTO);
                 if (null != filesDataTotals && filesDataTotals.size() > 0) {
                     filesDataTotalSer.remove(filesDataTotals);
@@ -465,8 +587,8 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
                         for (FilesData filesData : filesDatas2) {
                             Double context = Double.valueOf(filesDatas3.stream().map(FilesData::getContext).collect(Collectors.toList()).get(0));
                             FilesData filesData1 = new FilesData();
-                            filesData1.setIndex(num++);
-                            filesData1.setTable(filesData.getTable());
+                            filesData1.setTableIndex(num++);
+                            filesData1.setTableName(filesData.getTableName());
                             filesData1.setDateDataId(dateDataId);
                             filesData1.setContext((String.valueOf(Double.valueOf(filesData.getContext()) - context)));
                             filesData1 = filesDataSer.save(filesData1);
@@ -535,7 +657,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         DateDataBO bo = BeanTransform.copyProperties(dateData, DateDataBO.class);
 
         FilesDataBO filesDataBO = new FilesDataBO();
-        filesDataBO.setTable("阶段");
+        filesDataBO.setTableName("阶段");
 
         FilesDataDTO filesDataDTO = new FilesDataDTO();
         filesDataDTO.getConditions().add(Restrict.eq("dateDataId", dateDataId));
@@ -546,5 +668,117 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         }
         bo.setFilesDataVO(filesDataBO);
         return bo;
+    }
+
+    @Override
+    public MonthMoneyBO findMoneyData(String year, String month) throws SerException {
+        MonthMoneyDTO monthMoneyDTO = new MonthMoneyDTO();
+        monthMoneyDTO.getConditions().add(Restrict.eq("year", year));
+        monthMoneyDTO.getConditions().add(Restrict.eq("month", month));
+        List<MonthMoney> monthMoneys = monthMoneySer.findByCis(monthMoneyDTO);
+        if (null != monthMoneys && monthMoneys.size() > 0) {
+            MonthMoney monthMoney = monthMoneys.get(0);
+            MonthMoneyBO bo = BeanTransform.copyProperties(monthMoney, MonthMoneyBO.class);
+            return bo;
+        }
+        return null;
+    }
+
+    @Override
+    public MonthBusinessDataBO findBusinessData(String year, String month, String businessType) throws SerException {
+        MonthMoneyBO monthMoneyBO = findMoneyData(year, month);
+        if (null != monthMoneyBO) {
+            BusinessDataDTO businessDataDTO = new BusinessDataDTO();
+            businessDataDTO.getConditions().add(Restrict.eq("monthMoneyId", monthMoneyBO.getId()));
+            businessDataDTO.getConditions().add(Restrict.eq("businessType", businessType));
+            List<BusinessData> businessDatas = businessDataSer.findByCis(businessDataDTO);
+            if (null != businessDatas && businessDatas.size() > 0) {
+                MonthBusinessDataBO bo = BeanTransform.copyProperties(businessDatas.get(0), MonthBusinessDataBO.class);
+                return bo;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> findDate(String year, String month, String week) throws SerException {
+        List<String> list = new ArrayList<>(0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, Integer.valueOf(year));
+        calendar.set(Calendar.MONTH, Integer.valueOf(month) - 1);
+        int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        calendar.set(Calendar.WEEK_OF_MONTH, Integer.valueOf(week));
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String start = dateFormat.format(calendar.getTime());
+        list.add(start);
+        for (int i = 0; i < 6; i++) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            String sta = dateFormat.format(calendar.getTime());
+            list.add(sta);
+        }
+        return list;
+    }
+
+    public static void main(String[] args) {
+        String time = "2017-12";
+
+        Calendar cal = Calendar.getInstance();
+        int date = cal.get(Calendar.DAY_OF_MONTH);
+        int n = cal.get(Calendar.DAY_OF_WEEK);
+        if (n == 1) {
+            n = 7;
+        } else {
+            n = n - 1;
+        }
+
+        System.out.println("当天为本周第" + n + "天");
+// 日期格式
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for (int i = 1; i <= 7; i++) {
+            cal.set(Calendar.DAY_OF_MONTH, date + i - n);
+            System.out.println("本周第" + i + "天：" + sdf.format(cal.getTime()));
+        }
+
+        int year = 2017;
+        int month = 12;
+        int week = 6;
+
+        List<String> list = new ArrayList<>(0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int weekNum = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        calendar.set(Calendar.WEEK_OF_MONTH, week);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String start = dateFormat.format(calendar.getTime());
+        list.add(start);
+        for (int i = 0; i < 6; i++) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            String sta = dateFormat.format(calendar.getTime());
+            list.add(sta);
+        }
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        String end = dateFormat.format(calendar.getTime());
+        LocalDate e = DateUtil.parseDate(end);
+        if (week == 1) {
+            if (String.valueOf(month).length() == 1) {
+                start = year + "-0" + month + "-01";
+            } else {
+                start = year + "-" + month + "-01";
+            }
+        }
+        if (week == weekNum) {
+            if (month != e.getMonthValue()) {
+                e = DateUtil.parseDate(end);
+                e = e.minusDays(e.getDayOfMonth());
+            }
+        }
+        String endTime = e.toString();
+        String[] time1 = new String[]{start, endTime};
+//        return time;
+        System.out.print(time1);
     }
 }

@@ -82,7 +82,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -101,7 +101,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -120,7 +120,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -137,7 +137,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2",null);
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -151,12 +151,12 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
         Boolean flag2 = false;
 
         String userToken = RpcTransmit.getUserToken();
-        UserBO userBO  = userAPI.currentUser();
+        UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag1 = cusPermissionSer.getCusPermission("1",userBO);
-            flag2 = cusPermissionSer.getCusPermission("2",userBO);
+            flag1 = cusPermissionSer.getCusPermission("1", userBO);
+            flag2 = cusPermissionSer.getCusPermission("2", userBO);
         } else {
             flag1 = true;
             flag2 = true;
@@ -289,7 +289,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
     @Override
     public List<ProblemFeedbackBO> list(ProblemFeedbackDTO dto) throws SerException {
         checkSeeIdentity();
-        List<ProblemFeedback> problemFeedbacks = super.findByCis(dto);
+        List<ProblemFeedback> problemFeedbacks = super.findByCis(dto, true);
         List<ProblemFeedbackBO> problemFeedbackBOS = BeanTransform.copyProperties(problemFeedbacks, ProblemFeedbackBO.class);
 
         return problemFeedbackBOS;
@@ -359,7 +359,7 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
                 }
                 if (to.getSendObject() != null) {
                     List<String> sendObject = internalContactsAPI.getEmails(to.getSendObject());
-                    if(!sendObject.isEmpty()){
+                    if (!sendObject.isEmpty()) {
                         String[] strings = new String[sendObject.size()];
                         strings = sendObject.toArray(strings);
                         messageTO.setReceivers(strings);
@@ -488,4 +488,21 @@ public class ProblemFeedbackSerImpl extends ServiceImpl<ProblemFeedback, Problem
 
     }
 
+    @Override
+    public Long currentUserProblemCount() throws SerException {
+        Long count = 0l;
+        List<ProblemFeedback> feedbackList = super.findAll();
+        if (feedbackList != null && feedbackList.size() > 0) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            for (ProblemFeedback feedback : feedbackList) {
+                if (userBO.getUsername().equals(feedback.getProblemExhibitor())) {
+                    count += 1;
+                }
+            }
+
+        }
+        return count;
+    }
 }

@@ -90,4 +90,9 @@ public class PunchSonApiImpl implements PunchSonAPI {
     public void upload(List<PunchImportExcel> tos) throws SerException {
         punchSonSer.upload(tos);
     }
+
+    @Override
+    public Long currentUserLateCount() throws SerException {
+        return punchSonSer.currentUserLateCount();
+    }
 }

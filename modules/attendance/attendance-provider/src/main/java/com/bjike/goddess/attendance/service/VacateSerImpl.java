@@ -31,7 +31,9 @@ import com.bjike.goddess.event.enums.Permissions;
 import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
+import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -88,6 +90,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private EventAPI eventAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     private String content = "%s提交了%d天的请假申请，时间为%s至%s,请及时上系统查看审核";
     private String content1 = "%s提交了%d天的请假申请，时间为%s至%s,请注意工作交接情况";
@@ -332,10 +336,15 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             }
         }
         Vacate entity = BeanTransform.copyProperties(to, Vacate.class, true, "startTime", "endTime");
-        entity.setMain(toString(mains));
+        InternalContactsConditionBO bo = positionDetailUserAPI.getByName(entity.getName());
+        if (null != bo) {
+            entity.setArea(bo.getArea());
+            entity.setDepart(bo.getDepartment());
+            entity.setPosition(bo.getPosition());
+            entity.setMain(toString(mains));
+        }
         title = String.format(title, entity.getName());
         List<String> carbon = new ArrayList<>();
-        if (null != carbons) {
             entity.setCarbon(toString(carbons));
             carbon = internalContactsAPI.getEmails(carbons);
             if (!carbon.isEmpty()) {
@@ -345,7 +354,6 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
                 send(title, content, receivers);
             }
-        }
         if (time < 3) {
             LocalDate s = DateUtil.parseDate(startDate);
             long days = Math.abs(s.toEpochDay() - LocalDate.now().toEpochDay());
@@ -363,10 +371,12 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 to.getEndTime() + ":00");
         entity.setEndTime(end);
         List<VacateAudit> sons = getSon(entity);
-        entity.setVacateAudits(sons);
-        entity.setDate(LocalDate.now());
-        entity.setCreateTime(LocalDateTime.now());
-        entity.setModifyTime(LocalDateTime.now());
+        if (null != sons && sons.size() > 0) {
+            entity.setDate(LocalDate.now());
+            entity.setVacateAudits(sons);
+            entity.setCreateTime(LocalDateTime.now());
+            entity.setModifyTime(LocalDateTime.now());
+        }
         super.save(entity);
         List<String> main = internalContactsAPI.getEmails(mains);
         if (!main.isEmpty()) {
@@ -376,35 +386,36 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
             send(title, content, receivers);
         }
-        for (String name : mains) {
-            EventTO eventTO = new EventTO();
-            eventTO.setName(name);
-            eventTO.setProjectChineseName("考勤");
-            eventTO.setProjectEnglishName("attendance");
-            eventTO.setFunctionChineseName("请假");
-            eventTO.setFunctionEnglishName("vacate");
-            eventTO.setContent("请假审核");
-            eventTO.setPermissions(Permissions.ADUIT);
-            eventTO.setEventId(entity.getId());
-            eventTO.setStatus("待审核");
-            eventAPI.save(eventTO);
-        }
-        if (null != carbons) {
-            for (String name : carbons) {
-                EventTO eventTO = new EventTO();
-                eventTO.setName(name);
-                eventTO.setProjectChineseName("考勤");
-                eventTO.setProjectEnglishName("attendance");
-                eventTO.setFunctionChineseName("请假");
-                eventTO.setFunctionEnglishName("vacate");
-                eventTO.setContent("请假查看");
-                eventTO.setPermissions(Permissions.SEE);
-                eventTO.setEventId(entity.getId());
-                eventTO.setStatus("待查看");
-                eventAPI.save(eventTO);
-            }
-        }
+//        for (String name : mains) {
+//            EventTO eventTO = new EventTO();
+//            eventTO.setName(name);
+//            eventTO.setProjectChineseName("考勤");
+//            eventTO.setProjectEnglishName("attendance");
+//            eventTO.setFunctionChineseName("请假");
+//            eventTO.setFunctionEnglishName("vacate");
+//            eventTO.setContent("请假审核");
+//            eventTO.setPermissions(Permissions.ADUIT);
+//            eventTO.setEventId(entity.getId());
+//            eventTO.setStatus("待审核");
+//            eventAPI.save(eventTO);
+//        }
+//        if (null != carbons) {
+//            for (String name : carbons) {
+//                EventTO eventTO = new EventTO();
+//                eventTO.setName(name);
+//                eventTO.setProjectChineseName("考勤");
+//                eventTO.setProjectEnglishName("attendance");
+//                eventTO.setFunctionChineseName("请假");
+//                eventTO.setFunctionEnglishName("vacate");
+//                eventTO.setContent("请假查看");
+//                eventTO.setPermissions(Permissions.SEE);
+//                eventTO.setEventId(entity.getId());
+//                eventTO.setStatus("待查看");
+//                eventAPI.save(eventTO);
+//            }
+//        }
     }
+
 
     private void check(VacateTO to, double time, String userToken) throws SerException {
         VacateSetDTO dto = new VacateSetDTO();
@@ -429,14 +440,17 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     }
 
     private List<VacateAudit> getSon(Vacate entity) throws SerException {
-        String[] mains = entity.getMain().split(",");
+
         List<VacateAudit> list = new ArrayList<>();
-        for (String s : mains) {
-            VacateAudit vacateAudit = new VacateAudit();
-            vacateAudit.setName(s);
-            vacateAudit.setVacate(entity);
-            vacateAudit.setAduitStatus(AduitStatus.DOING);
-            list.add(vacateAudit);
+        if (StringUtils.isNotBlank(entity.getMain())) {
+            String[] mains = entity.getMain().split(",");
+            for (String s : mains) {
+                VacateAudit vacateAudit = new VacateAudit();
+                vacateAudit.setName(s);
+                vacateAudit.setVacate(entity);
+                vacateAudit.setAduitStatus(AduitStatus.DOING);
+                list.add(vacateAudit);
+            }
         }
         return list;
     }
@@ -589,7 +603,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     @Override
     public List<VacateBO> auditList(VacateDTO dto) throws SerException {
         checkSeeIdentity();
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
         vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
         List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
@@ -608,7 +624,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public List<VacateBO> auditListPhone(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
         vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
         List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
@@ -627,7 +645,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public Long auditListCount(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO vacateAuditDTO = new VacateAuditDTO();
         vacateAuditDTO.getConditions().add(Restrict.eq("name", name));
         List<VacateAudit> list = vacateAuditSer.findByCis(vacateAuditDTO);
@@ -648,7 +668,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         if (null == entity) {
             throw new SerException("该对象不存在");
         }
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         VacateAuditDTO dto = new VacateAuditDTO();
         dto.getConditions().add(Restrict.eq("vacate.id", entity.getId()));
         dto.getConditions().add(Restrict.eq("name", name));
@@ -676,7 +698,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 messageAPI.send(messageTO);
             }
         }
-        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+        String eventId = eventAPI.findId(to.getId(), name);
         if (null != eventId) {
             eventAPI.delete(eventId);
         }
@@ -751,7 +773,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public List<VacateBO> list(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("name", name));
         List<Vacate> list = super.findByCis(dto, true);
@@ -764,7 +788,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public List<VacateBO> listPhone(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getSorts().add("createTime=desc");
         dto.getConditions().add(Restrict.eq("name", name));
         List<Vacate> list = super.findByCis(dto, true);
@@ -810,7 +836,9 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 
     @Override
     public Long count(VacateDTO dto) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         String name = userAPI.currentUser().getUsername();
+        RpcTransmit.transmitUserToken(userToken);
         dto.getConditions().add(Restrict.eq("name", name));
         return super.count(dto);
     }
@@ -1551,5 +1579,23 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             tar = true;
         }
         return tar;
+    }
+
+    @Override
+    public Long currentUserVacate() throws SerException {
+        Long count = 0l;
+        List<Vacate> vacateList = super.findAll();
+        if (vacateList != null && vacateList.size() > 0) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            for (Vacate vacate : vacateList) {
+                if (userBO.getUsername().equals(vacate.getName())) {
+                    count += 1;
+                }
+            }
+
+        }
+        return count;
     }
 }

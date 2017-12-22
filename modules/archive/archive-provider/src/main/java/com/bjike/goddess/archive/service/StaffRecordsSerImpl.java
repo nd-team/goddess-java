@@ -738,6 +738,16 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
         return null;
     }
 
+    @Override
+    public List<String> findUserName() throws SerException {
+        List<StaffRecords> staffRecordses = super.findAll();
+        if (null != staffRecordses && staffRecordses.size() > 0) {
+            List<String> list = staffRecordses.stream().map(StaffRecords::getUsername).collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
     //tar false:柱状图
     private List<StaffRecordsCollectBO> findCollect(String startTime, String endTime, Boolean tar) throws SerException {
         List<StaffRecordsConditionBO> list = this.findAreaAndProject(tar);
@@ -838,7 +848,16 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
 
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = list.size() - 1; j > i; j--) {
-                if (((null == list.get(i).getProject() && null == list.get(j).getProject()) || list.get(i).getProject().equals(list.get(j).getProject())) && ((null == list.get(i).getArea() && null == list.get(j).getArea()) || list.get(i).getArea().equals(list.get(j).getArea()))) {
+                if (
+                        (
+                                (null == list.get(i).getProject() && null == list.get(j).getProject()) ||
+                                        (null != list.get(i).getProject() && null != list.get(j).getProject() && list.get(i).getProject().equals(list.get(j).getProject()))
+                        ) && (
+                                (null == list.get(i).getArea() && null == list.get(j).getArea()) ||
+                                        (null != list.get(i).getArea() && null != list.get(j).getArea() && list.get(i).getArea().equals(list.get(j).getArea()))
+                        )
+
+                        ) {
                     list.remove(list.get(j));
                 }
             }

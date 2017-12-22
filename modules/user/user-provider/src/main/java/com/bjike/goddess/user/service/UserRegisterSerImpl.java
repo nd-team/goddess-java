@@ -203,7 +203,7 @@ public class UserRegisterSerImpl implements UserRegisterSer {
         try {
             UserBO bo = userSer.findByUsername(appUserRegisterTO.getUsername());
             if (null == bo) {
-//                String employeeNumber = userSer.maxUserEmpNumber();
+                String employeeNumber = userSer.nextEmpNumber("AAAAA000001");
                 String sysNO = userSer.findByMaxField("systemNO", User.class);
                 User user = new User();
                 if (!appUserRegisterTO.getRegisterType().equals("个人")) {
@@ -212,6 +212,12 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                     } else {
                         throw new SerException("请填写企业/组织名称");
                     }
+                    if(StringUtils.isBlank(appUserRegisterTO.getEmployeeNumber())){
+                        throw new SerException("员工编号不能为空");
+                    }
+                    user.setEmployeeNumber(appUserRegisterTO.getEmployeeNumber());
+                }else{
+                    user.setEmployeeNumber(employeeNumber);
                 }
                 user.setUsername(appUserRegisterTO.getUsername());
                 user.setPhone(appUserRegisterTO.getPhone());
@@ -219,7 +225,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                 user.setUserType(UserType.ADMIN);
                 user.setCreateTime(LocalDateTime.now());
                 user.setStatus(Status.THAW);
-                user.setEmployeeNumber(appUserRegisterTO.getEmployeeNumber());
                 user.setSystemNO(SeqUtil.generateSys(sysNO));
                 userSer.save(user);
 

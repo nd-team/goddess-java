@@ -203,7 +203,7 @@ public class ProblemResultSerImpl extends ServiceImpl<ProblemResult, ProblemResu
     public List<ProblemResultBO> list(ProblemResultDTO dto) throws SerException {
         checkSeeIdentity();
         ReceivedFeedbackDTO receivedFeedbackDTO = new ReceivedFeedbackDTO();
-        List<ReceivedFeedback> receivedFeedbacks = receivedFeedbackSer.findByCis(receivedFeedbackDTO);
+        List<ReceivedFeedback> receivedFeedbacks = receivedFeedbackSer.findByCis(receivedFeedbackDTO,true);
 
         List<ProblemResultBO> problemResultBOS = new ArrayList<>();
         for (ReceivedFeedback receivedFeedback : receivedFeedbacks) {

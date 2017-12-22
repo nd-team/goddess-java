@@ -17,8 +17,6 @@ import com.bjike.goddess.competitormanage.api.CompetitorAPI;
 import com.bjike.goddess.competitormanage.bo.CompetitorBO;
 import com.bjike.goddess.customer.api.CustomerBaseInfoAPI;
 import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.supplier.api.SupplierInformationAPI;
-import com.bjike.goddess.supplier.bo.SupplierInformationBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
@@ -49,8 +47,8 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
     private CooperCapabilityAPI cooperCapabilityAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
-    @Autowired
-    private SupplierInformationAPI supplierInformationAPI;
+//    @Autowired
+//    private SupplierInformationAPI supplierInformationAPI;
     @Autowired
     private CustomerBaseInfoAPI customerBaseInfoAPI;
 //    @Autowired
@@ -313,17 +311,17 @@ public class TalkDetailSerImpl extends ServiceImpl<TalkDetail, TalkDetailDTO> im
         List<ContactObjectBO> list = new ArrayList<>();
 
         //从供应商信息管理获取
-        List<SupplierInformationBO> supplierInformationBOs = supplierInformationAPI.findByName(companyName);
-        if ((supplierInformationBOs != null) && (!supplierInformationBOs.isEmpty())) {
-            for (SupplierInformationBO supplierInformationBO : supplierInformationBOs) {
-                ContactObjectBO contactObjectBO = new ContactObjectBO();
-                contactObjectBO.setCompanyName(supplierInformationBO.getSupplierName());
-                contactObjectBO.setContactName(supplierInformationBO.getContacts());
-                contactObjectBO.setContactTel(supplierInformationBO.getTelephone());
-                contactObjectBO.setMobilePhone(supplierInformationBO.getTelephone());
-                list.add(contactObjectBO);
-            }
-        }
+//        List<SupplierInformationBO> supplierInformationBOs = supplierInformationAPI.findByName(companyName);
+//        if ((supplierInformationBOs != null) && (!supplierInformationBOs.isEmpty())) {
+//            for (SupplierInformationBO supplierInformationBO : supplierInformationBOs) {
+//                ContactObjectBO contactObjectBO = new ContactObjectBO();
+//                contactObjectBO.setCompanyName(supplierInformationBO.getSupplierName());
+//                contactObjectBO.setContactName(supplierInformationBO.getContacts());
+//                contactObjectBO.setContactTel(supplierInformationBO.getTelephone());
+//                contactObjectBO.setMobilePhone(supplierInformationBO.getTelephone());
+//                list.add(contactObjectBO);
+//            }
+//        }
         //从客户处获取
         List<CustomerBaseInfoBO> customerBaseInfoBOs = customerBaseInfoAPI.findByOriganizion(companyName);
         if ((customerBaseInfoBOs != null) && (!customerBaseInfoBOs.isEmpty())) {

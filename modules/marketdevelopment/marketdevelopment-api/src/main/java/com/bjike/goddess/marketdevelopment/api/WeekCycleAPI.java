@@ -1,8 +1,10 @@
 package com.bjike.goddess.marketdevelopment.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.marketdevelopment.bo.WeekCycleBO;
 import com.bjike.goddess.marketdevelopment.bo.WeekMonthMoneyBO;
 import com.bjike.goddess.marketdevelopment.dto.WeekCycleDTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.WeekCycleTO;
 import com.bjike.goddess.marketdevelopment.to.WeekCycleUpdateTO;
 
@@ -18,6 +20,13 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface WeekCycleAPI {
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表
@@ -48,5 +57,49 @@ public interface WeekCycleAPI {
      */
     default void update(WeekCycleUpdateTO to) throws SerException {
         return;
+    }
+
+    /**
+     * 删除周计划数据
+     *
+     * @param weekCycleId
+     * @throws SerException
+     */
+    default void delete(String weekCycleId) throws SerException {
+        return;
+    }
+
+    /**
+     * 根据id获取周计划数据
+     *
+     * @param weekCycleId
+     * @return
+     * @throws SerException
+     */
+    default List<WeekCycleBO> getById(String weekCycleId) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default Long getTotal(WeekCycleDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取当前月分的周期
+     *
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default List<String> getCycle(String year, String month) throws SerException {
+        return null;
     }
 }

@@ -14,6 +14,7 @@ import com.bjike.goddess.marketdevelopment.api.CustomerAPI;
 import com.bjike.goddess.marketdevelopment.dto.CustomerDTO;
 import com.bjike.goddess.marketdevelopment.excel.CustomerImportExcel;
 import com.bjike.goddess.marketdevelopment.to.CustomerTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.vo.CustomerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,27 +42,27 @@ public class CustomerAction extends BaseFileAction {
     @Autowired
     private CustomerAPI customerAPI;
 
-//    /**
-//     * 功能导航权限
-//     *
-//     * @param guidePermissionTO 导航类型数据
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @GetMapping("v1/guidePermission")
-//    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-//        try {
-//            Boolean isHasPermission = customerAPI.guidePermission(guidePermissionTO);
-//            if (!isHasPermission) {
-//                //int code, String msg
-//                return new ActResult(0, "没有权限", false);
-//            } else {
-//                return new ActResult(0, "有权限", true);
-//            }
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            Boolean isHasPermission = customerAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -245,6 +246,21 @@ public class CustomerAction extends BaseFileAction {
             List<CustomerImportExcel> tos = ExcelUtil.mergeExcelToClazz(is, CustomerImportExcel.class, excel);
             customerAPI.upload(tos);
             return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取阶段
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findStage")
+    public Result findStage() throws ActException {
+        try {
+            List<String> list = customerAPI.findStage();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

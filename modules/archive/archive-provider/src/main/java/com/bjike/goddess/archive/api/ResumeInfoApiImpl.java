@@ -94,4 +94,9 @@ public class ResumeInfoApiImpl implements ResumeInfoAPI  {
     public byte[] templateExcel() throws SerException {
         return resumeInfoSer.templateExcel();
     }
+
+    @Override
+    public List<String> findUserName() throws SerException {
+        return resumeInfoSer.findUserName();
+    }
 }

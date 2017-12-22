@@ -28,7 +28,9 @@ import java.util.List;
  */
 public interface VacateSer extends Ser<Vacate, VacateDTO> {
     List<SonPermissionObject> sonPermission() throws SerException;
+
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
     /**
      * 列表
      *
@@ -184,11 +186,14 @@ public interface VacateSer extends Ser<Vacate, VacateDTO> {
 
     /**
      * 某人当前周从周一至周日请假次数或某个季度分别请假次数
+     *
      * @param overTimesDTO
      * @return
      * @throws SerException
      */
-    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO ) throws SerException{return null;}
+    default OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -221,4 +226,14 @@ public interface VacateSer extends Ser<Vacate, VacateDTO> {
     default void upload(List<VacateImportExcel> tos) throws SerException {
         return;
     }
+
+    /**
+     * 当前用户请假总条数
+     *
+     * @throws SerException
+     */
+    default Long currentUserVacate() throws SerException {
+        return null;
+    }
+
 }

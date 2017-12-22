@@ -2,6 +2,7 @@ package com.bjike.goddess.organize.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.ManagerBO;
+import com.bjike.goddess.organize.bo.OptionAnnularBO;
 import com.bjike.goddess.organize.bo.OptionBO;
 import com.bjike.goddess.organize.bo.PositionWorkDetailsBO;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
@@ -176,10 +177,21 @@ public interface PositionWorkDetailsAPI {
 
     /**
      * excel模板下载
+     *
      * @return
      * @throws SerException
      */
-    default byte[] templateExport() throws SerException{
+    default byte[] templateExport() throws SerException {
+        return null;
+    }
+
+    /**
+     * 组织结构首页图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionAnnularBO figureShow() throws SerException {
         return null;
     }
 }

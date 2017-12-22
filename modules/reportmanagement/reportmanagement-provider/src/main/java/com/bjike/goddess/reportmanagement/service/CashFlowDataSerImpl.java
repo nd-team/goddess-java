@@ -165,13 +165,15 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
     @Override
     public void editMoney(CashFlowDataDTO dto) throws SerException {
         CashFlowDataDTO cashFlowDataDTO = new CashFlowDataDTO();
-        cashFlowDataDTO.getConditions().add(Restrict.eq("dataId", dto.getDataId()));
+        cashFlowDataDTO.getConditions().add(Restrict.eq("id", dto.getDataId()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
         CashFlowData cashFlowData = cashFlowDataSer.findOne(cashFlowDataDTO);
-        cashFlowData.setMoney(dto.getMoney());
-        cashFlowData.setModifyTime(LocalDateTime.now());
-        cashFlowDataSer.update(cashFlowData);
+            if(cashFlowData != null) {
+            cashFlowData.setMoney(dto.getMoney());
+            cashFlowData.setModifyTime(LocalDateTime.now());
+            cashFlowDataSer.update(cashFlowData);
+        }
     }
 
     //根据科目查询金额

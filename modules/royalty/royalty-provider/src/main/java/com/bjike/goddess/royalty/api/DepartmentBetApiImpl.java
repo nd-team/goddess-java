@@ -77,4 +77,9 @@ public class DepartmentBetApiImpl implements DepartmentBetAPI {
     public Set<String> projectName() throws SerException {
         return departmentBetSer.projectName();
     }
+
+    @Override
+    public Long currentUserRoyalty() throws SerException {
+        return departmentBetSer.currentUserRoyalty();
+    }
 }

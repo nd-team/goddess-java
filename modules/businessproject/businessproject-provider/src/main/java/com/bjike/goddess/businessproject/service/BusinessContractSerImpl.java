@@ -41,6 +41,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -75,7 +77,8 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     private CollectUpdateSer collectUpdateSer;
     @Autowired
     private TaskNodeAPI taskNodeAPI;
-
+//    @Autowired
+//    private InterfaceCalculationDetailSer interfaceCalculationDetailSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -387,6 +390,11 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 //        messageTO.setReceivers(new String[]{"xiazhili_aj@163.com"});
         messageAPI.send(messageTO);
         super.save(contract);
+
+//      projectcalculation
+//        InterfaceCalculationDetail interfaceCalculationDetail = BeanTransform.copyProperties(contract, InterfaceCalculationDetail.class,"calculationTime","makeContract","taxPoint","invoice","paymentMethod","settlementBatch","calculationProgress","epiboly"+
+//                "implementingParty","interfaceContent","entry","outsourcedUnitPrice","entryMoney","interfaceAssignment","totalAmountOfOutsourced","note");
+//        interfaceCalculationDetailSer.save(interfaceCalculationDetail);
 
         BusinessContractsBO bo = BeanTransform.copyProperties(contract, BusinessContractsBO.class);
         return bo;
@@ -4121,6 +4129,99 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         if (null != list && list.size() > 0) {
             stringList = list.stream().map(BusinessContract::getMarketNum).distinct().collect(Collectors.toList());
             return stringList;
+        }
+        return null;
+    }
+
+    @Override
+    public Double findMoney(String year) throws SerException {
+        Double money = 0d;
+        if (StringUtils.isBlank(year)) {
+            return money;
+        }
+        String startTime = year + "-01-01";
+        String endTime = year + "-12-31";
+        StringBuilder sql = new StringBuilder("select sum(taskMoney) from businessproject_businesscontract ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        List<Object> objectList = super.findBySql(sql.toString());
+        Object[] obj = (Object[]) objectList.get(0);
+        money = Double.parseDouble(String.valueOf(obj[0]));
+        return money;
+    }
+
+    @Override
+    public Double moneyByType(String businessType, String year) throws SerException {
+        Double money = 0d;
+        if (StringUtils.isBlank(year)) {
+            return money;
+        }
+        String startTime = year + "-01-01";
+        String endTime = year + "-12-31";
+        StringBuilder sql = new StringBuilder("select sum(taskMoney) from businessproject_businesscontract ");
+        sql.append(" where createTime between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        sql.append(" and businessType = '" + businessType + "'");
+        List<Object> objectList = super.findBySql(sql.toString());
+        Object[] obj = (Object[]) objectList.get(0);
+        money = Double.parseDouble(String.valueOf(obj[0]));
+        return money;
+    }
+
+    @Override
+    public Double findMakeMoney(String month) throws SerException {
+        if (StringUtils.isBlank(month)) {
+            return 0d;
+        }
+        String startTime = month + "-01";
+        String endTime = getNextMonth(startTime);
+        StringBuilder sql = new StringBuilder("select sum(makeMoney) from businessproject_businesscontract ");
+        sql.append(" where createTime between '" + startTime + "'");
+        sql.append(" and '" + endTime + "'");
+        List<Object> objectList = super.findBySql(sql.toString());
+        Object[] obj = (Object[]) objectList.get(0);
+        return Double.parseDouble(String.valueOf(obj[0]));
+    }
+
+    @Override
+    public Double findMakeMoney(String month, String businessType) throws SerException {
+        if (StringUtils.isBlank(month)) {
+            return 0d;
+        }
+        String startTime = month + "-01";
+        String endTime = getNextMonth(startTime);
+        StringBuilder sql = new StringBuilder("select sum(makeMoney) from businessproject_businesscontract ");
+        sql.append(" where createTime between '" + startTime + "'");
+        sql.append(" and '" + endTime + "' ");
+        sql.append(" and businessType = '" + businessType + "' ");
+        List<Object> objectList = super.findBySql(sql.toString());
+        Object[] obj = (Object[]) objectList.get(0);
+        return Double.parseDouble(String.valueOf(obj[0]));
+    }
+
+    @Override
+    public String findProjectName(String markNum) throws SerException {
+        BusinessContractDTO dto = new BusinessContractDTO();
+        dto.getConditions().add(Restrict.eq("marketNum", markNum));
+        List<BusinessContract> businessContracts = super.findByCis(dto);
+        if(null != businessContracts && businessContracts.size() > 0){
+            return businessContracts.get(0).getInnerProject();
+        }
+        return null;
+    }
+
+    private String getNextMonth(String time) throws SerException {
+        try {
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(time);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MONTH, 1);
+            SimpleDateFormat fma = new SimpleDateFormat("yyyy-MM-dd");
+            Date date1 = calendar.getTime();
+            return fma.format(date1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

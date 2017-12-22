@@ -24,6 +24,10 @@ public class SeriesBO extends BaseBO{
      */
     private Integer[] data;
 
+    private String[] radius;
+
+    private LabelBO label;
+
     public String getName() {
         return name;
     }
@@ -46,5 +50,21 @@ public class SeriesBO extends BaseBO{
 
     public void setData(Integer[] data) {
         this.data = data;
+    }
+
+    public String[] getRadius() {
+        return radius;
+    }
+
+    public void setRadius(String[] radius) {
+        this.radius = radius;
+    }
+
+    public LabelBO getLabel() {
+        return label;
+    }
+
+    public void setLabel(LabelBO label) {
+        this.label = label;
     }
 }

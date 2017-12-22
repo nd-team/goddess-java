@@ -16,6 +16,7 @@ import com.bjike.goddess.marketdevelopment.api.PlanDayAPI;
 import com.bjike.goddess.marketdevelopment.bo.MarkProblemAcceBO;
 import com.bjike.goddess.marketdevelopment.dto.PlanDayDTO;
 import com.bjike.goddess.marketdevelopment.excel.PlanDayImportExcel;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.marketdevelopment.to.PlanDayTO;
 import com.bjike.goddess.marketdevelopment.vo.MarkProblemAcceVO;
 import com.bjike.goddess.marketdevelopment.vo.PlanDayVO;
@@ -47,27 +48,27 @@ public class PlanDayAction extends BaseFileAction {
     @Autowired
     private CustomerBaseInfoAPI customerBaseInfoAPI;
 
-//    /**
-//     * 功能导航权限
-//     *
-//     * @param guidePermissionTO 导航类型数据
-//     * @throws ActException
-//     * @version v1
-//     */
-//    @GetMapping("v1/guidePermission")
-//    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
-//        try {
-//            Boolean isHasPermission = planDayAPI.guidePermission(guidePermissionTO);
-//            if (!isHasPermission) {
-//                //int code, String msg
-//                return new ActResult(0, "没有权限", false);
-//            } else {
-//                return new ActResult(0, "有权限", true);
-//            }
-//        } catch (SerException e) {
-//            throw new ActException(e.getMessage());
-//        }
-//    }
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            Boolean isHasPermission = planDayAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -257,6 +258,21 @@ public class PlanDayAction extends BaseFileAction {
     }
 
     /**
+     * 获取客户编号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findCode")
+    public Result findCode() throws ActException {
+        try {
+            List<String> list = customerBaseInfoAPI.findCode();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 根据客户编号获取公司名称职务姓名电话
      *
      * @version v1
@@ -342,6 +358,22 @@ public class PlanDayAction extends BaseFileAction {
         try {
             List<String> list = planDayAPI.findMarkCode();
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据市场信息编号获取内部项目名称
+     *
+     * @param marketNum 市场信息编号
+     * @version v1
+     */
+    @GetMapping("v1/findInnerProject")
+    public Result findInnerProject(@RequestParam String marketNum) throws ActException {
+        try {
+            String string = planDayAPI.findInnerProject(marketNum);
+            return ActResult.initialize(string);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

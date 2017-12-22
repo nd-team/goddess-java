@@ -151,4 +151,14 @@ public interface PersonnelQualificationSer extends Ser<PersonnelQualification, P
     default void upload(List<PersonnelQualificationImportExcel> tos) throws SerException {
         return;
     }
+
+    /**
+     * 人员资质导出时的姓名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findUserName() throws SerException {
+        return null;
+    }
 }

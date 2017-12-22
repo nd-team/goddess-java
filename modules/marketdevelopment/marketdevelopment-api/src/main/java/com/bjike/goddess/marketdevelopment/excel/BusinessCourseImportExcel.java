@@ -46,6 +46,7 @@ public class BusinessCourseImportExcel extends BaseBO {
     /**
      * 可以做的具体业务
      */
+    @ExcelHeader(name = "可以做的具体业务")
     private String business;
 
 //    /**
@@ -84,4 +85,6 @@ public class BusinessCourseImportExcel extends BaseBO {
     public void setBusiness(String business) {
         this.business = business;
     }
+
+
 }

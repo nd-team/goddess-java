@@ -319,5 +319,19 @@ public class ProblemFeedbackAction {
         }
     }
 
+    /**
+     * 当前用户反馈的总条数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/proCount")
+    public Result currentUserProblemCount() throws ActException {
+        try {
+            return ActResult.initialize(problemFeedbackAPI.currentUserProblemCount());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
 }

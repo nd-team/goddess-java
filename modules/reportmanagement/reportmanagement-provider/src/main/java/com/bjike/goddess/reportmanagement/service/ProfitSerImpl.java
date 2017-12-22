@@ -20,7 +20,6 @@ import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.utils.Utils;
-import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
@@ -67,8 +66,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     private ModuleTypeAPI moduleTypeAPI;
     @Autowired
     private ProfitFormulaSer profitFormulaSer;
-    @Autowired
-    private SubjectCollectAPI subjectCollectAPI;
+//    @Autowired
+//    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
 

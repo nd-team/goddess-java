@@ -135,4 +135,9 @@ public class EventApiImpl implements EventAPI {
     public FatherBO findFatherById(String id) throws SerException {
         return eventSer.findFatherById(id);
     }
+
+    @Override
+    public Long currentUserEvenCount() throws SerException {
+        return eventSer.currentUserEvenCount();
+    }
 }

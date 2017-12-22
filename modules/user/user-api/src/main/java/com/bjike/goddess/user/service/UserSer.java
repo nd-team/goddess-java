@@ -170,6 +170,7 @@ public interface UserSer extends Ser<User, UserDTO> {
     /**
      * 修改手机号码
      * chenayng
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -242,8 +243,9 @@ public interface UserSer extends Ser<User, UserDTO> {
     }
 
     /**
-     * 移动端获取下一个员工编号
+     * 移动端获取下一个员工编号(个人注册的下一个编号)
      * lijuntao
+     *
      * @param empNum 企业人(邀请人编号)
      * @throws SerException
      */

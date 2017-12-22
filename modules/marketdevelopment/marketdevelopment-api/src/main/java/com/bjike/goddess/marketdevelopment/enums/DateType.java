@@ -13,19 +13,19 @@ public enum DateType {
     /**
      * 无
      */
-    NONE(1),
+    NONE(0),
     /**
      * 计划完成
      */
-    PLAN(2),
+    PLAN(1),
     /**
      * 实际完成
      */
-    ATCUAL(3),
+    ATCUAL(2),
     /**
      * 差异
      */
-    DIFFERENCE(4);
+    DIFFERENCE(3);
 
     private int code;
 

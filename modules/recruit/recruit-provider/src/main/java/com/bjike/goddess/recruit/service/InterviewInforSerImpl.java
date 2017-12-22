@@ -190,7 +190,7 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
         checkSeeIdentity();
         search(dto);
         FirstPhoneRecordDTO firstPhoneRecordDTO = new FirstPhoneRecordDTO();
-        List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO);
+        List<FirstPhoneRecord> firstPhoneRecords = firstPhoneRecordSer.findByCis(firstPhoneRecordDTO,true);
         InterviewInfor interviewInfor = new InterviewInfor();
         for (FirstPhoneRecord record : firstPhoneRecords) {
             if (Boolean.TRUE.equals(record.getWhetherFirstInterview()) && record.getStatus() == null) {
@@ -324,7 +324,10 @@ public class InterviewInforSerImpl extends ServiceImpl<InterviewInfor, Interview
     public void wagesIdea(IdeaTO to) throws SerException {
         if (StringUtils.isNotBlank(to.getId())) {
             InterviewInfor interviewInfor = super.findById(to.getId());
-            BeanTransform.copyProperties(to, interviewInfor, true);
+            if (interviewInfor == null) {
+                throw new SerException("实体不存在");
+            }
+//            BeanTransform.copyProperties(to, interviewInfor, true);
             interviewInfor.setModifyTime(LocalDateTime.now());
             super.update(interviewInfor);
         } else {

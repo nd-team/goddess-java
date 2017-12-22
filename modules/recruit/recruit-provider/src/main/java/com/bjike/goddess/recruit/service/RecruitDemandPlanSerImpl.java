@@ -194,7 +194,7 @@ public class RecruitDemandPlanSerImpl extends ServiceImpl<RecruitDemandPlan, Rec
         dto.getSorts().add("completeRecruit=desc");
         checkSeeIdentity();
         search(dto);
-        List<RecruitDemandPlan> recruitDemandPlans = super.findByCis(dto);
+        List<RecruitDemandPlan> recruitDemandPlans = super.findByCis(dto,true);
         List<RecruitDemandPlanBO> recruitDemandPlanBOS = BeanTransform.copyProperties(recruitDemandPlans, RecruitDemandPlanBO.class);
         return recruitDemandPlanBOS;
     }

@@ -11,11 +11,17 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.projectprocing.api.HeadersCustomAPI;
+import com.bjike.goddess.projectprocing.api.NodeHeadersCustomAPI;
 import com.bjike.goddess.projectprocing.api.SettleProgressManageAPI;
 import com.bjike.goddess.projectprocing.api.SettleWorkProgreManageAPI;
 import com.bjike.goddess.projectprocing.bo.OptionBO;
 import com.bjike.goddess.projectprocing.bo.SettleProgressManageBO;
 import com.bjike.goddess.projectprocing.dto.SettleProgressManageDTO;
+import com.bjike.goddess.projectprocing.entity.HeadersCustom;
+import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
+import com.bjike.goddess.projectprocing.service.HeadersCustomSer;
+import com.bjike.goddess.projectprocing.service.NodeHeadersCustomSer;
 import com.bjike.goddess.projectprocing.to.*;
 import com.bjike.goddess.projectprocing.vo.*;
 import com.bjike.goddess.storage.api.FileAPI;
@@ -51,6 +57,10 @@ public class SettleProgressManageAction extends BaseFileAction {
     private BusinessContractAPI businessContractAPI;
     @Autowired
     private SettleWorkProgreManageAPI settleWorkProgreManageAPI;
+    @Autowired
+    private HeadersCustomAPI headersCustomAPI;
+    @Autowired
+    private NodeHeadersCustomAPI nodeHeadersCustomAPI;
     @Autowired
     private FileAPI fileAPI;
 
@@ -341,6 +351,38 @@ public class SettleProgressManageAction extends BaseFileAction {
         try {
             BusinessContractsBO businessContractsBO = businessContractAPI.findBySingleNum(contractNo);
             return ActResult.initialize(businessContractsBO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据对应的进度管理id获取对应自定义表头字段信息
+     *
+     * @return class HeadersCustomVO
+     * @version v1
+     */
+    @GetMapping("v1/headers/manageId")
+    public Result findHeaderByManage(@RequestParam String manageId, HttpServletRequest request) throws ActException {
+        try {
+            List<HeadersCustomVO> headersCustomVOList = BeanTransform.copyProperties(headersCustomAPI.getByManageId(manageId),HeadersCustomVO.class);
+            return ActResult.initialize(headersCustomVOList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据对应的进度管理id获取对应自定义节点表头字段信息
+     *
+     * @return class NodeHeadersCustomVO
+     * @version v1
+     */
+    @GetMapping("v1/nodeHeaders/manageId")
+    public Result findNodeHeaderByManage(@RequestParam String manageId, HttpServletRequest request) throws ActException {
+        try {
+            List<NodeHeadersCustomVO> nodeHeadersCustomVOList = BeanTransform.copyProperties(nodeHeadersCustomAPI.getByManageId(manageId),NodeHeadersCustomVO.class);
+            return ActResult.initialize(nodeHeadersCustomVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

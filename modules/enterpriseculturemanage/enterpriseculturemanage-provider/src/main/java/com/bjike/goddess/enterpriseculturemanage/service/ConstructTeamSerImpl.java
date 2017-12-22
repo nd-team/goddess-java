@@ -260,7 +260,7 @@ public class ConstructTeamSerImpl extends ServiceImpl<ConstructTeam, ConstructTe
         if (isUserNameExist(to)) {
             throw new SerException("该用户已存在!");
         }
-        ConstructTeam model = BeanTransform.copyProperties(to, ConstructTeam.class);
+        ConstructTeam model = BeanTransform.copyProperties(to, ConstructTeam.class,true);
         super.save(model);
         to.setId(model.getId());
         return BeanTransform.copyProperties(to, ConstructTeamBO.class);

@@ -19,6 +19,7 @@ import com.bjike.goddess.marketdevelopment.to.BusinessCourseTO;
 import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -48,8 +49,8 @@ import java.util.stream.Collectors;
 @Service
 public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessCourseDTO> implements BusinessCourseSer {
 
-    @Autowired
-    private BusinessTypeSer typeSer;
+    //    @Autowired
+//    private BusinessTypeSer typeSer;
     @Autowired
     private MarPermissionSer marPermissionSer;
     @Autowired
@@ -177,7 +178,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
     public void upload(List<BusinessCourseImportExcel> tos) throws SerException {
         List<BusinessCourseTO> businessCourseTOs = BeanTransform.copyProperties(tos, BusinessCourseTO.class);
         for (BusinessCourseTO to : businessCourseTOs) {
-            this.save(to);
+            save(to);
         }
     }
 
@@ -210,7 +211,7 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
             XSSFSheet sheet;
             sheet = wb.getSheetAt(0);
             //主表行数
-            int rowSize = list.size();
+            int rowSize = list.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList()).size();
 
 
             int index = 0;
@@ -234,9 +235,11 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
                             //1,5
                             sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
                         }
-
+                        index = ++lastRow;
                         os = new ByteArrayOutputStream();
                         wb.write(os);
+                    }else {
+                        index += 1;
                     }
                 }
             }
@@ -244,6 +247,41 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
             e.printStackTrace();
         }
         return os.toByteArray();
+    }
+
+    @Override
+    public List<String> findBusinessType() throws SerException {
+        List<BusinessCourse> businessCourses = super.findAll();
+        if (null != businessCourses && businessCourses.size() > 0) {
+            List<String> list = businessCourses.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> findSubject(String businessType) throws SerException {
+        if (StringUtils.isBlank(businessType)) {
+            return null;
+        }
+        BusinessCourseDTO businessCourseDTO = new BusinessCourseDTO();
+        businessCourseDTO.getConditions().add(Restrict.eq("businessType", businessType));
+        List<BusinessCourse> businessCourses = super.findByCis(businessCourseDTO);
+        if (null != businessCourses && businessCourses.size() > 0) {
+            List<String> list = businessCourses.stream().map(BusinessCourse::getCourse).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> findAllSubject() throws SerException {
+        List<BusinessCourse> list = super.findAll();
+        if(null != list && list.size() > 0){
+            List<String> stringList = list.stream().map(BusinessCourse::getCourse).distinct().collect(Collectors.toList());
+            return stringList;
+        }
+        return null;
     }
 
     /**
@@ -338,34 +376,42 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
             throw new SerException("目标数据不能为空");
         }
 
-        BeanTransform.copyProperties(to, entity);
-//        List<BusinessCourse> businessCourses3 = super.findAll();
-//        if (businessCourses3.size() == 1) {
-//            entity.setModifyTime(LocalDateTime.now());
-//            super.update(entity);
-//        } else {
-//            BusinessCourseDTO dto = new BusinessCourseDTO();
-//            dto.getConditions().add(Restrict.eq("businessType", entity.getBusinessType()));
-//            List<BusinessCourse> businessCourses = super.findByCis(dto);
-//            if (null != businessCourses && businessCourses.size() > 0) {
-//                businessNum = Integer.valueOf(businessCourses.get(0).getBusinessNum());
-//                List<BusinessCourse> businessCourses2 = businessCourses.stream().filter(obj -> entity.getCourse().equals(obj.getCourse())).distinct().collect(Collectors.toList());
-//                if (null != businessCourses2 && businessCourses2.size() > 0) {
-//                    subjectNum = Integer.valueOf(businessCourses2.get(0).getSubjectNum());
-//                } else {
-//                    subjectNum = businessCourses.size() + 1;
-//                }
-//            } else {
-//                List<BusinessCourse> businessCourses1 = super.findAll();
-//                List<String> stringList = businessCourses1.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
-//                businessNum = stringList.size() + 1;
-//                subjectNum = 1;
-//            }
-//            entity.setBusinessNum(String.valueOf(businessNum));
-//            entity.setSubjectNum(String.valueOf(businessNum) + "." + String.valueOf(subjectNum));
+        List<BusinessCourse> businessCourses3 = super.findAll();
+        if (businessCourses3.size() == 1) {
+            BeanTransform.copyProperties(to, entity);
             entity.setModifyTime(LocalDateTime.now());
             super.update(entity);
-//        }
+        } else {
+            BusinessCourseDTO dto = new BusinessCourseDTO();
+            dto.getConditions().add(Restrict.eq("businessType", to.getBusinessType()));
+            List<BusinessCourse> businessCourses = super.findByCis(dto);
+            if (null != businessCourses && businessCourses.size() > 0) {
+                businessNum = Integer.valueOf(businessCourses.get(0).getBusinessNum());
+                List<BusinessCourse> businessCourses2 = businessCourses.stream().filter(obj -> to.getCourse().equals(obj.getCourse())).distinct().collect(Collectors.toList());
+                if (null != businessCourses2 && businessCourses2.size() > 0) {
+                    throw new SerException("相同的业务方向分类不能有两个相同的业务方向科目");
+//                    subjectNum = Integer.valueOf(businessCourses2.get(0).getSubjectNum());
+                } else {
+                    //修改前后的业务方向类型是否相同
+                    //相同不修改科目编号
+                    if (entity.getBusinessType().equals(to.getBusinessType())) {
+                        subjectNum = Integer.valueOf(entity.getSubjectNum().substring(entity.getSubjectNum().indexOf(".") + 1, entity.getSubjectNum().length()));
+                    } else {
+                        subjectNum = businessCourses.size() + 1;
+                    }
+                }
+            } else {
+                List<BusinessCourse> businessCourses1 = super.findAll();
+                List<String> stringList = businessCourses1.stream().map(BusinessCourse::getBusinessType).distinct().collect(Collectors.toList());
+                businessNum = stringList.size() + 1;
+                subjectNum = 1;
+            }
+            BeanTransform.copyProperties(to, entity);
+            entity.setBusinessNum(String.valueOf(businessNum));
+            entity.setSubjectNum(String.valueOf(businessNum) + "." + String.valueOf(subjectNum));
+            entity.setModifyTime(LocalDateTime.now());
+            super.update(entity);
+        }
         return this.transformBO(entity);
     }
 
@@ -402,12 +448,43 @@ public class BusinessCourseSerImpl extends ServiceImpl<BusinessCourse, BusinessC
 //        if (!marPermissionSer.getMarPermission(marketManage))
 //            throw new SerException("您的帐号没有权限");
         BusinessCourse entity = super.findById(to.getId());
-        if (entity == null)
+        if (entity == null) {
             throw new SerException("数据对象不能为空");
-        try {
-            super.remove(entity);
-        } catch (SerException e) {
-            throw new SerException("存在依赖关系无法删除");
+        }
+        super.remove(entity);
+
+        BusinessCourseDTO dto = new BusinessCourseDTO();
+        dto.getConditions().add(Restrict.eq("businessType", entity.getBusinessType()));
+        List<BusinessCourse> businessCourses = super.findByCis(dto);
+        if (null != businessCourses && businessCourses.size() > 0) {
+            List<BusinessCourse> businessCourses1 = businessCourses.stream().filter(obj ->
+                    Integer.valueOf(
+                            obj.getSubjectNum().substring(
+                                    obj.getSubjectNum().indexOf(".") + 1,
+                                    obj.getSubjectNum().length())) >
+                            Integer.valueOf(
+                                    entity.getSubjectNum().substring(
+                                            entity.getSubjectNum().indexOf(".") + 1,
+                                            entity.getSubjectNum().length())))
+                    .collect(Collectors.toList());
+            if (null != businessCourses1 && businessCourses1.size() > 0) {
+                for (BusinessCourse businessCourse : businessCourses) {
+                    String sub = businessCourse.getSubjectNum();
+                    int subNum = Integer.valueOf(sub.substring(sub.indexOf(".") + 1, sub.length())) - 1;
+                    businessCourse.setSubjectNum(sub.substring(0, sub.indexOf(".")) + "." + subNum);
+                    super.update(businessCourse);
+                }
+            }
+        } else {
+            List<BusinessCourse> businessCourseList = super.findAll();
+            List<BusinessCourse> businessCourses1 = businessCourseList.stream().filter(obj -> Integer.valueOf(obj.getBusinessNum()) > Integer.valueOf(entity.getBusinessNum())).collect(Collectors.toList());
+            if (null != businessCourses1 && businessCourses1.size() > 0) {
+                for (BusinessCourse businessCourse : businessCourses1) {
+                    businessCourse.setBusinessNum(String.valueOf(Integer.valueOf(businessCourse.getBusinessNum()) - 1));
+                    businessCourse.setSubjectNum(businessCourse.getBusinessNum() + "." + businessCourse.getSubjectNum().substring(businessCourse.getSubjectNum().indexOf(".") + 1, businessCourse.getSubjectNum().length()));
+                    super.update(businessCourse);
+                }
+            }
         }
         return this.transformBO(entity);
     }

@@ -23,7 +23,6 @@ import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.to.AssetTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.vo.*;
-import com.bjike.goddess.subjectcollect.api.SubjectCollectAPI;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -52,8 +51,8 @@ public class AssetAct extends BaseFileAction {
     private AssetAPI assetAPI;
     @Autowired
     private FormulaAPI formulaAPI;
-    @Autowired
-    private SubjectCollectAPI subjectCollectAPI;
+//    @Autowired
+//    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired

@@ -1,5 +1,7 @@
 package com.bjike.goddess.marketdevelopment.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 月份类型
  *
@@ -13,50 +15,62 @@ public enum MonthType {
     /**
      * 一月
      */
+    @ExcelValue(name = "一月")
     JAN(1),
     /**
      * 二月
      */
+    @ExcelValue(name = "二月")
     FEB(2),
     /**
      * 三月
      */
+    @ExcelValue(name = "三月")
     MAR(3),
     /**
      * 四月
      */
+    @ExcelValue(name = "四月")
     APR(4),
     /**
      * 五月
      */
+    @ExcelValue(name = "五月")
     MAY(5),
     /**
      * 六月
      */
+    @ExcelValue(name = "六月")
     JUN(6),
     /**
      * 七月
      */
+    @ExcelValue(name = "七月")
     JUL(7),
     /**
      * 八月
      */
+    @ExcelValue(name = "八月")
     AUG(8),
     /**
      * 九月
      */
+    @ExcelValue(name = "九月")
     SEP(9),
     /**
      * 十月
      */
+    @ExcelValue(name = "十月")
     OCT(10),
     /**
      * 十一月
      */
+    @ExcelValue(name = "十一月")
     NOV(11),
     /**
      * 十二月
      */
+    @ExcelValue(name = "十二月")
     DEC(12);
 
     private int code;

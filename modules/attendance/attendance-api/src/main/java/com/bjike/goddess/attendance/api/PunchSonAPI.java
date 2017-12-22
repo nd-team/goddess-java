@@ -125,4 +125,11 @@ public interface PunchSonAPI {
     default void upload(List<PunchImportExcel> tos) throws SerException {
         return;
     }
+    /**
+     * 当前用户迟到总条数
+     *
+     * @return
+     * @throws SerException
+     */
+    Long currentUserLateCount() throws SerException;
 }

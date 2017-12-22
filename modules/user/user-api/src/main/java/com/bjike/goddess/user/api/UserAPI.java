@@ -266,6 +266,17 @@ public interface UserAPI {
     }
 
     /**
+     * 移动端获取下一个员工编号(个人注册的下一个编号)
+     * lijuntao
+     *
+     * @param empNum 企业人(邀请人编号)
+     * @throws SerException
+     */
+    default String nextEmpNumber(String empNum) throws SerException {
+        return null;
+    }
+
+    /**
      * chenjunhao
      * 通过用户id查找用户名
      *

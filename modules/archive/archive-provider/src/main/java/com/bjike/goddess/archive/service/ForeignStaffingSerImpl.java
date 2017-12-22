@@ -15,6 +15,7 @@ import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -221,7 +222,7 @@ public class ForeignStaffingSerImpl extends ServiceImpl<ForeignStaffing, Foreign
         ForeignStaffing entity = super.findById(to.getId());
         if (null == entity)
             throw new SerException("数据对象不能为空");
-        BeanTransform.copyProperties(to, entity, true);
+        BeanUtils.copyProperties(to, entity,"status");
         entity.setModifyTime(LocalDateTime.now());
         entity.setType(foreignStaffingSetSer.findById(to.getTypeId()));
         if (null == entity.getType())

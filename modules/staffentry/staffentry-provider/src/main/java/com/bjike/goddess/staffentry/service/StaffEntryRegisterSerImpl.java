@@ -412,7 +412,10 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
 
     @Override
     public String maxEmpNumber() throws SerException {
-        String empNumber = userAPI.maxUserEmpNumber();
+        String userTocken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userTocken);
+        String empNumber = userAPI.nextEmpNumber(userBO.getEmployeeNumber());
         return empNumber;
 //        if(moduleAPI.isCheck("organize")){
 //            List<UserBO> userBOList = positionDetailUserAPI.findUserListInOrgan();
@@ -539,9 +542,9 @@ public class StaffEntryRegisterSerImpl extends ServiceImpl<StaffEntryRegister, S
             UserDTO userDTO = new UserDTO();
             userDTO.getConditions().add(Restrict.eq("id", staffEntryRegister.getUserId()));
             UserBO userBO = userAPI.findOne(userDTO);
-            sb.append((userBO.getUsername() != null ? userBO.getUsername() : " ") + " " + (staffEntryRegister.getContactNum() != null ? staffEntryRegister.getContactNum() : " ") + " " + (staffEntryRegister.getEntryDate() != null ? staffEntryRegister.getEntryDate() : " ") + " " + checkBool(staffEntryRegister.getLodge()) + "住宿 ");
+            sb.append((userBO != null ? userBO.getUsername() : " ") + " " + (staffEntryRegister.getContactNum() != null ? staffEntryRegister.getContactNum() : " ") + " " + (staffEntryRegister.getEntryDate() != null ? staffEntryRegister.getEntryDate() : " ") + " " + checkBool(staffEntryRegister.getLodge()) + "住宿 ");
             sb.append(checkBool(staffEntryRegister.getUseCompanyComputer()) + "使用公司电脑 " + (staffEntryRegister.getEntryAddress() != null ? staffEntryRegister.getEntryAddress() : " ") + " " + (staffEntryRegister.getDepartment() != null ? staffEntryRegister.getDepartment() : " ") + " ");
-            sb.append((userBO.getEmployeeNumber() != null ? userBO.getEmployeeNumber() : " ") + " " + (staffEntryRegister.getPosition() != null ? staffEntryRegister.getPosition() : " ") + " " + (staffEntryRegister.getWorkEmail() != null ? staffEntryRegister.getWorkEmail() : " ") + ";  ");
+            sb.append((userBO != null ? userBO.getEmployeeNumber() : " ") + " " + (staffEntryRegister.getPosition() != null ? staffEntryRegister.getPosition() : " ") + " " + (staffEntryRegister.getWorkEmail() != null ? staffEntryRegister.getWorkEmail() : " ") + ";  ");
         }
         return sb.toString();
     }

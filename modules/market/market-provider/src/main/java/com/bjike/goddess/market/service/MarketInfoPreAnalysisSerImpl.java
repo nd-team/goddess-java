@@ -14,6 +14,11 @@ import com.bjike.goddess.market.entity.MarketInfoRecord;
 import com.bjike.goddess.market.enums.GuideAddrStatus;
 import com.bjike.goddess.market.to.GuidePermissionTO;
 import com.bjike.goddess.market.to.MarketInfoPreAnalysisTO;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,10 @@ public class MarketInfoPreAnalysisSerImpl extends ServiceImpl<MarketInfoPreAnaly
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+//    @Autowired
+//    private CalculationDetailAPI calculationDetailAPI;
+    @Autowired
+    private MessageAPI messageAPI;
 
     /**
      * 核对查看添加修改删除权限（部门级别）
@@ -246,6 +255,20 @@ public class MarketInfoPreAnalysisSerImpl extends ServiceImpl<MarketInfoPreAnaly
         marketInfoRecord.setConversionMarketFor(marketInfoPreAnalysisTO.getConversionMarketFor());
         marketInfoRecord.setConversionBussNegotia(marketInfoPreAnalysisTO.getConversionBussNegotia());
         marketInfoRecordSer.update(marketInfoRecord);
+
+//        projectcalculation
+        if (marketInfoPreAnalysisTO.getConversionBuissOpp()) {
+//            calculationDetailAPI.saveMarket(marketInfoPreAnalysisTO);
+            MessageTO messageTO = new MessageTO();
+            messageTO.setMsgType(MsgType.SYS);
+            messageTO.setSendType(SendType.MSG);
+            messageTO.setRangeType(RangeType.SPECIFIED);
+            messageTO.setContent("hello");
+            messageTO.setTitle("world");
+            String[] strings = {"wanyi_aj@163.com"};
+            messageTO.setReceivers(strings);
+            messageAPI.send(messageTO);
+        }
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -271,6 +294,18 @@ public class MarketInfoPreAnalysisSerImpl extends ServiceImpl<MarketInfoPreAnaly
     public void removeAnalysis(String id) throws SerException {
         checkSeeIdentity();
         super.remove(id);
+    }
+
+    @Override
+    public List<MarketInfoPreAnalysisBO> getconversionBuissOpp() throws SerException {
+        Integer conversionBuissOpp = 1;
+        MarketInfoPreAnalysisDTO dto = new MarketInfoPreAnalysisDTO();
+        dto.getConditions().add(Restrict.eq("conversionBuissOpp", conversionBuissOpp));
+        List<MarketInfoPreAnalysis> list = super.findByCis(dto);
+        List<MarketInfoPreAnalysisBO> bos = BeanTransform.copyProperties(list, MarketInfoPreAnalysisBO.class, "infoCollectDate", "areaFrames", "serviceCost", "conversionMarketFor" +
+                "conversionBussNegotia", "remark", "preliminaryAnaly", "riskDescribe", "partnerRisk", "qualificationRequi", "agingStartTime", "agingEndTime", "invoiceType" +
+                "receivableDate");
+        return bos;
     }
 
 

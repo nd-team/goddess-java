@@ -19,10 +19,7 @@ import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.PositionWorkDetailsDTO;
 import com.bjike.goddess.organize.excel.PositionWorkDetailsImport2;
 import com.bjike.goddess.organize.to.PositionWorkDetailsTO;
-import com.bjike.goddess.organize.vo.ActResultOrgan;
-import com.bjike.goddess.organize.vo.ManagerVO;
-import com.bjike.goddess.organize.vo.OptionVO;
-import com.bjike.goddess.organize.vo.PositionWorkDetailsVO;
+import com.bjike.goddess.organize.vo.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -476,6 +473,22 @@ public class PositionWorkDetailsAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 组织结构首页图形化
+     *
+     * @version v1
+     */
+    @GetMapping("v1/figureShow")
+    public Result figureShow() throws ActException {
+        try {
+            OptionAnnularBO bo = positionWorkDetailsAPI.figureShow();
+            return ActResult.initialize(BeanTransform.copyProperties(bo, OptionAnnularVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 
     /**
      * 导出excel

@@ -294,17 +294,17 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 审核记账凭证
      *
-     * @param id 记账凭证基本信息数据id
+     * @param voucherGenerateTO 记账凭证基本信息数据
      * @return class VoucherGenerateVO
      * @des 审核记账凭证
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/audit/{id}")
-    public Result audit(@PathVariable String id) throws ActException {
+    @PutMapping("v1/audit")
+    public Result audit(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.audit ( id );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            voucherGenerateAPI.audit ( voucherGenerateTO );
+            return new ActResult ("audit success" );
         } catch (SerException e) {
             throw new ActException ( e.getMessage () );
         }
@@ -388,17 +388,16 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 反审核
      *
-     * @param id 记账凭证基本信息数据id
-     * @return class VoucherGenerateVO
+     * @param voucherGenerateTO 记账凭证基本信息数据
      * @des 反审核
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/antiAudit/{id}")
-    public Result antiAudit(@PathVariable String id) throws ActException {
+    @PutMapping("v1/antiAudit")
+    public Result antiAudit(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiAudit ( id );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            voucherGenerateAPI.antiAudit ( voucherGenerateTO );
+            return new ActResult("antiAudit success");
         } catch (SerException e) {
             throw new ActException ( e.getMessage () );
         }
@@ -672,17 +671,17 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 反结账
      *
-     * @param ids 记账凭证基本信息数据id
+     * @param voucherGenerateTO 记账凭证基本信息数据
      * @return class VoucherGenerateVO
      * @des 反结账
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/antiCheckAccount")
-    public Result antiCheckAccount(@RequestParam String[] ids) throws ActException {
+    public Result antiCheckAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.antiCheckAccount ( ids );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBOs, VoucherGenerateVO.class, true ) );
+            voucherGenerateAPI.antiCheckAccount ( voucherGenerateTO );
+            return new  ActResult( "antiCheckAccount success" );
         } catch (SerException e) {
             throw new ActException ( e.getMessage () );
         }

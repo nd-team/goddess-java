@@ -6,6 +6,7 @@ import com.bjike.goddess.marketdevelopment.dto.CustomerDTO;
 import com.bjike.goddess.marketdevelopment.excel.CustomerImportExcel;
 import com.bjike.goddess.marketdevelopment.service.CustomerSer;
 import com.bjike.goddess.marketdevelopment.to.CustomerTO;
+import com.bjike.goddess.marketdevelopment.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,5 +84,15 @@ public class CustomerApiImpl implements CustomerAPI  {
     @Override
     public void upload(List<CustomerImportExcel> tos) throws SerException {
         customerSer.upload(tos);
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return customerSer.guidePermission(guidePermissionTO);
+    }
+
+    @Override
+    public List<String> findStage() throws SerException {
+        return customerSer.findStage();
     }
 }

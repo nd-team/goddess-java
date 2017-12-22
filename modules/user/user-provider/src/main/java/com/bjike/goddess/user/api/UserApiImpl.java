@@ -146,6 +146,11 @@ public class UserApiImpl implements UserAPI  {
     }
 
     @Override
+    public String nextEmpNumber(String empNum) throws SerException {
+        return userSer.nextEmpNumber(empNum);
+    }
+
+    @Override
     public String findNameById(String id) throws SerException {
         return userSer.findNameById(id);
     }

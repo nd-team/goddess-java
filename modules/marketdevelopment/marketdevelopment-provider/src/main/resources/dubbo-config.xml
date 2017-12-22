@@ -20,20 +20,39 @@
     <!--发布接口,供其他模块调用-->
     <!--另外注意命名,UserAPI为例,UserAPI是业务接口,则userSer是实现类@Service("userSer") 里注解的名字-->
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" ref="businessCourseApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" ref="businessTypeApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.DemandAnalysisAPI" ref="demandAnalysisApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketChannelAPI" ref="marketChannelApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI" ref="marketMeasureApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketResearchAPI" ref="marketResearchApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthPlanAPI" ref="monthPlanApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.TargetInformationAPI"
-                   ref="targetInformationApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.WeekPlanAPI" ref="weekPlanApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.YearPlanAPI" ref="yearPlanApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.DayPlanAPI" ref="dayPlanApiImpl"/>
     <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarPermissionAPI" ref="marPermissionApiImpl"/>
-    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarPermissionOperateAPI"
-                   ref="marPermissionOperateApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarPermissionOperateAPI" ref="marPermissionOperateApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.BusinessAPI" ref="businessApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.BusinessDataAPI" ref="businessDataApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.CustomerAPI" ref="customerApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.CycleAPI" ref="cycleApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.DateDataAPI" ref="dateDataApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.FilesDataAPI" ref="filesDataApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.FilesDataTotalAPI" ref="filesDataTotalApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthMoneyAPI" ref="monthMoneyApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthSubjectAPI" ref="monthSubjectApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthSubjectAreaAPI" ref="monthSubjectAreaApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthSubjectProvincialAPI" ref="monthSubjectProvincialApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.OutBillAPI" ref="outBillApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.PlanDayAPI" ref="planDayApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.PlanYearAPI" ref="planYearApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.PlanYearBusinessAPI" ref="planYearBusinessApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.PlanYearSubjectAPI" ref="planYearSubjectApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.PlanYearTypeAPI" ref="planYearTypeApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.SubjectDataAPI" ref="subjectDataApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.WeekCycleAPI" ref="weekCycleApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.WeekFilesAPI" ref="weekFilesApiImpl"/>
+    <dubbo:service interface="com.bjike.goddess.marketdevelopment.api.WeekTotalAPI" ref="weekTotalApiImpl"/>
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" ref="businessTypeApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.DemandAnalysisAPI" ref="demandAnalysisApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketChannelAPI" ref="marketChannelApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketMeasureAPI" ref="marketMeasureApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MarketResearchAPI" ref="marketResearchApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.MonthPlanAPI" ref="monthPlanApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.TargetInformationAPI" ref="targetInformationApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.WeekPlanAPI" ref="weekPlanApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.YearPlanAPI" ref="yearPlanApiImpl"/>-->
+    <!--<dubbo:service interface="com.bjike.goddess.marketdevelopment.api.DayPlanAPI" ref="dayPlanApiImpl"/>-->
 
     <!--以下配置为(上面的依赖注入接口所依赖的),如上面的 UserAPI的某个业务注入了UserLoginAPI 册需要配置该关系.
     否则不需要配置-->
@@ -50,8 +69,8 @@
                      interface="com.bjike.goddess.organize.api.PositionDetailUserAPI"/>
     <dubbo:reference validation="true" id="moduleApiImpl"
                      interface="com.bjike.goddess.assemble.api.ModuleAPI"/>
-    <dubbo:reference validation="true" id="problemAcceptApiImpl"
-                     interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI"/>
+    <!--<dubbo:reference validation="true" id="problemAcceptApiImpl"-->
+                     <!--interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI"/>-->
 
 
 </beans>

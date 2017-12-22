@@ -14,17 +14,17 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
 public enum TaskContract {
 
     /**
-     * 预立项
+     * 未派工
      */
     @ExcelValue(name = "未派工")
     NOTASK(0),
     /**
-     * 立项
+     * 已派工
      */
     @ExcelValue(name = "已派工")
     HADTASK(1),
     /**
-     * 不立项
+     * 不派工
      */
     @ExcelValue(name = "不派工")
     NOTTASK(2),;

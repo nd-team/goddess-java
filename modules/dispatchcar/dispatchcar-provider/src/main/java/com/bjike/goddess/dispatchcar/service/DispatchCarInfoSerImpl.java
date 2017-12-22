@@ -112,7 +112,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -125,30 +125,36 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
 
+        Boolean flag1 = false;
+        Boolean flag2 = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag1 = cusPermissionSer.getCusPermission("1",userBO);
+            flag2 = cusPermissionSer.getCusPermission("2",userBO);
+        } else {
+            flag1 = true;
+            flag2 = true;
+        }
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("driverInfo");
         obj.setDescribesion("出车记录管理");
-        if (flagSeeSign || flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagStandard = checkChangeCarSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("checkChangecar");
         obj.setDescribesion("核对出车修改记录设置");
-        if (flagStandard) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -158,7 +164,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         obj = new SonPermissionObject();
         obj.setName("collect");
         obj.setDescribesion("汇总");
-        if (flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -168,7 +174,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         obj = new SonPermissionObject();
         obj.setName("dispatchcarWrong");
         obj.setDescribesion("出车有误记录");
-        if (flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -178,7 +184,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         obj = new SonPermissionObject();
         obj.setName("financeAudit");
         obj.setDescribesion("财务核对");
-        if (flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -188,7 +194,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         obj = new SonPermissionObject();
         obj.setName("payed");
         obj.setDescribesion("已付款记录");
-        if (flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -198,7 +204,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         obj = new SonPermissionObject();
         obj.setName("waitAudit");
         obj.setDescribesion("等待审核");
-        if (flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -208,20 +214,17 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         obj = new SonPermissionObject();
         obj.setName("waitPay");
         obj.setDescribesion("等待支付");
-        if (flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagDispatchcar = dispatchcarRecordCollectSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("dispatchcarRecordCollect");
         obj.setDescribesion("出车记录汇总");
-        if (flagDispatchcar) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -1249,7 +1252,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -1266,7 +1269,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -1284,7 +1287,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -1301,7 +1304,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }

@@ -7,7 +7,9 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.NodeHeadersCustomDTO;
+import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
+import com.bjike.goddess.projectprocing.entity.SettleWorkProgreManage;
 import com.bjike.goddess.projectprocing.enums.GuideAddrStatus;
 import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.NodeHeadersCustomTO;
@@ -39,6 +41,8 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private SettleWorkProgreManageSer settleWorkProgreManageSer;
 
     /**
      * 检查权限(部门)
@@ -123,20 +127,23 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
 
     @Override
     public Long countNode(NodeHeadersCustomDTO nodeHeadersCustomDTO) throws SerException {
+        nodeHeadersCustomDTO.getConditions().add(Restrict.isNull("prossManageId"));
         Long count = super.count(nodeHeadersCustomDTO);
         return count;
     }
 
     @Override
     public NodeHeadersCustomBO getOneById(String id) throws SerException {
+
         NodeHeadersCustom nodeHeadersCustom = super.findById(id);
         return BeanTransform.copyProperties(nodeHeadersCustom, NodeHeadersCustomBO.class);
     }
 
     @Override
     public List<NodeHeadersCustomBO> listNode(NodeHeadersCustomDTO nodeHeadersCustomDTO) throws SerException {
-       checkPermission();
-        List<NodeHeadersCustom> nodeHeadersCustomList = super.findByCis(nodeHeadersCustomDTO);
+        checkPermission();
+        nodeHeadersCustomDTO.getConditions().add(Restrict.isNull("prossManageId"));
+        List<NodeHeadersCustom> nodeHeadersCustomList = super.findByCis(nodeHeadersCustomDTO, true);
         return BeanTransform.copyProperties(nodeHeadersCustomList, NodeHeadersCustomBO.class);
     }
 
@@ -153,7 +160,7 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     @Transactional(rollbackFor = SerException.class)
     @Override
     public NodeHeadersCustomBO editNode(NodeHeadersCustomTO nodeHeadersCustomTO) throws SerException {
-       checkPermission();
+        checkPermission();
         NodeHeadersCustom nodeHeadersCustom = super.findById(nodeHeadersCustomTO.getId());
         LocalDateTime dateTime = nodeHeadersCustom.getCreateTime();
         nodeHeadersCustom = BeanTransform.copyProperties(nodeHeadersCustomTO, NodeHeadersCustom.class);
@@ -166,7 +173,22 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void deleteNode(String id) throws SerException {
-       checkPermission();
+        checkPermission();
+        //查询到本条数据对应的内容数据
+        NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("fatherId",id));
+        List<NodeHeadersCustom> nodeHeadersCustomList = super.findByCis(nodeHeadersCustomDTO);
+        //删除时也要将内容数据分配节点出去的删除掉
+        if(nodeHeadersCustomList!=null && nodeHeadersCustomList.size()>0){
+            for (NodeHeadersCustom nodeHeadersCustom: nodeHeadersCustomList){
+                SettleWorkProgreManageDTO settleWorkProgreManageDTO = new SettleWorkProgreManageDTO();
+                settleWorkProgreManageDTO.getConditions().add(Restrict.eq("nodeId",nodeHeadersCustom.getId()));
+                List<SettleWorkProgreManage> settleWorkProgreManages = settleWorkProgreManageSer.findByCis(settleWorkProgreManageDTO);
+                settleWorkProgreManageSer.remove(settleWorkProgreManages);
+            }
+        }
+
+        super.remove(nodeHeadersCustomList);
         super.remove(id);
     }
 
@@ -184,8 +206,8 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
         nodeHeadersCustomDTO.getConditions().add(Restrict.eq("prossManageId", passManageId));
         List<NodeHeadersCustom> nodeHeadersCustoms = super.findByCis(nodeHeadersCustomDTO);
-        if(nodeHeadersCustoms!=null && nodeHeadersCustoms.size()>0){
-            for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustoms){
+        if (nodeHeadersCustoms != null && nodeHeadersCustoms.size() > 0) {
+            for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustoms) {
                 NodeHeadersCustom nodeHeadersCustom1 = super.findById(nodeHeadersCustom.getFatherId());
                 nodeHeadersCustom.setNodeOneName(nodeHeadersCustom1.getNodeOneName());
                 nodeHeadersCustom.setNodeOneHeader(nodeHeadersCustom1.getNodeOneHeader());
@@ -215,14 +237,14 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         nodeHeadersCustomDTO.getConditions().add(Restrict.isNotNull("prossManageId"));
         List<NodeHeadersCustom> nodeHeadersCustomList = super.findByCis(nodeHeadersCustomDTO);
         if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
-            for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustomList){
-                if(nodeHeadersCustom.getNodeTwoContent()== LocalDate.now()){
+            for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustomList) {
+                if (nodeHeadersCustom.getNodeTwoContent() == LocalDate.now()) {
                     nodeHeadersCustom.setNodeOneNameContent(2);
                 }
-                if(nodeHeadersCustom.getNodeThreeContent()== LocalDate.now()){
+                if (nodeHeadersCustom.getNodeThreeContent() == LocalDate.now()) {
                     nodeHeadersCustom.setNodeOneNameContent(3);
                 }
-                if(nodeHeadersCustom.getNodeFourContent()== LocalDate.now()){
+                if (nodeHeadersCustom.getNodeFourContent() == LocalDate.now()) {
                     nodeHeadersCustom.setNodeOneNameContent(4);
                 }
             }
@@ -232,8 +254,8 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     @Override
     public NodeHeadersCustomBO getByFatherId(String fatherId) throws SerException {
         NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
-        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("id",fatherId));
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("id", fatherId));
         NodeHeadersCustom nodeHeadersCustom = super.findOne(nodeHeadersCustomDTO);
-        return BeanTransform.copyProperties(nodeHeadersCustom,NodeHeadersCustomBO.class);
+        return BeanTransform.copyProperties(nodeHeadersCustom, NodeHeadersCustomBO.class);
     }
 }
