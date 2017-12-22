@@ -231,7 +231,7 @@ public class OutsourcBusinessContractAction extends BaseFileAction {
             List<OutsourcBusinessContractTO> tocs = new ArrayList<>();
             for (OutsourcBusinessContractExcel str : tos) {
                 OutsourcBusinessContractTO contractTO = BeanTransform.copyProperties(str, OutsourcBusinessContractTO.class,
-                        "measurePass", "taskContract", "cooperation", "complete",
+                        "measurePass", "cooperation", "complete",
                         "qualifiedGist", "accept", "acceptorPass", "account", "pay", "closedLoop");
 //              //测算是否通过
                 if (str.getMeasurePass().equals("是")) {
@@ -240,17 +240,17 @@ public class OutsourcBusinessContractAction extends BaseFileAction {
                     contractTO.setMeasurePass(false);
                 }
                 //是否有合同派工
-                if (str.getTaskContract().equals("是")) {
-                    contractTO.setTaskContract(true);
-                } else {
-                    contractTO.setTaskContract(false);
-                }
+//                if (str.getTaskContract().equals("是")) {
+//                    contractTO.setTaskContract(true);
+//                } else {
+//                    contractTO.setTaskContract(false);
+//                }
                 //是否有合同立项
-                if (contractTO.getMakeContract().equals("是")) {
+//                if (contractTO.getMakeContract().equals("是")) {
 //                    contractTO.setMakeContract(true);
-                } else {
+//                } else {
 //                    contractTO.setMakeContract(false);
-                }
+//                }
                 //是否确定合作
                 if (str.getCooperation().equals("是")) {
                     contractTO.setCooperation(true);
@@ -317,9 +317,9 @@ public class OutsourcBusinessContractAction extends BaseFileAction {
      * @des 导出外包半外包项目合同管理
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport(@Validated(OutsourcBusinessContractDTO.export.class) OutsourcBusinessContractDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
+    public Result exportReport(OutsourcBusinessContractDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
         try {
             String fileName = "外包半外包项目合同管理.xlsx";
             super.writeOutFile(response, outsourcBusinessContractAPI.exportExcel(dto), fileName);
