@@ -60,9 +60,8 @@ public class SocialInsuranceSerImpl extends ServiceImpl<SocialInsurance, SocialI
             throw new SerException("更新实体不存在");
         }
         SocialInsurance newEntity = BeanTransform.copyProperties(to, SocialInsurance.class);
-        LocalDateTime createTime = LocalDateTime.from(LocalDate.from(entity.getCreateTime()));
         newEntity.setModifyTime(LocalDateTime.now());
-        newEntity.setCreateTime(createTime);
+        newEntity.setCreateTime(entity.getCreateTime());
         super.update(newEntity);
     }
 
