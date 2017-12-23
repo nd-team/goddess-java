@@ -254,7 +254,7 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
      * 计划跟进时间
      */
     @ExcelHeader(name = "计划跟进时间")
-    private String planFollowUp;
+    private LocalDate planFollowUp;
 
     /**
      * 是否产生路费
@@ -581,11 +581,11 @@ public class BusinessNegotiationTemplateExcel extends BaseBO {
         this.assistLetterNum = assistLetterNum;
     }
 
-    public String getPlanFollowUp() {
+    public LocalDate getPlanFollowUp() {
         return planFollowUp;
     }
 
-    public void setPlanFollowUp(String planFollowUp) {
+    public void setPlanFollowUp(LocalDate planFollowUp) {
         this.planFollowUp = planFollowUp;
     }
 

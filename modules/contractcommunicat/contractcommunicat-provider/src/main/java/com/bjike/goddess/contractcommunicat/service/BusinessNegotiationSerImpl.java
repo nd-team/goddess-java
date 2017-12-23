@@ -8,6 +8,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.bo.BusinessNegotiationBO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
 import com.bjike.goddess.contractcommunicat.entity.BusinessNegotiation;
+import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationExport;
 import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationTemplateExcel;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
@@ -114,7 +115,15 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
 
     @Override
     public byte[] exportExcel(BusinessNegotiationDTO dto) throws SerException {
-        return new byte[0];
+        List<BusinessNegotiationExport> exports = new ArrayList<>();
+        List<BusinessNegotiation> list = super.findByCis(dto);
+        list.stream().forEach(str->{
+            BusinessNegotiationExport export = BeanTransform.copyProperties(str,BusinessNegotiationExport.class);
+            exports.add(export);
+        });
+        Excel excel = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports,excel);
+        return bytes;
     }
 
     @Override
@@ -151,6 +160,16 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
         templateExcel.setHasProject("是");
         templateExcel.setMarketCost("是");
         templateExcel.setMarketFor("是");
+        templateExcel.setContinueFollowUp("是");
+        templateExcel.setClosedLoop("是");
+        templateExcel.setNeedAssist("是");
+        templateExcel.setAssistDept("test");
+        templateExcel.setAssistContent("test");
+        templateExcel.setAssistLetter("是");
+        templateExcel.setAssistLetterNum("test");
+        templateExcel.setPlanFollowUp(LocalDate.now());
+        templateExcel.setProduceTrip("是");
+        templateExcel.setTrip(0d);
 
         templateExcels.add(templateExcel);
         Excel excel = new Excel(0,2);

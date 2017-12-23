@@ -111,11 +111,11 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         }
 
         SendType sendType = messageTO.getSendType();
-
+        messageTO.setReceivers(receiversEmail);
         switch (sendType) {
             case EMAIL:
                 messageTO.setReceivers(receiversEmail);
-                kafkaProducer.produce(messageTO);
+//                kafkaProducer.produce(messageTO);
                 log.info("读取消息。。。。。。。。。。1");
                 break;
             case MSG:
@@ -123,7 +123,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
             case ALL:
                 saveMsgToRedis(messageTO, message.getId(), receivers);//保存到redis
                 messageTO.setReceivers(receiversEmail);
-                kafkaProducer.produce(messageTO);
+//                kafkaProducer.produce(messageTO);
                 log.info("读取消息。。。。。。。。。。2");
                 break;
         }
@@ -137,7 +137,6 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
 
     @Override
     public List<MessageBO> list(MessageDTO dto) throws SerException {
-        log.info("读取消息。。。。。。。。。。。");
         UserDetailBO detailBO = userDetailAPI.findByUserId(dto.getUserId());
         String groupId = "-1";
         if (null != detailBO) {
@@ -154,7 +153,7 @@ public class MessageImpl extends ServiceImpl<Message, MessageDTO> implements Mes
         if (null != dto.getMsgType()) {
             sb.append(" where msgType=" + dto.getMsgType().getCode());
         }
-        sb.append(" order by createTime desc limit "+start+","+dto.getLimit());
+        sb.append(" order by createTime desc limit " + start + "," + dto.getLimit());
         String sql = sb.toString();
         sql = String.format(sql, groupId, dto.getUserId());
         String[] fields = new String[]{"id", "createTime", "modifyTime", "title", "content", "senderId", "senderName"};

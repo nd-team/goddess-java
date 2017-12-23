@@ -165,4 +165,9 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
         return departmentDetailSer.peopleByDepartment();
     }
+
+    @Override
+    public List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
+        return departmentDetailSer.departmentByName(name);
+    }
 }

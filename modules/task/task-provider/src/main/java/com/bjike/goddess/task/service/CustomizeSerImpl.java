@@ -596,7 +596,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     public Double get(String[] tableIds) throws SerException {
         String tableId = "'" + StringUtils.join(tableIds, "','") + "'";
         String sql = "SELECT count(*) count,taskStatus " +
-                "FROM taskallotment_tasknode " +
+                "FROM goddess_taskallotment.taskallotment_tasknode " +
                 "WHERE table_id IN (" + tableId + ")" +
                 "      AND taskStatus=0 group by taskStatus";
         List<Object> objects = super.findBySql(sql);
