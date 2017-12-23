@@ -1,16 +1,15 @@
 package com.bjike.goddess.lendreimbursement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
-import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDatasBO;
+import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
-import com.bjike.goddess.lendreimbursement.excel.lendreimimport.LendReimImportExcelTO;
 import com.bjike.goddess.lendreimbursement.service.ApplyLendSer;
 import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
@@ -82,7 +81,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public List<LendAuditDetailBO> getLendAuditDetailByApplyLendId(String applyLendId) throws SerException {
-        return applyLendSer.getLendAuditDetailByApplyLendId( applyLendId );
+        return applyLendSer.getLendAuditDetailByApplyLendId(applyLendId);
     }
 
     @Override
@@ -202,7 +201,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public Long countBorrowRecord(ApplyLendDTO applyLendDTO) throws SerException {
-        return applyLendSer.countBorrowRecord( applyLendDTO);
+        return applyLendSer.countBorrowRecord(applyLendDTO);
     }
 
     @Override
@@ -222,7 +221,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public ApplyLendBO editPhoneReturn(PhoneLendReturnSendTO phoneLendReturnSendTO) throws SerException {
-        return applyLendSer.editPhoneReturn( phoneLendReturnSendTO);
+        return applyLendSer.editPhoneReturn(phoneLendReturnSendTO);
     }
 
     @Override
@@ -237,7 +236,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public Long countReturn(ApplyLendDTO applyLendDTO) throws SerException {
-        return applyLendSer.countReturn( applyLendDTO);
+        return applyLendSer.countReturn(applyLendDTO);
     }
 
     @Override
@@ -257,12 +256,12 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public ApplyLendBO phoneCheckReturn(PhoneLendReturnCheckTO phoneLendReturnCheckTO) throws SerException {
-        return applyLendSer.phoneCheckReturn( phoneLendReturnCheckTO);
+        return applyLendSer.phoneCheckReturn(phoneLendReturnCheckTO);
     }
 
     @Override
     public ApplyLendBO editErrorReturn(ApplyLendTO applyLendTO) throws SerException {
-        return applyLendSer.editErrorReturn( applyLendTO );
+        return applyLendSer.editErrorReturn(applyLendTO);
     }
 
     @Override
@@ -282,12 +281,12 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public Long countRecTicket(ApplyLendDTO applyLendDTO) throws SerException {
-        return applyLendSer.countRecTicket( applyLendDTO);
+        return applyLendSer.countRecTicket(applyLendDTO);
     }
 
     @Override
     public List<ApplyLendBO> listRecieveTicketRecord(ApplyLendDTO applyLendDTO) throws SerException {
-        return applyLendSer.listRecieveTicketRecord( applyLendDTO);
+        return applyLendSer.listRecieveTicketRecord(applyLendDTO);
     }
 
     @Override
@@ -314,6 +313,7 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     public List<String> getAllUser() throws SerException {
         return applyLendSer.getAllUser();
     }
+
     @Override
     public List<String> listLender() throws SerException {
         return applyLendSer.listLender();
@@ -403,13 +403,13 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
     }
 
     @Override
-    public Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus,String lendId) throws SerException {
-        return applyLendSer.phoneShowRight( lendPhoneShowStatus ,lendId);
+    public Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus, String lendId) throws SerException {
+        return applyLendSer.phoneShowRight(lendPhoneShowStatus, lendId);
     }
 
     @Override
     public List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException {
-        return applyLendSer.listAll( dto );
+        return applyLendSer.listAll(dto);
     }
 
 
@@ -420,22 +420,22 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException {
-        return applyLendSer.collectSelfTrend( reimburseTrendShapeDTO );
+        return applyLendSer.collectSelfTrend(reimburseTrendShapeDTO);
     }
 
     @Override
     public ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
-        return applyLendSer.collectGroupBar( reimCompanyShapeDTO );
+        return applyLendSer.collectGroupBar(reimCompanyShapeDTO);
     }
 
     @Override
     public ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
-        return applyLendSer.collectProjectBar( reimCompanyShapeDTO );
+        return applyLendSer.collectProjectBar(reimCompanyShapeDTO);
     }
 
     @Override
     public ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
-        return applyLendSer.collectAreaBar( reimCompanyShapeDTO);
+        return applyLendSer.collectAreaBar(reimCompanyShapeDTO);
     }
 
     @Override
@@ -445,17 +445,37 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
 
     @Override
     public LendMixReimShapeVO collectMixMonAndWeek(LendMixReimSelfShapeDTO lendMixReimShapeDTO) throws SerException {
-        return applyLendSer.collectMixMonAndWeek( lendMixReimShapeDTO );
+        return applyLendSer.collectMixMonAndWeek(lendMixReimShapeDTO);
     }
 
     @Override
     public LendMixReimShapeVO collectMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
-        return applyLendSer.collectMixCompany(lendMixCompanyShapeDTO) ;
+        return applyLendSer.collectMixCompany(lendMixCompanyShapeDTO);
     }
 
     @Override
     public ReimShapeVO collectDetailMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
-        return applyLendSer.collectDetailMixCompany( lendMixCompanyShapeDTO ) ;
+        return applyLendSer.collectDetailMixCompany(lendMixCompanyShapeDTO);
+    }
+
+    @Override
+    public SubjectDataBO findSubjects(String name) throws SerException {
+        return applyLendSer.findSubjects(name);
+    }
+
+    @Override
+    public SubjectDatasBO findSubjects1(String name) throws SerException {
+        return applyLendSer.findSubjects1(name);
+    }
+
+    @Override
+    public List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
+        return applyLendSer.findSecondSubject(firstSubjectCode);
+    }
+
+    @Override
+    public OptionBO analysisDiagram() throws SerException {
+        return applyLendSer.analysisDiagram();
     }
 
 }

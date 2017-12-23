@@ -3,6 +3,7 @@ package com.bjike.goddess.lendreimbursement.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
+import com.bjike.goddess.lendreimbursement.bo.OptionBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
@@ -16,9 +17,10 @@ import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimCompanyMixShapeVO;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeAllVO;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeMixVO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeVO;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 
 import java.util.List;
@@ -51,9 +53,12 @@ public interface ReimburseRecordAPI {
 
     /**
      * 根据id获取申请报销
+     *
      * @return class ReimburseRecordBO
      */
-    default ReimburseRecordBO getOneById(String id) throws SerException {return null;}
+    default ReimburseRecordBO getOneById(String id) throws SerException {
+        return null;
+    }
 
     /**
      * 申请报销列表总条数
@@ -161,6 +166,7 @@ public interface ReimburseRecordAPI {
     default ReimburseRecordBO auditRecord(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
+
     /**
      * 等待审核寄件
      *
@@ -285,6 +291,7 @@ public interface ReimburseRecordAPI {
     default ReimburseRecordBO prePay(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
+
     /**
      * 手机版等待付款预计付款
      *
@@ -304,6 +311,7 @@ public interface ReimburseRecordAPI {
     default ReimburseRecordBO waitPay(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
     }
+
     /**
      * 手机版的等待付款的付款
      *
@@ -391,7 +399,9 @@ public interface ReimburseRecordAPI {
     /**
      * 预计付款的报销单号
      */
-    default List<String> reimNumByPrepay( ) throws SerException {return null;}
+    default List<String> reimNumByPrepay() throws SerException {
+        return null;
+    }
 
     /**
      * 所有一级科目
@@ -413,6 +423,7 @@ public interface ReimburseRecordAPI {
     default List<String> listProject() throws SerException {
         return null;
     }
+
     /**
      * 报销人汇总的报销人条件
      */
@@ -427,9 +438,11 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException{
+    default byte[] exportExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
-    };
+    }
+
+    ;
 
     /**
      * 已付款记录导出excel
@@ -438,9 +451,11 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException{
+    default byte[] exportAlPayExcel(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
-    };
+    }
+
+    ;
 
     /**
      * chenjunhao
@@ -450,9 +465,11 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException{
+    default List<ExportExcelTO> exportExcelCjh(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
-    } ;
+    }
+
+    ;
 
     /**
      * chenjunhao
@@ -462,9 +479,11 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException{
+    default List<ReimburseRecordBO> listWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
-    };
+    }
+
+    ;
 
     /**
      * chenjunhao
@@ -474,20 +493,24 @@ public interface ReimburseRecordAPI {
      * @return
      * @throws SerException
      */
-    default ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException{
+    default ReimburseRecordBO waitPayCJH(ReimburseRecordTO reimburseRecordTO) throws SerException {
         return null;
-    };
+    }
+
+    ;
 
     /**
      * chenjunhao
+     *
      * @param reimburseRecordDTO
      * @return
      * @throws SerException
      */
-    default Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException{
+    default Long countWaitPayCJH(ReimburseRecordDTO reimburseRecordDTO) throws SerException {
         return null;
-    };
+    }
 
+    ;
 
 
     /**
@@ -504,65 +527,90 @@ public interface ReimburseRecordAPI {
      *
      * @return class ReimPhoneShowStatus
      */
-    default ReimPhoneShowStatus phoneShowRight(ReimPhoneSelectStatus reimPhoneSelectStatus,String reimId ) throws SerException {
+    default ReimPhoneShowStatus phoneShowRight(ReimPhoneSelectStatus reimPhoneSelectStatus, String reimId) throws SerException {
         return null;
     }
 
 
-
     /**
      * 汇总个人周月年数据图
+     *
      * @param reimburseShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException{return null;}
+    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总任意两月的变化趋势图
+     *
      * @param reimburseTrendShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException{return null;}
+    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司项目组时间段内的特定指标统计图
+     *
      * @param reimCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司项目时间段内的特定指标统计图
+     *
      * @param reimCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司地区时间段内的特定指标统计图
+     *
      * @param reimCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司地区时间段内的特定指标统计图
+     *
      * @param reimburseShapeDetailDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException{return null;}
+    default ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException {
+        return null;
+    }
 
 
-
+    /**
+     * 报销数据分析图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO analysisDiagram() throws SerException {
+        return null;
+    }
 }

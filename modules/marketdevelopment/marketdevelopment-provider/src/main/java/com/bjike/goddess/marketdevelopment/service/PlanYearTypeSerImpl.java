@@ -303,7 +303,7 @@ public class PlanYearTypeSerImpl extends ServiceImpl<PlanYearType, PlanYearTypeD
         //查询月份集合
         PlanYearTypeDTO planYearTypeDTO1 = new PlanYearTypeDTO();
         planYearTypeDTO1.getConditions().add(Restrict.eq("yearId", to.getYearId()));
-        planYearTypeDTO1.getConditions().add(Restrict.eq("moneyType", to.getMoneyType()));
+        planYearTypeDTO1.getConditions().add(Restrict.eq("moneyType", entity.getMoneyType()));
         List<PlanYearType> planYearTypes1 = super.findByCis(planYearTypeDTO1);
         for (PlanYearType planYearType : planYearTypes1) {
             int i = 0;
@@ -343,6 +343,7 @@ public class PlanYearTypeSerImpl extends ServiceImpl<PlanYearType, PlanYearTypeD
 
         for (MonthType monthType : MonthType.values()) {
             if (monthType.equals(entity.getMonthType())) {
+                entity.setMoneyType(to.getMoneyType());
                 entity.setMoney(moneys.get(i));
                 entity.setTotal(String.valueOf(moneys.stream().mapToDouble(Double::doubleValue).sum()));
                 entity.setModifyTime(LocalDateTime.now());
@@ -629,20 +630,22 @@ public class PlanYearTypeSerImpl extends ServiceImpl<PlanYearType, PlanYearTypeD
         List<PlanYearType> planYearTypes1 = super.findByCis(planYearTypeDTO1);
 
         List<Double> moneys = new ArrayList<>(0);
-        //计算每月的差异金额
-        for (MonthType monthType : MonthType.values()) {
-            Double money = planYearTypes.stream().filter(obj -> monthType.equals(obj.getMonthType())).map(PlanYearType::getMoney).collect(Collectors.toList()).get(0) - planYearTypes1.stream().filter(obj -> monthType.equals(obj.getMonthType())).map(PlanYearType::getMoney).collect(Collectors.toList()).get(0);
-            moneys.add(money);
-        }
-        for (MonthType type : MonthType.values()) {
-            int i = 0;
-            PlanYearType planYearType = new PlanYearType();
-            planYearType.setYearId(planYear.getId());
-            planYearType.setMoneyType(MoneyType.DIFFERENCE);
-            planYearType.setMonthType(type);
-            planYearType.setMoney(moneys.get(i++));
-            planYearType.setTotal(String.valueOf(moneys.stream().mapToDouble(Double::doubleValue).sum()));
-            super.save(planYearType);
+        if (null != planYearTypes && planYearTypes.size() > 0 && null != planYearTypes1 && planYearTypes1.size() > 0) {
+            //计算每月的差异金额
+            for (MonthType monthType : MonthType.values()) {
+                Double money = planYearTypes.stream().filter(obj -> monthType.equals(obj.getMonthType())).map(PlanYearType::getMoney).collect(Collectors.toList()).get(0) - planYearTypes1.stream().filter(obj -> monthType.equals(obj.getMonthType())).map(PlanYearType::getMoney).collect(Collectors.toList()).get(0);
+                moneys.add(money);
+            }
+            for (MonthType type : MonthType.values()) {
+                int i = 0;
+                PlanYearType planYearType = new PlanYearType();
+                planYearType.setYearId(planYear.getId());
+                planYearType.setMoneyType(MoneyType.DIFFERENCE);
+                planYearType.setMonthType(type);
+                planYearType.setMoney(moneys.get(i++));
+                planYearType.setTotal(String.valueOf(moneys.stream().mapToDouble(Double::doubleValue).sum()));
+                super.save(planYearType);
+            }
         }
     }
 }

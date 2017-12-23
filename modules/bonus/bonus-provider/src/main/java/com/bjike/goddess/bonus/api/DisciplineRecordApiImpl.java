@@ -171,4 +171,9 @@ public class DisciplineRecordApiImpl implements DisciplineRecordAPI {
     public String getPushBallot(String name) throws SerException {
         return disciplineRecordSer.getPushBallot(name);
     }
+
+    @Override
+    public OptionBonusBO annular() throws SerException {
+        return disciplineRecordSer.annular();
+    }
 }

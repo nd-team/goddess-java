@@ -247,6 +247,7 @@ public interface DisciplineRecordAPI {
      * 根据姓名获取奖励和处罚总分数
      */
     ScoreBO getRePuTotal(String userName) throws SerException;
+
     /**
      * 根据姓名获取奖励总分
      */
@@ -258,6 +259,16 @@ public interface DisciplineRecordAPI {
      * 根据姓名获取惩罚总分
      */
     default String getPushBallot(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 首页项目奖金包图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBonusBO annular() throws SerException {
         return null;
     }
 }

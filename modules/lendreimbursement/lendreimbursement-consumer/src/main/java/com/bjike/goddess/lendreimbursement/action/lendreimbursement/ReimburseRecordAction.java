@@ -12,6 +12,7 @@ import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.lendreimbursement.api.ReimburseAuditLogAPI;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
+import com.bjike.goddess.lendreimbursement.bo.OptionBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
@@ -958,6 +959,7 @@ public class ReimburseRecordAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有二级科目
      *
@@ -965,15 +967,16 @@ public class ReimburseRecordAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listSecondSubject/{code}")
-    public Result listSecondByCode(@PathVariable String code ) throws ActException {
+    public Result listSecondByCode(@PathVariable String code) throws ActException {
         try {
-            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName( code );
+            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName(code);
 
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有三级科目
      *
@@ -981,16 +984,15 @@ public class ReimburseRecordAction extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/listThirdSubject/{code}")
-    public Result listThirdByCode(@PathVariable String code ) throws ActException {
+    public Result listThirdByCode(@PathVariable String code) throws ActException {
         try {
-            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName( code );
+            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName(code);
 
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
 
 
     /**
@@ -1109,6 +1111,22 @@ public class ReimburseRecordAction extends BaseFileAction {
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
         return new ActResult("delFile success");
+    }
+
+    /**
+     * 报销数据分析图
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/analysisDiagram")
+    public Result analysisDiagram() throws ActException {
+        try {
+            OptionBO bo = reimburseRecordAPI.analysisDiagram();
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
     }
 
 
