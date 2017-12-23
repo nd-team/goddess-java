@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.to;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.common.api.to.BaseTO;
 
 /**
@@ -62,7 +63,7 @@ public class OutsourcBusinessContractTO extends BaseTO {
     /**
      * 是否有合同派工
      */
-    private Boolean taskContract;
+    private TaskContract taskContract;
 
     /**
      * 市场编号
@@ -297,11 +298,11 @@ public class OutsourcBusinessContractTO extends BaseTO {
         this.projectGroup = projectGroup;
     }
 
-    public Boolean getTaskContract() {
+    public TaskContract getTaskContract() {
         return taskContract;
     }
 
-    public void setTaskContract(Boolean taskContract) {
+    public void setTaskContract(TaskContract taskContract) {
         this.taskContract = taskContract;
     }
 

@@ -71,13 +71,13 @@ public enum MakeContract {
 
     public static String exportStrConvert(MakeContract businessType) {
         String name = "";
-        if (businessType.equals(MakeContract.NOMAKE)) {
+        if (MakeContract.NOMAKE.equals(businessType)) {
             name = "预立项";
         }
-        if (businessType.equals(MakeContract.HADMAKE)) {
+        if (MakeContract.HADMAKE.equals(businessType)) {
             name = "立项";
         }
-        if (businessType.equals(MakeContract.NOTMAKE)) {
+        if (MakeContract.NOTMAKE.equals(businessType)) {
             name = "不立项";
         }
         return name;
