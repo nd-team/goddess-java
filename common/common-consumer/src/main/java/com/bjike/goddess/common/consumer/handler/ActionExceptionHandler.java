@@ -33,7 +33,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         ActResult actResult = new ActResult();
         httpServletResponse.setContentType(JSON_CONTEXT);
         if (!isChinese(e.getMessage())) {
-            actResult.setMsg("服务器错误");
+            actResult.setMsg("服务器错误:"+e.getMessage());
         } else {
             actResult.setMsg(e.getMessage());
         }
@@ -54,7 +54,7 @@ public class ActionExceptionHandler extends AbstractHandlerExceptionResolver {
         }
         if (StringUtils.isNotBlank(e.getMessage()) && e.getMessage().startsWith("Forbid consumer")) {
             LOGGER.error(e.getMessage());
-            actResult.setMsg("服务调用失败");
+            actResult.setMsg("服务调用失败:"+e.getMessage());
         }
         /**
          * 处理数据库异常

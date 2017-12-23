@@ -316,4 +316,14 @@ public interface DepartmentDetailSer extends Ser<DepartmentDetail, DepartmentDet
     default List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
         return null;
     }
+    /**
+     * 根据姓名查询所在部门
+     *
+     * @param name
+     * @return class DepartmentPeopleBO
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
+        return null;
+    }
 }

@@ -187,6 +187,7 @@ public interface DepartmentDetailAPI {
     default List<String> findPnameByAreaAndDepart(String area, String depart) throws SerException {
         return null;
     }
+
     /**
      * 获取所有内部项目名称
      * tanghaixiang
@@ -194,7 +195,7 @@ public interface DepartmentDetailAPI {
      * @return
      * @throws SerException
      */
-    default List<String> findAllProject( ) throws SerException {
+    default List<String> findAllProject() throws SerException {
         return null;
     }
 
@@ -291,6 +292,7 @@ public interface DepartmentDetailAPI {
     default List<String> findAllDepartment() throws SerException {
         return null;
     }
+
     /**
      * 查询所有部门下的人数
      *
@@ -300,6 +302,7 @@ public interface DepartmentDetailAPI {
     default List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
         return null;
     }
+
     /**
      * 查询部门下所有人的信息
      *
@@ -307,6 +310,17 @@ public interface DepartmentDetailAPI {
      * @throws SerException
      */
     default List<DepartmentPeopleBO> infoByDepartment(String dep) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名查询所在部门
+     *
+     * @param name
+     * @return class DepartmentPeopleBO
+     * @throws SerException
+     */
+    default List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
         return null;
     }
 }

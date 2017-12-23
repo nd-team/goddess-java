@@ -160,7 +160,7 @@ public class ScheduleSerImpl implements ScheduleSer {
             sb.append(" CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
             sb.append(" CASE needType   WHEN '1' THEN 60*needTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
             sb.append(" CASE actualType   WHEN '1' THEN 60*actualTime   WHEN '2' THEN 24*60*actualTime  ELSE actualTime END  AS factDuration ");
-            sb.append(" FROM taskallotment_tasknode tn ,taskallotment_table t,");
+            sb.append(" FROM goddess_taskallotment.taskallotment_tasknode tn ,goddess_taskallotment.taskallotment_table t,");
             sb.append(" taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
             sb.append(" AND ( ");
             sb.append(" tn.startTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
@@ -963,14 +963,14 @@ public class ScheduleSerImpl implements ScheduleSer {
         sb.append(" SELECT ");
         sb.append("  p.project AS outProject,p.innerProject, ");
         sb.append("  if(p.status=0,'完成','未完成')AS isFinish FROM ");
-        sb.append("  taskallotment_project p, ");
-        sb.append("  taskallotment_table t ");
+        sb.append("  goddess_taskallotment.taskallotment_project p, ");
+        sb.append("  goddess_taskallotment.taskallotment_table t ");
         sb.append("   WHERE p.id = '" + projectId + "' AND p.id = t.project_id ");
         if (null != cons) {
             sb.append(cons);
         }
         sb.append(" ) a, ( ");
-        sb.append("  select count(*) as workerCount FROM(SELECT execute FROM taskallotment_tasknode n,taskallotment_project p,taskallotment_table t ");
+        sb.append("  select count(*) as workerCount FROM(SELECT execute FROM goddess_taskallotment.taskallotment_tasknode n,goddess_taskallotment.taskallotment_project p,goddess_taskallotment.taskallotment_table t ");
         sb.append("  WHERE p.id = '" + projectId + "' AND p.id =t.project_id AND n.table_id=t.id");
         if (null != cons) {
             sb.append(cons);
@@ -1226,12 +1226,12 @@ public class ScheduleSerImpl implements ScheduleSer {
         String start = condition.getStart();
         String end = condition.getEnd();
         sb.append("  SELECT a.title,a.content,a.titleType,b.tasknode_id as nodeId ");
-        sb.append(" FROM taskallotment_customtitle a,( ");
+        sb.append(" FROM goddess_taskallotment.taskallotment_customtitle a,( ");
         sb.append("  SELECT a.* ");
         sb.append(" FROM( ");
         sb.append("    SELECT tc.title,tc.tasknode_id ");
-        sb.append(" FROM taskallotment_project p, ");
-        sb.append("  taskallotment_table t,taskallotment_tasknode tn,taskallotment_customtitle tc ");
+        sb.append(" FROM goddess_taskallotment.taskallotment_project p, ");
+        sb.append("  goddess_taskallotment.taskallotment_table t,goddess_taskallotment.taskallotment_tasknode tn,goddess_taskallotment.taskallotment_customtitle tc ");
         sb.append("  WHERE p.id ='" + condition.getProjectId() + "'");
         if (null != condition.getTablesId()) {
             sb.append("  AND t.id IN('" + StringUtils.join(condition.getTablesId(), "','") + "') ");
@@ -1241,8 +1241,8 @@ public class ScheduleSerImpl implements ScheduleSer {
         sb.append(" SELECT title AS title ");
         sb.append("  FROM( ");
         sb.append("  SELECT tc.title,tc.tasknode_id ");
-        sb.append("  FROM taskallotment_project p, ");
-        sb.append(" taskallotment_table t,taskallotment_tasknode tn,taskallotment_customtitle tc ");
+        sb.append("  FROM goddess_taskallotment.taskallotment_project p, ");
+        sb.append(" goddess_taskallotment.taskallotment_table t,goddess_taskallotment.taskallotment_tasknode tn,goddess_taskallotment.taskallotment_customtitle tc ");
         sb.append(" WHERE p.id ='" + condition.getProjectId() + "' ");
         if (null != condition.getTablesId()) {
             sb.append("  AND t.id IN('" + StringUtils.join(condition.getTablesId(), "','") + "') ");
@@ -1289,7 +1289,7 @@ public class ScheduleSerImpl implements ScheduleSer {
         sb.append(" SELECT title AS title ");
         sb.append("  FROM( ");
         sb.append(" SELECT tc.title,tc.tasknode_id ");
-        sb.append(" FROM taskallotment_project p, taskallotment_table t,taskallotment_tasknode tn,taskallotment_customtitle tc ");
+        sb.append(" FROM goddess_taskallotment.taskallotment_project p, goddess_taskallotment.taskallotment_table t,goddess_taskallotment.taskallotment_tasknode tn,goddess_taskallotment.taskallotment_customtitle tc ");
         sb.append("  WHERE p.id ='" + condition.getProjectId() + "' ");
         if (null != condition.getTablesId()) {
             sb.append("  AND t.id IN('" + StringUtils.join(condition.getTablesId(), "','") + "') ");
@@ -1323,8 +1323,8 @@ public class ScheduleSerImpl implements ScheduleSer {
         sb.append(" select t.name as tableName,tn.taskName,tn.execute as username ,tn.content,tn.planTime,tn.remark , ");
         sb.append("  CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
         sb.append(" planNum,tn.needTime,tn.id as nodeId ");
-        sb.append("  from taskallotment_project  p, ");
-        sb.append("  taskallotment_table t,taskallotment_tasknode tn ");
+        sb.append("  from goddess_taskallotment.taskallotment_project  p, ");
+        sb.append("  goddess_taskallotment.taskallotment_table t,goddess_taskallotment.taskallotment_tasknode tn ");
         sb.append("  where p.id ='" + condition.getProjectId() + "' ");
         if (null != condition.getTablesId()) {
             sb.append("  and t.id in('" + StringUtils.join(condition.getTablesId(), "','") + "') ");
