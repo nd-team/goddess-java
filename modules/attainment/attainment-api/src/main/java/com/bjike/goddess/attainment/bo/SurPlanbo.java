@@ -3,29 +3,25 @@ package com.bjike.goddess.attainment.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 /**
- * @Author: [dengjunren]
- * @Date: [2017-07-22 09:39]
- * @Description: [ ]
- * @Version: [1.0.0]
- * @Copy: [com.bjike]
+ * 调研计划业务传输对象
+ *
+ * @Author: [ dengjunren ]
+ * @Date: [ 2017-04-06 10:41 ]
+ * @Description: [ 调研计划业务传输对象 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
-public class SurPlanbo extends BaseBO {
+public class SurPlanBO extends BaseBO {
+
     /**
-     * 调研计划id
-     */
-    private String surPlanId;
-    /**
-     * 调研计划的编号
+     * 编号
      */
     private String serialNumber;
 
-    public String getSurPlanId() {
-        return surPlanId;
-    }
-
-    public void setSurPlanId(String surPlanId) {
-        this.surPlanId = surPlanId;
-    }
+    /**
+     * 调研类型
+     */
+    private String typeName;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -33,5 +29,13 @@ public class SurPlanbo extends BaseBO {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

@@ -255,9 +255,9 @@ include ':modules:workhandover:workhandover-consumer'
 include ':modules:workhandover:workhandover-provider'
 
 //subjectcollect 油卡管理
-include ':modules:subjectcollect:subjectcollect-api'
-include ':modules:subjectcollect:subjectcollect-consumer'
-include ':modules:subjectcollect:subjectcollect-provider'
+//include ':modules:subjectcollect:subjectcollect-api'
+//include ':modules:subjectcollect:subjectcollect-consumer'
+//include ':modules:subjectcollect:subjectcollect-provider'
 
 //contractware
 include ':modules:contractware:contractware-api'

@@ -29,10 +29,12 @@
 	<dubbo:service interface="com.bjike.goddess.user.api.UserLoginLogAPI" ref="userLoginLogApiImpl"/>
 -->
 
+	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" ref="problemAcceptApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" ref="problemHandlingResultApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" ref="involvedProcessingTaskApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" ref="projectEmailApiImpl"/>
 	<dubbo:service  ref="proPermissionApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionAPI" />
 	<dubbo:service  ref="proPermissionOperateApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionOperateAPI" />
-	<dubbo:service  ref="projectProblemAccApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProjectProblemAccAPI" />
-	<dubbo:service  ref="communicationFormworkApiImpl" interface="com.bjike.goddess.projectissuehandle.api.CommunicationFormworkAPI" />
 
 
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />
