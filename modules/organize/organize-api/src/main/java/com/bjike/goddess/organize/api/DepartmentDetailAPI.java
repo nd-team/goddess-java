@@ -323,4 +323,11 @@ public interface DepartmentDetailAPI {
     default List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 根据部门获取体系
+     */
+    default String findHierarchy(String department) throws SerException {
+        return null;
+    }
 }
