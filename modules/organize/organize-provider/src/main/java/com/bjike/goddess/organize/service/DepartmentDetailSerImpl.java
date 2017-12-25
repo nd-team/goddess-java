@@ -433,10 +433,23 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
 
     @Override
     public List<DepartmentPeopleBO> peopleByDepartment() throws SerException {
-        String[] fields = new String[]{"department","peopleCount"};
-        String sql =" SELECT a.department as department,count(DISTINCT c.user_id) peopleCount FROM " +
+        String[] fields = new String[]{"department", "peopleCount"};
+        String sql = " SELECT a.department as department,count(DISTINCT c.user_id) peopleCount FROM " +
                 " organize_department_detail a,organize_position_detail b,organize_position_detail_user_table c " +
                 " WHERE a.id = b.department_id AND b.id = c.position_id GROUP BY a.department";
+        List<DepartmentPeopleBO> list = super.findBySql(sql, DepartmentPeopleBO.class, fields);
+        return list;
+    }
+
+    @Override
+    public List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
+        String[] fields = new String[]{"department"};
+        String sql = " select department " +
+                " from organize_department_detail a, organize_position_detail b, organize_position_detail_user c, organize_position_detail_user_table d " +
+                " where c.name = '" + name + "' " +
+                " and c.id = d.user_id " +
+                " and d.position_id = b.id " +
+                " and b.department_id = a.id ";
         List<DepartmentPeopleBO> list = super.findBySql(sql,DepartmentPeopleBO.class,fields);
         return list;
     }

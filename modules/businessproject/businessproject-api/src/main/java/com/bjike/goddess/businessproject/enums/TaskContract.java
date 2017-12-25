@@ -14,17 +14,17 @@ import com.bjike.goddess.common.utils.excel.ExcelValue;
 public enum TaskContract {
 
     /**
-     * 未派工
+     * 预立项
      */
     @ExcelValue(name = "未派工")
     NOTASK(0),
     /**
-     * 已派工
+     * 立项
      */
     @ExcelValue(name = "已派工")
     HADTASK(1),
     /**
-     * 不派工
+     * 不立项
      */
     @ExcelValue(name = "不派工")
     NOTTASK(2),;
@@ -71,13 +71,13 @@ public enum TaskContract {
 
     public static String exportStrConvert(TaskContract businessType) {
         String name = "";
-        if (businessType.equals( TaskContract.NOTASK)) {
+        if (TaskContract.NOTASK.equals(businessType)) {
             name = "未派工";
         }
-        if (businessType.equals( TaskContract.HADTASK)) {
+        if (TaskContract.HADTASK.equals(businessType)) {
             name = "已派工";
         }
-        if (businessType.equals( TaskContract.NOTTASK)) {
+        if (TaskContract.NOTTASK.equals(businessType)) {
             name = "不派工";
         }
         return name;

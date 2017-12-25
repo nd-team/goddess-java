@@ -1,7 +1,6 @@
 package com.bjike.goddess.marketdevelopment.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.businessproject.api.BusinessContractAPI;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -56,8 +55,8 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
     private UserAPI userAPI;
     @Autowired
     private MarPermissionSer marPermissionSer;
-    @Autowired
-    private BusinessContractAPI businessContractAPI;
+//    @Autowired
+//    private BusinessContractAPI businessContractAPI;
 
     private static final String marketCheck = "market-check";
 
@@ -308,8 +307,8 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
         return list;
     }
 
-    @Override
-    public MarkProblemAcceBO findProblemAcce(String interCode) throws SerException {
+//    @Override
+//    public MarkProblemAcceBO findProblemAcce(String interCode) throws SerException {
 //        if (moduleAPI.isCheck("projectissuehandle")) {
 //            ProblemAcceBO problemAcceBO = problemAcceptAPI.findProblemAcce(interCode);
 //            if (null != problemAcceBO) {
@@ -319,17 +318,17 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
 //                return bo;
 //            }
 //        }
-        return null;
-    }
+//        return null;
+//    }
 
-    @Override
-    public List<String> findMarkCode() throws SerException {
-        List<String> list = businessContractAPI.findMarkNum();
-        return list;
-    }
+//    @Override
+//    public List<String> findMarkCode() throws SerException {
+//        List<String> list = businessContractAPI.findMarkNum();
+//        return list;
+//    }
 
-    @Override
-    public String findInnerProject(String marketNum) throws SerException {
-        return businessContractAPI.findProjectName(marketNum);
-    }
+//    @Override
+//    public String findInnerProject(String marketNum) throws SerException {
+//        return businessContractAPI.findProjectName(marketNum);
+//    }
 }

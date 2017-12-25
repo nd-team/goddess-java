@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.vo;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 
 /**
  * 外包半外包项目合同管理表现层对象
@@ -65,7 +66,7 @@ public class OutsourcBusinessContractVO {
     /**
      * 是否有合同派工
      */
-    private Boolean taskContract;
+    private TaskContract taskContract;
 
     /**
      * 市场编号
@@ -308,11 +309,11 @@ public class OutsourcBusinessContractVO {
         this.projectGroup = projectGroup;
     }
 
-    public Boolean getTaskContract() {
+    public TaskContract getTaskContract() {
         return taskContract;
     }
 
-    public void setTaskContract(Boolean taskContract) {
+    public void setTaskContract(TaskContract taskContract) {
         this.taskContract = taskContract;
     }
 

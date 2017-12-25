@@ -6,6 +6,8 @@ import com.bjike.goddess.businessproject.dto.OutsourcBusinessContractDTO;
 import com.bjike.goddess.businessproject.entity.BusinessContract;
 import com.bjike.goddess.businessproject.entity.OutsourcBusinessContract;
 import com.bjike.goddess.businessproject.enums.GuideAddrStatus;
+import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.businessproject.excel.OutsourcBusinessContractExport;
 import com.bjike.goddess.businessproject.excel.OutsourcBusinessContractTemplateExcel;
 import com.bjike.goddess.businessproject.to.GuidePermissionTO;
@@ -383,18 +385,18 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
             } else {
                 export.setMeasurePass("否");
             }
-            //是否有合同派工
-            if (str.getTaskContract().equals(true)) {
-                export.setTaskContract("是");
-            } else {
-                export.setTaskContract("否");
-            }
+//            //是否有合同派工
+//            if (str.getTaskContract().equals(true)) {
+//                export.setTaskContract("是");
+//            } else {
+//                export.setTaskContract("否");
+//            }
             //是否有合同立项
-            if (str.getMakeContract().equals(true)) {
-                export.setMakeContract("是");
-            } else {
-                export.setMakeContract("否");
-            }
+//            if (str.getMakeContract().equals(true)) {
+//                export.setMakeContract("是");
+//            } else {
+//                export.setMakeContract("否");
+//            }
             //是否确定合作
             if (str.getCooperation().equals(true)) {
                 export.setCooperation("是");
@@ -443,6 +445,10 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
             } else {
                 export.setClosedLoop("否");
             }
+            //合同派工合同
+            export.setTaskContract(TaskContract.exportStrConvert(str.getTaskContract()));
+            //是否有合同立项
+            export.setMakeContract(MakeContract.exportStrConvert(str.getMakeContract()));
             exports.add(export);
         });
         Excel excel = new Excel(0, 2);
@@ -463,7 +469,7 @@ public class OutsourcBusinessContractSerImpl extends ServiceImpl<OutsourcBusines
         templateExcel.setMajorCompany("test");
         templateExcel.setSubCompany("test");
         templateExcel.setProjectGroup("test");
-        templateExcel.setTaskContract("是");
+        templateExcel.setTaskContract("未派工");
         templateExcel.setMarketNum("test");
         templateExcel.setType("test");
         templateExcel.setMajor("test");

@@ -29,6 +29,9 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+//import com.bjike.goddess.projectcalculation.entity.InterfaceCalculationDetail;
+//import com.bjike.goddess.projectcalculation.service.CalculationDecisionsSer;
+//import com.bjike.goddess.projectcalculation.service.InterfaceCalculationDetailSer;
 import com.bjike.goddess.taskallotment.api.TaskNodeAPI;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
@@ -2405,7 +2408,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         templateExcel.setOperator("test");
         templateExcel.setType("test");
         templateExcel.setMajor("test");
-        templateExcel.setTaskContract("是");
+        templateExcel.setTaskContract("未派工");
         templateExcel.setMarketNum("test");
         templateExcel.setInternalProjectNum("test");
         templateExcel.setInternalContractNum("test");

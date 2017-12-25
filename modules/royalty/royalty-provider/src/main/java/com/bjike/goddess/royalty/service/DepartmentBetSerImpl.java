@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.royalty.bo.*;
 import com.bjike.goddess.royalty.dto.*;
 import com.bjike.goddess.royalty.entity.*;
@@ -46,6 +48,8 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
     private DepartmentBetDSer departmentBetDSer;
     @Autowired
     private DepartmentBetESer departmentBetESer;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
     @Autowired
     private UserAPI userAPI;
     @Autowired
@@ -802,7 +806,7 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
     public Set<String> projectName() throws SerException {
         Set<String> set = new HashSet<>();
         List<DepartmentBetA> list = departmentBetASer.findAll();
-        for(DepartmentBetA a:list){
+        for (DepartmentBetA a : list) {
             set.add(a.getProjectName());
         }
         return set;
@@ -810,8 +814,17 @@ public class DepartmentBetSerImpl extends ServiceImpl<DepartmentBet, DepartmentB
 
     @Override
     public Long currentUserRoyalty() throws SerException {
-        long count = 0l;
-
-        return null;
+        Long count = 0l;
+        List<DepartmentBetA> departmentBetAList = departmentBetASer.findAll();
+        if (departmentBetAList != null && departmentBetAList.size() > 0) {
+            String userToken = RpcTransmit.getUserToken();
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            List<DepartmentPeopleBO> list = departmentDetailAPI.departmentByName(userBO.getUsername());
+            if (list != null && list.size() > 0) {
+                count += list.size();
+            }
+        }
+        return count;
     }
 }

@@ -114,122 +114,131 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
 
     @Override
     public byte[] exportExcel(BusinessNegotiationDTO dto) throws SerException {
-        List<BusinessNegotiation> list = super.findByCis(dto);
+
+//        List<BusinessNegotiation> list = super.findByCis(dto);
+//        List<BusinessNegotiationExport> exports = new ArrayList<>();
+//        list.stream().forEach(str -> {
+//            BusinessNegotiationExport export = BeanTransform.copyProperties(str, BusinessNegotiationExport.class,
+//                    "discussPrepare", "discuss", "attainDiscussIdea", "discussProblem",
+//                    "soundRecord", "hasProject", "marketCost", "marketFor",
+//                    "continueFollowUp", "closedLoop", "needAssist", "assistLetter", "produceTrip");
+//            //是否有洽谈准备
+//            if (null != str.getDiscussPrepare()) {
+//                if (str.getDiscussPrepare().equals("是")) {
+//                    export.setDiscussPrepare(true);
+//                } else {
+//                    export.setDiscussPrepare(false);
+//                }
+//            }
+//            //是否洽谈
+//            if (null != str.getDiscuss()) {
+//                if (str.getDiscuss().equals("是")) {
+//                    export.setDiscuss(true);
+//                } else {
+//                    export.setDiscuss(false);
+//                }
+//            }
+//            //是否达到洽谈目的
+//            if (null != str.getAttainDiscussIdea()) {
+//                if (str.getAttainDiscussIdea().equals("是")) {
+//                    export.setAttainDiscussIdea(true);
+//                } else {
+//                    export.setAttainDiscussIdea(false);
+//                }
+//            }
+//            //是否有洽谈到其他问题
+//            if (null != str.getDiscussProblem()) {
+//                if (str.getDiscussProblem().equals("是")) {
+//                    export.setDiscussProblem(true);
+//                } else {
+//                    export.setDiscussProblem(false);
+//                }
+//            }
+//
+//            //是否有录音
+//            if (null != str.getSoundRecord()) {
+//                if (str.getSoundRecord().equals("是")) {
+//                    export.setSoundRecord(true);
+//                } else {
+//                    export.setSoundRecord(false);
+//                }
+//            }
+//            //是否转入合同管理-已立项
+//            if (null != str.getHasProject()) {
+//                if (str.getHasProject().equals("是")) {
+//                    export.setHasProject(true);
+//                } else {
+//                    export.setHasProject(false);
+//                }
+//            }
+//            //是否转入合同管理-市场费用
+//            if (null != str.getMarketCost()) {
+//                if (str.getMarketCost().equals("是")) {
+//                    export.setMarketCost(true);
+//                } else {
+//                    export.setMarketCost(false);
+//                }
+//            }
+//            //是否转换市场招待
+//            if (null != str.getMarketFor()) {
+//                if (str.getMarketFor().equals("是")) {
+//                    export.setMarketFor(true);
+//                } else {
+//                    export.setMarketFor(false);
+//                }
+//            }
+//            //是否持续跟进
+//            if (null != str.getContinueFollowUp()) {
+//                if (str.getContinueFollowUp().equals("是")) {
+//                    export.setContinueFollowUp(true);
+//                } else {
+//                    export.setContinueFollowUp(false);
+//                }
+//            }
+//            //是否闭环
+//            if (null != str.getClosedLoop()) {
+//                if (str.getClosedLoop().equals("是")) {
+//                    export.setClosedLoop(true);
+//                } else {
+//                    export.setClosedLoop(false);
+//                }
+//            }
+//            //是否需要协助
+//            if (null != str.getNeedAssist()) {
+//                if (str.getNeedAssist().equals("是")) {
+//                    export.setNeedAssist(true);
+//                } else {
+//                    export.setNeedAssist(false);
+//                }
+//            }
+//            //是否已发协助函
+//            if (null != str.getAssistLetter()) {
+//                if (str.getAssistLetter().equals("是")) {
+//                    export.setAssistLetter(true);
+//                } else {
+//                    export.setAssistLetter(false);
+//                }
+//            }
+//            //是否产生路费
+//            if (null != str.getProduceTrip()) {
+//                if (str.getProduceTrip().equals("是")) {
+//                    export.setProduceTrip(true);
+//                } else {
+//                    export.setProduceTrip(false);
+//                }
+//            }
+//
+//        });
+//        Excel excel = new Excel(0, 2);
+//        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         List<BusinessNegotiationExport> exports = new ArrayList<>();
-        list.stream().forEach(str -> {
-            BusinessNegotiationExport export = BeanTransform.copyProperties(str, BusinessNegotiationExport.class,
-                    "discussPrepare", "discuss", "attainDiscussIdea", "discussProblem",
-                    "soundRecord", "hasProject", "marketCost", "marketFor",
-                    "continueFollowUp", "closedLoop", "needAssist", "assistLetter", "produceTrip");
-            //是否有洽谈准备
-            if (null != str.getDiscussPrepare()) {
-                if (str.getDiscussPrepare().equals("是")) {
-                    export.setDiscussPrepare(true);
-                } else {
-                    export.setDiscussPrepare(false);
-                }
-            }
-            //是否洽谈
-            if (null != str.getDiscuss()) {
-                if (str.getDiscuss().equals("是")) {
-                    export.setDiscuss(true);
-                } else {
-                    export.setDiscuss(false);
-                }
-            }
-            //是否达到洽谈目的
-            if (null != str.getAttainDiscussIdea()) {
-                if (str.getAttainDiscussIdea().equals("是")) {
-                    export.setAttainDiscussIdea(true);
-                } else {
-                    export.setAttainDiscussIdea(false);
-                }
-            }
-            //是否有洽谈到其他问题
-            if (null != str.getDiscussProblem()) {
-                if (str.getDiscussProblem().equals("是")) {
-                    export.setDiscussProblem(true);
-                } else {
-                    export.setDiscussProblem(false);
-                }
-            }
-
-            //是否有录音
-            if (null != str.getSoundRecord()) {
-                if (str.getSoundRecord().equals("是")) {
-                    export.setSoundRecord(true);
-                } else {
-                    export.setSoundRecord(false);
-                }
-            }
-            //是否转入合同管理-已立项
-            if (null != str.getHasProject()) {
-                if (str.getHasProject().equals("是")) {
-                    export.setHasProject(true);
-                } else {
-                    export.setHasProject(false);
-                }
-            }
-            //是否转入合同管理-市场费用
-            if (null != str.getMarketCost()) {
-                if (str.getMarketCost().equals("是")) {
-                    export.setMarketCost(true);
-                } else {
-                    export.setMarketCost(false);
-                }
-            }
-            //是否转换市场招待
-            if (null != str.getMarketFor()) {
-                if (str.getMarketFor().equals("是")) {
-                    export.setMarketFor(true);
-                } else {
-                    export.setMarketFor(false);
-                }
-            }
-            //是否持续跟进
-            if (null != str.getContinueFollowUp()) {
-                if (str.getContinueFollowUp().equals("是")) {
-                    export.setContinueFollowUp(true);
-                } else {
-                    export.setContinueFollowUp(false);
-                }
-            }
-            //是否闭环
-            if (null != str.getClosedLoop()) {
-                if (str.getClosedLoop().equals("是")) {
-                    export.setClosedLoop(true);
-                } else {
-                    export.setClosedLoop(false);
-                }
-            }
-            //是否需要协助
-            if (null != str.getNeedAssist()) {
-                if (str.getNeedAssist().equals("是")) {
-                    export.setNeedAssist(true);
-                } else {
-                    export.setNeedAssist(false);
-                }
-            }
-            //是否已发协助函
-            if (null != str.getAssistLetter()) {
-                if (str.getAssistLetter().equals("是")) {
-                    export.setAssistLetter(true);
-                } else {
-                    export.setAssistLetter(false);
-                }
-            }
-            //是否产生路费
-            if (null != str.getProduceTrip()) {
-                if (str.getProduceTrip().equals("是")) {
-                    export.setProduceTrip(true);
-                } else {
-                    export.setProduceTrip(false);
-                }
-            }
-
+        List<BusinessNegotiation> list = super.findByCis(dto);
+        list.stream().forEach(str->{
+            BusinessNegotiationExport export = BeanTransform.copyProperties(str,BusinessNegotiationExport.class);
+            exports.add(export);
         });
-        Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
+        Excel excel = new Excel(0,2);
+        byte[] bytes = ExcelUtil.clazzToExcel(exports,excel);
         return bytes;
     }
 
@@ -267,6 +276,16 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
         templateExcel.setHasProject("是");
         templateExcel.setMarketCost("是");
         templateExcel.setMarketFor("是");
+        templateExcel.setContinueFollowUp("是");
+        templateExcel.setClosedLoop("是");
+        templateExcel.setNeedAssist("是");
+        templateExcel.setAssistDept("test");
+        templateExcel.setAssistContent("test");
+        templateExcel.setAssistLetter("是");
+        templateExcel.setAssistLetterNum("test");
+        templateExcel.setPlanFollowUp(LocalDate.now());
+        templateExcel.setProduceTrip("是");
+        templateExcel.setTrip(0d);
 
         templateExcels.add(templateExcel);
         Excel excel = new Excel(0, 2);

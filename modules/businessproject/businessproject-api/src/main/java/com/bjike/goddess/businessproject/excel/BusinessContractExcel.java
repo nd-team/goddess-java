@@ -1,6 +1,7 @@
 package com.bjike.goddess.businessproject.excel;
 
 import com.bjike.goddess.businessproject.enums.MakeContract;
+import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 
@@ -128,7 +129,7 @@ public class BusinessContractExcel extends BaseTO {
      * 是否有合同派工合同
      */
     @ExcelHeader(name = "是否有合同派工合同")
-    private String taskContract;
+    private TaskContract taskContract;
 
     /**
      * 市场编号
@@ -596,11 +597,11 @@ public class BusinessContractExcel extends BaseTO {
         this.major = major;
     }
 
-    public String getTaskContract() {
+    public TaskContract getTaskContract() {
         return taskContract;
     }
 
-    public void setTaskContract(String taskContract) {
+    public void setTaskContract(TaskContract taskContract) {
         this.taskContract = taskContract;
     }
 
