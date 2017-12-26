@@ -261,13 +261,15 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         dto.getConditions().add(Restrict.ne("eventStatus", EventStatus.HAVEDEAL.getValue()));
         List<Event> list = super.findByCis(dto);
         List<ContentBO> contentVOs = new ArrayList<>();
-        for (Event event : list) {
-            LocalDateTime request = event.getRequestTime();
-            if (year == request.getYear() && month == request.getMonthValue()) {
-                ContentBO vo = new ContentBO();
-                vo.setTime(DateUtil.dateToString(request));
-                vo.setContent(event.getFather().getProjectChineseName() + "的" + event.getContent());
-                contentVOs.add(vo);
+        if (list != null && list.size() > 0) {
+            for (Event event : list) {
+                LocalDateTime request = event.getRequestTime();
+                if (year == request.getYear() && month == request.getMonthValue()) {
+                    ContentBO vo = new ContentBO();
+                    vo.setTime(DateUtil.dateToString(request));
+                    vo.setContent(event.getFather().getProjectChineseName() + "的" + event.getContent());
+                    contentVOs.add(vo);
+                }
             }
         }
         return contentVOs;
