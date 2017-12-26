@@ -7,6 +7,7 @@ import com.bjike.goddess.supplier.bo.SupplierTypeSetBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeSetDTO;
 import com.bjike.goddess.supplier.entity.SupplierInfo;
 import com.bjike.goddess.supplier.entity.SupplierTypeSet;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeSetTO;
 
 import java.util.List;
@@ -21,6 +22,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SupplierTypeSetSer extends Ser<SupplierTypeSet, SupplierTypeSetDTO> {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
+
     /**
      * 供应商类型设置总条数
      */

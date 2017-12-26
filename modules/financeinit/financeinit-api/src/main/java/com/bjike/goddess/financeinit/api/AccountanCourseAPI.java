@@ -218,4 +218,40 @@ public interface AccountanCourseAPI {
     default List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
         return null;
     }
+    /**
+     * 获取一级科目为固定资产的所有对应的二级科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findByFixedAssets() throws SerException {
+        return null;
+    }
+    /**
+     * 根据科目名称获取代码
+     *
+     * @return
+     * @throws SerException
+     */
+    default String findByCourseName(String courseName) throws SerException {
+        return null;
+    }
+    /**
+     * 获取折旧费用科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepreciationAccount() throws SerException {
+        return null;
+    }
+    /**
+     * 获取税金科目
+     *
+     * @return
+     * @throws SerException
+     */
+    default String findtaxSubject() throws SerException {
+        return null;
+    }
 }

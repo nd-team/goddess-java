@@ -2,13 +2,11 @@ package com.bjike.goddess.assistance.action.assistance;
 
 import com.bjike.goddess.assistance.api.ComputerSubsidiesAPI;
 import com.bjike.goddess.assistance.dto.ComputerSubsidiesDTO;
-import com.bjike.goddess.assistance.entity.ComputerSubsidies;
 import com.bjike.goddess.assistance.excel.ComputerSubsidiesExcel;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesExcelTO;
 import com.bjike.goddess.assistance.to.ComputerSubsidiesTO;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.vo.ComputerSubsidiesVO;
-import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -19,13 +17,12 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +40,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("computersubsidies")
-public class ComputerSubsidiesAction extends BaseFileAction{
+public class ComputerSubsidiesAction extends BaseFileAction {
     @Autowired
     private ComputerSubsidiesAPI computerSubsidiesAPI;
 
@@ -69,6 +66,7 @@ public class ComputerSubsidiesAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 总条数
      *
@@ -196,7 +194,9 @@ public class ComputerSubsidiesAction extends BaseFileAction{
             List<ComputerSubsidiesExcel> tos = ExcelUtil.excelToClazz(is, ComputerSubsidiesExcel.class, excel);
             List<ComputerSubsidiesExcelTO> tocs = new ArrayList<>();
             for (ComputerSubsidiesExcel str : tos) {
-                ComputerSubsidiesExcelTO computerSubsidiesExcelTO = BeanTransform.copyProperties(str, ComputerSubsidiesExcelTO.class, "entryDate", "confirmDate");
+                ComputerSubsidiesExcelTO computerSubsidiesExcelTO = BeanTransform.copyProperties(str, ComputerSubsidiesExcelTO.class, "entryDate", "confirmDate", "necklineComputer","confirm");
+                computerSubsidiesExcelTO.setNecklineComputer(checkBool(str.getNecklineComputer(),"是否领用电脑"));
+                computerSubsidiesExcelTO.setConfirm(checkBool(str.getConfirm(),"是否确认"));
                 computerSubsidiesExcelTO.setEntryDate(String.valueOf(str.getEntryDate()));
                 computerSubsidiesExcelTO.setConfirmDate(String.valueOf(str.getConfirmDate()));
                 tocs.add(computerSubsidiesExcelTO);
@@ -209,6 +209,22 @@ public class ComputerSubsidiesAction extends BaseFileAction{
         }
     }
 
+    private Boolean checkBool(String type, String field) throws ActException {
+        Boolean bool = null;
+        if (type != null) {
+            switch (type) {
+                case "是":
+                    bool = true;
+                    break;
+                case "否":
+                    bool = false;
+                    break;
+                default:
+                    throw new ActException(field + "类型输入错误,正确格式为(是/否)");
+            }
+        }
+        return bool;
+    }
 
     /**
      * 导出excel

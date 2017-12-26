@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -292,6 +293,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void saveTempera(TemperatureSubsidiesTO temperatureSubsidiesTO) throws SerException {
         checkSeeIdentity();
         TemperatureSubsidies temperatureSubsidies = BeanTransform.copyProperties(temperatureSubsidiesTO, TemperatureSubsidies.class, true);
@@ -301,12 +303,13 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void editTempera(TemperatureSubsidiesTO temperatureSubsidiesTO) throws SerException {
         checkSeeIdentity();
         TemperatureSubsidies temperatureSubsidies = super.findById(temperatureSubsidiesTO.getId());
         LocalDateTime dateTime = temperatureSubsidies.getCreateTime();
         if (!temperatureSubsidies.getConfirm()) {
-            BeanTransform.copyProperties(temperatureSubsidies, temperatureSubsidies, true);
+            BeanTransform.copyProperties(temperatureSubsidiesTO, temperatureSubsidies, true);
             temperatureSubsidies.setCreateTime(dateTime);
             temperatureSubsidies.setModifyTime(LocalDateTime.now());
             temperatureSubsidies.setSubsidiesAmount(temperatureSubsidiesTO.getDays() * temperatureSubsidiesTO.getSubsidiesPrice());
@@ -317,6 +320,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void deleteTemp(String id) throws SerException {
         checkSeeIdentity();
         super.remove(id);
@@ -329,7 +333,8 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         List<TemperatureSubsidiesImport> temperatureSubsidiesImports = new ArrayList<>();
 
         for (TemperatureSubsidies temperatureSubsidies : list){
-            TemperatureSubsidiesImport excel = BeanTransform.copyProperties(temperatureSubsidies, TemperatureSubsidiesImport.class);
+            TemperatureSubsidiesImport excel = BeanTransform.copyProperties(temperatureSubsidies, TemperatureSubsidiesImport.class,"confirm");
+            excel.setConfirm((!temperatureSubsidies.getConfirm()?"否":"是"));
             StaffStatus staffStatus = positionDetailUserAPI.statusByName(excel.getName());//查看员工状态
             if (staffStatus == null) {
                 excel.setStaffStatus("未获取到数据");
@@ -357,7 +362,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
         excel.setOutdoorWorkDate("2017-12-12");
         excel.setDays(10);
         excel.setSubsidiesPrice(100d);
-        excel.setSubsidiesAmount(1000d);
+//        excel.setSubsidiesAmount(1000d);
         excel.setConfirm("是");
         excel.setConfirmDate("2017-12-12");
         excel.setSubsidiesStatus("在补助");
@@ -368,6 +373,7 @@ public class TemperatureSubsidiesSerImpl extends ServiceImpl<TemperatureSubsidie
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void importExcel(List<TemperatureSubsidiesExcelTO> temperatureSubsidiesExcelTOS) throws SerException {
         checkSeeIdentity();
         List<TemperatureSubsidies> senioritySubsidies = BeanTransform.copyProperties(temperatureSubsidiesExcelTOS, TemperatureSubsidies.class, true);

@@ -3,19 +3,22 @@ package com.bjike.goddess.supplier.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.supplier.bo.ContactSituationBO;
-import com.bjike.goddess.supplier.bo.SummationBO;
-import com.bjike.goddess.supplier.bo.SupplierInfoBO;
-import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
+import com.bjike.goddess.supplier.bo.*;
 import com.bjike.goddess.supplier.dto.*;
 import com.bjike.goddess.supplier.entity.*;
+import com.bjike.goddess.supplier.enums.GuideAddrStatus;
 import com.bjike.goddess.supplier.excel.SupplierInfoImport;
 import com.bjike.goddess.supplier.excel.SupplierInfoImportTemple;
 import com.bjike.goddess.supplier.to.*;
+import com.bjike.goddess.supplier.vo.SonPermissionObject;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import net.sf.ehcache.search.aggregator.Sum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,149 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
     private ContactSituationSer contactSituationSer;
     @Autowired
     private ProvideProductSer provideProductSer;
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private SupCusPermissionSer supCusPermissionSer;
+    @Autowired
+    private QualificationLevelSetSer qualificationLevelSetSer;
+    @Autowired
+    private SupplierTypeSetSer supplierTypeSetSer;
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = supCusPermissionSer.busSupCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = supCusPermissionSer.busSupCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeProblem = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("supplierInfo");
+        obj.setDescribesion("供应商信息管理");
+        if (flagSeeProblem) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagSeeResult = qualificationLevelSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("qualificationlevelset");
+        obj.setDescribesion("资质等级设置");
+        if (flagSeeResult) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagTypeSet = supplierTypeSetSer.sonPermission();
+        RpcTransmit.transmitUserToken(userToken);
+        obj = new SonPermissionObject();
+        obj.setName("suppliertypeset");
+        obj.setDescribesion("供应商类型设置");
+        if (flagTypeSet) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideSeeIdentity();
+                break;
+            case EDIT:
+                flag = guideSeeIdentity();
+                break;
+            case DELETE:
+                flag = guideSeeIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case IMPORT:
+                flag = guideSeeIdentity();
+                break;
+            case EXPORT:
+                flag = guideSeeIdentity();
+                break;
+            case UPLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+
 
     @Override
     public Long countSupplierInfo(SupplierInfoDTO supplierInfoDTO) throws SerException {
@@ -296,7 +442,7 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
         String startDate = summDate;
         String endDate = summDate;
 
-        return totalMethod(startDate,endDate);
+        return totalMethod(startDate, endDate);
     }
 
     //转换周期
@@ -343,7 +489,7 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
         String startDate = date[0];
         String endDate = date[1];
 
-        return totalMethod(startDate,endDate);
+        return totalMethod(startDate, endDate);
     }
 
     @Override
@@ -356,7 +502,7 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
         String endDate = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
 
 
-        return totalMethod(startDate,endDate);
+        return totalMethod(startDate, endDate);
     }
 
     public String[] quarterChange(Integer year, Integer quarter) throws SerException {
@@ -395,7 +541,7 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
         }
         String[] date = quarterChange(year, quarter);
 
-        return totalMethod(date[0],date[1]);
+        return totalMethod(date[0], date[1]);
     }
 
     @Override
@@ -406,7 +552,7 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
         String startDate = DateUtil.dateToString(LocalDate.of(year, 1, 1));
         String endDate = DateUtil.dateToString(LocalDate.of(year, 12, DateUtil.getDayByDate(year, 12)));
 
-        return totalMethod(startDate,endDate);
+        return totalMethod(startDate, endDate);
     }
 
     @Override
@@ -420,12 +566,12 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
             for (String bussType : bussTypes) {
                 StringBuilder sql = new StringBuilder();
                 sql.append("SELECT * FROM ( ");
-                sql.append(" (SELECT count(*) AS supplierMarketInfoNum FROM supplier_supplierinfo WHERE infoCollectDate < '"+endDate+"' and bussType='"+bussType+"' AND marketNum IS NOT NULL )a, ");
-                sql.append(" (SELECT count(*) AS supplierNum FROM supplier_supplierinfo WHERE infoCollectDate < '"+endDate+"' and bussType='"+bussType+"' )b, ");
-                sql.append(" (SELECT count(*) AS supplierImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate < '"+endDate+"' and bussType='"+bussType+"' AND is_infoPerfecting=1)c, ");
-                sql.append(" (SELECT count(*) AS supplierNoImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate < '"+endDate+"' and bussType='"+bussType+"' AND is_infoPerfecting=0)d, ");
-                sql.append(" (SELECT count(*) AS cooperatingSupplier FROM supplier_supplierinfo WHERE infoCollectDate < '"+endDate+"' and bussType='"+bussType+"' AND is_deterCooper=1)e, ");
-                sql.append(" (SELECT count(*) AS noCooperationSupplier FROM supplier_supplierinfo WHERE infoCollectDate < '"+endDate+"' and bussType='"+bussType+"' AND is_deterCooper=0)f ");
+                sql.append(" (SELECT count(*) AS supplierMarketInfoNum FROM supplier_supplierinfo WHERE infoCollectDate < '" + endDate + "' and bussType='" + bussType + "' AND marketNum IS NOT NULL )a, ");
+                sql.append(" (SELECT count(*) AS supplierNum FROM supplier_supplierinfo WHERE infoCollectDate < '" + endDate + "' and bussType='" + bussType + "' )b, ");
+                sql.append(" (SELECT count(*) AS supplierImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate < '" + endDate + "' and bussType='" + bussType + "' AND is_infoPerfecting=1)c, ");
+                sql.append(" (SELECT count(*) AS supplierNoImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate < '" + endDate + "' and bussType='" + bussType + "' AND is_infoPerfecting=0)d, ");
+                sql.append(" (SELECT count(*) AS cooperatingSupplier FROM supplier_supplierinfo WHERE infoCollectDate < '" + endDate + "' and bussType='" + bussType + "' AND is_deterCooper=1)e, ");
+                sql.append(" (SELECT count(*) AS noCooperationSupplier FROM supplier_supplierinfo WHERE infoCollectDate < '" + endDate + "' and bussType='" + bussType + "' AND is_deterCooper=0)f ");
                 sql.append(" )");
                 List<Object> objectList = super.findBySql(sql.toString());
                 Object[] objects = (Object[]) objectList.get(0);
@@ -451,19 +597,26 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
         return summationBOList;
     }
 
-    private List<SummationBO> totalMethod(String startDate,String endDate) throws SerException{
+    /**
+     * 汇总总方法
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws SerException
+     */
+    private List<SummationBO> totalMethod(String startDate, String endDate) throws SerException {
         List<SummationBO> summationBOList = new ArrayList<>();
         List<String> bussTypes = findBussType();
         if (bussTypes != null && bussTypes.size() > 0) {
             for (String bussType : bussTypes) {
                 StringBuilder sql = new StringBuilder();
                 sql.append("SELECT * FROM ( ");
-                sql.append(" (SELECT count(*) AS supplierMarketInfoNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '"+startDate+"' AND '"+endDate+"' and bussType='"+bussType+"' AND marketNum IS NOT NULL )a, ");
-                sql.append(" (SELECT count(*) AS supplierNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '"+startDate+"' AND '"+endDate+"' and bussType='"+bussType+"' )b, ");
-                sql.append(" (SELECT count(*) AS supplierImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '"+startDate+"' AND '"+endDate+"' and bussType='"+bussType+"' AND is_infoPerfecting=1)c, ");
-                sql.append(" (SELECT count(*) AS supplierNoImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '"+startDate+"' AND '"+endDate+"' and bussType='"+bussType+"' AND is_infoPerfecting=0)d, ");
-                sql.append(" (SELECT count(*) AS cooperatingSupplier FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '"+startDate+"' AND '"+endDate+"' and bussType='"+bussType+"' AND is_deterCooper=1)e, ");
-                sql.append(" (SELECT count(*) AS noCooperationSupplier FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '"+startDate+"' AND '"+endDate+"' and bussType='"+bussType+"' AND is_deterCooper=0)f ");
+                sql.append(" (SELECT count(*) AS supplierMarketInfoNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '" + startDate + "' AND '" + endDate + "' and bussType='" + bussType + "' AND marketNum IS NOT NULL )a, ");
+                sql.append(" (SELECT count(*) AS supplierNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '" + startDate + "' AND '" + endDate + "' and bussType='" + bussType + "' )b, ");
+                sql.append(" (SELECT count(*) AS supplierImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '" + startDate + "' AND '" + endDate + "' and bussType='" + bussType + "' AND is_infoPerfecting=1)c, ");
+                sql.append(" (SELECT count(*) AS supplierNoImprovedNum FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '" + startDate + "' AND '" + endDate + "' and bussType='" + bussType + "' AND is_infoPerfecting=0)d, ");
+                sql.append(" (SELECT count(*) AS cooperatingSupplier FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '" + startDate + "' AND '" + endDate + "' and bussType='" + bussType + "' AND is_deterCooper=1)e, ");
+                sql.append(" (SELECT count(*) AS noCooperationSupplier FROM supplier_supplierinfo WHERE infoCollectDate BETWEEN '" + startDate + "' AND '" + endDate + "' and bussType='" + bussType + "' AND is_deterCooper=0)f ");
                 sql.append(" )");
                 List<Object> objectList = super.findBySql(sql.toString());
                 Object[] objects = (Object[]) objectList.get(0);
@@ -487,5 +640,141 @@ public class SupplierInfoSerImpl extends ServiceImpl<SupplierInfo, SupplierInfoD
             }
         }
         return summationBOList;
+    }
+
+    @Override
+    public OptionBO figureShowDay(String summDate) throws SerException {
+        List<SummationBO> summationBOList = summaDay(summDate);
+        String text_1 = "供应商信息日统计";
+        return figureShow(summationBOList,text_1);
+    }
+
+    @Override
+    public OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
+        List<SummationBO> summationBOList = summaWeek(year,month,week);
+        String text_1 = "供应商信息周统计";
+        return figureShow(summationBOList,text_1);
+    }
+
+    @Override
+    public OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
+        List<SummationBO> summationBOList = summaMonth(year,month);
+        String text_1 = "供应商信息月统计";
+        return figureShow(summationBOList,text_1);
+    }
+
+    @Override
+    public OptionBO figureShowQuarter(Integer year, Integer quarter) throws SerException {
+        List<SummationBO> summationBOList = summaQuarter(year,quarter);
+        String text_1 = "供应商信息季度统计";
+        return figureShow(summationBOList,text_1);
+    }
+
+    @Override
+    public OptionBO figureShowYear(Integer year) throws SerException {
+        List<SummationBO> summationBOList = summaYear(year);
+        String text_1 = "供应商信息年统计";
+        return figureShow(summationBOList,text_1);
+    }
+
+    @Override
+    public OptionBO figureShowTotal(String endDate) throws SerException {
+        List<SummationBO> summationBOList = summaTotal(endDate);
+        String text_1 = "供应商信息累计统计";
+        return figureShow(summationBOList,text_1);
+    }
+
+    /**
+     * 图形展示总方法
+     *
+     * @param summationBOS 汇总数据对象
+     * @param text_1
+     * @return
+     * @throws SerException
+     */
+    public OptionBO figureShow(List<SummationBO> summationBOS, String text_1) throws SerException {
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        String[] text_2 = new String[]{"与市场信息关联的供应商", "供应商数量",
+                "供应商已完善信息", "供应商未完善信息", "正在合作供应商",
+                "未合作供应商"};
+        legendBO.setData(text_2);
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        List<String> text_list_3 = new ArrayList<>();//1
+
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        //悬停提示
+        TooltipBO tooltipBO = new TooltipBO();
+        //        tooltipBO.setTrigger("axis");
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        if (summationBOS != null && summationBOS.size() > 0) {
+            List<Integer> supplierMarketInfoNums = new ArrayList<>();
+            List<Integer> supplierNums = new ArrayList<>();
+            List<Integer> supplierImprovedNums = new ArrayList<>();
+            List<Integer> supplierNoImprovedNums = new ArrayList<>();
+            List<Integer> cooperatingSuppliers = new ArrayList<>();
+            List<Integer> noCooperationSuppliers = new ArrayList<>();
+
+            for (SummationBO summationBO : summationBOS) {
+                text_list_3.add(summationBO.getBussType());
+
+                //柱状图数据
+                supplierMarketInfoNums.add(summationBO.getSupplierMarketInfoNum());
+                supplierNums.add(summationBO.getSupplierNum());
+                supplierImprovedNums.add(summationBO.getSupplierImprovedNum());
+                supplierNoImprovedNums.add(summationBO.getSupplierNoImprovedNum());
+                cooperatingSuppliers.add(summationBO.getCooperatingSupplier());
+                noCooperationSuppliers.add(summationBO.getNoCooperationSupplier());
+            }
+            String[] dataNames = new String[]{"与市场信息关联的供应商", "供应商数量",
+                    "供应商已完善信息", "供应商未完善信息", "正在合作供应商",
+                    "未合作供应商"};
+            List<List<Integer>> datas = new ArrayList<>();
+            datas.add(supplierMarketInfoNums);
+            datas.add(supplierNums);
+            datas.add(supplierImprovedNums);
+            datas.add(supplierNoImprovedNums);
+            datas.add(cooperatingSuppliers);
+            datas.add(noCooperationSuppliers);
+            for (int i = 0; i < datas.size(); i++) {
+                SeriesBO seriesBO = new SeriesBO();
+                seriesBO.setName(dataNames[i]);
+                seriesBO.setType("bar");
+                Integer[] nums = new Integer[]{datas.get(i).size()};
+                nums = datas.get(i).toArray(nums);
+                seriesBO.setData(nums);
+                seriesBOList.add(seriesBO);
+            }
+
+        }
+
+        String[] text_3 = new String[text_list_3.size()];
+        text_3 = text_list_3.toArray(text_3);
+        xAxisBO.setData(text_3);
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+        return optionBO;
     }
 }
