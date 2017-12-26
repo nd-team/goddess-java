@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.NestedTransactionNotSupportedException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -117,13 +118,57 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     public byte[] exportExcel(BusinessNegotiationDTO dto) throws SerException {
         List<BusinessNegotiationExport> exports = new ArrayList<>();
         List<BusinessNegotiation> list = super.findByCis(dto);
-        list.stream().forEach(str->{
-            BusinessNegotiationExport export = BeanTransform.copyProperties(str,BusinessNegotiationExport.class);
-            exports.add(export);
-        });
+        if(list != null && list.size()>0){
+            for(BusinessNegotiation negotiation:list){
+                BusinessNegotiationExport export = BeanTransform.copyProperties(negotiation,BusinessNegotiationExport.class,
+                        "discussPrepare","discuss","attainDiscussIdea","discussProblem","soundRecord",
+                        "hasProject","marketCost","marketFor","continueFollowUp","closedLoop",
+                        "needAssist","assistLetter","produceTrip");
+                //是否有洽谈准备
+                export.setDiscussPrepare(boolToString(negotiation.getDiscussPrepare()));
+                //是否洽谈
+                export.setDiscuss(boolToString(negotiation.getDiscuss()));
+                //是否达到洽谈目的
+                export.setAttainDiscussIdea(boolToString(negotiation.getAttainDiscussIdea()));
+                //是否有录音
+                export.setDiscussProblem(boolToString(negotiation.getDiscussProblem()));
+                //是否有洽谈到其他问题
+                export.setSoundRecord(boolToString(negotiation.getSoundRecord()));
+                //是否转入合同管理-已立项
+                export.setHasProject(boolToString(negotiation.getHasProject()));
+                //是否转入合同管理-市场费用
+                export.setMarketCost(boolToString(negotiation.getMarketCost()));
+                //是否转换市场招待
+                export.setMarketFor(boolToString(negotiation.getMarketFor()));
+                //是否持续跟进
+                export.setContinueFollowUp(boolToString(negotiation.getContinueFollowUp()));
+                //是否闭环
+                export.setClosedLoop(boolToString(negotiation.getClosedLoop()));
+                //是否需要协助
+                export.setNeedAssist(boolToString(negotiation.getNeedAssist()));
+                //是否已发协助函
+                export.setAssistLetter(boolToString(negotiation.getAssistLetter()));
+                //是否产生路费
+                export.setProduceTrip(boolToString(negotiation.getProduceTrip()));
+                exports.add(export);
+            }
+        }
+
         Excel excel = new Excel(0,2);
         byte[] bytes = ExcelUtil.clazzToExcel(exports,excel);
         return bytes;
+    }
+
+    private String boolToString(Boolean bool)throws SerException{
+        String str= "";
+        if(bool != null){
+            if(bool){
+                str = "是";
+            }else {
+                str = "否";
+            }
+        }
+        return str;
     }
 
     @Override
