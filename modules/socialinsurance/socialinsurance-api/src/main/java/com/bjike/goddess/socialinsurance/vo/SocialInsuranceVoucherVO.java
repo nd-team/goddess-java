@@ -1,26 +1,22 @@
-package com.bjike.goddess.socialinsurance.bo;
-
-import com.bjike.goddess.common.api.bo.BaseBO;
+package com.bjike.goddess.socialinsurance.vo;
 
 /**
- * 社会保险汇总
  * @Author: [caiwenxian]
- * @Date: [2017-12-21 17:42]
- * @Description: [　社会保险汇总 ]
+ * @Date: [2017-12-21 17:44]
+ * @Description: [ ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SocialInsuranceCollectBO extends BaseBO{
+public class SocialInsuranceVoucherVO {
+    /**
+     * 年份
+     */
+    private int year;
 
     /**
-     * 开始日期
+     * 月份
      */
-    private String startDate;
-
-    /**
-     * 结束日期
-     */
-    private String endDate;
+    private int month;
 
     /**
      * 姓名
@@ -51,27 +47,6 @@ public class SocialInsuranceCollectBO extends BaseBO{
      * 地区
      */
     private String area;
-
-    /**
-     * 日期
-     */
-    private String taxDate;
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
 
     public String getName() {
         return name;
@@ -121,11 +96,19 @@ public class SocialInsuranceCollectBO extends BaseBO{
         this.area = area;
     }
 
-    public String getTaxDate() {
-        return taxDate;
+    public int getYear() {
+        return year;
     }
 
-    public void setTaxDate(String taxDate) {
-        this.taxDate = taxDate;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 }
