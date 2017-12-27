@@ -1,5 +1,7 @@
 package com.bjike.goddess.assistance.excel;
 
+import com.bjike.goddess.assistance.enums.SubsidiesStatus;
+import com.bjike.goddess.assistance.enums.Usage;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
@@ -52,7 +54,7 @@ public class ComputerSubsidiesExcel extends BaseTO {
      * 使用情况
      */
     @ExcelHeader(name = "使用情况")
-    private String usage;
+    private Usage usage;
 
     /**
      * 电脑补助额
@@ -76,7 +78,7 @@ public class ComputerSubsidiesExcel extends BaseTO {
      * 补助状态
      */
     @ExcelHeader(name = "补助状态", notNull = true)
-    private String subsidiesStatus;
+    private SubsidiesStatus subsidiesStatus;
 
 
     public String getArea() {
@@ -119,11 +121,11 @@ public class ComputerSubsidiesExcel extends BaseTO {
         this.necklineComputer = necklineComputer;
     }
 
-    public String getUsage() {
+    public Usage getUsage() {
         return usage;
     }
 
-    public void setUsage(String usage) {
+    public void setUsage(Usage usage) {
         this.usage = usage;
     }
 
@@ -151,12 +153,11 @@ public class ComputerSubsidiesExcel extends BaseTO {
         this.confirmDate = confirmDate;
     }
 
-    public String getSubsidiesStatus() {
+    public SubsidiesStatus getSubsidiesStatus() {
         return subsidiesStatus;
     }
 
-    public void setSubsidiesStatus(String subsidiesStatus) {
+    public void setSubsidiesStatus(SubsidiesStatus subsidiesStatus) {
         this.subsidiesStatus = subsidiesStatus;
     }
-
 }

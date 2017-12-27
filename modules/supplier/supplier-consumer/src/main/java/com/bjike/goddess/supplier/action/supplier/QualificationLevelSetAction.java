@@ -12,6 +12,7 @@ import com.bjike.goddess.supplier.api.QualificationLevelSetAPI;
 import com.bjike.goddess.supplier.bo.QualificationLevelSetBO;
 import com.bjike.goddess.supplier.dto.QualificationLevelSetDTO;
 import com.bjike.goddess.supplier.entity.QualificationLevelSet;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.QualificationLevelSetTO;
 import com.bjike.goddess.supplier.vo.QualificationLevelSetVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,29 @@ import java.util.List;
 public class QualificationLevelSetAction {
     @Autowired
     private QualificationLevelSetAPI qualificationLevelSetAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = qualificationLevelSetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 根据id查询资质等级设置

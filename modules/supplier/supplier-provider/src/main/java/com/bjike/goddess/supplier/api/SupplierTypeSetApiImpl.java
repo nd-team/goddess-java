@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.SupplierTypeSetBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeSetDTO;
 import com.bjike.goddess.supplier.service.SupplierTypeSetSer;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeSetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,16 @@ import java.util.List;
 public class SupplierTypeSetApiImpl implements SupplierTypeSetAPI {
     @Autowired
     private SupplierTypeSetSer supplierTypeSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return supplierTypeSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return supplierTypeSetSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countSupplierTypeSet(SupplierTypeSetDTO supplierTypeSetDTO) throws SerException {

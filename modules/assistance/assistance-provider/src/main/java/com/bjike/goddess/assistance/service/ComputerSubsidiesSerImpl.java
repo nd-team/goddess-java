@@ -285,7 +285,7 @@ public class ComputerSubsidiesSerImpl extends ServiceImpl<ComputerSubsidies, Com
         excel.setName("张三");
         excel.setEntryDate("2017-09-12");
         excel.setNecklineComputer("否");
-        excel.setUsage("使用自己的电脑");
+        excel.setUsage("用自己的电脑");
         excel.setComputerAmount(100d);
         excel.setConfirm("是");
         excel.setConfirmDate("2017-12-12");

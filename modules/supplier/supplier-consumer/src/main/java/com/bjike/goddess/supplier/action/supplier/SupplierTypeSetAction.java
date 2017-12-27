@@ -12,6 +12,7 @@ import com.bjike.goddess.supplier.api.SupplierTypeSetAPI;
 import com.bjike.goddess.supplier.bo.SupplierTypeSetBO;
 import com.bjike.goddess.supplier.dto.SupplierTypeSetDTO;
 import com.bjike.goddess.supplier.entity.SupplierTypeSet;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierTypeSetTO;
 import com.bjike.goddess.supplier.vo.SupplierTypeSetVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,29 @@ import java.util.List;
 public class SupplierTypeSetAction {
     @Autowired
     private SupplierTypeSetAPI supplierTypeSetAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = supplierTypeSetAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 根据id查询供应商类型设置
      *
