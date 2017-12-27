@@ -1,5 +1,7 @@
 package com.bjike.goddess.socialinsurance.dto;
 
+import com.bjike.goddess.common.api.dto.BaseDTO;
+
 /**
  * @Author: [caiwenxian]
  * @Date: [2017-12-21 17:51]
@@ -7,7 +9,7 @@ package com.bjike.goddess.socialinsurance.dto;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SocialInsuranceVoucherTO {
+public class SocialInsuranceVoucherDTO extends BaseDTO{
 
     /**
      * 年份

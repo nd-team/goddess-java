@@ -1,4 +1,4 @@
-package com.bjike.goddess.businessprojectmanage.bo;
+package com.bjike.goddess.socialinsurance.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
@@ -11,7 +11,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BCCollectEchartBO extends BaseBO {
+public class SICollectEchartBO extends BaseBO {
     /**
      * 标题
      */
@@ -45,8 +45,8 @@ public class BCCollectEchartBO extends BaseBO {
         return tooltip;
     }
 
-    public void setTooltip(TooltipBO tooltipBO) {
-        this.tooltip = tooltipBO;
+    public void setTooltip(TooltipBO tooltip) {
+        this.tooltip = tooltip;
     }
 
     public TitleBO getTitle() {
@@ -88,4 +88,6 @@ public class BCCollectEchartBO extends BaseBO {
     public void setSeries(SeriesBO[] series) {
         this.series = series;
     }
+
+
 }

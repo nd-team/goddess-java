@@ -1,26 +1,30 @@
-package com.bjike.goddess.socialinsurance.bo;
+package com.bjike.goddess.socialinsurance.to;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.DEL;
+import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.to.BaseTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 社会保险汇总
+ * 社保缴费汇总传输对象
  * @Author: [caiwenxian]
- * @Date: [2017-12-21 17:42]
- * @Description: [　社会保险汇总 ]
+ * @Date: [2017-12-21 17:44]
+ * @Description: [ 社保缴费汇总传输对象 ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SocialInsuranceCollectBO extends BaseBO{
+public class SocialInsuranceVoucherTO extends BaseTO{
+
+    public interface Add {};
+    /**
+     * 年份
+     */
+    private int year;
 
     /**
-     * 开始日期
+     * 月份
      */
-    private String startDate;
-
-    /**
-     * 结束日期
-     */
-    private String endDate;
+    private int month;
 
     /**
      * 姓名
@@ -52,26 +56,8 @@ public class SocialInsuranceCollectBO extends BaseBO{
      */
     private String area;
 
-    /**
-     * 日期
-     */
-    private String taxDate;
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
+    @NotBlank(message = "ids不能为空", groups = {SocialInsuranceVoucherTO.Add.class})
+    private String[] ids;
 
     public String getName() {
         return name;
@@ -121,11 +107,27 @@ public class SocialInsuranceCollectBO extends BaseBO{
         this.area = area;
     }
 
-    public String getTaxDate() {
-        return taxDate;
+    public int getYear() {
+        return year;
     }
 
-    public void setTaxDate(String taxDate) {
-        this.taxDate = taxDate;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public String[] getIds() {
+        return ids;
+    }
+
+    public void setIds(String[] ids) {
+        this.ids = ids;
     }
 }

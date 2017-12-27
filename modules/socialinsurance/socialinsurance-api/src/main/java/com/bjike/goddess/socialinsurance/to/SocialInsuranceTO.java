@@ -15,13 +15,6 @@ import javax.validation.constraints.NotNull;
  */
 public class SocialInsuranceTO extends BaseTO {
 
-//    public interface Edit{};
-//
-//    /**
-//     * id
-//     */
-//    @NotNull(groups = {SocialInsuranceTO.Edit.class} , message = "id不能为空")
-//    private String id;
 
     /**
      * 税费所属时期

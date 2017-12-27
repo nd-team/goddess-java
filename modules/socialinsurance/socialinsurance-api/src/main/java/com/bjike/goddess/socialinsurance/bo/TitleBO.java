@@ -16,11 +16,39 @@ public class TitleBO extends BaseBO{
      */
     private String text;
 
+    /**
+     * title位置
+     */
+    private String x;
+
+    public TitleBO() {
+
+    }
+
+    public TitleBO(String text) {
+        this.text = text;
+    }
+
+    public TitleBO(String text, String x) {
+        this.text = text;
+        this.x = x;
+    }
+
+
+
     public String getText() {
         return text;
     }
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x;
     }
 }
