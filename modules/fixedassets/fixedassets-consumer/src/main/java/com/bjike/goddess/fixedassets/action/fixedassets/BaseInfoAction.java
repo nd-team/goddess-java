@@ -306,7 +306,7 @@ public class BaseInfoAction extends BaseFileAction {
     @GetMapping("v1/templateExport")
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
-            String fileName = "市场活动申请模板.xlsx";
+            String fileName = "基本信息模板.xlsx";
             super.writeOutFile(response, baseInfoAPI.templateExport(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {

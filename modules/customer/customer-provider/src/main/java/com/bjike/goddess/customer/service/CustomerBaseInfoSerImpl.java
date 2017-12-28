@@ -289,6 +289,9 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         } else {
             String levelName = customerBaseInfoTO.getCustomerLevelName();
             CustomerLevelBO customerLevelBO = customerLevelSer.getCustomerLevelByName(levelName);
+            if(null==customerLevelBO){
+                throw new SerException("该重要性级别不存在,请先在重要性级别设置中添加此级别");
+            }
             CustomerLevel customerLevel = BeanTransform.copyProperties(customerLevelBO, CustomerLevel.class, true);
 
             RpcTransmit.transmitUserToken(userToken);
@@ -1026,7 +1029,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
                     int firstRow = index;
                     int lastRow = 0;
                     lastRow = firstRow + mergeRowCount - 1;
-                    for (int i = 0; i < 63; i++) {
+                    for (int i = 0; i < 64; i++) {
                         sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, i, i));
                     }
                     index = lastRow + 1;
@@ -1095,6 +1098,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple.setMarketReceptionRecord("text");
         customerBaseInfoExportTemple.setMarketInfoRecord("text");
         customerBaseInfoExportTemple.setProceedMarketTreat("text");
+        customerBaseInfoExportTemple.setCallcyle(2);
         customerBaseInfoExportTemple.setAge(18);
         customerBaseInfoExportTemple.setBirthday("2017/12/12");
         customerBaseInfoExportTemple.setWorkExperience("text");
@@ -1108,7 +1112,6 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple.setCharactLove("想干嘛就干嘛");
         customerBaseInfoExportTemple.setWorkPlace("text");
         customerBaseInfoExportTemple.setJobPost("text");
-        customerBaseInfoExportTemple.setCallcyle(2);
         customerBaseInfoExportTemples.add(customerBaseInfoExportTemple);
 
         CustomerBaseInfoExportTemple customerBaseInfoExportTemple2 = new CustomerBaseInfoExportTemple();
@@ -1160,6 +1163,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple2.setMarketReceptionRecord("text");
         customerBaseInfoExportTemple2.setMarketInfoRecord("text");
         customerBaseInfoExportTemple2.setProceedMarketTreat("text");
+        customerBaseInfoExportTemple2.setCallcyle(2);
         customerBaseInfoExportTemple2.setAge(18);
         customerBaseInfoExportTemple2.setBirthday("2017/12/12");
         customerBaseInfoExportTemple2.setWorkExperience("text");
@@ -1173,7 +1177,6 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple2.setCharactLove("想干嘛就干嘛");
         customerBaseInfoExportTemple2.setWorkPlace("text");
         customerBaseInfoExportTemple2.setJobPost("text");
-        customerBaseInfoExportTemple2.setCallcyle(2);
         customerBaseInfoExportTemples.add(customerBaseInfoExportTemple2);
 
         CustomerBaseInfoExportTemple customerBaseInfoExportTemple3 = new CustomerBaseInfoExportTemple();
@@ -1225,6 +1228,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple3.setMarketReceptionRecord("text");
         customerBaseInfoExportTemple3.setMarketInfoRecord("text");
         customerBaseInfoExportTemple3.setProceedMarketTreat("text");
+        customerBaseInfoExportTemple3.setCallcyle(2);
         customerBaseInfoExportTemple3.setAge(18);
         customerBaseInfoExportTemple3.setBirthday("2017/12/12");
         customerBaseInfoExportTemple3.setWorkExperience("text");
@@ -1238,7 +1242,6 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple3.setCharactLove("想干嘛就干嘛");
         customerBaseInfoExportTemple3.setWorkPlace("text");
         customerBaseInfoExportTemple3.setJobPost("text");
-        customerBaseInfoExportTemple3.setCallcyle(2);
         customerBaseInfoExportTemples.add(customerBaseInfoExportTemple3);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(customerBaseInfoExportTemples, excel);
@@ -1259,7 +1262,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
 //                    int firstRow = index;
 //                    int lastRow =0;
 //                    lastRow = firstRow+mergeRowCount-1;
-                for (int i = 0; i < 54; i++) {
+                for (int i = 0; i < 55; i++) {
                     sheet.addMergedRegion(new CellRangeAddress(1, 3, i, i));
                 }
 //                    index =lastRow+1;

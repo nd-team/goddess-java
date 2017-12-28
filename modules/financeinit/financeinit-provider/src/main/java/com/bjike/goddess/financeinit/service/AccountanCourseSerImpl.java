@@ -652,9 +652,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
             String name = code+"费用管理-折旧费";
             depreciationAccount.add(name);
         }
-        StringBuffer sql1 = new StringBuffer("select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
-        sql.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '研发费用') ");
-        sql.append(" and LENGTH(code) = 6 ");
+        StringBuffer sql1 = new StringBuffer(" select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
+        sql1.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '研发费用') ");
+        sql1.append(" and LENGTH(code) = 6 ");
         List<Object> objectList1 = super.findBySql(sql1.toString());
         if(objectList1!=null&& objectList1.size()>0){
             String code = String.valueOf(objectList1.get(0));
