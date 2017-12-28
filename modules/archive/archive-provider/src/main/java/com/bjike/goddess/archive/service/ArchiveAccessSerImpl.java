@@ -489,25 +489,14 @@ public class ArchiveAccessSerImpl extends ServiceImpl<ArchiveAccess, ArchiveAcce
         return bytes;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
-    public void upload(List<ArchiveAccessImportExcel> tos) throws SerException {
+    public void upload(List<ArchiveAccessTO> tos) throws SerException {
         String userToken = RpcTransmit.getUserToken();
+        RpcTransmit.transmitUserToken(userToken);
         if (null != tos && tos.size() > 0) {
-            for (ArchiveAccessImportExcel excel : tos) {
-                ArchiveAccess entity = BeanTransform.copyProperties(excel, ArchiveAccess.class, true, "audit");
-                if (isOrder(excel.getEnd(), DateUtil.dateToString(LocalDate.now()))) {
-                    entity.setOverdue(true);
-                }
-                AuditType type = transString(excel.getAudit());
-                if (null != type) {
-                    entity.setAudit(type);
-                } else {
-                    entity.setAudit(AuditType.NONE);
-                }
-                UserBO userBO = userAPI.currentUser();
-                RpcTransmit.transmitUserToken(userToken);
-                entity.setUsername(userBO.getUsername());
-                super.save(entity);
+            for (ArchiveAccessTO to : tos) {
+                this.save(to);
             }
         }
     }

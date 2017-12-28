@@ -6,5 +6,4 @@ dependencies {
     compile project(":modules:user:user-api")
     compile project(":modules:voucher:voucher-api")
     compile project(":modules:assemble:assemble-api")
-    compile project(":modules:subjectcollect:subjectcollect-api")
 }

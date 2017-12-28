@@ -64,8 +64,8 @@ public class ProjectWeekTO extends BaseTO {
     /**
      * 实际完工量
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "实际完工量不能为空")
-    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "实际完工量必须大于0")
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "实际完工量不能为空")
+//    @Min(value = 0, groups = {ADD.class, EDIT.class}, message = "实际完工量必须大于0")
     private Integer actualWork;
 
     private Integer workDifferences;
@@ -87,8 +87,8 @@ public class ProjectWeekTO extends BaseTO {
     /**
      * 计划收入
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划收入不能为空")
-    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "计划收入必须大于0")
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "计划收入不能为空")
+//    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, inclusive = false, message = "计划收入必须大于0")
     private Double planIncome;
 
     private Double incomeDifferences;

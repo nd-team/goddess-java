@@ -86,4 +86,9 @@ public class ArrivalMonthApiImpl implements ArrivalMonthAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return arrivalMonthSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<ArrivalMonthCountBO> collect(ArrivalMonthDTO dto) throws SerException {
+        return arrivalMonthSer.collect(dto);
+    }
 }

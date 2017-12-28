@@ -3,7 +3,6 @@ package com.bjike.goddess.budget.service;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekListBO;
-import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.entity.ProjectWeek;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -140,4 +139,26 @@ public interface ProjectWeekSer extends Ser<ProjectWeek, ProjectWeekDTO> {
      * @throws SerException
      */
     byte[] templateExport() throws SerException;
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     * zhuangkaiqin
+     */
+    default List<ProjectWeekCountBO> collect(ProjectWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 汇总时获取地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAreas() throws SerException {
+        return null;
+    }
 }

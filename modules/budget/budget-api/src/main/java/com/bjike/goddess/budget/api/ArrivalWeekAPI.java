@@ -3,7 +3,6 @@ package com.bjike.goddess.budget.api;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
-import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.vo.SonPermissionObject;
@@ -128,4 +127,15 @@ public interface ArrivalWeekAPI {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ArrivalWeekCountBO> collect(ArrivalWeekDTO dto) throws SerException {
+        return null;
+    }
 }

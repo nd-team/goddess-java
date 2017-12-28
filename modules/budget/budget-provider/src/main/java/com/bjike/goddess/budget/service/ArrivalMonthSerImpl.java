@@ -15,6 +15,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 地区收入月业务实现
@@ -162,6 +164,119 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
 
         RpcTransmit.transmitUserToken(userToken);
         return flag;
+    }
+
+    @Override
+    public List<ArrivalMonthCountBO> collect(ArrivalMonthDTO dto) throws SerException {
+        checkSeeIdentity();
+        List<ArrivalMonthCountBO> boList = new ArrayList<ArrivalMonthCountBO>();
+        Integer targetWorkSum = 0;
+        Integer actualWorkSum = 0;
+        Integer workDifferencesSum = 0;
+        Double targetIncomeSum = 0.00;
+        Double planIncomeSum = 0.00;
+        Double incomeDifferencesSum = 0.00;
+
+        ArrivalMonthDTO dto1 = new ArrivalMonthDTO();
+        if (null != dto.getArrivals()) {
+            for (String arrival : dto.getArrivals()) {
+                dto1 = new ArrivalMonthDTO();
+                dto1 = condition(dto);
+                dto1.getConditions().add(Restrict.eq("arrival", arrival));
+                dto1.getSorts().add("year=desc");
+                dto1.getSorts().add("month=asc");
+                List<ArrivalMonth> projectMonths = super.findByCis(dto1);
+                if (null != projectMonths && projectMonths.size() > 0) {
+                    List<String> arrivals = projectMonths.stream().map(ArrivalMonth::getArrival).distinct().collect(Collectors.toList());
+                    List<Integer> years = projectMonths.stream().map(ArrivalMonth::getYear).distinct().collect(Collectors.toList());
+                    List<Integer> months = projectMonths.stream().map(ArrivalMonth::getMonth).distinct().collect(Collectors.toList());
+//                    for (String area : arrivals) {
+                    for (Integer year : years) {
+//                        for (Integer month : months) {
+                        for (ArrivalMonth entity : projectMonths) {
+                            if (entity.getYear().equals(year)) {
+                                targetIncomeSum += entity.getTargetIncome();
+                                planIncomeSum += entity.getPlanIncome();
+                                double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += entity.getTargetWork();
+                                actualWorkSum += entity.getActualWork();
+                                int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                workDifferencesSum += workDifference;
+                            }
+                        }
+                        if (targetWorkSum != 0) {
+                            ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                            bo.setArrival(arrival);
+                            bo.setYear(year);
+//                                    bo.setProjectName(price);
+                            bo.setTargetWorkSum(targetWorkSum);
+                            bo.setActualWorkSum(actualWorkSum);
+                            bo.setWorkDifferencesSum(workDifferencesSum);
+                            bo.setTargetIncomeSum(targetIncomeSum);
+                            bo.setPlanIncomeSum(planIncomeSum);
+                            bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                            boList.add(bo);
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;     //置为0
+                        }
+                    }
+                }
+
+            }
+        } else {
+            dto1 = new ArrivalMonthDTO();
+            dto1 = condition(dto);
+            dto1.getSorts().add("year=desc");
+            dto1.getSorts().add("month=asc");
+            List<ArrivalMonth> projectMonths = super.findByCis(dto1);
+            if (null != projectMonths && projectMonths.size() > 0) {
+                List<String> arrivals = projectMonths.stream().map(ArrivalMonth::getArrival).distinct().collect(Collectors.toList());
+                List<Integer> years = projectMonths.stream().map(ArrivalMonth::getYear).distinct().collect(Collectors.toList());
+                List<Integer> months = projectMonths.stream().map(ArrivalMonth::getMonth).distinct().collect(Collectors.toList());
+                for (String area : arrivals) {
+                    for (Integer year : years) {
+//                        for (Integer month : months) {
+                        for (ArrivalMonth entity : projectMonths) {
+                            if (entity.getArrival().equals(area) && entity.getYear().equals(year)) {
+                                targetIncomeSum += entity.getTargetIncome();
+                                planIncomeSum += entity.getPlanIncome();
+                                double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                incomeDifferencesSum += incomeDifference;
+                                targetWorkSum += entity.getTargetWork();
+                                actualWorkSum += entity.getActualWork();
+                                int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                workDifferencesSum += workDifference;
+                            }
+                        }
+                        if (targetWorkSum != 0) {
+                            ArrivalMonthCountBO bo = new ArrivalMonthCountBO();
+                            bo.setArrival(area);
+                            bo.setYear(year);
+//                                    bo.setProjectName(price);
+                            bo.setTargetWorkSum(targetWorkSum);
+                            bo.setActualWorkSum(actualWorkSum);
+                            bo.setWorkDifferencesSum(workDifferencesSum);
+                            bo.setTargetIncomeSum(targetIncomeSum);
+                            bo.setPlanIncomeSum(planIncomeSum);
+                            bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                            boList.add(bo);
+                            targetWorkSum = 0;
+                            actualWorkSum = 0;
+                            workDifferencesSum = 0;
+                            targetIncomeSum = 0.00;
+                            planIncomeSum = 0.00;
+                            incomeDifferencesSum = 0.00;     //置为0
+                        }
+                    }
+                }
+            }
+        }
+        return boList;
     }
 
     @Override
@@ -386,5 +501,17 @@ public class ArrivalMonthSerImpl extends ServiceImpl<ArrivalMonth, ArrivalMonthD
     @Override
     public Long countNum(ArrivalMonthDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    private ArrivalMonthDTO condition(ArrivalMonthDTO dto) throws SerException {
+        ArrivalMonthDTO dto1 = new ArrivalMonthDTO();
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto1.getConditions().add(Restrict.eq("arrival", dto.getArea()));
+        }
+        if (StringUtils.isNotBlank(dto.getTime())) {
+            dto1.getConditions().add(Restrict.eq("year", dto.getTime()));
+//            dto1.getConditions().add(Restrict.eq("month", dto.getTime().substring(dto.getTime().indexOf("-") + 1, dto.getTime().length())));
+        }
+        return dto1;
     }
 }

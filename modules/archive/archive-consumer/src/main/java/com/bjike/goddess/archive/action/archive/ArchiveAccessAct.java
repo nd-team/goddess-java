@@ -369,7 +369,15 @@ public class ArchiveAccessAct extends BaseFileAction {
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<ArchiveAccessImportExcel> tos = ExcelUtil.excelToClazz(is, ArchiveAccessImportExcel.class, excel);
-            archiveAccessAPI.upload(tos);
+            List<ArchiveAccessTO> archiveAccessTOs = new ArrayList<>(0);
+            if (null != tos && tos.size() > 0) {
+                for (ArchiveAccessImportExcel excel1 : tos) {
+                    ArchiveAccessTO to = BeanTransform.copyProperties(excel1, ArchiveAccessTO.class, false);
+                    to.setAccessNames(excel1.getAccess().split(","));
+                    archiveAccessTOs.add(to);
+                }
+            }
+            archiveAccessAPI.upload(archiveAccessTOs);
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

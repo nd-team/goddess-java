@@ -91,9 +91,9 @@ public class BusinessSerImpl extends ServiceImpl<Business, BusinessDTO> implemen
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = marPermissionSer.getMarPermission(planCheck);
+        Boolean flagSeeSign = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = marPermissionSer.getMarPermission(planManage);
+        Boolean flagAddSign = guideAddIdentity();
 
         SonPermissionObject obj = new SonPermissionObject();
 

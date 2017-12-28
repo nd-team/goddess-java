@@ -143,4 +143,15 @@ public interface ProjectMonthAPI {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        return null;
+    }
 }

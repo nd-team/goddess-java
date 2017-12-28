@@ -42,7 +42,6 @@
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.ModuleTypeAPI" id="moduleTypeApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.PositionDetailAPI" id="positionDetailApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
-	<dubbo:reference validation="true"  interface="com.bjike.goddess.subjectcollect.api.SubjectCollectAPI" id="subjectCollectApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.voucher.api.VoucherGenerateAPI" id="voucherGenerateApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
 	<dubbo:reference validation="true"  interface="com.bjike.goddess.financeinit.api.AccountanCourseAPI" id="accountanCourseApiImpl"/>
