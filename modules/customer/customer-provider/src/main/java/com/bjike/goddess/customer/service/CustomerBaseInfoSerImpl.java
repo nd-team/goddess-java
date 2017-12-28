@@ -1108,6 +1108,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple.setCharactLove("想干嘛就干嘛");
         customerBaseInfoExportTemple.setWorkPlace("text");
         customerBaseInfoExportTemple.setJobPost("text");
+        customerBaseInfoExportTemple.setCallcyle(2);
         customerBaseInfoExportTemples.add(customerBaseInfoExportTemple);
 
         CustomerBaseInfoExportTemple customerBaseInfoExportTemple2 = new CustomerBaseInfoExportTemple();
@@ -1172,6 +1173,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple2.setCharactLove("想干嘛就干嘛");
         customerBaseInfoExportTemple2.setWorkPlace("text");
         customerBaseInfoExportTemple2.setJobPost("text");
+        customerBaseInfoExportTemple2.setCallcyle(2);
         customerBaseInfoExportTemples.add(customerBaseInfoExportTemple2);
 
         CustomerBaseInfoExportTemple customerBaseInfoExportTemple3 = new CustomerBaseInfoExportTemple();
@@ -1236,6 +1238,7 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         customerBaseInfoExportTemple3.setCharactLove("想干嘛就干嘛");
         customerBaseInfoExportTemple3.setWorkPlace("text");
         customerBaseInfoExportTemple3.setJobPost("text");
+        customerBaseInfoExportTemple3.setCallcyle(2);
         customerBaseInfoExportTemples.add(customerBaseInfoExportTemple3);
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(customerBaseInfoExportTemples, excel);

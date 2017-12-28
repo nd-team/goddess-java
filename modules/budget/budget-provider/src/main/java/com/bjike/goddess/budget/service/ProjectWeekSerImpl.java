@@ -242,6 +242,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setYear(bo.getYear());
             projectMonthTO.setMonth(bo.getMonth());
 //            projectMonthTO.setPrice(bo.getPrice());
+            projectMonthTO.setProjectName(bo.getProjectName());
             projectMonthTO.setTargetWork(bo.getTargetWorkSum());
             projectMonthTO.setActualWork(bo.getActualWorkSum());
             projectMonthTO.setWorkDifferences(bo.getWorkDifferencesSum());

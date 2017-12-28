@@ -67,7 +67,7 @@ public class FundRecordTO extends BaseTO {
     private String dataSource;
 
     /**
-     * 金额
+     * 余额
      */
     @NotNull(message = "金额不能为空", groups = {ADD.class, EDIT.class})
     private Double amount;

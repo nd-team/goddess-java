@@ -352,6 +352,12 @@ public class CustomerBaseInfoExcel extends BaseTO {
     private String charactLove;
 
     /**
+     * 拜访周期
+     */
+    @ExcelHeader(name = "拜访周期",notNull = true)
+    private Integer callcyle;
+
+    /**
      * 工作单位
      */
     @ExcelHeader(name = "工作单位")
@@ -849,5 +855,13 @@ public class CustomerBaseInfoExcel extends BaseTO {
 
     public void setJobPost(String jobPost) {
         this.jobPost = jobPost;
+    }
+
+    public Integer getCallcyle() {
+        return callcyle;
+    }
+
+    public void setCallcyle(Integer callcyle) {
+        this.callcyle = callcyle;
     }
 }

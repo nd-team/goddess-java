@@ -5,8 +5,10 @@ import com.bjike.goddess.fixedassets.bo.BaseInfoBO;
 import com.bjike.goddess.fixedassets.bo.BaseInfoDetailBO;
 import com.bjike.goddess.fixedassets.bo.SummationBO;
 import com.bjike.goddess.fixedassets.dto.BaseInfoDTO;
+import com.bjike.goddess.fixedassets.excel.SonPermissionObject;
 import com.bjike.goddess.fixedassets.service.BaseInfoSer;
 import com.bjike.goddess.fixedassets.to.BaseInfoTO;
+import com.bjike.goddess.fixedassets.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,16 @@ import java.util.List;
 public class BaseInfoApiImpl implements BaseInfoAPI {
     @Autowired
     private BaseInfoSer baseInfoSer;
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        return baseInfoSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return baseInfoSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<BaseInfoBO> list(BaseInfoDTO dto) throws SerException {
