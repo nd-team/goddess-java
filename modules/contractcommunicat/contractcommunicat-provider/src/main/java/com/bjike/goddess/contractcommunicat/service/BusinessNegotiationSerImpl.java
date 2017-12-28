@@ -1,5 +1,6 @@
 package com.bjike.goddess.contractcommunicat.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
@@ -55,15 +56,46 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
 
     @Override
     public Long count(BusinessNegotiationDTO dto) throws SerException {
+        search(dto);
         Long count = super.count(dto);
         return count;
     }
 
     @Override
     public List<BusinessNegotiationBO> list(BusinessNegotiationDTO dto) throws SerException {
+        search(dto);
         List<BusinessNegotiation> businessNegotiations = super.findByCis(dto);
         List<BusinessNegotiationBO> businessNegotiationBOS = BeanTransform.copyProperties(businessNegotiations,BusinessNegotiationBO.class);
         return businessNegotiationBOS;
+    }
+    public List<BusinessNegotiationBO> search(BusinessNegotiationDTO dto)throws SerException{
+        //市场编号
+        if(StringUtils.isNotBlank(dto.getMarketNum())){
+            dto.getConditions().add(Restrict.like("marketNum",dto.getMarketNum()));
+        }
+        //洽谈公司
+        if(StringUtils.isNotBlank(dto.getDiscussCompany())){
+            dto.getConditions().add(Restrict.like("discussCompany",dto.getDiscussCompany()));
+        }
+        //洽谈对象
+        if(StringUtils.isNotBlank(dto.getDiscussObject())){
+            dto.getConditions().add(Restrict.like("discussObject",dto.getDiscussObject()));
+        }
+        //洽谈人
+        if(StringUtils.isNotBlank(dto.getDiscussPeople())){
+            dto.getConditions().add(Restrict.like("discussPeople",dto.getDiscussPeople()));
+        }
+        //地区
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.like("area",dto.getArea()));
+        }
+        //内部项目编号
+        if(StringUtils.isNotBlank(dto.getProjectNum())){
+            dto.getConditions().add(Restrict.like("projectNum",dto.getProjectNum()));
+        }
+        List<BusinessNegotiation> negotiations = super.findByCis(dto);
+        List<BusinessNegotiationBO> boList = BeanTransform.copyProperties(negotiations,BusinessNegotiationBO.class);
+        return boList;
     }
 
     @Transactional(rollbackFor = SerException.class)

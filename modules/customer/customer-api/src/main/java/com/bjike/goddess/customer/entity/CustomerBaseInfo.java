@@ -341,6 +341,11 @@ public class CustomerBaseInfo extends BaseEntity {
     @Column(name = "callcyle", columnDefinition = "INT(11)   COMMENT '拜访周期'")
     private Integer callcyle;
     /**
+     * 年龄
+     */
+    @Column(name = "age", columnDefinition = "INT(11)   COMMENT '年龄'")
+    private Integer age;
+    /**
      * 地区经纬度
      */
     @Column(name = "areaLatitude", columnDefinition = "VARCHAR(255)   COMMENT '地区经纬度'")
@@ -371,6 +376,67 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
     private CustomerDetail customerDetail;
+
+    /**
+     * 业主提供的身份证明
+     */
+    @Column(name = "proof", columnDefinition = "VARCHAR(255)   COMMENT '业主提供的身份证明'")
+    private String proof;
+    /**
+     * 与业主签订的合同
+     */
+    @Column(name = "landlordContract", columnDefinition = "VARCHAR(255)   COMMENT '与业主签订的合同'")
+    private String landlordContract;
+    /**
+     * 甲方和业主的合同
+     */
+    @Column(name = "firstAndLandlordContract", columnDefinition = "VARCHAR(255)   COMMENT '甲方和业主的合同'")
+    private String firstAndLandlordContract;
+    /**
+     * 数据来源
+     */
+    @Column(name = "dataSource", columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
+    private String dataSource;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getProof() {
+        return proof;
+    }
+
+    public void setProof(String proof) {
+        this.proof = proof;
+    }
+
+    public String getLandlordContract() {
+        return landlordContract;
+    }
+
+    public void setLandlordContract(String landlordContract) {
+        this.landlordContract = landlordContract;
+    }
+
+    public String getFirstAndLandlordContract() {
+        return firstAndLandlordContract;
+    }
+
+    public void setFirstAndLandlordContract(String firstAndLandlordContract) {
+        this.firstAndLandlordContract = firstAndLandlordContract;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public Double getCustomerPosition() {
         return customerPosition;

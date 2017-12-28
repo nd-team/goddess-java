@@ -2000,4 +2000,18 @@ public class CustomerBaseInfoSerImpl extends ServiceImpl<CustomerBaseInfo, Custo
         }
         return null;
     }
+
+    @Override
+    public List<CustomerAndOwnerInfoBO> customerList(CustomerBaseInfoDTO dto) throws SerException {
+        List<CustomerBaseInfo> customerBaseInfos = super.findByCis(dto);
+        List<CustomerAndOwnerInfoBO> boList = BeanTransform.copyProperties(customerBaseInfos, CustomerAndOwnerInfoBO.class);
+        return boList;
+    }
+
+    @Override
+    public CustomerAndOwnerInfoBO customerById(String id) throws SerException {
+        CustomerBaseInfo customerBaseInfo = super.findById(id);
+        CustomerAndOwnerInfoBO bo = BeanTransform.copyProperties(customerBaseInfo, CustomerAndOwnerInfoBO.class);
+        return bo;
+    }
 }

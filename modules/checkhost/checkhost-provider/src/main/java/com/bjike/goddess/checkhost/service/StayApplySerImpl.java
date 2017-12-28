@@ -48,7 +48,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -66,7 +66,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -84,7 +84,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3", null);
             if (!flag) {
                 throw new SerException("您不是福利模块负责人，不可以操作");
             }
@@ -102,7 +102,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -119,7 +119,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -136,7 +136,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.busCusPermission("3", null);
         } else {
             flag = true;
         }
@@ -259,7 +259,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
         checkAduitIdentity();
 //        UserBO userBO = userAPI.currentUser();
         StayApply apply = super.findById(to.getId());
-        BeanTransform.copyProperties(to,apply,true);
+        BeanTransform.copyProperties(to, apply, true);
         apply.setHeadAudit(to.getHeadAudit());
         apply.setCheckStatus(to.getCheckStatus());
         apply.setModifyTime(LocalDateTime.now());
@@ -286,7 +286,7 @@ public class StayApplySerImpl extends ServiceImpl<StayApply, StayApplyDTO> imple
     public StayApplyBO hostAudit(StayApplyTO to) throws SerException {
         checkAduitIdentity();
         StayApply apply = super.findById(to.getId());
-        BeanTransform.copyProperties(to,apply,true);
+        BeanTransform.copyProperties(to, apply, true);
         apply.setModuleAudit(to.getModuleAudit());
         apply.setModuleCheckStatus(to.getModuleCheckStatus());
         apply.setModifyTime(LocalDateTime.now());

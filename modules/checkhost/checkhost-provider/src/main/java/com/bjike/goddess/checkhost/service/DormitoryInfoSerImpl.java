@@ -42,10 +42,6 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
-    @Autowired
-    private StayApplySer stayApplySer;
-    @Autowired
-    private StayDaysSer stayDaysSer;
 
 
     /**
@@ -58,7 +54,7 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -77,7 +73,7 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -95,7 +91,7 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -112,7 +108,7 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -122,43 +118,50 @@ public class DormitoryInfoSerImpl extends ServiceImpl<DormitoryInfo, DormitoryIn
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
-        String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
+        boolean flag1 = false;
+        boolean flag2 = false;
+        boolean flag3 = false;
 
+
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag1 = cusPermissionSer.getCusPermission("1", userBO);
+            flag2 = cusPermissionSer.getCusPermission("2", userBO);
+            flag3 = cusPermissionSer.busCusPermission("3", userBO);
+        } else {
+            flag1 = true;
+            flag2 = true;
+            flag3 = true;
+        }
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("dormitoryinfo");
         obj.setDescribesion("宿舍信息管理");
-        if (flagSeeSign || flagAddSign) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeSta = stayApplySer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("stayapply");
         obj.setDescribesion("住宿申请");
-        if (flagSeeSta) {
+        if (flag1 || flag2 || flag3) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeStd = stayDaysSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("staydays");
         obj.setDescribesion("员工住宿天数汇总");
-        if (flagSeeStd) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
