@@ -10,11 +10,11 @@ import javax.persistence.Table;
 /**
  * 联络情况
  *
- * @Author: [ lijuntao ]　
- * @Date: [ 2017-12-15 04:03 ]　
- * @Description: [ 联络情况 ]　
- * @Version: [ v1.0.0 ]　
- * @Copy: [ com.bjike ]　
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-12-15 04:03 ]
+ * @Description: [ 联络情况 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @Entity
 @Table(name = "supplier_contactsituation")

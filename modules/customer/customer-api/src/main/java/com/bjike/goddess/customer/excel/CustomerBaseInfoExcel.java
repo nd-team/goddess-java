@@ -285,6 +285,12 @@ public class CustomerBaseInfoExcel extends BaseTO {
      */
     @ExcelHeader(name = "是否需进行市场招待")
     private String proceedMarketTreat;
+
+    /**
+     * 拜访周期
+     */
+    @ExcelHeader(name = "拜访周期",notNull = true)
+    private Integer callcyle;
     /**
      * 年龄
      */
@@ -351,11 +357,6 @@ public class CustomerBaseInfoExcel extends BaseTO {
     @ExcelHeader(name = "性格爱好")
     private String charactLove;
 
-    /**
-     * 拜访周期
-     */
-    @ExcelHeader(name = "拜访周期",notNull = true)
-    private Integer callcyle;
 
     /**
      * 工作单位

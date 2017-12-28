@@ -287,6 +287,7 @@ public class CustomerBaseInfoExportTemple extends BaseBO {
      */
     @ExcelHeader(name = "拜访周期",notNull = true)
     private Integer callcyle;
+
     /**
      * 年龄
      */

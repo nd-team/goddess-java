@@ -15,13 +15,14 @@
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--配置暴露的公共接口-->
-	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.event.api.CusPermissionAPI" id="cusPermissionApiImpl"/>-->
-	<!--<dubbo:reference  validation="true"  interface="com.bjike.goddess.event.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>-->
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.fixedassets.api.CusPermissionAPI" id="cusPermissionApiImpl"/>
+	<dubbo:reference  validation="true"  interface="com.bjike.goddess.fixedassets.api.CusPermissionOperateAPI" id="cusPermissionOperateApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.fixedassets.api.BaseInfoAPI" id="baseInfoApiImpl"/>
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
+	<dubbo:reference  validation="true" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" id="permissionApiImpl"/>
 	<dubbo:reference  validation="true" interface="com.bjike.goddess.storage.api.FileAPI" id="fileApiImpl"/>
 	<dubbo:reference  validation="true" interface="com.bjike.goddess.financeinit.api.AccountanCourseAPI" id="accountanCourseApiImpl"/>
 </beans>

@@ -1,9 +1,9 @@
 package com.bjike.goddess.fixedassets.config;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.financeinit.api.CusPermissionAPI;
-import com.bjike.goddess.financeinit.enums.CusPermissionType;
-import com.bjike.goddess.financeinit.to.CusPermissionTO;
+import com.bjike.goddess.fixedassets.api.CusPermissionAPI;
+import com.bjike.goddess.fixedassets.enums.CusPermissionType;
+import com.bjike.goddess.fixedassets.to.CusPermissionTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

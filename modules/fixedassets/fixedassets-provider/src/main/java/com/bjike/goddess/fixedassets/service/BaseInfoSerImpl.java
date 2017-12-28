@@ -30,6 +30,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -442,13 +444,15 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
         baseInfoDTO.getConditions().add(Restrict.lt_eq("bookDate", date));
         List<BaseInfo> baseInfoList = super.findByCis(baseInfoDTO);
         if (baseInfoList != null && baseInfoList.size() > 0) {
+            DecimalFormat nf = new DecimalFormat("#.00");
             for (BaseInfo baseInfo : baseInfoList) {
                 BaseInfoDetailBO baseInfoDetailBO = new BaseInfoDetailBO();
                 baseInfoDetailBO.setFixedAssetName(baseInfo.getFixedAssetName());
                 baseInfoDetailBO.setDepartment(baseInfo.getDepartment());
                 //计算折旧率
-                Integer months = Integer.parseInt(baseInfo.getEstimatedPeriod().substring(0, baseInfo.getEstimatedPeriod().lastIndexOf("(")));
-                Double depreRate = (1 - baseInfo.getSalvage()) / months / 12;
+                Double months = Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0, baseInfo.getEstimatedPeriod().lastIndexOf("(")));
+                Double depreRate = Double.parseDouble(nf.format((1 - baseInfo.getSalvage()) / months / 12));
+//                Double depreRate = (1 - baseInfo.getSalvage()) / months / 12;
                 baseInfoDetailBO.setDepreciationMonthRate(depreRate);
                 baseInfoDetailBO.setOriginalValue(baseInfo.getOriginalValue());
                 baseInfoDetailBO.setDepreciationMonth(baseInfo.getDepreciationMonth());
@@ -457,9 +461,9 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
                 baseInfoDetailBO.setAccumDepreciation(diffMonth * baseInfo.getDepreciationMonth());
                 //本年累计折旧 = 汇总的年份与入账日期比较是他们的年份相同的话就是汇总的(月份-1)*月折旧额,如果是汇总年份与入账日期比较不同的就是直接是月份*月折旧额
                 if (year == baseInfo.getBookDate().getYear()) {
-                    baseInfoDetailBO.setYearAccumDepreciation((month - 1) * baseInfo.getDepreciationMonth());
+                    baseInfoDetailBO.setYearAccumDepreciation(Double.parseDouble(nf.format((month - 1) * baseInfo.getDepreciationMonth())));
                 } else {
-                    baseInfoDetailBO.setYearAccumDepreciation(month * baseInfo.getDepreciationMonth());
+                    baseInfoDetailBO.setYearAccumDepreciation(Double.parseDouble(nf.format(month * baseInfo.getDepreciationMonth())));
                 }
                 baseInfoDetailBO.setImpairmentLoss(baseInfo.getImpairmentLoss());
                 baseInfoDetailBO.setNetFinalValue(baseInfo.getNetBegining());
