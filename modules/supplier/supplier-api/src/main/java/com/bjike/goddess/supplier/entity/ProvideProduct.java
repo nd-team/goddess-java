@@ -11,11 +11,11 @@ import java.time.LocalDate;
 /**
  * 针对拟为我公司提供产品
  *
- * @Author: [ lijuntao ]
- * @Date: [ 2017-12-15 04:06 ]
- * @Description: [ 针对拟为我公司提供产品 ]
- * @Version: [ v1.0.0 ]
- * @Copy: [ com.bjike ]
+ * @Author: [ lijuntao ]　
+ * @Date: [ 2017-12-15 04:06 ]　
+ * @Description: [ 针对拟为我公司提供产品 ]　
+ * @Version: [ v1.0.0 ]　
+ * @Copy: [ com.bjike ]　
  */
 @Entity
 @Table(name = "supplier_provideproduct")
