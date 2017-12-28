@@ -710,6 +710,7 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
         calendar.set(Calendar.WEEK_OF_MONTH, Integer.valueOf(week));
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         String start = dateFormat.format(calendar.getTime());
         list.add(start);
         for (int i = 0; i < 6; i++) {
@@ -718,6 +719,23 @@ public class DateDataSerImpl extends ServiceImpl<DateData, DateDataDTO> implemen
             list.add(sta);
         }
         return list;
+    }
+
+    @Override
+    public Integer weeks(Integer year, Integer month) throws SerException {
+        int weeks = 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String time = year + "-" + month;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(time));
+//            calendar.set(Calendar.YEAR,year);
+//            calendar.set(Calendar.MONTH,month-1);
+            weeks = calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+        return weeks;
     }
 
     public static void main(String[] args) {

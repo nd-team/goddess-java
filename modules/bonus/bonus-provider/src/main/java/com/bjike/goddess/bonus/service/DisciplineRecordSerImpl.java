@@ -15,9 +15,7 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.organize.bo.PositionDetailUserBO;
-import com.bjike.goddess.organize.bo.PositionUserDetailBO;
+import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.enums.WorkStatus;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -27,9 +25,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -839,4 +839,154 @@ public class DisciplineRecordSerImpl extends ServiceImpl<DisciplineRecord, Disci
         }
         return null;
     }
+
+    @Override
+    public OptionBonusBO annular() throws SerException {
+        List<DisciplineRecordDataBO> bos = new ArrayList<>(0);
+        for (int i = 1; i <= 4; i++) {
+            //奖励
+            bos.add(createEntity(i, false));
+            //惩罚
+            bos.add(createEntity(i, true));
+        }
+
+        String text_1 = "项目奖金包";
+
+        return getOptionBO(text_1, bos);
+    }
+
+    //柱状图数据
+    private OptionBonusBO getOptionBO(String text_1, List<DisciplineRecordDataBO> list) throws SerException {
+        Double num1 = 0d;
+        Double num2 = 0d;
+        List<String> departList = list.stream().map(DisciplineRecordDataBO::getQuarter).distinct().sorted(String::compareTo).collect(Collectors.toList());
+        String[] text_3 = departList.toArray(new String[departList.size()]);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText(text_1);
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_2 = new String[]{"奖励", "惩罚"};
+        text_list2 = Arrays.stream(text_2).collect(Collectors.toList());
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBonusBO> seriesBOList = new ArrayList<>();
+
+        if (list != null && list.size() > 0) {
+
+            for (String str : text_list2) {
+                Double j = 0d;
+                SeriesBonusBO seriesBO = new SeriesBonusBO();
+                seriesBO.setName(str);
+                seriesBO.setType("bar");
+                List<Double> number = new ArrayList<>(0);
+                if (str.equals("奖励")) {
+                    for (DisciplineRecordDataBO bo : list.stream().filter(obj -> !obj.getStatus()).collect(Collectors.toList())) {
+                        j = bo.getBallot();
+                        number.add(j);
+                        num1 += j;
+                    }
+                }
+                if (str.equals("惩罚")) {
+                    for (DisciplineRecordDataBO bo : list.stream().filter(obj -> obj.getStatus()).collect(Collectors.toList())) {
+                        j = bo.getBallot();
+                        number.add(j);
+                        num2 += j;
+                    }
+                }
+                //柱状图数据
+                Double[] numbers = number.toArray(new Double[number.size()]);
+                seriesBO.setData(numbers);
+                seriesBOList.add(seriesBO);
+            }
+        }
+
+//        String[] text_2 = new String[text_list2.size()];
+//        text_2 = text_list2.toArray(text_2);
+
+        SeriesBonusBO[] text_4 = new SeriesBonusBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        TooltipBO tooltipBO = new TooltipBO();
+        OptionBonusBO optionBO = new OptionBonusBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setNum1(num1);
+        optionBO.setNum2(num2);
+        optionBO.setSeries(text_4);
+        return optionBO;
+    }
+
+    private DisciplineRecordDataBO createEntity(int i, Boolean flag) throws SerException {
+        int tar = 0;
+        if(flag){
+            tar = 1;
+        }
+        DisciplineRecordDataBO bo = new DisciplineRecordDataBO();
+        bo.setQuarter("第" + i + "季度");
+        bo.setBallot(findData(getTimes(i)[0], getTimes(i)[1], tar));
+        bo.setStatus(flag);
+        return bo;
+    }
+
+    private Double findData(String startTime, String endTime, int tar) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+            StringBuilder sql = new StringBuilder("select ifnull(sum(ballot),0) from bonus_discipline_record ");
+        sql.append(" WHERE username = '" + userBO.getUsername() + "' ");
+        sql.append(" and occurrence between '" + startTime + "' ");
+        sql.append(" and '" + endTime + "' ");
+        sql.append(" and is_status = " + tar);
+
+        List<Object> objectList = super.findBySql(sql.toString());
+        Double sum = Double.parseDouble(String.valueOf(objectList.get(0)));
+
+        return sum;
+    }
+
+    //获取当年季度的开始时间与结束时间
+    private String[] getTimes(int quartOfYear) throws SerException {
+        String startTime = "";
+        String endTime = "";
+        int year = LocalDate.now().getYear();
+        switch (quartOfYear) {
+            case 1:
+                startTime = year + "-01-01";
+                endTime = year + "-03-31";
+                break;
+            case 2:
+                startTime = year + "-04-01";
+                endTime = year + "-06-30";
+                break;
+            case 3:
+                startTime = year + "-07-01";
+                endTime = year + "-09-30";
+                break;
+            case 4:
+                startTime = year + "-10-01";
+                endTime = year + "-12-31";
+                break;
+        }
+
+        return new String[]{startTime, endTime};
+    }
+
+
 }

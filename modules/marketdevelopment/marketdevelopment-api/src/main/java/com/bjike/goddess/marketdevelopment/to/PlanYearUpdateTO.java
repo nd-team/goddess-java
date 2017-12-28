@@ -41,7 +41,7 @@ public class PlanYearUpdateTO extends BaseTO {
      * 全年实际金额（万元）
      */
     @NotNull(message = "全年实际金额（万元）不能为空", groups = {ADD.class, EDIT.class})
-    private Double yearActualMoney;
+        private Double yearActualMoney;
 
 //    /**
 //     * 全年差异金额（万元）

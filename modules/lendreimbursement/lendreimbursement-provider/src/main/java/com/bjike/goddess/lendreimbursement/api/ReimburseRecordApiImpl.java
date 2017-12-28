@@ -2,8 +2,8 @@ package com.bjike.goddess.lendreimbursement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
 import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
+import com.bjike.goddess.lendreimbursement.bo.OptionBO;
 import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
@@ -18,8 +18,10 @@ import com.bjike.goddess.lendreimbursement.service.ReimburseRecordSer;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.PhoneReimbursePayTO;
 import com.bjike.goddess.lendreimbursement.to.ReimburseRecordTO;
-import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
-import com.bjike.goddess.reimbursementprepare.excel.ExportExcel;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimCompanyMixShapeVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeAllVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeMixVO;
+import com.bjike.goddess.lendreimbursement.vo.lendreimshape.ReimShapeVO;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -335,5 +337,10 @@ public class ReimburseRecordApiImpl implements ReimburseRecordAPI {
     @Override
     public ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException {
         return reimburseRecordSer.collectAreaDetailBar(reimburseShapeDetailDTO);
+    }
+
+    @Override
+    public OptionBO analysisDiagram() throws SerException {
+        return reimburseRecordSer.analysisDiagram();
     }
 }

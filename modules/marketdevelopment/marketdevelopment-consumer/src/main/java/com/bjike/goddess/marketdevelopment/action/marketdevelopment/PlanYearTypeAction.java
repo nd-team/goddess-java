@@ -71,7 +71,7 @@ public class PlanYearTypeAction extends BaseFileAction {
      * 列表
      *
      * @param dto 年计划数据传输对象
-     * @return class WeekMonthMoneyVO
+     * @return class PlanYearVO
      * @version v1
      */
     @GetMapping("v1/maps")

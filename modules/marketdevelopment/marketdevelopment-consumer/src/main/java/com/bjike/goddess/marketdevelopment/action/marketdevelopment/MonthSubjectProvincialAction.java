@@ -63,7 +63,7 @@ public class MonthSubjectProvincialAction {
      * 列表
      *
      * @param dto 月计划省市方向数据传输对象
-     * @return class MonthMonthMoneyVO
+     * @return class MonthMoneyProvincialVO
      * @version v1
      */
     @GetMapping("v1/maps")

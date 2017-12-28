@@ -21,7 +21,6 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
-
     /**
      * 下拉导航权限
      */
@@ -116,6 +115,5 @@ public interface SkillLibrarySer extends Ser<SkillLibrary, SkillLibraryDTO> {
     default List<HistoryAppraiseBO> historyAppraise(String id) throws SerException {
         return null;
     }
-
 
 }

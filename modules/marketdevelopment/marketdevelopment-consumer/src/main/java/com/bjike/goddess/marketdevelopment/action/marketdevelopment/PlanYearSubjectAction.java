@@ -136,7 +136,7 @@ public class PlanYearSubjectAction extends BaseFileAction {
      * 根据id获取年计划数据
      *
      * @param id 类型id
-     * @return class PlanYearUpdateVO
+     * @return class PlanYearSubjectUpdateVO
      * @version v1
      */
     @GetMapping("v1/findById/{id}")
