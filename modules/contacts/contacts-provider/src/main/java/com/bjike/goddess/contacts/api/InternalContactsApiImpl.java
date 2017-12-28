@@ -121,6 +121,11 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     }
 
     @Override
+    public List<InternalContactsBO> getInfoByName(String name) throws SerException {
+        return internalContactsSer.getInfoByName ( name );
+    }
+
+    @Override
     public List<PhoneNumberBO> mobileGetTel() throws SerException {
         return internalContactsSer.mobileGetTel();
     }

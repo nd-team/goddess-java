@@ -190,7 +190,7 @@ public class TaskNodeExcel extends BaseTO {
      * 是否发生费用报销
      */
     @ExcelHeader(name = "是否发生费用报销")
-    private Boolean reimbursement;
+    private String reimbursement;
 
     /**
      * 注意事项
@@ -206,7 +206,7 @@ public class TaskNodeExcel extends BaseTO {
      * 是否延期完成
      */
     @ExcelHeader(name = "是否延期完成")
-    private Boolean delay;
+    private String delay;
     /**
      * 延期时长
      */
@@ -506,14 +506,6 @@ public class TaskNodeExcel extends BaseTO {
         this.reason = reason;
     }
 
-    public Boolean getReimbursement() {
-        return reimbursement;
-    }
-
-    public void setReimbursement(Boolean reimbursement) {
-        this.reimbursement = reimbursement;
-    }
-
     public String getNotice() {
         return notice;
     }
@@ -528,14 +520,6 @@ public class TaskNodeExcel extends BaseTO {
 
     public void setReport(Boolean report) {
         this.report = report;
-    }
-
-    public Boolean getDelay() {
-        return delay;
-    }
-
-    public void setDelay(Boolean delay) {
-        this.delay = delay;
     }
 
     public Double getDelayTime() {
@@ -616,5 +600,21 @@ public class TaskNodeExcel extends BaseTO {
 
     public void setEfficiency(Double efficiency) {
         this.efficiency = efficiency;
+    }
+
+    public String getReimbursement() {
+        return reimbursement;
+    }
+
+    public void setReimbursement(String reimbursement) {
+        this.reimbursement = reimbursement;
+    }
+
+    public String getDelay() {
+        return delay;
+    }
+
+    public void setDelay(String delay) {
+        this.delay = delay;
     }
 }

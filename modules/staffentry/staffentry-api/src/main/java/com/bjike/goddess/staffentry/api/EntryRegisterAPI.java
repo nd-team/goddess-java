@@ -208,7 +208,7 @@ public interface EntryRegisterAPI {
      * @return
      * @throws SerException
      */
-    default List<EntryRegisterBO> map(EntryRegisterDTO entryBasicInfoDTO) throws SerException {
+    default List<EntryRegisterBO>  map(EntryRegisterDTO entryBasicInfoDTO) throws SerException {
         return null;
     }
 
@@ -293,6 +293,16 @@ public interface EntryRegisterAPI {
      * @return
      */
     default List<UserNameSexBO> findSexByUserName(String[] userName) throws SerException {
+        return null;
+    }
+
+    /**
+     * 我的团队
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<EntryRegisterBO> myTeam(EntryRegisterDTO dto) throws SerException {
         return null;
     }
 }

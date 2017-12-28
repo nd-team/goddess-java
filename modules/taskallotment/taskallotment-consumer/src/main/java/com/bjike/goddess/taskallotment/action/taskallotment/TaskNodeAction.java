@@ -674,7 +674,7 @@ public class TaskNodeAction extends BaseFileAction {
 
     /**
      * 完成情况汇总图形化
-     *
+
      * @param dto dto
      * @return class OptionBO
      * @throws ActException
@@ -1343,6 +1343,23 @@ public class TaskNodeAction extends BaseFileAction {
         try {
             List<PositionDetailBO> userBOS = positionDetailUserAPI.getPositionDetail(name);
             return ActResult.initialize(BeanTransform.copyProperties(userBOS, PositionDetailVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查找所有用户
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allUsers")
+    public Result allUsers(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

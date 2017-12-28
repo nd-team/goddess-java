@@ -33,7 +33,6 @@ dependencies {
     compile project(":modules:customer:customer-api")
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:contacts:contacts-api")
-//    compile project(":modules:projectcalculation:projectcalculation-api")
     compile project(":modules:competitormanage:competitormanage-api")
 }
 

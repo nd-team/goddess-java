@@ -14,7 +14,6 @@ import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationTemplateExc
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.NestedTransactionNotSupportedException;
@@ -50,7 +49,7 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     @Override
     public BusinessNegotiationBO getOne(String id) throws SerException {
         BusinessNegotiation businessNegotiation = super.findById(id);
-        BusinessNegotiationBO businessNegotiationBO = BeanTransform.copyProperties(businessNegotiation,BusinessNegotiationBO.class);
+        BusinessNegotiationBO businessNegotiationBO = BeanTransform.copyProperties(businessNegotiation, BusinessNegotiationBO.class);
         return businessNegotiationBO;
     }
 
@@ -65,7 +64,7 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     public List<BusinessNegotiationBO> list(BusinessNegotiationDTO dto) throws SerException {
         search(dto);
         List<BusinessNegotiation> businessNegotiations = super.findByCis(dto);
-        List<BusinessNegotiationBO> businessNegotiationBOS = BeanTransform.copyProperties(businessNegotiations,BusinessNegotiationBO.class);
+        List<BusinessNegotiationBO> businessNegotiationBOS = BeanTransform.copyProperties(businessNegotiations, BusinessNegotiationBO.class);
         return businessNegotiationBOS;
     }
     public List<BusinessNegotiationBO> search(BusinessNegotiationDTO dto)throws SerException{
@@ -101,25 +100,25 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessNegotiationBO insert(BusinessNegotiationTO to) throws SerException {
-        BusinessNegotiation businessNegotiation = BeanTransform.copyProperties(to,BusinessNegotiation.class,true);
+        BusinessNegotiation businessNegotiation = BeanTransform.copyProperties(to, BusinessNegotiation.class, true);
         businessNegotiation.setCreateTime(LocalDateTime.now());
         super.save(businessNegotiation);
-        BusinessNegotiationBO bo = BeanTransform.copyProperties(businessNegotiation,BusinessNegotiationBO.class);
+        BusinessNegotiationBO bo = BeanTransform.copyProperties(businessNegotiation, BusinessNegotiationBO.class);
         return bo;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public BusinessNegotiationBO edit(BusinessNegotiationTO to) throws SerException {
-        if(StringUtils.isNotBlank(to.getId())){
+        if (StringUtils.isNotBlank(to.getId())) {
             BusinessNegotiation businessNegotiation = super.findById(to.getId());
-            LocalDateTime createTime =businessNegotiation.getCreateTime();
-            businessNegotiation = BeanTransform.copyProperties(to,BusinessNegotiation.class,true);
+            LocalDateTime createTime = businessNegotiation.getCreateTime();
+            businessNegotiation = BeanTransform.copyProperties(to, BusinessNegotiation.class, true);
             businessNegotiation.setCreateTime(createTime);
             businessNegotiation.setModifyTime(LocalDateTime.now());
-            BusinessNegotiationBO bo = BeanTransform.copyProperties(businessNegotiation,BusinessNegotiationBO.class);
+            BusinessNegotiationBO bo = BeanTransform.copyProperties(businessNegotiation, BusinessNegotiationBO.class);
             return bo;
-        }else {
+        } else {
             throw new SerException("id不能为空");
         }
     }
@@ -127,9 +126,9 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void remove(String id) throws SerException {
-        if(StringUtils.isNotBlank(id)){
+        if (StringUtils.isNotBlank(id)) {
             super.remove(id);
-        }else {
+        } else {
             throw new SerException("id不能为空");
         }
     }
@@ -137,17 +136,134 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     @Override
     public BusinessNegotiationBO importExcel(List<BusinessNegotiationTO> businessNegotiationTOS) throws SerException {
         List<BusinessNegotiation> businessNegotiations = new ArrayList<>(businessNegotiationTOS.size());
-        for(BusinessNegotiationTO to:businessNegotiationTOS){
-            BusinessNegotiation entity = BeanTransform.copyProperties(to,BusinessNegotiation.class,true);
+        for (BusinessNegotiationTO to : businessNegotiationTOS) {
+            BusinessNegotiation entity = BeanTransform.copyProperties(to, BusinessNegotiation.class, true);
             businessNegotiations.add(entity);
         }
         super.save(businessNegotiations);
-        BusinessNegotiationBO bo = BeanTransform.copyProperties(new BusinessNegotiation(),BusinessNegotiationBO.class);
+        BusinessNegotiationBO bo = BeanTransform.copyProperties(new BusinessNegotiation(), BusinessNegotiationBO.class);
         return bo;
     }
 
     @Override
     public byte[] exportExcel(BusinessNegotiationDTO dto) throws SerException {
+
+//        List<BusinessNegotiation> list = super.findByCis(dto);
+//        List<BusinessNegotiationExport> exports = new ArrayList<>();
+//        list.stream().forEach(str -> {
+//            BusinessNegotiationExport export = BeanTransform.copyProperties(str, BusinessNegotiationExport.class,
+//                    "discussPrepare", "discuss", "attainDiscussIdea", "discussProblem",
+//                    "soundRecord", "hasProject", "marketCost", "marketFor",
+//                    "continueFollowUp", "closedLoop", "needAssist", "assistLetter", "produceTrip");
+//            //是否有洽谈准备
+//            if (null != str.getDiscussPrepare()) {
+//                if (str.getDiscussPrepare().equals("是")) {
+//                    export.setDiscussPrepare(true);
+//                } else {
+//                    export.setDiscussPrepare(false);
+//                }
+//            }
+//            //是否洽谈
+//            if (null != str.getDiscuss()) {
+//                if (str.getDiscuss().equals("是")) {
+//                    export.setDiscuss(true);
+//                } else {
+//                    export.setDiscuss(false);
+//                }
+//            }
+//            //是否达到洽谈目的
+//            if (null != str.getAttainDiscussIdea()) {
+//                if (str.getAttainDiscussIdea().equals("是")) {
+//                    export.setAttainDiscussIdea(true);
+//                } else {
+//                    export.setAttainDiscussIdea(false);
+//                }
+//            }
+//            //是否有洽谈到其他问题
+//            if (null != str.getDiscussProblem()) {
+//                if (str.getDiscussProblem().equals("是")) {
+//                    export.setDiscussProblem(true);
+//                } else {
+//                    export.setDiscussProblem(false);
+//                }
+//            }
+//
+//            //是否有录音
+//            if (null != str.getSoundRecord()) {
+//                if (str.getSoundRecord().equals("是")) {
+//                    export.setSoundRecord(true);
+//                } else {
+//                    export.setSoundRecord(false);
+//                }
+//            }
+//            //是否转入合同管理-已立项
+//            if (null != str.getHasProject()) {
+//                if (str.getHasProject().equals("是")) {
+//                    export.setHasProject(true);
+//                } else {
+//                    export.setHasProject(false);
+//                }
+//            }
+//            //是否转入合同管理-市场费用
+//            if (null != str.getMarketCost()) {
+//                if (str.getMarketCost().equals("是")) {
+//                    export.setMarketCost(true);
+//                } else {
+//                    export.setMarketCost(false);
+//                }
+//            }
+//            //是否转换市场招待
+//            if (null != str.getMarketFor()) {
+//                if (str.getMarketFor().equals("是")) {
+//                    export.setMarketFor(true);
+//                } else {
+//                    export.setMarketFor(false);
+//                }
+//            }
+//            //是否持续跟进
+//            if (null != str.getContinueFollowUp()) {
+//                if (str.getContinueFollowUp().equals("是")) {
+//                    export.setContinueFollowUp(true);
+//                } else {
+//                    export.setContinueFollowUp(false);
+//                }
+//            }
+//            //是否闭环
+//            if (null != str.getClosedLoop()) {
+//                if (str.getClosedLoop().equals("是")) {
+//                    export.setClosedLoop(true);
+//                } else {
+//                    export.setClosedLoop(false);
+//                }
+//            }
+//            //是否需要协助
+//            if (null != str.getNeedAssist()) {
+//                if (str.getNeedAssist().equals("是")) {
+//                    export.setNeedAssist(true);
+//                } else {
+//                    export.setNeedAssist(false);
+//                }
+//            }
+//            //是否已发协助函
+//            if (null != str.getAssistLetter()) {
+//                if (str.getAssistLetter().equals("是")) {
+//                    export.setAssistLetter(true);
+//                } else {
+//                    export.setAssistLetter(false);
+//                }
+//            }
+//            //是否产生路费
+//            if (null != str.getProduceTrip()) {
+//                if (str.getProduceTrip().equals("是")) {
+//                    export.setProduceTrip(true);
+//                } else {
+//                    export.setProduceTrip(false);
+//                }
+//            }
+//
+//        });
+//        Excel excel = new Excel(0, 2);
+//        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
         List<BusinessNegotiationExport> exports = new ArrayList<>();
         List<BusinessNegotiation> list = super.findByCis(dto);
         if(list != null && list.size()>0){
@@ -249,8 +365,8 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
         templateExcel.setTrip(0d);
 
         templateExcels.add(templateExcel);
-        Excel excel = new Excel(0,2);
-        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels,excel);
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(templateExcels, excel);
         return bytes;
     }
 }
