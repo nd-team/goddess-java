@@ -2,14 +2,13 @@ package com.bjike.goddess.checkhost.service;
 
 import com.bjike.goddess.checkhost.bo.CollectNameBO;
 import com.bjike.goddess.checkhost.bo.StayDaysBO;
-import com.bjike.goddess.checkhost.enums.CheckStatus;
+import com.bjike.goddess.checkhost.dto.StayDaysDTO;
+import com.bjike.goddess.checkhost.entity.StayDays;
 import com.bjike.goddess.checkhost.enums.GuideAddrStatus;
 import com.bjike.goddess.checkhost.to.GuidePermissionTO;
 import com.bjike.goddess.checkhost.to.StayDaysTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import com.bjike.goddess.checkhost.dto.StayDaysDTO;
-import com.bjike.goddess.checkhost.entity.StayDays;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
@@ -17,7 +16,6 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +50,7 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -70,7 +68,7 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -89,7 +87,7 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -106,7 +104,7 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -164,14 +162,16 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         Long count = super.count(stayDaysDTO);
         return count;
     }
+
     @Override
     public StayDaysBO getOne(String id) throws SerException {
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
         StayDays stayDays = super.findById(id);
-        return BeanTransform.copyProperties(stayDays,StayDaysBO.class);
+        return BeanTransform.copyProperties(stayDays, StayDaysBO.class);
     }
+
     @Override
     public List<StayDaysBO> findListStayDays(StayDaysDTO stayDaysDTO) throws SerException {
         checkSeeIdentity();
@@ -221,7 +221,7 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         checkAddIdentity();
 //        stayDaysTO.setComprehensiveVerify(userAPI.currentUser().getUsername());
 //        StayDays stayDays = BeanTransform.copyProperties(stayDaysTO, StayDays.class, true);
-        StayDays stayDays=super.findById(id);
+        StayDays stayDays = super.findById(id);
         stayDays.setCheckStatus(dto.getCheckStatus());
         stayDays.setModifyTime(LocalDateTime.now());
         super.update(stayDays);
@@ -229,6 +229,7 @@ public class StayDaysSerImpl extends ServiceImpl<StayDays, StayDaysDTO> implemen
         StayDaysBO stayDaysBO = BeanTransform.copyProperties(stayDays, StayDaysBO.class);
         return stayDaysBO;
     }
+
     @Override
     public List<CollectNameBO> collectName(String[] names) throws SerException {
         checkSeeIdentity();

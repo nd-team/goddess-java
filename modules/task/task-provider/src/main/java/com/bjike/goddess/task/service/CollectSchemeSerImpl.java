@@ -183,14 +183,16 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
         String[] tableIds = collectScheme.getTables().split(",");
         StringBuilder sb = new StringBuilder();
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < tableIds.length; i++) {
-            if (i == tableIds.length - 1) {
-                sb.append(customizeSer.findById(tableIds[i]).getName());
-            } else {
-                sb.append(customizeSer.findById(tableIds[i]).getName() + "、");
+            for (int i = 0; i < tableIds.length; i++) {
+                if (i == tableIds.length - 1) {
+                    customizeSer.findById(tableIds[i]);
+                    customizeSer.findById(tableIds[i]).getName();
+                    sb.append(customizeSer.findById(tableIds[i]).getName());
+                } else {
+                    sb.append(customizeSer.findById(tableIds[i]).getName() + "、");
+                }
+                list.add(customizeSer.findById(tableIds[i]).getName());
             }
-            list.add(customizeSer.findById(tableIds[i]).getName());
-        }
         String[] tables = new String[list.size()];
         tables = list.toArray(tables);
         bo.setTables(sb.toString());

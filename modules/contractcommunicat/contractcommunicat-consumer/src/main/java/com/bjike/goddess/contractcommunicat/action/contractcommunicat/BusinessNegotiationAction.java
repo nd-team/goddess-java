@@ -42,7 +42,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("businessnegotiation")
-public class BusinessNegotiationAction extends BaseFileAction {
+public class BusinessNegotiationAction extends BaseFileAction{
     @Autowired
     private BusinessNegotiationAPI businessNegotiationAPI;
     /**
@@ -169,7 +169,6 @@ public class BusinessNegotiationAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 导入Excel
      *
@@ -184,118 +183,39 @@ public class BusinessNegotiationAction extends BaseFileAction {
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
             List<BusinessNegotiationExcel> tos = ExcelUtil.excelToClazz(is, BusinessNegotiationExcel.class, excel);
-            List<BusinessNegotiationTO> tocs = new ArrayList<> ();
+            List<BusinessNegotiationTO> tocs = new ArrayList<>();
             for (BusinessNegotiationExcel str : tos) {
-                BusinessNegotiationTO businessNegotiationTO = BeanTransform.copyProperties(str, BusinessNegotiationTO.class,
-                        "discussPrepare", "discuss", "attainDiscussIdea", "discussProblem",
-                        "soundRecord", "hasProject", "marketCost", "marketFor",
-                        "continueFollowUp", "closedLoop", "needAssist", "assistLetter", "produceTrip");
+                BusinessNegotiationTO negotiationTO = BeanTransform.copyProperties(str, BusinessNegotiationTO.class,
+                        "discussPrepare","discuss","attainDiscussIdea","discussProblem","soundRecord",
+                        "hasProject","marketCost","marketFor","continueFollowUp","closedLoop",
+                        "needAssist","assistLetter","produceTrip");
                 //是否有洽谈准备
-                if (null != str.getDiscussPrepare()) {
-                    if (str.getDiscussPrepare().equals("是")) {
-                        businessNegotiationTO.setDiscussPrepare(true);
-                    } else {
-                        businessNegotiationTO.setDiscussPrepare(false);
-                    }
-                }
+                negotiationTO.setDiscussPrepare(stringToBool(str.getDiscussPrepare(),"是否有洽谈准备"));
                 //是否洽谈
-                if(null != str.getDiscuss()){
-                    if (str.getDiscuss().equals("是")) {
-                        businessNegotiationTO.setDiscuss(true);
-                    } else {
-                        businessNegotiationTO.setDiscuss(false);
-                    }
-                }
+                negotiationTO.setDiscuss(stringToBool(str.getDiscuss(),"是否洽谈"));
                 //是否达到洽谈目的
-                if(null != str.getAttainDiscussIdea()){
-                    if (str.getAttainDiscussIdea().equals("是")) {
-                        businessNegotiationTO.setAttainDiscussIdea(true);
-                    } else {
-                        businessNegotiationTO.setAttainDiscussIdea(false);
-                    }
-                }
-                //是否有洽谈到其他问题
-                if(null != str.getDiscussProblem()){
-                    if (str.getDiscussProblem().equals("是")) {
-                        businessNegotiationTO.setDiscussProblem(true);
-                    } else {
-                        businessNegotiationTO.setDiscussProblem(false);
-                    }
-                }
-
+                negotiationTO.setAttainDiscussIdea(stringToBool(str.getAttainDiscussIdea(),"是否达到洽谈目的"));
                 //是否有录音
-                if (null != str.getSoundRecord()) {
-                    if (str.getSoundRecord().equals("是")) {
-                        businessNegotiationTO.setSoundRecord(true);
-                    } else {
-                        businessNegotiationTO.setSoundRecord(false);
-                    }
-                }
+                negotiationTO.setDiscussProblem(stringToBool(str.getDiscussProblem(),"是否有录音"));
+                //是否有洽谈到其他问题
+                negotiationTO.setSoundRecord(stringToBool(str.getSoundRecord(),"是否有洽谈到其他问题"));
                 //是否转入合同管理-已立项
-                if(null != str.getHasProject()){
-                    if (str.getHasProject().equals("是")) {
-                        businessNegotiationTO.setHasProject(true);
-                    } else {
-                        businessNegotiationTO.setHasProject(false);
-                    }
-                }
+                negotiationTO.setHasProject(stringToBool(str.getHasProject(),"是否转入合同管理-已立项"));
                 //是否转入合同管理-市场费用
-                if(null != str.getMarketCost()){
-                    if (str.getMarketCost().equals("是")) {
-                        businessNegotiationTO.setMarketCost(true);
-                    } else {
-                        businessNegotiationTO.setMarketCost(false);
-                    }
-                }
+                negotiationTO.setMarketCost(stringToBool(str.getMarketCost(),"是否转入合同管理-市场费用"));
                 //是否转换市场招待
-                if(null != str.getMarketFor()){
-                    if (str.getMarketFor().equals("是")) {
-                        businessNegotiationTO.setMarketFor(true);
-                    } else {
-                        businessNegotiationTO.setMarketFor(false);
-                    }
-                }
+                negotiationTO.setMarketFor(stringToBool(str.getMarketFor(),"是否转换市场招待"));
                 //是否持续跟进
-                if(null != str.getContinueFollowUp()){
-                    if (str.getContinueFollowUp().equals("是")) {
-                        businessNegotiationTO.setContinueFollowUp(true);
-                    } else {
-                        businessNegotiationTO.setContinueFollowUp(false);
-                    }
-                }
+                negotiationTO.setContinueFollowUp(stringToBool(str.getContinueFollowUp(),"是否持续跟进"));
                 //是否闭环
-                if(null != str.getClosedLoop()){
-                    if (str.getClosedLoop().equals("是")) {
-                        businessNegotiationTO.setClosedLoop(true);
-                    } else {
-                        businessNegotiationTO.setClosedLoop(false);
-                    }
-                }
+                negotiationTO.setClosedLoop(stringToBool(str.getClosedLoop(),"是否闭环"));
                 //是否需要协助
-                if(null != str.getNeedAssist()){
-                    if (str.getNeedAssist().equals("是")) {
-                        businessNegotiationTO.setNeedAssist(true);
-                    } else {
-                        businessNegotiationTO.setNeedAssist(false);
-                    }
-                }
+                negotiationTO.setNeedAssist(stringToBool(str.getNeedAssist(),"是否需要协助"));
                 //是否已发协助函
-                if(null != str.getAssistLetter()){
-                    if (str.getAssistLetter().equals("是")) {
-                        businessNegotiationTO.setAssistLetter(true);
-                    } else {
-                        businessNegotiationTO.setAssistLetter(false);
-                    }
-                }
+                negotiationTO.setAssistLetter(stringToBool(str.getAssistLetter(),"是否已发协助函"));
                 //是否产生路费
-                if(null != str.getProduceTrip()){
-                    if (str.getProduceTrip().equals("是")) {
-                        businessNegotiationTO.setProduceTrip(true);
-                    } else {
-                        businessNegotiationTO.setProduceTrip(false);
-                    }
-                }
-                tocs.add(businessNegotiationTO);
+                negotiationTO.setProduceTrip(stringToBool(str.getProduceTrip(),"是否产生路费"));
+                tocs.add(negotiationTO);
             }
             //注意序列化
             businessNegotiationAPI.importExcel(tocs);
@@ -304,12 +224,30 @@ public class BusinessNegotiationAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+    private Boolean stringToBool(String str,String fileName) throws ActException{
+        Boolean bool = null;
+        if(str != null){
+            switch (str){
+                case "是":
+                    bool = true;
+                    break;
+                case "否":
+                    bool = false;
+                    break;
+                default:
+                    throw new ActException(fileName + "格式输入错误,正确格式为(是/否)");
+            }
+
+        }
+        return bool;
+    }
+
 
     /**
      * 导出excel
      *
      * @param dto 商务洽谈
-     * @des 商务洽谈
+     * @des 导出商务洽谈
      * @version v1
      */
 //    @LoginAuth
@@ -319,6 +257,25 @@ public class BusinessNegotiationAction extends BaseFileAction {
         try {
             String fileName = "商务洽谈.xlsx";
             super.writeOutFile(response, businessNegotiationAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板商务洽谈
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商务项目合同导入模板.xlsx";
+            super.writeOutFile(response, businessNegotiationAPI.templateExcel(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

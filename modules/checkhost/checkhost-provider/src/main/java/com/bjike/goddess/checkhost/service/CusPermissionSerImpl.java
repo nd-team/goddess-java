@@ -300,11 +300,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
+    public Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         String ss = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
-        UserBO userBO = userAPI.currentUser();
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -357,11 +362,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean busCusPermission(String idFlag) throws SerException {
+    public Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         //但前用户
-        UserBO userBO = userAPI.currentUser();
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -395,10 +405,10 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 
         //TODO 部门id 商务部
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
-//        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
+//        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
+        Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
-        if (moduleFlag) {
+        if (positionFlag) {
             flag = true;
         } else {
             flag = false;

@@ -29,6 +29,7 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -191,20 +192,21 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @throws SerException
      */
     List<CustomerNameNumBO> findNameNum() throws SerException;
+
     /**
      * 获取所有的业务类型
-     *
      */
     default List<String> findBussType() throws SerException {
         return null;
     }
+
     /**
      * 根据业务类型获取地区
-     *
      */
     default List<String> findAreaByBussType(String bussType) throws SerException {
         return null;
     }
+
     /**
      * 客户信息管理日汇总
      *
@@ -250,7 +252,7 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
      * @return class SummationBO
      * @throws SerException
      */
-    default List<SummationBO> summaQuarter(Integer year,Integer quarter) throws SerException {
+    default List<SummationBO> summaQuarter(Integer year, Integer quarter) throws SerException {
         return null;
     }
 
@@ -277,6 +279,7 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
     default List<SummationBO> summaTotal(String endDate) throws SerException {
         return null;
     }
+
     /**
      * 导出Excel
      *
@@ -300,119 +303,142 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
 
     /**
      * 获取所有的地区
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findArea() throws SerException{
+    default List<String> findArea() throws SerException {
         return null;
     }
 
     /**
      * 客户信息管理图形展示日汇总数据
+     *
      * @param summDate 日期
      * @return class OptionBO
      * @throws SerException
      */
-    default OptionBO figureShowDay(String summDate) throws SerException{
+    default OptionBO figureShowDay(String summDate) throws SerException {
         return null;
     }
+
     /**
      * 客户信息管理图形展示周汇总数据
-     * @param year 年份
+     *
+     * @param year  年份
      * @param month 月份
-     * @param week 周期
+     * @param week  周期
      * @return class OptionBO
      * @throws SerException
      */
-    default OptionBO figureShowWeek(Integer year,Integer month,Integer week) throws SerException{
+    default OptionBO figureShowWeek(Integer year, Integer month, Integer week) throws SerException {
         return null;
     }
+
     /**
      * 客户信息管理图形展示月汇总数据
-     * @param year 年份
+     *
+     * @param year  年份
      * @param month 月份
      * @return class OptionBO
      * @throws SerException
      */
-    default OptionBO figureShowMonth(Integer year,Integer month) throws SerException{
+    default OptionBO figureShowMonth(Integer year, Integer month) throws SerException {
         return null;
     }
+
     /**
      * 客户信息管理图形展示季度汇总数据
-     * @param year 年份
+     *
+     * @param year    年份
      * @param quarter 季度
      * @return class OptionBO
      * @throws SerException
      */
-    default OptionBO figureShowQuarter(Integer year,Integer quarter) throws SerException{
+    default OptionBO figureShowQuarter(Integer year, Integer quarter) throws SerException {
         return null;
     }
+
     /**
      * 客户信息管理图形展示年度汇总数据
+     *
      * @param year 年份
      * @return class OptionBO
      * @throws SerException
      */
-    default OptionBO figureShowYear(Integer year) throws SerException{
+    default OptionBO figureShowYear(Integer year) throws SerException {
         return null;
     }
+
     /**
      * 客户信息管理图形展示累计汇总数据
+     *
      * @param endDate 截止日期
      * @return class OptionBO
      * @throws SerException
      */
-    default OptionBO figureShowTotal(String endDate) throws SerException{
+    default OptionBO figureShowTotal(String endDate) throws SerException {
         return null;
     }
 
     /**
      * 客户地区分布情况
+     *
      * @return
      * @throws SerException
      */
-    default PieOptionBO areaPieShow() throws SerException{
+    default PieOptionBO areaPieShow() throws SerException {
         return null;
     }
+
     /**
      * 客户类型分类分析
+     *
      * @param area 地区
      * @return
      * @throws SerException
      */
-    default PieOptionBO areaBussTypePieShow(String area) throws SerException{
+    default PieOptionBO areaBussTypePieShow(String area) throws SerException {
         return null;
     }
+
     /**
      * 各业务类型客户地区分布情况
+     *
      * @return
      * @throws SerException
      */
-    default OptionBO bussTypeAreaBaiShow() throws SerException{
+    default OptionBO bussTypeAreaBaiShow() throws SerException {
         return null;
     }
+
     /**
      * 客户来源分析
+     *
      * @return
      * @throws SerException
      */
-    default OptionBO resouceBaiShow() throws SerException{
+    default OptionBO resouceBaiShow() throws SerException {
         return null;
     }
+
     /**
      * 根据业务类型客户来源分析
+     *
      * @return
      * @throws SerException
      */
-    default PieOptionBO resoucePieShowBybussType(String bussType) throws SerException{
+    default PieOptionBO resoucePieShowBybussType(String bussType) throws SerException {
         return null;
     }
+
     /**
      * 将所有数据重新计算一遍
+     *
      * @return
      * @throws SerException
      */
-    default List<CustomerBaseInfoBO> computations() throws SerException{
+    default List<CustomerBaseInfoBO> computations() throws SerException {
         return null;
     }
 
@@ -432,4 +458,22 @@ public interface CustomerBaseInfoSer extends Ser<CustomerBaseInfo, CustomerBaseI
     default List<String> findCode() throws SerException {
         return null;
     }
+
+    /**
+     * 客户管理平台业主客户列表
+     *
+     * @param dto
+     * @return class CustomerAndOwnerInfoBO
+     * @throws SerException
+     */
+    List<CustomerAndOwnerInfoBO> customerList(CustomerBaseInfoDTO dto) throws SerException;
+
+    /**
+     * 客户管理平台业主客户id
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    CustomerAndOwnerInfoBO customerById(String id) throws SerException;
 }
