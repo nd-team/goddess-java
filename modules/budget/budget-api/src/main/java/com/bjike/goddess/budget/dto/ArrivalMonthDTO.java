@@ -17,11 +17,38 @@ public class ArrivalMonthDTO extends BaseDTO {
      */
     private String[] arrivals;
 
+
+    /**
+     * 时间(如2017-05)
+     */
+    private String time;
+
+    /**
+     * 地区
+     */
+    private String area;
+
     public String[] getArrivals() {
         return arrivals;
     }
 
     public void setArrivals(String[] arrivals) {
         this.arrivals = arrivals;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.budget.dto.ProjectWeekDTO;
 import com.bjike.goddess.budget.entity.ProjectWeek;
 import com.bjike.goddess.budget.enums.GuideAddrStatus;
 import com.bjike.goddess.budget.excel.ProjectWeekImportTemple;
+import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
 import com.bjike.goddess.budget.to.ProjectWeekTO;
@@ -18,6 +19,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,8 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
     private ProjectMonthSer projectMonthSer;
     @Autowired
     private UserAPI userAPI;
+    @Autowired
+    private ArrivalWeekSer arrivalWeekSer;
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
@@ -175,7 +179,11 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
         ProjectWeek projectWeek = BeanTransform.copyProperties(to, ProjectWeek.class, true);
 //        projectWeek.setTargetIncome(to.getPrice()*to.getTargetWork());
 //        projectWeek.setPlanIncome(to.getPrice()*to.getActualWork());
+        projectWeek.setCreateTime(LocalDateTime.now());
+        projectWeek.setModifyTime(LocalDateTime.now());
         super.save(projectWeek);
+
+        //项目收入月
         projectMonthSer.deleteAll();
         List<ProjectWeekCountBO> list = count();
         for (ProjectWeekCountBO bo : list) {
@@ -194,7 +202,81 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             projectMonthSer.save(projectMonthTO);
         }
-        return BeanTransform.copyProperties(projectWeek, ProjectWeekBO.class);
+
+        //地区收入周
+        arrivalWeekSer.deleteAll();
+        List<ArrivalWeekTO> arrivalWeekTOs = countArea();
+
+        ProjectWeekBO bo = BeanTransform.copyProperties(projectWeek, ProjectWeekBO.class);
+        return bo;
+    }
+
+    //zhuangkaiqin
+    //获取地区收入周
+    private List<ArrivalWeekTO> countArea() throws SerException {
+        List<ArrivalWeekTO> boList = new ArrayList<>(0);
+        List<String> areas = findArea();
+        List<Integer> years = findAllYears();
+        List<Integer> months = findAllMonths();
+        List<Integer> weeks = findAllWeeks();
+        Integer targetWorkSum = 0;
+        Integer actualWorkSum = 0;
+        Double priceSum = 0d;
+        Double targetIncomeSum = 0d;
+        Double planIncomeSum = 0d;
+        Integer workDifferencesSum = 0;
+        Double price = 0d;
+        int i = 0;
+
+        List<ProjectWeek> projectWeeks = super.findAll();
+        if (null != projectWeeks && projectWeeks.size() > 0) {
+            for (String area : areas) {
+                for (Integer year : years) {
+                    for (Integer month : months) {
+                        for (Integer week : weeks) {
+                            for (ProjectWeek entity : projectWeeks) {
+                                if (entity.getArrival().equals(area) && entity.getYear().equals(year) && entity.getMonth().equals(month) && entity.getWeek().equals(week)) {
+                                    targetWorkSum += entity.getTargetWork();
+                                    actualWorkSum += entity.getActualWork();
+                                    workDifferencesSum += (targetWorkSum - actualWorkSum);
+                                    priceSum += entity.getPrice();
+                                    if (null != entity.getTargetIncome()) {
+                                        entity.setTargetIncome(0d);
+                                    }
+                                    targetIncomeSum += entity.getTargetIncome();
+                                    planIncomeSum += entity.getPlanIncome();
+                                    i++;
+                                    price += entity.getPrice();
+                                }
+                            }
+                            if (targetWorkSum != 0) {
+                                ArrivalWeekTO arrivalWeekTO = new ArrivalWeekTO();
+                                arrivalWeekTO.setArrival(area);
+                                arrivalWeekTO.setYear(year);
+                                arrivalWeekTO.setMonth(month);
+                                arrivalWeekTO.setWeek(week);
+                                arrivalWeekTO.setTargetWork(targetWorkSum);
+                                arrivalWeekTO.setActualWork(actualWorkSum);
+                                arrivalWeekTO.setPrice(price / i);
+                                arrivalWeekTO.setTargetIncome(targetIncomeSum);
+                                arrivalWeekTO.setPlanIncome(planIncomeSum);
+                                boList.add(arrivalWeekTO);
+                                arrivalWeekSer.save(arrivalWeekTO);
+                                targetWorkSum = 0;
+                                actualWorkSum = 0;
+                                workDifferencesSum = 0;
+                                targetIncomeSum = 0.00;
+                                planIncomeSum = 0.00;
+                                workDifferencesSum = 0;
+                                i = 0;
+                                price = 0d;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return boList;
     }
 
     @Override
@@ -293,9 +375,9 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                                         if (months != null && months.size() > 0) {
                                             for (Integer month : months) {
                                                 List<WeekListBO> weekListBOS = findWeekByArProNaYeMo(area, project, projectName, year, month);
-                                                for(WeekListBO weekListBO : weekListBOS){
-                                                    weekListBO.setIncomeDifferences(weekListBO.getTargetIncome()-weekListBO.getPlanIncome());
-                                                    weekListBO.setWorkDifferences(weekListBO.getActualWork()-weekListBO.getTargetWork());
+                                                for (WeekListBO weekListBO : weekListBOS) {
+                                                    weekListBO.setIncomeDifferences(weekListBO.getTargetIncome() - weekListBO.getPlanIncome());
+                                                    weekListBO.setWorkDifferences(weekListBO.getActualWork() - weekListBO.getTargetWork());
                                                 }
                                                 MonthListBO monthListBO = new MonthListBO();
                                                 monthListBO.setMonth(month);
@@ -329,7 +411,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             }
         }
         int limit = dto.getLimit();
-        int start = limit*dto.getPage();
+        int start = limit * dto.getPage();
         return projectWeekListBOS.stream().skip(start).limit(limit).collect(Collectors.toList());
     }
 
@@ -345,6 +427,17 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             return Collections.emptyList();
         }
         return list.stream().map(ProjectWeek::getArrival).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 获取周数
+     */
+    public List<Integer> findAllWeeks() throws SerException {
+        List<ProjectWeek> list = super.findAll();
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return list.stream().map(ProjectWeek::getWeek).distinct().collect(Collectors.toList());
     }
 
     /**
@@ -469,10 +562,16 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
 //                                boolean b = projectWeek.getPrice().compareTo(price) == 0 ? true : false;
                                 if (projectWeek.getArrival().equals(arrival) && projectWeek.getProject().equals(project) && projectWeek.getYear().equals(year) && projectWeek.getMonth().equals(month) && price.equals(projectWeek.getProjectName())) {
                                     targetIncomeSum += projectWeek.getTargetIncome();
+                                    if (null == projectWeek.getPlanIncome()) {
+                                        projectWeek.setPlanIncome(0d);
+                                    }
                                     planIncomeSum += projectWeek.getPlanIncome();
                                     double incomeDifference = projectWeek.getPlanIncome() - projectWeek.getTargetIncome();
                                     incomeDifferencesSum += incomeDifference;
                                     targetWorkSum += projectWeek.getTargetWork();
+                                    if (null == projectWeek.getActualWork()) {
+                                        projectWeek.setActualWork(0);
+                                    }
                                     actualWorkSum += projectWeek.getActualWork();
                                     int workDifference = projectWeek.getActualWork() - projectWeek.getTargetWork();
                                     workDifferencesSum += workDifference;
@@ -680,5 +779,150 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
         Excel exce = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(projectWeekImportTemples, exce);
         return bytes;
+    }
+
+    @Override
+    public List<ProjectWeekCountBO> collect(ProjectWeekDTO dto) throws SerException {
+        checkSeeIdentity();
+        List<ProjectWeekCountBO> boList = new ArrayList<ProjectWeekCountBO>();
+        Integer targetWorkSum = 0;
+        Integer actualWorkSum = 0;
+        Integer workDifferencesSum = 0;
+        Double targetIncomeSum = 0.00;
+        Double planIncomeSum = 0.00;
+        Double incomeDifferencesSum = 0.00;
+
+        ProjectWeekDTO dto1 = new ProjectWeekDTO();
+        if (null != dto.getProjects()) {
+            for (String project : dto.getProjects()) {
+                dto1 = new ProjectWeekDTO();
+                dto1 = condition(dto);
+                dto1.getConditions().add(Restrict.eq("project", project));
+                dto1.getSorts().add("year=desc");
+                dto1.getSorts().add("month=asc");
+                List<ProjectWeek> projectWeeks = super.findByCis(dto1);
+                if (null != projectWeeks && projectWeeks.size() > 0) {
+                    List<String> arrivals = projectWeeks.stream().map(ProjectWeek::getArrival).distinct().collect(Collectors.toList());
+                    List<Integer> years = projectWeeks.stream().map(ProjectWeek::getYear).distinct().collect(Collectors.toList());
+                    List<Integer> months = projectWeeks.stream().map(ProjectWeek::getMonth).distinct().collect(Collectors.toList());
+                    for (String area : arrivals) {
+                        for (Integer year : years) {
+                            for (Integer month : months) {
+                                for (ProjectWeek entity : projectWeeks) {
+                                    if (entity.getArrival().equals(area) && entity.getYear().equals(year) && entity.getMonth().equals(month)) {
+                                        targetIncomeSum += entity.getTargetIncome();
+                                        planIncomeSum += entity.getPlanIncome();
+                                        double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                        incomeDifferencesSum += incomeDifference;
+                                        targetWorkSum += entity.getTargetWork();
+                                        actualWorkSum += entity.getActualWork();
+                                        int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                        workDifferencesSum += workDifference;
+                                    }
+                                }
+                                if (targetWorkSum != 0) {
+                                    ProjectWeekCountBO bo = new ProjectWeekCountBO();
+                                    bo.setArrival(area);
+                                    bo.setProject(project);
+                                    bo.setYear(year);
+                                    bo.setMonth(month);
+//                                    bo.setProjectName(price);
+                                    bo.setTargetWorkSum(targetWorkSum);
+                                    bo.setActualWorkSum(actualWorkSum);
+                                    bo.setWorkDifferencesSum(workDifferencesSum);
+                                    bo.setTargetIncomeSum(targetIncomeSum);
+                                    bo.setPlanIncomeSum(planIncomeSum);
+                                    bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                                    boList.add(bo);
+                                    targetWorkSum = 0;
+                                    actualWorkSum = 0;
+                                    workDifferencesSum = 0;
+                                    targetIncomeSum = 0.00;
+                                    planIncomeSum = 0.00;
+                                    incomeDifferencesSum = 0.00;     //置为0
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        } else {
+            dto1 = new ProjectWeekDTO();
+            dto1 = condition(dto);
+            dto1.getSorts().add("year=desc");
+            dto1.getSorts().add("month=asc");
+            List<ProjectWeek> projectWeeks = super.findByCis(dto1);
+            if (null != projectWeeks && projectWeeks.size() > 0) {
+                List<String> arrivals = projectWeeks.stream().map(ProjectWeek::getArrival).distinct().collect(Collectors.toList());
+                List<Integer> years = projectWeeks.stream().map(ProjectWeek::getYear).distinct().collect(Collectors.toList());
+                List<Integer> months = projectWeeks.stream().map(ProjectWeek::getMonth).distinct().collect(Collectors.toList());
+                List<String> projects = projectWeeks.stream().map(ProjectWeek::getProject).distinct().collect(Collectors.toList());
+                for (String area : arrivals) {
+                    for (Integer year : years) {
+                        for (Integer month : months) {
+                            for (String project : projects) {
+                                for (ProjectWeek entity : projectWeeks) {
+                                    if (entity.getArrival().equals(area) && entity.getYear().equals(year) && entity.getMonth().equals(month) && entity.getProject().equals(project)) {
+                                        targetIncomeSum += entity.getTargetIncome();
+                                        planIncomeSum += entity.getPlanIncome();
+                                        double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                        incomeDifferencesSum += incomeDifference;
+                                        targetWorkSum += entity.getTargetWork();
+                                        actualWorkSum += entity.getActualWork();
+                                        int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                        workDifferencesSum += workDifference;
+                                    }
+                                }
+                                if (targetWorkSum != 0) {
+                                    ProjectWeekCountBO bo = new ProjectWeekCountBO();
+                                    bo.setArrival(area);
+                                    bo.setProject(project);
+                                    bo.setYear(year);
+                                    bo.setMonth(month);
+//                                    bo.setProjectName(price);
+                                    bo.setTargetWorkSum(targetWorkSum);
+                                    bo.setActualWorkSum(actualWorkSum);
+                                    bo.setWorkDifferencesSum(workDifferencesSum);
+                                    bo.setTargetIncomeSum(targetIncomeSum);
+                                    bo.setPlanIncomeSum(planIncomeSum);
+                                    bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                                    boList.add(bo);
+                                    targetWorkSum = 0;
+                                    actualWorkSum = 0;
+                                    workDifferencesSum = 0;
+                                    targetIncomeSum = 0.00;
+                                    planIncomeSum = 0.00;
+                                    incomeDifferencesSum = 0.00;     //置为0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return boList;
+    }
+
+    @Override
+    public List<String> findAreas() throws SerException {
+        List<ProjectWeek> projectWeeks = super.findAll();
+        if (null != projectWeeks && projectWeeks.size() > 0) {
+            List<String> list = projectWeeks.stream().map(ProjectWeek::getArrival).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    private ProjectWeekDTO condition(ProjectWeekDTO dto) throws SerException {
+        ProjectWeekDTO dto1 = new ProjectWeekDTO();
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto1.getConditions().add(Restrict.eq("arrival", dto.getArea()));
+        }
+        if (StringUtils.isNotBlank(dto.getTime())) {
+            dto1.getConditions().add(Restrict.eq("year", dto.getTime().substring(0, dto.getTime().indexOf("-"))));
+            dto1.getConditions().add(Restrict.eq("month", dto.getTime().substring(dto.getTime().indexOf("-") + 1, dto.getTime().length())));
+        }
+        return dto1;
     }
 }

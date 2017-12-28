@@ -51,7 +51,7 @@ public class AssetAct extends BaseFileAction {
     private AssetAPI assetAPI;
     @Autowired
     private FormulaAPI formulaAPI;
-//    @Autowired
+    //    @Autowired
 //    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;

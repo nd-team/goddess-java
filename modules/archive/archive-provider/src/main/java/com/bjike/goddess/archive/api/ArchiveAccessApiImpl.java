@@ -50,7 +50,7 @@ public class ArchiveAccessApiImpl implements ArchiveAccessAPI {
     }
 
     @Override
-    public void upload(List<ArchiveAccessImportExcel> tos) throws SerException {
+    public void upload(List<ArchiveAccessTO> tos) throws SerException {
         archiveAccessSer.upload(tos);
     }
 

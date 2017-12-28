@@ -87,9 +87,9 @@ public class PlanYearSubjectSerImpl extends ServiceImpl<PlanYearSubject, PlanYea
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = marPermissionSer.getMarPermission(marketCheck);
+        Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = marPermissionSer.getMarPermission(marketManage);
+        Boolean flagAdd = guideAddIdentity();
         if (flagSee || flagAdd) {
             return true;
         } else {

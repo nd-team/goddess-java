@@ -144,4 +144,15 @@ public interface ProjectMonthSer extends Ser<ProjectMonth, ProjectMonthDTO> {
     default List<String> findAllProjects() throws SerException {
         return null;
     }
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        return null;
+    }
 }
