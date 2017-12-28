@@ -238,4 +238,14 @@ public class CustomerBaseInfoApiImpl implements CustomerBaseInfoAPI {
     public List<String> findCode() throws SerException {
         return customerBaseInfoSer.findCode();
     }
+
+    @Override
+    public List<CustomerAndOwnerInfoBO> customerList(CustomerBaseInfoDTO dto) throws SerException {
+        return customerBaseInfoSer.customerList(dto);
+    }
+
+    @Override
+    public CustomerAndOwnerInfoBO customerById(String id) throws SerException {
+        return customerBaseInfoSer.customerById(id);
+    }
 }

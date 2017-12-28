@@ -13,10 +13,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.customer.api.*;
-import com.bjike.goddess.customer.bo.CustomerBaseInfoBO;
-import com.bjike.goddess.customer.bo.OptionBO;
-import com.bjike.goddess.customer.bo.PieOptionBO;
-import com.bjike.goddess.customer.bo.SummationBO;
+import com.bjike.goddess.customer.bo.*;
 import com.bjike.goddess.customer.dto.CustomerBaseInfoDTO;
 import com.bjike.goddess.customer.excel.CustomerBaseInfoExcel;
 import com.bjike.goddess.customer.to.*;
@@ -414,9 +411,9 @@ public class CustomerBaseInfoAction extends BaseFileAction {
                         cusFamilyMemberTOS.add(cusFamilyMemberTO);
                     }
                 }
-                CustomerDetailTO customerDetailTO = BeanTransform.copyProperties(customerBaseInfoExcels.get(0), CustomerDetailTO.class,"birthday");
+                CustomerDetailTO customerDetailTO = BeanTransform.copyProperties(customerBaseInfoExcels.get(0), CustomerDetailTO.class, "birthday");
                 customerDetailTO.setBirthday(customerBaseInfoExcels.get(0).getBirthday().toString());
-                CustomerBaseInfoTO customerBaseInfoTO = BeanTransform.copyProperties(customerBaseInfoExcels.get(0), CustomerBaseInfoTO.class,"proceedMarketTreat","marketReceptTime");
+                CustomerBaseInfoTO customerBaseInfoTO = BeanTransform.copyProperties(customerBaseInfoExcels.get(0), CustomerBaseInfoTO.class, "proceedMarketTreat", "marketReceptTime");
                 customerBaseInfoTO.setProceedMarketTreat(stringToBool(customerBaseInfoExcels.get(0).getProceedMarketTreat()));
                 customerBaseInfoTO.setMarketReceptTime(DateUtil.dateToString(customerBaseInfoExcels.get(0).getMarketReceptTime()));
                 customerDetailTO.setCustomerBaseInfoTO(customerBaseInfoTO);
@@ -468,6 +465,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户信息周汇总
      *
@@ -512,7 +510,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     /**
      * 客户信息季度汇总
      *
-     * @param year  年份
+     * @param year    年份
      * @param quarter 季度
      * @return class SummationVO
      * @version v1
@@ -528,10 +526,11 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户信息年度汇总
      *
-     * @param year  年份
+     * @param year 年份
      * @return class SummationVO
      * @version v1
      */
@@ -565,6 +564,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户信息图形展示日汇总
      *
@@ -625,10 +625,11 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户信息图形展示季度汇总
      *
-     * @param year  年份
+     * @param year    年份
      * @param quarter 季度
      * @return class OptionVO
      * @version v1
@@ -648,7 +649,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
     /**
      * 客户信息图形展示年度汇总
      *
-     * @param year  年份
+     * @param year 年份
      * @return class OptionVO
      * @version v1
      */
@@ -666,8 +667,9 @@ public class CustomerBaseInfoAction extends BaseFileAction {
 
     /**
      * 客户信息图形展示累计汇总
-     * @return class OptionVO
+     *
      * @param date 截止日期
+     * @return class OptionVO
      * @version v1
      */
     @LoginAuth
@@ -681,14 +683,16 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户地区分布情况饼状图
+     *
      * @return class PieOptionVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/pieAreaShow")
-    public Result pieAreaShow( HttpServletRequest request) throws ActException {
+    public Result pieAreaShow(HttpServletRequest request) throws ActException {
         try {
             PieOptionBO pieOptionBO = customerBaseInfoAPI.areaPieShow();
             PieOptionVO pieOptionVO = BeanTransform.copyProperties(pieOptionBO, PieOptionVO.class);
@@ -697,6 +701,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的地区
      *
@@ -704,7 +709,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
      */
 //    @LoginAuth
     @GetMapping("v1/findAllArea")
-    public Result findAllArea( HttpServletRequest request) throws ActException {
+    public Result findAllArea(HttpServletRequest request) throws ActException {
         try {
             List<String> areas = customerBaseInfoAPI.findArea();
             return ActResult.initialize(areas);
@@ -712,6 +717,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有的业务类型
      *
@@ -719,7 +725,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
      */
 //    @LoginAuth
     @GetMapping("v1/findBussType")
-    public Result findBussType( HttpServletRequest request) throws ActException {
+    public Result findBussType(HttpServletRequest request) throws ActException {
         try {
             List<String> bussType = customerBaseInfoAPI.findBussType();
             return ActResult.initialize(bussType);
@@ -727,8 +733,10 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户类型分布情况饼状图
+     *
      * @param area 地区
      * @return class PieOptionVO
      * @version v1
@@ -744,14 +752,16 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 各业务类型客户地区分布情况
+     *
      * @return class OptionVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/bussTypeAreaBaiShow")
-    public Result bussTypeAreaBaiShow( HttpServletRequest request) throws ActException {
+    public Result bussTypeAreaBaiShow(HttpServletRequest request) throws ActException {
         try {
             OptionBO optionBO = customerBaseInfoAPI.bussTypeAreaBaiShow();
             OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
@@ -760,14 +770,16 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据业务类型客户来源分析
+     *
      * @return class PieOptionVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/resoucePieShowBybussType")
-    public Result resoucePieShowByArea( String bussType, HttpServletRequest request) throws ActException {
+    public Result resoucePieShowByArea(String bussType, HttpServletRequest request) throws ActException {
         try {
             PieOptionBO pieOptionBO = customerBaseInfoAPI.resoucePieShowBybussType(bussType);
             PieOptionVO pieOptionVO = BeanTransform.copyProperties(pieOptionBO, PieOptionVO.class);
@@ -776,14 +788,16 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 客户来源分析
+     *
      * @return class OptionVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/resouceBaiShow")
-    public Result resouceBaiShow( HttpServletRequest request) throws ActException {
+    public Result resouceBaiShow(HttpServletRequest request) throws ActException {
         try {
             OptionBO optionBO = customerBaseInfoAPI.resouceBaiShow();
             OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
@@ -875,13 +889,14 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         }
         return new ActResult("delFile success");
     }
+
     /**
      * 添加编辑中省份下拉值
      *
      * @version v1
      */
     @GetMapping("v1/findAddProvinces")
-    public Result findAddProvinces( HttpServletRequest request) throws ActException {
+    public Result findAddProvinces(HttpServletRequest request) throws ActException {
         try {
             List<String> provinces = areaWeightSetAPI.findProvinces();
             return ActResult.initialize(provinces);
@@ -889,6 +904,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加编辑中根据省份获取地区下拉值
      *
@@ -903,13 +919,14 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加中的业务类型下拉值
      *
      * @version v1
      */
     @GetMapping("v1/findAddBussType")
-    public Result findAddBussType( HttpServletRequest request) throws ActException {
+    public Result findAddBussType(HttpServletRequest request) throws ActException {
         try {
             List<String> bussType = bussTypeWeightSetAPI.findBussType();
             return ActResult.initialize(bussType);
@@ -917,6 +934,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加中的根据业务类型获取业务方向
      *
@@ -931,6 +949,7 @@ public class CustomerBaseInfoAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加中的接触阶段下拉值
      *
@@ -941,6 +960,40 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         try {
             List<String> name = contactWeightSetAPI.findName();
             return ActResult.initialize(name);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 客户管理平台业主客户列表
+     *
+     * @param dto
+     * @return class CustomerAndOwnerInfoBO
+     * @version v1
+     */
+    @GetMapping("v1/customerList")
+    public Result customerList(CustomerBaseInfoDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<CustomerAndOwnerInfoBO> boList = customerBaseInfoAPI.customerList(dto);
+            return ActResult.initialize(boList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 客户管理平台业主客户id
+     *
+     * @param id
+     * @return class CustomerAndOwnerInfoBO
+     * @version v1
+     */
+    @GetMapping("v1/customer/{id}")
+    public Result customerById(@PathVariable String id) throws ActException {
+        try {
+            CustomerAndOwnerInfoBO bo = customerBaseInfoAPI.customerById(id);
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

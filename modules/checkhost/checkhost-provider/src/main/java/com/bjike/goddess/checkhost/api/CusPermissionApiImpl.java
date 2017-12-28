@@ -6,6 +6,7 @@ import com.bjike.goddess.checkhost.service.CusPermissionSer;
 import com.bjike.goddess.checkhost.to.CusPermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,13 +58,13 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
-        return cusPermissionSer.getCusPermission(idFlag);
+    public Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
+        return cusPermissionSer.getCusPermission(idFlag,user);
     }
 
     @Override
-    public Boolean busCusPermission(String idFlag) throws SerException {
-        return cusPermissionSer.busCusPermission(idFlag);
+    public Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
+        return cusPermissionSer.busCusPermission(idFlag,user);
     }
 
 }
