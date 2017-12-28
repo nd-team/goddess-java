@@ -24,7 +24,7 @@ public interface SocialInsuranceAPI {
     /**
      * 下拉导航权限
      */
-    default List<SonPermissionObject> sonPermission() throws SerException {
+    default Boolean sonPermission() throws SerException {
         return null;
     }
 
@@ -97,6 +97,15 @@ public interface SocialInsuranceAPI {
      * @version v1
      */
     void importExcel(List<SocialInsuranceTO> tos) throws SerException;
+
+    /**
+     * 导入模板
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    byte[] exportExcelTemplate() throws SerException;
 
     /**
      * 导出

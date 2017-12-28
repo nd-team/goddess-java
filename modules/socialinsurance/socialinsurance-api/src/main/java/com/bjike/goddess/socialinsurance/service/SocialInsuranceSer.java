@@ -25,7 +25,7 @@ public interface SocialInsuranceSer extends Ser<SocialInsurance, SocialInsurance
     /**
      * 下拉导航权限
      */
-    default List<SonPermissionObject> sonPermission() throws SerException {
+    default Boolean sonPermission() throws SerException {
         return null;
     }
 
@@ -109,5 +109,13 @@ public interface SocialInsuranceSer extends Ser<SocialInsurance, SocialInsurance
     byte[] exportExcel(SocialInsuranceDTO dto) throws SerException;
 
 
+    /**
+     * 导出模板
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    byte[] exportExcelTemplate() throws SerException;
 
 }

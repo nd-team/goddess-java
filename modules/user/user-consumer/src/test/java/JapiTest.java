@@ -22,6 +22,9 @@ public class JapiTest {
 		JapiClient.setActionReletivePath("com/bjike/goddess/user/action");//主项目action位置
 		JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
 				"modules/user/user-api",
+				"modules/event/event-api",
+				"modules/attendance/attendance-api",
+				"modules/lendreimbursement/lendreimbursement-api",
 				"common/common-api"
 		});
 		JapiClient.setFlushServer(true);

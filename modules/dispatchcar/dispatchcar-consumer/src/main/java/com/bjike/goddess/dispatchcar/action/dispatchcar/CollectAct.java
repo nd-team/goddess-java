@@ -89,7 +89,7 @@ public class CollectAct extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/driverCollect")
-    public Result driverCollect(@Validated({ADD.class}) CollectIntervalTypeTO to, HttpServletRequest request) throws ActException {
+    public Result driverCollect(@Validated({ADD.class}) CollectIntervalTypeTO to, BindingResult result) throws ActException {
         try {
             List<DispatchDriverCollectVO> voList = BeanTransform.copyProperties(dispatchCarInfoAPI.dispatchCollect(to.getType(), CollectType.DRIVER), DispatchDriverCollectVO.class);
             return ActResult.initialize(voList);

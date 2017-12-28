@@ -1349,6 +1349,23 @@ public class TaskNodeAction extends BaseFileAction {
     }
 
     /**
+     * 查找所有用户
+     *
+     * @return class UserVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/allUsers")
+    public Result allUsers(HttpServletRequest request) throws ActException {
+        try {
+            List<UserBO> list = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(BeanTransform.copyProperties(list, UserVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 语音识别
      *
      * @param request httpRequest 语音流

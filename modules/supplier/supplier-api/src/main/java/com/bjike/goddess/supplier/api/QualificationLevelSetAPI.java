@@ -3,6 +3,7 @@ package com.bjike.goddess.supplier.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.QualificationLevelSetBO;
 import com.bjike.goddess.supplier.dto.QualificationLevelSetDTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.QualificationLevelSetTO;
 
 import java.util.List;
@@ -17,6 +18,19 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface QualificationLevelSetAPI {
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 资质等级设置总条数
      */

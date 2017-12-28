@@ -11,21 +11,24 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.supplier.api.QualificationLevelSetAPI;
 import com.bjike.goddess.supplier.api.SupplierInfoAPI;
 import com.bjike.goddess.supplier.api.SupplierTypeSetAPI;
+import com.bjike.goddess.supplier.bo.OptionBO;
+import com.bjike.goddess.supplier.bo.SummationBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
 import com.bjike.goddess.supplier.dto.SupplierInfoDTO;
 import com.bjike.goddess.supplier.excel.SupplierInfoExcel;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SiginManageDeleteFileTO;
 import com.bjike.goddess.supplier.to.SupplierInfoRegistraDataTO;
 import com.bjike.goddess.supplier.to.SupplierInfoTO;
-import com.bjike.goddess.supplier.vo.SupplierInfoRegistraDataVO;
-import com.bjike.goddess.supplier.vo.SupplierInfoVO;
+import com.bjike.goddess.supplier.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -60,7 +63,79 @@ public class SupplierInfoAction extends BaseFileAction {
     private SupplierTypeSetAPI supplierTypeSetAPI;
     @Autowired
     private QualificationLevelSetAPI qualificationLevelSetAPI;
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
 
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result i() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("propermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = supplierInfoAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = supplierInfoAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
     /**
      * 根据id查询供应商信息管理
      *
@@ -413,6 +488,238 @@ public class SupplierInfoAction extends BaseFileAction {
         try {
             List<String> types = supplierTypeSetAPI.findAllType();
             return ActResult.initialize(types);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商管理日汇总
+     *
+     * @param date 日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/summarize/day")
+    public Result summarizeDay(String date, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = supplierInfoAPI.summaDay(date);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 供应商管理周汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/summarize/week")
+    public Result summarizeWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = supplierInfoAPI.summaWeek(year, month, week);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商管理月汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/summarize/month")
+    public Result summarizeMonth(Integer year, Integer month, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = supplierInfoAPI.summaMonth(year, month);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商管理季度汇总
+     *
+     * @param year  年份
+     * @param quarter 季度
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/summarize/quarter")
+    public Result summarizeQuarter(Integer year, Integer quarter, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = supplierInfoAPI.summaQuarter(year, quarter);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 供应商管理年度汇总
+     *
+     * @param year  年份
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/summarize/year")
+    public Result summarizeYear(Integer year,  HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = supplierInfoAPI.summaYear(year);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商管理累计汇总
+     *
+     * @param date 截止日期
+     * @return class SummationVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/summarize/total")
+    public Result summarizeTotal(String date, HttpServletRequest request) throws ActException {
+        try {
+            List<SummationBO> boList = supplierInfoAPI.summaTotal(date);
+            List<SummationVO> voList = BeanTransform.copyProperties(boList, SummationVO.class, request);
+            return ActResult.initialize(voList);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 供应商管理图形展示日汇总
+     *
+     * @param date 日期
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/day")
+    public Result figureShowDay(String date, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = supplierInfoAPI.figureShowDay(date);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商管理图形展示周汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/week")
+    public Result figureShowWeek(Integer year, Integer month, Integer week, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = supplierInfoAPI.figureShowWeek(year, month, week);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商管理图形展示月汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/month")
+    public Result figureShowMonth(Integer year, Integer month, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = supplierInfoAPI.figureShowMonth(year, month);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 供应商管理图形展示季度汇总
+     *
+     * @param year  年份
+     * @param quarter 季度
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/quarter")
+    public Result figureShowQuarter(Integer year, Integer quarter, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = supplierInfoAPI.figureShowQuarter(year, quarter);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 供应商管理图形展示年度汇总
+     *
+     * @param year  年份
+     * @return class OptionVO
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/year")
+    public Result figureShowQuarter(Integer year, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = supplierInfoAPI.figureShowYear(year);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 供应商管理图形展示累计汇总
+     * @return class OptionVO
+     * @param date 截止日期
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/figureShow/total")
+    public Result figureShowTotal(String date, HttpServletRequest request) throws ActException {
+        try {
+            OptionBO optionBO = supplierInfoAPI.figureShowTotal(date);
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

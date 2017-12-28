@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.supplier.bo.QualificationLevelSetBO;
 import com.bjike.goddess.supplier.dto.QualificationLevelSetDTO;
 import com.bjike.goddess.supplier.service.QualificationLevelSetSer;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.QualificationLevelSetTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,16 @@ import java.util.List;
 public class QualificationLevelSetApiImpl implements QualificationLevelSetAPI {
     @Autowired
     private QualificationLevelSetSer qualificationLevelSetSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return qualificationLevelSetSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return qualificationLevelSetSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long countLevelSet(QualificationLevelSetDTO qualificationLevelSetDTO) throws SerException {

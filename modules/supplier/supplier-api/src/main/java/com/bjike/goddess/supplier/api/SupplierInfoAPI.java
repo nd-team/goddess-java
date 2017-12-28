@@ -1,11 +1,15 @@
 package com.bjike.goddess.supplier.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.supplier.bo.OptionBO;
+import com.bjike.goddess.supplier.bo.SummationBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoBO;
 import com.bjike.goddess.supplier.bo.SupplierInfoRegistraDataBO;
 import com.bjike.goddess.supplier.dto.SupplierInfoDTO;
+import com.bjike.goddess.supplier.to.GuidePermissionTO;
 import com.bjike.goddess.supplier.to.SupplierInfoRegistraDataTO;
 import com.bjike.goddess.supplier.to.SupplierInfoTO;
+import com.bjike.goddess.supplier.vo.SonPermissionObject;
 
 import java.util.List;
 
@@ -19,6 +23,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface SupplierInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 供应商信息管理总条数
      */
@@ -110,5 +128,136 @@ public interface SupplierInfoAPI {
      */
     default void addSupplierDetail(SupplierInfoRegistraDataTO supplierInfoRegistraDataTO) throws SerException {
         return;
+    }
+
+    /**
+     * 供应商信息日汇总
+     *
+     * @param summDate 日期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaDay(String summDate) throws SerException {
+        return null;
+    }
+
+    /**
+     * 供应商信息周汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @param week  周期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaWeek(Integer year, Integer month, Integer week) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息月汇总
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaMonth(Integer year, Integer month) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息季度汇总
+     *
+     * @param quarter 季度
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaQuarter(Integer year,Integer quarter) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息年度汇总
+     *
+     * @param year 年度
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaYear(Integer year) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 供应商信息累计汇总
+     *
+     * @param endDate 截止日期
+     * @return class SummationBO
+     * @throws SerException
+     */
+    default List<SummationBO> summaTotal(String endDate) throws SerException {
+        return null;
+    }
+    /**
+     * 供应商信息图形展示日汇总数据
+     * @param summDate 日期
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowDay(String summDate) throws SerException{
+        return null;
+    }
+    /**
+     * 供应商信息图形展示周汇总数据
+     * @param year 年份
+     * @param month 月份
+     * @param week 周期
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowWeek(Integer year,Integer month,Integer week) throws SerException{
+        return null;
+    }
+    /**
+     * 供应商信息图形展示月汇总数据
+     * @param year 年份
+     * @param month 月份
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowMonth(Integer year,Integer month) throws SerException{
+        return null;
+    }
+    /**
+     * 供应商信息图形展示季度汇总数据
+     * @param year 年份
+     * @param quarter 季度
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowQuarter(Integer year,Integer quarter) throws SerException{
+        return null;
+    }
+    /**
+     * 供应商信息图形展示年度汇总数据
+     * @param year 年份
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowYear(Integer year) throws SerException{
+        return null;
+    }
+    /**
+     * 供应商信息图形展示累计汇总数据
+     * @param endDate 截止日期
+     * @return class OptionBO
+     * @throws SerException
+     */
+    default OptionBO figureShowTotal(String endDate) throws SerException{
+        return null;
     }
 }

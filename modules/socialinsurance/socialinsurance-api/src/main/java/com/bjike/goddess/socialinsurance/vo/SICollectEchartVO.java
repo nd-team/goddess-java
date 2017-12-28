@@ -1,6 +1,7 @@
-package com.bjike.goddess.socialinsurance.bo;
+package com.bjike.goddess.socialinsurance.vo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.socialinsurance.bo.*;
 
 /**
  * 项目实施进度图形展示传数对象
@@ -11,7 +12,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class BCCollectEchartBO extends BaseBO {
+public class SICollectEchartVO extends BaseBO {
     /**
      * 标题
      */
@@ -39,14 +40,14 @@ public class BCCollectEchartBO extends BaseBO {
     /**
      * 悬停提示
      */
-    private TooltipBO tooltipBO;
+    private TooltipBO tooltip;
 
-    public TooltipBO getTooltipBO() {
-        return tooltipBO;
+    public TooltipBO getTooltip() {
+        return tooltip;
     }
 
-    public void setTooltipBO(TooltipBO tooltipBO) {
-        this.tooltipBO = tooltipBO;
+    public void setTooltip(TooltipBO tooltip) {
+        this.tooltip = tooltip;
     }
 
     public TitleBO getTitle() {

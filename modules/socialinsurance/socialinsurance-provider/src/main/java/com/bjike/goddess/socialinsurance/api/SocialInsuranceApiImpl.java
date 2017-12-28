@@ -3,7 +3,9 @@ package com.bjike.goddess.socialinsurance.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.socialinsurance.bo.SocialInsuranceBO;
 import com.bjike.goddess.socialinsurance.dto.SocialInsuranceDTO;
+import com.bjike.goddess.socialinsurance.excel.SonPermissionObject;
 import com.bjike.goddess.socialinsurance.service.SocialInsuranceSer;
+import com.bjike.goddess.socialinsurance.to.GuidePermissionTO;
 import com.bjike.goddess.socialinsurance.to.SocialInsuranceTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,16 @@ public class SocialInsuranceApiImpl implements SocialInsuranceAPI {
 
     @Autowired
     SocialInsuranceSer socialInsuranceSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return socialInsuranceSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return socialInsuranceSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public Long count(SocialInsuranceDTO dto) throws SerException {
@@ -58,6 +70,11 @@ public class SocialInsuranceApiImpl implements SocialInsuranceAPI {
     @Override
     public void importExcel(List<SocialInsuranceTO> tos) throws SerException {
         socialInsuranceSer.importExcel(tos);
+    }
+
+    @Override
+    public byte[] exportExcelTemplate() throws SerException {
+        return socialInsuranceSer.exportExcelTemplate();
     }
 
     @Override

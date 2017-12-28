@@ -135,4 +135,24 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     public List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
         return accountanCourseSer.findSecondSubject(firstSubjectCode);
     }
+
+    @Override
+    public List<String> findByFixedAssets() throws SerException {
+        return accountanCourseSer.findByFixedAssets();
+    }
+
+    @Override
+    public String findByCourseName(String courseName) throws SerException {
+        return accountanCourseSer.findByCourseName(courseName);
+    }
+
+    @Override
+    public List<String> findDepreciationAccount() throws SerException {
+        return accountanCourseSer.findDepreciationAccount();
+    }
+
+    @Override
+    public String findtaxSubject() throws SerException {
+        return accountanCourseSer.findtaxSubject();
+    }
 }

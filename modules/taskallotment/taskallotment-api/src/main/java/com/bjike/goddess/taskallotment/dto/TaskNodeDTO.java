@@ -74,7 +74,6 @@ public class TaskNodeDTO extends BaseDTO {
     /**
      * 项目名称
      */
-    @NotNull(groups = {TaskNodeDTO.PERSON.class}, message = "项目名称不能为空")
     private String[] projects;
     /**
      * 员工

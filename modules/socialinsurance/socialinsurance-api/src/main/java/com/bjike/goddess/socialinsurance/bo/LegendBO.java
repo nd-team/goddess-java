@@ -16,11 +16,50 @@ public class LegendBO extends BaseBO{
      */
     private String[] data;
 
+    /**
+     * orient
+     */
+    private String orient;
+
+    /**
+     * left
+     */
+    private String left;
+
+    public LegendBO() {
+    }
+
+    public LegendBO(String[] data) {
+        this.data = data;
+    }
+
+    public LegendBO(String[] data, String orient, String left) {
+        this.data = data;
+        this.orient = orient;
+        this.left = left;
+    }
+
     public String[] getData() {
         return data;
     }
 
     public void setData(String[] data) {
         this.data = data;
+    }
+
+    public String getOrient() {
+        return orient;
+    }
+
+    public void setOrient(String orient) {
+        this.orient = orient;
+    }
+
+    public String getLeft() {
+        return left;
+    }
+
+    public void setLeft(String left) {
+        this.left = left;
     }
 }

@@ -64,7 +64,7 @@ public class ComputerSubsidiesVO {
     /**
      * 确认时间
      */
-    private LocalDate confirmDate;
+    private String confirmDate;
 
     /**
      * 补助状态
@@ -148,11 +148,11 @@ public class ComputerSubsidiesVO {
         this.confirm = confirm;
     }
 
-    public LocalDate getConfirmDate() {
+    public String getConfirmDate() {
         return confirmDate;
     }
 
-    public void setConfirmDate(LocalDate confirmDate) {
+    public void setConfirmDate(String confirmDate) {
         this.confirmDate = confirmDate;
     }
 

@@ -1,5 +1,7 @@
 package com.bjike.goddess.socialinsurance.bo;
 
+import com.bjike.goddess.common.api.bo.BaseBO;
+
 /**
  * 社会保险汇总
  * @Author: [caiwenxian]
@@ -8,7 +10,7 @@ package com.bjike.goddess.socialinsurance.bo;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SocialInsuranceCollectBO {
+public class SocialInsuranceCollectBO extends BaseBO{
 
     /**
      * 开始日期
@@ -49,6 +51,11 @@ public class SocialInsuranceCollectBO {
      * 地区
      */
     private String area;
+
+    /**
+     * 日期
+     */
+    private String taxDate;
 
     public String getStartDate() {
         return startDate;
@@ -112,5 +119,13 @@ public class SocialInsuranceCollectBO {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getTaxDate() {
+        return taxDate;
+    }
+
+    public void setTaxDate(String taxDate) {
+        this.taxDate = taxDate;
     }
 }

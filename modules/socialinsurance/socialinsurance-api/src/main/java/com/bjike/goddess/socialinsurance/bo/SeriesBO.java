@@ -22,17 +22,26 @@ public class SeriesBO extends BaseBO{
     /**
      * 数据
      */
-    private String[] data;
+    private Object[] data;
 
     /**
      * 间隔
      */
     private String barGap;
 
-    public SeriesBO(String name, String type, String[] data) {
+
+
+    public SeriesBO(String name, String type, Object[] data) {
         this.name = name;
         this.type = type;
         this.data = data;
+    }
+
+    public SeriesBO(String name, String type, Object[] data, String barGap) {
+        this.name = name;
+        this.type = type;
+        this.data = data;
+        this.barGap = barGap;
     }
 
 
@@ -52,11 +61,19 @@ public class SeriesBO extends BaseBO{
         this.type = type;
     }
 
-    public String[] getData() {
+    public Object[] getData() {
         return data;
     }
 
-    public void setData(String[] data) {
+    public void setData(Object[] data) {
         this.data = data;
+    }
+
+    public String getBarGap() {
+        return barGap;
+    }
+
+    public void setBarGap(String barGap) {
+        this.barGap = barGap;
     }
 }

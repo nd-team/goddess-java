@@ -198,6 +198,12 @@ public class SocialInsurance extends BaseEntity {
     @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
+    /**
+     * 是否付款
+     */
+    @Column(name = "pay", nullable = false, columnDefinition = "INT(2)   COMMENT '是否付款'")
+    private String pay;
+
 
     public String getTaxDate() {
         return taxDate;
@@ -437,5 +443,13 @@ public class SocialInsurance extends BaseEntity {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getPay() {
+        return pay;
+    }
+
+    public void setPay(String pay) {
+        this.pay = pay;
     }
 }

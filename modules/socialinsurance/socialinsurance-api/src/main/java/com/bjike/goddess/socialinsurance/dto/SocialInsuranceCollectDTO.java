@@ -1,6 +1,7 @@
 package com.bjike.goddess.socialinsurance.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 社会保险汇总
@@ -12,14 +13,18 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class SocialInsuranceCollectDTO extends BaseDTO{
 
+    public interface TestGet{}
+
     /**
-     * 开始时间
+     * 开始时间 例:2017-11
      */
+    @NotBlank(groups = {SocialInsuranceCollectDTO.TestGet.class}, message = "开始日期不能为空")
     private String startDate;
 
     /**
-     * 结束时间
+     * 结束时间 例:2017-12
      */
+    @NotBlank(groups = {SocialInsuranceCollectDTO.TestGet.class}, message = "结束日期不能为空")
     private String endDate;
 
     /**
