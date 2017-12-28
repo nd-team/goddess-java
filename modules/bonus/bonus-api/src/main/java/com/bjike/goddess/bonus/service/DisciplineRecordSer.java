@@ -244,4 +244,14 @@ public interface DisciplineRecordSer extends Ser<DisciplineRecord, DisciplineRec
     default String getPushBallot(String name) throws SerException {
         return null;
     }
+
+    /**
+     * 首页项目奖金包图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBonusBO annular() throws SerException {
+        return null;
+    }
 }

@@ -130,7 +130,7 @@ public class DateDataAction extends BaseFileAction {
      * 根据id获取日汇总数据
      *
      * @param dateDataId 业务方向数据id
-     * @return class DateDataVO
+     * @return class MonthMoneyVO
      * @version v1
      */
     @GetMapping("v1/findById/{dateDataId}")
@@ -204,6 +204,21 @@ public class DateDataAction extends BaseFileAction {
         try {
             List<String> list = dateDataAPI.findDate(year, month, cycle);
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当月的周数
+     *
+     * @version v1
+     */
+    @GetMapping("v1/weeks")
+    public Result weeks(@RequestParam Integer year, @RequestParam Integer month) throws ActException {
+        try {
+            Integer i = dateDataAPI.weeks(year, month);
+            return ActResult.initialize(i);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

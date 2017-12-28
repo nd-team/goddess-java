@@ -2,7 +2,7 @@ package com.bjike.goddess.lendreimbursement.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
+import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.PhoneReimburseDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimCompanyShapeDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseShapeDTO;
@@ -11,9 +11,6 @@ import com.bjike.goddess.lendreimbursement.dto.reimshape.ReimburseTrendShapeDTO;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneShowStatus;
 import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
-import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
 import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.excel.SonPermissionObject;
@@ -559,6 +556,13 @@ public interface ReimburseRecordSer extends Ser<ReimburseRecord, ReimburseRecord
     default ReimShapeVO collectAreaDetailBar(ReimburseShapeDetailDTO reimburseShapeDetailDTO) throws SerException{return null;}
 
 
-
-
+    /**
+     * 报销数据分析图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO analysisDiagram() throws SerException {
+        return null;
+    }
 }

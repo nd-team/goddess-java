@@ -762,45 +762,55 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
                 sourceAccounts.add(sourceAccount);
             }
         }
-        return sourceAccounts;
+        return sourceAccounts.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void exportFund() throws SerException {
         List<VoucherGenerateBO> voucherGenerateBOS = new ArrayList<>();
+
+        List<FundRecord> fundRecords1 = super.findAll();
         if (modulesAPI.isCheck("voucher")) {
             voucherGenerateBOS = voucherGenerateAPI.findByCourseName();
         }
-//        logger.info("voucherGenerateBOS.size()"+ voucherGenerateBOS.size());
         if (voucherGenerateBOS != null && voucherGenerateBOS.size() > 0) {
             List<FundRecord> fundRecordList = new ArrayList<>();
             for (VoucherGenerateBO voucherGenerateBO : voucherGenerateBOS) {
-                FundRecord fundRecord = new FundRecord();
-                String str = voucherGenerateBO.getFirstSubject();
-                if (StringUtils.isNotBlank(voucherGenerateBO.getSecondSubject())) {
-                    str += "-" + voucherGenerateBO.getSecondSubject();
+                Boolean bool = true;
+                if (fundRecords1 != null && fundRecords1.size() > 0) {
+                    for (FundRecord fundRecord1 : fundRecords1) {
+                        if (voucherGenerateBO.getId().equals(fundRecord1.getVoucherGenerateId())) {
+                            bool = false;
+                        }
+                    }
                 }
-                if (StringUtils.isNotBlank(voucherGenerateBO.getThirdSubject())) {
-                    str += "-" + voucherGenerateBO.getThirdSubject();
+                if (bool) {
+                    FundRecord fundRecord = new FundRecord();
+                    String str = voucherGenerateBO.getFirstSubject();
+                    if (StringUtils.isNotBlank(voucherGenerateBO.getSecondSubject())) {
+                        str += "-" + voucherGenerateBO.getSecondSubject();
+                    }
+                    if (StringUtils.isNotBlank(voucherGenerateBO.getThirdSubject())) {
+                        str += "-" + voucherGenerateBO.getThirdSubject();
+                    }
+                    Double amount = 0d;
+                    if (modulesAPI.isCheck("financeinit")) {
+                        amount = accountAPI.findTotalAmount();
+                    }
+                    fundRecord.setRecordDate(LocalDate.now());
+                    fundRecord.setVoucherGenerateId(voucherGenerateBO.getId());//地区
+                    fundRecord.setArea(voucherGenerateBO.getArea());//地区
+                    fundRecord.setProjectGroup(voucherGenerateBO.getProjectGroup());//项目组
+                    fundRecord.setProject(voucherGenerateBO.getProjectName());//项目名称
+                    fundRecord.setDigest(voucherGenerateBO.getSumary());//摘要
+                    fundRecord.setIncome(voucherGenerateBO.getBorrowMoney());//收入
+                    fundRecord.setExpenditure(voucherGenerateBO.getLoanMoney());//支出
+                    fundRecord.setDataSource(str);//数据来源
+                    fundRecord.setAmount(amount + voucherGenerateBO.getBorrowMoney() - voucherGenerateBO.getLoanMoney());//金额
+                    fundRecordList.add(fundRecord);
                 }
-                Double amount = 0d;
-                if (modulesAPI.isCheck("financeinit")) {
-                    amount = accountAPI.findTotalAmount();
-                }
-                fundRecord.setRecordDate(LocalDate.now());
-                fundRecord.setArea(voucherGenerateBO.getArea());//地区
-                fundRecord.setProjectGroup(voucherGenerateBO.getProjectGroup());//项目组
-                fundRecord.setProject(voucherGenerateBO.getProjectName());//项目名称
-                fundRecord.setDigest(voucherGenerateBO.getSumary());//摘要
-                fundRecord.setIncome(voucherGenerateBO.getBorrowMoney());//收入
-                fundRecord.setExpenditure(voucherGenerateBO.getLoanMoney());//支出
-                fundRecord.setDataSource(str);//数据来源
-                fundRecord.setAmount(amount + voucherGenerateBO.getBorrowMoney() - voucherGenerateBO.getLoanMoney());//金额
-                fundRecordList.add(fundRecord);
-//                logger.info("fundRecord"+ fundRecord);
             }
-//            logger.info("fundRecordList"+ fundRecordList);
             super.save(fundRecordList);
         }
     }
@@ -816,10 +826,10 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
         MonthCollectBO monthCollectBO = new MonthCollectBO();
         if (fundRecordList1 != null && fundRecordList1.size() > 0) {
-            Double lastBalance = fundRecordList1.stream().mapToDouble(FundRecord::getAmount).sum();//本月余额
-            Double currentBalance = 0d;//本月余额
+            Double currentBalance = fundRecordList1.stream().mapToDouble(FundRecord::getAmount).sum();//本月余额
+            Double lastBalance = 0d;//上月余额
             if (fundRecordList2 != null && fundRecordList2.size() > 0) {
-                currentBalance = fundRecordList2.stream().mapToDouble(FundRecord::getAmount).sum();//上月余额
+                lastBalance = fundRecordList2.stream().mapToDouble(FundRecord::getAmount).sum();//上月余额
             }
             Double income = fundRecordList1.stream().mapToDouble(FundRecord::getIncome).sum();//收入
             Double expenditure = fundRecordList1.stream().mapToDouble(FundRecord::getExpenditure).sum();//支出
@@ -857,6 +867,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             conditionCollectBO.setArea(area);
             conditionCollectBO.setIncome(income);
             conditionCollectBO.setExpenditure(expenditure);
+            conditionCollectBO.setIncurredAmount(income-expenditure);
         }
         return conditionCollectBO;
     }
@@ -877,6 +888,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             conditionCollectBO.setProjectGroup(project);
             conditionCollectBO.setIncome(income);
             conditionCollectBO.setExpenditure(expenditure);
+            conditionCollectBO.setIncurredAmount(income-expenditure);
         }
         return conditionCollectBO;
     }
@@ -897,6 +909,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             conditionCollectBO.setProject(projectName);
             conditionCollectBO.setIncome(income);
             conditionCollectBO.setExpenditure(expenditure);
+            conditionCollectBO.setIncurredAmount(income-expenditure);
         }
         return conditionCollectBO;
     }
@@ -960,6 +973,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
         AreaAnalyzeBO areaAnalyzeBO = new AreaAnalyzeBO();
         if (fundRecordList != null && fundRecordList.size() > 0) {
+            DecimalFormat df = new DecimalFormat("######0.00");
             Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
             Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
             Double lastIncome = 0d;
@@ -976,10 +990,10 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             areaAnalyzeBO.setLastExpenditure(lastExpenditure);
             areaAnalyzeBO.setIncomeSubtract(income - lastIncome);
             areaAnalyzeBO.setExpenditureSubtract(expenditure - lastExpenditure);
-            areaAnalyzeBO.setIncomeRate(totalIncome == 0d ? 0d : income / totalIncome);
-            areaAnalyzeBO.setExpenditureRate(totalExpenditure == 0d ? 0d : expenditure / totalExpenditure);
+            areaAnalyzeBO.setIncomeRate(Double.parseDouble(df.format(totalIncome == 0d ? 0d : income / totalIncome)));
+            areaAnalyzeBO.setExpenditureRate(Double.parseDouble(df.format(totalExpenditure == 0d ? 0d : expenditure / totalExpenditure)));
             areaAnalyzeBO.setIncomeGrowRate(areaAnalyzeBO.getIncomeSubtract() == 0d ? 0d + "%" : lastIncome / areaAnalyzeBO.getIncomeSubtract() + "%");
-            areaAnalyzeBO.setExpenditureGrowRate(areaAnalyzeBO.getExpenditureSubtract() == 0d ? 0d + "%" : lastExpenditure / areaAnalyzeBO.getExpenditureSubtract() + "%");
+            areaAnalyzeBO.setExpenditureGrowRate(areaAnalyzeBO.getExpenditureSubtract() == 0d ? 0d + "%" : df.format(lastExpenditure / areaAnalyzeBO.getExpenditureSubtract()) + "%");
         }
         return areaAnalyzeBO;
     }
@@ -1004,6 +1018,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
         GroupAnalyzeBO groupAnalyzeBO = new GroupAnalyzeBO();
         if (fundRecordList != null && fundRecordList.size() > 0) {
+            DecimalFormat df = new DecimalFormat("######0.00");
             Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
             Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
             Double lastIncome = 0d;
@@ -1020,10 +1035,10 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             groupAnalyzeBO.setLastExpenditure(lastExpenditure);
             groupAnalyzeBO.setIncomeSubtract(income - lastIncome);
             groupAnalyzeBO.setExpenditureSubtract(expenditure - lastExpenditure);
-            groupAnalyzeBO.setIncomeRate(totalIncome == 0d ? 0d : income / totalIncome);
-            groupAnalyzeBO.setExpenditureRate(totalExpenditure == 0d ? 0d : expenditure / totalExpenditure);
-            groupAnalyzeBO.setIncomeGrowRate(groupAnalyzeBO.getIncomeSubtract() == 0d ? 0d + "%" : lastIncome / groupAnalyzeBO.getIncomeSubtract() + "%");
-            groupAnalyzeBO.setExpenditureGrowRate(groupAnalyzeBO.getExpenditureSubtract() == 0d ? 0d + "%" : lastExpenditure / groupAnalyzeBO.getExpenditureSubtract() + "%");
+            groupAnalyzeBO.setIncomeRate(Double.parseDouble(df.format(totalIncome == 0d ? 0d : income / totalIncome)));
+            groupAnalyzeBO.setExpenditureRate(Double.parseDouble(df.format(totalExpenditure == 0d ? 0d : expenditure / totalExpenditure)));
+            groupAnalyzeBO.setIncomeGrowRate(groupAnalyzeBO.getIncomeSubtract() == 0d ? 0d + "%" : df.format(lastIncome / groupAnalyzeBO.getIncomeSubtract()) + "%");
+            groupAnalyzeBO.setExpenditureGrowRate(groupAnalyzeBO.getExpenditureSubtract() == 0d ? 0d + "%" : df.format(lastExpenditure / groupAnalyzeBO.getExpenditureSubtract()) + "%");
         }
         return groupAnalyzeBO;
     }
@@ -1048,6 +1063,7 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
 
         ProjectAnalyzeBO projectAnalyzeBO = new ProjectAnalyzeBO();
         if (fundRecordList != null && fundRecordList.size() > 0) {
+            DecimalFormat df = new DecimalFormat("######0.00");
             Double income = fundRecordList.stream().mapToDouble(FundRecord::getIncome).sum();
             Double expenditure = fundRecordList.stream().mapToDouble(FundRecord::getExpenditure).sum();
             Double lastIncome = 0d;
@@ -1064,10 +1080,10 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
             projectAnalyzeBO.setLastExpenditure(lastExpenditure);
             projectAnalyzeBO.setIncomeSubtract(income - lastIncome);
             projectAnalyzeBO.setExpenditureSubtract(expenditure - lastExpenditure);
-            projectAnalyzeBO.setIncomeRate(totalIncome == 0d ? 0d : income / totalIncome);
-            projectAnalyzeBO.setExpenditureRate(totalExpenditure == 0d ? 0d : expenditure / totalExpenditure);
-            projectAnalyzeBO.setIncomeGrowRate(projectAnalyzeBO.getIncomeSubtract() == 0d ? 0d + "%" : lastIncome / projectAnalyzeBO.getIncomeSubtract() + "%");
-            projectAnalyzeBO.setExpenditureGrowRate(projectAnalyzeBO.getExpenditureSubtract() == 0d ? 0d + "%" : lastExpenditure / projectAnalyzeBO.getExpenditureSubtract() + "%");
+            projectAnalyzeBO.setIncomeRate(Double.parseDouble(df.format(totalIncome == 0d ? 0d : income / totalIncome)));
+            projectAnalyzeBO.setExpenditureRate(Double.parseDouble(df.format(totalExpenditure == 0d ? 0d : expenditure / totalExpenditure)));
+            projectAnalyzeBO.setIncomeGrowRate(projectAnalyzeBO.getIncomeSubtract() == 0d ? 0d + "%" : df.format(lastIncome / projectAnalyzeBO.getIncomeSubtract()) + "%");
+            projectAnalyzeBO.setExpenditureGrowRate(projectAnalyzeBO.getExpenditureSubtract() == 0d ? 0d + "%" : df.format(lastExpenditure / projectAnalyzeBO.getExpenditureSubtract()) + "%");
         }
         return projectAnalyzeBO;
     }

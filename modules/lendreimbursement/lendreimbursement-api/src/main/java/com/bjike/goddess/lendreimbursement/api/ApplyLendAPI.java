@@ -1,16 +1,15 @@
 package com.bjike.goddess.lendreimbursement.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
-import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDatasBO;
+import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.dto.PhoneApplyLendSelectDTO;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.enums.LendPhoneShowStatus;
-import com.bjike.goddess.lendreimbursement.excel.lendreimimport.LendReimImportExcelTO;
 import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
@@ -41,6 +40,7 @@ public interface ApplyLendAPI {
     default Boolean guidePermission(LendGuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+
     /**
      * 申请借款列表总条数
      */
@@ -50,10 +50,12 @@ public interface ApplyLendAPI {
 
     /**
      * 根据id获取申请借款
+     *
      * @return class ApplyLendBO
      */
-    default ApplyLendBO getOneById(String id) throws SerException {return null;}
-
+    default ApplyLendBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -373,6 +375,7 @@ public interface ApplyLendAPI {
     default ApplyLendBO editPhoneReturn(PhoneLendReturnSendTO phoneLendReturnSendTO) throws SerException {
         return null;
     }
+
     /**
      * 手机版寄件
      *
@@ -430,6 +433,7 @@ public interface ApplyLendAPI {
     default ApplyLendBO checkReturnMoney(ApplyLendTO applyLendTO) throws SerException {
         return null;
     }
+
     /**
      * 手机版还款记录还款核对
      *
@@ -443,6 +447,7 @@ public interface ApplyLendAPI {
     /**
      * 网页版还款记录不通过编辑
      * 当不通过才去编辑，否则不可以编辑
+     *
      * @param applyLendTO 申请借款信息
      * @return class ApplyLendBO
      */
@@ -581,6 +586,7 @@ public interface ApplyLendAPI {
     default List<String> listProjectGroup() throws SerException {
         return null;
     }
+
     /**
      * 手机端获取所有项目组
      *
@@ -658,6 +664,7 @@ public interface ApplyLendAPI {
     /**
      * 获取所有账户来源
      * chenjunhao
+     *
      * @return
      */
     default List<String> listAccountCom() throws SerException {
@@ -696,6 +703,7 @@ public interface ApplyLendAPI {
 
     /**
      * chenjunhao
+     *
      * @param applyLendDTO
      * @return
      * @throws SerException
@@ -704,101 +712,173 @@ public interface ApplyLendAPI {
 
     /**
      * 判断手机端页面某些地方显示问题的权限
+     *
      * @param lendPhoneShowStatus
-     * @param lendId 借款id
+     * @param lendId              借款id
      * @return
      * @throws SerException
      */
-    Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus ,String lendId) throws SerException;
+    Boolean phoneShowRight(LendPhoneShowStatus lendPhoneShowStatus, String lendId) throws SerException;
+
     /**
-     *
      * 手机版所有列表
      *
      * @param dto
      * @return
      * @throws SerException
      */
-    default List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException{return null;};
+    default List<ApplyLendBO> listAll(PhoneApplyLendDTO dto) throws SerException {
+        return null;
+    }
 
-
+    ;
 
 
     /**
      * 汇总个人周月年借款数据图
+     *
      * @param reimburseShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException{return null;}
+    default ReimShapeAllVO collectSelfShape(ReimburseShapeDTO reimburseShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总任意两月的借款变化趋势图
+     *
      * @param reimburseTrendShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException{return null;}
+    default ReimShapeMixVO collectSelfTrend(ReimburseTrendShapeDTO reimburseTrendShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司项目组时间段内的借款特定指标统计图
+     *
      * @param reimCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectGroupBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司项目时间段内的借款特定指标统计图
+     *
      * @param reimCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectProjectBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司地区时间段内的借款特定指标统计图
+     *
      * @param reimCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException{return null;}
+    default ReimCompanyMixShapeVO collectAreaBar(ReimCompanyShapeDTO reimCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总公司地区时间段内的借款详情特定指标统计图
+     *
      * @param reimburseShapeDetailDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeVO collectAreaDetailBar(LendShapeDetailDTO reimburseShapeDetailDTO) throws SerException{return null;}
+    default ReimShapeVO collectAreaDetailBar(LendShapeDetailDTO reimburseShapeDetailDTO) throws SerException {
+        return null;
+    }
 
 
     /**
      * 汇总个人借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     *
      * @param lendMixReimShapeDTO
      * @return
      * @throws SerException
      */
-    default LendMixReimShapeVO collectMixMonAndWeek(LendMixReimSelfShapeDTO lendMixReimShapeDTO) throws SerException{return null;}
+    default LendMixReimShapeVO collectMixMonAndWeek(LendMixReimSelfShapeDTO lendMixReimShapeDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 汇总公司借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     *
      * @param lendMixCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default LendMixReimShapeVO collectMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException{return null;}
+    default LendMixReimShapeVO collectMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 汇总详细公司借款和报销混合年和月和周的（申报报销/已报销/申请借款/已还款的借款）四种数据
+     *
      * @param lendMixCompanyShapeDTO
      * @return
      * @throws SerException
      */
-    default ReimShapeVO collectDetailMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException{return null;}
+    default ReimShapeVO collectDetailMixCompany(LendMixCompanyShapeDTO lendMixCompanyShapeDTO) throws SerException {
+        return null;
+    }
 
+    /**
+     * 报销根据报销人跟二级科目获取一级科目和三级科目
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default SubjectDataBO findSubjects(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 借款根据报销人跟二级科目获取一级科目和三级科目
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default SubjectDatasBO findSubjects1(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目代码获取二级科目
+     *
+     * @param firstSubjectCode
+     * @return
+     * @throws SerException
+     */
+    default List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
+        return null;
+    }
+
+    /**
+     * 借款数据分析图
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO analysisDiagram() throws SerException {
+        return null;
+    }
 }

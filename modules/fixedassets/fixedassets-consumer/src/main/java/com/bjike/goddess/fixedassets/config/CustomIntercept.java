@@ -1,4 +1,4 @@
-package com.bjike.goddess.financeinit.config;
+package com.bjike.goddess.fixedassets.config;
 
 import com.bjike.goddess.common.consumer.config.HIInfo;
 import com.bjike.goddess.common.consumer.config.Interceptor;

@@ -170,4 +170,9 @@ public class DepartmentDetailApiImpl implements DepartmentDetailAPI {
     public List<DepartmentPeopleBO> departmentByName(String name) throws SerException {
         return departmentDetailSer.departmentByName(name);
     }
+
+    @Override
+    public String findHierarchy(String department) throws SerException {
+        return departmentDetailSer.findHierarchy(department);
+    }
 }

@@ -9,10 +9,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectReimerDataBO;
-import com.bjike.goddess.lendreimbursement.bo.ReimburseAuditLogBO;
-import com.bjike.goddess.lendreimbursement.bo.ReimburseRecordBO;
+import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.*;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.entity.*;
@@ -42,7 +39,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
@@ -3250,6 +3246,123 @@ public class ReimburseRecordSerImpl extends ServiceImpl<ReimburseRecord, Reimbur
         reimShapeSeriesVO.setSeriesDataVOList(dataVOS);
         reimShapeVO.setSeriesVO(reimShapeSeriesVO);
         return reimShapeVO;
+    }
+
+    @Override
+    public OptionBO analysisDiagram() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String username = userBO.getUsername();
+        Integer year = LocalDate.now().getYear();
+        List<Double> moneys = new ArrayList<>(0);
+        List<Double> counts = new ArrayList<>(0);
+        for (int i = 1; i < 12; i++) {
+            Double money = findTotalMoney(username, year + "-" + i + "-01", year + "-" + (i + 1) + "-01", true);
+            Double count = findTotal(username, year + "-" + i + "-01", year + "-" + (i + 1) + "-01", true);
+            moneys.add(money);
+            counts.add(count);
+        }
+        moneys.add(findTotalMoney(username, year + "-12-01", (year + 1) + "-01-01", true));
+        counts.add(findTotal(username, year + "-12-01", (year + 1) + "-01-01", true));
+
+        return getOptionBO(username, counts, moneys);
+
+    }
+
+    //柱状图数据
+    private OptionBO getOptionBO(String userName, List<Double> list1, List<Double> list2) throws SerException {
+        List<String> monthList = new ArrayList<>(0);
+        for (int i = 1; i < 13; i++) {
+            monthList.add(i + "月");
+        }
+        String[] text_3 = monthList.toArray(new String[monthList.size()]);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText("报销数据分析图");
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_2 = new String[]{"未完成单数", "未完成金额"};
+        text_list2 = Arrays.stream(text_2).collect(Collectors.toList());
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        for (String str : text_list2) {
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(str);
+            seriesBO.setType("bar");
+            List<Double> number = new ArrayList<>(0);
+            if ("未完成单数".equals(str)) {
+                number.addAll(list1);
+            }
+            if ("未完成金额".equals(str)) {
+                number.addAll(list2);
+            }
+            //柱状图数据
+            Double[] numbers = number.toArray(new Double[number.size()]);
+            seriesBO.setData(numbers);
+            seriesBOList.add(seriesBO);
+        }
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        TooltipBO tooltipBO = new TooltipBO();
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+
+        optionBO.setTotalMoney(findTotalMoney(userName, "", "", false));
+        String count1 = String.valueOf(findTotal(userName, "", "", false));
+        count1 = count1.substring(0,count1.indexOf("."));
+        optionBO.setCount(Integer.valueOf(count1));
+        return optionBO;
+    }
+
+    private Double findTotal(String userName, String startTime, String endTime, Boolean tar) throws SerException {
+        StringBuilder sql = new StringBuilder("select ifnull(count(id),0) from lendreimbursement_reimburserecord ");
+        if (tar) {
+            sql.append(" where payCondition = '是' ");
+//            sql.append(" and reimer = '" + userName + "' ");
+            sql.append(" and reimer = '曾强' ");
+            sql.append(" and createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<Object> objectList = super.findBySql(sql.toString());
+        Double objects = Double.valueOf(String.valueOf(objectList.get(0)));
+        return objects;
+    }
+
+    private Double findTotalMoney(String userName,String startTime, String endTime,Boolean tar) throws SerException{
+        StringBuilder sql = new StringBuilder("select ifnull(sum(reimMoney),0) from lendreimbursement_reimburserecord ");
+        if (tar) {
+            sql.append(" where payCondition = '是' ");
+            sql.append(" and reimer = '曾强' ");
+//            sql.append(" and reimer = '" + userName + "' ");
+            sql.append(" and createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<Object> objectList = super.findBySql(sql.toString());
+        Double objects = Double.valueOf(String.valueOf(objectList.get(0)));
+        return objects;
     }
 
 

@@ -61,9 +61,9 @@ public class FundRecordExcel extends BaseTO {
     @ExcelHeader(name = "支出(贷方)", notNull = true)
     private Double expenditure;
     /**
-     * 金额
+     * 余额
      */
-    @ExcelHeader(name = "金额", notNull = true)
+    @ExcelHeader(name = "余额", notNull = true)
     private Double amount;
 
     /**

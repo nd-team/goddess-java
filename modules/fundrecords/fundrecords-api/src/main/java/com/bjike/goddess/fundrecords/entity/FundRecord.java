@@ -64,7 +64,7 @@ public class FundRecord extends BaseEntity {
     private Double expenditure;
 
     /**
-     * 金额
+     * 余额
      */
     @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
     private Double amount;
@@ -74,6 +74,12 @@ public class FundRecord extends BaseEntity {
      */
     @Column(name = "dataSource", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
     private String dataSource;
+
+    /**
+     * 记账凭证导入资金流水对应的数据id
+     */
+    @Column(name = "voucherGenerateId", columnDefinition = "VARCHAR(255)   COMMENT '记账凭证导入资金流水对应的数据id'")
+    private String voucherGenerateId;
 
 
 
@@ -147,5 +153,13 @@ public class FundRecord extends BaseEntity {
 
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public String getVoucherGenerateId() {
+        return voucherGenerateId;
+    }
+
+    public void setVoucherGenerateId(String voucherGenerateId) {
+        this.voucherGenerateId = voucherGenerateId;
     }
 }

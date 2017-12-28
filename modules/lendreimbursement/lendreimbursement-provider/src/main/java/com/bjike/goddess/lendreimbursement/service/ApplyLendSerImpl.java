@@ -1,5 +1,6 @@
 package com.bjike.goddess.lendreimbursement.service;
 
+import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -9,10 +10,11 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountAPI;
-import com.bjike.goddess.lendreimbursement.bo.AccountVoucherBO;
-import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
-import com.bjike.goddess.lendreimbursement.bo.CollectDataBO;
-import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDataBO;
+import com.bjike.goddess.financeinit.bo.SubjectDatasBO;
+import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.*;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
 import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
@@ -21,7 +23,6 @@ import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
 import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
 import com.bjike.goddess.lendreimbursement.enums.*;
 import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
-import com.bjike.goddess.lendreimbursement.excel.lendreimimport.LendReimImportExcelTO;
 import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.vo.LendMixReimCollectDataVO;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
@@ -49,8 +50,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -83,6 +82,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private AccountAPI accountAPI;
     @Autowired
     private ReimburseRecordSer reimburseRecordSer;
+    @Autowired
+    private ModuleAPI moduleAPI;
+
+    @Autowired
+    private AccountanCourseAPI accountanCourseAPI;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -2561,7 +2565,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
      * @param seriesDataVOList
      * @return
      */
-    private ReimShapeVO echartPieObject(List<ReimShapeSeriesDataVO> seriesDataVOList, ReimShapeTitleVO titleVO,String titleName ) {
+    private ReimShapeVO echartPieObject(List<ReimShapeSeriesDataVO> seriesDataVOList, ReimShapeTitleVO titleVO, String titleName) {
         ReimShapeVO reimShapeVO = new ReimShapeVO();
         //echart饼状图形数据封装
         //title
@@ -2793,12 +2797,12 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         ReimShapeTitleVO titlePieVO = new ReimShapeTitleVO();
         titlePieVO.setText(reimburseShapeConDTO.getUserName() + "借款情况统计");
         titlePieVO.setSubtext("时间: " + startTime + "至" + endTime + "累计记录");
-        reimShapeVO = echartPieObject(seriesDataVOList, titlePieVO,"单数");
+        reimShapeVO = echartPieObject(seriesDataVOList, titlePieVO, "单数");
         //echart饼状图形数据封装
         ReimShapeTitleVO titlePie2VO = new ReimShapeTitleVO();
         titlePie2VO.setText(reimburseShapeConDTO.getUserName() + "借款金额指标统计");
         titlePie2VO.setSubtext("时间: " + startTime + "至" + endTime + "借款金额");
-        reimShape2VO = echartPieObject(seriesDataVO2List, titlePie2VO,"金额");
+        reimShape2VO = echartPieObject(seriesDataVO2List, titlePie2VO, "金额");
         //echart柱状图形数据封装
         reimShapeBarVO = echartBarObject(reimburseShapeConDTO.getUserName(), startTime, endTime, seriesDataVOBarList);
 
@@ -3532,20 +3536,20 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         reimSql = reimSql + " and " + reimTypeFlag + " = '" + userName + "' ";
         String reimGroupBy = " group by " + reimTypeFlag + "";
         String lendGroupBy = " group by " + lendTypeFlag + "";
-        List<LendMixReimCollectDataVO> queryData = reimburseRecordSer.findBySql(reimSql+reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        List<LendMixReimCollectDataVO> queryData = reimburseRecordSer.findBySql(reimSql + reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
         moneyList.add(queryData != null && queryData.size() > 0 ? queryData.stream().mapToDouble(LendMixReimCollectDataVO::getMoney).sum() : 0d);
         //查询某个人当前时间已报销记录
         reimSql = reimSql + "  and payCondition = '是' ";
-        System.out.println( reimSql);
-        queryData = reimburseRecordSer.findBySql(reimSql+reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        System.out.println(reimSql);
+        queryData = reimburseRecordSer.findBySql(reimSql + reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
         moneyList.add(queryData != null && queryData.size() > 0 ? queryData.stream().mapToDouble(LendMixReimCollectDataVO::getMoney).sum() : 0d);
         //查询某个人当前时间申请借款记录
         lendSql = lendSql + " and " + lendTypeFlag + " = '" + userName + "'  ";
-        queryData = super.findBySql(lendSql+lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        queryData = super.findBySql(lendSql + lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
         moneyList.add(queryData != null && queryData.size() > 0 ? queryData.stream().mapToDouble(LendMixReimCollectDataVO::getMoney).sum() : 0d);
         //查询某个人当前时间已还款核对和帐务核对的借款记录
         lendSql = lendSql + "  and lendRetunStatus = 2 ";
-        queryData = super.findBySql(lendSql+lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        queryData = super.findBySql(lendSql + lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
         moneyList.add(queryData != null && queryData.size() > 0 ? queryData.stream().mapToDouble(LendMixReimCollectDataVO::getMoney).sum() : 0d);
 
         //TODO
@@ -3628,34 +3632,34 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         LocalDateTime startTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getStartTime()) + " 00:00:00");
         LocalDateTime endTime = DateUtil.parseDateTime(DateUtil.dateToString(reimburseShapeConDTO.getEndTime()) + " 23:59:59");
 
-        String[] reimFields = new String[]{"money","username"};
-        String reimSql = " select if(sum(reimMoney) IS NULL , 0.00 , sum(reimMoney) ) as money ,"+reimTypeFlag+" as username from lendreimbursement_reimburserecord where 1=1 ";
+        String[] reimFields = new String[]{"money", "username"};
+        String reimSql = " select if(sum(reimMoney) IS NULL , 0.00 , sum(reimMoney) ) as money ," + reimTypeFlag + " as username from lendreimbursement_reimburserecord where 1=1 ";
         reimSql = reimSql + " and createTime between '" + startTime + "' and '" + endTime + "'  ";
-        String lendSql = " select if(sum(money) IS NULL , 0.00 , sum(money) ) as money ,"+lendTypeFlag+" as username from lendreimbursement_applylend where 1=1 ";
+        String lendSql = " select if(sum(money) IS NULL , 0.00 , sum(money) ) as money ," + lendTypeFlag + " as username from lendreimbursement_applylend where 1=1 ";
         lendSql = lendSql + " and createTime between '" + startTime + "' and '" + endTime + "'  ";
         //查询当前时间所有申请报销的记录
         String reimGroupBy = "  group by " + reimTypeFlag + " ";
-        List<LendMixReimCollectDataVO> queryDataApply = reimburseRecordSer.findBySql(reimSql+reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        List<LendMixReimCollectDataVO> queryDataApply = reimburseRecordSer.findBySql(reimSql + reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
         //查询当前时间所有已报销记录
         reimSql = reimSql + " and payCondition = '是' ";
-        List<LendMixReimCollectDataVO> queryDataRecord = reimburseRecordSer.findBySql(reimSql+reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        List<LendMixReimCollectDataVO> queryDataRecord = reimburseRecordSer.findBySql(reimSql + reimGroupBy, LendMixReimCollectDataVO.class, reimFields);
         //查询当前时间所有申请借款记录
-        String lendGroupBy =  "  group by " + lendTypeFlag + " ";
-        System.out.println( lendSql+lendGroupBy );
-        List<LendMixReimCollectDataVO> queryDataLendApply = super.findBySql(lendSql+lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        String lendGroupBy = "  group by " + lendTypeFlag + " ";
+        System.out.println(lendSql + lendGroupBy);
+        List<LendMixReimCollectDataVO> queryDataLendApply = super.findBySql(lendSql + lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
         //查询当前时间所有已还款核对和帐务核对的借款记录
         lendSql = lendSql + " and lendRetunStatus = 2  ";
-        List<LendMixReimCollectDataVO> queryDataLendRecord = super.findBySql(lendSql+lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
+        List<LendMixReimCollectDataVO> queryDataLendRecord = super.findBySql(lendSql + lendGroupBy, LendMixReimCollectDataVO.class, reimFields);
 
         //封装柱型图形数据
-        List<ReimShapeBarSeriesVO> barDataList = TransformBarData(groupList, queryDataApply,queryDataRecord, queryDataLendApply,queryDataLendRecord);
+        List<ReimShapeBarSeriesVO> barDataList = TransformBarData(groupList, queryDataApply, queryDataRecord, queryDataLendApply, queryDataLendRecord);
         ReimCompanyShapeBarVO shapeVO = new ReimCompanyShapeBarVO();
         shapeVO.setReimShapeTitleVO(new ReimShapeTitleVO("公司总指标统计", startTime + "与" + endTime, "", ""));
         shapeVO.setLegendVO(new ReimShapeLegendVO("", "", groupList));
         shapeVO.setToolTipVO(new ReimShapeBarToolTipVO("axis"));
         shapeVO.setXaxisVO(new ReimShapeXaxisVO("category", "", Arrays.asList("申报报销", "报销已支付", "申请借款", "借款已支付")));
         shapeVO.setYaxisVO(new ReimShapeYaxisVO("value", "金额(元)"));
-        shapeVO.setSeriesVOList( barDataList );
+        shapeVO.setSeriesVOList(barDataList);
         //封装饼状图形数据
         ReimShapeVO pieShapeVO = new ReimShapeVO();
         pieShapeVO.setTitleVO(new ReimShapeTitleVO("公司总指标统计", startTime + "与" + endTime));
@@ -3673,11 +3677,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             val4 = val4 + piedata.getSeriesDataVOList().get(3);//借款已支付
         }
         List<ReimShapeSeriesDataVO> pieDataList = new ArrayList<>();
-        ReimShapeSeriesDataVO pieData = new ReimShapeSeriesDataVO("申报报销", String.valueOf( new BigDecimal(val1).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
+        ReimShapeSeriesDataVO pieData = new ReimShapeSeriesDataVO("申报报销", String.valueOf(new BigDecimal(val1).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
         pieDataList.add(pieData);
-        pieData = new ReimShapeSeriesDataVO("报销已支付", String.valueOf( new BigDecimal(val2).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
+        pieData = new ReimShapeSeriesDataVO("报销已支付", String.valueOf(new BigDecimal(val2).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
         pieDataList.add(pieData);
-        pieData = new ReimShapeSeriesDataVO("申请借款", String.valueOf( new BigDecimal(val3).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
+        pieData = new ReimShapeSeriesDataVO("申请借款", String.valueOf(new BigDecimal(val3).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
         pieDataList.add(pieData);
         pieData = new ReimShapeSeriesDataVO("借款已支付", String.valueOf(new BigDecimal(val4).setScale(5, BigDecimal.ROUND_UP).doubleValue()));
         pieDataList.add(pieData);
@@ -3703,10 +3707,10 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             seriesDataVOListArea.add(reimMoney == null || reimMoney.size() == 0 ? 0d : reimMoney.get(0));
             reimMoney = queryDataLendRecord.stream().filter(str -> tempArea.equals(str.getUsername())).map(LendMixReimCollectDataVO::getMoney).collect(Collectors.toList());
             seriesDataVOListArea.add(reimMoney == null || reimMoney.size() == 0 ? 0d : reimMoney.get(0));
-            seriesVO.setName( tempArea );
-            seriesVO.setSeriesDataVOList( seriesDataVOListArea );
+            seriesVO.setName(tempArea);
+            seriesVO.setSeriesDataVOList(seriesDataVOListArea);
 
-            seriesDataList.add( seriesVO );
+            seriesDataList.add(seriesVO);
         }
         return seriesDataList;
     }
@@ -3807,6 +3811,149 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         return pieShapeVO;
     }
+
+    @Override
+    public SubjectDataBO findSubjects(String name) throws SerException {
+//        if(moduleAPI.isCheck("financeinit")){
+        return accountanCourseAPI.findSubjects(name);
+//        }
+//        return null;
+    }
+
+    @Override
+    public SubjectDatasBO findSubjects1(String name) throws SerException {
+//        if(moduleAPI.isCheck("financeinit")){
+        return accountanCourseAPI.findSubjects1(name);
+//        }
+//        return null;
+    }
+
+    @Override
+    public List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
+//        if(moduleAPI.isCheck("financeinit")){
+        return accountanCourseAPI.findSecondSubject(firstSubjectCode);
+//        }
+//        return null;
+    }
+
+    @Override
+    public OptionBO analysisDiagram() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String username = userBO.getUsername();
+
+        Integer year = LocalDate.now().getYear();
+        List<Double> moneys = new ArrayList<>(0);
+        List<Double> counts = new ArrayList<>(0);
+        for (int i = 1; i < 12; i++) {
+            Double money = findTotalMoney(username, year + "-" + i + "-01", year + "-" + (i + 1) + "-01", true);
+            Double count = findTotal(username, year + "-" + i + "-01", year + "-" + (i + 1) + "-01", true);
+            moneys.add(money);
+            counts.add(count);
+        }
+        moneys.add(findTotalMoney(username, year + "-12-01", (year + 1) + "-01-01", true));
+        counts.add(findTotal(username, year + "-12-01", (year + 1) + "-01-01", true));
+
+        return getOptionBO(username, counts, moneys);
+    }
+
+    //柱状图数据
+    private OptionBO getOptionBO(String userName, List<Double> list1, List<Double> list2) throws SerException {
+        List<String> monthList = new ArrayList<>(0);
+        for (int i = 1; i < 13; i++) {
+            monthList.add(i + "月");
+        }
+        String[] text_3 = monthList.toArray(new String[monthList.size()]);
+
+        //标题
+        TitleBO titleBO = new TitleBO();
+        titleBO.setText("借款数据分析图");
+
+        //横坐标描述
+        LegendBO legendBO = new LegendBO();
+        List<String> text_list2 = new ArrayList<>();
+
+        //纵坐标
+        YAxisBO yAxisBO = new YAxisBO();
+
+        //横坐标描述
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] text_2 = new String[]{"未完成单数", "未完成金额"};
+        text_list2 = Arrays.stream(text_2).collect(Collectors.toList());
+        xAxisBO.setData(text_3);
+        AxisLabelBO axisLabelBO = new AxisLabelBO();
+        axisLabelBO.setInterval(0);
+        xAxisBO.setAxisLabel(axisLabelBO);
+
+        List<SeriesBO> seriesBOList = new ArrayList<>();
+
+        for (String str : text_list2) {
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(str);
+            seriesBO.setType("bar");
+            List<Double> number = new ArrayList<>(0);
+            if ("未完成单数".equals(str)) {
+                number.addAll(list1);
+            }
+            if ("未完成金额".equals(str)) {
+                number.addAll(list2);
+            }
+            //柱状图数据
+            Double[] numbers = number.toArray(new Double[number.size()]);
+            seriesBO.setData(numbers);
+            seriesBOList.add(seriesBO);
+        }
+
+        SeriesBO[] text_4 = new SeriesBO[seriesBOList.size()];
+        text_4 = seriesBOList.toArray(text_4);
+        legendBO.setData(text_2);
+        TooltipBO tooltipBO = new TooltipBO();
+        OptionBO optionBO = new OptionBO();
+        optionBO.setTitle(titleBO);
+        optionBO.setLegend(legendBO);
+        optionBO.setTooltip(tooltipBO);
+        optionBO.setxAxis(xAxisBO);
+        optionBO.setyAxis(yAxisBO);
+
+        optionBO.setSeries(text_4);
+
+        optionBO.setTotalMoney(findTotalMoney(userName, "", "", false));
+        String count1 = String.valueOf(findTotal(userName, "", "", false));
+        count1 = count1.substring(0,count1.indexOf("."));
+        optionBO.setCount(Integer.valueOf(count1));
+        return optionBO;
+    }
+
+    //获取某一个的借款总数
+    private Double findTotal(String userName, String startTime, String endTime, Boolean tar) throws SerException {
+        StringBuilder sql = new StringBuilder("select ifnull(count(id),0) from lendreimbursement_applylend ");
+        if (tar) {
+            sql.append(" where lendRetunStatus != 0 and lendRetunStatus != 3 ");
+            sql.append(" and lender = '" + userName + "' ");
+            sql.append(" and createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<Object> objectList = super.findBySql(sql.toString());
+        Double objects = Double.valueOf(String.valueOf(objectList.get(0)));
+        return objects;
+    }
+
+    //获取某一个月的借款总金额,
+    private Double findTotalMoney(String userName, String startTime, String endTime, Boolean tar) throws SerException {
+        StringBuilder sql = new StringBuilder("select ifnull(sum(money),0) from lendreimbursement_applylend ");
+        if (tar) {
+            sql.append(" where lendRetunStatus != 0 and lendRetunStatus != 3 ");
+            sql.append(" and lender = '" + userName + "' ");
+            sql.append(" and createTime between '" + startTime + "' ");
+            sql.append(" and '" + endTime + "' ");
+        }
+        List<Object> objectList = super.findBySql(sql.toString());
+        Double objects = Double.valueOf(String.valueOf(objectList.get(0)));
+        return objects;
+    }
+
+    //
 
     //统计所有地区的已报销记录
     private List<ReimShapeSeriesDataVO> getReimDataSeries(List<String> groupList, LocalDateTime startTime, LocalDateTime endTime, ReimShapeDetailTypeStatus typeStatus, String flag) throws SerException {

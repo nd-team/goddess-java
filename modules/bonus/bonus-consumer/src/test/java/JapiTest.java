@@ -15,6 +15,7 @@ public class JapiTest {
         JapiClient.setActionReletivePath("com/bjike/goddess/bonus/action");//主项目action位置
         JapiClient.setIncludeProjectJavaPath(new String[]{//关联项目
                 "modules/bonus/bonus-api",
+                "modules/organize/organize-api",
                 "common/common-api"
         });
         JapiClient.setIncludePackages(new String[]{"com.bjike.goddess"});//可以准确快速搜索

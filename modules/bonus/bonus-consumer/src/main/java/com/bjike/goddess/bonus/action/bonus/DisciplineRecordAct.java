@@ -3,6 +3,7 @@ package com.bjike.goddess.bonus.action.bonus;
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.bonus.api.PerformanceIndicatorAPI;
+import com.bjike.goddess.bonus.bo.OptionBonusBO;
 import com.bjike.goddess.bonus.dto.DisciplineRecordDTO;
 import com.bjike.goddess.bonus.to.CollectFilterTO;
 import com.bjike.goddess.bonus.to.DisciplineRecordTO;
@@ -485,6 +486,22 @@ public class DisciplineRecordAct {
         try {
             List<String> list = disciplineRecordAPI.getTarget();
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 首页项目奖金包图形化
+     *
+     * @return class OptionBonusBO
+     * @version v1
+     */
+    @GetMapping("v1/annular")
+    public Result annular() throws ActException {
+        try {
+            OptionBonusBO bo = disciplineRecordAPI.annular();
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
