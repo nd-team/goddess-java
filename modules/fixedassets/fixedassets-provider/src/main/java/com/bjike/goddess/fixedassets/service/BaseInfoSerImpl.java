@@ -3,6 +3,7 @@ package com.bjike.goddess.fixedassets.service;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -14,15 +15,20 @@ import com.bjike.goddess.fixedassets.dto.BaseInfoDTO;
 import com.bjike.goddess.fixedassets.entity.BaseInfo;
 import com.bjike.goddess.fixedassets.enums.DepreciationWay;
 import com.bjike.goddess.fixedassets.enums.FixedAssetType;
+import com.bjike.goddess.fixedassets.enums.GuideAddrStatus;
 import com.bjike.goddess.fixedassets.excel.BaseInfoImport;
 import com.bjike.goddess.fixedassets.excel.BaseInfoImportTemple;
+import com.bjike.goddess.fixedassets.excel.SonPermissionObject;
 import com.bjike.goddess.fixedassets.to.BaseInfoTO;
+import com.bjike.goddess.fixedassets.to.GuidePermissionTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,34 +46,150 @@ import java.util.*;
 @CacheConfig(cacheNames = "fixedassetsSerCache")
 @Service
 public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implements BaseInfoSer {
-   @Autowired
-   private PositionDetailUserAPI positionDetailUserAPI;
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
+
+    @Autowired
+    private UserAPI userAPI;
+    @Autowired
+    private CusPermissionSer cusPermissionSer;
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应财务部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    @Override
+    public List<SonPermissionObject> sonPermission() throws SerException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSeeSign = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        SonPermissionObject obj = new SonPermissionObject();
+
+        obj = new SonPermissionObject();
+        obj.setName("baseinfo");
+        obj.setDescribesion("基本信息");
+        if (flagSeeSign) {
+            obj.setFlag(true);
+        } else {
+            obj.setFlag(false);
+        }
+        list.add(obj);
+
+        return list;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = guidePermissionTO.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideSeeIdentity();
+                break;
+            case EDIT:
+                flag = guideSeeIdentity();
+                break;
+            case DELETE:
+                flag = guideSeeIdentity();
+                break;
+            case COLLECT:
+                flag = guideSeeIdentity();
+                break;
+            case IMPORT:
+                flag = guideSeeIdentity();
+                break;
+            case EXPORT:
+                flag = guideSeeIdentity();
+                break;
+            case UPLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideSeeIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+
     @Override
     public List<BaseInfoBO> list(BaseInfoDTO dto) throws SerException {
+       checkSeeIdentity();
         List<BaseInfo> baseInfoList = super.findByCis(dto, true);
         return BeanTransform.copyProperties(baseInfoList, BaseInfoBO.class);
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public BaseInfoBO save(BaseInfoTO to) throws SerException {
-        BaseInfo baseInfo = BeanTransform.copyProperties(to, BaseInfo.class,true);
+        checkSeeIdentity();
+        BaseInfo baseInfo = BeanTransform.copyProperties(to, BaseInfo.class, true);
         baseInfo.setCreateTime(LocalDateTime.now());
         baseInfo.setEstimatedValue(to.getOriginalValue() * to.getSalvage());
         baseInfo.setDepreciationWay(DepreciationWay.AVERAGELIFE);
         baseInfo.setEstimatedPeriod(checkValue(to.getFixedAssetType()));
         baseInfo.setAccumulatedPeriod(computationMonth(to.getBookDate(), DateUtil.dateToString(LocalDate.now())));
-        baseInfo.setDepreciationMonth((to.getOriginalValue() - baseInfo.getEstimatedValue()) * Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0,baseInfo.getEstimatedPeriod().lastIndexOf("("))));
+        baseInfo.setDepreciationMonth((to.getOriginalValue() - baseInfo.getEstimatedValue()) * Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0, baseInfo.getEstimatedPeriod().lastIndexOf("("))));
         super.save(baseInfo);
         return BeanTransform.copyProperties(baseInfo, BaseInfoBO.class);
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public BaseInfoBO edit(BaseInfoTO to) throws SerException {
+       checkSeeIdentity();
         BaseInfo baseInfo = super.findById(to.getId());
         LocalDateTime dateTime = baseInfo.getCreateTime();
         Integer accumulatedPeriod = baseInfo.getAccumulatedPeriod();
         LocalDate date = baseInfo.getBookDate();
-        baseInfo = BeanTransform.copyProperties(to, BaseInfo.class,true, "estimatedPeriod");
+        baseInfo = BeanTransform.copyProperties(to, BaseInfo.class, true, "estimatedPeriod");
         baseInfo.setCreateTime(dateTime);
         baseInfo.setModifyTime(LocalDateTime.now());
         baseInfo.setEstimatedValue(to.getOriginalValue() * to.getSalvage());
@@ -80,13 +202,15 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
         } else {
             baseInfo.setAccumulatedPeriod(accumulatedPeriod);
         }
-        baseInfo.setDepreciationMonth((to.getOriginalValue() - baseInfo.getEstimatedValue()) * Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0,baseInfo.getEstimatedPeriod().lastIndexOf("("))));
+        baseInfo.setDepreciationMonth((to.getOriginalValue() - baseInfo.getEstimatedValue()) * Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0, baseInfo.getEstimatedPeriod().lastIndexOf("("))));
         super.update(baseInfo);
         return BeanTransform.copyProperties(baseInfo, BaseInfoBO.class);
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void deleteBaseInfo(String id) throws SerException {
+        checkSeeIdentity();
         super.remove(id);
     }
 
@@ -168,6 +292,7 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
 
     @Override
     public byte[] exportExcel() throws SerException {
+//        checkSeeIdentity();
         List<BaseInfo> list = super.findAll();
         List<BaseInfoImport> exports = new ArrayList<>();
         for (BaseInfo baseInfo : list) {
@@ -180,7 +305,9 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void importExcel(List<BaseInfoTO> baseInfoTOS) throws SerException {
+//       checkSeeIdentity();
         for (BaseInfoTO to : baseInfoTOS) {
             BaseInfo baseInfo = BeanTransform.copyProperties(to, BaseInfo.class, true);
             baseInfo.setCreateTime(LocalDateTime.now());
@@ -188,7 +315,7 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
             baseInfo.setDepreciationWay(DepreciationWay.AVERAGELIFE);
             baseInfo.setEstimatedPeriod(checkValue(to.getFixedAssetType()));
             baseInfo.setAccumulatedPeriod(computationMonth(to.getBookDate(), DateUtil.dateToString(LocalDate.now())));
-            baseInfo.setDepreciationMonth((to.getOriginalValue() - baseInfo.getEstimatedValue()) * Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0,baseInfo.getEstimatedPeriod().lastIndexOf("("))));
+            baseInfo.setDepreciationMonth((to.getOriginalValue() - baseInfo.getEstimatedValue()) * Double.parseDouble(baseInfo.getEstimatedPeriod().substring(0, baseInfo.getEstimatedPeriod().lastIndexOf("("))));
             super.save(baseInfo);
         }
     }
@@ -229,6 +356,7 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
 
     @Override
     public List<SummationBO> summation(Integer year, Integer month) throws SerException {
+       checkSeeIdentity();
         String date = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
         List<SummationBO> summationBOList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
@@ -251,11 +379,11 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
                     accumDepreciation += diffMonth * baseInfo.getDepreciationMonth();
                     //本年累计折旧 = 汇总的年份与入账日期比较是他们的年份相同的话就是汇总的(月份-1)*月折旧额,如果是汇总年份与入账日期比较不同的就是直接是月份*月折旧额
                     if (year == baseInfo.getBookDate().getYear()) {
-                        yearAccumDepreciation += (month-1)*baseInfo.getDepreciationMonth();
-                    }else{
-                        yearAccumDepreciation += month*baseInfo.getDepreciationMonth();
+                        yearAccumDepreciation += (month - 1) * baseInfo.getDepreciationMonth();
+                    } else {
+                        yearAccumDepreciation += month * baseInfo.getDepreciationMonth();
                     }
-                    impairmentLoss += (baseInfo.getImpairmentLoss()==null?0:baseInfo.getImpairmentLoss());
+                    impairmentLoss += (baseInfo.getImpairmentLoss() == null ? 0 : baseInfo.getImpairmentLoss());
                 }
                 SummationBO summationBO = new SummationBO();
                 summationBO.setFixedAssetType(fixedAssetTypeToString(i));
@@ -307,19 +435,20 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
 
     @Override
     public List<BaseInfoDetailBO> baseInfoDetail(Integer year, Integer month) throws SerException {
+       checkSeeIdentity();
         String date = DateUtil.dateToString(LocalDate.of(year, month, DateUtil.getDayByDate(year, month)));
         List<BaseInfoDetailBO> baseInfoDetailBOS = new ArrayList<>();
         BaseInfoDTO baseInfoDTO = new BaseInfoDTO();
         baseInfoDTO.getConditions().add(Restrict.lt_eq("bookDate", date));
         List<BaseInfo> baseInfoList = super.findByCis(baseInfoDTO);
         if (baseInfoList != null && baseInfoList.size() > 0) {
-            for (BaseInfo baseInfo : baseInfoList){
+            for (BaseInfo baseInfo : baseInfoList) {
                 BaseInfoDetailBO baseInfoDetailBO = new BaseInfoDetailBO();
                 baseInfoDetailBO.setFixedAssetName(baseInfo.getFixedAssetName());
                 baseInfoDetailBO.setDepartment(baseInfo.getDepartment());
                 //计算折旧率
-                Integer months = Integer.parseInt(baseInfo.getEstimatedPeriod().substring(0,baseInfo.getEstimatedPeriod().lastIndexOf("(")));
-                Double depreRate = (1-baseInfo.getSalvage())/months/12;
+                Integer months = Integer.parseInt(baseInfo.getEstimatedPeriod().substring(0, baseInfo.getEstimatedPeriod().lastIndexOf("(")));
+                Double depreRate = (1 - baseInfo.getSalvage()) / months / 12;
                 baseInfoDetailBO.setDepreciationMonthRate(depreRate);
                 baseInfoDetailBO.setOriginalValue(baseInfo.getOriginalValue());
                 baseInfoDetailBO.setDepreciationMonth(baseInfo.getDepreciationMonth());
@@ -328,9 +457,9 @@ public class BaseInfoSerImpl extends ServiceImpl<BaseInfo, BaseInfoDTO> implemen
                 baseInfoDetailBO.setAccumDepreciation(diffMonth * baseInfo.getDepreciationMonth());
                 //本年累计折旧 = 汇总的年份与入账日期比较是他们的年份相同的话就是汇总的(月份-1)*月折旧额,如果是汇总年份与入账日期比较不同的就是直接是月份*月折旧额
                 if (year == baseInfo.getBookDate().getYear()) {
-                    baseInfoDetailBO.setYearAccumDepreciation ((month-1)*baseInfo.getDepreciationMonth());
-                }else{
-                    baseInfoDetailBO.setYearAccumDepreciation ( month*baseInfo.getDepreciationMonth());
+                    baseInfoDetailBO.setYearAccumDepreciation((month - 1) * baseInfo.getDepreciationMonth());
+                } else {
+                    baseInfoDetailBO.setYearAccumDepreciation(month * baseInfo.getDepreciationMonth());
                 }
                 baseInfoDetailBO.setImpairmentLoss(baseInfo.getImpairmentLoss());
                 baseInfoDetailBO.setNetFinalValue(baseInfo.getNetBegining());

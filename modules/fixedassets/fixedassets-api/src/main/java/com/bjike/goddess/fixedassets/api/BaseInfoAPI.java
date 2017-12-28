@@ -5,7 +5,9 @@ import com.bjike.goddess.fixedassets.bo.BaseInfoBO;
 import com.bjike.goddess.fixedassets.bo.BaseInfoDetailBO;
 import com.bjike.goddess.fixedassets.bo.SummationBO;
 import com.bjike.goddess.fixedassets.dto.BaseInfoDTO;
+import com.bjike.goddess.fixedassets.excel.SonPermissionObject;
 import com.bjike.goddess.fixedassets.to.BaseInfoTO;
+import com.bjike.goddess.fixedassets.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +21,20 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public interface BaseInfoAPI {
+
+    /**
+     * 下拉导航权限
+     */
+    default List<SonPermissionObject> sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
     /**
      * 基本信息列表
      *

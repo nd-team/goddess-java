@@ -1,17 +1,11 @@
 package com.bjike.goddess.assistance.action.assistance;
 
 import com.bjike.goddess.assistance.api.SenioritySubsidiesAPI;
-import com.bjike.goddess.assistance.bo.SubsidySchemeBO;
 import com.bjike.goddess.assistance.dto.SenioritySubsidiesDTO;
-import com.bjike.goddess.assistance.entity.SenioritySubsidies;
-import com.bjike.goddess.assistance.enums.SubsidiesStatus;
 import com.bjike.goddess.assistance.excel.SenioritySubsidiesExcel;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.SenioritySubsidiesTO;
-import com.bjike.goddess.assistance.to.SubsidySchemeTO;
 import com.bjike.goddess.assistance.vo.SenioritySubsidiesVO;
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -21,13 +15,12 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.organize.enums.StaffStatus;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +38,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("senioritysubsidies")
-public class SenioritySubsidiesAction extends BaseFileAction{
+public class SenioritySubsidiesAction extends BaseFileAction {
     @Autowired
     private SenioritySubsidiesAPI senioritySubsidiesAPI;
 
@@ -207,7 +200,7 @@ public class SenioritySubsidiesAction extends BaseFileAction{
      */
     @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport( HttpServletResponse response) throws ActException {
+    public Result exportReport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "工龄补助.xlsx";
             super.writeOutFile(response, senioritySubsidiesAPI.exportExcel(), fileName);
@@ -218,7 +211,6 @@ public class SenioritySubsidiesAction extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
-
 
 
     /**

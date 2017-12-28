@@ -3811,9 +3811,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> findByCourseName() throws SerException {
-        String[] feilds = new String[]{"area", "projectName", "projectGroup", "sumary", "borrowMoney", "loanMoney", "firstSubject", "secondSubject", "thirdSubject"};
+        String[] feilds = new String[]{"id","area", "projectName", "projectGroup", "sumary", "borrowMoney", "loanMoney", "firstSubject", "secondSubject", "thirdSubject"};
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
+        sql.append("  id AS id,");
         sql.append("  area AS area,");
         sql.append("  projectName   AS projectName,");
         sql.append("  projectGroup  AS projectGroup,");
