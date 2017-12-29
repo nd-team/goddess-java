@@ -162,10 +162,14 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
     }
     @Override
     public Long count(BankRecordDTO dto) throws SerException {
+
         String sql = "SELECT count(m.c) FROM (\n" +
                 "  SELECT 1 as c\n" +
                 "  FROM bankrecords_bankrecord b LEFT JOIN bankrecords_bankrecorddetail d ON b.id = d.bankRecord_id\n" +
-                "  WHERE b.accountId = '"+ dto.getAccountId() +"' ";
+                "  WHERE 1 = 1 ";
+                if (!StringUtils.isEmpty(dto.getAccountId())) {
+                    sql += "AND b.accountId = '"+ dto.getAccountId() +"' ";
+                }
                 if (!StringUtils.isEmpty(dto.getStartDate()) && !StringUtils.isEmpty(dto.getEndDate())) {
                     sql += "       AND b.id IN\n" +
                     "        (SELECT bankRecord_id\n" +
@@ -396,6 +400,7 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                     bo.setBalance(list.get(0).getBalance());
                     bo.setId(list.get(0).getId());
                     bo.setMakeMoney(bo.getCreditorCost() - bo.getDebtorCost());
+                    bo.setMakeMoney(new BigDecimal(bo.getMakeMoney()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
             }
             double debtorCost = boList.stream().filter(p -> p.getDebtorCost() != null).mapToDouble(BankRecordCollectBO::getDebtorCost).sum();
@@ -503,16 +508,19 @@ public class BankRecordSerImpl extends ServiceImpl<BankRecord, BankRecordDTO> im
                         bo.setCreditorGrow(1.0);
                     }
                 } else {
+
                     bo.setCreditorGrow(creditorSubtract / lastCreditorCost);
+                    bo.setCreditorGrow(new BigDecimal(bo.getCreditorGrow()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
                 if (lastDebtorCost == 0) {
-                    if (creditorSubtract == 0) {
+                    if (debtorSubtract == 0) {
                         bo.setDebtorGrow(0.0);
                     } else {
                         bo.setDebtorGrow(1.0);
                     }
                 } else {
-                    bo.setDebtorGrow(creditorSubtract / lastDebtorCost);
+                    bo.setDebtorGrow(debtorSubtract / lastDebtorCost);
+                    bo.setDebtorGrow(new BigDecimal(bo.getDebtorGrow()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
                 //计算比率
                 BankRecordDTO allDTO = new BankRecordDTO();//查询总流水

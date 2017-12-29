@@ -220,7 +220,7 @@ public class BankRecordAct extends BaseFileAction {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(@Validated({BankRecordDTO.PageList.class}) BankRecordDTO dto) throws ActException {
+    public Result count(BankRecordDTO dto) throws ActException {
         try {
             Long count = bankRecordAPI.count(dto);
             return ActResult.initialize(count);
