@@ -51,6 +51,11 @@ public class BankRecordCollectBO extends BaseBO {
      */
     private String accountId;
 
+    /**
+     * 本月发生额
+     */
+    private Double makeMoney;
+
     public Double getDebtorCost() {
         return debtorCost;
     }
@@ -105,6 +110,14 @@ public class BankRecordCollectBO extends BaseBO {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public Double getMakeMoney() {
+        return makeMoney;
+    }
+
+    public void setMakeMoney(Double makeMoney) {
+        this.makeMoney = makeMoney;
     }
 
     public BankRecordCollectBO() {

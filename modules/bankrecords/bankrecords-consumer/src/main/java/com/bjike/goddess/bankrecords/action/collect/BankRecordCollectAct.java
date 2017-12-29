@@ -10,7 +10,9 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.storage.api.FileAPI;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -95,6 +97,9 @@ public class BankRecordCollectAct extends BaseFileAction {
     public Result findByid(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             BankRecordInfoVO vo = BeanTransform.copyProperties(bankRecordAPI.find(id), BankRecordInfoVO.class, request);
+            if (vo != null && StringUtils.isNotBlank(vo.getRecordDate())) {
+                vo.setRecordDate(vo.getRecordDate().replace("T", " "));
+            }
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

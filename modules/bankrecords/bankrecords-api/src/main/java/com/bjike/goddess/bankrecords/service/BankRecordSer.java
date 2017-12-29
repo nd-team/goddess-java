@@ -38,6 +38,15 @@ public interface BankRecordSer extends Ser<BankRecord, BankRecordDTO> {
     void upload(BankRecordTO to) throws SerException;
 
     /**
+     * 汇总
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    Long count(BankRecordDTO dto) throws SerException;
+
+    /**
      * 列表
      *
      * @param dto 分页条件或查询条件
