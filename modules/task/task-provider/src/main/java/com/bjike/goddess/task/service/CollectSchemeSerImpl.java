@@ -185,8 +185,6 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
         List<String> list = new ArrayList<>();
             for (int i = 0; i < tableIds.length; i++) {
                 if (i == tableIds.length - 1) {
-                    customizeSer.findById(tableIds[i]);
-                    customizeSer.findById(tableIds[i]).getName();
                     sb.append(customizeSer.findById(tableIds[i]).getName());
                 } else {
                     sb.append(customizeSer.findById(tableIds[i]).getName() + "、");

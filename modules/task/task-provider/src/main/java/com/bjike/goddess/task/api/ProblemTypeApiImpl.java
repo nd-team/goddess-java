@@ -47,7 +47,7 @@ public class ProblemTypeApiImpl implements ProblemTypeAPI {
         if (null != dto.getEnable()) {
             dto.getConditions().add(Restrict.eq("enable", dto.getEnable()));
         }
-        List<ProblemType> problemTypes = problemTypeSer.findByCis(dto);
+        List<ProblemType> problemTypes = problemTypeSer.findByCis(dto,true);
         return BeanTransform.copyProperties(problemTypes, ProblemTypeBO.class);
     }
 

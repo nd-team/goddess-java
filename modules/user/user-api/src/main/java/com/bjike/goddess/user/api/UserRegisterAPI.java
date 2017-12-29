@@ -99,6 +99,10 @@ public interface UserRegisterAPI {
     default String autogenerationNum(String startNumber) throws SerException {
         return null;
     }
+
+    default String shareCode(long id) throws SerException {
+        return null;
+    }
     /**
      * 移动端邀请员工注册
      * lijuntao
