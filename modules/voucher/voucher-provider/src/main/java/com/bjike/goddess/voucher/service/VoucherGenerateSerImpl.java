@@ -1228,8 +1228,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(dto.getThirdSubject())) {
             dto.getConditions().add(Restrict.like("thirdSubject", dto.getThirdSubject()));
         }
-        if (StringUtils.isNotBlank(dto.getStartTime())&&StringUtils.isNotBlank(dto.getEndTime())) {
-            dto.getConditions().add(Restrict.between("voucherDate",new String[]{dto.getStartTime(),dto.getEndTime()}));
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            dto.getConditions().add(Restrict.between("voucherDate", new String[]{dto.getStartTime(), dto.getEndTime()}));
         }
         if ("降序".equals(dto.getAscOrDesc())) {
             dto.getSorts().add("voucherNum=desc");
@@ -1301,8 +1301,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        List<Double> borrs = borrow.stream().filter(b->b!=null).collect(Collectors.toList());
 //        List<Double> los = loan.stream().filter(b->b!=null).collect(Collectors.toList());
 
-        Double borrowSum = borrow.stream().filter(b->b!=null).mapToDouble(b->b).sum();
-        Double loanSum = loan.stream().filter(l->l!=null).mapToDouble(l->l).sum();
+        Double borrowSum = borrow.stream().filter(b -> b != null).mapToDouble(b -> b).sum();
+        Double loanSum = loan.stream().filter(l -> l != null).mapToDouble(l -> l).sum();
         if (!borrowSum.equals(loanSum)) {
             throw new SerException("借方和贷方金额不相等，不能添加");
         }
@@ -1538,9 +1538,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public void audit(VoucherGenerateTO voucherGenerateTO) throws SerException {
         VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
-        voucherGenerateDTO.getConditions().add(Restrict.in("id",voucherGenerateTO.getIds()));
+        voucherGenerateDTO.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
         List<VoucherGenerate> vgs = super.findByCis(voucherGenerateDTO);
-        vgs.stream().forEach(str->{
+        vgs.stream().forEach(str -> {
             str.setAuditStatus(AuditStatus.CHECK);
             str.setModifyTime(LocalDateTime.now());
         });
@@ -1863,15 +1863,21 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public VoucherGenerateBO antiPosting(String id) throws SerException {
-        if (StringUtils.isBlank(id)) {
+    public VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
+        if (null == to.getIds()) {
             throw new SerException("id不能为空");
         }
-        VoucherGenerate vg = super.findById(id);
-        vg.setTransferStatus(TransferStatus.NONE);
-        vg.setModifyTime(LocalDateTime.now());
-        super.update(vg);
-        return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        for (String id : to.getIds()) {
+            VoucherGenerate vg = super.findById(id);
+            if (null == vg) {
+                throw new SerException("目标数据对象不能为空");
+            }
+            vg.setTransferStatus(TransferStatus.NONE);
+            vg.setModifyTime(LocalDateTime.now());
+            super.update(vg);
+//            return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        }
+        return null;
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -3811,7 +3817,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<VoucherGenerateBO> findByCourseName() throws SerException {
-        String[] feilds = new String[]{"id","area", "projectName", "projectGroup", "sumary", "borrowMoney", "loanMoney", "firstSubject", "secondSubject", "thirdSubject"};
+        String[] feilds = new String[]{"id", "area", "projectName", "projectGroup", "sumary", "borrowMoney", "loanMoney", "firstSubject", "secondSubject", "thirdSubject"};
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         sql.append("  id AS id,");
@@ -4021,26 +4027,26 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
     private List<FirstSubjectBO> figureCollect(LocalDate[] dates) throws SerException {
-            VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
-            voucherGenerateDTO.getConditions().add(Restrict.between("voucherDate", dates));
-            voucherGenerateDTO.getSorts().add("createTime=desc");
-            List<VoucherGenerateBO> boList = voucherGenerateAPI.listNoPage(voucherGenerateDTO);
-            List<FirstSubjectBO> firstSubjectBOS = new ArrayList<>();
-            if (boList != null && boList.size() > 0) {
-                Set<String> firstSubjects = boList.stream().map(p -> p.getFirstSubject()).collect(Collectors.toSet());
-                Set<String> voucherDates = boList.stream().map(p -> p.getVoucherDate()).collect(Collectors.toSet());
-                for (String voucherDate : voucherDates) {
-                    for (String firstSubject : firstSubjects) {
-                        FirstSubjectBO firstSubjectBO = getFirstSubjectBO(voucherDate, firstSubject);
-                        firstSubjectBOS.add(firstSubjectBO);
-                    }
-                    Map<String, List<Integer>> map = new HashMap<>();
+        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
+        voucherGenerateDTO.getConditions().add(Restrict.between("voucherDate", dates));
+        voucherGenerateDTO.getSorts().add("createTime=desc");
+        List<VoucherGenerateBO> boList = voucherGenerateAPI.listNoPage(voucherGenerateDTO);
+        List<FirstSubjectBO> firstSubjectBOS = new ArrayList<>();
+        if (boList != null && boList.size() > 0) {
+            Set<String> firstSubjects = boList.stream().map(p -> p.getFirstSubject()).collect(Collectors.toSet());
+            Set<String> voucherDates = boList.stream().map(p -> p.getVoucherDate()).collect(Collectors.toSet());
+            for (String voucherDate : voucherDates) {
+                for (String firstSubject : firstSubjects) {
+                    FirstSubjectBO firstSubjectBO = getFirstSubjectBO(voucherDate, firstSubject);
+                    firstSubjectBOS.add(firstSubjectBO);
                 }
+                Map<String, List<Integer>> map = new HashMap<>();
             }
-
-
-            return firstSubjectBOS;
         }
+
+
+        return firstSubjectBOS;
+    }
 
 
     private FirstSubjectBO getFirstSubjectBO(String time, String firstSubject) throws SerException {
@@ -4175,7 +4181,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         list.add(2.0);
         list.add(null);
         list.add(3.0);
-        Double ss = list.stream().filter(li->li!=null).mapToDouble(lis->lis).sum();
+        Double ss = list.stream().filter(li -> li != null).mapToDouble(lis -> lis).sum();
         System.out.println(ss);
     }
 }

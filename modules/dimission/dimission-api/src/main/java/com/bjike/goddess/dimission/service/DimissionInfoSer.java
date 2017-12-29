@@ -340,12 +340,12 @@ public interface DimissionInfoSer extends Ser<DimissionInfo, DimissionInfoDTO> {
     }
 
     /**
-     * 根据当前登陆用户获取地区,部门,员工编号,岗位,岗位层级,学历,联系电话，入职时间,在司工龄
+     * 根据当前离职姓名获取地区,部门,员工编号,岗位,岗位层级,学历,联系电话，入职时间,在司工龄
      *
      * @return
      * @throws SerException
      */
-    default DataBO findDataByName() throws SerException {
+    default DataBO findDataByName(String name) throws SerException {
         return null;
     }
 }

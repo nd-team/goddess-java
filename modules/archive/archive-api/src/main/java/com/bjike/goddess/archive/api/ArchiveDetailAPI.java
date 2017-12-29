@@ -108,4 +108,25 @@ public interface ArchiveDetailAPI {
     default Long getTotal() throws SerException {
         return null;
     }
+
+    /**
+     * 根据姓名获取管理等级
+     *
+     * @return
+     * @throws SerException
+     */
+    default String findManage(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取处罚和奖励
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String[] findPushAndReward(String name) throws SerException {
+        return null;
+    }
 }

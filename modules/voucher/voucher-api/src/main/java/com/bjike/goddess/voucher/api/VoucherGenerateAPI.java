@@ -231,10 +231,10 @@ public interface VoucherGenerateAPI {
     /**
      * 反过账
      *
-     * @param id 记账凭证信息id
+     * @param to 只需要传数组ids即可
      * @return class VoucherGenerateBO
      */
-    default VoucherGenerateBO antiPosting(String id) throws SerException {
+    default VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
         return null;
     }
 

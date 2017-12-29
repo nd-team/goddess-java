@@ -79,22 +79,22 @@ public class VoucherGenerateAction extends BaseFileAction {
     @LoginAuth
     @GetMapping("v1/setButtonPermission")
     public Result setButtonPermission() throws ActException {
-        List<SonPermissionObject> list = new ArrayList<> ();
+        List<SonPermissionObject> list = new ArrayList<>();
         try {
-            SonPermissionObject obj = new SonPermissionObject ();
-            obj.setName ( "cuspermission" );
-            obj.setDescribesion ( "设置" );
-            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission ();
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
             if (!isHasPermission) {
                 //int code, String msg
-                obj.setFlag ( false );
+                obj.setFlag(false);
             } else {
-                obj.setFlag ( true );
+                obj.setFlag(true);
             }
-            list.add ( obj );
-            return new ActResult ( 0, "设置权限", list );
+            list.add(obj);
+            return new ActResult(0, "设置权限", list);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -110,11 +110,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result sonPermission() throws ActException {
         try {
 
-            List<SonPermissionObject> hasPermissionList = voucherGenerateAPI.sonPermission ();
-            return new ActResult ( 0, "有权限", hasPermissionList );
+            List<SonPermissionObject> hasPermissionList = voucherGenerateAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
 
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -129,15 +129,15 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
 
-            Boolean isHasPermission = voucherGenerateAPI.guidePermission ( guidePermissionTO );
+            Boolean isHasPermission = voucherGenerateAPI.guidePermission(guidePermissionTO);
             if (!isHasPermission) {
                 //int code, String msg
-                return new ActResult ( 0, "没有权限", false );
+                return new ActResult(0, "没有权限", false);
             } else {
-                return new ActResult ( 0, "有权限", true );
+                return new ActResult(0, "有权限", true);
             }
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -151,10 +151,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/count")
     public Result count(VoucherGenerateDTO voucherGenerateDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countVoucherGenerate ( voucherGenerateDTO );
-            return ActResult.initialize ( count );
+            Long count = voucherGenerateAPI.countVoucherGenerate(voucherGenerateDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -169,11 +169,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listVoucher")
     public Result findList(VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.listVoucherGenerate ( voucherGenerateDTO ), VoucherGenerateVO.class );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.listVoucherGenerate(voucherGenerateDTO), VoucherGenerateVO.class);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -188,11 +188,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/getOne/{id}")
     public Result getOne(@PathVariable String id) throws ActException {
         try {
-            VoucherGenerateVO voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.getById ( id ), VoucherGenerateVO.class );
-            return ActResult.initialize ( voucherGenerateVOList );
+            VoucherGenerateVO voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.getById(id), VoucherGenerateVO.class);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -208,10 +208,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PostMapping("v1/add")
     public Result add(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateBO> voucherGenerateBO1 = voucherGenerateAPI.addVoucherGenerate ( voucherGenerateTO );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            List<VoucherGenerateBO> voucherGenerateBO1 = voucherGenerateAPI.addVoucherGenerate(voucherGenerateTO);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -228,10 +228,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PutMapping("v1/edit")
     public Result edit(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.editVoucherGenerate ( voucherGenerateTO );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.editVoucherGenerate(voucherGenerateTO);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -246,10 +246,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id) throws ActException {
         try {
-            voucherGenerateAPI.deleteVoucherGenerate ( id );
-            return new ActResult ( "delete success!" );
+            voucherGenerateAPI.deleteVoucherGenerate(id);
+            return new ActResult("delete success!");
         } catch (SerException e) {
-            throw new ActException ( "删除失败：" + e.getMessage () );
+            throw new ActException("删除失败：" + e.getMessage());
         }
     }
 
@@ -264,10 +264,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/countAudit")
     public Result countAudit(VoucherGenerateDTO customerBaseInfoDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countAudit ( customerBaseInfoDTO );
-            return ActResult.initialize ( count );
+            Long count = voucherGenerateAPI.countAudit(customerBaseInfoDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -282,11 +282,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listAudit")
     public Result listAudit(VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.listAudit ( voucherGenerateDTO ), VoucherGenerateVO.class );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.listAudit(voucherGenerateDTO), VoucherGenerateVO.class);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -303,10 +303,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PutMapping("v1/audit")
     public Result audit(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            voucherGenerateAPI.audit ( voucherGenerateTO );
-            return new ActResult ("audit success" );
+            voucherGenerateAPI.audit(voucherGenerateTO);
+            return new ActResult("audit success");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -322,10 +322,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PutMapping("v1/split")
     public Result split(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.split ( voucherGenerateTO );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.split(voucherGenerateTO);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -339,10 +339,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/countAudited")
     public Result countAudited(VoucherGenerateDTO customerBaseInfoDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countAudited ( customerBaseInfoDTO );
-            return ActResult.initialize ( count );
+            Long count = voucherGenerateAPI.countAudited(customerBaseInfoDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -357,11 +357,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listAudited")
     public Result listAudited(VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.listAudited ( voucherGenerateDTO ), VoucherGenerateVO.class );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.listAudited(voucherGenerateDTO), VoucherGenerateVO.class);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -379,9 +379,9 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result posting(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
 //            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.posting(voucherGenerateTO);
-            return ActResult.initialize ( voucherGenerateAPI.posting ( voucherGenerateTO ) );
+            return ActResult.initialize(voucherGenerateAPI.posting(voucherGenerateTO));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -396,10 +396,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PutMapping("v1/antiAudit")
     public Result antiAudit(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            voucherGenerateAPI.antiAudit ( voucherGenerateTO );
+            voucherGenerateAPI.antiAudit(voucherGenerateTO);
             return new ActResult("antiAudit success");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -414,11 +414,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/collectSub")
     public Result collectSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.collectSub ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -433,11 +433,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/collectArea")
     public Result collectArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.collectArea ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -452,11 +452,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/collectGroup")
     public Result collectGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.collectGroup ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -471,11 +471,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/collectPname")
     public Result collectPname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.collectPname ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.collectPname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -489,10 +489,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/countChecked")
     public Result countChecked(VoucherGenerateDTO customerBaseInfoDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countChecked ( customerBaseInfoDTO );
-            return ActResult.initialize ( count );
+            Long count = voucherGenerateAPI.countChecked(customerBaseInfoDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -507,11 +507,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listChecked")
     public Result listChecked(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.listChecked ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.listChecked(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -519,19 +519,21 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 反过账
      *
-     * @param id 记账凭证基本信息数据id
+     * @param to 只需要传id数组就行
      * @return class VoucherGenerateVO
      * @des 反过账
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/antiPosting/{id}")
-    public Result antiPosting(@PathVariable String id) throws ActException {
+    @PutMapping("v1/antiPosting")
+    public Result antiPosting(VoucherGenerateTO to) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiPosting ( id );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+//            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiPosting ( ids );
+//            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            voucherGenerateAPI.antiPosting(to);
+            return ActResult.initialize("反过账成功");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -547,10 +549,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PutMapping("v1/checkAccount")
     public Result checkAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
-            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.checkAccount ( voucherGenerateTO );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
+            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.checkAccount(voucherGenerateTO);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -566,11 +568,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctTransSub")
     public Result ctTransSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctTransSub ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctTransSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -585,11 +587,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctTransArea")
     public Result ctTransArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctTransArea ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctTransArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -604,11 +606,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctTransGroup")
     public Result ctTransGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctTransGroup ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctTransGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -623,11 +625,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctTransPname")
     public Result ctTransPname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctTransPname ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctTransPname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -642,10 +644,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/countCkRecord")
     public Result countCkRecord(VoucherGenerateDTO customerBaseInfoDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countCkRecord ( customerBaseInfoDTO );
-            return ActResult.initialize ( count );
+            Long count = voucherGenerateAPI.countCkRecord(customerBaseInfoDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -660,11 +662,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listCkRecord")
     public Result listCkRecord(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.listCkRecord ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.listCkRecord(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -680,10 +682,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PutMapping("v1/antiCheckAccount")
     public Result antiCheckAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
-            voucherGenerateAPI.antiCheckAccount ( voucherGenerateTO );
-            return new  ActResult( "antiCheckAccount success" );
+            voucherGenerateAPI.antiCheckAccount(voucherGenerateTO);
+            return new ActResult("antiCheckAccount success");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -696,18 +698,18 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/findCkRecordByTime")
     public Result findCkRecordByTime(String month, Integer quart, String year) throws ActException {
         try {
-            List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.findCkRecordByTime ( month, quart, year );
-            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBOs, VoucherGenerateVO.class, true ) );
+            List<VoucherGenerateBO> voucherGenerateBOs = voucherGenerateAPI.findCkRecordByTime(month, quart, year);
+            return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBOs, VoucherGenerateVO.class, true));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
     public static void main(String args[]) {
-        String ll = DateUtil.dateToString ( DateUtil.getStartQuart () );
-        String lll = DateUtil.dateToString ( DateUtil.getEndQuart () );
-        System.out.println ( DateUtil.getStartQuart () );
-        System.out.println ( String.valueOf ( LocalDate.now ().getMonth ().getValue () - 1 ) );
+        String ll = DateUtil.dateToString(DateUtil.getStartQuart());
+        String lll = DateUtil.dateToString(DateUtil.getEndQuart());
+        System.out.println(DateUtil.getStartQuart());
+        System.out.println(String.valueOf(LocalDate.now().getMonth().getValue() - 1));
     }
 
     /**
@@ -721,11 +723,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctCkSub")
     public Result ctCkSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctCkSub ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctCkSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -740,11 +742,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctCkArea")
     public Result ctCkArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctCkArea ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctCkArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -759,11 +761,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctCkGroup")
     public Result ctCkGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctCkGroup ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctCkGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -778,11 +780,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctCkPname")
     public Result ctCkPname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctCkPname ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctCkPname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -797,10 +799,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/countRecord")
     public Result countRecord(VoucherGenerateDTO customerBaseInfoDTO) throws ActException {
         try {
-            Long count = voucherGenerateAPI.countRecord ( customerBaseInfoDTO );
-            return ActResult.initialize ( count );
+            Long count = voucherGenerateAPI.countRecord(customerBaseInfoDTO);
+            return ActResult.initialize(count);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -815,11 +817,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listRecord")
     public Result listRecord(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.listRecord ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.listRecord(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -834,11 +836,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctReSub")
     public Result ctReSub(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctReSub ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctReSub(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -852,11 +854,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctReSubHistogram")
     public Result ctReSubHistogram() throws ActException {
         try {
-            OptionBO optionBO = voucherGenerateAPI.ctReSubHistogram ();
-            OptionVO optionVO = BeanTransform.copyProperties ( optionBO, OptionVO.class );
-            return ActResult.initialize ( optionVO );
+            OptionBO optionBO = voucherGenerateAPI.ctReSubHistogram();
+            OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
+            return ActResult.initialize(optionVO);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -871,11 +873,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctReArea")
     public Result ctReArea(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctReArea ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctReArea(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -890,11 +892,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctReGroup")
     public Result ctReGroup(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctReGroup ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctReGroup(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -909,11 +911,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/ctRePname")
     public Result ctRePname(@Validated VoucherGenerateDTO voucherGenerateDTO, BindingResult bindingResult) throws ActException {
         try {
-            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties (
-                    voucherGenerateAPI.ctRePname ( voucherGenerateDTO ), VoucherGenerateVO.class, true );
-            return ActResult.initialize ( voucherGenerateVOList );
+            List<VoucherGenerateVO> voucherGenerateVOList = BeanTransform.copyProperties(
+                    voucherGenerateAPI.ctRePname(voucherGenerateDTO), VoucherGenerateVO.class, true);
+            return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -927,10 +929,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/analysis")
     public Result analysis(@Validated(ADD.class) AnalysisTO to, BindingResult bindingResult) throws ActException {
         try {
-            List<AnalysisBO> analysisBOs = voucherGenerateAPI.analysis ( to );
-            return ActResult.initialize ( BeanTransform.copyProperties ( analysisBOs, AnalysisVO.class ) );
+            List<AnalysisBO> analysisBOs = voucherGenerateAPI.analysis(to);
+            return ActResult.initialize(BeanTransform.copyProperties(analysisBOs, AnalysisVO.class));
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -944,10 +946,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listFirstSubject")
     public Result listFirstSubject() throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listFirstSubject ();
-            return ActResult.initialize ( userList );
+            List<String> userList = voucherGenerateAPI.listFirstSubject();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -960,10 +962,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listSubByFirst")
     public Result listSubByFirst(@RequestParam String firstSub) throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listSubByFirst ( firstSub );
-            return ActResult.initialize ( userList );
+            List<String> userList = voucherGenerateAPI.listSubByFirst(firstSub);
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -976,10 +978,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listTubByFirst")
     public Result listTubByFirst(@RequestParam String firstSub, @RequestParam String secondSub) throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listTubByFirst ( firstSub, secondSub );
-            return ActResult.initialize ( userList );
+            List<String> userList = voucherGenerateAPI.listTubByFirst(firstSub, secondSub);
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -992,10 +994,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listArea")
     public Result listArea() throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listArea ();
-            return ActResult.initialize ( userList );
+            List<String> userList = voucherGenerateAPI.listArea();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1008,10 +1010,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listProject")
     public Result listProject() throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listProject ();
-            return ActResult.initialize ( userList );
+            List<String> userList = voucherGenerateAPI.listProject();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1024,10 +1026,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listGroup")
     public Result listGroup() throws ActException {
         try {
-            List<String> userList = voucherGenerateAPI.listGroup ();
-            return ActResult.initialize ( userList );
+            List<String> userList = voucherGenerateAPI.listGroup();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1043,13 +1045,13 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/account")
     public Result account(VoucherGenerateDTO dto) throws ActException {
         try {
-            List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties ( voucherGenerateAPI.accountCollect ( dto ), AccountInfoVO.class );
+            List<AccountInfoVO> accountInfoVOS = BeanTransform.copyProperties(voucherGenerateAPI.accountCollect(dto), AccountInfoVO.class);
             for (AccountInfoVO accountInfoVO : accountInfoVOS) {
-                accountInfoVO.setId ( UUID.randomUUID ().toString () );
+                accountInfoVO.setId(UUID.randomUUID().toString());
             }
-            return ActResult.initialize ( accountInfoVOS );
+            return ActResult.initialize(accountInfoVOS);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1064,12 +1066,12 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result exportReport(VoucherGenerateDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "明细账.xlsx";
-            super.writeOutFile ( response, voucherGenerateAPI.exportExcelAccount ( dto ), fileName );
-            return new ActResult ( "导出成功" );
+            super.writeOutFile(response, voucherGenerateAPI.exportExcelAccount(dto), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         } catch (IOException e1) {
-            throw new ActException ( e1.getMessage () );
+            throw new ActException(e1.getMessage());
         }
     }
 
@@ -1082,10 +1084,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/accountArea")
     public Result accountArea() throws ActException {
         try {
-            List<String> areaList = voucherGenerateAPI.accountArea ();
-            return ActResult.initialize ( areaList );
+            List<String> areaList = voucherGenerateAPI.accountArea();
+            return ActResult.initialize(areaList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1098,10 +1100,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/accountProjectName")
     public Result accountProjectName() throws ActException {
         try {
-            List<String> projectNameList = voucherGenerateAPI.accountProjectName ();
-            return ActResult.initialize ( projectNameList );
+            List<String> projectNameList = voucherGenerateAPI.accountProjectName();
+            return ActResult.initialize(projectNameList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1114,10 +1116,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/accountProjectGroup")
     public Result accountProjectGroup() throws ActException {
         try {
-            List<String> projectGroupList = voucherGenerateAPI.accountProjectGroup ();
-            return ActResult.initialize ( projectGroupList );
+            List<String> projectGroupList = voucherGenerateAPI.accountProjectGroup();
+            return ActResult.initialize(projectGroupList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1130,10 +1132,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/accountSubject")
     public Result accountSubject() throws ActException {
         try {
-            List<String> subjectList = voucherGenerateAPI.accountSubject ();
-            return ActResult.initialize ( subjectList );
+            List<String> subjectList = voucherGenerateAPI.accountSubject();
+            return ActResult.initialize(subjectList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1146,10 +1148,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/subSubject")
     public Result subSubject(String firstSubject) throws ActException {
         try {
-            List<String> subjectList = voucherGenerateAPI.subSubject ( firstSubject );
-            return ActResult.initialize ( subjectList );
+            List<String> subjectList = voucherGenerateAPI.subSubject(firstSubject);
+            return ActResult.initialize(subjectList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1162,10 +1164,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/thirdSubject")
     public Result thirdSubject(String firstSubject, String subSubject) throws ActException {
         try {
-            List<String> subjectList = voucherGenerateAPI.thirdSubject ( firstSubject, subSubject );
-            return ActResult.initialize ( subjectList );
+            List<String> subjectList = voucherGenerateAPI.thirdSubject(firstSubject, subSubject);
+            return ActResult.initialize(subjectList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1183,11 +1185,11 @@ public class VoucherGenerateAction extends BaseFileAction {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
             String paths = "/voucher/vouchergenerate/" + id;
-            List<InputStream> inputStreams = getInputStreams ( request, paths );
-            fileAPI.upload ( inputStreams );
-            return new ActResult ( "upload success" );
+            List<InputStream> inputStreams = getInputStreams(request, paths);
+            fileAPI.upload(inputStreams);
+            return new ActResult("upload success");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1204,14 +1206,14 @@ public class VoucherGenerateAction extends BaseFileAction {
             //跟前端约定好 ，文件路径是列表id
             // /voucher/id/....
             String path = "/voucher/vouchergenerate/" + id;
-            FileInfo fileInfo = new FileInfo ();
-            fileInfo.setPath ( path );
-            Object storageToken = request.getAttribute ( "storageToken" );
-            fileInfo.setStorageToken ( storageToken.toString () );
-            List<FileVO> files = BeanTransform.copyProperties ( fileAPI.list ( fileInfo ), FileVO.class );
-            return ActResult.initialize ( files );
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            Object storageToken = request.getAttribute("storageToken");
+            fileInfo.setStorageToken(storageToken.toString());
+            List<FileVO> files = BeanTransform.copyProperties(fileAPI.list(fileInfo), FileVO.class);
+            return ActResult.initialize(files);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1225,16 +1227,16 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result download(@RequestParam String path, HttpServletRequest request, HttpServletResponse response) throws ActException {
         try {
             //该文件的路径
-            Object storageToken = request.getAttribute ( "storageToken" );
-            FileInfo fileInfo = new FileInfo ();
-            fileInfo.setPath ( path );
-            fileInfo.setStorageToken ( storageToken.toString () );
-            String filename = StringUtils.substringAfterLast ( fileInfo.getPath (), "/" );
-            byte[] buffer = fileAPI.download ( fileInfo );
-            writeOutFile ( response, buffer, filename );
-            return new ActResult ( "download success" );
+            Object storageToken = request.getAttribute("storageToken");
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setPath(path);
+            fileInfo.setStorageToken(storageToken.toString());
+            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
+            byte[] buffer = fileAPI.download(fileInfo);
+            writeOutFile(response, buffer, filename);
+            return new ActResult("download success");
         } catch (Exception e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
 
     }
@@ -1248,11 +1250,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @LoginAuth
     @PostMapping("v1/deleteFile")
     public Result delFile(@Validated(VoucherFileTO.TestDEL.class) VoucherFileTO siginManageDeleteFileTO, HttpServletRequest request) throws SerException {
-        if (null != siginManageDeleteFileTO.getPaths () && siginManageDeleteFileTO.getPaths ().length >= 0) {
-            Object storageToken = request.getAttribute ( "storageToken" );
-            fileAPI.delFile ( storageToken.toString (), siginManageDeleteFileTO.getPaths () );
+        if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
+            Object storageToken = request.getAttribute("storageToken");
+            fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
         }
-        return new ActResult ( "delFile success" );
+        return new ActResult("delFile success");
     }
 
 
@@ -1268,7 +1270,7 @@ public class VoucherGenerateAction extends BaseFileAction {
         try {
 
             String fileName = "记账凭证记录.xlsx";
-            ExportStatus exportStatus = dto.getExportStatus ();
+            ExportStatus exportStatus = dto.getExportStatus();
             switch (exportStatus) {
                 case NONE:
                     fileName = "未审核的记账凭证记录.xlsx";
@@ -1286,14 +1288,14 @@ public class VoucherGenerateAction extends BaseFileAction {
                     fileName = "记账凭证记录.xlsx";
                     break;
                 default:
-                    throw new ActException ( "请输入正确的数据状态" );
+                    throw new ActException("请输入正确的数据状态");
             }
-            super.writeOutFile ( response, voucherGenerateAPI.exportExcel ( dto ), fileName );
-            return new ActResult ( "导出成功" );
+            super.writeOutFile(response, voucherGenerateAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         } catch (IOException e1) {
-            throw new ActException ( e1.getMessage () );
+            throw new ActException(e1.getMessage());
         }
     }
 
@@ -1308,12 +1310,12 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result templateExport(HttpServletResponse response) throws ActException {
         try {
             String fileName = "记账凭证数据导入模板.xlsx";
-            super.writeOutFile ( response, voucherGenerateAPI.templateExport (), fileName );
-            return new ActResult ( "导出成功" );
+            super.writeOutFile(response, voucherGenerateAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         } catch (IOException e1) {
-            throw new ActException ( e1.getMessage () );
+            throw new ActException(e1.getMessage());
         }
     }
 
@@ -1328,11 +1330,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
-            List<InputStream> inputStreams = super.getInputStreams ( request );
-            InputStream is = inputStreams.get ( 1 );
-            Excel excel = new Excel ( 0, 1 );
-            List<VoucherTemplateImportExcel> tos = ExcelUtil.mergeExcelToClazz ( is, VoucherTemplateImportExcel.class, excel );
-            List<VoucherGenerateTO> tocs = new ArrayList<> ();
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<VoucherTemplateImportExcel> tos = ExcelUtil.mergeExcelToClazz(is, VoucherTemplateImportExcel.class, excel);
+            List<VoucherGenerateTO> tocs = new ArrayList<>();
 //            for (SiginManageExcel str : tos) {
 //                SiginManageTO siginManageTO = BeanTransform.copyProperties(str, SiginManageTO.class, "startProjectTime", "endProjectTime",
 //                        "siginStatus", "makeProject", "manager", "auditAdvice");
@@ -1347,58 +1349,58 @@ public class VoucherGenerateAction extends BaseFileAction {
 //            //注意序列化
 //            voucherGenerateAPI.importExcel(tocs);
 
-            tocs = convertVoucherGenerateTO ( tos );
-            voucherGenerateAPI.importExcel ( tocs );
-            return new ActResult ( "导入成功" );
+            tocs = convertVoucherGenerateTO(tos);
+            voucherGenerateAPI.importExcel(tocs);
+            return new ActResult("导入成功");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
     private List<VoucherGenerateTO> convertVoucherGenerateTO(List<VoucherTemplateImportExcel> tos) throws ActException {
-        List<VoucherGenerateTO> voucherGenerateTOS = new ArrayList<> ();
-        if (tos != null && tos.size () > 0) {
-            List<String> firstSubjects = new ArrayList<> ();
-            List<String> secondSubjects = new ArrayList<> ();
-            List<String> thirdSubjects = new ArrayList<> ();
-            List<Double> borrowMoneys = new ArrayList<> ();
-            List<Double> loanMoneys = new ArrayList<> ();
+        List<VoucherGenerateTO> voucherGenerateTOS = new ArrayList<>();
+        if (tos != null && tos.size() > 0) {
+            List<String> firstSubjects = new ArrayList<>();
+            List<String> secondSubjects = new ArrayList<>();
+            List<String> thirdSubjects = new ArrayList<>();
+            List<Double> borrowMoneys = new ArrayList<>();
+            List<Double> loanMoneys = new ArrayList<>();
 
-            String num = tos.get ( 0 ).getNum ();
+            String num = tos.get(0).getNum();
             int index = 0;
-            VoucherGenerateTO voucherGenerateTO = new VoucherGenerateTO ();
+            VoucherGenerateTO voucherGenerateTO = new VoucherGenerateTO();
             for (VoucherTemplateImportExcel str : tos) {
-                checkVoucherWord ( str );
-                if (num.equals ( str.getNum () )) {
-                    firstSubjects.add ( str.getFirstSubject () );
-                    secondSubjects.add ( str.getSecondSubject () );
-                    thirdSubjects.add ( str.getThirdSubject () );
-                    borrowMoneys.add ( str.getBorrowMoney () );
-                    loanMoneys.add ( str.getLoanMoney () );
+                checkVoucherWord(str);
+                if (num.equals(str.getNum())) {
+                    firstSubjects.add(str.getFirstSubject());
+                    secondSubjects.add(str.getSecondSubject());
+                    thirdSubjects.add(str.getThirdSubject());
+                    borrowMoneys.add(str.getBorrowMoney());
+                    loanMoneys.add(str.getLoanMoney());
                 } else {
-                    voucherGenerateTO = BeanTransform.copyProperties ( tos.get ( index - 1 ), VoucherGenerateTO.class, "firstSubject",
-                            "secondSubject", "thirdSubject", "borrowMoney", "loanMoney" );
-                    voucherGenerateTO.setFirstSubjects ( firstSubjects );
-                    voucherGenerateTO.setSecondSubjects ( secondSubjects );
-                    voucherGenerateTO.setThirdSubjects ( thirdSubjects );
-                    voucherGenerateTO.setBorrowMoneys ( borrowMoneys );
-                    voucherGenerateTO.setLoanMoneys ( loanMoneys );
+                    voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 1), VoucherGenerateTO.class, "firstSubject",
+                            "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
+                    voucherGenerateTO.setFirstSubjects(firstSubjects);
+                    voucherGenerateTO.setSecondSubjects(secondSubjects);
+                    voucherGenerateTO.setThirdSubjects(thirdSubjects);
+                    voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+                    voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-                    voucherGenerateTOS.add ( voucherGenerateTO );
+                    voucherGenerateTOS.add(voucherGenerateTO);
 
-                    firstSubjects = new ArrayList<> ();
-                    secondSubjects = new ArrayList<> ();
-                    thirdSubjects = new ArrayList<> ();
-                    borrowMoneys = new ArrayList<> ();
-                    loanMoneys = new ArrayList<> ();
+                    firstSubjects = new ArrayList<>();
+                    secondSubjects = new ArrayList<>();
+                    thirdSubjects = new ArrayList<>();
+                    borrowMoneys = new ArrayList<>();
+                    loanMoneys = new ArrayList<>();
 
-                    firstSubjects.add ( str.getFirstSubject () );
-                    secondSubjects.add ( str.getSecondSubject () );
-                    thirdSubjects.add ( str.getThirdSubject () );
-                    borrowMoneys.add ( str.getBorrowMoney () );
-                    loanMoneys.add ( str.getLoanMoney () );
+                    firstSubjects.add(str.getFirstSubject());
+                    secondSubjects.add(str.getSecondSubject());
+                    thirdSubjects.add(str.getThirdSubject());
+                    borrowMoneys.add(str.getBorrowMoney());
+                    loanMoneys.add(str.getLoanMoney());
                 }
-                num = str.getNum ();
+                num = str.getNum();
                 index++;
             }
 
@@ -1418,26 +1420,26 @@ public class VoucherGenerateAction extends BaseFileAction {
 //            borrowMoneys.add(tos.get(index - 2).getBorrowMoney());
 //            loanMoneys.add(tos.get(index - 2).getLoanMoney());
 
-            voucherGenerateTO = BeanTransform.copyProperties ( tos.get ( index - 2 ), VoucherGenerateTO.class, "firstSubject",
-                    "secondSubject", "thirdSubject", "borrowMoney", "loanMoney" );
+            voucherGenerateTO = BeanTransform.copyProperties(tos.get(index - 2), VoucherGenerateTO.class, "firstSubject",
+                    "secondSubject", "thirdSubject", "borrowMoney", "loanMoney");
 
-            voucherGenerateTO.setFirstSubjects ( firstSubjects );
-            voucherGenerateTO.setSecondSubjects ( secondSubjects );
-            voucherGenerateTO.setThirdSubjects ( thirdSubjects );
-            voucherGenerateTO.setBorrowMoneys ( borrowMoneys );
-            voucherGenerateTO.setLoanMoneys ( loanMoneys );
+            voucherGenerateTO.setFirstSubjects(firstSubjects);
+            voucherGenerateTO.setSecondSubjects(secondSubjects);
+            voucherGenerateTO.setThirdSubjects(thirdSubjects);
+            voucherGenerateTO.setBorrowMoneys(borrowMoneys);
+            voucherGenerateTO.setLoanMoneys(loanMoneys);
 
-            voucherGenerateTOS.add ( voucherGenerateTO );
+            voucherGenerateTOS.add(voucherGenerateTO);
         }
         return voucherGenerateTOS;
     }
 
     private String checkVoucherWord(VoucherTemplateImportExcel voucherTemplateImportExcel) throws ActException {
         String word = "";
-        if (null == voucherTemplateImportExcel.getVoucherWord ()) {
-            throw new ActException ( "凭证字填写不正确,导入失败,正确填写方式（付/转/记/收）" );
+        if (null == voucherTemplateImportExcel.getVoucherWord()) {
+            throw new ActException("凭证字填写不正确,导入失败,正确填写方式（付/转/记/收）");
         }
-        switch (voucherTemplateImportExcel.getVoucherWord ()) {
+        switch (voucherTemplateImportExcel.getVoucherWord()) {
             case "付":
                 word = "付";
                 break;
@@ -1451,7 +1453,7 @@ public class VoucherGenerateAction extends BaseFileAction {
                 word = "收";
                 break;
             default:
-                throw new ActException ( "凭证字填写不正确,导入失败,正确填写方式（付/转/记/收）" );
+                throw new ActException("凭证字填写不正确,导入失败,正确填写方式（付/转/记/收）");
         }
         return word;
     }
@@ -1467,10 +1469,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listOrganArea")
     public Result listOrganArea() throws ActException {
         try {
-            List<AreaBO> userList = departmentDetailAPI.findArea ();
-            return ActResult.initialize ( userList );
+            List<AreaBO> userList = departmentDetailAPI.findArea();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1485,10 +1487,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listOrganDepart")
     public Result listOrganDepart() throws ActException {
         try {
-            List<OpinionBO> userList = departmentDetailAPI.findThawOpinion ();
-            return ActResult.initialize ( userList );
+            List<OpinionBO> userList = departmentDetailAPI.findThawOpinion();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1502,10 +1504,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/listOrganUser")
     public Result listOrganUser() throws ActException {
         try {
-            List<UserBO> userList = positionDetailUserAPI.findUserListInOrgan ();
-            return ActResult.initialize ( userList );
+            List<UserBO> userList = positionDetailUserAPI.findUserListInOrgan();
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1518,10 +1520,10 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/findByMoney")
     public Result findByMoney(VoucherGenerateDTO dto) throws ActException {
         try {
-            List<PartBO> userList = voucherGenerateAPI.findByMoney ( dto );
-            return ActResult.initialize ( userList );
+            List<PartBO> userList = voucherGenerateAPI.findByMoney(dto);
+            return ActResult.initialize(userList);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1535,11 +1537,11 @@ public class VoucherGenerateAction extends BaseFileAction {
     @GetMapping("v1/Subject/pageList")
     public Result pageList(SubjectCollectsDTO subjectCollectsDTO) throws ActException {
         try {
-            List<FirstSubjectBO> bos = voucherGenerateAPI.collect ( subjectCollectsDTO );
-            List<FirstSubjectVO> vos = BeanTransform.copyProperties ( bos, FirstSubjectVO.class );
-            return ActResult.initialize ( vos );
+            List<FirstSubjectBO> bos = voucherGenerateAPI.collect(subjectCollectsDTO);
+            List<FirstSubjectVO> vos = BeanTransform.copyProperties(bos, FirstSubjectVO.class);
+            return ActResult.initialize(vos);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 
@@ -1554,12 +1556,12 @@ public class VoucherGenerateAction extends BaseFileAction {
     public Result exportExcel(ExportSubjectCollectTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "科目汇总.xlsx";
-            super.writeOutFile ( response, voucherGenerateAPI.exportExcel ( to ), fileName );
-            return new ActResult ( "导出成功" );
+            super.writeOutFile(response, voucherGenerateAPI.exportExcel(to), fileName);
+            return new ActResult("导出成功");
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         } catch (IOException e1) {
-            throw new ActException ( e1.getMessage () );
+            throw new ActException(e1.getMessage());
         }
     }
 
@@ -1567,16 +1569,16 @@ public class VoucherGenerateAction extends BaseFileAction {
      * 获取所有会计科目
      *
      * @param request
-     * @return
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/findFirstSubject")
     public Result findFirstSubject(HttpServletRequest request) throws ActException {
         try {
-            List<String> list = voucherGenerateAPI.findFirstSubject ();
-            return ActResult.initialize ( list );
+            List<String> list = voucherGenerateAPI.findFirstSubject();
+            return ActResult.initialize(list);
         } catch (SerException e) {
-            throw new ActException ( e.getMessage () );
+            throw new ActException(e.getMessage());
         }
     }
 }

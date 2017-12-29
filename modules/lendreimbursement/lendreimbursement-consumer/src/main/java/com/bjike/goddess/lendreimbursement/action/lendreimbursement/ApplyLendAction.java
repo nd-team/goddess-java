@@ -1325,7 +1325,7 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 报销根据报销人获取一级二级三级科目
+     * 报销根据报销人获取一级三级科目
      *
      * @param name 报销人姓名
      * @return class SubjectDataVO
@@ -1341,10 +1341,10 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
-     * 借款根据报销人获取三级科目和一级科目
+     * 借款根据借款人获取三级科目和一级科目
      *
      * @param name 借款人姓名
-     * @return class SubjectDataVO
+     * @return class SubjectDatasVO
      * @version v1
      */
     @GetMapping("v1/findSubjects1")

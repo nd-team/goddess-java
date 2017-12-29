@@ -29,10 +29,58 @@ public class DimissionInfo extends BaseEntity {
     private String username;
 
     /**
+     * 地区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '地区' ")
+    private String area;
+
+    /**
+     * 项目组
+     */
+    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '项目组' ")
+    private String department;
+
+    /**
+     * 员工编号
+     */
+    @Column(name = "employeeNumber", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '员工编号' ")
+    private String employeeNumber;
+
+    /**
+     * 岗位
+     */
+    @Column(name = "position", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '岗位' ")
+    private String position;
+
+    /**
+     * 岗位层级
+     */
+    @Column(name = "arrangement", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '岗位层级' ")
+    private String arrangement;
+
+    /**
+     * 学历
+     */
+    @Column(name = "education", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '学历' ")
+    private String education;
+
+    /**
+     * 在司工龄(月)
+     */
+    @Column(name = "seniority", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '在司工龄(月)' ")
+    private String seniority;
+
+    /**
      * 私人邮箱
      */
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '私人邮箱'")
     private String email;
+
+    /**
+     * 入职时间
+     */
+    @Column(name = "entryTime", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '入职时间' ")
+    private LocalDate entryTime;
 
     /**
      * 离职类型
@@ -315,5 +363,69 @@ public class DimissionInfo extends BaseEntity {
 
     public void setDimissionConfirmation(ConfirmationType dimissionConfirmation) {
         this.dimissionConfirmation = dimissionConfirmation;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getArrangement() {
+        return arrangement;
+    }
+
+    public void setArrangement(String arrangement) {
+        this.arrangement = arrangement;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getSeniority() {
+        return seniority;
+    }
+
+    public void setSeniority(String seniority) {
+        this.seniority = seniority;
+    }
+
+    public LocalDate getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(LocalDate entryTime) {
+        this.entryTime = entryTime;
     }
 }
