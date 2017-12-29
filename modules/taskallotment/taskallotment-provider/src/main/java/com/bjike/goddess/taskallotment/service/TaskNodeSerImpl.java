@@ -787,7 +787,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void 0.finish(TaskNodeTO to) throws SerException {
+    public void finish(TaskNodeTO to) throws SerException {
         TaskNode entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
