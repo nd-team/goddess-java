@@ -13,6 +13,7 @@ import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.SmsCodeParameterTO;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
+import com.bjike.goddess.user.utils.ShareCodeUtil;
 import com.bjike.goddess.user.utils.SmsCodeUtil;
 import com.bjike.goddess.user.vo.SmsReceiveCodeVO;
 import org.apache.commons.lang3.StringUtils;
@@ -252,6 +253,18 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             }
         }
         return SeqUtil.appAutogeneration(startNumber);
+    }
+
+    @Override
+    public String shareCode(long id) throws SerException {
+        UserBO user = userSer.currentUser();
+//        Long aa = Long.valueOf(user.getId());
+//        System.out.print(Integer.valueOf(user.getId()).intValue());
+        int i=Integer.valueOf(user.getEmployeeNumber().trim()).intValue();
+        long aa = (int)i;
+//        id = Long.valueOf(user.getId()).longValue();
+//        id = Long.parseLong(user.getEmployeeNumber());
+        return ShareCodeUtil.toSerialCode(aa);
     }
 
     @Transactional(rollbackFor = SerException.class)
