@@ -3123,7 +3123,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (currents != null && currents.size() > 0) {
                 for (TaskNode current : currents) {
                     String name = current.getExecute();
-                    DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class);
+                    DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class, "planTime");
                     bo.setName(name);
                     bo.setTime(time);
                     double taskTime = time(current.getNeedTime(), current.getNeedType());

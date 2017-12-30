@@ -71,6 +71,13 @@ public class DimissionInfo extends BaseEntity {
     private String seniority;
 
     /**
+     * 联系电话
+     */
+    @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255) COMMENT '联系电话' ")
+    private String phone;
+
+
+    /**
      * 私人邮箱
      */
     @Column(name = "email", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '私人邮箱'")
@@ -427,5 +434,13 @@ public class DimissionInfo extends BaseEntity {
 
     public void setEntryTime(LocalDate entryTime) {
         this.entryTime = entryTime;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

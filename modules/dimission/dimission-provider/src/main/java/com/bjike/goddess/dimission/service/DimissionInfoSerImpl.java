@@ -363,7 +363,6 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         UserBO user = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
-//        entity.setUsername(user.getUsername());
         entity.setType(DimissionType.NORMAL);
         entity.setApplyDate(LocalDate.now());
         entity.setDimission(DimissionStatus.APPLY);
