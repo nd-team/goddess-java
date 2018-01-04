@@ -70,4 +70,14 @@ public class ArchiveDetailApiImpl implements ArchiveDetailAPI {
     public Long getTotal() throws SerException {
         return archiveDetailSer.getTotal();
     }
+
+    @Override
+    public String findManage(String name) throws SerException {
+        return archiveDetailSer.findManage(name);
+    }
+
+    @Override
+    public String[] findPushAndReward(String name) throws SerException {
+        return archiveDetailSer.findPushAndReward(name);
+    }
 }

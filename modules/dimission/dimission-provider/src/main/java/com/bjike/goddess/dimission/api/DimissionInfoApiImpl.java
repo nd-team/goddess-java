@@ -188,7 +188,7 @@ public class DimissionInfoApiImpl implements DimissionInfoAPI {
     }
 
     @Override
-    public DataBO findDataByName() throws SerException {
-        return dimissionInfoSer.findDataByName();
+    public DataBO findDataByName(String name) throws SerException {
+        return dimissionInfoSer.findDataByName(name);
     }
 }

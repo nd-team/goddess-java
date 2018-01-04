@@ -18,11 +18,11 @@ import javax.validation.constraints.NotNull;
  */
 public class DimissionInfoAddEditTO extends BaseTO {
 
-//    /**
-//     * 地区
-//     */
-//    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
-//    private String eare;
+    /**
+     * 离职人员姓名
+     */
+    @NotBlank(message = "离职人员姓名", groups = {ADD.class, EDIT.class})
+    private String username;
 
     /**
      * 地区
@@ -77,10 +77,6 @@ public class DimissionInfoAddEditTO extends BaseTO {
      */
     @NotBlank(message = "入职时间不能为空", groups = {ADD.class, EDIT.class})
     private String entryTime;
-
-
-
-
 
     /**
      * 私人邮箱
@@ -235,5 +231,13 @@ public class DimissionInfoAddEditTO extends BaseTO {
 
     public void setEntryTime(String entryTime) {
         this.entryTime = entryTime;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

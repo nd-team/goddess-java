@@ -1,6 +1,8 @@
 package com.bjike.goddess.dimission.action.dimission;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.assemble.api.ModuleAPI;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -25,6 +27,8 @@ import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -60,6 +64,8 @@ public class DimissionInfoAct extends BaseFileAction {
     private UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private UserAPI userAPI;
 
 
     /**
@@ -667,17 +673,38 @@ public class DimissionInfoAct extends BaseFileAction {
     }
 
     /**
-     * 根据当前登陆用户获取地区部门员工编号岗位岗位层级学历联系电话入职时间在司工龄
+     * 根据离职人员姓名获取地区部门员工编号岗位岗位层级学历联系电话入职时间在司工龄
      *
+     * @param name 离职人员姓名
+     * @return class DataVO
      * @version v1
      */
     @GetMapping("v1/findDataByName")
-    public Result findDataByName() throws ActException{
+    public Result findDataByName(@RequestParam String name) throws ActException {
         try {
-            DataBO dataBOs = dimissionInfoAPI.findDataByName();
+            DataBO dataBOs = dimissionInfoAPI.findDataByName(name);
             return ActResult.initialize(BeanTransform.copyProperties(dataBOs, DataVO.class));
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取自离信息的人员姓名
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/findName")
+    public Result findName(HttpServletRequest request) throws ActException {
+        try {
+            String userToken = request.getHeader(RpcCommon.USER_TOKEN);
+            UserBO userBO = userAPI.currentUser(userToken);
+            RpcContext.getContext().set(RpcCommon.USER_TOKEN, userToken);
+            return ActResult.initialize(userBO.getUsername());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }
