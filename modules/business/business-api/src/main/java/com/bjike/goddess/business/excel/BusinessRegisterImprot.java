@@ -1,142 +1,157 @@
-package com.bjike.goddess.business.vo;
+package com.bjike.goddess.business.excel;
 
-import com.bjike.goddess.business.bo.ShareholdersBO;
 import com.bjike.goddess.business.enums.Status;
+import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
+import com.bjike.goddess.common.utils.excel.ExcelValue;
 
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.Table;
+import java.time.LocalDate;
+
 
 /**
- * 工商注册表现层对象
+ * 工商注册导出
  *
- * @Author: [ xiazhili ]
+ * @Author: [ lijuntao ]
  * @Date: [ 2017-04-18 03:41 ]
- * @Description: [ 工商注册表现层对象 ]
+ * @Description: [ 工商注册导出 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class BusinessRegisterVO {
+public class BusinessRegisterImprot extends BaseBO {
 
-    /**
-     * id
-     */
-    private String id;
     /**
      * 注册公司名称
      */
+    @ExcelHeader(name = "注册公司名称",notNull = true)
     private String registerCompanyName;
 
     /**
      * 注册号/统一社会信用代码
      */
+    @ExcelHeader(name = "注册号/统一社会信用代码",notNull = true)
     private String registerNum;
 
     /**
-     * 经营期限开始
+     * 成立日期
      */
-    private String startOperationPeriod;
+    @ExcelHeader(name = "成立日期",notNull = true)
+    private String setUpDate;
+
     /**
-     * 经营期限结束
+     * 经营期限
      */
-    private String endOperationPeriod;
+    @ExcelHeader(name = "经营期限",notNull = true)
+    private String operationPeriod;
 
     /**
      * 注册类型
      */
+    @ExcelHeader(name = "注册类型",notNull = true)
     private String registerType;
 
     /**
      * 注册资本
      */
+    @ExcelHeader(name = "注册资本",notNull = true)
     private String registerCapital;
 
     /**
      * 经营范围
      */
+    @ExcelHeader(name = "经营范围",notNull = true)
     private String operationScope;
 
+
+    /**
+     * 许可经营范围
+     */
+    @ExcelHeader(name = "许可经营范围")
+    private String permittedBusiness;
     /**
      * 法人
      */
+    @ExcelHeader(name = "法人",notNull = true)
     private String legalPerson;
 
     /**
      * 股东:股权比例
      */
-    private List<ShareholdersBO> shareholdersBOS;
+    @ExcelHeader(name = "股东:股权比例",notNull = true)
+    private String shareholders;
+
 
     /**
      * 地址
      */
+    @ExcelHeader(name = "地址",notNull = true)
     private String address;
 
-    /**
-     * 相关资料（名称）
-     */
-    private String cursorAdapter;
 
-    /**
-     * 备注
-     */
-    private String remark;
-
-    /**
-     * 成立日期
-     */
-    private String setUpDate;
-
-    /**
-     * 许可经营范围
-     */
-    private String permittedBusiness;
 
     /**
      * 状态
      */
+    @ExcelHeader(name = "状态",notNull = true)
     private Status status;
 
     /**
      * 核发日期
      */
+    @ExcelHeader(name = "核发日期",notNull = true)
     private String issuingDate;
 
     /**
      * 登记机关
      */
+    @ExcelHeader(name = "登记机关",notNull = true)
     private String registrationAuthor;
 
     /**
      * 组织结构成员名称
      */
+    @ExcelHeader(name = "组织结构成员名称",notNull = true)
     private String organizationNemName;
 
     /**
      * 职务
      */
+    @ExcelHeader(name = "职务",notNull = true)
     private String position;
 
     /**
      * 职务产生方式
      */
+    @ExcelHeader(name = "职务产生方式")
     private String positionWay;
 
     /**
      * 是否法定代表人
      */
-    private Boolean representativeLegal;
+    @ExcelHeader(name = "是否法定代表人",notNull = true)
+    private String representativeLegal;
 
     /**
      * 网址
      */
+    @ExcelHeader(name = "网址",notNull = true)
     private String url;
 
+    /**
+     * 相关资料（名称）
+     */
+    @ExcelHeader(name = "相关资料（名称）",notNull = true)
+    private String cursorAdapter;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    /**
+     * 备注
+     */
+    @ExcelHeader(name = "备注")
+    private String remark;
 
     public String getRegisterCompanyName() {
         return registerCompanyName;
@@ -154,20 +169,20 @@ public class BusinessRegisterVO {
         this.registerNum = registerNum;
     }
 
-    public String getStartOperationPeriod() {
-        return startOperationPeriod;
+    public String getSetUpDate() {
+        return setUpDate;
     }
 
-    public void setStartOperationPeriod(String startOperationPeriod) {
-        this.startOperationPeriod = startOperationPeriod;
+    public void setSetUpDate(String setUpDate) {
+        this.setUpDate = setUpDate;
     }
 
-    public String getEndOperationPeriod() {
-        return endOperationPeriod;
+    public String getOperationPeriod() {
+        return operationPeriod;
     }
 
-    public void setEndOperationPeriod(String endOperationPeriod) {
-        this.endOperationPeriod = endOperationPeriod;
+    public void setOperationPeriod(String operationPeriod) {
+        this.operationPeriod = operationPeriod;
     }
 
     public String getRegisterType() {
@@ -194,6 +209,14 @@ public class BusinessRegisterVO {
         this.operationScope = operationScope;
     }
 
+    public String getPermittedBusiness() {
+        return permittedBusiness;
+    }
+
+    public void setPermittedBusiness(String permittedBusiness) {
+        this.permittedBusiness = permittedBusiness;
+    }
+
     public String getLegalPerson() {
         return legalPerson;
     }
@@ -202,12 +225,12 @@ public class BusinessRegisterVO {
         this.legalPerson = legalPerson;
     }
 
-    public List<ShareholdersBO> getShareholdersBOS() {
-        return shareholdersBOS;
+    public String getShareholders() {
+        return shareholders;
     }
 
-    public void setShareholdersBOS(List<ShareholdersBO> shareholdersBOS) {
-        this.shareholdersBOS = shareholdersBOS;
+    public void setShareholders(String shareholders) {
+        this.shareholders = shareholders;
     }
 
     public String getAddress() {
@@ -216,38 +239,6 @@ public class BusinessRegisterVO {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getCursorAdapter() {
-        return cursorAdapter;
-    }
-
-    public void setCursorAdapter(String cursorAdapter) {
-        this.cursorAdapter = cursorAdapter;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getSetUpDate() {
-        return setUpDate;
-    }
-
-    public void setSetUpDate(String setUpDate) {
-        this.setUpDate = setUpDate;
-    }
-
-    public String getPermittedBusiness() {
-        return permittedBusiness;
-    }
-
-    public void setPermittedBusiness(String permittedBusiness) {
-        this.permittedBusiness = permittedBusiness;
     }
 
     public Status getStatus() {
@@ -298,11 +289,11 @@ public class BusinessRegisterVO {
         this.positionWay = positionWay;
     }
 
-    public Boolean getRepresentativeLegal() {
+    public String getRepresentativeLegal() {
         return representativeLegal;
     }
 
-    public void setRepresentativeLegal(Boolean representativeLegal) {
+    public void setRepresentativeLegal(String representativeLegal) {
         this.representativeLegal = representativeLegal;
     }
 
@@ -312,5 +303,21 @@ public class BusinessRegisterVO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getCursorAdapter() {
+        return cursorAdapter;
+    }
+
+    public void setCursorAdapter(String cursorAdapter) {
+        this.cursorAdapter = cursorAdapter;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

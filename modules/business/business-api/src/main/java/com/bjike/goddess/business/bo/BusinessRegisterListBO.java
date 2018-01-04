@@ -1,98 +1,80 @@
-package com.bjike.goddess.business.to;
+package com.bjike.goddess.business.bo;
 
 import com.bjike.goddess.business.enums.Status;
-import com.bjike.goddess.common.api.entity.ADD;
-import com.bjike.goddess.common.api.entity.EDIT;
-import com.bjike.goddess.common.api.to.BaseTO;
-import org.hibernate.validator.constraints.NotBlank;
+import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 工商注册
+ * 工商注册业务传输对象
  *
  * @Author: [ xiazhili ]
  * @Date: [ 2017-04-18 03:41 ]
- * @Description: [ 工商注册 ]
+ * @Description: [ 工商注册业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class BusinessRegisterTO extends BaseTO {
+public class BusinessRegisterListBO extends BaseBO {
 
     /**
      * 注册公司名称
      */
-    @NotBlank(message = "注册公司名称不能为空",groups = {ADD.class, EDIT.class})
     private String registerCompanyName;
 
     /**
      * 注册号/统一社会信用代码
      */
-    @NotBlank(message = "注册号/统一社会信用代码不能为空",groups = {ADD.class, EDIT.class})
     private String registerNum;
 
     /**
-     * 经营期限开始
+     * 经营期限
      */
-    @NotBlank(message = "经营期限开始不能为空",groups = {ADD.class, EDIT.class})
-    private String startOperationPeriod;
-
-    /**
-     * 经营期限结束
-     */
-    private String endOperationPeriod;
+    private String operationPeriod;
 
     /**
      * 注册类型
      */
-    @NotBlank(message = "注册类型不能为空",groups = {ADD.class, EDIT.class})
     private String registerType;
 
     /**
      * 注册资本
      */
-    @NotBlank(message = "注册资本不能为空",groups = {ADD.class, EDIT.class})
     private String registerCapital;
 
     /**
      * 经营范围
      */
-    @NotBlank(message = "经营范围不能为空",groups = {ADD.class, EDIT.class})
     private String operationScope;
 
     /**
      * 法人
      */
-    @NotBlank(message = "法人不能为空",groups = {ADD.class, EDIT.class})
     private String legalPerson;
 
     /**
-     * 股东:占股比例
+     * 股东:股权比例
      */
-    @NotNull(message = "股东占股比例不能为空",groups = {ADD.class, EDIT.class})
-    private List<ShareholdersTO> shareholdersTOList;
+    private String shareholders;
+
 
     /**
      * 地址
      */
-    @NotBlank(message = "地址不能为空",groups = {ADD.class, EDIT.class})
     private String address;
 
     /**
      * 相关资料（名称）
      */
-    @NotBlank(message = "相关资料（名称）不能为空",groups = {ADD.class, EDIT.class})
     private String cursorAdapter;
 
     /**
      * 备注
      */
     private String remark;
+
     /**
      * 成立日期
      */
-    @NotBlank(message = "成立日期不能为空",groups = {ADD.class, EDIT.class})
     private String setUpDate;
 
     /**
@@ -103,31 +85,26 @@ public class BusinessRegisterTO extends BaseTO {
     /**
      * 状态
      */
-    @NotNull(message = "状态不能为空",groups = {ADD.class, EDIT.class})
     private Status status;
 
     /**
      * 核发日期
      */
-    @NotBlank(message = "核发日期不能为空",groups = {ADD.class, EDIT.class})
     private String issuingDate;
 
     /**
      * 登记机关
      */
-    @NotBlank(message = "登记机关不能为空",groups = {ADD.class, EDIT.class})
     private String registrationAuthor;
 
     /**
      * 组织结构成员名称
      */
-    @NotBlank(message = "组织结构成员名称不能为空",groups = {ADD.class, EDIT.class})
     private String organizationNemName;
 
     /**
      * 职务
      */
-    @NotBlank(message = "职务不能为空",groups = {ADD.class, EDIT.class})
     private String position;
 
     /**
@@ -138,14 +115,14 @@ public class BusinessRegisterTO extends BaseTO {
     /**
      * 是否法定代表人
      */
-    @NotNull(message = "是否法定代表人不能为空",groups = {ADD.class, EDIT.class})
     private Boolean representativeLegal;
 
     /**
      * 网址
      */
-    @NotBlank(message = "网址不能为空",groups = {ADD.class, EDIT.class})
     private String url;
+
+
 
     public String getRegisterCompanyName() {
         return registerCompanyName;
@@ -163,20 +140,12 @@ public class BusinessRegisterTO extends BaseTO {
         this.registerNum = registerNum;
     }
 
-    public String getStartOperationPeriod() {
-        return startOperationPeriod;
+    public String getOperationPeriod() {
+        return operationPeriod;
     }
 
-    public void setStartOperationPeriod(String startOperationPeriod) {
-        this.startOperationPeriod = startOperationPeriod;
-    }
-
-    public String getEndOperationPeriod() {
-        return endOperationPeriod;
-    }
-
-    public void setEndOperationPeriod(String endOperationPeriod) {
-        this.endOperationPeriod = endOperationPeriod;
+    public void setOperationPeriod(String operationPeriod) {
+        this.operationPeriod = operationPeriod;
     }
 
     public String getRegisterType() {
@@ -211,12 +180,12 @@ public class BusinessRegisterTO extends BaseTO {
         this.legalPerson = legalPerson;
     }
 
-    public List<ShareholdersTO> getShareholdersTOList() {
-        return shareholdersTOList;
+    public String getShareholders() {
+        return shareholders;
     }
 
-    public void setShareholdersTOList(List<ShareholdersTO> shareholdersTOList) {
-        this.shareholdersTOList = shareholdersTOList;
+    public void setShareholders(String shareholders) {
+        this.shareholders = shareholders;
     }
 
     public String getAddress() {
