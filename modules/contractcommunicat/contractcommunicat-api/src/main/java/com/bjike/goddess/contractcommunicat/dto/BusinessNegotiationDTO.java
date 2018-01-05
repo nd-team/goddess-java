@@ -12,7 +12,6 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [ com.bjike ]
  */
 public class BusinessNegotiationDTO extends BaseDTO {
-
     /**
      * 搜索内容
      */
