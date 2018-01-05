@@ -158,10 +158,10 @@ public class ScheduleSerImpl implements ScheduleSer {
             sb.append(" SELECT tn.execute AS username,p.project AS outProject,p.innerProject  , ");
             sb.append(" tn.content,tn.remark,planNum,actualNum AS factNum,(actualNum-planNum ) AS differNum, ");
             sb.append(" CASE tn.taskType WHEN '0' THEN '行政任务' WHEN '1' THEN '工程任务' WHEN '2' THEN '培训任务' END AS taskType, ");
-            sb.append(" CASE needType   WHEN '1' THEN 60*needTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
+            sb.append(" CASE needType   WHEN '1' THEN 60*nee.dTime    WHEN '2' THEN 24*60*needTime  ELSE needTime END  AS planDuration, ");
             sb.append(" CASE actualType   WHEN '1' THEN 60*actualTime   WHEN '2' THEN 24*60*actualTime  ELSE actualTime END  AS factDuration ");
             sb.append(" FROM goddess_taskallotment.taskallotment_tasknode tn ,goddess_taskallotment.taskallotment_table t,");
-            sb.append(" taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
+            sb.append(" goddess_taskallotment.taskallotment_project p WHERE tn.table_id = t.id AND t.project_id = p.id  ");
             sb.append(" AND ( ");
             sb.append(" tn.startTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");
             sb.append(" OR tn.endTime BETWEEN '" + startTime + "' AND  '" + endTime + "' ");

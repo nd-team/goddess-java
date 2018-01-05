@@ -5,18 +5,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
-import com.bjike.goddess.common.utils.token.IpUtil;
-import com.bjike.goddess.user.api.UserLoginAPI;
-import com.bjike.goddess.user.enums.LoginType;
-import com.bjike.goddess.user.to.UserLoginTO;
 import com.bjike.goddess.user.utils.LatSpeechViewUtil;
+import com.bjike.goddess.user.utils.ShareCodeUtil;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,6 +64,12 @@ public class LatSpeechAct extends BaseFileAction {
         }
     }
 
+    @GetMapping("v1/ShareCodeUtil/code")
+    public Result code() throws ActException {
+        String result = "";
+        result = ShareCodeUtil.generateShortUuid();
+        return ActResult.initialize(result);
+    }
 
 
 }

@@ -247,12 +247,12 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     @Override
     public ArchiveDetailBO save(ArchiveDetailTO to) throws SerException {
         ArchiveDetail entity = BeanTransform.copyProperties(to, ArchiveDetail.class);
-        if (moduleAPI.isCheck("managementpromotion")) {
-            LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
-            if (null != levelShow) {
-                entity.setManage(levelShow.getCurrentLevel());
-            }
-        }
+//        if (moduleAPI.isCheck("managementpromotion")) {
+//            LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
+//            if (null != levelShow) {
+//                entity.setManage(levelShow.getCurrentLevel());
+//            }
+//        }
         if (moduleAPI.isCheck("bonus")) {
             String reward = disciplineRecordAPI.getRewardBallot(to.getUsername());
             String push = disciplineRecordAPI.getPushBallot(to.getUsername());
@@ -270,18 +270,18 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
             try {
                 ArchiveDetail entity = super.findById(to.getId());
                 BeanUtils.copyProperties(to, entity);
-                if (moduleAPI.isCheck("managementpromotion")) {
-                    LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
-                    if (null != levelShow) {
-                        entity.setManage(levelShow.getCurrentLevel());
-                    }
-                }
-                if (moduleAPI.isCheck("bonus")) {
-                    String reward = disciplineRecordAPI.getRewardBallot(to.getUsername());
-                    String push = disciplineRecordAPI.getPushBallot(to.getUsername());
-                    entity.setReward(reward);
-                    entity.setPush(push);
-                }
+//                if (moduleAPI.isCheck("managementpromotion")) {
+//                    LevelShow levelShow = levelShowAPI.findByName(to.getUsername());
+//                    if (null != levelShow) {
+//                        entity.setManage(levelShow.getCurrentLevel());
+//                    }
+//                }
+//                if (moduleAPI.isCheck("bonus")) {
+//                    String reward = disciplineRecordAPI.getRewardBallot(to.getUsername());
+//                    String push = disciplineRecordAPI.getPushBallot(to.getUsername());
+//                    entity.setReward(reward);
+//                    entity.setPush(push);
+//                }
                 entity.setModifyTime(LocalDateTime.now());
                 entity.setRemark(to.getRemark());
                 entity.setStorage(to.getStorage());
@@ -329,6 +329,27 @@ public class ArchiveDetailSerImpl extends ServiceImpl<ArchiveDetail, ArchiveDeta
     public Long getTotal() throws SerException {
         ArchiveDetailDTO dto = new ArchiveDetailDTO();
         return super.count(dto);
+    }
+
+    @Override
+    public String findManage(String name) throws SerException {
+        if (moduleAPI.isCheck("managementpromotion")) {
+            LevelShow levelShow = levelShowAPI.findByName(name);
+            if (null != levelShow) {
+                return levelShow.getCurrentLevel();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String[] findPushAndReward(String name) throws SerException {
+        if (moduleAPI.isCheck("bonus")) {
+            String reward = disciplineRecordAPI.getRewardBallot(name);
+            String push = disciplineRecordAPI.getPushBallot(name);
+            String[] strings = new String[]{push, reward};
+        }
+        return null;
     }
 
     /**

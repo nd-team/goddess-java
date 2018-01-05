@@ -14,6 +14,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -210,9 +211,9 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
                                 if (years != null && years.size() > 0) {
                                     for (Integer year : years) {
                                         List<MonthsListBO> monthsListBOList = findMonthByArProNaYe(area, project, projectName, year);
-                                        for(MonthsListBO monthsListBO : monthsListBOList){
-                                            monthsListBO.setIncomeDifferences(monthsListBO.getTargetIncome()-monthsListBO.getPlanIncome());
-                                            monthsListBO.setWorkDifferences(monthsListBO.getActualWork()-monthsListBO.getTargetWork());
+                                        for (MonthsListBO monthsListBO : monthsListBOList) {
+                                            monthsListBO.setIncomeDifferences(monthsListBO.getTargetIncome() - monthsListBO.getPlanIncome());
+                                            monthsListBO.setWorkDifferences(monthsListBO.getActualWork() - monthsListBO.getTargetWork());
                                         }
                                         YearListBO yearListBO = new YearListBO();
                                         yearListBO.setYear(year);
@@ -240,7 +241,7 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
             }
         }
         int limit = dto.getLimit();
-        int start = limit*dto.getPage();
+        int start = limit * dto.getPage();
         return projectWeekListBOS.stream().skip(start).limit(limit).collect(Collectors.toList());
 
     }
@@ -382,6 +383,128 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
         return l;
     }
 
+    @Override
+    public List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        checkSeeIdentity();
+        List<ProjectMonthCountBO> boList = new ArrayList<>();
+        Integer targetWorkSum = 0;
+        Integer actualWorkSum = 0;
+        Integer workDifferencesSum = 0;
+        Double targetIncomeSum = 0.00;
+        Double planIncomeSum = 0.00;
+        Double incomeDifferencesSum = 0.00;
+
+        ProjectMonthDTO dto1 = new ProjectMonthDTO();
+        if (null != dto.getProjects()) {
+            for (String project : dto.getProjects()) {
+                dto1 = new ProjectMonthDTO();
+                dto1 = condition(dto);
+                dto1.getConditions().add(Restrict.eq("project", project));
+                dto1.getSorts().add("year=desc");
+                dto1.getSorts().add("month=asc");
+                List<ProjectMonth> projectWeeks = super.findByCis(dto1);
+                if (null != projectWeeks && projectWeeks.size() > 0) {
+                    List<String> arrivals = projectWeeks.stream().map(ProjectMonth::getArrival).distinct().collect(Collectors.toList());
+                    List<Integer> years = projectWeeks.stream().map(ProjectMonth::getYear).distinct().collect(Collectors.toList());
+                    List<Integer> months = projectWeeks.stream().map(ProjectMonth::getMonth).distinct().collect(Collectors.toList());
+                    for (String area : arrivals) {
+                        for (Integer year : years) {
+//                            for (Integer month : months) {
+                            for (ProjectMonth entity : projectWeeks) {
+                                if (entity.getArrival().equals(area) && entity.getYear().equals(year)) {
+                                    targetIncomeSum += entity.getTargetIncome();
+                                    planIncomeSum += entity.getPlanIncome();
+                                    double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                    incomeDifferencesSum += incomeDifference;
+                                    targetWorkSum += entity.getTargetWork();
+                                    actualWorkSum += entity.getActualWork();
+                                    int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                    workDifferencesSum += workDifference;
+                                }
+                            }
+                            if (targetWorkSum != 0) {
+                                ProjectMonthCountBO bo = new ProjectMonthCountBO();
+                                bo.setArrival(area);
+                                bo.setProject(project);
+                                bo.setYear(year);
+//                                    bo.setMonth(month);
+//                                    bo.setProjectName(price);
+                                bo.setTargetWorkSum(targetWorkSum);
+                                bo.setActualWorkSum(actualWorkSum);
+                                bo.setWorkDifferencesSum(workDifferencesSum);
+                                bo.setTargetIncomeSum(targetIncomeSum);
+                                bo.setPlanIncomeSum(planIncomeSum);
+                                bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                                boList.add(bo);
+                                targetWorkSum = 0;
+                                actualWorkSum = 0;
+                                workDifferencesSum = 0;
+                                targetIncomeSum = 0.00;
+                                planIncomeSum = 0.00;
+                                incomeDifferencesSum = 0.00;     //置为0
+                            }
+                        }
+                    }
+                }
+
+            }
+        } else {
+            dto1 = new ProjectMonthDTO();
+            dto1 = condition(dto);
+            dto1.getSorts().add("year=desc");
+            dto1.getSorts().add("month=asc");
+            List<ProjectMonth> projectWeeks = super.findByCis(dto1);
+            if (null != projectWeeks && projectWeeks.size() > 0) {
+                List<String> arrivals = projectWeeks.stream().map(ProjectMonth::getArrival).distinct().collect(Collectors.toList());
+                List<Integer> years = projectWeeks.stream().map(ProjectMonth::getYear).distinct().collect(Collectors.toList());
+                List<Integer> months = projectWeeks.stream().map(ProjectMonth::getMonth).distinct().collect(Collectors.toList());
+                List<String> projects = projectWeeks.stream().map(ProjectMonth::getProject).distinct().collect(Collectors.toList());
+                for (String area : arrivals) {
+                    for (Integer year : years) {
+//                        for (Integer month : months) {
+                        for (String project : projects) {
+                            for (ProjectMonth entity : projectWeeks) {
+                                if (entity.getArrival().equals(area) && entity.getYear().equals(year) && entity.getProject().equals(project)) {
+                                    targetIncomeSum += entity.getTargetIncome();
+                                    planIncomeSum += entity.getPlanIncome();
+                                    double incomeDifference = entity.getPlanIncome() - entity.getTargetIncome();
+                                    incomeDifferencesSum += incomeDifference;
+                                    targetWorkSum += entity.getTargetWork();
+                                    actualWorkSum += entity.getActualWork();
+                                    int workDifference = entity.getActualWork() - entity.getTargetWork();
+                                    workDifferencesSum += workDifference;
+                                }
+                            }
+                            if (targetWorkSum != 0) {
+                                ProjectMonthCountBO bo = new ProjectMonthCountBO();
+                                bo.setArrival(area);
+                                bo.setProject(project);
+                                bo.setYear(year);
+//                                    bo.setMonth(month);
+//                                    bo.setProjectName(price);
+                                bo.setTargetWorkSum(targetWorkSum);
+                                bo.setActualWorkSum(actualWorkSum);
+                                bo.setWorkDifferencesSum(workDifferencesSum);
+                                bo.setTargetIncomeSum(targetIncomeSum);
+                                bo.setPlanIncomeSum(planIncomeSum);
+                                bo.setIncomeDifferencesSum(incomeDifferencesSum);
+                                boList.add(bo);
+                                targetWorkSum = 0;
+                                actualWorkSum = 0;
+                                workDifferencesSum = 0;
+                                targetIncomeSum = 0.00;
+                                planIncomeSum = 0.00;
+                                incomeDifferencesSum = 0.00;     //置为0
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return boList;
+
+    }
+
     /**
      * 查找所有年份
      *
@@ -518,31 +641,45 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
         if (projectMonth == null) {
             throw new SerException("该对象不存在");
         }
-        String[] arrivals = new String[]{projectMonth.getArrival()};
-        String[] projects = new String[]{projectMonth.getProject()};
-        Integer[] years = new Integer[]{projectMonth.getYear()};
-        Integer[] months = new Integer[]{projectMonth.getMonth()};
-        List<ProjectWeekBO> list = null;
-        for (int i = 0; i < arrivals.length && i < projects.length && i < years.length && i < months.length; i++) {
-            String sql = "SELECT week,targetWork,actualWork,price,targetIncome,planIncome\n" +
-                    "from budget_projectweek\n" +
-                    "where arrival='" + arrivals[i] + "' AND project='" + projects[i] + "' AND year='" + years[i] + "' AND month='" + months[i] + "'";
-            String[] fields = new String[]{"week", "targetWork", "actualWork", "price", "targetIncome", "planIncome"};
-            list = super.findBySql(sql, ProjectWeekBO.class, fields);
-        }
-        for (ProjectWeekBO bo : list) {
-            bo.setArrival(projectMonth.getArrival());
-            bo.setProject(projectMonth.getProject());
-            bo.setYear(projectMonth.getYear());
-            bo.setMonth(projectMonth.getMonth());
-            bo.setIncomeDifferences(bo.getTargetIncome() - bo.getPlanIncome());
-            bo.setWorkDifferences(bo.getActualWork() - bo.getTargetWork());
-        }
+        List<ProjectWeekBO> list = new ArrayList<>(0);
+//        String[] arrivals = new String[]{projectMonth.getArrival()};
+//        String[] projects = new String[]{projectMonth.getProject()};
+//        Integer[] years = new Integer[]{projectMonth.getYear()};
+//        Integer[] months = new Integer[]{projectMonth.getMonth()};
+//        List<ProjectWeekBO> list = null;
+//        for (int i = 0; i < arrivals.length && i < projects.length && i < years.length && i < months.length; i++) {
+//            String sql = "SELECT week,targetWork,actualWork,price,targetIncome,planIncome\n" +
+//                    "from budget_projectweek\n" +
+//                    "where arrival='" + arrivals[i] + "' AND project='" + projects[i] + "' AND year='" + years[i] + "' AND month='" + months[i] + "'";
+//            String[] fields = new String[]{"week", "targetWork", "actualWork", "price", "targetIncome", "planIncome"};
+//            list = super.findBySql(sql, ProjectWeekBO.class, fields);
+//        }
+//        for (ProjectWeekBO bo : list) {
+//            bo.setArrival(projectMonth.getArrival());
+//            bo.setProject(projectMonth.getProject());
+//            bo.setYear(projectMonth.getYear());
+//            bo.setMonth(projectMonth.getMonth());
+//            bo.setIncomeDifferences(bo.getTargetIncome() - bo.getPlanIncome());
+//            bo.setWorkDifferences(bo.getActualWork() - bo.getTargetWork());
+//        }
+        list.add(BeanTransform.copyProperties(projectMonth, ProjectMonthBO.class));
         return list;
     }
 
     @Override
     public Long countNum(ProjectMonthDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    private ProjectMonthDTO condition(ProjectMonthDTO dto) throws SerException {
+        ProjectMonthDTO dto1 = new ProjectMonthDTO();
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            dto1.getConditions().add(Restrict.eq("arrival", dto.getArea()));
+        }
+        if (StringUtils.isNotBlank(dto.getTime())) {
+            dto1.getConditions().add(Restrict.eq("year", dto.getTime()));
+//            dto1.getConditions().add(Restrict.eq("month", dto.getTime().substring(dto.getTime().indexOf("-") + 1, dto.getTime().length())));
+        }
+        return dto1;
     }
 }

@@ -91,4 +91,14 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return projectWeekSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<ProjectWeekCountBO> collect(ProjectWeekDTO dto) throws SerException {
+        return projectWeekSer.collect(dto);
+    }
+
+    @Override
+    public List<String> findArea() throws SerException {
+        return projectWeekSer.findAreas();
+    }
 }

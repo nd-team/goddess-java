@@ -1,6 +1,5 @@
 package com.bjike.goddess.archive.service;
 
-import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.bo.ArchiveDetailBO;
 import com.bjike.goddess.archive.dto.ArchiveDetailDTO;
 import com.bjike.goddess.archive.entity.ArchiveDetail;
@@ -110,6 +109,27 @@ public interface ArchiveDetailSer extends Ser<ArchiveDetail, ArchiveDetailDTO> {
      * @throws SerException
      */
     default Long getTotal() throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取管理等级
+     *
+     * @return
+     * @throws SerException
+     */
+    default String findManage(String name) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据姓名获取处罚和奖励
+     *
+     * @param name
+     * @return
+     * @throws SerException
+     */
+    default String[] findPushAndReward(String name) throws SerException {
         return null;
     }
 }

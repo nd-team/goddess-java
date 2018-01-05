@@ -136,4 +136,16 @@ public interface DateDataSer extends Ser<DateData, DateDataDTO> {
     default List<String> findDate(String year, String month, String cycle) throws SerException {
         return null;
     }
+
+    /**
+     * 获取当月的周数
+     *
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    default Integer weeks(Integer year, Integer month) throws SerException {
+        return null;
+    }
 }

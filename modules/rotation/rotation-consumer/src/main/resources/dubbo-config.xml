@@ -32,7 +32,7 @@
 
 
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.ArrangementAPI" id="arrangementApiImpl"/>
-    <dubbo:reference validation="true" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="EntryBasicInfoApiImpl"/>
+    <!--<dubbo:reference validation="true" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" id="EntryBasicInfoApiImpl"/>-->
 
     <dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />
     <dubbo:reference  validation="true" id="moduleTypeApiImpl" interface="com.bjike.goddess.organize.api.ModuleTypeAPI" />

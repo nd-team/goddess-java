@@ -10,8 +10,6 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.event.api.EventAPI;
-import com.bjike.goddess.event.enums.Permissions;
-import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
@@ -469,19 +467,20 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             priority(entity);  //处理优先级
         }
         send(name, entity);
-        if (null != entity.getExecute()) {
-            EventTO eventTO = new EventTO();
-            eventTO.setName(entity.getExecute());
-            eventTO.setProjectChineseName("任务分配");
-            eventTO.setProjectEnglishName("taskallotment");
-            eventTO.setFunctionChineseName("任务分配");
-            eventTO.setFunctionEnglishName("toaskallotment");
-            eventTO.setContent("待确认接收");
-            eventTO.setPermissions(Permissions.CONFIRM);
-            eventTO.setEventId(entity.getId());
-            eventTO.setStatus("待确认");
-            eventAPI.save(eventTO);
-        }
+        //TODO 发起任务保存代办事件
+//        if (null != entity.getExecute()) {
+//            EventTO eventTO = new EventTO();
+//            eventTO.setName(entity.getExecute());
+//            eventTO.setProjectChineseName("任务分配");
+//            eventTO.setProjectEnglishName("taskallotment");
+//            eventTO.setFunctionChineseName("任务分配");
+//            eventTO.setFunctionEnglishName("toaskallotment");
+//            eventTO.setContent("待确认接收");
+//            eventTO.setPermissions(Permissions.CONFIRM);
+//            eventTO.setEventId(entity.getId());
+//            eventTO.setStatus("待确认");
+//            eventAPI.save(eventTO);
+//        }
     }
 
     public void split(TaskNode entity) throws SerException {
@@ -740,19 +739,20 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             priority(entity);  //处理优先级
         }
         send(name, entity);
-        if (null != entity.getExecute()) {
-            EventTO eventTO = new EventTO();
-            eventTO.setName(entity.getExecute());
-            eventTO.setProjectChineseName("任务分配");
-            eventTO.setProjectEnglishName("taskallotment");
-            eventTO.setFunctionChineseName("任务分配");
-            eventTO.setFunctionEnglishName("toaskallotment");
-            eventTO.setContent("待确认接收");
-            eventTO.setPermissions(Permissions.CONFIRM);
-            eventTO.setEventId(entity.getId());
-            eventTO.setStatus("待确认");
-            eventAPI.save(eventTO);
-        }
+        // TODO 添加任务保存代办事件
+//        if (null != entity.getExecute()) {
+//            EventTO eventTO = new EventTO();
+//            eventTO.setName(entity.getExecute());
+//            eventTO.setProjectChineseName("任务分配");
+//            eventTO.setProjectEnglishName("taskallotment");
+//            eventTO.setFunctionChineseName("任务分配");
+//            eventTO.setFunctionEnglishName("toaskallotment");
+//            eventTO.setContent("待确认接收");
+//            eventTO.setPermissions(Permissions.CONFIRM);
+//            eventTO.setEventId(entity.getId());
+//            eventTO.setStatus("待确认");
+//            eventAPI.save(eventTO);
+//        }
     }
 
     @Override
@@ -814,16 +814,17 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             updateFather(entity.getFatherId());
         }
         updateTable(entity);
-        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
-        if (null != entity.getExecute()) {
-            String eventId1 = eventAPI.findId(entity.getId(), entity.getExecute());
-            if (null != eventId1) {
-                eventAPI.delete(eventId1);
-            }
-        }
+        //TODO 确认完成保存代办事件
+//        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
+//        if (null != entity.getExecute()) {
+//            String eventId1 = eventAPI.findId(entity.getId(), entity.getExecute());
+//            if (null != eventId1) {
+//                eventAPI.delete(eventId1);
+//            }
+//        }
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -876,16 +877,17 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             updateFather(entity.getFatherId());
         }
         updateTable(entity);
-        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
-        if (null != entity.getExecute()) {
-            String eventId1 = eventAPI.findId(entity.getId(), entity.getExecute());
-            if (null != eventId1) {
-                eventAPI.delete(eventId1);
-            }
-        }
+        //TODO 确认未完成删除代办事件
+//        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
+//        if (null != entity.getExecute()) {
+//            String eventId1 = eventAPI.findId(entity.getId(), entity.getExecute());
+//            if (null != eventId1) {
+//                eventAPI.delete(eventId1);
+//            }
+//        }
     }
 
     @Override
@@ -900,10 +902,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setTaskStatus(TaskStatus.DOING);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
+        //TODO 上报审核通过保存代办事件
+//        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
     }
 
     @Override
@@ -918,10 +921,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setTaskStatus(TaskStatus.DOING);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
+        //TODO 上报审核不通过删除代办事件
+//        String eventId = eventAPI.findId(to.getId(), userAPI.currentUser().getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
     }
 
     @Override
@@ -1062,17 +1066,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setTaskStatus(TaskStatus.TOBEAUDITED);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        EventTO eventTO = new EventTO();
-        eventTO.setName(userAPI.currentUser().getUsername());
-        eventTO.setProjectChineseName("任务分配");
-        eventTO.setProjectEnglishName("taskallotment");
-        eventTO.setFunctionChineseName("任务分配");
-        eventTO.setFunctionEnglishName("taskallotment");
-        eventTO.setContent("上报审核");
-        eventTO.setPermissions(Permissions.ADUIT);
-        eventTO.setEventId(entity.getId());
-        eventTO.setStatus("待审核");
-        eventAPI.save(eventTO);
+        //TODO 上报任务代办事件变更
+//        EventTO eventTO = new EventTO();
+//        eventTO.setName(userAPI.currentUser().getUsername());
+//        eventTO.setProjectChineseName("任务分配");
+//        eventTO.setProjectEnglishName("taskallotment");
+//        eventTO.setFunctionChineseName("任务分配");
+//        eventTO.setFunctionEnglishName("taskallotment");
+//        eventTO.setContent("上报审核");
+//        eventTO.setPermissions(Permissions.ADUIT);
+//        eventTO.setEventId(entity.getId());
+//        eventTO.setStatus("待审核");
+//        eventAPI.save(eventTO);
     }
 
     @Override
@@ -1151,17 +1156,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setEfficiency(efficiency);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        EventTO eventTO = new EventTO();
-        eventTO.setName(entity.getInitiate());
-        eventTO.setProjectChineseName("任务分配");
-        eventTO.setProjectEnglishName("taskallotment");
-        eventTO.setFunctionChineseName("任务分配");
-        eventTO.setFunctionEnglishName("toaskallotment");
-        eventTO.setContent("待确认完成");
-        eventTO.setPermissions(Permissions.CONFIRM);
-        eventTO.setEventId(entity.getId());
-        eventTO.setStatus("待确认");
-        eventAPI.save(eventTO);
+        //TODO 填写任务完成情况保存代办事件
+//        EventTO eventTO = new EventTO();
+//        eventTO.setName(entity.getInitiate());
+//        eventTO.setProjectChineseName("任务分配");
+//        eventTO.setProjectEnglishName("taskallotment");
+//        eventTO.setFunctionChineseName("任务分配");
+//        eventTO.setFunctionEnglishName("toaskallotment");
+//        eventTO.setContent("待确认完成");
+//        eventTO.setPermissions(Permissions.CONFIRM);
+//        eventTO.setEventId(entity.getId());
+//        eventTO.setStatus("待确认");
+//        eventAPI.save(eventTO);
     }
 
     @Transactional(rollbackFor = {SerException.class})
@@ -3055,21 +3061,22 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setTaskStatus(TaskStatus.DOING);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
-        EventTO eventTO = new EventTO();
-        eventTO.setName(entity.getExecute());
-        eventTO.setProjectChineseName("任务分配");
-        eventTO.setProjectEnglishName("taskallotment");
-        eventTO.setFunctionChineseName("任务分配");
-        eventTO.setFunctionEnglishName("toaskallotment");
-        eventTO.setContent("执行任务中");
-        eventTO.setPermissions(Permissions.MAKE);
-        eventTO.setEventId(entity.getId());
-        eventTO.setStatus("待制作");
-        eventAPI.save(eventTO);
+        //TODO 确认接受任务添加代办事件
+//        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
+//        EventTO eventTO = new EventTO();
+//        eventTO.setName(entity.getExecute());
+//        eventTO.setProjectChineseName("任务分配");
+//        eventTO.setProjectEnglishName("taskallotment");
+//        eventTO.setFunctionChineseName("任务分配");
+//        eventTO.setFunctionEnglishName("toaskallotment");
+//        eventTO.setContent("执行任务中");
+//        eventTO.setPermissions(Permissions.MAKE);
+//        eventTO.setEventId(entity.getId());
+//        eventTO.setStatus("待制作");
+//        eventAPI.save(eventTO);
     }
 
     @Override
@@ -3083,10 +3090,11 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         entity.setTaskStatus(TaskStatus.NOTRECEIVE);
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
-        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
+        //TODO 不确认接受任务代办事件删除
+//        String eventId = eventAPI.findId(entity.getId(), userAPI.currentUser().getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
     }
 
     @Override
@@ -3115,7 +3123,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (currents != null && currents.size() > 0) {
                 for (TaskNode current : currents) {
                     String name = current.getExecute();
-                    DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class);
+                    DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class, "planTime");
                     bo.setName(name);
                     bo.setTime(time);
                     double taskTime = time(current.getNeedTime(), current.getNeedType());

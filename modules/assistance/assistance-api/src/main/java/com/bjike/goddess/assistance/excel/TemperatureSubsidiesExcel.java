@@ -76,7 +76,7 @@ public class TemperatureSubsidiesExcel extends BaseTO {
     /**
      * 补助总额
      */
-    @ExcelHeader(name = "补助状态", notNull = true)
+    @ExcelHeader(name = "补助总额", notNull = true)
     private Double subsidiesAmount;
 
     /**

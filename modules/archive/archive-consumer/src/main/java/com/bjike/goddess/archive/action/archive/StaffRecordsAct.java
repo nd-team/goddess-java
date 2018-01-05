@@ -142,7 +142,7 @@ public class StaffRecordsAct extends BaseFileAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id, BindingResult bindingResult) throws ActException {
+    public Result delete(@PathVariable String id) throws ActException {
         try {
             staffRecordsAPI.delete(id);
             return ActResult.initialize("DELETE SUCCESS");

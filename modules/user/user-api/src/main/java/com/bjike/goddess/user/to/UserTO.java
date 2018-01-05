@@ -20,9 +20,12 @@ public class UserTO extends BaseTO {
 
     public interface UPDATEPHONE{}
 
+    public interface BECOMEENTERPRISE{}
+
     /**
      * 用户名
      */
+    @NotBlank(groups ={ UserTO.BECOMEENTERPRISE.class} , message = "用户名不能为空")
     private String username;
 
     /**
@@ -51,6 +54,7 @@ public class UserTO extends BaseTO {
     /**
      * 员工编号
      */
+    @NotBlank(groups ={ UserTO.BECOMEENTERPRISE.class} , message = "员工编号不能为空")
     private String employeeNumber;
 
     /**

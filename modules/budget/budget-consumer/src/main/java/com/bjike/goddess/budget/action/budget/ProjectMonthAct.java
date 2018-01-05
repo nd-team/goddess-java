@@ -190,4 +190,21 @@ public class ProjectMonthAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 按条件汇总
+     *
+     * @return class ProjectMonthCountVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(ProjectMonthDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectMonthCountBO> list = projectMonthAPI.collect(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectMonthCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -281,6 +281,13 @@ public class CustomerBaseInfoExportTemple extends BaseBO {
      */
     @ExcelHeader(name = "是否需进行市场招待")
     private String proceedMarketTreat;
+
+    /**
+     * 拜访周期
+     */
+    @ExcelHeader(name = "拜访周期",notNull = true)
+    private Integer callcyle;
+
     /**
      * 年龄
      */
@@ -845,5 +852,13 @@ public class CustomerBaseInfoExportTemple extends BaseBO {
 
     public void setJobPost(String jobPost) {
         this.jobPost = jobPost;
+    }
+
+    public Integer getCallcyle() {
+        return callcyle;
+    }
+
+    public void setCallcyle(Integer callcyle) {
+        this.callcyle = callcyle;
     }
 }

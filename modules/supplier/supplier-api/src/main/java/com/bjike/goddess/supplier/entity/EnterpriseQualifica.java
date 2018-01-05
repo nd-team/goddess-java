@@ -10,11 +10,11 @@ import javax.persistence.Table;
 /**
  * 企业资质
  *
- * @Author: [ lijuntao ]　
- * @Date: [ 2017-12-15 03:58 ]　
- * @Description: [ 企业资质 ]　
- * @Version: [ v1.0.0 ]　
- * @Copy: [ com.bjike ]　
+ * @Author: [ lijuntao ]
+ * @Date: [ 2017-12-15 03:58 ]
+ * @Description: [ 企业资质 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @Entity
 @Table(name = "supplier_enterprisequalifica")

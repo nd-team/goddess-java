@@ -92,4 +92,9 @@ public class ProjectMonthApiImpl implements ProjectMonthAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return projectMonthSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        return projectMonthSer.collect(dto);
+    }
 }

@@ -10,10 +10,10 @@ import java.time.LocalDate;
  * 获奖情况
  *
  * @Author: [ lijuntao ]
- * @Date: [ 2017-12-15 04:00 ]　
- * @Description: [ 获奖情况 ]　
- * @Version: [ v1.0.0 ]　
- * @Copy: [ com.bjike ]　
+ * @Date: [ 2017-12-15 04:00 ]
+ * @Description: [ 获奖情况 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
  */
 @Entity
 @Table(name = "supplier_awards")

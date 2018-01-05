@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("situation")
-public class SituationAction {
+public class    SituationAction {
     @Autowired
     private SituationAPI situationAPI;
 

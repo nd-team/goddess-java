@@ -8,15 +8,23 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.financeinit.api.AccountAPI;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
+import com.bjike.goddess.financeinit.vo.SecondSubjectDataVO;
+import com.bjike.goddess.financeinit.vo.SubjectDataVO;
+import com.bjike.goddess.financeinit.vo.SubjectDatasVO;
 import com.bjike.goddess.lendreimbursement.api.ApplyLendAPI;
 import com.bjike.goddess.lendreimbursement.bo.ApplyLendBO;
 import com.bjike.goddess.lendreimbursement.bo.LendAuditDetailBO;
+import com.bjike.goddess.lendreimbursement.bo.OptionBO;
 import com.bjike.goddess.lendreimbursement.dto.ApplyLendDTO;
 import com.bjike.goddess.lendreimbursement.to.ApplyLendTO;
-import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.LendDeleteFileTO;
+import com.bjike.goddess.lendreimbursement.to.LendGuidePermissionTO;
 import com.bjike.goddess.lendreimbursement.to.LendReturnSendTO;
-import com.bjike.goddess.lendreimbursement.vo.*;
+import com.bjike.goddess.lendreimbursement.vo.AccountVoucherVO;
+import com.bjike.goddess.lendreimbursement.vo.ApplyLendVO;
+import com.bjike.goddess.lendreimbursement.vo.CollectDataVO;
+import com.bjike.goddess.lendreimbursement.vo.LendAuditDetailVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
@@ -28,9 +36,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 申请借款
@@ -1306,7 +1316,7 @@ public class ApplyLendAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/deleteFile")
-    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO,BindingResult bindingResult, HttpServletRequest request) throws SerException {
+    public Result delFile(@Validated(LendDeleteFileTO.TestDEL.class) LendDeleteFileTO siginManageDeleteFileTO, BindingResult bindingResult, HttpServletRequest request) throws SerException {
         if (null != siginManageDeleteFileTO.getPaths() && siginManageDeleteFileTO.getPaths().length >= 0) {
             Object storageToken = request.getAttribute("storageToken");
             fileAPI.delFile(storageToken.toString(), siginManageDeleteFileTO.getPaths());
@@ -1314,6 +1324,69 @@ public class ApplyLendAction extends BaseFileAction {
         return new ActResult("delFile success");
     }
 
+    /**
+     * 报销根据报销人获取一级三级科目
+     *
+     * @param name 报销人姓名
+     * @return class SubjectDataVO
+     * @version v1
+     */
+    @GetMapping("v1/findSubjects")
+    public Result findSubjects(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendAPI.findSubjects(name), SubjectDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 借款根据借款人获取三级科目和一级科目
+     *
+     * @param name 借款人姓名
+     * @return class SubjectDatasVO
+     * @version v1
+     */
+    @GetMapping("v1/findSubjects1")
+    public Result findSubjects1(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendAPI.findSubjects1(name), SubjectDatasVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据一级科目代码获取二级科目
+     *
+     * @param firstSubjectCode 一级科目代码
+     * @version v1
+     */
+    @GetMapping("v1/findSecondSubject")
+    public Result findSecondSubject(@RequestParam String firstSubjectCode) throws ActException {
+        try {
+            List<SecondSubjectDataBO> list = applyLendAPI.findSecondSubject(firstSubjectCode);
+            return ActResult.initialize(BeanTransform.copyProperties(list, SecondSubjectDataVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 借款数据分析图
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/analysisDiagram")
+    public Result analysisDiagram() throws ActException {
+        try {
+            OptionBO bo = applyLendAPI.analysisDiagram();
+            return ActResult.initialize(bo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 
 }

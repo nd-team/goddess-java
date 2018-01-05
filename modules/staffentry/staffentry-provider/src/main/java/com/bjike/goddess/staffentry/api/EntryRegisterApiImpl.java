@@ -1,10 +1,10 @@
 package com.bjike.goddess.staffentry.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.staffentry.bo.*;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.bo.UserNameSexBO;
 import com.bjike.goddess.staffentry.dto.EntryRegisterDTO;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
 import com.bjike.goddess.staffentry.service.EntryRegisterSer;
 import com.bjike.goddess.staffentry.to.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,5 +164,10 @@ public class EntryRegisterApiImpl implements EntryRegisterAPI {
     @Override
     public List<UserNameSexBO> findSexByUserName(String[] userName) throws SerException {
         return entryRegisterSer.findSexByUserName(userName);
+    }
+
+    @Override
+    public List<EntryRegisterBO> myTeam(EntryRegisterDTO dto) throws SerException {
+        return entryRegisterSer.myTeam (dto);
     }
 }

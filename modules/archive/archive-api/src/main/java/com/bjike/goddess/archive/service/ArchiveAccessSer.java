@@ -3,7 +3,6 @@ package com.bjike.goddess.archive.service;
 import com.bjike.goddess.archive.bo.ArchiveAccessBO;
 import com.bjike.goddess.archive.dto.ArchiveAccessDTO;
 import com.bjike.goddess.archive.entity.ArchiveAccess;
-import com.bjike.goddess.archive.excel.ArchiveAccessImportExcel;
 import com.bjike.goddess.archive.excel.SonPermissionObject;
 import com.bjike.goddess.archive.to.AccessAuditTO;
 import com.bjike.goddess.archive.to.ArchiveAccessTO;
@@ -141,7 +140,7 @@ public interface ArchiveAccessSer extends Ser<ArchiveAccess, ArchiveAccessDTO> {
      * @param tos
      * @throws SerException
      */
-    default void upload(List<ArchiveAccessImportExcel> tos) throws SerException {
+    default void upload(List<ArchiveAccessTO> tos) throws SerException {
         return;
     }
 

@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
@@ -355,11 +356,13 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public DimissionInfoBO apply(DimissionInfoAddEditTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
         UserBO user = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         DimissionInfo entity = BeanTransform.copyProperties(to, DimissionInfo.class, true);
-        entity.setUsername(user.getUsername());
         entity.setType(DimissionType.NORMAL);
         entity.setApplyDate(LocalDate.now());
         entity.setDimission(DimissionStatus.APPLY);
@@ -874,11 +877,9 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
     }
 
     @Override
-    public DataBO findDataByName() throws SerException {
+    public DataBO findDataByName(String name) throws SerException {
         Boolean tar = false;
-        String userToken = RpcTransmit.getUserToken();
-        UserBO userBO = userAPI.currentUser();
-        RpcTransmit.transmitUserToken(userToken);
+        UserBO userBO = userAPI.findByUsername(name);
         DataBO bo = new DataBO();
         bo.setUsername(userBO.getUsername());
         bo.setEmployeeNumber(userBO.getEmployeeNumber());
@@ -900,10 +901,6 @@ public class DimissionInfoSerImpl extends ServiceImpl<DimissionInfo, DimissionIn
                 bo.setPhone(staffRecordsBO.getTelephone());
                 bo.setSeniority(String.valueOf(findSeniority(bo.getEntryTime(), DateUtil.dateToString(LocalDate.now()))));
             }
-//            StaffStatus staffStatus = positionDetailUserAPI.statusByName(userBO.getUsername());
-//            if (StaffStatus.HAVELEAVE.equals(staffStatus)) {
-//                tar = true;
-//            }
         }
         return bo;
     }

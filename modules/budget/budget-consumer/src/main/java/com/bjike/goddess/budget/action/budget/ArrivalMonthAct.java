@@ -169,4 +169,22 @@ public class ArrivalMonthAct {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto 地区收入月dto
+     * @return class ArrivalMonthCountVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(ArrivalMonthDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<ArrivalMonthCountBO> list = arrivalMonthAPI.collect(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalMonthCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

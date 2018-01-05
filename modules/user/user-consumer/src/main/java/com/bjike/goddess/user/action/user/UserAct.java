@@ -14,11 +14,15 @@ import com.bjike.goddess.event.api.EventAPI;
 import com.bjike.goddess.event.dto.FatherDTO;
 import com.bjike.goddess.lendreimbursement.api.ReimburseRecordAPI;
 import com.bjike.goddess.lendreimbursement.dto.ReimburseRecordDTO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.to.UserTO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +63,8 @@ public class UserAct extends BaseFileAction {
     private VacateAPI vacateAPI;
     @Autowired
     private ReimburseRecordAPI reimburseRecordAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     /**
      * 手机号码是否存在
@@ -69,10 +75,10 @@ public class UserAct extends BaseFileAction {
     @GetMapping("v1/phone/{phone}/exists")
     public Result existPhone(@PathVariable String phone) throws ActException {
         try {
-            Boolean result = (null != userAPI.findByPhone(phone));
-            return ActResult.initialize(result);
+            Boolean result = (null != userAPI.findByPhone ( phone ));
+            return ActResult.initialize ( result );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -85,10 +91,10 @@ public class UserAct extends BaseFileAction {
     @GetMapping("v1/username/{username}/exists")
     public Result existUsername(@PathVariable String username) throws ActException {
         try {
-            Boolean result = (null != userAPI.findByUsername(username));
-            return ActResult.initialize(result);
+            Boolean result = (null != userAPI.findByUsername ( username ));
+            return ActResult.initialize ( result );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -101,14 +107,12 @@ public class UserAct extends BaseFileAction {
     @PostMapping("v1/add")
     public Result add(UserTO userTO) throws ActException {
         try {
-            Boolean result = (null != userAPI.add(null, userTO));
-            return ActResult.initialize(result);
+            Boolean result = (null != userAPI.add ( null, userTO ));
+            return ActResult.initialize ( result );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
-
-
 
 
     /**
@@ -120,10 +124,10 @@ public class UserAct extends BaseFileAction {
     @PostMapping("v1/update/pwd")
     public Result updatePassword(@Validated(UserTO.UPDATEPWD.class) UserTO userTO, BindingResult bindingResult) throws ActException {
         try {
-            userAPI.updatePassword(userTO);
-            return new ActResult("修改密码成功！");
+            userAPI.updatePassword ( userTO );
+            return new ActResult ( "修改密码成功！" );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -136,10 +140,10 @@ public class UserAct extends BaseFileAction {
     @PostMapping("v1/update/phone")
     public Result updatePhone(@Validated(UserTO.UPDATEPHONE.class) UserTO userTO, BindingResult bindingResult) throws ActException {
         try {
-            userAPI.updatePhone(userTO);
-            return new ActResult("修改手机号码成功！");
+            userAPI.updatePhone ( userTO );
+            return new ActResult ( "修改手机号码成功！" );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -147,25 +151,25 @@ public class UserAct extends BaseFileAction {
     /**
      * 上传用户头像前检查
      * tanghaixiang
-     * @param username 被修改头像的用户名
-     * @desc 当前用户只能操作自己的头像,用于上传头像和修改头像前校验
      *
+     * @param username 被修改头像的用户名
+     * @desc 当前用户只能操作自己的头像, 用于上传头像和修改头像前校验
      * @version v1
      */
     @LoginAuth
     @GetMapping("v1/check/currentuser/{username}")
     public Result currentUserCheck(@PathVariable String username, HttpServletRequest request) throws ActException {
         try {
-            String userToken = RpcContext.getContext().getAttachment("userToken");
-            UserBO userBO = userAPI.currentUser();
-            if (StringUtils.isBlank(username) || !username.equals(userBO.getUsername() )) {
-                throw new ActException("操作失败，您只能操作自己的头像或密码");
-            }else{
-                return new ActResult("checkSuccess");
+            String userToken = RpcContext.getContext ().getAttachment ( "userToken" );
+            UserBO userBO = userAPI.currentUser ();
+            if (StringUtils.isBlank ( username ) || !username.equals ( userBO.getUsername () )) {
+                throw new ActException ( "操作失败，您只能操作自己的头像或密码" );
+            } else {
+                return new ActResult ( "checkSuccess" );
             }
 
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -183,27 +187,27 @@ public class UserAct extends BaseFileAction {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
             //上传图片-头像图片
-            String userToken = RpcContext.getContext().getAttachment("userToken");
-            UserBO userBO = userAPI.currentUser();
+            String userToken = RpcContext.getContext ().getAttachment ( "userToken" );
+            UserBO userBO = userAPI.currentUser ();
             if (null == userBO) {
-                throw new ActException("该用户不存在");
+                throw new ActException ( "该用户不存在" );
             }
-            if (StringUtils.isNotBlank(userBO.getHeadSculpture()) && !"1".equals(userBO.getHeadSculpture() )) {
-                throw new ActException("该用户已经上传过头像，请进行修改操作");
+            if (StringUtils.isNotBlank ( userBO.getHeadSculpture () ) && !"1".equals ( userBO.getHeadSculpture () )) {
+                throw new ActException ( "该用户已经上传过头像，请进行修改操作" );
             }
-            RpcContext.getContext().setAttachment("userToken", userToken);
-            String path = "/user/touxiang/" + userBO.getId();
-            List<InputStream> inputStreams = getInputStreams(request, path);
-            List<FileBO> list = fileAPI.upload(inputStreams);
-            RpcContext.getContext().setAttachment("userToken", userToken);
+            RpcContext.getContext ().setAttachment ( "userToken", userToken );
+            String path = "/user/touxiang/" + userBO.getId ();
+            List<InputStream> inputStreams = getInputStreams ( request, path );
+            List<FileBO> list = fileAPI.upload ( inputStreams );
+            RpcContext.getContext ().setAttachment ( "userToken", userToken );
 
-            UserTO userTO = new UserTO();
-            BeanTransform.copyProperties(userBO, userTO);
-            userTO.setHeadSculpture(list.get(0).getPath());
-            userAPI.update(userTO);
-            return new ActResult("upload success");
+            UserTO userTO = new UserTO ();
+            BeanTransform.copyProperties ( userBO, userTO );
+            userTO.setHeadSculpture ( list.get ( 0 ).getPath () );
+            userAPI.update ( userTO );
+            return new ActResult ( "upload success" );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -220,39 +224,39 @@ public class UserAct extends BaseFileAction {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
             //上传图片-头像图片
-            Object storageToken = request.getAttribute("storageToken");
+            Object storageToken = request.getAttribute ( "storageToken" );
 
-            String userToken = RpcContext.getContext().getAttachment("userToken");
-            UserBO userBO = userAPI.currentUser();
+            String userToken = RpcContext.getContext ().getAttachment ( "userToken" );
+            UserBO userBO = userAPI.currentUser ();
             if (null == userBO) {
-                throw new ActException("该用户不存在");
+                throw new ActException ( "该用户不存在" );
             }
 
-            RpcContext.getContext().setAttachment("userToken", userToken);
+            RpcContext.getContext ().setAttachment ( "userToken", userToken );
             //旧的地址
-            String oldPath = userBO.getHeadSculpture();
+            String oldPath = userBO.getHeadSculpture ();
             //新的地址
-            String path = "/user/touxiang/" + userBO.getId();
+            String path = "/user/touxiang/" + userBO.getId ();
             //先删除
-            fileAPI.delFile(storageToken.toString(), new String[]{oldPath});
+            fileAPI.delFile ( storageToken.toString (), new String[]{oldPath} );
 
             //重新上传
-            RpcContext.getContext().setAttachment("userToken", userToken);
-            List<InputStream> inputStreams = getInputStreams(request, path);
-            List<FileBO> fileBOS = fileAPI.upload(inputStreams);
+            RpcContext.getContext ().setAttachment ( "userToken", userToken );
+            List<InputStream> inputStreams = getInputStreams ( request, path );
+            List<FileBO> fileBOS = fileAPI.upload ( inputStreams );
 
-            RpcContext.getContext().setAttachment("userToken", userToken);
-            UserTO userTO = new UserTO();
-            BeanTransform.copyProperties(userBO, userTO);
-            userTO.setHeadSculpture( fileBOS.get(0).getPath() );
+            RpcContext.getContext ().setAttachment ( "userToken", userToken );
+            UserTO userTO = new UserTO ();
+            BeanTransform.copyProperties ( userBO, userTO );
+            userTO.setHeadSculpture ( fileBOS.get ( 0 ).getPath () );
 //            userTO.setHeadSculpture( "1" );
-            userTO.setId(userBO.getId());
-            userAPI.update(userTO);
+            userTO.setId ( userBO.getId () );
+            userAPI.update ( userTO );
 
 
-            return new ActResult("edit pic success");
+            return new ActResult ( "edit pic success" );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -268,29 +272,29 @@ public class UserAct extends BaseFileAction {
             //跟前端约定好 ，文件路径是列表id
             // /id/....
             //上传图片-头像图片
-            String userToken = request.getParameter("token");
+            String userToken = request.getParameter ( "token" );
 //                    RpcContext.getContext().getAttachment("userToken");
 //            UserBO userBO = userAPI.currentUser();
-            UserBO userBO = userAPI.findByUsername(username);
-            RpcContext.getContext().setAttachment("userToken", userToken);
+            UserBO userBO = userAPI.findByUsername ( username );
+            RpcContext.getContext ().setAttachment ( "userToken", userToken );
             if (null == userBO) {
-                throw new ActException("该用户不存在");
+                throw new ActException ( "该用户不存在" );
             }
 
-            FileInfo fileInfo = new FileInfo();
-            Object storageToken = request.getAttribute("storageToken");
-            fileInfo.setStorageToken(storageToken.toString());
-            fileInfo.setPath(userBO.getHeadSculpture());
-            String filename = StringUtils.substringAfterLast(fileInfo.getPath(), "/");
-            byte[] buffer = fileAPI.download(fileInfo);
+            FileInfo fileInfo = new FileInfo ();
+            Object storageToken = request.getAttribute ( "storageToken" );
+            fileInfo.setStorageToken ( storageToken.toString () );
+            fileInfo.setPath ( userBO.getHeadSculpture () );
+            String filename = StringUtils.substringAfterLast ( fileInfo.getPath (), "/" );
+            byte[] buffer = fileAPI.download ( fileInfo );
             try {
-                writeOutFile(response, buffer, filename);
+                writeOutFile ( response, buffer, filename );
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
-            return new ActResult("download success");
+            return new ActResult ( "download success" );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -304,9 +308,9 @@ public class UserAct extends BaseFileAction {
     @GetMapping("v1/event/count")
     public Result count(FatherDTO dto) throws ActException {
         try {
-            return ActResult.initialize(eventAPI.count(dto));
+            return ActResult.initialize ( eventAPI.count ( dto ) );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -320,9 +324,9 @@ public class UserAct extends BaseFileAction {
     @GetMapping("v1/vacate/count")
     public Result vacate(VacateDTO dto) throws ActException {
         try {
-            return ActResult.initialize(vacateAPI.count(dto));
+            return ActResult.initialize ( vacateAPI.count ( dto ) );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
         }
     }
 
@@ -336,10 +340,45 @@ public class UserAct extends BaseFileAction {
     @GetMapping("v1/count")
     public Result counts(ReimburseRecordDTO reimburseRecordDTO) throws ActException {
         try {
-            Long count = reimburseRecordAPI.countReimburseRecords(reimburseRecordDTO);
-            return ActResult.initialize(count);
+            Long count = reimburseRecordAPI.countReimburseRecords ( reimburseRecordDTO );
+            return ActResult.initialize ( count );
         } catch (SerException e) {
-            throw new ActException(e.getMessage());
+            throw new ActException ( e.getMessage () );
+        }
+    }
+
+    /**
+     * 成为企业(phone)
+     *
+     * @param userTO 用户
+     * @version v1
+     */
+    @PostMapping("v1/phone/becomeEnterprise")
+    public Result becomeEnterprise(@Validated(UserTO.BECOMEENTERPRISE.class) UserTO userTO, BindingResult bindingResult) throws ActException {
+        try {
+            userAPI.becomeEnterprise ( userTO );
+            return new ActResult ( "成为企业成功！" );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
+        }
+    }
+
+    /**
+     * 根据姓名获取个人信息(phone)
+     *
+     * @param dto
+     * @return class EntryRegisterVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findEntryRegisterByName")
+    public Result findEntryRegisterByName(@Validated(UserDTO.NAME.class) UserDTO dto, BindingResult bindingResult) throws ActException {
+        try {
+            List<EntryRegisterBO> boList = entryRegisterAPI.getEntryRegisterByName ( dto.getUsername () );
+            List<EntryRegisterVO> vo = BeanTransform.copyProperties ( boList, EntryRegisterVO.class );
+            return ActResult.initialize ( vo );
+        } catch (SerException e) {
+            throw new ActException ( e.getMessage () );
         }
     }
     /**
@@ -360,5 +399,6 @@ public class UserAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
 
 }

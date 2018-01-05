@@ -327,6 +327,13 @@ public class CustomerBaseInfoExport extends BaseBO {
      */
     @ExcelHeader(name = "是否需进行市场招待")
     private String proceedMarketTreat;
+
+    /**
+     * 拜访周期
+     */
+    @ExcelHeader(name = "拜访周期",notNull = true)
+    private Integer callcyle;
+
     /**
      * 年龄
      */

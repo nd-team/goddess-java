@@ -450,7 +450,21 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
                 " and c.id = d.user_id " +
                 " and d.position_id = b.id " +
                 " and b.department_id = a.id ";
-        List<DepartmentPeopleBO> list = super.findBySql(sql,DepartmentPeopleBO.class,fields);
+        List<DepartmentPeopleBO> list = super.findBySql(sql, DepartmentPeopleBO.class, fields);
         return list;
+    }
+
+    @Override
+    public String findHierarchy(String department) throws SerException {
+        StringBuilder sql = new StringBuilder("SELECT ifnull(a.hierarchy,' ') FROM organize_hierarchy a, ");
+        sql.append(" organize_department_detail b ");
+        sql.append(" WHERE a.id = b.hierarchy_id ");
+        sql.append(" AND b.department = '" + department + "';");
+        List<Object> objectList = super.findBySql(sql.toString());
+        if(null != objectList && objectList.size() > 0) {
+            String objects = String.valueOf( objectList.get(0));
+            return objects;
+        }
+        return null;
     }
 }

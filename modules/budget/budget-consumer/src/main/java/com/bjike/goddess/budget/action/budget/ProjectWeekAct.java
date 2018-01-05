@@ -21,8 +21,6 @@ import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.organize.bo.ArrangementBO;
-import org.aspectj.lang.annotation.Around;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -32,9 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 项目收入周
@@ -88,7 +84,7 @@ public class ProjectWeekAct extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/save")
+        @PostMapping("v1/save")
     public Result save(@Validated({ADD.class}) ProjectWeekTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ProjectWeekBO bo = projectWeekAPI.save(to);
@@ -328,6 +324,37 @@ public class ProjectWeekAct extends BaseFileAction{
                 projectName = dispatchSheetAPI.getInnerName(area,project);
             }
             return ActResult.initialize(project);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 按条件汇总
+     *
+     * @return class ProjectWeekCountVO
+     * @version v1
+     */
+    @GetMapping("v1/collect")
+    public Result collect(ProjectWeekDTO dto, HttpServletRequest request) throws ActException {
+        try {
+            List<ProjectWeekCountBO> list = projectWeekAPI.collect(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list, ProjectWeekCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 汇总时获取地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAreas")
+    public Result findAreas() throws ActException {
+        try {
+            List<String> list = projectWeekAPI.findArea();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

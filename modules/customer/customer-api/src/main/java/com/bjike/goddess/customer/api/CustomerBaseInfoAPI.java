@@ -441,4 +441,21 @@ public interface CustomerBaseInfoAPI {
     default List<String> findCode() throws SerException {
         return null;
     }
+    /**
+     * 客户管理平台业主客户列表
+     *
+     * @param dto
+     * @return class CustomerAndOwnerInfoBO
+     * @throws SerException
+     */
+    List<CustomerAndOwnerInfoBO> customerList(CustomerBaseInfoDTO dto) throws SerException;
+
+    /**
+     * 客户管理平台业主客户id
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    CustomerAndOwnerInfoBO customerById(String id) throws SerException;
 }

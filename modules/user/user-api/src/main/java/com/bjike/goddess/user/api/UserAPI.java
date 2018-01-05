@@ -2,8 +2,8 @@ package com.bjike.goddess.user.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
-import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
@@ -293,6 +293,26 @@ public interface UserAPI {
      * @throws SerException
      */
     default List<UserBO> findByDept(String ... department  ) throws SerException {
+        return null;
+    }
+
+    /**
+     * 成为企业（phone）
+     *
+     * @param userTO
+     * @return
+     * @throws SerException
+     */
+    default void becomeEnterprise(UserTO userTO) throws SerException {
+    }
+
+    /**
+     * 我的团队
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<UserDetailBO> myTeam() throws SerException {
         return null;
     }
 }

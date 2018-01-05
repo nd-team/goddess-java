@@ -16,10 +16,12 @@
 
 	<!--以下配置为注册业务接口,所有控制器,业务层等用到的业务接口都需在此配置-->
 
+	<dubbo:reference  validation="true" id="problemAcceptApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" />
+	<dubbo:reference  validation="true" id="problemHandlingResultApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI" />
+	<dubbo:reference  validation="true" id="involvedProcessingTaskApiImpl" interface="com.bjike.goddess.projectissuehandle.api.InvolvedProcessingTaskAPI" />
+	<dubbo:reference  validation="true" id="projectEmailApiImpl" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI" />
 	<dubbo:reference  validation="true" id="proPermissionApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionAPI" />
 	<dubbo:reference  validation="true" id="proPermissionOperateApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProPermissionOperateAPI" />
-	<dubbo:reference  validation="true" id="projectProblemAccApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProjectProblemAccAPI"/>
-	<dubbo:reference  validation="true" id="communicationFormworkApiImpl" interface="com.bjike.goddess.projectissuehandle.api.CommunicationFormworkAPI" />
 
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="permissionApiImpl" interface="com.bjike.goddess.user.api.rbac.PermissionAPI" />

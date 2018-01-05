@@ -10,11 +10,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.*;
-import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
-import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
-import com.bjike.goddess.contacts.dto.InternalContactsDTO;
-import com.bjike.goddess.contacts.dto.SearchDTO;
+import com.bjike.goddess.contacts.dto.*;
 import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.entity.InternalContacts;
@@ -97,6 +95,8 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     private ExternalContactsSer externalContactsSer;
     @Autowired
     private CommerceContactsSer commerceContactsSer;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
 
     private static final String foot = "（正确可忽略这个邮件，否则请发邮件到综合资源部。）";
     private static final String title = "关于通讯录信息正确性";
@@ -799,6 +799,14 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
             return sort(mobileInternalContactsBOs);
         }
         return null;
+    }
+
+    @Override
+    public List<InternalContactsBO> getInfoByName(String name) throws SerException {
+        InternalContactsDTO dto = new InternalContactsDTO();
+        dto.getConditions().add(Restrict.eq("userName", name));
+        List<InternalContacts> internalContactsBOS = super.findByCis ( dto );
+        return BeanTransform.copyProperties(internalContactsBOS, InternalContactsBO.class, false);
     }
 
     @Override

@@ -55,9 +55,14 @@ public class FundRecordVO {
      */
     private String dataSource;
     /**
-     * 金额
+     * 余额
      */
     private Double amount;
+
+    /**
+     * 记账凭证导入资金流水对应的数据id
+     */
+    private String voucherGenerateId;
 
     public String getId() {
         return id;
@@ -137,5 +142,13 @@ public class FundRecordVO {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public String getVoucherGenerateId() {
+        return voucherGenerateId;
+    }
+
+    public void setVoucherGenerateId(String voucherGenerateId) {
+        this.voucherGenerateId = voucherGenerateId;
     }
 }

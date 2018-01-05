@@ -128,4 +128,23 @@ public interface ArrivalWeekSer extends Ser<ArrivalWeek, ArrivalWeekDTO> {
      * 导航权限
      */
     Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException;
+
+    /**
+     * 删除全部地区收入周的数据
+     * zhuangkaiqin
+     */
+    default void deleteAll() throws SerException{
+        return;
+    }
+
+    /**
+     * 按条件汇总
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default List<ArrivalWeekCountBO> collect(ArrivalWeekDTO dto) throws SerException {
+        return null;
+    }
 }

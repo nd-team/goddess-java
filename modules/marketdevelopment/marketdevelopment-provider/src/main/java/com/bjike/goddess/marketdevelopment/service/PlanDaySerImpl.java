@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//import com.bjike.goddess.marketdevelopment.bo.MarkProblemAcceBO;
+import com.bjike.goddess.marketdevelopment.bo.MarkProblemAcceBO;
 
 /**
  * 日计划业务实现
@@ -70,9 +70,9 @@ public class PlanDaySerImpl extends ServiceImpl<PlanDay, PlanDayDTO> implements 
     @Override
     public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSee = marPermissionSer.getMarPermission(marketCheck);
+        Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAdd = marPermissionSer.getMarPermission(marketManage);
+        Boolean flagAdd = guideAddIdentity();
         if (flagSee || flagAdd) {
             return true;
         } else {

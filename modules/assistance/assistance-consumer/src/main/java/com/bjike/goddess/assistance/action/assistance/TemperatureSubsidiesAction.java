@@ -1,9 +1,7 @@
 package com.bjike.goddess.assistance.action.assistance;
 
 import com.bjike.goddess.assistance.api.TemperatureSubsidiesAPI;
-import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
 import com.bjike.goddess.assistance.dto.TemperatureSubsidiesDTO;
-import com.bjike.goddess.assistance.entity.TemperatureSubsidies;
 import com.bjike.goddess.assistance.excel.TemperatureSubsidiesExcel;
 import com.bjike.goddess.assistance.to.GuidePermissionTO;
 import com.bjike.goddess.assistance.to.TemperatureSubsidiesExcelTO;
@@ -22,12 +20,12 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,6 +98,7 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 总条数
      *
@@ -116,6 +115,7 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 功能导航权限
      *
@@ -176,6 +176,7 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 添加
      *
@@ -230,6 +231,7 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
             throw new ActException("删除失败：" + e.getMessage());
         }
     }
+
     /**
      * 导入Excel
      *
@@ -246,7 +248,7 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
             List<TemperatureSubsidiesExcel> tos = ExcelUtil.excelToClazz(is, TemperatureSubsidiesExcel.class, excel);
             List<TemperatureSubsidiesExcelTO> tocs = new ArrayList<>();
             for (TemperatureSubsidiesExcel str : tos) {
-                TemperatureSubsidiesExcelTO temperatureSubsidiesExcelTO = BeanTransform.copyProperties(str, TemperatureSubsidiesExcelTO.class, "entryDate", "salaryStartDate","salaryEndDate","outdoorWorkDate","confirmDate");
+                TemperatureSubsidiesExcelTO temperatureSubsidiesExcelTO = BeanTransform.copyProperties(str, TemperatureSubsidiesExcelTO.class, "entryDate", "salaryStartDate", "salaryEndDate", "outdoorWorkDate", "confirmDate");
                 temperatureSubsidiesExcelTO.setEntryDate(String.valueOf(str.getEntryDate()));
                 temperatureSubsidiesExcelTO.setSalaryStartDate(String.valueOf(str.getSalaryStartDate()));
                 temperatureSubsidiesExcelTO.setSalaryEndDate(String.valueOf(str.getSalaryEndDate()));
@@ -269,7 +271,7 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
      * @des 导出高温补助
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(HttpServletResponse response) throws ActException {
         try {
@@ -302,8 +304,10 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
             throw new ActException(e1.getMessage());
         }
     }
+
     /**
      * 提醒确认
+     *
      * @param id 高温补助id
      * @des 提醒确认
      * @version v1
@@ -313,22 +317,24 @@ public class TemperatureSubsidiesAction extends BaseFileAction {
         try {
             temperatureSubsidiesAPI.remindingConfirm(id);
             return new ActResult("提醒成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 确认
+     *
      * @param id 高温补助id
      * @des 确认
      * @version v1
      */
     @GetMapping("v1/confirm")
-    public Result confirm(@RequestParam String id,@RequestParam Boolean confirm,HttpServletResponse response) throws ActException {
+    public Result confirm(@RequestParam String id, @RequestParam Boolean confirm, HttpServletResponse response) throws ActException {
         try {
-            temperatureSubsidiesAPI.confirm(id,confirm);
+            temperatureSubsidiesAPI.confirm(id, confirm);
             return new ActResult("确认成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

@@ -1,32 +1,20 @@
 package com.bjike.goddess.salarymanage.api;
 
-import com.bjike.goddess.archive.bo.StaffRecords1BO;
 import com.bjike.goddess.archive.bo.StaffRecordsBO;
 import com.bjike.goddess.assistance.bo.ComputerSubsidiesBO;
 import com.bjike.goddess.assistance.bo.SenioritySubsidiesBO;
 import com.bjike.goddess.assistance.bo.TemperatureSubsidiesBO;
-
 import com.bjike.goddess.common.api.exception.SerException;
-
-import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.managementpromotion.bo.LevelShowBO;
-import com.bjike.goddess.managementpromotion.entity.LevelShow;
 import com.bjike.goddess.managepromotion.bo.OverviewSkillLevelBO;
 import com.bjike.goddess.salaryconfirm.bo.SalaryconfirmBO;
 import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
 import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
-import com.bjike.goddess.salarymanage.entity.SalaryInformation;
 import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
-import com.bjike.goddess.salarymanage.bo.SalaryInformationBO;
-import com.bjike.goddess.salarymanage.dto.SalaryInformationDTO;
-import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
-
 import com.bjike.goddess.salarymanage.to.SalaryInformationTO;
 import com.bjike.goddess.secure.bo.AttachedBO;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryOptionBO;
-import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 
 import java.util.List;
 

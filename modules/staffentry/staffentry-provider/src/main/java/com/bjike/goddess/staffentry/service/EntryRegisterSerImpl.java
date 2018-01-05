@@ -958,4 +958,30 @@ public class EntryRegisterSerImpl extends ServiceImpl<EntryRegister, EntryRegist
         }
         return os.toByteArray();
     }
+
+    @Override
+    public List<EntryRegisterBO> myTeam(EntryRegisterDTO dto) throws SerException {
+        String employeeNumber = (dto.getEmpNumber ()).substring ( 0, 4 );
+        String[] employeeNumbers = new String[]{employeeNumber};
+        String sql = "SELECT id,gender,departmentName,positionName,empNumber\n" +
+                "FROM user_detail\n" +
+                "WHERE meetingNumber='" + employeeNumbers + "'";
+//        List<UserDetailBO> list =
+//        String[] meetingNumbers = new String[]{meetingNumber};
+
+//        List<Organization> list = null;
+//        for (String s : meetingNumbers) {
+//            String sql = "SELECT id,meetingFormat,meetingArea,meetingTopic,content,host,organization\n" +
+//                    "FROM negotiatemeeting_organization\n" +
+//                    "WHERE meetingNumber='" + s + "'";
+//            String[] fileds = new String[]{"id", "meetingFormat", "meetingArea", "meetingTopic", "content", "host", "organization"};
+//            list = super.findBySql(sql, Organization.class, fileds);
+//        }
+//        if ((list != null) && (list.size() != 0)) {
+//            return list.get(0);
+//        }
+//        return null;
+        String[] fields = new String[]{"id", "gender", "department", "positionName","empNumber"};
+        return null;
+    }
 }

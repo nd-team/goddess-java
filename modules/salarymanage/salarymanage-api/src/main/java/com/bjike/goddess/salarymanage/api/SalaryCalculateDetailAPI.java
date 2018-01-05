@@ -1,15 +1,11 @@
 package com.bjike.goddess.salarymanage.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.recruit.bo.InterviewAddressInforBO;
 import com.bjike.goddess.recruit.bo.InterviewInforBO;
 import com.bjike.goddess.salarymanage.bo.SalaryCalculateDetailBO;
-import com.bjike.goddess.salarymanage.bo.SalaryConfirmRecordBO;
 import com.bjike.goddess.salarymanage.dto.SalaryCalculateDetailDTO;
-import com.bjike.goddess.salarymanage.dto.SalaryConfirmRecordDTO;
 import com.bjike.goddess.salarymanage.excel.SonPermissionObject;
 import com.bjike.goddess.salarymanage.to.ExportSalaryCalculateTO;
-import com.bjike.goddess.salarymanage.to.ExportSalaryInformationTO;
 import com.bjike.goddess.salarymanage.to.GuidePermissionTO;
 import com.bjike.goddess.salarymanage.to.SalaryCalculateDetailTO;
 

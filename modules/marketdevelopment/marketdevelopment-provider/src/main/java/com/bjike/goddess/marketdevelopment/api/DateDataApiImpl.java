@@ -77,4 +77,9 @@ public class DateDataApiImpl implements DateDataAPI {
     public List<String> findDate(String year, String month, String cycle) throws SerException {
         return dateDataSer.findDate(year, month, cycle);
     }
+
+    @Override
+    public Integer weeks(Integer year, Integer month) throws SerException {
+        return dateDataSer.weeks(year, month);
+    }
 }
