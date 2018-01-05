@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.api;
 
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.service.ArrivalWeekSer;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
@@ -90,5 +91,10 @@ public class ArrivalWeekApiImpl implements ArrivalWeekAPI {
     @Override
     public List<ArrivalWeekCountBO> collect(ArrivalWeekDTO dto) throws SerException {
         return arrivalWeekSer.collect(dto);
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        return arrivalWeekSer.figureShow();
     }
 }

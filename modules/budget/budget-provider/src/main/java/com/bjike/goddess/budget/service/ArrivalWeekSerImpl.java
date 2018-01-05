@@ -1,7 +1,6 @@
 package com.bjike.goddess.budget.service;
 
-import com.bjike.goddess.budget.bo.ArrivalWeekBO;
-import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.entity.ArrivalWeek;
 import com.bjike.goddess.budget.enums.GuideAddrStatus;
@@ -25,6 +24,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -362,6 +362,142 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
             }
         }
         return boList;
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        List<ArrivalWeek> projectWeeks = super.findAll();
+        List<ArrivalWeek> list = new ArrayList<>(0);
+        if (null != projectWeeks && projectWeeks.size() > 0) {
+            List<String> arrivals = projectWeeks.stream().map(ArrivalWeek::getArrival).distinct().collect(Collectors.toList());
+            for (String arrival : arrivals) {
+                for (int i = 1; i < 13; i++) {
+                    ArrivalWeek entity = findData(arrival, i);
+                    if (null != entity) {
+                        list.add(entity);
+                    }
+                }
+            }
+        }
+
+        String text_1 = "地区收入周";
+
+        return getOptionBO(text_1, list);
+    }
+
+    private OptionBO getOptionBO(String text_1, List<ArrivalWeek> list) throws SerException {
+        TitleBO title = new TitleBO();
+        title.setText(text_1);
+
+        TooltipBO tooltip = new TooltipBO();
+
+        List<String> names = list.stream().map(ArrivalWeek::getArrival).distinct().collect(Collectors.toList());
+        List<String> nameList = new ArrayList<>(0);
+        for (String name : names) {
+            nameList.add(name + "目标任务量");
+            nameList.add(name + "实际任务量");
+            nameList.add(name + "目标收入");
+            nameList.add(name + "实际收入");
+        }
+        String[] data1 = (String[]) nameList.toArray(new String[nameList.size()]);
+        LegendBO legend = new LegendBO();
+        legend.setData(data1);
+
+        List<String> months = new ArrayList<>(0);
+        for (int i = 1; i < 13; i++) {
+            months.add(i + "月");
+        }
+        XAxisBO xAxis = new XAxisBO();
+        String[] data2 = (String[]) months.toArray(new String[months.size()]);
+        xAxis.setData(data2);
+
+        YAxisBO yAxis = new YAxisBO();
+
+        List<SeriesBO> seriesBOList = new ArrayList<>(0);
+
+
+        for (String arrival : nameList) {
+            int tar = arrival.indexOf("目标");
+            String name = "";
+            String flag = "";
+            if (tar != -1) {
+                name = arrival.substring(0, tar);
+                flag = arrival.substring(tar, arrival.length());
+            } else {
+                name = arrival.substring(0, arrival.indexOf("实际"));
+                flag = arrival.substring(arrival.indexOf("实际"), arrival.length());
+            }
+            List<Double> numbers = new ArrayList<>(0);
+            Double value = 0d;
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(arrival);
+            for (int i = 1; i < 13; i++) {
+                value = 0d;
+                numbers.add(value);
+            }
+
+            for (ArrivalWeek entity : list) {
+                if (name.equals(entity.getArrival())) {
+                    if ("目标任务量".equals(flag) || "实际任务量".equals(flag)) {
+                        seriesBO.setType("bar");
+                    }
+                    if ("目标收入".equals(flag) || "实际收入".equals(flag)) {
+                        seriesBO.setType("line");
+                    }
+
+                    if ("目标任务量".equals(flag)) {
+                        int val = entity.getTargetWork();
+                        value = Double.valueOf(String.valueOf(val));
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                    if ("实际任务量".equals(flag)) {
+                        int val = entity.getActualWork();
+                        value = Double.valueOf(String.valueOf(val));
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                    if ("目标收入".equals(flag)) {
+                        value = entity.getTargetIncome();
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                    if ("实际收入".equals(flag)) {
+                        value = entity.getPlanIncome();
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                }
+            }
+
+            Double[] data3 = numbers.toArray(new Double[numbers.size()]);
+            seriesBO.setData(data3);
+            seriesBOList.add(seriesBO);
+        }
+
+        SeriesBO[] seriesBOs = seriesBOList.toArray(new SeriesBO[seriesBOList.size()]);
+        OptionBO option = new OptionBO();
+        option.setLegend(legend);
+        option.setSeries(seriesBOs);
+        option.setTitle(title);
+        option.setTooltip(tooltip);
+        option.setxAxis(xAxis);
+        option.setyAxis(yAxis);
+        return option;
+    }
+
+    private ArrivalWeek findData(String arrival, Integer month) throws SerException {
+        String[] files = new String[]{"targetWork", "actualWork", "targetIncome", "planIncome", "month", "arrival"};
+        Integer year = LocalDate.now().getYear();
+        year = 2017;
+        StringBuilder sql = new StringBuilder("select ifnull(sum(targetWork),0) as targetWork, ");
+        sql.append(" ifnull(sum(actualWork),0) as actualWork, ");
+        sql.append(" ifnull(sum(targetIncome),0) as targetIncome, ");
+        sql.append(" ifnull(sum(planIncome),0) as planIncome, ");
+        sql.append(" ifnull(month, 0) as month, arrival ");
+        sql.append(" from budget_arrivalweek ");
+        sql.append(" where year = '" + year + "' ");
+        sql.append(" and month = '" + month + "' ");
+        sql.append(" and arrival = '" + arrival + "' ");
+
+        List<ArrivalWeek> list = super.findBySql(sql.toString(), ArrivalWeek.class, files);
+        return list.get(0).getMonth() == 0 ? null : list.get(0);
     }
 
     @Override

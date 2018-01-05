@@ -283,7 +283,15 @@ public class ReimburseRecordVO {
     private ReimPhoneShowStatus reimPhoneShowStatus;
 
 
+    /**
+     * 分析人
+     */
+    private String analysiser;
 
+    /**
+     * 分析状态(通过/不通过)
+     */
+    private String analyse;
 
 
 
@@ -709,5 +717,21 @@ public class ReimburseRecordVO {
 
     public void setReimPhoneShowStatus(ReimPhoneShowStatus reimPhoneShowStatus) {
         this.reimPhoneShowStatus = reimPhoneShowStatus;
+    }
+
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

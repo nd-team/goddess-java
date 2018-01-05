@@ -537,6 +537,26 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
+     * 分析
+     *
+     * @param applyLendTO 申请借款基本信息数据bo
+     * @return class ApplyLendVO
+     * @des 分析
+     * @version v1
+     */
+    @LoginAuth
+    @PutMapping("v1/analyse")
+    public Result analyse(ApplyLendTO applyLendTO) throws ActException {
+        try {
+            ApplyLendBO applyLendBO1 = applyLendAPI.analyse(applyLendTO);
+            return ActResult.initialize(BeanTransform.copyProperties(applyLendBO1, ApplyLendVO.class, true));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
      * 已审核或分析记录总条数
      *
      * @param applyLendDTO 申请借款信息dto

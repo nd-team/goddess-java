@@ -1,9 +1,6 @@
 package com.bjike.goddess.budget.api;
 
-import com.bjike.goddess.budget.bo.ProjectMonthBO;
-import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
-import com.bjike.goddess.budget.bo.ProjectWeekBO;
-import com.bjike.goddess.budget.bo.ProjectWeekListBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.to.ProjectMonthTO;
@@ -152,6 +149,16 @@ public interface ProjectMonthAPI {
      * @throws SerException
      */
     default List<ProjectMonthCountBO> collect(ProjectMonthDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
         return null;
     }
 }

@@ -719,7 +719,7 @@ public class StaffRecordsSerImpl extends ServiceImpl<StaffRecords, StaffRecordsD
             List<EntryRegisterBO> entryRegisterBOs = entryRegisterAPI.getEntryRegisterByName(name);
             if (null != entryRegisterBOs && entryRegisterBOs.size() > 0) {
                 EntryRegisterBO entryRegisterBO = entryRegisterBOs.get(0);
-                StaffRecordsDataBO bo = BeanTransform.copyProperties(entryRegisterBO, StaffRecordsBO.class);
+                StaffRecordsDataBO bo = BeanTransform.copyProperties(entryRegisterBO, StaffRecordsDataBO.class);
                 bo.setSerialNumber(entryRegisterBO.getEmpNumber());
                 bo.setProject(entryRegisterBO.getDepartment());
                 bo.setMajor(entryRegisterBO.getProfession());

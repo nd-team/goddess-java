@@ -4,8 +4,6 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.lendreimbursement.enums.ReimPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.ReimStatus;
 
-import javax.persistence.Column;
-
 /**
  * 报销记录业务传输对象
  *
@@ -277,7 +275,15 @@ public class ReimburseRecordBO extends BaseBO {
      */
     private ReimPhoneSelectStatus reimPhoneSelectStatus;
 
+    /**
+     * 分析人
+     */
+    private String analysiser;
 
+    /**
+     * 分析状态(通过/不通过)
+     */
+    private String analyse;
 
 
 
@@ -695,5 +701,21 @@ public class ReimburseRecordBO extends BaseBO {
 
     public void setReimPhoneSelectStatus(ReimPhoneSelectStatus reimPhoneSelectStatus) {
         this.reimPhoneSelectStatus = reimPhoneSelectStatus;
+    }
+
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }
