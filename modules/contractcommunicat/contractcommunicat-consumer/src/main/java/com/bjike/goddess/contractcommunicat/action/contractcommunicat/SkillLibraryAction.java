@@ -98,14 +98,14 @@ public class SkillLibraryAction {
 
     /**
      * 谈判技巧库列表
-     *
+     * @param dto dto
      * @return class SkillLibraryVO
      * @version v1
      */
     @GetMapping("v1/list")
     public Result list(SkillLibraryDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<SkillLibraryVO> vo = BeanTransform.copyProperties(skillLibraryAPI.list(dto), InProjectsVO.class);
+            List<SkillLibraryVO> vo = BeanTransform.copyProperties(skillLibraryAPI.list(dto), SkillLibraryVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -113,9 +113,9 @@ public class SkillLibraryAction {
     }
 
     /**
-     * 新增项目承包洽谈
+     * 新增谈判技巧库
      *
-     * @param to 项目承包洽谈信息
+     * @param to 谈判技巧库信息
      * @return class SkillLibraryVO
      * @version v1
      */
@@ -123,7 +123,7 @@ public class SkillLibraryAction {
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) SkillLibraryTO to, BindingResult bindingResult) throws ActException {
         try {
-            SkillLibraryVO voList = BeanTransform.copyProperties(skillLibraryAPI.insert(to), ProjectOutsourcingVO.class);
+            SkillLibraryVO voList = BeanTransform.copyProperties(skillLibraryAPI.insert(to), SkillLibraryVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -131,9 +131,9 @@ public class SkillLibraryAction {
     }
 
     /**
-     * 编辑项目承包洽谈
+     * 编辑谈判技巧库
      *
-     * @param to 项目承包洽谈信息
+     * @param to 谈判技巧库
      * @return class ProjectOutsourcingVO
      * @version v1
      */
@@ -141,7 +141,7 @@ public class SkillLibraryAction {
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) SkillLibraryTO to, BindingResult bindingResult) throws ActException {
         try {
-            ProjectOutsourcingVO vo = BeanTransform.copyProperties(skillLibraryAPI.edit(to), ProjectOutsourcingVO.class);
+            SkillLibraryVO vo = BeanTransform.copyProperties(skillLibraryAPI.edit(to), SkillLibraryVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -149,7 +149,7 @@ public class SkillLibraryAction {
     }
 
     /**
-     * 删除项目承包洽谈
+     * 删除谈判技巧库
      *
      * @param id id
      * @version v1

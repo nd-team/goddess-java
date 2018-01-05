@@ -13,4 +13,16 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  */
 public class BusinessNegotiationDTO extends BaseDTO {
 
+    /**
+     * 搜索内容
+     */
+    private String search;
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    }
 }

@@ -27,7 +27,10 @@ public class JapiTest {
                 "modules/user/user-api",
                 "modules/organize/organize-api",
                 "modules/storage/storage-api",
-                "common/common-api"
+                "common/common-api",
+                "modules/contacts/contacts-api",
+                "modules/organize/organize-api",
+                "modules/message/message-api",
         });
 //        JapiClient.saveHistory(false);
         JapiClient.setFlushServer(true);

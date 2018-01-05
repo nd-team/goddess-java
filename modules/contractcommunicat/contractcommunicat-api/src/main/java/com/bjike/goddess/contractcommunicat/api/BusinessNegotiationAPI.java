@@ -117,4 +117,25 @@ public interface BusinessNegotiationAPI {
      * @throws SerException
      */
     byte[] templateExcel() throws SerException;
+
+    /**
+     * 添加谈判技巧
+     *
+     * @param id
+     * @param problemNum
+     * @return class
+     * @version v1
+     */
+    void addPrepareNegotiation(String id, String problemNum) throws SerException;
+
+    /**
+     * 发送协助函
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void sendAssist(String content, String title, String[] receiver, String id, String type) throws SerException;
+
+
 }
