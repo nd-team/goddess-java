@@ -120,4 +120,22 @@ public interface BusinessNegotiationSer extends Ser<BusinessNegotiation, Busines
      * @throws SerException
      */
     byte[] templateExcel() throws SerException;
+
+    /**
+     * 添加技巧库id
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void addPrepareNegotiation(String id, String problemNum) throws SerException;
+
+    /**
+     * 发送协助函
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void sendAssist(String title, String content, String[] receiver, String id, String type) throws SerException;
 }

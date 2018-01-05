@@ -36,7 +36,7 @@ public class SkillLibraryTO extends BaseTO {
     /**
      * 策略
      */
-    private String strategy;
+        private String strategy;
 
     /**
      * 例子

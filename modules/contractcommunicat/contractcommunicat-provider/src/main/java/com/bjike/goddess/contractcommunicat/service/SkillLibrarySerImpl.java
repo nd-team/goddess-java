@@ -56,6 +56,21 @@ public class SkillLibrarySerImpl extends ServiceImpl<SkillLibrary, SkillLibraryD
 
     @Override
     public List<SkillLibraryBO> list(SkillLibraryDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getPhase())) {
+            dto.getConditions().add(Restrict.eq("phase", dto.getPhase()));
+        }
+        if (StringUtils.isNotBlank(dto.getSceneType())) {
+            dto.getConditions().add(Restrict.eq("sceneType", dto.getSceneType()));
+        }
+        if (StringUtils.isNotBlank(dto.getSkills())) {
+            dto.getConditions().add(Restrict.eq("skills", dto.getSkills()));
+        }
+        if (StringUtils.isNotBlank(dto.getStrategy())) {
+            dto.getConditions().add(Restrict.eq("strategy", dto.getStrategy()));
+        }
+        if (StringUtils.isNotBlank(dto.getSource())) {
+            dto.getConditions().add(Restrict.eq("source", dto.getSource()));
+        }
         List<SkillLibrary> skillLibraries = super.findByCis(dto);
         List<SkillLibraryBO> skillLibraryBOS = BeanTransform.copyProperties(skillLibraries, SkillLibraryBO.class);
         return skillLibraryBOS;

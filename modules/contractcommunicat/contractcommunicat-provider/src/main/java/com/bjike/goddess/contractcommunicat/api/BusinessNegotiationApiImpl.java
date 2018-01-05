@@ -76,4 +76,14 @@ public class BusinessNegotiationApiImpl implements BusinessNegotiationAPI {
     public byte[] templateExcel() throws SerException {
         return businessNegotiationSer.templateExcel();
     }
+
+    @Override
+    public void addPrepareNegotiation(String id, String skillLibraryId) throws SerException {
+        businessNegotiationSer.addPrepareNegotiation(id, skillLibraryId);
+    }
+
+    @Override
+    public void sendAssist(String content, String title, String[] receiver, String id, String type) throws SerException {
+        businessNegotiationSer.sendAssist(content, title, receiver, id, type);
+    }
 }
