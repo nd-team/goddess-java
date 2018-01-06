@@ -3,10 +3,7 @@ package com.bjike.goddess.taskallotment.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.taskallotment.enums.FinishStatus;
-import com.bjike.goddess.taskallotment.enums.TaskStatus;
-import com.bjike.goddess.taskallotment.enums.TaskType;
-import com.bjike.goddess.taskallotment.enums.TimeType;
+import com.bjike.goddess.taskallotment.enums.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
@@ -23,6 +20,31 @@ import java.util.List;
  * @Copy: [ com.bjike ]
  */
 public class TaskNodeTO extends BaseTO {
+
+    public String getMoudle() {
+        return moudle;
+    }
+
+    public void setMoudle(String moudle) {
+        this.moudle = moudle;
+    }
+
+    public Integer getGpriority() {
+        return gpriority;
+    }
+
+    public void setGpriority(Integer gpriority) {
+        this.gpriority = gpriority;
+    }
+
+    public TimesType getTimesType() {
+        return timesType;
+    }
+
+    public void setTimesType(TimesType timesType) {
+        this.timesType = timesType;
+    }
+
     public interface INITIATE {
     }
 
@@ -103,6 +125,24 @@ public class TaskNodeTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.CONFIRM.class}, message = "任务类型不能为空")
     private TaskType taskType;
+
+    /**
+     * 时长类型
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "时长类型不能为空")
+    private TimesType timesType;
+
+    /**
+     * 功能模块
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "功能模块不能为空")
+    private String moudle;
+
+    /**
+     * 功能优先级
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "功能优先级不能为空")
+    private Integer gpriority;
 
     /**
      * 任务内容
