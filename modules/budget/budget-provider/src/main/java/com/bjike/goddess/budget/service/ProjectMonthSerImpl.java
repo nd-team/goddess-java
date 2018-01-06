@@ -605,7 +605,6 @@ public class ProjectMonthSerImpl extends ServiceImpl<ProjectMonth, ProjectMonthD
     private ProjectMonth findData(String projectName) throws SerException {
         String[] files = new String[]{"targetWork", "actualWork", "targetIncome", "planIncome", "projectName"};
         Integer year = LocalDate.now().getYear();
-        year = 2017;
         StringBuilder sql = new StringBuilder("select ifnull(sum(targetWork),0) as targetWork, ");
         sql.append(" ifnull(sum(actualWork),0) as actualWork, ");
         sql.append(" ifnull(sum(targetIncome),0) as targetIncome, ");

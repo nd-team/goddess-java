@@ -28,7 +28,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.Name;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -607,10 +606,10 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     @Override
     public List<String> findByFixedAssets() throws SerException {
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
-        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName","固定资产"));
+        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName", "固定资产"));
         List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
         List<String> names = new ArrayList<>();
-        if(accountanCourseList!=null && accountanCourseList.size()>0){
+        if (accountanCourseList != null && accountanCourseList.size() > 0) {
             String code = accountanCourseList.get(0).getCode();
             String[] files = new String[]{"secondSubjectCode", "secondSubject"};
             //查询二级科目代码
@@ -618,9 +617,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
             sql.append(" where substring(code,1,4) = '" + code + "' ");
             sql.append(" and LENGTH(code) = 6 ");
             List<SecondSubjectDataBO> bos = super.findBySql(sql.toString(), SecondSubjectDataBO.class, files);
-            if(bos!=null&& bos.size()>0){
-                for (SecondSubjectDataBO secondSubjectDataBO : bos){
-                    String name = secondSubjectDataBO.getSecondSubjectCode()+":"+secondSubjectDataBO.getSecondSubject();
+            if (bos != null && bos.size() > 0) {
+                for (SecondSubjectDataBO secondSubjectDataBO : bos) {
+                    String name = secondSubjectDataBO.getSecondSubjectCode() + ":" + secondSubjectDataBO.getSecondSubject();
                     names.add(name);
                 }
             }
@@ -632,36 +631,36 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public String findByCourseName(String courseName) throws SerException {
         String name = "";
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
-        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName",courseName));
+        accountanCourseDTO.getConditions().add(Restrict.eq("accountanName", courseName));
         List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
-        if(accountanCourseList!=null&& accountanCourseList.size()>0){
-            name = accountanCourseList.get(0).getCode()+":"+courseName;
+        if (accountanCourseList != null && accountanCourseList.size() > 0) {
+            name = accountanCourseList.get(0).getCode() + ":" + courseName;
         }
         return name;
     }
 
     @Override
     public List<String> findDepreciationAccount() throws SerException {
-       List<String> depreciationAccount = new ArrayList<>();
-       StringBuffer sql = new StringBuffer("select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
+        List<String> depreciationAccount = new ArrayList<>();
+        StringBuffer sql = new StringBuffer("select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
         sql.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '管理费用') ");
         sql.append(" and LENGTH(code) = 6 ");
         List<Object> objectList = super.findBySql(sql.toString());
-        if(objectList!=null&& objectList.size()>0){
+        if (objectList != null && objectList.size() > 0) {
             String code = String.valueOf(objectList.get(0));
-            String name = code+"费用管理-折旧费";
+            String name = code + "费用管理-折旧费";
             depreciationAccount.add(name);
         }
         StringBuffer sql1 = new StringBuffer(" select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
         sql1.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '研发费用') ");
         sql1.append(" and LENGTH(code) = 6 ");
         List<Object> objectList1 = super.findBySql(sql1.toString());
-        if(objectList1!=null&& objectList1.size()>0){
+        if (objectList1 != null && objectList1.size() > 0) {
             String code = String.valueOf(objectList1.get(0));
-            String name = code+"研发费用-折旧费";
+            String name = code + "研发费用-折旧费";
             depreciationAccount.add(name);
         }
-       return depreciationAccount;
+        return depreciationAccount;
     }
 
     @Override
@@ -673,10 +672,38 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         sql.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '应交税金' and LENGTH(code) = 4) ");
         sql.append(" and LENGTH(code) = 6) AND LENGTH(code) = 8 ");
         List<Object> objectList = super.findBySql(sql.toString());
-        if(objectList!=null&& objectList.size()>0){
+        if (objectList != null && objectList.size() > 0) {
             String code = String.valueOf(objectList.get(0));
-            name = code+"应交税金-应交增值税-进项税额";
+            name = code + "应交税金-应交增值税-进项税额";
         }
         return name;
+    }
+
+    @Override
+    public List<String> findByFirstName(String firstSubject) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        String code = "";
+        List<AccountAddDateBO> list = this.findFirstNameCode();
+        if (null != list && list.size() > 0) {
+            for (AccountAddDateBO bo : list) {
+                if (firstSubject.equals(bo.getAccountanName())) {
+                    code = bo.getCode();
+                }
+            }
+        }
+        String[] fildes = new String[]{"accountanName"};
+        if (StringUtils.isNotBlank(code)) {
+            StringBuilder sql = new StringBuilder("SELECT accountanName FROM financeinit_accountancourse ");
+            sql.append(" WHERE substring(code,1,4) = '" + code + "' ");
+            sql.append(" and length(code) = 8;");
+            List<AccountAddDateBO> list1 = super.findBySql(sql.toString(), AccountAddDateBO.class, fildes);
+            if (null != list1 && list1.size() > 0) {
+                List<String> strings = list1.stream().map(AccountAddDateBO::getAccountanName).distinct().collect(Collectors.toList());
+                return strings;
+            }
+        }
+        return null;
     }
 }
