@@ -3,39 +3,105 @@ package com.bjike.goddess.businessinteraction.action.businessinteraction;
 import com.bjike.goddess.businessinteraction.api.TalkDetailAPI;
 import com.bjike.goddess.businessinteraction.bo.TalkDetailBO;
 import com.bjike.goddess.businessinteraction.dto.TalkDetailDTO;
+import com.bjike.goddess.businessinteraction.entity.TalkDetail;
+import com.bjike.goddess.businessinteraction.excel.TalkDetailExcel;
 import com.bjike.goddess.businessinteraction.to.GuidePermissionTO;
+import com.bjike.goddess.businessinteraction.to.SonPermissionObject;
 import com.bjike.goddess.businessinteraction.to.TalkDetailTO;
-import com.bjike.goddess.businessinteraction.vo.ContactObjectVO;
 import com.bjike.goddess.businessinteraction.vo.TalkDetailVO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 洽谈详情
+ * 资料信息
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:27 ]
- * @Description: [ 洽谈详情 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 11:48 ]
+ * @Description: [ 资料信息 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 @RestController
 @RequestMapping("talkdetail")
-public class TalkDetailAction {
+public class TalkDetailAction extends BaseFileAction{
     @Autowired
     private TalkDetailAPI talkDetailAPI;
+
+
+    @Autowired
+    private UserSetPermissionAPI userSetPermissionAPI;
+
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        try {
+            SonPermissionObject obj = new SonPermissionObject();
+            obj.setName("cuspermission");
+            obj.setDescribesion("设置");
+            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+            if (!isHasPermission) {
+                //int code, String msg
+                obj.setFlag(false);
+            } else {
+                obj.setFlag(true);
+            }
+            list.add(obj);
+
+            return new ActResult(0, "设置权限", list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = talkDetailAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 功能导航权限
@@ -45,7 +111,7 @@ public class TalkDetailAction {
      * @version v1
      */
     @GetMapping("v1/guidePermission")
-    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, javax.servlet.http.HttpServletRequest request) throws ActException {
         try {
 
             Boolean isHasPermission = talkDetailAPI.guidePermission(guidePermissionTO);
@@ -61,10 +127,10 @@ public class TalkDetailAction {
     }
 
     /**
-     *  列表总条数
+     * 列表总条数
      *
-     * @param talkDetailDTO  洽谈详情信息dto
-     * @des 获取所有洽谈详情信息总条数
+     * @param talkDetailDTO 资料信息
+     * @des 获取所有资料信息总条数
      * @version v1
      */
     @GetMapping("v1/count")
@@ -78,59 +144,58 @@ public class TalkDetailAction {
     }
 
     /**
-     * 一个洽谈详情
+     * 一个资料信息
      *
-     * @param id 洽谈详情信息id
-     * @des 根据id获取所有洽谈详情信息
-     * @return  class TalkDetailVO
+     * @param id 资料信息id
+     * @return class TalkDetailVO
+     * @des 根据id获取资料信息
      * @version v1
      */
-    @GetMapping("v1/getOne/{id}")
-    public Result getOne( @PathVariable String id ) throws ActException {
+    @GetMapping("v1/getOneById/{id}")
+    public Result getOneById(@PathVariable String id) throws ActException {
         try {
-            TalkDetailVO talkDetailVOList = BeanTransform.copyProperties(
+            TalkDetailVO talkDetailVO = BeanTransform.copyProperties(
                     talkDetailAPI.getOneById(id), TalkDetailVO.class);
-            return ActResult.initialize(talkDetailVOList);
+            return ActResult.initialize(talkDetailVO);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    
     /**
-     * 洽谈详情列表
+     * 资料信息列表
      *
-     * @param talkDetailDTO 洽谈详情信息dto
-     * @param request 前端过滤参数
-     * @des 获取所有洽谈详情信息
-     * @return  class TalkDetailVO
+     * @param talkDetailDTO 资料信息dto
+     * @return class TalkDetailVO
+     * @des 获取所有资料信息
      * @version v1
      */
-    @GetMapping("v1/listTalkDetail")
-    public Result findListTalkDetail(TalkDetailDTO talkDetailDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    @GetMapping("v1/list")
+    public Result findListMoneyPerpare(TalkDetailDTO talkDetailDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
-            List<TalkDetailVO> talkDetailVOList = BeanTransform.copyProperties(
-                    talkDetailAPI.listTalkDetail(talkDetailDTO), TalkDetailVO.class, request);
-            return ActResult.initialize(talkDetailVOList);
+            List<TalkDetailVO> talkDetailVOS = BeanTransform.copyProperties(
+                    talkDetailAPI.listIntera(talkDetailDTO), TalkDetailVO.class, request);
+            return ActResult.initialize(talkDetailVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
+
     /**
-     * 添加洽谈详情
+     * 添加资料信息
      *
-     * @param talkDetailTO 洽谈详情基本信息数据to
-     * @des 添加洽谈详情
-     * @return  class TalkDetailVO
+     * @param talkDetailTO 资料信息to
+     * @return class TalkDetailVO
+     * @des 添加资料信息
      * @version v1
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addTalkDetail(@Validated TalkDetailTO talkDetailTO, BindingResult bindingResult) throws ActException {
+    public Result addBaseInfoManage(@Validated({ADD.class}) TalkDetailTO talkDetailTO, BindingResult result) throws ActException {
         try {
-            TalkDetailBO talkDetailBO1 = talkDetailAPI.addTalkDetail(talkDetailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO1,TalkDetailVO.class));
+            TalkDetailBO talkDetailBO = talkDetailAPI.addIntera(talkDetailTO);
+            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO, TalkDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -138,19 +203,19 @@ public class TalkDetailAction {
 
 
     /**
-     * 编辑洽谈详情
+     * 编辑资料信息
      *
-     * @param talkDetailTO 洽谈详情基本信息数据bo
-     * @des 添加洽谈详情
-     * @return  class TalkDetailVO
+     * @param talkDetailTO 资料信息数据bo
+     * @return class TalkDetailVO
+     * @des 编辑资料信息
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/edit")
-    public Result editTalkDetail(@Validated TalkDetailTO talkDetailTO) throws ActException {
+    @PostMapping("v1/edit")
+    public Result editBaseInfoManage(@Validated({EDIT.class}) TalkDetailTO talkDetailTO, BindingResult result) throws ActException {
         try {
-            TalkDetailBO talkDetailBO1 = talkDetailAPI.editTalkDetail(talkDetailTO);
-            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO1,TalkDetailVO.class));
+            TalkDetailBO talkDetailBO = talkDetailAPI.editIntera(talkDetailTO);
+            return ActResult.initialize(BeanTransform.copyProperties(talkDetailBO, TalkDetailVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -160,36 +225,103 @@ public class TalkDetailAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除洽谈详情信息记录
+     * @des 根据id删除资料信息
      * @version v1
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result deleteTalkDetail(@PathVariable String id) throws ActException {
+    public Result deleteBaseInfoManage(@PathVariable String id) throws ActException {
         try {
-            talkDetailAPI.deleteTalkDetail(id);
+            talkDetailAPI.deleteIntera(id);
             return new ActResult("delete success!");
-        } catch (SerException e) {
-            throw new ActException("删除失败："+e.getMessage());
-        }
-    }
-
-    /**
-     * 获取合作对象联系方式
-     *
-     * @param talkDetailDTO 洽谈详情信息dto
-     * @des 获取对象联系方式从供应商管理和商业能力展示和市场信息管理和客户信息管理获取
-     * @return  class TalkDetailVO
-     * @version v1
-     */
-    @GetMapping("v1/getContactWays")
-    public Result getContactWays(@Validated({TalkDetailDTO.TESTTalkDetailDTO.class}) TalkDetailDTO talkDetailDTO, BindingResult bindingResult) throws ActException {
-        try {
-            List<ContactObjectVO> talkDetailVOList = BeanTransform.copyProperties(
-                    talkDetailAPI.getContactWays(talkDetailDTO), ContactObjectVO.class);
-            return ActResult.initialize(talkDetailVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<TalkDetailExcel> tos = ExcelUtil.excelToClazz(is, TalkDetailExcel.class, excel);
+            List<TalkDetailTO> tocs = new ArrayList<>();
+            for (TalkDetailExcel str : tos) {
+                TalkDetailTO talkDetailTO = BeanTransform.copyProperties(str, TalkDetailTO.class,"cooperDate");
+                talkDetailTO.setCooperDate(DateUtil.dateToString(str.getCooperDate()));
+                tocs.add(talkDetailTO);
+            }
+            //注意序列化
+            talkDetailAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 导出excel
+     *
+     * @des 导出资料信息
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "资料信息.xlsx";
+            super.writeOutFile(response, talkDetailAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+
+    /**
+     * excel模板下载
+     *
+     * @des 下载模板资料信息
+     * @version v1
+     */
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "资料信息模板.xlsx";
+            super.writeOutFile(response, talkDetailAPI.templateExport(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有的业务类型
+     *
+     * @des 获取所有的业务类型
+     * @version v1
+     */
+    @GetMapping("v1/findBussType")
+    public Result findBussType(HttpServletRequest request) throws ActException {
+        try {
+            List<String> bussType = talkDetailAPI.findBussType();
+            return ActResult.initialize(bussType);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

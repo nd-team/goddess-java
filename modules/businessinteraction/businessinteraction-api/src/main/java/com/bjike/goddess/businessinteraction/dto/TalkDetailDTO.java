@@ -1,32 +1,27 @@
 package com.bjike.goddess.businessinteraction.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 洽谈详情数据传输对象
+ * 资料信息数据传输对象
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:27 ]
- * @Description: [ 洽谈详情数据传输对象 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 11:48 ]
+ * @Description: [ 资料信息数据传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class TalkDetailDTO extends BaseDTO {
-
-    public interface TESTTalkDetailDTO{}
-
     /**
-     * 合作对象公司名称
+     * 对象公司业务类型
      */
-    @NotBlank(groups = TalkDetailDTO.TESTTalkDetailDTO.class,message = "合作对象公司名称不能为空")
-    private String cooperCompany;
+    private String businessTarget;
 
-    public String getCooperCompany() {
-        return cooperCompany;
+    public String getBusinessTarget() {
+        return businessTarget;
     }
 
-    public void setCooperCompany(String cooperCompany) {
-        this.cooperCompany = cooperCompany;
+    public void setBusinessTarget(String businessTarget) {
+        this.businessTarget = businessTarget;
     }
 }

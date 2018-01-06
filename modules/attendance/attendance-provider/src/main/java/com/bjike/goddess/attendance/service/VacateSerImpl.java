@@ -345,8 +345,10 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         }
         title = String.format(title, entity.getName());
         List<String> carbon = new ArrayList<>();
+        if (carbons != null) {
             entity.setCarbon(toString(carbons));
             carbon = internalContactsAPI.getEmails(carbons);
+
             if (!carbon.isEmpty()) {
                 String[] receivers = new String[carbon.size()];
                 receivers = carbon.toArray(receivers);
@@ -354,6 +356,7 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 String content = "" + entity.getName() + "提交了" + time + "天的请假申请，时间为" + to.getStartDate() + to.getStartTime().toString() + "至" + to.getEndDate() + to.getEndTime().toString() + ",请及时上系统查看审核";
                 send(title, content, receivers);
             }
+        }
         if (time < 3) {
             LocalDate s = DateUtil.parseDate(startDate);
             long days = Math.abs(s.toEpochDay() - LocalDate.now().toEpochDay());

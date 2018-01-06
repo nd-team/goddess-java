@@ -153,8 +153,8 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public VoucherGenerateBO antiPosting(String id) throws SerException {
-        return voucherGenerateSer.antiPosting(id);
+    public VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
+        return voucherGenerateSer.antiPosting(to);
     }
 
     @Override

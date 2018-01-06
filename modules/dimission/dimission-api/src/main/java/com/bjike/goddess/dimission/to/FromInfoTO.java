@@ -21,11 +21,10 @@ import javax.validation.constraints.NotNull;
 public class FromInfoTO extends BaseTO {
 
     /**
-     * 离职人员姓名
+     * 自离人员姓名
      */
     @NotBlank(message = "离职人员姓名", groups = {ADD.class, EDIT.class})
     private String username;
-
 
     /**
      * 地区
@@ -90,7 +89,7 @@ public class FromInfoTO extends BaseTO {
     /**
      * 离职原因
      */
-    @NotBlank(message = "私人邮箱不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "离职原因不能为空", groups = {ADD.class, EDIT.class})
     private String reason;
 
     /**

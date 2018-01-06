@@ -2,15 +2,18 @@ package com.bjike.goddess.businessinteraction.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
 
 /**
- * 商业能力互动联系
+ * 公司信息
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:06 ]
- * @Description: [ 商业能力互动联系 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 08:58 ]
+ * @Description: [ 公司信息 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -19,9 +22,15 @@ import javax.persistence.*;
 public class InteractionRelation extends BaseEntity {
 
     /**
+     * 互动信息更新时间
+     */
+    @Column(name = "interactiveInfoDate", nullable = false, columnDefinition = "DATE   COMMENT '互动信息更新时间'")
+    private LocalDate interactiveInfoDate;
+
+    /**
      * 地区
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "area", columnDefinition = "VARCHAR(255)   COMMENT '地区'")
     private String area;
 
     /**
@@ -33,26 +42,38 @@ public class InteractionRelation extends BaseEntity {
     /**
      * 公司电话
      */
-    @Column(name = "companyTel",  columnDefinition = "VARCHAR(255)   COMMENT '公司电话'")
+    @Column(name = "companyTel", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司电话'")
     private String companyTel;
 
     /**
      * 公司邮箱
      */
-    @Column(name = "companyEmail",  columnDefinition = "VARCHAR(255)   COMMENT '公司邮箱'")
+    @Column(name = "companyEmail", columnDefinition = "VARCHAR(255)   COMMENT '公司邮箱'")
     private String companyEmail;
 
     /**
      * 公司主页
      */
-    @Column(name = "companyMajorPage",  columnDefinition = "VARCHAR(255)   COMMENT '公司主页'")
+    @Column(name = "companyMajorPage", columnDefinition = "VARCHAR(255)   COMMENT '公司主页'")
     private String companyMajorPage;
+
+    /**
+     * 公司业务方向
+     */
+    @Column(name = "companyBussWay",  columnDefinition = "VARCHAR(255)   COMMENT '公司业务方向'")
+    private String companyBussWay;
 
     /**
      * 公司微信号
      */
     @Column(name = "companyWebchat",  columnDefinition = "VARCHAR(255)   COMMENT '公司微信号'")
     private String companyWebchat;
+
+    /**
+     * 公司公众号
+     */
+    @Column(name = "companyPublic",  columnDefinition = "VARCHAR(255)   COMMENT '公司公众号'")
+    private String companyPublic;
 
     /**
      * 公司QQ号
@@ -66,24 +87,14 @@ public class InteractionRelation extends BaseEntity {
     @Column(name = "companyTalk",  columnDefinition = "VARCHAR(255)   COMMENT '公司论坛'")
     private String companyTalk;
 
-    /**
-     * 联系人
-     */
-    @Column(name = "contact",  columnDefinition = "VARCHAR(255)   COMMENT '联系人'")
-    private String contact;
 
-    /**
-     * 联系电话
-     */
-    @Column(name = "contactTel", columnDefinition = "VARCHAR(255)   COMMENT '联系电话'")
-    private String contactTel;
+    public LocalDate getInteractiveInfoDate() {
+        return interactiveInfoDate;
+    }
 
-    /**
-     * 移动电话
-     */
-    @Column(name = "phone",  columnDefinition = "VARCHAR(255)   COMMENT '移动电话'")
-    private String phone;
-
+    public void setInteractiveInfoDate(LocalDate interactiveInfoDate) {
+        this.interactiveInfoDate = interactiveInfoDate;
+    }
 
     public String getArea() {
         return area;
@@ -125,12 +136,28 @@ public class InteractionRelation extends BaseEntity {
         this.companyMajorPage = companyMajorPage;
     }
 
+    public String getCompanyBussWay() {
+        return companyBussWay;
+    }
+
+    public void setCompanyBussWay(String companyBussWay) {
+        this.companyBussWay = companyBussWay;
+    }
+
     public String getCompanyWebchat() {
         return companyWebchat;
     }
 
     public void setCompanyWebchat(String companyWebchat) {
         this.companyWebchat = companyWebchat;
+    }
+
+    public String getCompanyPublic() {
+        return companyPublic;
+    }
+
+    public void setCompanyPublic(String companyPublic) {
+        this.companyPublic = companyPublic;
     }
 
     public String getCompanyQQ() {
@@ -147,29 +174,5 @@ public class InteractionRelation extends BaseEntity {
 
     public void setCompanyTalk(String companyTalk) {
         this.companyTalk = companyTalk;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContactTel() {
-        return contactTel;
-    }
-
-    public void setContactTel(String contactTel) {
-        this.contactTel = contactTel;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 }

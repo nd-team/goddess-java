@@ -261,4 +261,36 @@ public class ArchiveDetailAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据姓名获取管理等级
+     *
+     * @param name 姓名
+     * @version v1
+     */
+    @GetMapping("v1/findManage")
+    public Result findManage(@RequestParam String name) throws ActException {
+        try {
+            return ActResult.initialize(archiveDetailAPI.findManage(name));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据姓名获取处罚和奖励
+     *
+     * @description 数组第一个为处罚第二个为奖励
+     * @param name 姓名
+     * @version v1
+     */
+    @GetMapping("v1/findPushAndReward")
+    public Result findPushAndReward(@RequestParam String name) throws ActException {
+        try {
+            String[] strings = archiveDetailAPI.findPushAndReward(name);
+            return ActResult.initialize(strings);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }

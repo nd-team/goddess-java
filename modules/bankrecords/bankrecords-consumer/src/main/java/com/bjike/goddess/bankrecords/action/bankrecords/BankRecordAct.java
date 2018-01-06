@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -202,7 +203,7 @@ public class BankRecordAct extends BaseFileAction {
         try {
             String path = "/upload";
             List<InputStream> inputStreams = super.getInputStreams(request, path);
-            List<InputStream> streams = super.getInputStreams(request, path);
+//            List<InputStream> streams = super.getInputStreams(request, path);
             to.setInputStreams(inputStreams);
             bankRecordAPI.upload(to);
             ;
@@ -255,13 +256,13 @@ public class BankRecordAct extends BaseFileAction {
     @GetMapping("v1/list")
     public Result pageList(@Validated({BankRecordDTO.PageList.class}) BankRecordDTO dto, HttpServletRequest request) throws ActException {
         try {
+
             List<BankRecordPageListVO> voList = BeanTransform.copyProperties(bankRecordAPI.pageList(dto), BankRecordPageListVO.class, request);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
-
     /**
      * 删除银行流水记录
      *

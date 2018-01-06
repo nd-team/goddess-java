@@ -10,8 +10,6 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.event.api.EventAPI;
-import com.bjike.goddess.event.enums.Permissions;
-import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.message.api.MessageAPI;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
@@ -3125,7 +3123,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             if (currents != null && currents.size() > 0) {
                 for (TaskNode current : currents) {
                     String name = current.getExecute();
-                    DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class);
+                    DaysBO bo = BeanTransform.copyProperties(current, DaysBO.class, "planTime");
                     bo.setName(name);
                     bo.setTime(time);
                     double taskTime = time(current.getNeedTime(), current.getNeedType());

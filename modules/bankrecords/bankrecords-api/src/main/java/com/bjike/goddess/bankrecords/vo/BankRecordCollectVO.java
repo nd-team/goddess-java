@@ -46,6 +46,11 @@ public class BankRecordCollectVO {
      */
     private String bank;
 
+    /**
+     * 本月发生额
+     */
+    private Double makeMoney;
+
     public String getId() {
         return id;
     }
@@ -100,5 +105,13 @@ public class BankRecordCollectVO {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public Double getMakeMoney() {
+        return makeMoney;
+    }
+
+    public void setMakeMoney(Double makeMoney) {
+        this.makeMoney = makeMoney;
     }
 }
