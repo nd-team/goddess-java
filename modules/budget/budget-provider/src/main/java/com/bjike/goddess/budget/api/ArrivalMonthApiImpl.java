@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.api;
 import com.bjike.goddess.budget.bo.ArrivalMonthBO;
 import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.service.ArrivalMonthSer;
 import com.bjike.goddess.budget.to.ArrivalMonthTO;
@@ -90,5 +91,10 @@ public class ArrivalMonthApiImpl implements ArrivalMonthAPI {
     @Override
     public List<ArrivalMonthCountBO> collect(ArrivalMonthDTO dto) throws SerException {
         return arrivalMonthSer.collect(dto);
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        return arrivalMonthSer.figureShow();
     }
 }

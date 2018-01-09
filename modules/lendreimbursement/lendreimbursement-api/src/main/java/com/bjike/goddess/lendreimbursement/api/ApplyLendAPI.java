@@ -881,4 +881,15 @@ public interface ApplyLendAPI {
     default OptionBO analysisDiagram() throws SerException {
         return null;
     }
+
+    /**
+     * 分析
+     *
+     * @param applyLendTO
+     * @return
+     * @throws SerException
+     */
+    default ApplyLendBO analyse(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
 }

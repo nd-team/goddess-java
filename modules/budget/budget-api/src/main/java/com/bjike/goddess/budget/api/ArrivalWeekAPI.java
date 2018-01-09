@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.api;
 
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -136,6 +137,16 @@ public interface ArrivalWeekAPI {
      * @throws SerException
      */
     default List<ArrivalWeekCountBO> collect(ArrivalWeekDTO dto) throws SerException {
+        return null;
+    }
+
+    /**
+     * 地区收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
         return null;
     }
 }

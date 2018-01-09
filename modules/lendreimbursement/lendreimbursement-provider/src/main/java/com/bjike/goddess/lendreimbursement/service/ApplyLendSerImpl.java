@@ -17,10 +17,7 @@ import com.bjike.goddess.financeinit.bo.SubjectDatasBO;
 import com.bjike.goddess.lendreimbursement.bo.*;
 import com.bjike.goddess.lendreimbursement.dto.*;
 import com.bjike.goddess.lendreimbursement.dto.reimshape.*;
-import com.bjike.goddess.lendreimbursement.entity.ApplyLend;
-import com.bjike.goddess.lendreimbursement.entity.ApplyLendCopy;
-import com.bjike.goddess.lendreimbursement.entity.LendAuditDetail;
-import com.bjike.goddess.lendreimbursement.entity.ReimburseRecord;
+import com.bjike.goddess.lendreimbursement.entity.*;
 import com.bjike.goddess.lendreimbursement.enums.*;
 import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
 import com.bjike.goddess.lendreimbursement.to.*;
@@ -84,6 +81,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private ReimburseRecordSer reimburseRecordSer;
     @Autowired
     private ModuleAPI moduleAPI;
+    @Autowired
+    private ReimburseAnalisisorSer reimburseAnalisisorSer;
 
     @Autowired
     private AccountanCourseAPI accountanCourseAPI;
@@ -3858,6 +3857,40 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return getOptionBO(username, counts, moneys);
     }
 
+    @Override
+    public ApplyLendBO analyse(ApplyLendTO applyLendTO) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+
+        if (StringUtils.isBlank(applyLendTO.getId())) {
+            throw new SerException("分析失败，id不能为空");
+        }
+        //先去报销分析人员里面看一下是不是有设置分析人员
+        ReimburseAnalisisorDTO analisisorDTO = new ReimburseAnalisisorDTO();
+        List<ReimburseAnalisisor> listReimAuditor = reimburseAnalisisorSer.findByCis(analisisorDTO);
+        if (listReimAuditor == null || listReimAuditor.size() < 0) {
+            throw new SerException("还没有可以分析的分析人员，请去'报销分析人员设置'里面去设置可以分析的人员,再重新添加报销数据");
+        }
+        analisisorDTO = new ReimburseAnalisisorDTO();
+        analisisorDTO.getConditions().add(Restrict.eq("userName", userBO.getUsername()));
+        List<ReimburseAnalisisor> listReimAuditor1 = reimburseAnalisisorSer.findByCis(analisisorDTO);
+        if (listReimAuditor1 == null || listReimAuditor1.size() < 0) {
+            throw new SerException("您不是分析人员,不可以分析");
+        }
+        String id = applyLendTO.getId();
+        ApplyLend lend = super.findById(id);
+
+        lend.setAnalyse(applyLendTO.getAnalyse());
+        lend.setAnalysiser(userBO.getUsername());
+
+
+        lend.setModifyTime(LocalDateTime.now());
+        super.update(lend);
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
+    }
+
     //柱状图数据
     private OptionBO getOptionBO(String userName, List<Double> list1, List<Double> list2) throws SerException {
         List<String> monthList = new ArrayList<>(0);
@@ -3920,7 +3953,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         optionBO.setTotalMoney(findTotalMoney(userName, "", "", false));
         String count1 = String.valueOf(findTotal(userName, "", "", false));
-        count1 = count1.substring(0,count1.indexOf("."));
+        count1 = count1.substring(0, count1.indexOf("."));
         optionBO.setCount(Integer.valueOf(count1));
         return optionBO;
     }

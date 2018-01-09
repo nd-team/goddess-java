@@ -18,11 +18,14 @@ import com.bjike.goddess.rotation.enums.AuditType;
 import com.bjike.goddess.rotation.enums.GuideAddrStatus;
 import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RecommendRotationTO;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,6 +69,8 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
     private ModuleAPI moduleAPI;
     @Autowired
     private StaffRecordsAPI staffRecordsAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
 
     private RecommendRotationBO transformBO(RecommendRotation entity) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -104,63 +109,63 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         return bos;
     }
 
-//    @Override
-//    public RecommendRotationBO save(RecommendRotationTO to) throws SerException {
-//        String userToken = RpcTransmit.getUserToken();
-//        UserBO userBO = userAPI.currentUser();
-//        RpcTransmit.transmitUserToken(userToken);
-//        //user = userAPI.findByUsername(to.getUsername());
-//        //查询入职模块的用户
-//        List<EntryBasicInfoBO> entryBasicInfoVOList = entryBasicInfoAPI.getEntryBasicInfoByName(to.getUsername());
-//        if (CollectionUtils.isEmpty(entryBasicInfoVOList)) {
-//            throw new SerException("该用户不存在");
-////            EntryBasicInfoBO user = entryBasicInfoVOList.get(0);
-//        }
-//
-//        RecommendRotation entity = BeanTransform.copyProperties(to, RecommendRotation.class, true);
-//        if (null == entryBasicInfoVOList.get(0))
-//            throw new SerException("该用户不存在");
-//        RpcTransmit.transmitUserToken(userToken);
-//        if (moduleAPI.isCheck("organize")) {
-//            List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(entryBasicInfoVOList.get(0).getId()).stream()
-//                    .sorted(Comparator.comparing(PositionDetailBO::getArea)
-//                            .thenComparing(PositionDetailBO::getDepartmentId))
-//                    .collect(Collectors.toList());
-//            RpcTransmit.transmitUserToken(userToken);
-//            StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder(), arrangement = new StringBuilder();
-//            String tempArea = "", tempDepartment = "", tempArrangement = "";
-//            for (PositionDetailBO positionDetailBO : bos) {
-//                if (!tempArea.equals(positionDetailBO.getArea())) {
-//                    tempArea = positionDetailBO.getArea();
-//                    area.append(tempArea + ",");
-//                }
-//                if (!tempDepartment.equals(positionDetailBO.getDepartmentName())) {
-//                    tempDepartment = positionDetailBO.getDepartmentName();
-//                    department.append(tempDepartment + ",");
-//                }
-//                position.append(positionDetailBO.getPosition());
-//            }
-//            for (String s : bos.stream()
-//                    .sorted(Comparator.comparing(PositionDetailBO::getArrangementName))
-//                    .map(PositionDetailBO::getArrangementName).collect(Collectors.toList()))
-//                if (!tempArrangement.equals(s)) {
-//                    tempArrangement = s;
-//                    arrangement.append(s);
-//                }
-//            entity.setArea(area.toString());
-//            entity.setPosition(position.toString());
-//            entity.setArrangement(arrangement.toString());
-//            entity.setDepartment(department.toString());
-//        }
-//        entity.setRecommend(userBO.getUsername());
-//        entity.setRecommendTime(LocalDate.now());
-//        entity.setAudit(AuditType.NONE);
-//        entity.setApplyLevel(subsidyStandardSer.findById(to.getApplyLevelId()));
-//        if (null == entity.getApplyLevel())
-//            throw new SerException("推荐的层级不存在");
-//        super.save(entity);
-//        return this.transformBO(entity);
-//    }
+    @Override
+    public RecommendRotationBO save(RecommendRotationTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        //user = userAPI.findByUsername(to.getUsername());
+        //查询入职模块的用户
+        List<EntryRegisterBO> entryBasicInfoVOList = entryRegisterAPI.getEntryRegisterByName(to.getUsername());
+        if (CollectionUtils.isEmpty(entryBasicInfoVOList)) {
+            throw new SerException("该用户不存在");
+//            EntryBasicInfoBO user = entryBasicInfoVOList.get(0);
+        }
+
+        RecommendRotation entity = BeanTransform.copyProperties(to, RecommendRotation.class, true);
+        if (null == entryBasicInfoVOList.get(0))
+            throw new SerException("该用户不存在");
+        RpcTransmit.transmitUserToken(userToken);
+        if (moduleAPI.isCheck("organize")) {
+            List<PositionDetailBO> bos = positionDetailUserAPI.findPositionByUser(entryBasicInfoVOList.get(0).getUsername()).stream()
+                    .sorted(Comparator.comparing(PositionDetailBO::getArea)
+                            .thenComparing(PositionDetailBO::getDepartmentId))
+                    .collect(Collectors.toList());
+            RpcTransmit.transmitUserToken(userToken);
+            StringBuilder area = new StringBuilder(), department = new StringBuilder(), position = new StringBuilder(), arrangement = new StringBuilder();
+            String tempArea = "", tempDepartment = "", tempArrangement = "";
+            for (PositionDetailBO positionDetailBO : bos) {
+                if (!tempArea.equals(positionDetailBO.getArea())) {
+                    tempArea = positionDetailBO.getArea();
+                    area.append(tempArea + ",");
+                }
+                if (!tempDepartment.equals(positionDetailBO.getDepartmentName())) {
+                    tempDepartment = positionDetailBO.getDepartmentName();
+                    department.append(tempDepartment + ",");
+                }
+                position.append(positionDetailBO.getPosition());
+            }
+            for (String s : bos.stream()
+                    .sorted(Comparator.comparing(PositionDetailBO::getArrangementName))
+                    .map(PositionDetailBO::getArrangementName).collect(Collectors.toList()))
+                if (!tempArrangement.equals(s)) {
+                    tempArrangement = s;
+                    arrangement.append(s);
+                }
+            entity.setArea(area.toString());
+            entity.setPosition(position.toString());
+            entity.setArrangement(arrangement.toString());
+            entity.setDepartment(department.toString());
+        }
+        entity.setRecommend(userBO.getUsername());
+        entity.setRecommendTime(LocalDate.now());
+        entity.setAudit(AuditType.NONE);
+        entity.setApplyLevel(subsidyStandardSer.findById(to.getApplyLevelId()));
+        if (null == entity.getApplyLevel())
+            throw new SerException("推荐的层级不存在");
+        super.save(entity);
+        return this.transformBO(entity);
+    }
 
     @Override
     public RecommendRotationBO update(RecommendRotationTO to) throws SerException {

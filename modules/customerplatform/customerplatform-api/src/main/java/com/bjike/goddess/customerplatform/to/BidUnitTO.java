@@ -96,18 +96,18 @@ public class BidUnitTO extends BaseTO {
      */
     private String wechat;
 
-    /**
-     * 业务类型
-     */
-    private String businessType;
+//    /**
+//     * 业务类型
+//     */
+//    private String businessType;
 
     /**
-     * 项目类型
+     * 需求类型
      */
     private String projectType;
 
     /**
-     * 项目说明
+     * 需求说明
      */
     private String description;
 
@@ -227,14 +227,6 @@ public class BidUnitTO extends BaseTO {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
-    }
-
-    public String getBusinessType() {
-        return businessType;
-    }
-
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
     }
 
     public String getProjectType() {

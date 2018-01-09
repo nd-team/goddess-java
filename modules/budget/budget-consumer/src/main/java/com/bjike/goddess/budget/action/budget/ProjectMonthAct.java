@@ -1,10 +1,7 @@
 package com.bjike.goddess.budget.action.budget;
 
 import com.bjike.goddess.budget.api.ProjectMonthAPI;
-import com.bjike.goddess.budget.bo.ProjectMonthBO;
-import com.bjike.goddess.budget.bo.ProjectMonthCountBO;
-import com.bjike.goddess.budget.bo.ProjectWeekBO;
-import com.bjike.goddess.budget.bo.ProjectWeekListBO;
+import com.bjike.goddess.budget.bo.*;
 import com.bjike.goddess.budget.dto.ProjectMonthDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.vo.ProjectMonthCountVO;
@@ -202,6 +199,23 @@ public class ProjectMonthAct {
         try {
             List<ProjectMonthCountBO> list = projectMonthAPI.collect(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ProjectMonthCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目收入月图形化
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/figureShow")
+    public Result figureShow() throws ActException {
+        try {
+            OptionBO bo = projectMonthAPI.figureShow();
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, OptionVO.class));
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
