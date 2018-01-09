@@ -837,7 +837,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public String customRepPerson() throws SerException {
-        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')))";
+        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id in (SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '客户模块')) AND workStatus = 0) and a.staffStatus = 0";
         List<Object> objs = arrangementSer.findBySql(sql);
         if (objs != null && objs.size() > 0) {
             String name = String.valueOf(objs.get(0));
@@ -848,7 +848,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public String moneyModulePerson() throws SerException {
-        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id =(SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '资金模块')))";
+        String sql = "SELECT a.name as name FROM organize_position_detail_user a WHERE a.id in (SELECT userId FROM organize_position_user_detail b WHERE b.positionId = (SELECT id FROM organize_position_detail c where c.arrangement_id = (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id = (select id FROM organize_moduletype e where e.module = '资金模块')) AND workStatus = 0) and a.staffStatus = 0";
         List<Object> objs = arrangementSer.findBySql(sql);
         if (objs != null && objs.size() > 0) {
             String name = String.valueOf(objs.get(0));
@@ -862,7 +862,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         String sql = "SELECT name FROM organize_position_detail_user WHERE id = "+
                 " (SELECT userId FROM organize_position_user_detail WHERE positionId = "+
                 " (SELECT id FROM organize_position_detail WHERE department_id = "+
-                " (SELECT id FROM organize_department_detail WHERE department = '"+department+"') AND position LIKE '%项目经理%') AND workStatus = 0) ";
+                " (SELECT id FROM organize_department_detail WHERE department = '"+department+"') AND position LIKE '%项目经理%') AND workStatus = 0) and a.staffStatus = 0";
         List<Object> objs = arrangementSer.findBySql(sql);
         if (objs != null && objs.size() > 0) {
             String name = String.valueOf(objs.get(0));
@@ -873,7 +873,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public String[] budgetPerson() throws SerException {
-        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '预算模块'))) ";
+        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '预算模块')) AND workStatus = 0) ";
         List<Object> nameBOS = arrangementSer.findBySql(sql);
         String[] strings = new String[nameBOS.size()];
         strings = nameBOS.toArray(strings);
@@ -882,7 +882,7 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
 
     @Override
     public String[] planPerson() throws SerException {
-        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '规划模块'))) ";
+        String sql = " SELECT a.name as name FROM organize_position_detail_user a WHERE a.id IN (SELECT userId FROM organize_position_user_detail b WHERE b.positionId IN (SELECT id FROM organize_position_detail c where c.arrangement_id IN (select id from organize_arrangement d where d.arrangement = '管理层') and c.module_id IN (select id FROM organize_moduletype e where e.module = '规划模块')) AND workStatus = 0) ";
         List<Object> nameBOS = arrangementSer.findBySql(sql);
         String[] strings = new String[nameBOS.size()];
         strings = nameBOS.toArray(strings);

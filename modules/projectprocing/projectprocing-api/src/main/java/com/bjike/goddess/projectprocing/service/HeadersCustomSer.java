@@ -96,11 +96,19 @@ public interface HeadersCustomSer extends Ser<HeadersCustom, HeadersCustomDTO> {
         return null;
     }
     /**
-     * 查找对应的字段和内容
+     * 查找对应的字段和内容(内容一定不为空)
      *
      * @return class HeadersCustomBO
      */
     default List<HeadersCustomBO> getByManageId(String prossManageId) throws SerException {
+        return null;
+    }
+    /**
+     * 获取一外包单位对应的自定义字段和他的内容(内容可以为空)
+     *
+     * @return class HeadersCustomBO
+     */
+    default List<HeadersCustomBO> getAllByManageId(String prossManageId) throws SerException {
         return null;
     }
     /**

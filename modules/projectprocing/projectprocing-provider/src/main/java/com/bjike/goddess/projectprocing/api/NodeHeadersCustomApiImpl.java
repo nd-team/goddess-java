@@ -76,6 +76,11 @@ public class NodeHeadersCustomApiImpl implements NodeHeadersCustomAPI {
     }
 
     @Override
+    public List<NodeHeadersCustomBO> getAllByManageId(String passManageId) throws SerException {
+        return nodeHeadersCustomSer.getAllByManageId(passManageId);
+    }
+
+    @Override
     public void removeByManageId(String passManageId) throws SerException {
         nodeHeadersCustomSer.removeByManageId(passManageId);
     }
