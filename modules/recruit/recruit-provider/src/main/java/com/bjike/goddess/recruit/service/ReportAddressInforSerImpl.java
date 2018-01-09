@@ -14,6 +14,10 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -194,6 +198,8 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
      * @return
      * @throws SerException
      */
+//    @Cacheable(value = {"listCache"},key="#dto.toString()",condition = "#dto.id!=''")
+    @Cacheable(value = {"listCache"},key="#dto.toString()")
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public List<ReportAddressInforBO> list(ReportAddressInforDTO dto) throws SerException {
@@ -203,6 +209,7 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
         return listBO;
     }
 
+
     /**
      * 保存报道地址信息
      *
@@ -210,6 +217,8 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
      * @return
      * @throws SerException
      */
+//    @CachePut(value = "listCache",key = "#to.reportAddress",condition = "#to.reportAddress!=''")
+    @CacheEvict( value="listCache",allEntries=true)
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public ReportAddressInforBO save(ReportAddressInforTO to) throws SerException {
@@ -226,6 +235,7 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
      * @param to 报道地址信息to
      * @throws SerException
      */
+    @CacheEvict( value="listCache",allEntries=true)
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void update(ReportAddressInforTO to) throws SerException {
@@ -259,16 +269,17 @@ public class ReportAddressInforSerImpl extends ServiceImpl<ReportAddressInfor, R
     }
 
     /**
-     * 删除报道地址信息
+     * 根据id删除报道地址信息
      *
-     * @param entity
+     * @param id
      * @throws SerException
      */
+    @CacheEvict( value="listCache",key = "#id",allEntries=true,condition = "#id != ''")
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void remove(ReportAddressInfor entity) throws SerException {
+    public void remove(String id) throws SerException{
         checkModuleIdentity();
-        super.remove(entity);
+        super.remove(id);
     }
 
     @Override

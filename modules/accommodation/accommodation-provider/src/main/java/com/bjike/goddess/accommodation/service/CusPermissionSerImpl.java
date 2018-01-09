@@ -1,6 +1,5 @@
 package com.bjike.goddess.accommodation.service;
 
-import com.alibaba.fastjson.JSON;
 import com.bjike.goddess.accommodation.bo.CusOperateBO;
 import com.bjike.goddess.accommodation.bo.CusPermissionBO;
 import com.bjike.goddess.accommodation.dto.CusPermissionDTO;
@@ -18,26 +17,11 @@ import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Consts;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
-import sun.net.www.http.HttpClient;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -330,10 +314,15 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
+    public Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         Boolean flag = false;
         //但前用户
-        UserBO userBO = userAPI.currentUser();
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -385,11 +374,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean busCusPermission(String idFlag) throws SerException {
+    public Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
-        UserBO userBO = userAPI.currentUser();
+        UserBO userBO = new UserBO();
+        if (null == user) {
+            userBO = userAPI.currentUser();
+        } else {
+            userBO = user;
+        }
         String userId = userBO.getId();
         if (StringUtils.isBlank(idFlag)) {
             throw new SerException("idFlag不能为空");
@@ -423,10 +417,9 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
 //        Boolean moduleFlag = positionDetailUserAPI.checkAsUserModule(userId,operateIds);
         String token = RpcTransmit.getUserToken();
         RpcTransmit.transmitUserToken(token);
-        Boolean moduleFlag = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
         Boolean positionFlag = positionDetailUserAPI.checkAsUserPosition(userId, operateIds);
 
-        if (moduleFlag || positionFlag) {
+        if (positionFlag) {
             flag = true;
         } else {
             flag = false;

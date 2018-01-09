@@ -1,6 +1,7 @@
 package com.bjike.goddess.recruit.config;
 
 
+import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.boot.JpaCache;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
@@ -18,5 +19,20 @@ import java.util.List;
  */
 @Component
 public class AppJpaCache implements JpaCache {
+    @Override
+    public List<Cache> initCaches() {
+        ConcurrentMapCache serCache = new ConcurrentMapCache("recruitSerCache");
+        serCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
+        serCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
 
+        ConcurrentMapCache daoCache = new ConcurrentMapCache("recruitDaoCache");
+        daoCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
+        daoCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
+
+        ConcurrentMapCache listCache = new ConcurrentMapCache("listCache");
+        daoCache.put("timeToLiveSeconds", 60 * 60);//1小时过期
+        daoCache.put("timeToIdleSeconds", 60 * 60 * 12);//闲置时间
+
+        return Arrays.asList(serCache, daoCache,listCache);
+    }
 }

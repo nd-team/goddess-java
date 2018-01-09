@@ -61,7 +61,7 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -79,7 +79,7 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -97,7 +97,7 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -114,7 +114,7 @@ public class RentalSerImpl extends ServiceImpl<Rental, RentalDTO> implements Ren
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.busCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -201,6 +201,7 @@ private RentalApplySer rentalApplySer;
 
     @Override
     public List<RentalBO> findListRental(RentalDTO rentalDTO) throws SerException {
+        checkSeeIdentity();
         RentalApplyDTO applyDTO = new RentalApplyDTO();
         List<RentalApply> rentalApplies = rentalApplySer.findByCis(applyDTO);
 
@@ -255,7 +256,7 @@ private RentalApplySer rentalApplySer;
     @Transactional(rollbackFor = SerException.class)
     @Override
     public RentalBO editRental(RentalTO rentalTO) throws SerException {
-
+        checkAddIdentity();
         Rental rental = super.findById(rentalTO.getId());
         LocalDateTime createTime = rental.getCreateTime();
         rental = BeanTransform.copyProperties(rentalTO, Rental.class, true,"projectName");
@@ -269,6 +270,7 @@ private RentalApplySer rentalApplySer;
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void removeRental(String id) throws SerException {
+        checkAddIdentity();
         try {
             super.remove(id);
         } catch (SerException e) {

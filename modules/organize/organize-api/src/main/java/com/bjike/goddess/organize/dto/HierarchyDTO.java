@@ -12,4 +12,14 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class HierarchyDTO extends BaseDTO {
+    @Override
+    public String toString() {
+        return "HierarchyDTO{" +
+                "limit=" + limit +
+                ", page=" + page +
+                ", sorts=" + sorts +
+                ", conditions=" + conditions +
+                ", conditionsJson='" + conditionsJson + '\'' +
+                '}';
+    }
 }

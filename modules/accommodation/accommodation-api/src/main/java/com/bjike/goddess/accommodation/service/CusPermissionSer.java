@@ -7,6 +7,7 @@ import com.bjike.goddess.accommodation.bo.CusPermissionBO;
 import com.bjike.goddess.accommodation.dto.CusPermissionDTO;
 import com.bjike.goddess.accommodation.entity.CusPermission;
 import com.bjike.goddess.accommodation.to.CusPermissionTO;
+import com.bjike.goddess.user.bo.UserBO;
 
 import java.util.List;
 
@@ -90,7 +91,7 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @param idFlag 权限idFlag
      * @throws SerException
      */
-    default Boolean getCusPermission(String idFlag) throws SerException {
+    default Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
 
@@ -100,7 +101,7 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @param idFlag 权限idFlag
      * @throws SerException
      */
-    default Boolean busCusPermission(String idFlag) throws SerException {
+    default Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
 
