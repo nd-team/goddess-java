@@ -61,6 +61,7 @@ public class MessageAct {
      * @throws ActException
      * @version v1
      */
+    @LoginAuth
     @GetMapping("v1/{id}/read")
     public Result read(@PathVariable String id) throws ActException {
         try {

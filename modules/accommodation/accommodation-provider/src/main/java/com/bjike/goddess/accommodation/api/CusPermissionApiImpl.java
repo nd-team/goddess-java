@@ -1,11 +1,12 @@
 package com.bjike.goddess.accommodation.api;
 
-import com.bjike.goddess.common.api.exception.SerException;
-import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.accommodation.bo.CusPermissionBO;
 import com.bjike.goddess.accommodation.dto.CusPermissionDTO;
 import com.bjike.goddess.accommodation.service.CusPermissionSer;
 import com.bjike.goddess.accommodation.to.CusPermissionTO;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.organize.bo.OpinionBO;
+import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public List<OpinionBO>  listOperateById(String id) throws SerException {
+    public List<OpinionBO> listOperateById(String id) throws SerException {
         return cusPermissionSer.listOperateById(id);
     }
 
@@ -57,12 +58,12 @@ public class CusPermissionApiImpl implements CusPermissionAPI {
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag) throws SerException {
-        return cusPermissionSer.getCusPermission(idFlag);
+    public Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
+        return cusPermissionSer.getCusPermission(idFlag, user);
     }
 
     @Override
-    public Boolean busCusPermission(String idFlag) throws SerException {
-        return cusPermissionSer.busCusPermission(idFlag);
+    public Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
+        return cusPermissionSer.busCusPermission(idFlag, user);
     }
 }

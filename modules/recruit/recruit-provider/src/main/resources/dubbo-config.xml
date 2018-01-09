@@ -44,7 +44,6 @@
 	<dubbo:reference validation="true" interface="com.bjike.goddess.message.api.MessageAPI" id="messageApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.marketdevelopment.api.BusinessCourseAPI" id="businessCourseApiImpl"/>
-	<dubbo:reference validation="true" interface="com.bjike.goddess.marketdevelopment.api.BusinessTypeAPI" id="businessTypeApiImpl"/>
 	<dubbo:reference validation="true" interface="com.bjike.goddess.staffentry.api.EntryRegisterAPI" id="entryRegisterApiImpl"/>
 
 </beans>

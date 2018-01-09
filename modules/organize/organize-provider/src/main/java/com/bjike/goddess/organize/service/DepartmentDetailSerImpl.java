@@ -12,6 +12,8 @@ import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.DepartmentDetailTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -141,6 +143,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return bos;
     }
 
+    @Cacheable(value = {"listCache"}, key = "#dto.toString()")
     @Override
     public List<DepartmentDetailBO> view(DepartmentDetailDTO dto) throws SerException {
         return this.transformationToBOList(super.findByPage(dto));
@@ -190,6 +193,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
             throw new SerException("部门或编号已存在,无法保存");
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO save(DepartmentDetailTO to) throws SerException {
@@ -214,6 +218,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return this.transformationToBO(department);
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional(rollbackFor = SerException.class)
     @Override
     public DepartmentDetailBO update(DepartmentDetailTO to) throws SerException {
@@ -273,6 +278,7 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         return this.transformationToBO(entity);
     }
 
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public DepartmentDetailBO delete(String id) throws SerException {
         DepartmentDetail entity = super.findById(id);
@@ -461,8 +467,8 @@ public class DepartmentDetailSerImpl extends ServiceImpl<DepartmentDetail, Depar
         sql.append(" WHERE a.id = b.hierarchy_id ");
         sql.append(" AND b.department = '" + department + "';");
         List<Object> objectList = super.findBySql(sql.toString());
-        if(null != objectList && objectList.size() > 0) {
-            String objects = String.valueOf( objectList.get(0));
+        if (null != objectList && objectList.size() > 0) {
+            String objects = String.valueOf(objectList.get(0));
             return objects;
         }
         return null;

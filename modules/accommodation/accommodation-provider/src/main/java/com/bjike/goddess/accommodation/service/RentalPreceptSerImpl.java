@@ -65,7 +65,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以查看");
             }
@@ -84,7 +84,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -103,7 +103,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("3",null);
             if (!flag) {
                 throw new SerException("您不是相应商务发展部的人员，不可以操作");
             }
@@ -121,7 +121,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.getCusPermission("4",null);
             if (!flag) {
                 throw new SerException("您不是相应运营财务部的人员，不可以操作");
             }
@@ -139,7 +139,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.getCusPermission("5",null);
             if (!flag) {
                 throw new SerException("您不是相应综合资源部的人员，不可以操作");
             }
@@ -157,7 +157,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("6");
+            flag = cusPermissionSer.busCusPermission("6",null);
             if (!flag) {
                 throw new SerException("您不是相应项目经理的人员，不可以操作");
             }
@@ -176,7 +176,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("7");
+            flag = cusPermissionSer.getCusPermission("7",null);
             if (!flag) {
                 throw new SerException("您不是相应总经办的人员，不可以操作");
             }
@@ -195,7 +195,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1");
+            flag = cusPermissionSer.getCusPermission("1",null);
         } else {
             flag = true;
         }
@@ -212,7 +212,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2",null);
         } else {
             flag = true;
         }
@@ -229,7 +229,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3");
+            flag = cusPermissionSer.getCusPermission("3",null);
         } else {
             flag = true;
         }
@@ -246,7 +246,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("4");
+            flag = cusPermissionSer.getCusPermission("4",null);
         } else {
             flag = true;
         }
@@ -263,7 +263,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("5");
+            flag = cusPermissionSer.getCusPermission("5",null);
         } else {
             flag = true;
         }
@@ -280,7 +280,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("6");
+            flag = cusPermissionSer.busCusPermission("6",null);
         } else {
             flag = true;
         }
@@ -298,7 +298,7 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("7");
+            flag = cusPermissionSer.getCusPermission("7",null);
         } else {
             flag = true;
         }
@@ -308,46 +308,76 @@ public class RentalPreceptSerImpl extends ServiceImpl<RentalPrecept, RentalPrece
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         List<SonPermissionObject> list = new ArrayList<>();
+
+
+        Boolean flag1 = false;
+        Boolean flag2 = false;
+        Boolean flag3 = false;
+        Boolean flag4 = false;
+        Boolean flag5 = false;
+        Boolean flag6 = false;
+        Boolean flag7 = false;
+        Boolean flag8 = false;
+        Boolean flag9 = false;
+        Boolean flag10 = false;
+        Boolean flag11 = false;
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeInfo = guideSeeIdentity();
+        UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddInfo = guideAddIdentity();
-        Boolean flagBus = guideBusinessAuditIdentity();
-        Boolean flagFin = guideFinanceAuditIdentity();
-        Boolean flagRes = guideResourceAuditIdentity();
-        Boolean flagMan = guideManagerAuditIdentity();
-        Boolean flagGen = guideGeneralAuditIdentity();
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag1 = cusPermissionSer.getCusPermission("1",userBO);
+            flag2 = cusPermissionSer.getCusPermission("2",userBO);
+            flag3 = cusPermissionSer.getCusPermission("3",userBO);
+            flag4 = cusPermissionSer.getCusPermission("4",userBO);
+            flag5 = cusPermissionSer.getCusPermission("5",userBO);
+            flag6 = cusPermissionSer.busCusPermission("6",userBO);
+            flag7 = cusPermissionSer.getCusPermission("7",userBO);
+            flag8 = cusPermissionSer.busCusPermission("8",userBO);
+            flag9 = cusPermissionSer.getCusPermission("9",userBO);
+            flag10 = cusPermissionSer.getCusPermission("10",userBO);
+            flag11 = cusPermissionSer.getCusPermission("11",userBO);
+        } else {
+            flag1 = true;
+            flag2 = true;
+            flag3 = true;
+            flag4 = true;
+            flag5 = true;
+            flag6 = true;
+            flag7 = true;
+            flag8 = true;
+            flag9 = true;
+            flag10 = true;
+            flag11 = true;
+        }
+
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("rentalPrecept");
         obj.setDescribesion("租房方案");
-        if (flagSeeInfo || flagAddInfo || flagBus || flagFin || flagRes || flagMan || flagGen) {
+        if (flag1 || flag2 || flag3 || flag4 || flag5 || flag6 || flag7) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeApply = rentalApplySer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("rentalApply");
         obj.setDescribesion("租房申请");
-        if (flagSeeApply) {
+        if (flag1 || flag2 || flag8 || flag9 || flag10 || flag11) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
         }
         list.add(obj);
 
-        Boolean flagSeeRental = rentalSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("rental");
         obj.setDescribesion("租房信息");
-        if (flagSeeRental) {
+        if (flag1 || flag2) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);

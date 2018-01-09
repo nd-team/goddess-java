@@ -17,6 +17,8 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -244,6 +246,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
             throw new SerException("岗位或编号已存在,无法保存");
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDetailBO save(PositionDetailTO to) throws SerException {
@@ -269,6 +272,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         return this.transformationToBO(entity);
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional(rollbackFor = SerException.class)
     @Override
     public PositionDetailBO update(PositionDetailTO to) throws SerException {
@@ -298,6 +302,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         return this.transformationToBO(entity);
     }
 
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public PositionDetailBO delete(String id) throws SerException {
         PositionDetail entity = super.findById(id);
@@ -308,7 +313,7 @@ public class PositionDetailSerImpl extends ServiceImpl<PositionDetail, PositionD
         super.remove(entity);
         return this.transformationToBO(entity);
     }
-
+    @Cacheable(value = {"listCache"},key="#dto.toString()")
     @Override
     public List<PositionDetailBO> maps(PositionDetailDTO dto) throws SerException {
         dto.getSorts().add("department_id=asc");
