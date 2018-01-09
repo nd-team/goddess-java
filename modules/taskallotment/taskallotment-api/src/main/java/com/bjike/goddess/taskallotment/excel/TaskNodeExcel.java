@@ -107,7 +107,7 @@ public class TaskNodeExcel extends BaseTO {
      * 任务是否拆分
      */
     @ExcelHeader(name = "任务是否拆分")
-    private Boolean split;
+    private String split;
 
     /**
      * 拆分为（天）
@@ -180,7 +180,7 @@ public class TaskNodeExcel extends BaseTO {
      * 确认状态
      */
     @ExcelHeader(name = "确认状态")
-    private Boolean confirm;
+    private String confirm;
     /**
      * 不确认理由
      */
@@ -201,7 +201,7 @@ public class TaskNodeExcel extends BaseTO {
      * 是否上报
      */
     @ExcelHeader(name = "是否上报")
-    private Boolean report;
+    private String report;
     /**
      * 是否延期完成
      */
@@ -378,14 +378,6 @@ public class TaskNodeExcel extends BaseTO {
         this.remark = remark;
     }
 
-    public Boolean getSplit() {
-        return split;
-    }
-
-    public void setSplit(Boolean split) {
-        this.split = split;
-    }
-
     public Double getDay() {
         return day;
     }
@@ -490,14 +482,6 @@ public class TaskNodeExcel extends BaseTO {
         this.finishStatus = finishStatus;
     }
 
-    public Boolean getConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(Boolean confirm) {
-        this.confirm = confirm;
-    }
-
     public String getReason() {
         return reason;
     }
@@ -512,14 +496,6 @@ public class TaskNodeExcel extends BaseTO {
 
     public void setNotice(String notice) {
         this.notice = notice;
-    }
-
-    public Boolean getReport() {
-        return report;
-    }
-
-    public void setReport(Boolean report) {
-        this.report = report;
     }
 
     public Double getDelayTime() {
@@ -616,5 +592,29 @@ public class TaskNodeExcel extends BaseTO {
 
     public void setDelay(String delay) {
         this.delay = delay;
+    }
+
+    public String getSplit() {
+        return split;
+    }
+
+    public void setSplit(String split) {
+        this.split = split;
+    }
+
+    public String getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(String confirm) {
+        this.confirm = confirm;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
     }
 }

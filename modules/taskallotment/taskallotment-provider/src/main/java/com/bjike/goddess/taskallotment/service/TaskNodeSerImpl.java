@@ -3465,6 +3465,22 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         dto.getConditions().add(Restrict.in("taskName", dto.getTaskNames()));
         List<TaskNode> list = super.findByCis(dto);
         List<TaskNodeExcel> toList = new ArrayList<>();
+//        list.stream().forEach(str -> {
+//            TaskNodeExcel export = BeanTransform.copyProperties(str, TaskNodeExcel.class,
+//                    "taskType", "split", "needType", "executeType", "actualType",
+//                    "finishStatus", "report", "confirm", "reimbursement", "delay",
+//                    "delayType", "aduitType", "taskStatus", "closeSingle", "archive", "summarizeFinish");
+//            //测算是否通过
+//            if (null != toList.getSplit()) {
+//                if (toList.getMeasurePass().equals(true)) {
+//                    toList.setMeasurePass("是");
+//                } else {
+//                    toList.setMeasurePass("否");
+//                }
+//
+//            }
+//        });
+//        toList.add(toList);
         for (TaskNode taskNode : list) {
             TaskNodeExcel excel = new TaskNodeExcel();
             BeanUtils.copyProperties(taskNode, excel);
