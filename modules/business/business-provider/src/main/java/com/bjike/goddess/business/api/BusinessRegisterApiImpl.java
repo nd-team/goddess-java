@@ -1,10 +1,12 @@
 package com.bjike.goddess.business.api;
 
 import com.bjike.goddess.business.bo.BusinessRegisterBO;
+import com.bjike.goddess.business.bo.BusinessRegisterListBO;
 import com.bjike.goddess.business.bo.RegisterNaTypeCaBO;
 import com.bjike.goddess.business.dto.BusinessRegisterDTO;
 import com.bjike.goddess.business.excel.SonPermissionObject;
 import com.bjike.goddess.business.service.BusinessRegisterSer;
+import com.bjike.goddess.business.to.BusinessRegisterExcelTO;
 import com.bjike.goddess.business.to.BusinessRegisterTO;
 import com.bjike.goddess.business.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -26,6 +28,7 @@ import java.util.List;
 public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
     @Autowired
     private BusinessRegisterSer businessRegisterSer;
+
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
         return businessRegisterSer.sonPermission();
@@ -35,16 +38,19 @@ public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return businessRegisterSer.guidePermission(guidePermissionTO);
     }
+
     @Override
     public Long countBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
         return businessRegisterSer.countBusinessRegister(businessRegisterDTO);
     }
+
     @Override
     public BusinessRegisterBO getOne(String id) throws SerException {
         return businessRegisterSer.getOne(id);
     }
+
     @Override
-    public List<BusinessRegisterBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
+    public List<BusinessRegisterListBO> findListBusinessRegister(BusinessRegisterDTO businessRegisterDTO) throws SerException {
         return businessRegisterSer.findListBusinessRegister(businessRegisterDTO);
     }
 
@@ -71,5 +77,25 @@ public class BusinessRegisterApiImpl implements BusinessRegisterAPI {
     @Override
     public List<String> findAddress() throws SerException {
         return businessRegisterSer.findAddress();
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return businessRegisterSer.exportExcel();
+    }
+
+    @Override
+    public void importExcel(List<BusinessRegisterExcelTO> businessRegisterExcelTOS) throws SerException {
+        businessRegisterSer.importExcel(businessRegisterExcelTOS);
+    }
+
+    @Override
+    public byte[] templateExport() throws SerException {
+        return businessRegisterSer.templateExport();
+    }
+
+    @Override
+    public BusinessRegisterListBO findOneById(String id) throws SerException {
+        return businessRegisterSer.findOneById(id);
     }
 }

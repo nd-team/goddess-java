@@ -1,9 +1,13 @@
 package com.bjike.goddess.business.to;
 
+import com.bjike.goddess.business.enums.Status;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 工商注册
@@ -29,55 +33,119 @@ public class BusinessRegisterTO extends BaseTO {
     private String registerNum;
 
     /**
-     * 经营期限
+     * 经营期限开始
      */
-    private String operationPeriod;
+    @NotBlank(message = "经营期限开始不能为空",groups = {ADD.class, EDIT.class})
+    private String startOperationPeriod;
+
+    /**
+     * 经营期限结束
+     */
+    private String endOperationPeriod;
 
     /**
      * 注册类型
      */
+    @NotBlank(message = "注册类型不能为空",groups = {ADD.class, EDIT.class})
     private String registerType;
 
     /**
      * 注册资本
      */
+    @NotBlank(message = "注册资本不能为空",groups = {ADD.class, EDIT.class})
     private String registerCapital;
 
     /**
      * 经营范围
      */
+    @NotBlank(message = "经营范围不能为空",groups = {ADD.class, EDIT.class})
     private String operationScope;
 
     /**
      * 法人
      */
+    @NotBlank(message = "法人不能为空",groups = {ADD.class, EDIT.class})
     private String legalPerson;
 
     /**
-     * 股东
+     * 股东:占股比例
      */
-    private String shareholders;
-
-    /**
-     * 股权比例
-     */
-    private String equityRatio;
+    @NotNull(message = "股东占股比例不能为空",groups = {ADD.class, EDIT.class})
+    private List<ShareholdersTO> shareholdersTOList;
 
     /**
      * 地址
      */
+    @NotBlank(message = "地址不能为空",groups = {ADD.class, EDIT.class})
     private String address;
 
     /**
      * 相关资料（名称）
      */
+    @NotBlank(message = "相关资料（名称）不能为空",groups = {ADD.class, EDIT.class})
     private String cursorAdapter;
 
     /**
      * 备注
      */
     private String remark;
+    /**
+     * 成立日期
+     */
+    @NotBlank(message = "成立日期不能为空",groups = {ADD.class, EDIT.class})
+    private String setUpDate;
 
+    /**
+     * 许可经营范围
+     */
+    private String permittedBusiness;
+
+    /**
+     * 状态
+     */
+    @NotNull(message = "状态不能为空",groups = {ADD.class, EDIT.class})
+    private Status status;
+
+    /**
+     * 核发日期
+     */
+    @NotBlank(message = "核发日期不能为空",groups = {ADD.class, EDIT.class})
+    private String issuingDate;
+
+    /**
+     * 登记机关
+     */
+    @NotBlank(message = "登记机关不能为空",groups = {ADD.class, EDIT.class})
+    private String registrationAuthor;
+
+    /**
+     * 组织结构成员名称
+     */
+    @NotBlank(message = "组织结构成员名称不能为空",groups = {ADD.class, EDIT.class})
+    private String organizationNemName;
+
+    /**
+     * 职务
+     */
+    @NotBlank(message = "职务不能为空",groups = {ADD.class, EDIT.class})
+    private String position;
+
+    /**
+     * 职务产生方式
+     */
+    private String positionWay;
+
+    /**
+     * 是否法定代表人
+     */
+    @NotNull(message = "是否法定代表人不能为空",groups = {ADD.class, EDIT.class})
+    private Boolean representativeLegal;
+
+    /**
+     * 网址
+     */
+    @NotBlank(message = "网址不能为空",groups = {ADD.class, EDIT.class})
+    private String url;
 
     public String getRegisterCompanyName() {
         return registerCompanyName;
@@ -95,12 +163,20 @@ public class BusinessRegisterTO extends BaseTO {
         this.registerNum = registerNum;
     }
 
-    public String getOperationPeriod() {
-        return operationPeriod;
+    public String getStartOperationPeriod() {
+        return startOperationPeriod;
     }
 
-    public void setOperationPeriod(String operationPeriod) {
-        this.operationPeriod = operationPeriod;
+    public void setStartOperationPeriod(String startOperationPeriod) {
+        this.startOperationPeriod = startOperationPeriod;
+    }
+
+    public String getEndOperationPeriod() {
+        return endOperationPeriod;
+    }
+
+    public void setEndOperationPeriod(String endOperationPeriod) {
+        this.endOperationPeriod = endOperationPeriod;
     }
 
     public String getRegisterType() {
@@ -135,20 +211,12 @@ public class BusinessRegisterTO extends BaseTO {
         this.legalPerson = legalPerson;
     }
 
-    public String getShareholders() {
-        return shareholders;
+    public List<ShareholdersTO> getShareholdersTOList() {
+        return shareholdersTOList;
     }
 
-    public void setShareholders(String shareholders) {
-        this.shareholders = shareholders;
-    }
-
-    public String getEquityRatio() {
-        return equityRatio;
-    }
-
-    public void setEquityRatio(String equityRatio) {
-        this.equityRatio = equityRatio;
+    public void setShareholdersTOList(List<ShareholdersTO> shareholdersTOList) {
+        this.shareholdersTOList = shareholdersTOList;
     }
 
     public String getAddress() {
@@ -173,5 +241,85 @@ public class BusinessRegisterTO extends BaseTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getSetUpDate() {
+        return setUpDate;
+    }
+
+    public void setSetUpDate(String setUpDate) {
+        this.setUpDate = setUpDate;
+    }
+
+    public String getPermittedBusiness() {
+        return permittedBusiness;
+    }
+
+    public void setPermittedBusiness(String permittedBusiness) {
+        this.permittedBusiness = permittedBusiness;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getIssuingDate() {
+        return issuingDate;
+    }
+
+    public void setIssuingDate(String issuingDate) {
+        this.issuingDate = issuingDate;
+    }
+
+    public String getRegistrationAuthor() {
+        return registrationAuthor;
+    }
+
+    public void setRegistrationAuthor(String registrationAuthor) {
+        this.registrationAuthor = registrationAuthor;
+    }
+
+    public String getOrganizationNemName() {
+        return organizationNemName;
+    }
+
+    public void setOrganizationNemName(String organizationNemName) {
+        this.organizationNemName = organizationNemName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPositionWay() {
+        return positionWay;
+    }
+
+    public void setPositionWay(String positionWay) {
+        this.positionWay = positionWay;
+    }
+
+    public Boolean getRepresentativeLegal() {
+        return representativeLegal;
+    }
+
+    public void setRepresentativeLegal(Boolean representativeLegal) {
+        this.representativeLegal = representativeLegal;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

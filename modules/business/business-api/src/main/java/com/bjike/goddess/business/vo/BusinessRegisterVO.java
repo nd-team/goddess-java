@@ -1,5 +1,10 @@
 package com.bjike.goddess.business.vo;
 
+import com.bjike.goddess.business.bo.ShareholdersBO;
+import com.bjike.goddess.business.enums.Status;
+
+import java.util.List;
+
 /**
  * 工商注册表现层对象
  *
@@ -26,9 +31,13 @@ public class BusinessRegisterVO {
     private String registerNum;
 
     /**
-     * 经营期限
+     * 经营期限开始
      */
-    private String operationPeriod;
+    private String startOperationPeriod;
+    /**
+     * 经营期限结束
+     */
+    private String endOperationPeriod;
 
     /**
      * 注册类型
@@ -51,14 +60,9 @@ public class BusinessRegisterVO {
     private String legalPerson;
 
     /**
-     * 股东
+     * 股东:股权比例
      */
-    private String shareholders;
-
-    /**
-     * 股权比例
-     */
-    private String equityRatio;
+    private List<ShareholdersBO> shareholdersBOS;
 
     /**
      * 地址
@@ -74,6 +78,56 @@ public class BusinessRegisterVO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 成立日期
+     */
+    private String setUpDate;
+
+    /**
+     * 许可经营范围
+     */
+    private String permittedBusiness;
+
+    /**
+     * 状态
+     */
+    private Status status;
+
+    /**
+     * 核发日期
+     */
+    private String issuingDate;
+
+    /**
+     * 登记机关
+     */
+    private String registrationAuthor;
+
+    /**
+     * 组织结构成员名称
+     */
+    private String organizationNemName;
+
+    /**
+     * 职务
+     */
+    private String position;
+
+    /**
+     * 职务产生方式
+     */
+    private String positionWay;
+
+    /**
+     * 是否法定代表人
+     */
+    private Boolean representativeLegal;
+
+    /**
+     * 网址
+     */
+    private String url;
 
 
     public String getId() {
@@ -100,12 +154,20 @@ public class BusinessRegisterVO {
         this.registerNum = registerNum;
     }
 
-    public String getOperationPeriod() {
-        return operationPeriod;
+    public String getStartOperationPeriod() {
+        return startOperationPeriod;
     }
 
-    public void setOperationPeriod(String operationPeriod) {
-        this.operationPeriod = operationPeriod;
+    public void setStartOperationPeriod(String startOperationPeriod) {
+        this.startOperationPeriod = startOperationPeriod;
+    }
+
+    public String getEndOperationPeriod() {
+        return endOperationPeriod;
+    }
+
+    public void setEndOperationPeriod(String endOperationPeriod) {
+        this.endOperationPeriod = endOperationPeriod;
     }
 
     public String getRegisterType() {
@@ -140,20 +202,12 @@ public class BusinessRegisterVO {
         this.legalPerson = legalPerson;
     }
 
-    public String getShareholders() {
-        return shareholders;
+    public List<ShareholdersBO> getShareholdersBOS() {
+        return shareholdersBOS;
     }
 
-    public void setShareholders(String shareholders) {
-        this.shareholders = shareholders;
-    }
-
-    public String getEquityRatio() {
-        return equityRatio;
-    }
-
-    public void setEquityRatio(String equityRatio) {
-        this.equityRatio = equityRatio;
+    public void setShareholdersBOS(List<ShareholdersBO> shareholdersBOS) {
+        this.shareholdersBOS = shareholdersBOS;
     }
 
     public String getAddress() {
@@ -178,5 +232,85 @@ public class BusinessRegisterVO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getSetUpDate() {
+        return setUpDate;
+    }
+
+    public void setSetUpDate(String setUpDate) {
+        this.setUpDate = setUpDate;
+    }
+
+    public String getPermittedBusiness() {
+        return permittedBusiness;
+    }
+
+    public void setPermittedBusiness(String permittedBusiness) {
+        this.permittedBusiness = permittedBusiness;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getIssuingDate() {
+        return issuingDate;
+    }
+
+    public void setIssuingDate(String issuingDate) {
+        this.issuingDate = issuingDate;
+    }
+
+    public String getRegistrationAuthor() {
+        return registrationAuthor;
+    }
+
+    public void setRegistrationAuthor(String registrationAuthor) {
+        this.registrationAuthor = registrationAuthor;
+    }
+
+    public String getOrganizationNemName() {
+        return organizationNemName;
+    }
+
+    public void setOrganizationNemName(String organizationNemName) {
+        this.organizationNemName = organizationNemName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPositionWay() {
+        return positionWay;
+    }
+
+    public void setPositionWay(String positionWay) {
+        this.positionWay = positionWay;
+    }
+
+    public Boolean getRepresentativeLegal() {
+        return representativeLegal;
+    }
+
+    public void setRepresentativeLegal(Boolean representativeLegal) {
+        this.representativeLegal = representativeLegal;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

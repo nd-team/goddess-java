@@ -1,8 +1,7 @@
 package com.bjike.goddess.business.bo;
 
+import com.bjike.goddess.business.enums.ChangeDataName;
 import com.bjike.goddess.common.api.bo.BaseBO;
-
-import javax.persistence.Column;
 
 /**
  * 工商税务变更业务传输对象
@@ -14,7 +13,10 @@ import javax.persistence.Column;
  * @Copy: [ com.bjike ]
  */
 public class BusinessTaxChangeBO extends BaseBO {
-
+    /**
+     * 工商注册id
+     */
+    private String businessRegisterId;
     /**
      * 变更日期
      */
@@ -48,8 +50,20 @@ public class BusinessTaxChangeBO extends BaseBO {
     /**
      * 变更资料名称
      */
-    private String changeDataName;
+    private ChangeDataName changeDataName;
 
+    /**
+     * 负责经办人联系方式
+     */
+    private String responsiblePhone;
+
+    public String getBusinessRegisterId() {
+        return businessRegisterId;
+    }
+
+    public void setBusinessRegisterId(String businessRegisterId) {
+        this.businessRegisterId = businessRegisterId;
+    }
 
     public String getChangeDate() {
         return changeDate;
@@ -99,11 +113,19 @@ public class BusinessTaxChangeBO extends BaseBO {
         this.remark = remark;
     }
 
-    public String getChangeDataName() {
+    public ChangeDataName getChangeDataName() {
         return changeDataName;
     }
 
-    public void setChangeDataName(String changeDataName) {
+    public void setChangeDataName(ChangeDataName changeDataName) {
         this.changeDataName = changeDataName;
+    }
+
+    public String getResponsiblePhone() {
+        return responsiblePhone;
+    }
+
+    public void setResponsiblePhone(String responsiblePhone) {
+        this.responsiblePhone = responsiblePhone;
     }
 }

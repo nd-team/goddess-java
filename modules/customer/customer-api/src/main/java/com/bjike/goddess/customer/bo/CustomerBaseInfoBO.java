@@ -286,27 +286,6 @@ public class CustomerBaseInfoBO extends BaseBO {
     private Integer callcyle;
 
     /**
-     * 地区经纬度
-     */
-    private String areaLatitude;
-    /**
-     * 客户性格
-     */
-    private String customerCharacter;
-    /**
-     * 客户脾气
-     */
-    private String customerTemper;
-    /**
-     * 客户兴趣
-     */
-    private String customerInterest;
-    /**
-     * 共同认识的人
-     */
-    private String knowEachOther;
-
-    /**
      * 客户详细信息
      */
     private CustomerDetailBO customerDetailBO;
@@ -792,43 +771,4 @@ public class CustomerBaseInfoBO extends BaseBO {
         this.callcyle = callcyle;
     }
 
-    public String getAreaLatitude() {
-        return areaLatitude;
-    }
-
-    public void setAreaLatitude(String areaLatitude) {
-        this.areaLatitude = areaLatitude;
-    }
-
-    public String getCustomerCharacter() {
-        return customerCharacter;
-    }
-
-    public void setCustomerCharacter(String customerCharacter) {
-        this.customerCharacter = customerCharacter;
-    }
-
-    public String getCustomerTemper() {
-        return customerTemper;
-    }
-
-    public void setCustomerTemper(String customerTemper) {
-        this.customerTemper = customerTemper;
-    }
-
-    public String getCustomerInterest() {
-        return customerInterest;
-    }
-
-    public void setCustomerInterest(String customerInterest) {
-        this.customerInterest = customerInterest;
-    }
-
-    public String getKnowEachOther() {
-        return knowEachOther;
-    }
-
-    public void setKnowEachOther(String knowEachOther) {
-        this.knowEachOther = knowEachOther;
-    }
 }

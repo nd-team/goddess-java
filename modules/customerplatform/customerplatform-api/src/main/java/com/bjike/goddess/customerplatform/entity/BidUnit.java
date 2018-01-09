@@ -105,6 +105,7 @@ public class BidUnit extends BaseEntity {
     @Column(name = "wechat", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '联系人微信'")
     private String wechat;
 
+
 //    /**
 //     * 业务类型
 //     */
@@ -242,6 +243,17 @@ public class BidUnit extends BaseEntity {
         this.wechat = wechat;
     }
 
+<<<<<<< HEAD
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+=======
+>>>>>>> upstream/develop
     public String getProjectType() {
         return projectType;
     }

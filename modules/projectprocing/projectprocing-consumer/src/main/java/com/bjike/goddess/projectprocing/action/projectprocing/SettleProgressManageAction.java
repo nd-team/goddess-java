@@ -365,7 +365,7 @@ public class SettleProgressManageAction extends BaseFileAction {
     @GetMapping("v1/headers/manageId")
     public Result findHeaderByManage(@RequestParam String manageId, HttpServletRequest request) throws ActException {
         try {
-            List<HeadersCustomVO> headersCustomVOList = BeanTransform.copyProperties(headersCustomAPI.getByManageId(manageId),HeadersCustomVO.class);
+            List<HeadersCustomVO> headersCustomVOList = BeanTransform.copyProperties(headersCustomAPI.getAllByManageId(manageId),HeadersCustomVO.class);
             return ActResult.initialize(headersCustomVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -381,7 +381,7 @@ public class SettleProgressManageAction extends BaseFileAction {
     @GetMapping("v1/nodeHeaders/manageId")
     public Result findNodeHeaderByManage(@RequestParam String manageId, HttpServletRequest request) throws ActException {
         try {
-            List<NodeHeadersCustomVO> nodeHeadersCustomVOList = BeanTransform.copyProperties(nodeHeadersCustomAPI.getByManageId(manageId),NodeHeadersCustomVO.class);
+            List<NodeHeadersCustomVO> nodeHeadersCustomVOList = BeanTransform.copyProperties(nodeHeadersCustomAPI.getAllByManageId(manageId),NodeHeadersCustomVO.class);
             return ActResult.initialize(nodeHeadersCustomVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -548,7 +548,7 @@ public class SettleProgressManageAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/scheduleDelay")
-    public Result scheduleDelay(@Validated({ADD.class}) ScheduleDelayDataTO scheduleDelayDataTO) throws ActException {
+    public Result scheduleDelay(@Validated({ADD.class}) ScheduleDelayDataTO scheduleDelayDataTO,BindingResult bindingResult) throws ActException {
         try {
             settleProgressManageAPI.scheduleDelay(scheduleDelayDataTO);
             return new ActResult("scheduleDelay success");
@@ -637,3 +637,4 @@ public class SettleProgressManageAction extends BaseFileAction {
     }
 
 }
+

@@ -1,5 +1,7 @@
 package com.bjike.goddess.business.vo;
 
+import com.bjike.goddess.business.enums.ChangeDataName;
+
 /**
  * 工商税务变更表现层对象
  *
@@ -15,6 +17,10 @@ public class BusinessTaxChangeVO {
      * id
      */
     private String id;
+    /**
+     * 工商注册id
+     */
+    private String businessRegisterId;
     /**
      * 变更日期
      */
@@ -48,7 +54,12 @@ public class BusinessTaxChangeVO {
     /**
      * 变更资料名称
      */
-    private String changeDataName;
+    private ChangeDataName changeDataName;
+
+    /**
+     * 负责经办人联系方式
+     */
+    private String responsiblePhone;
 
 
     public String getId() {
@@ -57,6 +68,14 @@ public class BusinessTaxChangeVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getBusinessRegisterId() {
+        return businessRegisterId;
+    }
+
+    public void setBusinessRegisterId(String businessRegisterId) {
+        this.businessRegisterId = businessRegisterId;
     }
 
     public String getChangeDate() {
@@ -107,11 +126,19 @@ public class BusinessTaxChangeVO {
         this.remark = remark;
     }
 
-    public String getChangeDataName() {
+    public ChangeDataName getChangeDataName() {
         return changeDataName;
     }
 
-    public void setChangeDataName(String changeDataName) {
+    public void setChangeDataName(ChangeDataName changeDataName) {
         this.changeDataName = changeDataName;
+    }
+
+    public String getResponsiblePhone() {
+        return responsiblePhone;
+    }
+
+    public void setResponsiblePhone(String responsiblePhone) {
+        this.responsiblePhone = responsiblePhone;
     }
 }

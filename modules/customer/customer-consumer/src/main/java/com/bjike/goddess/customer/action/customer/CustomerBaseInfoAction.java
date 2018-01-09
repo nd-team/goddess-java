@@ -965,38 +965,5 @@ public class CustomerBaseInfoAction extends BaseFileAction {
         }
     }
 
-    /**
-     * 客户管理平台业主客户列表
-     *
-     * @param dto
-     * @return class CustomerAndOwnerInfoBO
-     * @version v1
-     */
-    @GetMapping("v1/customerList")
-    public Result customerList(CustomerBaseInfoDTO dto, HttpServletRequest request) throws ActException {
-        try {
-            List<CustomerAndOwnerInfoBO> boList = customerBaseInfoAPI.customerList(dto);
-            return ActResult.initialize(boList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 客户管理平台业主客户id
-     *
-     * @param id
-     * @return class CustomerAndOwnerInfoBO
-     * @version v1
-     */
-    @GetMapping("v1/customer/{id}")
-    public Result customerById(@PathVariable String id) throws ActException {
-        try {
-            CustomerAndOwnerInfoBO bo = customerBaseInfoAPI.customerById(id);
-            return ActResult.initialize(bo);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
 }

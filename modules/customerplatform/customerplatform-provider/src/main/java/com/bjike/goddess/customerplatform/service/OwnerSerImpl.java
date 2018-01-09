@@ -169,8 +169,9 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
         super.remove(id);
     }
 
-    @Override
     public List<OwnerBO> maps(OwnerDTO dto) throws SerException {
+        List<Owner> owners = super.findByCis(dto);
+        List<OwnerBO> ownerBOs = BeanTransform.copyProperties(owners, OwnerBO.class, false);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
@@ -199,6 +200,7 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
         if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
+        return BeanTransform.copyProperties(entity, OwnerBO.class);
         OwnerBO bo = BeanTransform.copyProperties(entity, OwnerBO.class);
         // TODO: 18-1-5 判断是否是vip
         Boolean tar = false;

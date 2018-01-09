@@ -41,8 +41,6 @@
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 	<dubbo:reference  validation="true" id="competitorApiImpl" interface="com.bjike.goddess.competitormanage.api.CompetitorAPI" />
 	<dubbo:reference  validation="true" id="customerBaseInfoApiImpl" interface="com.bjike.goddess.customer.api.CustomerBaseInfoAPI" />
-	<dubbo:reference  validation="true" id="marketInfoApiImpl" interface="com.bjike.goddess.market.api.MarketInfoAPI" />
-	<dubbo:reference  validation="true" id="supplierInformationApiImpl" interface="com.bjike.goddess.supplier.api.SupplierInformationAPI" />
 
 
 	<dubbo:service  ref="cusPermissionApiImpl" interface="com.bjike.goddess.businessinteraction.api.CusPermissionAPI" />

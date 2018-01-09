@@ -97,11 +97,19 @@ public interface NodeHeadersCustomSer extends Ser<NodeHeadersCustom, NodeHeaders
         return null;
     }
     /**
-     * 获取对应工作进度管理id对应的数据
+     * 获取对应工作进度管理id对应的数据(内容不可以为空)
      *
      * @return class NodeHeadersCustomBO
      */
     default List<NodeHeadersCustomBO> getByManageId(String passManageId) throws SerException {
+        return null;
+    }
+    /**
+     * 获取一外包单位对应的自定义节点字段和他的内容(内容可以为空)
+     *
+     * @return class NodeHeadersCustomBO
+     */
+    default List<NodeHeadersCustomBO> getAllByManageId(String passManageId) throws SerException {
         return null;
     }
     /**

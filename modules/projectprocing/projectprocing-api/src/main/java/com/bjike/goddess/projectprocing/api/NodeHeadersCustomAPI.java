@@ -103,6 +103,14 @@ public interface NodeHeadersCustomAPI {
         return null;
     }
     /**
+     * 获取一外包单位对应的自定义节点字段和他的内容(内容可以为空)
+     *
+     * @return class NodeHeadersCustomBO
+     */
+    default List<NodeHeadersCustomBO> getAllByManageId(String passManageId) throws SerException {
+        return null;
+    }
+    /**
      * 根据工作进度管理id删除所有对应的数据
      *
      */
@@ -116,4 +124,5 @@ public interface NodeHeadersCustomAPI {
     default void checkNodeCutoff() throws SerException {
         return;
     }
+
 }
