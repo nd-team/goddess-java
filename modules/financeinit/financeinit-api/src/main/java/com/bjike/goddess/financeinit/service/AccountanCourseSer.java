@@ -255,4 +255,15 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
     default String findtaxSubject() throws SerException {
         return null;
     }
+
+    /**
+     * 根据一级科目名称获取三级科目名称
+     *
+     * @param firstSubject
+     * @return
+     * @throws SerException
+     */
+    default List<String> findByFirstName(String firstSubject) throws SerException {
+        return null;
+    }
 }

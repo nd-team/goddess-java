@@ -1,5 +1,6 @@
 package com.bjike.goddess.budget.api;
 
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekListBO;
@@ -100,5 +101,10 @@ public class ProjectWeekApiImpl implements ProjectWeekAPI {
     @Override
     public List<String> findArea() throws SerException {
         return projectWeekSer.findAreas();
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        return projectWeekSer.figureShow();
     }
 }

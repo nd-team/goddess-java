@@ -2,6 +2,7 @@ package com.bjike.goddess.budget.action.budget;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
 import com.bjike.goddess.budget.api.ProjectWeekAPI;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekListBO;
@@ -355,6 +356,23 @@ public class ProjectWeekAct extends BaseFileAction{
         try {
             List<String> list = projectWeekAPI.findArea();
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/figureShow")
+    public Result figureShow() throws ActException {
+        try {
+            OptionBO bo = projectWeekAPI.figureShow();
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, OptionVO.class));
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

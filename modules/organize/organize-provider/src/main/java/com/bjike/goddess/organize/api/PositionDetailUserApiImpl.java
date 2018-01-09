@@ -34,8 +34,8 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
 
 
     @Override
-    public List<PositionDetailBO> findPositionByUser(String user_id) throws SerException {
-        return positionDetailUserSer.findPositionByUser(user_id);
+    public List<PositionDetailBO> findPositionByUser(String name) throws SerException {
+        return positionDetailUserSer.findPositionByUser(name);
     }
 
     @Override

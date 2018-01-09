@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class QualificationsCollectTO extends BaseTO {
+public class    QualificationsCollectTO extends BaseTO {
 
     /**
      * 资质名称

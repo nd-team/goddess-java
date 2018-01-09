@@ -4,7 +4,10 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.lendreimbursement.enums.LendRetunStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendStatus;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -420,6 +423,17 @@ public class ApplyLend extends BaseEntity {
     @Column(name = "commitTime", columnDefinition = " DATETIME  COMMENT '提交时间'")
     private LocalDateTime commitTime;
 
+    /**
+     * 分析人
+     */
+    @Column(name = "analysiser", columnDefinition = " TEXT  COMMENT '分析人'")
+    private String analysiser;
+
+    /**
+     * 分析状态(通过/不通过)
+     */
+    @Column(name = "analyse", columnDefinition = " VARCHAR(255)  COMMENT '是否分析(是/否)'")
+    private String analyse;
 
 
     /**
@@ -972,4 +986,19 @@ public class ApplyLend extends BaseEntity {
         this.receiveArea = receiveArea;
     }
 
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
+    }
 }

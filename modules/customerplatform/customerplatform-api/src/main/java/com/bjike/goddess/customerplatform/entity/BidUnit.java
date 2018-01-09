@@ -105,20 +105,21 @@ public class BidUnit extends BaseEntity {
     @Column(name = "wechat", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '联系人微信'")
     private String wechat;
 
-    /**
-     * 业务类型
-     */
-    @Column(name = "businessType", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
-    private String businessType;
+
+//    /**
+//     * 业务类型
+//     */
+//    @Column(name = "businessType", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
+//    private String businessType;
 
     /**
-     * 项目类型
+     * 需求类型
      */
     @Column(name = "projectType", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '项目类型'")
     private String projectType;
 
     /**
-     * 项目说明
+     * 需求说明
      */
     @Column(name = "description", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '项目说明'")
     private String description;
@@ -242,6 +243,7 @@ public class BidUnit extends BaseEntity {
         this.wechat = wechat;
     }
 
+<<<<<<< HEAD
     public String getBusinessType() {
         return businessType;
     }
@@ -250,6 +252,8 @@ public class BidUnit extends BaseEntity {
         this.businessType = businessType;
     }
 
+=======
+>>>>>>> upstream/develop
     public String getProjectType() {
         return projectType;
     }

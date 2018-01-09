@@ -21,7 +21,6 @@ import com.bjike.goddess.rotation.to.CoverRotationTO;
 import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.vo.CoverRotationOpinionVO;
 import com.bjike.goddess.rotation.vo.CoverRotationVO;
-import com.bjike.goddess.rotation.vo.FindNameVO;
 import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -162,7 +161,6 @@ public class CoverRotationAct {
     }
 
     /**
-     * ArrangementAPI
      * 列表
      *
      * @param dto 岗位轮换自荐数据传输对象

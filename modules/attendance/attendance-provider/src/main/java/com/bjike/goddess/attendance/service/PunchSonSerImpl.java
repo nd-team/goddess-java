@@ -201,6 +201,8 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
                 punchStatus = PunchStatus.NORMAL;
             } else if ((null != to.getArea()) && (!(to.getArea().contains(departmentDetailBO.getArea())))) {
                 punchStatus = PunchStatus.OUTSIDE;    //外勤
+            }else if((null != to.getArea())  && (!(to.getArea().contains("内网IP//内网IP/内网IP")))){
+                punchStatus = PunchStatus.NORMAL;
             }
         }
         saveSon(punchSon, userBO.getUsername(), punchStatus, date);

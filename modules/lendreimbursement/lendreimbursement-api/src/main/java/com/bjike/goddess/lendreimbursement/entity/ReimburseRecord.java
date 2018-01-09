@@ -310,6 +310,18 @@ public class ReimburseRecord extends BaseEntity {
     @Column(name = "receiveAddr", columnDefinition = "VARCHAR(255)   COMMENT '收件地址'")
     private String receiveAddr;
 
+    /**
+     * 分析人
+     */
+    @Column(name = "analysiser", columnDefinition = " TEXT  COMMENT '分析人'")
+    private String analysiser;
+
+    /**
+     * 分析状态(通过/不通过)
+     */
+    @Column(name = "analyse", columnDefinition = " VARCHAR(255)  COMMENT '是否分析(是/否)'")
+    private String analyse;
+
     public ReimburseRecord(String reimer, Double reimMoney) {
         this.reimer = reimer;
         this.reimMoney = reimMoney;
@@ -700,5 +712,21 @@ public class ReimburseRecord extends BaseEntity {
 
     public void setChargeCongleAdvice(String chargeCongleAdvice) {
         this.chargeCongleAdvice = chargeCongleAdvice;
+    }
+
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

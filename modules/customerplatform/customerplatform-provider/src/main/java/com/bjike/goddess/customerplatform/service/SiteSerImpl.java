@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -140,12 +141,14 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
     }
 
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void save(SiteTO to) throws SerException {
         Site entity = BeanTransform.copyProperties(to, Site.class, true);
         super.save(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void update(SiteTO to) throws SerException {
         Site entity = super.findById(to.getId());
@@ -157,6 +160,7 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
         super.update(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
         Site entity = super.findById(id);
@@ -170,20 +174,51 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
     public List<SiteBO> maps(SiteDTO dto) throws SerException {
         List<Site> sites = super.findByCis(dto);
         List<SiteBO> siteBOs = BeanTransform.copyProperties(sites, SiteBO.class, false);
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+
+        List<Site> sites = super.findByCis(dto);
+        List<SiteBO> siteBOs = BeanTransform.copyProperties(sites, SiteBO.class, false);
+        if (null != siteBOs && siteBOs.size() > 0) {
+            for(SiteBO bo : siteBOs){
+                // TODO: 18-1-5 判断是否是vip
+                Boolean tar = false;
+                if (!tar) {
+                    bo.setPhone(transPhone(bo.getPhone()));
+                }
+            }
+        }
         return siteBOs;
     }
 
     @Override
     public SiteBO getById(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+
         Site entity = super.findById(id);
         if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
         return BeanTransform.copyProperties(entity, SiteBO.class);
+        SiteBO bo =  BeanTransform.copyProperties(entity, SiteBO.class);
+        // TODO: 18-1-5 判断是否是vip
+        Boolean tar = false;
+        if (!tar) {
+            bo.setPhone(transPhone(bo.getPhone()));
+        }
+        return bo;
     }
 
     @Override
     public Long getTotal(SiteDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    private String transPhone(String phone) throws SerException {
+        phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
+        return phone;
     }
 }

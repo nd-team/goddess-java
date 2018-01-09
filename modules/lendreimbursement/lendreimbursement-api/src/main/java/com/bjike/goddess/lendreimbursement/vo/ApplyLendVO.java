@@ -2,8 +2,6 @@ package com.bjike.goddess.lendreimbursement.vo;
 
 import com.bjike.goddess.lendreimbursement.enums.*;
 
-import java.time.LocalDateTime;
-
 /**
  * 申请借款表现层对象
  *
@@ -377,6 +375,16 @@ public class ApplyLendVO {
      * 审核身份（三种身份）
      */
     private LendIndentityStatus lendIndentityStatus;
+
+    /**
+     * 分析人
+     */
+    private String analysiser;
+
+    /**
+     * 是否分析(是/否)
+     */
+    private String analyse;
 
 
 
@@ -970,5 +978,21 @@ public class ApplyLendVO {
 
     public void setLendPhoneShowStatus(LendPhoneShowStatus lendPhoneShowStatus) {
         this.lendPhoneShowStatus = lendPhoneShowStatus;
+    }
+
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

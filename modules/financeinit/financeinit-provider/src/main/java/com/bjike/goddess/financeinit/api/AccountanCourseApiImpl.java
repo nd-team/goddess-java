@@ -155,4 +155,9 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     public String findtaxSubject() throws SerException {
         return accountanCourseSer.findtaxSubject();
     }
+
+    @Override
+    public List<String> findByFirstName(String firstSubject) throws SerException {
+        return accountanCourseSer.findByFirstName(firstSubject);
+    }
 }

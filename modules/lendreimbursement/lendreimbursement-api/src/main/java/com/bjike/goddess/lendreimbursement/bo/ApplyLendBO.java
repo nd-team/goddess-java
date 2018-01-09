@@ -5,8 +5,6 @@ import com.bjike.goddess.lendreimbursement.enums.LendPhoneSelectStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendRetunStatus;
 import com.bjike.goddess.lendreimbursement.enums.LendStatus;
 
-import java.time.LocalDateTime;
-
 /**
  * 申请借款业务传输对象
  *
@@ -364,6 +362,16 @@ public class ApplyLendBO extends BaseBO {
      * 手机端的数据状态
      */
     private LendPhoneSelectStatus lendPhoneSelectStatus;
+
+    /**
+     * 分析人
+     */
+    private String analysiser;
+
+    /**
+     * 是否分析(是/否)
+     */
+    private String analyse;
 
 
     public String getEstimateLendDate() {
@@ -926,4 +934,19 @@ public class ApplyLendBO extends BaseBO {
         this.lendPhoneSelectStatus = lendPhoneSelectStatus;
     }
 
+    public String getAnalysiser() {
+        return analysiser;
+    }
+
+    public void setAnalysiser(String analysiser) {
+        this.analysiser = analysiser;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
+    }
 }

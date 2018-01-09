@@ -11,6 +11,8 @@ import com.bjike.goddess.organize.entity.Hierarchy;
 import com.bjike.goddess.organize.to.HierarchyTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
             throw new SerException("该编号已存在,无法保存");
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HierarchyBO save(HierarchyTO to) throws SerException {
@@ -65,6 +68,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return BeanTransform.copyProperties(hierarchy, HierarchyBO.class);
     }
 
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional(rollbackFor = SerException.class)
     @Override
     public HierarchyBO update(HierarchyTO to) throws SerException {
@@ -82,6 +86,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return BeanTransform.copyProperties(entity, HierarchyBO.class);
     }
 
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public HierarchyBO delete(String id) throws SerException {
         Hierarchy entity = super.findById(id);
@@ -113,6 +118,7 @@ public class HierarchySerImpl extends ServiceImpl<Hierarchy, HierarchyDTO> imple
         return BeanTransform.copyProperties(entity, HierarchyBO.class);
     }
 
+    @Cacheable(value = {"listCache"}, key = "#dto.toString()")
     @Override
     public List<HierarchyBO> maps(HierarchyDTO dto) throws SerException {
         dto.getSorts().add("serialNumber=asc");

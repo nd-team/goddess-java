@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,7 +165,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         List<UserBO> userBOS = BeanTransform.copyProperties ( users, UserBO.class );
         return userBOS;
     }
-
+    @CacheEvict(value = "listCache", allEntries = true)
     @Override
     @Transactional(rollbackFor = SerException.class)
     @Compensable(confirmMethod = "addConfirm", cancelMethod = "addCancel")
@@ -244,7 +245,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         UserBO userBO = BeanTransform.copyProperties ( user, UserBO.class );
         return userBO;
     }
-
+    @CacheEvict(value = "listCache", allEntries = true)
     @Transactional
     @Override
     public void update(UserTO userTO) throws SerException {
@@ -267,7 +268,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             throw new SerException ( "notLogin" );
         }
     }
-
+    @CacheEvict(value = "listCache", allEntries = true)
     @Override
     public void updatePassword(UserTO userTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -291,7 +292,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         }
 
     }
-
+    @CacheEvict(value = "listCache", allEntries = true)
     @Override
     public void updatePhone(UserTO userTO) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -345,14 +346,14 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             throw new SerException ( "notLogin" );
         }
     }
-
+    @Cacheable(value = {"listCache"}, key = "#dto.toString()")
     @Override
     public List<UserBO> findUserByPage(UserDTO dto) throws SerException {
         List<User> list = super.findByPage ( dto );
         List<UserBO> boList = BeanTransform.copyProperties ( list, UserBO.class );
         return boList;
     }
-
+    @CacheEvict(value = "listCache", allEntries = true)
     @Override
     public UserBO updateUser(UserTO userTO) throws SerException {
         if (StringUtils.isBlank ( userTO.getId () )) {
@@ -365,7 +366,7 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         UserBO userBO = BeanTransform.copyProperties ( user, UserBO.class );
         return userBO;
     }
-
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @Override
     public void deleteUser(String id) throws SerException {
         if (StringUtils.isBlank ( id )) {

@@ -1,5 +1,6 @@
 package com.bjike.goddess.budget.service;
 
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.bo.ProjectWeekBO;
 import com.bjike.goddess.budget.bo.ProjectWeekCountBO;
 import com.bjike.goddess.budget.bo.ProjectWeekListBO;
@@ -159,6 +160,16 @@ public interface ProjectWeekSer extends Ser<ProjectWeek, ProjectWeekDTO> {
      * @throws SerException
      */
     default List<String> findAreas() throws SerException {
+        return null;
+    }
+
+    /**
+     * 项目收入周图形化
+     *
+     * @return
+     * @throws SerException
+     */
+    default OptionBO figureShow() throws SerException {
         return null;
     }
 }
