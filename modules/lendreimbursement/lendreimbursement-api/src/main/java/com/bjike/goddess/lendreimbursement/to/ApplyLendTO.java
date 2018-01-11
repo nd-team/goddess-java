@@ -351,6 +351,12 @@ public class ApplyLendTO extends BaseTO {
 
 
     /**
+     * 是否分析(是/否)
+     */
+    private String analyse;
+
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -846,5 +852,13 @@ public class ApplyLendTO extends BaseTO {
 
     public void setCheckPassOr(String checkPassOr) {
         this.checkPassOr = checkPassOr;
+    }
+
+    public String getAnalyse() {
+        return analyse;
+    }
+
+    public void setAnalyse(String analyse) {
+        this.analyse = analyse;
     }
 }

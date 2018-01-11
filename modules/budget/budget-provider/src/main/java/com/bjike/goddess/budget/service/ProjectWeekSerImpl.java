@@ -25,6 +25,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -912,6 +913,141 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             return list;
         }
         return null;
+    }
+
+    @Override
+    public OptionBO figureShow() throws SerException {
+        List<ProjectWeek> projectWeeks = super.findAll();
+        List<ProjectWeek> list = new ArrayList<>(0);
+        if (null != projectWeeks && projectWeeks.size() > 0) {
+            List<String> projectNames = projectWeeks.stream().map(ProjectWeek::getProjectName).distinct().collect(Collectors.toList());
+            for (String projectName : projectNames) {
+                for (int i = 1; i < 13; i++) {
+                    ProjectWeek entity = findData(projectName, i);
+                    if (null != entity) {
+                        list.add(entity);
+                    }
+                }
+            }
+        }
+
+        String text_1 = "项目收入周";
+
+        return getOptionBO(text_1, list);
+    }
+
+    private OptionBO getOptionBO(String text_1, List<ProjectWeek> list) throws SerException {
+        TitleBO title = new TitleBO();
+        title.setText(text_1);
+
+        TooltipBO tooltip = new TooltipBO();
+
+        List<String> names = list.stream().map(ProjectWeek::getProjectName).distinct().collect(Collectors.toList());
+        List<String> nameList = new ArrayList<>(0);
+        for (String name : names) {
+            nameList.add(name + "目标任务量");
+            nameList.add(name + "实际任务量");
+            nameList.add(name + "目标收入");
+            nameList.add(name + "实际收入");
+        }
+        String[] data1 = (String[]) nameList.toArray(new String[nameList.size()]);
+        LegendBO legend = new LegendBO();
+        legend.setData(data1);
+
+        List<String> months = new ArrayList<>(0);
+        for (int i = 1; i < 13; i++) {
+            months.add(i + "月");
+        }
+        XAxisBO xAxis = new XAxisBO();
+        String[] data2 = (String[]) months.toArray(new String[months.size()]);
+        xAxis.setData(data2);
+
+        YAxisBO yAxis = new YAxisBO();
+
+        List<SeriesBO> seriesBOList = new ArrayList<>(0);
+
+
+        for (String projectName : nameList) {
+            int tar = projectName.indexOf("目标");
+            String name = "";
+            String flag = "";
+            if (tar != -1) {
+                name = projectName.substring(0, tar);
+                flag = projectName.substring(tar, projectName.length());
+            } else {
+                name = projectName.substring(0, projectName.indexOf("实际"));
+                flag = projectName.substring(projectName.indexOf("实际"), projectName.length());
+            }
+            List<Double> numbers = new ArrayList<>(0);
+            Double value = 0d;
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(projectName);
+            for (int i = 1; i < 13; i++) {
+                value = 0d;
+                numbers.add(value);
+            }
+
+            for (ProjectWeek entity : list) {
+                if (name.equals(entity.getProjectName())) {
+                    if ("目标任务量".equals(flag) || "实际任务量".equals(flag)) {
+                        seriesBO.setType("bar");
+                    }
+                    if ("目标收入".equals(flag) || "实际收入".equals(flag)) {
+                        seriesBO.setType("line");
+                    }
+
+                    if ("目标任务量".equals(flag)) {
+                        int val = entity.getTargetWork();
+                        value = Double.valueOf(String.valueOf(val));
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                    if ("实际任务量".equals(flag)) {
+                        int val = entity.getActualWork();
+                        value = Double.valueOf(String.valueOf(val));
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                    if ("目标收入".equals(flag)) {
+                        value = entity.getTargetIncome();
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                    if ("实际收入".equals(flag)) {
+                        value = entity.getPlanIncome();
+                        numbers.set(entity.getMonth() - 1, value);
+                    }
+                }
+            }
+
+            Double[] data3 = numbers.toArray(new Double[numbers.size()]);
+            seriesBO.setData(data3);
+            seriesBOList.add(seriesBO);
+        }
+
+        SeriesBO[] seriesBOs = seriesBOList.toArray(new SeriesBO[seriesBOList.size()]);
+        OptionBO option = new OptionBO();
+        option.setLegend(legend);
+        option.setSeries(seriesBOs);
+        option.setTitle(title);
+        option.setTooltip(tooltip);
+        option.setxAxis(xAxis);
+        option.setyAxis(yAxis);
+        return option;
+    }
+
+    private ProjectWeek findData(String projectName, Integer month) throws SerException {
+        String[] files = new String[]{"targetWork", "actualWork", "targetIncome", "planIncome", "month", "projectName"};
+        Integer year = LocalDate.now().getYear();
+        StringBuilder sql = new StringBuilder("select ifnull(sum(targetWork),0) as targetWork, ");
+        sql.append(" ifnull(sum(actualWork),0) as actualWork, ");
+        sql.append(" ifnull(sum(targetIncome),0) as targetIncome, ");
+        sql.append(" ifnull(sum(planIncome),0) as planIncome, ");
+        sql.append(" ifnull(month, 0) as month, projectName ");
+        sql.append(" from budget_projectweek ");
+        sql.append(" where year = '" + year + "' ");
+        sql.append(" and month = '" + month + "' ");
+        sql.append(" and projectName = '" + projectName + "' ");
+
+        List<ProjectWeek> list = super.findBySql(sql.toString(), ProjectWeek.class, files);
+        return list.get(0).getMonth() == 0 ? null : list.get(0);
     }
 
     private ProjectWeekDTO condition(ProjectWeekDTO dto) throws SerException {

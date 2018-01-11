@@ -23,9 +23,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.vo.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import util.AddressUtils;
 import util.CheckMobile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 打卡
@@ -153,14 +157,10 @@ public class PunchAction extends BaseFileAction {
     @PostMapping("v1/pc")
     public Result pc(@Validated(PunchSonTO.PC.class) PunchSonTO to, BindingResult result1, HttpServletRequest request) throws ActException {
         try {
-//            String addr = "";
-//            String str = AddressUtils.getJsonContent("http://ip.taobao.com/service/getIpInfo.php?ip=" + IpUtil.getIp(request));
-//            AddressResult result = JSON.parseObject(str, AddressResult.class);
-//            if ("0".equals(result.getCode())) {
-//                Address ad = JSON.parseObject(result.getData(), Address.class);
-//                addr = ad.getRegion() + ad.getCity();
-//            }
-//            to.setArea(addr);
+
+            String ip = IpUtil.getIp(request);
+            String address = IpUtil.getAddress(ip);
+            to.setArea(address);
             to.setPunchSource(PunchSource.PC);
             PunchSonBO bo = punchSonAPI.save(to);
             return ActResult.initialize(BeanTransform.copyProperties(bo, PunchSonVO.class, request));
@@ -168,6 +168,9 @@ public class PunchAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+
+
 
 
     /**

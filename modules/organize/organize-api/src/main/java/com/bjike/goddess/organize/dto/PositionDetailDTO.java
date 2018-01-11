@@ -12,4 +12,14 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
  * @Copy: [com.bjike]
  */
 public class PositionDetailDTO extends BaseDTO {
+    @Override
+    public String toString() {
+        return "PositionDetailDTO{" +
+                "limit=" + limit +
+                ", page=" + page +
+                ", sorts=" + sorts +
+                ", conditions=" + conditions +
+                ", conditionsJson='" + conditionsJson + '\'' +
+                '}';
+    }
 }

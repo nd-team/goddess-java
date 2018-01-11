@@ -9,6 +9,7 @@ import com.bjike.goddess.projectprocing.bo.NodeHeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.NodeHeadersCustomDTO;
 import com.bjike.goddess.projectprocing.dto.SettleWorkProgreManageDTO;
 import com.bjike.goddess.projectprocing.entity.NodeHeadersCustom;
+import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
 import com.bjike.goddess.projectprocing.entity.SettleWorkProgreManage;
 import com.bjike.goddess.projectprocing.enums.GuideAddrStatus;
 import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
@@ -43,6 +44,8 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private SettleWorkProgreManageSer settleWorkProgreManageSer;
+    @Autowired
+    private SettleProgressManageSer settleProgressManageSer;
 
     /**
      * 检查权限(部门)
@@ -176,13 +179,13 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         checkPermission();
         //查询到本条数据对应的内容数据
         NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
-        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("fatherId",id));
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("fatherId", id));
         List<NodeHeadersCustom> nodeHeadersCustomList = super.findByCis(nodeHeadersCustomDTO);
         //删除时也要将内容数据分配节点出去的删除掉
-        if(nodeHeadersCustomList!=null && nodeHeadersCustomList.size()>0){
-            for (NodeHeadersCustom nodeHeadersCustom: nodeHeadersCustomList){
+        if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
+            for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustomList) {
                 SettleWorkProgreManageDTO settleWorkProgreManageDTO = new SettleWorkProgreManageDTO();
-                settleWorkProgreManageDTO.getConditions().add(Restrict.eq("nodeId",nodeHeadersCustom.getId()));
+                settleWorkProgreManageDTO.getConditions().add(Restrict.eq("nodeId", nodeHeadersCustom.getId()));
                 List<SettleWorkProgreManage> settleWorkProgreManages = settleWorkProgreManageSer.findByCis(settleWorkProgreManageDTO);
                 settleWorkProgreManageSer.remove(settleWorkProgreManages);
             }
@@ -207,17 +210,46 @@ public class NodeHeadersCustomSerImpl extends ServiceImpl<NodeHeadersCustom, Nod
         nodeHeadersCustomDTO.getConditions().add(Restrict.eq("prossManageId", passManageId));
         List<NodeHeadersCustom> nodeHeadersCustoms = super.findByCis(nodeHeadersCustomDTO);
         if (nodeHeadersCustoms != null && nodeHeadersCustoms.size() > 0) {
+
             for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustoms) {
                 NodeHeadersCustom nodeHeadersCustom1 = super.findById(nodeHeadersCustom.getFatherId());
-                nodeHeadersCustom.setNodeOneName(nodeHeadersCustom1.getNodeOneName());
-                nodeHeadersCustom.setNodeOneHeader(nodeHeadersCustom1.getNodeOneHeader());
-                nodeHeadersCustom.setNodeTwoHeader(nodeHeadersCustom1.getNodeTwoHeader());
-                nodeHeadersCustom.setNodeTwoInterDate(nodeHeadersCustom1.getNodeTwoInterDate());
-                nodeHeadersCustom.setNodeThreeHeader(nodeHeadersCustom1.getNodeThreeHeader());
-                nodeHeadersCustom.setNodeThreeInterDate(nodeHeadersCustom1.getNodeThreeInterDate());
-                nodeHeadersCustom.setNodeFourInterDate(nodeHeadersCustom1.getNodeFourInterDate());
-                nodeHeadersCustom.setNodeFourHeader(nodeHeadersCustom1.getNodeFourHeader());
+                if(nodeHeadersCustom1!=null){
+                    nodeHeadersCustom.setNodeOneName(nodeHeadersCustom1.getNodeOneName());
+                    nodeHeadersCustom.setNodeOneHeader(nodeHeadersCustom1.getNodeOneHeader());
+                    nodeHeadersCustom.setNodeTwoHeader(nodeHeadersCustom1.getNodeTwoHeader());
+                    nodeHeadersCustom.setNodeTwoInterDate(nodeHeadersCustom1.getNodeTwoInterDate());
+                    nodeHeadersCustom.setNodeThreeHeader(nodeHeadersCustom1.getNodeThreeHeader());
+                    nodeHeadersCustom.setNodeThreeInterDate(nodeHeadersCustom1.getNodeThreeInterDate());
+                    nodeHeadersCustom.setNodeFourInterDate(nodeHeadersCustom1.getNodeFourInterDate());
+                    nodeHeadersCustom.setNodeFourHeader(nodeHeadersCustom1.getNodeFourHeader());
+                }
             }
+        }
+        return BeanTransform.copyProperties(nodeHeadersCustoms, NodeHeadersCustomBO.class);
+    }
+
+    @Override
+    public List<NodeHeadersCustomBO> getAllByManageId(String passManageId) throws SerException {
+        SettleProgressManage settleProgressManage = settleProgressManageSer.findById(passManageId);
+        NodeHeadersCustomDTO nodeHeadersCustomDTO = new NodeHeadersCustomDTO();
+        nodeHeadersCustomDTO.getConditions().add(Restrict.eq("outUnit", settleProgressManage.getOutUnit()));
+        nodeHeadersCustomDTO.getConditions().add(Restrict.isNull("prossManageId"));
+        List<NodeHeadersCustom> nodeHeadersCustoms = super.findByCis(nodeHeadersCustomDTO);
+        if (nodeHeadersCustoms != null && nodeHeadersCustoms.size() > 0) {
+            for (NodeHeadersCustom nodeHeadersCustom : nodeHeadersCustoms) {
+                NodeHeadersCustomDTO nodeHeadersCustomDTO2 = new NodeHeadersCustomDTO();
+                nodeHeadersCustomDTO2.getConditions().add(Restrict.eq("prossManageId", passManageId));
+                nodeHeadersCustomDTO2.getConditions().add(Restrict.eq("fatherId", nodeHeadersCustom.getId()));
+                NodeHeadersCustom nodeHeadersCustom1 = super.findOne(nodeHeadersCustomDTO2);
+                if (nodeHeadersCustom1 != null) {
+                    nodeHeadersCustom.setNodeOneNameContent(nodeHeadersCustom1.getNodeOneNameContent());
+                    nodeHeadersCustom.setNodeOneContent(nodeHeadersCustom1.getNodeOneContent());
+                    nodeHeadersCustom.setNodeTwoContent(nodeHeadersCustom1.getNodeTwoContent());
+                    nodeHeadersCustom.setNodeThreeContent(nodeHeadersCustom1.getNodeThreeContent());
+                    nodeHeadersCustom.setNodeFourContent(nodeHeadersCustom1.getNodeFourContent());
+                }
+            }
+
         }
         return BeanTransform.copyProperties(nodeHeadersCustoms, NodeHeadersCustomBO.class);
     }

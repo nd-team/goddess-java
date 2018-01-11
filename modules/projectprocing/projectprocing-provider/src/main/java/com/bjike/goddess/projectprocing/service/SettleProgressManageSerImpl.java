@@ -408,14 +408,16 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         List<SettleProgressManage> settleProgressManageList = super.findAll();
         List<String> dispatNames = businessContractAPI.findSingleContractName();
         List<String> returnDates = new ArrayList<>();
-        if (settleProgressManageList == null || settleProgressManageList.size() == 0) {
-            returnDates = dispatNames;
-        } else {
-            if (dispatNames != null && dispatNames.size() > 0) {
-                for (String dispatName : dispatNames) {
-                    for (SettleProgressManage settleProgressManage : settleProgressManageList) {
-                        if (!dispatName.equals(settleProgressManage.getDispatName())) {
-                            returnDates.add(dispatName);
+        if (dispatNames != null && dispatNames.size() > 0) {
+            if (settleProgressManageList == null || settleProgressManageList.size() == 0) {
+                returnDates = dispatNames;
+            } else {
+                if (dispatNames != null && dispatNames.size() > 0) {
+                    for (String dispatName : dispatNames) {
+                        for (SettleProgressManage settleProgressManage : settleProgressManageList) {
+                            if (!dispatName.equals(settleProgressManage.getDispatName())) {
+                                returnDates.add(dispatName);
+                            }
                         }
                     }
                 }
@@ -1180,22 +1182,22 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
                                 if (encapsulationNodeBO.getNodeOneNameContent() != null) {
                                     switch (encapsulationNodeBO.getNodeOneNameContent()) {
                                         case 1:
-                                            if (encapsulationNodeBO.getNodeOneHeader().equals(nodeDataBO.getNode())) {
+                                            if (nodeDataBO.getNode().equals(encapsulationNodeBO.getNodeOneHeader())) {
                                                 nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
                                             }
                                             break;
                                         case 2:
-                                            if (encapsulationNodeBO.getNodeTwoHeader().equals(nodeDataBO.getNode())) {
+                                            if (nodeDataBO.getNode().equals(encapsulationNodeBO.getNodeTwoHeader())) {
                                                 nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
                                             }
                                             break;
                                         case 3:
-                                            if (encapsulationNodeBO.getNodeThreeHeader().equals(nodeDataBO.getNode())) {
+                                            if (nodeDataBO.getNode().equals(encapsulationNodeBO.getNodeThreeHeader())) {
                                                 nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
                                             }
                                             break;
                                         case 4:
-                                            if (encapsulationNodeBO.getNodeFourHeader().equals(nodeDataBO.getNode())) {
+                                            if (nodeDataBO.getNode().equals(encapsulationNodeBO.getNodeFourHeader())) {
                                                 nodeDataBO.setNodeAmount(encapsulationNodeBO.getEstimSettleAmount());
                                             }
                                             break;

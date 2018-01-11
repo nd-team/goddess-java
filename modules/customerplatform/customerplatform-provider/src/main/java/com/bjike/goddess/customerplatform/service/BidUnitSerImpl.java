@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -185,12 +186,14 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
         return flag;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void save(BidUnitTO to) throws SerException {
         BidUnit entity = BeanTransform.copyProperties(to, BidUnit.class, true);
         super.save(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void update(BidUnitTO to) throws SerException {
         BidUnit entity = super.findById(to.getId());
@@ -207,6 +210,7 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
         super.update(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
         BidUnit entity = super.findById(id);
@@ -220,20 +224,49 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
     public List<BidUnitBO> maps(BidUnitDTO dto) throws SerException {
         List<BidUnit> bidUnits = super.findByCis(dto);
         List<BidUnitBO> bidUnitBOs = BeanTransform.copyProperties(bidUnits, BidUnitBO.class, false);
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        List<BidUnit> bidUnits = super.findByCis(dto);
+        List<BidUnitBO> bidUnitBOs = BeanTransform.copyProperties(bidUnits, BidUnitBO.class, false);
+        if (null != bidUnitBOs && bidUnitBOs.size() > 0) {
+            for(BidUnitBO bo : bidUnitBOs){
+                // TODO: 18-1-5 判断是否是vip
+                Boolean tar = false;
+                if (!tar) {
+                    bo.setPhone(transPhone(bo.getPhone()));
+                }
+            }
+        }
         return bidUnitBOs;
     }
 
     @Override
     public BidUnitBO getById(String id) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         BidUnit entity = super.findById(id);
         if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
         return BeanTransform.copyProperties(entity, BidUnitBO.class);
+        BidUnitBO bo = BeanTransform.copyProperties(entity, BidUnitBO.class);
+        // TODO: 18-1-5 判断是否是vip
+        Boolean tar = false;
+        if (!tar) {
+            bo.setPhone(transPhone(bo.getPhone()));
+        }
+        return bo;
     }
 
     @Override
     public Long getTotal(BidUnitDTO dto) throws SerException {
         return super.count(dto);
+    }
+
+    private String transPhone(String phone) throws SerException {
+        phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
+        return phone;
     }
 }

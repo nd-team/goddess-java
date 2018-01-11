@@ -478,4 +478,9 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
         return applyLendSer.analysisDiagram();
     }
 
+    @Override
+    public ApplyLendBO analyse(ApplyLendTO applyLendTO) throws SerException {
+        return applyLendSer.analyse(applyLendTO);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.bjike.goddess.business.entity;
 
+import com.bjike.goddess.business.enums.ChangeDataName;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -20,6 +21,11 @@ import java.time.LocalDate;
 public class BusinessTaxChange extends BaseEntity {
 
     /**
+     * 工商注册id
+     */
+    @Column(name = "businessRegisterId", columnDefinition = "VARCHAR(255)   COMMENT '工商注册id'")
+    private String businessRegisterId;
+    /**
      * 变更日期
      */
     @Column(name = "changeDate", columnDefinition = "DATE   COMMENT '变更日期'")
@@ -30,6 +36,11 @@ public class BusinessTaxChange extends BaseEntity {
      */
     @Column(name = "changeCause", columnDefinition = "VARCHAR(255)   COMMENT '变更原因'")
     private String changeCause;
+    /**
+     * 变更资料名称
+     */
+    @Column(name = "changeDataName",  columnDefinition = "TINYINT(2)   COMMENT '变更资料名称'")
+    private ChangeDataName changeDataName;
 
     /**
      * 变更前内容
@@ -50,17 +61,24 @@ public class BusinessTaxChange extends BaseEntity {
     private String responsibleAgent;
 
     /**
+     * 负责经办人联系方式
+     */
+    @Column(name = "responsiblePhone", columnDefinition = "VARCHAR(255)   COMMENT '负责经办人联系方式'")
+    private String responsiblePhone;
+
+    /**
      * 备注
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
-    /**
-     * 变更资料名称
-     */
-    @Column(name = "changeDataName",  columnDefinition = "VARCHAR(255)   COMMENT '变更资料名称'")
-    private String changeDataName;
+    public String getBusinessRegisterId() {
+        return businessRegisterId;
+    }
 
+    public void setBusinessRegisterId(String businessRegisterId) {
+        this.businessRegisterId = businessRegisterId;
+    }
 
     public LocalDate getChangeDate() {
         return changeDate;
@@ -76,6 +94,14 @@ public class BusinessTaxChange extends BaseEntity {
 
     public void setChangeCause(String changeCause) {
         this.changeCause = changeCause;
+    }
+
+    public ChangeDataName getChangeDataName() {
+        return changeDataName;
+    }
+
+    public void setChangeDataName(ChangeDataName changeDataName) {
+        this.changeDataName = changeDataName;
     }
 
     public String getChangeBeforeContent() {
@@ -102,19 +128,19 @@ public class BusinessTaxChange extends BaseEntity {
         this.responsibleAgent = responsibleAgent;
     }
 
+    public String getResponsiblePhone() {
+        return responsiblePhone;
+    }
+
+    public void setResponsiblePhone(String responsiblePhone) {
+        this.responsiblePhone = responsiblePhone;
+    }
+
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getChangeDataName() {
-        return changeDataName;
-    }
-
-    public void setChangeDataName(String changeDataName) {
-        this.changeDataName = changeDataName;
     }
 }

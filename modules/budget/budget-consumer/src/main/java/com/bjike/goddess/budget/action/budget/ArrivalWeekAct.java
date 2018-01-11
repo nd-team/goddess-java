@@ -3,6 +3,7 @@ package com.bjike.goddess.budget.action.budget;
 import com.bjike.goddess.budget.api.ArrivalWeekAPI;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekCountBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalWeekDTO;
 import com.bjike.goddess.budget.to.ArrivalWeekTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
@@ -313,6 +314,23 @@ public class ArrivalWeekAct extends BaseFileAction{
         try {
             List<ArrivalWeekCountBO> list = arrivalWeekAPI.collect(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalWeekCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地区收入周图形化
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/figureShow")
+    public Result figureShow() throws ActException {
+        try {
+            OptionBO bo = arrivalWeekAPI.figureShow();
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, OptionVO.class));
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

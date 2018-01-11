@@ -345,31 +345,6 @@ public class CustomerBaseInfo extends BaseEntity {
      */
     @Column(name = "age", columnDefinition = "INT(11)   COMMENT '年龄'")
     private Integer age;
-    /**
-     * 地区经纬度
-     */
-    @Column(name = "areaLatitude", columnDefinition = "VARCHAR(255)   COMMENT '地区经纬度'")
-    private String areaLatitude;
-    /**
-     * 客户性格
-     */
-    @Column(name = "customerCharacter", columnDefinition = "VARCHAR(255)   COMMENT '客户性格'")
-    private String customerCharacter;
-    /**
-     * 客户脾气
-     */
-    @Column(name = "customerTemper", columnDefinition = "VARCHAR(255)   COMMENT '客户脾气'")
-    private String customerTemper;
-    /**
-     * 客户兴趣
-     */
-    @Column(name = "customerInterest", columnDefinition = "VARCHAR(255)   COMMENT '客户兴趣'")
-    private String customerInterest;
-    /**
-     * 共同认识的人
-     */
-    @Column(name = "knowEachOther", columnDefinition = "TEXT   COMMENT '共同认识的人'")
-    private String knowEachOther;
 
     /**
      * 客户详细信息
@@ -377,26 +352,6 @@ public class CustomerBaseInfo extends BaseEntity {
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "customerBaseInfo", fetch = FetchType.LAZY)
     private CustomerDetail customerDetail;
 
-    /**
-     * 业主提供的身份证明
-     */
-    @Column(name = "proof", columnDefinition = "VARCHAR(255)   COMMENT '业主提供的身份证明'")
-    private String proof;
-    /**
-     * 与业主签订的合同
-     */
-    @Column(name = "landlordContract", columnDefinition = "VARCHAR(255)   COMMENT '与业主签订的合同'")
-    private String landlordContract;
-    /**
-     * 甲方和业主的合同
-     */
-    @Column(name = "firstAndLandlordContract", columnDefinition = "VARCHAR(255)   COMMENT '甲方和业主的合同'")
-    private String firstAndLandlordContract;
-    /**
-     * 数据来源
-     */
-    @Column(name = "dataSource", columnDefinition = "VARCHAR(255)   COMMENT '数据来源'")
-    private String dataSource;
 
     public Integer getAge() {
         return age;
@@ -406,37 +361,6 @@ public class CustomerBaseInfo extends BaseEntity {
         this.age = age;
     }
 
-    public String getProof() {
-        return proof;
-    }
-
-    public void setProof(String proof) {
-        this.proof = proof;
-    }
-
-    public String getLandlordContract() {
-        return landlordContract;
-    }
-
-    public void setLandlordContract(String landlordContract) {
-        this.landlordContract = landlordContract;
-    }
-
-    public String getFirstAndLandlordContract() {
-        return firstAndLandlordContract;
-    }
-
-    public void setFirstAndLandlordContract(String firstAndLandlordContract) {
-        this.firstAndLandlordContract = firstAndLandlordContract;
-    }
-
-    public String getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public Double getCustomerPosition() {
         return customerPosition;
@@ -910,43 +834,4 @@ public class CustomerBaseInfo extends BaseEntity {
         this.callcyle = callcyle;
     }
 
-    public String getAreaLatitude() {
-        return areaLatitude;
-    }
-
-    public void setAreaLatitude(String areaLatitude) {
-        this.areaLatitude = areaLatitude;
-    }
-
-    public String getCustomerCharacter() {
-        return customerCharacter;
-    }
-
-    public void setCustomerCharacter(String customerCharacter) {
-        this.customerCharacter = customerCharacter;
-    }
-
-    public String getCustomerTemper() {
-        return customerTemper;
-    }
-
-    public void setCustomerTemper(String customerTemper) {
-        this.customerTemper = customerTemper;
-    }
-
-    public String getCustomerInterest() {
-        return customerInterest;
-    }
-
-    public void setCustomerInterest(String customerInterest) {
-        this.customerInterest = customerInterest;
-    }
-
-    public String getKnowEachOther() {
-        return knowEachOther;
-    }
-
-    public void setKnowEachOther(String knowEachOther) {
-        this.knowEachOther = knowEachOther;
-    }
 }

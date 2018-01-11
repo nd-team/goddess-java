@@ -8,17 +8,20 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.projectprocing.bo.HeadersCustomBO;
 import com.bjike.goddess.projectprocing.dto.HeadersCustomDTO;
 import com.bjike.goddess.projectprocing.entity.HeadersCustom;
+import com.bjike.goddess.projectprocing.entity.SettleProgressManage;
 import com.bjike.goddess.projectprocing.enums.GuideAddrStatus;
 import com.bjike.goddess.projectprocing.to.GuidePermissionTO;
 import com.bjike.goddess.projectprocing.to.HeadersCustomTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,6 +41,8 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private SettleProgressManageSer settleProgressManageSer;
 
     /**
      * 检查权限(部门)
@@ -189,17 +194,40 @@ public class HeadersCustomSerImpl extends ServiceImpl<HeadersCustom, HeadersCust
         HeadersCustomDTO headersCustomDTO = new HeadersCustomDTO();
         headersCustomDTO.getConditions().add(Restrict.eq("prossManageId", prossManageId));
         List<HeadersCustom> headersCustoms = super.findByCis(headersCustomDTO);
-        if (headersCustoms != null && headersCustoms.size() > 0) {
+        if (headersCustoms!=null && headersCustoms.size()>0) {
             for (HeadersCustom headersCustom : headersCustoms) {
                 HeadersCustom headersCustom1 = super.findById(headersCustom.getFatherId());
-                headersCustom.setHeader(headersCustom1.getHeader());
-                headersCustom.setOutUnit(headersCustom1.getOutUnit());
-                headersCustom.setRemark(headersCustom1.getRemark());
-                headersCustom.setRequiredFill(headersCustom1.getRequiredFill());
-                headersCustom.setTypes(headersCustom1.getTypes());
+                if(headersCustom1!=null){
+                    headersCustom.setHeader(headersCustom1.getHeader());
+                    headersCustom.setOutUnit(headersCustom1.getOutUnit());
+                    headersCustom.setRemark(headersCustom1.getRemark());
+                    headersCustom.setRequiredFill(headersCustom1.getRequiredFill());
+                    headersCustom.setTypes(headersCustom1.getTypes());
+                }
             }
         }
         return BeanTransform.copyProperties(headersCustoms, HeadersCustomBO.class);
+    }
+
+    @Override
+    public List<HeadersCustomBO> getAllByManageId( String prossManageId) throws SerException {
+        SettleProgressManage settleProgressManage = settleProgressManageSer.findById(prossManageId);
+        HeadersCustomDTO headersCustomDTO = new HeadersCustomDTO();
+        headersCustomDTO.getConditions().add(Restrict.eq("outUnit", settleProgressManage.getOutUnit()));
+        headersCustomDTO.getConditions().add(Restrict.isNull("prossManageId"));
+        List<HeadersCustom> headersCustoms = super.findByCis(headersCustomDTO);
+        if(headersCustoms!=null && headersCustoms.size()>0){
+            for (HeadersCustom headersCustom : headersCustoms){
+                HeadersCustomDTO headersCustomDTO2 = new HeadersCustomDTO();
+                headersCustomDTO2.getConditions().add(Restrict.eq("prossManageId",prossManageId));
+                headersCustomDTO2.getConditions().add(Restrict.eq("fatherId",headersCustom.getId()));
+                HeadersCustom headersCustom1 = super.findOne(headersCustomDTO2);
+                if(headersCustom1!=null){
+                    headersCustom.setContent(headersCustom1.getContent());
+                }
+            }
+        }
+        return BeanTransform.copyProperties(headersCustoms,HeadersCustomBO.class);
     }
 
     @Transactional(rollbackFor = SerException.class)

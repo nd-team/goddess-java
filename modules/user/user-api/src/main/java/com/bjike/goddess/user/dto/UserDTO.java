@@ -14,6 +14,17 @@ import org.hibernate.validator.constraints.NotBlank;
  * @Copy: [com.bjike]
  */
 public class UserDTO extends BaseDTO {
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "limit=" + limit +
+                ", page=" + page +
+                ", username='" + username + '\'' +
+                ", sorts=" + sorts +
+                ", conditions=" + conditions +
+                ", conditionsJson='" + conditionsJson + '\'' +
+                '}';
+    }
 
     public interface NAME {
     }

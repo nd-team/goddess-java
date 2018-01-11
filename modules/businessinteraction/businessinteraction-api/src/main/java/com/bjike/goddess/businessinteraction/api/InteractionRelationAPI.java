@@ -9,60 +9,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import java.util.List;
 
 /**
- * 商业能力互动联系业务接口
+ * 公司信息业务接口
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:06 ]
- * @Description: [ 商业能力互动联系业务接口 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 08:58 ]
+ * @Description: [ 公司信息业务接口 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public interface InteractionRelationAPI {
-
-    /**
-     * 商业能力互动联系列表总条数
-     *
-     */
-    default Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
-        return null;
-    }
-    /**
-     * 互动联系列表id
-     * @return class InteractionRelationBO
-     */
-    default InteractionRelationBO getOneById (String id) throws SerException {return null;}
-
-
-    /**
-     * 互动联系列表
-     * @return class InteractionRelationBO
-     */
-    default List<InteractionRelationBO> listInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {return null;}
-    /**
-     *  添加
-     * @param interactionRelationTO 互动联系信息
-     * @return class InteractionRelationBO
-     */
-    default InteractionRelationBO addInteractionRelation(InteractionRelationTO interactionRelationTO) throws SerException { return null;}
-
-    /**
-     *  编辑
-     * @param interactionRelationTO 互动联系信息
-     * @return class InteractionRelationBO
-     */
-    default InteractionRelationBO editInteractionRelation(InteractionRelationTO interactionRelationTO) throws SerException { return null;}
-
-    /**
-     * 删除互动联系信息
-     * @param id id
-     */
-    default void deleteInteractionRelation(String id ) throws SerException {return;};
-
-    /**
-     * 搜索互动联系
-     * @return class InteractionRelationBO
-     */
-    default List<InteractionRelationBO> searchInteractionRelation(InteractionRelationDTO interactionRelationDTO) throws SerException {return null;}
 
     /**
      * 下拉导航权限
@@ -70,10 +25,86 @@ public interface InteractionRelationAPI {
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;
     }
+    /**
+     * 公司信息列表总条数
+     */
+    default Long countInter(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 一个公司信息
+     *
+     * @return class InteractionRelationBO
+     */
+    default InteractionRelationBO getOneById(String id) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 公司信息列表
+     *
+     * @return class InteractionRelationBO
+     */
+    default List<InteractionRelationBO> listIntera(InteractionRelationDTO interactionRelationDTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 添加
+     *
+     * @param interactionRelationTO 公司信息
+     * @return class InteractionRelationBO
+     */
+    default InteractionRelationBO addIntera(InteractionRelationTO interactionRelationTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 编辑
+     *
+     * @param interactionRelationTO 公司信息
+     * @return class LeavingMessageBO
+     */
+    default InteractionRelationBO editIntera(InteractionRelationTO interactionRelationTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 删除公司信息
+     *
+     * @param id id
+     */
+    default void deleteIntera(String id) throws SerException {
+        return;
+    }
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param interactionRelationTOS 工龄补助
+     */
+    void importExcel(List<InteractionRelationTO> interactionRelationTOS) throws SerException;
 }

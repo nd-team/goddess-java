@@ -24,6 +24,7 @@ public class JapiTest {
 				"modules/user/user-api",
 				"modules/event/event-api",
 				"modules/attendance/attendance-api",
+				"modules/staffentry/staffentry-api",
 				"modules/lendreimbursement/lendreimbursement-api",
 				"common/common-api"
 		});

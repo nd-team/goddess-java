@@ -66,6 +66,17 @@ public class TaskNode extends BaseEntity {
      */
     @Column(name = "taskType", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '任务类型'")
     private TaskType taskType;
+    /**
+     * 时长类型
+     */
+    @Column(name = "timesType", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '任务类型'")
+    private TimesType timesType;
+
+    /**
+     * 功能模块
+     */
+    @Column(name = "moudle", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '功能模块'")
+    private String moudle;
 
     /**
      * 类型
@@ -279,6 +290,11 @@ public class TaskNode extends BaseEntity {
      */
     @Column(name = "priority", columnDefinition = "INT(11)   COMMENT '优先级'")
     private Integer priority;
+    /**
+     * 功能优先级
+     */
+    @Column(name = "gpriority", columnDefinition = "INT(11)   COMMENT '优先级'")
+    private Integer gpriority;
 
     /**
      * 工作效率
@@ -730,5 +746,29 @@ public class TaskNode extends BaseEntity {
 
     public void setHaveSon(Boolean haveSon) {
         this.haveSon = haveSon;
+    }
+
+    public String getMoudle() {
+        return moudle;
+    }
+
+    public void setMoudle(String moudle) {
+        this.moudle = moudle;
+    }
+
+    public Integer getGpriority() {
+        return gpriority;
+    }
+
+    public void setGpriority(Integer gpriority) {
+        this.gpriority = gpriority;
+    }
+
+    public TimesType getTimesType() {
+        return timesType;
+    }
+
+    public void setTimesType(TimesType timesType) {
+        this.timesType = timesType;
     }
 }

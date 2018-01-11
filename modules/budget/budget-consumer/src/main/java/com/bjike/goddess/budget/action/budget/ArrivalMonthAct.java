@@ -4,6 +4,7 @@ import com.bjike.goddess.budget.api.ArrivalMonthAPI;
 import com.bjike.goddess.budget.bo.ArrivalMonthBO;
 import com.bjike.goddess.budget.bo.ArrivalMonthCountBO;
 import com.bjike.goddess.budget.bo.ArrivalWeekBO;
+import com.bjike.goddess.budget.bo.OptionBO;
 import com.bjike.goddess.budget.dto.ArrivalMonthDTO;
 import com.bjike.goddess.budget.to.GuidePermissionTO;
 import com.bjike.goddess.budget.vo.ArrivalMonthCountVO;
@@ -183,6 +184,23 @@ public class ArrivalMonthAct {
         try {
             List<ArrivalMonthCountBO> list = arrivalMonthAPI.collect(dto);
             return ActResult.initialize(BeanTransform.copyProperties(list, ArrivalMonthCountVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地区收入月图形化
+     *
+     * @return class OptionBO
+     * @version v1
+     */
+    @GetMapping("v1/figureShow")
+    public Result figureShow() throws ActException {
+        try {
+            OptionBO bo = arrivalMonthAPI.figureShow();
+//            return ActResult.initialize(BeanTransform.copyProperties(bo, OptionVO.class));
+            return ActResult.initialize(bo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

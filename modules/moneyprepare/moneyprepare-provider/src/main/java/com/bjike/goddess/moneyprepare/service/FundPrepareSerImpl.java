@@ -6,8 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.api.CategoryAPI;
-import com.bjike.goddess.financeinit.api.FirstSubjectAPI;
+import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.moneyprepare.api.ProportionAPI;
 import com.bjike.goddess.moneyprepare.bo.*;
 import com.bjike.goddess.moneyprepare.dto.FundPrepareDTO;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 资金准备业务实现
@@ -44,7 +46,7 @@ import java.util.List;
 public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO> implements FundPrepareSer {
 
     @Autowired
-    private FirstSubjectAPI firstSubjectAPI;
+    private AccountanCourseAPI accountanCourseAPI;
     @Autowired
     private ProportionAPI proportionAPI;
     @Autowired
@@ -381,7 +383,7 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
         fundPrepareTO.setTime(sb.toString());
 
         FundPrepare fundPrepare = BeanTransform.copyProperties(fundPrepareTO, FundPrepare.class);
-        BeanUtils.copyProperties(fundPrepare, temp,  "createTime");
+        BeanUtils.copyProperties(fundPrepare, temp, "createTime");
         temp.setModifyTime(LocalDateTime.now());
         super.update(temp);
 
@@ -400,7 +402,12 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
     @Override
     public List<String> findFirstSubject() throws SerException {
         //从财务模块得到一级科目
-        return firstSubjectAPI.listAllFirst();
+        List<AccountAddDateBO> list = accountanCourseAPI.findFirstNameCode();
+        if (null != list && list.size() > 0) {
+            List<String> strings = list.stream().map(AccountAddDateBO::getAccountanName).distinct().collect(Collectors.toList());
+            return strings;
+        }
+        return null;
     }
 
     @Override
@@ -409,7 +416,7 @@ public class FundPrepareSerImpl extends ServiceImpl<FundPrepare, FundPrepareDTO>
             throw new SerException("一级科目名称不能为空");
         }
         //从财务模块得到三级科目
-        return categoryAPI.findByFirstName(firstSubject);
+        return accountanCourseAPI.findByFirstName(firstSubject);
     }
 
 

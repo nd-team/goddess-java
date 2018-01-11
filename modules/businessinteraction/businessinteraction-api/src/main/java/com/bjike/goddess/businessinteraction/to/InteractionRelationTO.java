@@ -1,34 +1,37 @@
 package com.bjike.goddess.businessinteraction.to;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 商业能力互动联系
+ * 公司信息
  *
- * @Author: [ tanghaixiang ]
- * @Date: [ 2017-03-28 03:06 ]
- * @Description: [ 商业能力互动联系 ]
+ * @Author: [ lijuntao ]
+ * @Date: [ 2018-01-05 08:58 ]
+ * @Description: [ 公司信息 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
 public class InteractionRelationTO extends BaseTO {
 
+
     /**
      * 地区
      */
-    @NotBlank(message = "地区不能为空")
     private String area;
 
     /**
      * 公司名称
      */
-    @NotBlank(message = "公司名称不能为空")
+    @NotBlank(message = "公司名称不能为空",groups = {ADD.class, EDIT.class})
     private String companyName;
 
     /**
      * 公司电话
      */
+    @NotBlank(message = "公司电话不能为空",groups = {ADD.class, EDIT.class})
     private String companyTel;
 
     /**
@@ -42,9 +45,19 @@ public class InteractionRelationTO extends BaseTO {
     private String companyMajorPage;
 
     /**
+     * 公司业务方向
+     */
+    private String companyBussWay;
+
+    /**
      * 公司微信号
      */
     private String companyWebchat;
+
+    /**
+     * 公司公众号
+     */
+    private String companyPublic;
 
     /**
      * 公司QQ号
@@ -55,21 +68,6 @@ public class InteractionRelationTO extends BaseTO {
      * 公司论坛
      */
     private String companyTalk;
-
-    /**
-     * 联系人
-     */
-    private String contact;
-
-    /**
-     * 联系电话
-     */
-    private String contactTel;
-
-    /**
-     * 移动电话
-     */
-    private String phone;
 
 
     public String getArea() {
@@ -112,12 +110,28 @@ public class InteractionRelationTO extends BaseTO {
         this.companyMajorPage = companyMajorPage;
     }
 
+    public String getCompanyBussWay() {
+        return companyBussWay;
+    }
+
+    public void setCompanyBussWay(String companyBussWay) {
+        this.companyBussWay = companyBussWay;
+    }
+
     public String getCompanyWebchat() {
         return companyWebchat;
     }
 
     public void setCompanyWebchat(String companyWebchat) {
         this.companyWebchat = companyWebchat;
+    }
+
+    public String getCompanyPublic() {
+        return companyPublic;
+    }
+
+    public void setCompanyPublic(String companyPublic) {
+        this.companyPublic = companyPublic;
     }
 
     public String getCompanyQQ() {
@@ -134,29 +148,5 @@ public class InteractionRelationTO extends BaseTO {
 
     public void setCompanyTalk(String companyTalk) {
         this.companyTalk = companyTalk;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContactTel() {
-        return contactTel;
-    }
-
-    public void setContactTel(String contactTel) {
-        this.contactTel = contactTel;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 }
