@@ -155,13 +155,13 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
     }
 
     @Override
-    public List<SurPlanbo> getSurveyPlan() throws SerException {
+    public List<SurPlanBO> getSurveyPlan() throws SerException {
         List<SurveyPlan> surveyPlanList = super.findAll();
-        List<SurPlanbo> list = new ArrayList<>();
+        List<SurPlanBO> list = new ArrayList<>();
         if (null != surveyPlanList && surveyPlanList.size() > 0) {
             for (SurveyPlan entity : surveyPlanList) {
-                SurPlanbo surPlanbo = new SurPlanbo();
-                surPlanbo.setSurPlanId(entity.getId());
+                SurPlanBO surPlanbo = new SurPlanBO();
+//                surPlanbo.setTypeName(entity.getId());
                 surPlanbo.setSerialNumber(entity.getSerialNumber());
                 list.add(surPlanbo);
             }

@@ -113,7 +113,7 @@ public interface SurveyPlanSer extends Ser<SurveyPlan, SurveyPlanDTO> {
     /**
      * 获取调研计划
      */
-    default List<SurPlanbo> getSurveyPlan() throws SerException {
+    default List<SurPlanBO> getSurveyPlan() throws SerException {
         return null;
     }
 
