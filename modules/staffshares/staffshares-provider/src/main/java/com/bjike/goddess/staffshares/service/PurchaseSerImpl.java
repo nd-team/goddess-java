@@ -1,7 +1,6 @@
 package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.bonus.api.DisciplineRecordAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -10,6 +9,8 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
 import com.bjike.goddess.staffshares.api.SchemeAPI;
 import com.bjike.goddess.staffshares.bo.PurchaseBO;
 import com.bjike.goddess.staffshares.bo.SchemeIssueBO;
@@ -35,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
@@ -57,8 +59,8 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
-    //    @Autowired
-//    private EntryBasicInfoAPI entryBasicInfoAPI;
+        @Autowired
+    private StaffEntryRegisterAPI staffEntryRegisterAPI;
     @Autowired
     private DisciplineRecordAPI disciplineRecordAPI;
     @Autowired
@@ -71,8 +73,8 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
     private SellscheduleSer sellscheduleSer;
     @Autowired
     private ModuleAPI moduleAPI;
-    @Autowired
-    private AgeAssistAPI ageAssistAPI;
+//    @Autowired
+//    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -252,20 +254,20 @@ public class PurchaseSerImpl extends ServiceImpl<Purchase, PurchaseDTO> implemen
             entity.setDepartment(positionDetailBO.getDepartmentName());
             entity.setPosition(positionDetailBO.getPosition());
 
-//            List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getByEmpNumber(positionDetailBO.getSerialNumber());
-//            if (null != entryBasicInfoBOs && entryBasicInfoBOs.size() > 0) {
-//                //获取第一条数据
+            LinkDateStaffEntryBO entryBO = staffEntryRegisterAPI.findByEmpNum(positionDetailBO.getSerialNumber());
+            if (null != entryBO) {
+                //获取第一条数据
 //                EntryBasicInfoBO entryBasicInfoBO = entryBasicInfoBOs.get(0);
-//                String time = entryBasicInfoBO.getEntryTime();
-//                int months = getMonthSpace(time, LocalDate.now().toString());
-//                entity.setMonths(months);
-//            } else {
-//                throw new SerException("查无当前用户的入职信息");
-//            }
+                String time = entryBO.getEntryDate();
+                int months = getMonthSpace(time, LocalDate.now().toString());
+                entity.setMonths(months);
+            } else {
+                throw new SerException("查无当前用户的入职信息");
+            }
 
             int months = 0;
             if (moduleAPI.isCheck("assistance")) {
-                months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
+//                months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
             }
             entity.setMonths(months);
             entity.setSellName(schemeIssueBO.getPublisher());

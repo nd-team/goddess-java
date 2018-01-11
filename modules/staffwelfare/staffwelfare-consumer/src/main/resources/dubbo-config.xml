@@ -24,7 +24,6 @@
 
 	<!-- 感谢语API -->
 	<dubbo:reference interface="com.bjike.goddess.staffwelfare.api.ThankStatementAPI" id="thankStatementApiImpl" />
-
 	<!-- 祝福语API -->
 	<dubbo:reference interface="com.bjike.goddess.staffwelfare.api.WishesStatementAPI" id="wishesStatementApiImpl" />
 
@@ -60,7 +59,7 @@
 	<dubbo:reference  validation="true" id="userApiImpl" interface="com.bjike.goddess.user.api.UserAPI" />
 	<dubbo:reference  validation="true" id="storageUserApiImpl" interface="com.bjike.goddess.storage.api.StorageUserAPI" />
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
-	<dubbo:reference  validation="true" id="entryBasicInfoApiImpl" interface="com.bjike.goddess.staffentry.api.EntryBasicInfoAPI" />
+	<dubbo:reference  validation="true" id="staffEntryRegisterApiImpl" interface="com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
 	<dubbo:reference  validation="true" id="dimissionInfoApiImpl" interface="com.bjike.goddess.dimission.api.DimissionInfoAPI" />
     <dubbo:reference  validation="true" id="staffRecordsApiImpl" interface="com.bjike.goddess.archive.api.StaffRecordsAPI" />

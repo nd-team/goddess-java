@@ -70,7 +70,7 @@ public class SurveyPlanApiImpl implements SurveyPlanAPI {
     }
 
     @Override
-    public List<SurPlanbo> getSurveyPlan() throws SerException {
+    public List<SurPlanBO> getSurveyPlan() throws SerException {
         return surveyPlanSer.getSurveyPlan();
     }
 
