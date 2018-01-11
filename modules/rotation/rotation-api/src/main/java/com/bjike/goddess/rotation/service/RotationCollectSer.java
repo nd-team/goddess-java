@@ -7,6 +7,7 @@ import com.bjike.goddess.rotation.bo.RotationDetailsCollectBO;
 import com.bjike.goddess.rotation.dto.RotationCollectEchartDTO;
 import com.bjike.goddess.rotation.dto.RotationDetailsCollectDTO;
 import com.bjike.goddess.rotation.enums.CollectTimeType;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 public interface RotationCollectSer {
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 公能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
 
     /**

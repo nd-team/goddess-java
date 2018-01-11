@@ -26,12 +26,12 @@ public interface CurrentPositionSer extends Ser<CurrentPosition, CurrentPosition
     /**
      * 下拉导航权限
      */
-    default List<SonPermissionObject> sonPermission() throws SerException {
+    default Boolean sonPermission() throws SerException {
         return null;
     }
 
     /**
-     * 工能导航权限
+     * 公能导航权限
      */
     default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return null;

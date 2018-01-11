@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.rotation.bo.RotationRecordBO;
 import com.bjike.goddess.rotation.entity.RotationRecord;
 import com.bjike.goddess.rotation.dto.RotationRecordDTO;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationConditionTO;
 import com.bjike.goddess.rotation.to.RotationRecordTO;
 
@@ -21,6 +22,20 @@ import java.util.List;
  */
 public interface RotationRecordSer extends Ser<RotationRecord, RotationRecordDTO> {
 
+
+    /**
+     * 下拉导航权限
+     */
+    default Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    /**
+     * 功能导航权限
+     */
+    default Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 列表

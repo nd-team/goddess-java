@@ -24,7 +24,7 @@ public interface CurrentPositionAPI {
     /**
      * 下拉导航权限
      */
-    default List<SonPermissionObject> sonPermission() throws SerException {
+    default Boolean sonPermission() throws SerException {
         return null;
     }
 

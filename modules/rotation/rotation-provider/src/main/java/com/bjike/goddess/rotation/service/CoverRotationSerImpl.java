@@ -35,6 +35,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
@@ -200,6 +201,9 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         entity.setUsername(user.getUsername());
         entity.setAudit(AuditType.NONE);
         entity.setApplyLevel(subsidyStandardSer.findById(to.getApplyLevelId()));
+        StaffRecordsBO bo = staffRecordsAPI.findByName(entity.getUsername());
+        entity.setEntryTime(bo == null ? null : bo.getEntryTime());
+        entity.setRegularTime(regularizationAPI.getTime(entity.getUsername()));
         if (null == entity.getApplyLevel())
             throw new SerException("申请的层级不存在");
         super.save(entity);
@@ -292,6 +296,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         return coverRotationOpinionSer.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CoverRotationBO generalOpinion(CoverRotationTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -317,8 +322,12 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         entity.setHadNotify(false);
         super.update(entity);
         CoverRotationBO coverRotationBO = BeanTransform.copyProperties(entity, CoverRotationBO.class);
+        coverRotationBO.setApplyTime(entity.getCreateTime().toString());
+        coverRotationBO.setApplyLevelArrangement(entity.getApplyLevel().getArrangement());
+        coverRotationBO.setRotationLevelArrangement(entity.getRotationLevel().getArrangement());
         List<CoverRotationBO> coverRotationBOS = new ArrayList<>();
         coverRotationBOS.add(coverRotationBO);
+
 
         //通过则保存到记录表
         if (to.getPass()) {
@@ -620,10 +629,11 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
                 sb.append("<td>" + bo.getArea() + "</td>");
                 sb.append("<td>" + bo.getDepartment() + "</td>");
                 sb.append("<td>" + bo.getPosition() + "</td>");
-                sb.append("<td>" + bo.getEntryTime() + "</td>");
-                sb.append("<td>" + bo.getRegularTime() + "</td>");
-                sb.append("<td>" + bo.getApplyLevelArrangement() + "</td>");
+                sb.append("<td>" + bo.getEntryTime() == null ? "" : bo.getEntryTime() + "</td>");
+                sb.append("<td>" + bo.getRegularTime() == null ? "" : bo.getRegularTime() + "</td>");
+                sb.append("<td>" + bo.getArrangement() + "</td>");
                 sb.append("<td>" + bo.getGetTime() + "</td>");
+                sb.append("<td>" + bo.getApplyLevelArrangement() + "</td>");
                 sb.append("<td>" + bo.getApplyTime() + "</td>");
                 sb.append("<td>" + bo.getReason() + "</td>");
                 sb.append("<td>" + bo.getRotationLevelArrangement() + "</td>");
@@ -632,6 +642,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
                 sb.append("<td></td>");
                 sb.append("<td></td>");
                 sb.append("<td>" + bo.getGeneral() + "</td>");
+                sb.append("<td>" + bo.getOpinion() + "</td>");
                 sb.append("<td>" + bo.getRotationDate() + "</td>");
                 sb.append("<tr>");
             }

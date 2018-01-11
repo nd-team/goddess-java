@@ -8,6 +8,7 @@ import com.bjike.goddess.rotation.bo.RotationRecordBO;
 import com.bjike.goddess.rotation.dto.RotationRecordDTO;
 import com.bjike.goddess.rotation.entity.RotationRecord;
 import com.bjike.goddess.rotation.enums.AuditType;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.to.RotationConditionTO;
 import com.bjike.goddess.rotation.to.RotationRecordTO;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,6 +32,16 @@ import java.util.List;
 @CacheConfig(cacheNames = "rotationSerCache")
 @Service
 public class RotationRecordSerImpl extends ServiceImpl<RotationRecord, RotationRecordDTO> implements RotationRecordSer {
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return null;
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return null;
+    }
 
     @Override
     public List<RotationRecordBO> list(RotationRecordDTO dto) throws SerException {

@@ -8,6 +8,7 @@ import com.bjike.goddess.rotation.dto.RotationCollectEchartDTO;
 import com.bjike.goddess.rotation.dto.RotationDetailsCollectDTO;
 import com.bjike.goddess.rotation.enums.CollectTimeType;
 import com.bjike.goddess.rotation.service.RotationCollectSer;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ import java.util.List;
 public class RotationCollectApiImpl implements RotationCollectAPI{
     @Autowired
     RotationCollectSer rotationCollectSer;
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        return rotationCollectSer.sonPermission();
+    }
+
+    @Override
+    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
+        return rotationCollectSer.guidePermission(guidePermissionTO);
+    }
 
     @Override
     public List<RotationDetailsCollectBO> listDetailsCollect(RotationDetailsCollectDTO dto) throws SerException {

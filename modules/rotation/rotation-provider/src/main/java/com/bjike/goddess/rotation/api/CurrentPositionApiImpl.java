@@ -28,7 +28,7 @@ public class CurrentPositionApiImpl implements CurrentPositionAPI {
     CurrentPositionSer currentPositionSer;
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
+    public Boolean sonPermission() throws SerException {
         return currentPositionSer.sonPermission();
     }
 

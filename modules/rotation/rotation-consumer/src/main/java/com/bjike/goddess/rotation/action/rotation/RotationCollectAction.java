@@ -14,15 +14,19 @@ import com.bjike.goddess.rotation.dto.RotationCollectEchartDTO;
 import com.bjike.goddess.rotation.dto.RotationDetailsCollectDTO;
 import com.bjike.goddess.rotation.enums.CollectDetailsType;
 import com.bjike.goddess.rotation.enums.CollectTimeType;
+import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.vo.RotationCollectEchartVO;
 import com.bjike.goddess.rotation.vo.RotationCollectVO;
 import com.bjike.goddess.rotation.vo.RotationDetailsCollectVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -39,6 +43,30 @@ public class RotationCollectAction {
 
     @Autowired
     RotationCollectAPI rotationCollectAPI;
+
+    /**
+     * 功能导航权限
+     *
+     * @param guidePermissionTO 导航类型数据
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/guidePermission")
+    public Result guidePermission(@Validated(GuidePermissionTO.TestAdd.class) GuidePermissionTO guidePermissionTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+
+            Boolean isHasPermission = rotationCollectAPI.guidePermission(guidePermissionTO);
+            if (!isHasPermission) {
+                //int code, String msg
+                return new ActResult(0, "没有权限", false);
+            } else {
+                return new ActResult(0, "有权限", true);
+            }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
     /**
      * 岗位轮岗明细汇总-管理

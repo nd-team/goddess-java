@@ -168,11 +168,10 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
         if (!"admin".equals(userName.toLowerCase())) {
             flag = cusPermissionSer.getCusPermission("1");
             if (!flag) {
-                throw new SerException("您不是相应部门的人员，不可以查看");
+                throw new SerException("您不是相应部门的人员，不可以操作");
             }
         }
         RpcTransmit.transmitUserToken(userToken);
-
     }
 
     /**
@@ -185,17 +184,16 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2");
+            flag = cusPermissionSer.getCusPermission("2");
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
         }
         RpcTransmit.transmitUserToken(userToken);
-
     }
 
     /**
-     * 导航栏核对查看权限（部门级别）
+     * 核对查看权限（部门级别）
      */
     private Boolean guideSeeIdentity() throws SerException {
         Boolean flag = false;
@@ -212,7 +210,7 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
     }
 
     /**
-     * 导航栏核对添加修改删除审核权限（岗位级别）
+     * 核对添加修改删除审核权限（岗位级别）
      */
     private Boolean guideAddIdentity() throws SerException {
         Boolean flag = false;
@@ -229,88 +227,16 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
     }
 
     @Override
-    public List<SonPermissionObject> sonPermission() throws SerException {
-        List<SonPermissionObject> list = new ArrayList<>();
+    public Boolean sonPermission() throws SerException {
         String userToken = RpcTransmit.getUserToken();
-        Boolean flagSeeSign = guideSeeIdentity();
+        Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
-        Boolean flagAddSign = guideAddIdentity();
-
-        /*SonPermissionObject obj = new SonPermissionObject();
-
-        obj = new SonPermissionObject();
-        obj.setName("coverrotationopinion");
-        obj.setDescribesion("岗位轮换自荐");
-        if (flagSeeSign || flagAddSign) {
-            obj.setFlag(true);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
         } else {
-            obj.setFlag(false);
+            return false;
         }
-        list.add(obj);
-
-
-        RpcTransmit.transmitUserToken(userToken);
-        Boolean flagSeeDis = coverRotationOpinionSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("coverrotationopinion");
-        obj.setDescribesion("岗位轮换自荐意见");
-        if (flagSeeDis) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagSeeCate = recommendRotationSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("recommendrotation");
-        obj.setDescribesion("岗位轮换推荐");
-        if (flagSeeCate) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagSeeCate1 = rotationConditionSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("rotationcondition");
-        obj.setDescribesion("岗位轮换条件");
-        if (flagSeeCate1) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagSeeCate2 = rotationStatisticsSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("rotationstatistics");
-        obj.setDescribesion("岗位轮换统计");
-        if (flagSeeCate2) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);
-
-        Boolean flagSeeCate3 = subsidyStandardSer.sonPermission();
-        RpcTransmit.transmitUserToken(userToken);
-        obj = new SonPermissionObject();
-        obj.setName("subsidystandard");
-        obj.setDescribesion("岗位补贴标准");
-        if (flagSeeCate3) {
-            obj.setFlag(true);
-        } else {
-            obj.setFlag(false);
-        }
-        list.add(obj);*/
-
-        return list;
     }
 
     @Override
@@ -365,6 +291,8 @@ public class CurrentPositionSerImpl extends ServiceImpl<CurrentPosition, Current
                 flag = true;
                 break;
         }
+
+        RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
 }
