@@ -7,6 +7,7 @@ package com.bjike.goddess.common.api.constant;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+
 public class RpcCommon {
     /**
      * 用户登录令牌

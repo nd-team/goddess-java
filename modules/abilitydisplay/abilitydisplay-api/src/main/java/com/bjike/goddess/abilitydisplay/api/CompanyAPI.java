@@ -1,0 +1,34 @@
+package com.bjike.goddess.abilitydisplay.api;
+
+import com.bjike.goddess.abilitydisplay.bo.CompanyBO;
+import com.bjike.goddess.abilitydisplay.dto.CompanyDTO;
+import com.bjike.goddess.abilitydisplay.entity.MyPage;
+import com.bjike.goddess.abilitydisplay.entity.MyPage;
+import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.api.restful.Result;
+
+import java.util.List;
+
+/**
+ * 公司业务接口
+ *
+ * @Author: [ wanyi ]
+ * @Date: [ 2018-01-06 03:38 ]
+ * @Description: [ 公司业务接口 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
+public interface CompanyAPI {
+    default void test() {
+
+    }
+
+    MyPage getList(Integer pageNum) throws SerException;
+
+    void add(CompanyBO companyBO) throws SerException;
+
+    void del(String id);
+
+    CompanyBO edi(String id) throws SerException;
+
+}
