@@ -6,15 +6,20 @@ import com.bjike.goddess.rotation.enums.AuditType;
 import javax.persistence.Column;
 
 /**
- * 岗位轮换推荐业务传输对象
+ * 岗位轮换记录业务传输对象
  *
- * @Author: [ dengjunren ]
- * @Date: [ 2017-05-13 02:28 ]
- * @Description: [ 岗位轮换推荐业务传输对象 ]
+ * @Author: [ caiwenxian ]
+ * @Date: [ 2018-01-08 09:29 ]
+ * @Description: [ 岗位轮换记录业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-public class RecommendRotationBO extends BaseBO {
+public class RotationRecordBO extends BaseBO {
+
+    /**
+     * 轮岗方式
+     */
+    private String rotationType;
 
     /**
      * 姓名
@@ -37,12 +42,6 @@ public class RecommendRotationBO extends BaseBO {
     private String position;
 
     /**
-     * 目前岗位层级
-     */
-    private String arrangement;
-
-
-    /**
      * 入职时间
      */
     private String entryTime;
@@ -53,29 +52,24 @@ public class RecommendRotationBO extends BaseBO {
     private String regularTime;
 
     /**
-     * 举荐轮换等级数据id
+     * 目前岗位层级
+     */
+    private String arrangement;
+
+    /**
+     * 申请轮换等级数据id
      */
     private String applyLevelId;
 
     /**
-     * 举荐轮换等级
+     * 申请轮换等级
      */
     private String applyLevelArrangement;
 
     /**
-     * 举荐原因
+     * 申请轮换原因
      */
     private String reason;
-
-    /**
-     * 举荐人
-     */
-    private String recommend;
-
-    /**
-     * 举荐时间
-     */
-    private String recommendTime;
 
     /**
      * 轮换后岗位等级数据id
@@ -108,9 +102,47 @@ public class RecommendRotationBO extends BaseBO {
     private String rotationDate;
 
     /**
-     * 是否已通报结果
+     * 申请时间(举荐时间)
      */
-    private Boolean hadNotify;
+    private String applyTime;
+
+    /**
+     * 获得时间
+     */
+    private String getTime;
+
+    /**
+     * 举荐人/申请人
+     */
+    private String applyPerson;
+
+    /**
+     * 模块负责人意见
+     */
+    private String moduleChargerAdvice;
+
+    /**
+     * 原模块负责人意见
+     */
+    private String oldModuleChargerAdvice;
+
+    /**
+     * 项目经理
+     */
+    private String manager;
+
+    /**
+     * 项目经理意见
+     */
+    private String managerAdvice;
+
+    public String getRotationType() {
+        return rotationType;
+    }
+
+    public void setRotationType(String rotationType) {
+        this.rotationType = rotationType;
+    }
 
     public String getUsername() {
         return username;
@@ -144,6 +176,22 @@ public class RecommendRotationBO extends BaseBO {
         this.position = position;
     }
 
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public String getRegularTime() {
+        return regularTime;
+    }
+
+    public void setRegularTime(String regularTime) {
+        this.regularTime = regularTime;
+    }
+
     public String getArrangement() {
         return arrangement;
     }
@@ -174,22 +222,6 @@ public class RecommendRotationBO extends BaseBO {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public String getRecommend() {
-        return recommend;
-    }
-
-    public void setRecommend(String recommend) {
-        this.recommend = recommend;
-    }
-
-    public String getRecommendTime() {
-        return recommendTime;
-    }
-
-    public void setRecommendTime(String recommendTime) {
-        this.recommendTime = recommendTime;
     }
 
     public String getRotationLevelId() {
@@ -240,27 +272,59 @@ public class RecommendRotationBO extends BaseBO {
         this.rotationDate = rotationDate;
     }
 
-    public String getEntryTime() {
-        return entryTime;
+    public String getApplyTime() {
+        return applyTime;
     }
 
-    public void setEntryTime(String entryTime) {
-        this.entryTime = entryTime;
+    public void setApplyTime(String applyTime) {
+        this.applyTime = applyTime;
     }
 
-    public String getRegularTime() {
-        return regularTime;
+    public String getGetTime() {
+        return getTime;
     }
 
-    public void setRegularTime(String regularTime) {
-        this.regularTime = regularTime;
+    public void setGetTime(String getTime) {
+        this.getTime = getTime;
     }
 
-    public Boolean getHadNotify() {
-        return hadNotify;
+    public String getApplyPerson() {
+        return applyPerson;
     }
 
-    public void setHadNotify(Boolean hadNotify) {
-        this.hadNotify = hadNotify;
+    public void setApplyPerson(String applyPerson) {
+        this.applyPerson = applyPerson;
+    }
+
+    public String getModuleChargerAdvice() {
+        return moduleChargerAdvice;
+    }
+
+    public void setModuleChargerAdvice(String moduleChargerAdvice) {
+        this.moduleChargerAdvice = moduleChargerAdvice;
+    }
+
+    public String getOldModuleChargerAdvice() {
+        return oldModuleChargerAdvice;
+    }
+
+    public void setOldModuleChargerAdvice(String oldModuleChargerAdvice) {
+        this.oldModuleChargerAdvice = oldModuleChargerAdvice;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public String getManagerAdvice() {
+        return managerAdvice;
+    }
+
+    public void setManagerAdvice(String managerAdvice) {
+        this.managerAdvice = managerAdvice;
     }
 }
