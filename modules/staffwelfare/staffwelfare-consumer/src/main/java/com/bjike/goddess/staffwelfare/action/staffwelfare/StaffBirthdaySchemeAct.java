@@ -5,8 +5,8 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.vo.EntryBasicInfoVO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
+import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import com.bjike.goddess.staffwelfare.api.StaffBirthdaySchemeAPI;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
@@ -14,9 +14,7 @@ import com.bjike.goddess.staffwelfare.to.GuidePermissionTO;
 import com.bjike.goddess.staffwelfare.to.StaffBirthdaySchemeTO;
 import com.bjike.goddess.staffwelfare.vo.StaffBirthdaySchemeVO;
 import com.bjike.goddess.staffwelfare.vo.WishesStatementVO;
-import com.bjike.goddess.user.api.DepartmentAPI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +62,6 @@ public class StaffBirthdaySchemeAct {
     }
 
 
-
     /**
      * 查询祝福语
      *
@@ -73,7 +70,7 @@ public class StaffBirthdaySchemeAct {
      * @version v1
      */
     @GetMapping("v1/findWishStatements")
-    public Result findWishStatements() throws ActException{
+    public Result findWishStatements() throws ActException {
         try {
             List<WishesStatementVO> voList = BeanTransform.copyProperties(staffBirthdaySchemeAPI.findWishStatements(), WishesStatementVO.class);
             return ActResult.initialize(voList);
@@ -89,7 +86,7 @@ public class StaffBirthdaySchemeAct {
      * @version v1
      */
     @GetMapping("v1/findHeadPortraitHats")
-    public Result findHeadPortraitHats() throws ActException{
+    public Result findHeadPortraitHats() throws ActException {
         try {
             List<WishesStatementVO> voList = BeanTransform.copyProperties(staffBirthdaySchemeAPI.findHeadPortraitHats(), WishesStatementVO.class);
             return ActResult.initialize(voList);
@@ -119,8 +116,8 @@ public class StaffBirthdaySchemeAct {
      * 编辑员工生日福利方案
      *
      * @param to 员工生日福利方案
-     * @version v1
      * @return class StaffBirthdaySchemeVO
+     * @version v1
      */
     @PostMapping("v1/edit")
     public Result edit(StaffBirthdaySchemeTO to, BindingResult bindingResult) throws ActException {
@@ -184,7 +181,7 @@ public class StaffBirthdaySchemeAct {
     /**
      * 领取福利
      *
-     * @param id 方案id
+     * @param id     方案id
      * @param remark 备注
      * @version v1
      */
@@ -201,17 +198,17 @@ public class StaffBirthdaySchemeAct {
     /**
      * 查询所有地区和所属部门
      *
-     * @return class EntryBasicInfoVO
+     * @return class EntryRegisterVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/entry")
-    public Result findEntry() throws ActException{
+    public Result findEntry() throws ActException {
         try {
-            List<EntryBasicInfoBO> boList = staffBirthdaySchemeAPI.findEntry();
-            List<EntryBasicInfoVO> voList = BeanTransform.copyProperties(boList,EntryBasicInfoVO.class);
+            List<EntryRegisterBO> boList = staffBirthdaySchemeAPI.findEntry();
+            List<EntryRegisterVO> voList = BeanTransform.copyProperties(boList,EntryRegisterVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -225,29 +222,30 @@ public class StaffBirthdaySchemeAct {
      * @version v1
      */
     @GetMapping("v1/count")
-    public Result count(StaffBirthdaySchemeDTO dto) throws ActException{
+    public Result count(StaffBirthdaySchemeDTO dto) throws ActException {
         try {
             Long count = staffBirthdaySchemeAPI.count(dto);
             return ActResult.initialize(count);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 根据id查询单条数据
+     *
      * @param id 条件
      * @return class StaffBirthdaySchemeVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/one")
-    public Result findOne(@RequestParam String id) throws ActException{
+    public Result findOne(@RequestParam String id) throws ActException {
         try {
             StaffBirthdaySchemeBO bo = staffBirthdaySchemeAPI.findOne(id);
-            StaffBirthdaySchemeVO vo = BeanTransform.copyProperties(bo,StaffBirthdaySchemeVO.class);
+            StaffBirthdaySchemeVO vo = BeanTransform.copyProperties(bo, StaffBirthdaySchemeVO.class);
             return ActResult.initialize(vo);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -255,18 +253,19 @@ public class StaffBirthdaySchemeAct {
 
     /**
      * 汇总
+     *
      * @param dto 汇总条件
      * @return class StaffBirthdaySchemeVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/collect")
-    public Result collect(StaffBirthdaySchemeDTO dto) throws ActException{
+    public Result collect(StaffBirthdaySchemeDTO dto) throws ActException {
         try {
             List<StaffBirthdaySchemeBO> boList = staffBirthdaySchemeAPI.collect(dto);
-            List<StaffBirthdaySchemeVO> voList = BeanTransform.copyProperties(boList,StaffBirthdaySchemeVO.class);
+            List<StaffBirthdaySchemeVO> voList = BeanTransform.copyProperties(boList, StaffBirthdaySchemeVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

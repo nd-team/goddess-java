@@ -3,6 +3,8 @@ package com.bjike.goddess.rotation.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.rotation.enums.AuditType;
 
+import javax.persistence.Column;
+
 /**
  * 岗位轮换自荐业务传输对象
  *
@@ -103,6 +105,11 @@ public class CoverRotationBO extends BaseBO {
      * 获得时间
      */
     private String getTime;
+
+    /**
+     * 是否已通报结果
+     */
+    private Boolean hadNotify;
 
     public String getUsername() {
         return username;
@@ -246,5 +253,13 @@ public class CoverRotationBO extends BaseBO {
 
     public void setGetTime(String getTime) {
         this.getTime = getTime;
+    }
+
+    public Boolean getHadNotify() {
+        return hadNotify;
+    }
+
+    public void setHadNotify(Boolean hadNotify) {
+        this.hadNotify = hadNotify;
     }
 }

@@ -10,12 +10,11 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.entity.PositionDetail;
 import com.bjike.goddess.organize.entity.PositionDetailUser;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
-import com.bjike.goddess.staffentry.entity.EntryRegister;
+import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthDayBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
@@ -61,7 +60,7 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
     private CusPermissionSer cusPermissionSer;
 
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private StaffEntryRegisterAPI staffEntryRegisterAPI;
 
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
@@ -328,7 +327,7 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
                     if (entryRegister.getBirthday() == null) {
                         throw new SerException("当前用户员工生日数据未填写,请先完善用户数据");
                     }
-                    List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(userBO.getEmployeeNumber());
+                    LinkDateStaffEntryBO entryBO = staffEntryRegisterAPI.findByEmpNum(userBO.getEmployeeNumber());
                     LocalDate birthday = DateUtil.parseDate(entryRegister.getBirthday());
                     Integer birthMonth = birthday.getMonthValue();
                     Integer schemeMonth = model.getSchemeTime().getMonthValue();
@@ -342,8 +341,8 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
                         staffBirthDayWelfare.setName(userBO.getUsername());
                         staffBirthDayWelfare.setUserId(userBO.getId());
                         // TODO: 17-4-7 地区尚未确定
-                        staffBirthDayWelfare.setArea(entryBasicInfo.get(0).getArea());
-                        staffBirthDayWelfare.setProjectGroup(entryBasicInfo.get(0).getProjectGroup());
+                        staffBirthDayWelfare.setArea(entryBO.getArea());
+                        staffBirthDayWelfare.setProjectGroup(entryBO.getDepartment());
                         staffBirthDayWelfare.setSendTime(model.getSendTime());
                         staffBirthDayWelfare.setSendDetail(model.getWelfareDetail());
                         staffBirthDayWelfare.setRemark(remark);
@@ -363,8 +362,8 @@ public class StaffBirthdaySchemeSerImpl extends ServiceImpl<StaffBirthdayScheme,
     }
 
     @Override
-    public List<EntryBasicInfoBO> findEntry() throws SerException {
-        List<EntryBasicInfoBO> boList = entryBasicInfoAPI.listEntryBasicInfo();
+    public List<EntryRegisterBO> findEntry() throws SerException {
+        List<EntryRegisterBO> boList = entryRegisterAPI.list();
         return boList;
     }
 
