@@ -3,6 +3,9 @@ package com.bjike.goddess.event.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.event.enums.EventStatus;
 import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.enums.PlanType;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 事件父表数据传输对象
@@ -14,6 +17,7 @@ import com.bjike.goddess.event.enums.Permissions;
  * @Copy: [ com.bjike ]
  */
 public class FatherDTO extends BaseDTO {
+
     /**
      * 日期
      */
@@ -50,4 +54,5 @@ public class FatherDTO extends BaseDTO {
     public void setEventStatuses(EventStatus[] eventStatuses) {
         this.eventStatuses = eventStatuses;
     }
+
 }

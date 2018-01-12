@@ -38,6 +38,17 @@ public class FatherBO extends BaseBO {
      */
     private List<EventBO> eventBOs;
 
+    /**
+     * 2017-12-28
+     *  新增字段
+     *  创建日期
+     */
+    private String startDate;
+
+    public String getStartDate() {return startDate;}
+
+    public void setStartDate(String startDate) {  this.startDate = startDate; }
+
     public List<EventBO> getEventBOs() {
         return eventBOs;
     }

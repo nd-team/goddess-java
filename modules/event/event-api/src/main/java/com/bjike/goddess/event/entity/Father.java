@@ -5,6 +5,8 @@ import com.bjike.goddess.common.api.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -42,6 +44,21 @@ public class Father extends BaseEntity {
     @Column(name = "functionEnglishName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '功能名称英文名'")
     private String functionEnglishName;
 
+    /**
+     * 任务创建时间
+     * 2017-12-28 新增字段 用于区别任务创建日期
+     * @Author:zhangzhiguang
+     */
+    @Column(name = "startDate", nullable = false, columnDefinition = "DATE   COMMENT '开始时间'")
+    private LocalDate startDate;
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
     public String getProjectChineseName() {
         return projectChineseName;

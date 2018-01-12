@@ -140,4 +140,19 @@ public class EventApiImpl implements EventAPI {
     public Long currentUserEvenCount() throws SerException {
         return eventSer.currentUserEvenCount();
     }
+
+    @Override
+    public List<FatherBO> findByPlanType(EventDTO dto) throws SerException {
+        return eventSer.findByPlanType(dto);
+    }
+
+    @Override
+    public EventBO saveEvTo(EventTO to) throws SerException {
+        return eventSer.saveEvTo(to);
+    }
+
+    @Override
+    public EventBO update(EventTO to) throws SerException {
+        return eventSer.update(to);
+    }
 }

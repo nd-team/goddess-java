@@ -9,8 +9,10 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.event.bo.*;
 import com.bjike.goddess.event.dto.EventDTO;
+import com.bjike.goddess.event.dto.EventTimeSetDTO;
 import com.bjike.goddess.event.dto.FatherDTO;
 import com.bjike.goddess.event.entity.Event;
+import com.bjike.goddess.event.entity.EventTimeSet;
 import com.bjike.goddess.event.entity.Father;
 import com.bjike.goddess.event.entity.TimeSet;
 import com.bjike.goddess.event.enums.*;
@@ -23,12 +25,14 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.Even;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -70,6 +74,9 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
+
+    @Autowired
+    private EventTimeSetSer eventTimeSetSer;
 
     /**
      * 核对查看权限（部门级别）
@@ -163,7 +170,7 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         if (userBO != null) {
             positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
         }
-        if (!positionDetailBOs.isEmpty()) {
+        if (positionDetailBOs != null && positionDetailBOs.size()>0) {
             entity.setArea(positionDetailBOs.get(0).getArea());
         }
         entity.setGetTime(LocalDateTime.now());
@@ -971,5 +978,204 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
 
         }
         return count;
+    }
+
+
+    /**
+     * 通过计划类型获取对应的数据内容
+     *      month   月计划
+     *      week    周计划
+     *      day     日计划
+     *
+     * 当计划类型为 (MONTH)月份
+     *      只需要传输 年-月
+     * 当计划类型为 (WEEK)周
+     *      只需要传输 年-月-周数
+     * 当计划类型为 (DAY)日
+     *      只需要传输 年-月-日
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<FatherBO> findByPlanType(EventDTO dto) throws SerException {
+        FatherDTO fatherDTO = new FatherDTO();
+        Integer year = dto.getYear();
+        Integer month = dto.getMonth();
+        List<FatherBO> boList = new ArrayList<>();
+
+        if (dto.getPlanTypes() != null) {
+            if (PlanType.MONTH.name().equals(dto.getPlanTypes()[0].name())) {
+                LocalDate startDate = DateUtil.getStartDayOfMonth(year,month);
+                LocalDate endDate = DateUtil.getEndDaYOfMonth(year,month);
+                fatherDTO.getConditions().add(Restrict.between("startDate", new LocalDate[]{startDate, endDate}));
+            } else if (PlanType.WEEK.name().equals(dto.getPlanTypes()[0].name())) {
+                Integer week = dto.getWeek();
+                LocalDate[] WeekStr = DateUtil.getWeekTimes(year, month, week);
+                LocalDate startDate = WeekStr[0];
+                LocalDate endDate = WeekStr[1];
+                fatherDTO.getConditions().add(Restrict.between("startDate", new LocalDate[]{startDate, endDate}));
+            } else if (PlanType.DAY.name().equals(dto.getPlanTypes()[0].name())) {
+                Integer day = dto.getDay();
+                String monthStr = "";
+                String dayStr = "";
+                if (month < 10){
+                    monthStr = "0"+month;
+                }else {
+                    monthStr = month+"";
+                }
+                if (day < 10){
+                    dayStr = "0"+day;
+                }else {
+                    dayStr = day+"";
+                }
+                fatherDTO.getConditions().add(Restrict.between("startDate", new LocalDate[]{DateUtil.parseDate(year + "-" + monthStr + "-" + dayStr), DateUtil.parseDate(year + "-" + monthStr + "-" + dayStr)}));
+            } else if (PlanType.ALL.name().equals(dto.getPlanTypes()[0].name())) {
+
+            }
+
+            String name = userAPI.currentUser().getUsername();
+            UserBO userBO = userAPI.findByUsername(name);
+            List<PositionDetailBO> positionDetailBOs = null;
+            if (userBO != null) {
+                positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
+            }
+            List<Father> fathers = fatherSer.findByCis(fatherDTO);
+
+            for (Father father : fathers) {
+                EventDTO eventDTO = new EventDTO();
+                eventDTO.getSorts().add("requestTime=asc");
+
+                eventDTO.getConditions().add(Restrict.eq("father.id", father.getId()));
+                eventDTO.getConditions().add(Restrict.eq("name", name));
+                List<Event> list = super.findByCis(eventDTO);
+                List<EventBO> eventBOs = BeanTransform.copyProperties(list, EventBO.class);
+                if (null != eventBOs) {
+                    for (EventBO bo : eventBOs) {
+
+                        EventTimeSetDTO eventTimeSetDTO = new EventTimeSetDTO();
+                        eventTimeSetDTO.getConditions().add(Restrict.eq("event.id",bo.getId()));
+                        EventTimeSet eventTimeSet = eventTimeSetSer.findOne(eventTimeSetDTO);
+                        if (eventTimeSet != null && null != eventTimeSet){
+                            bo.setRemindTime(eventTimeSet.getEventTime().name());
+                            bo.seteStatus(eventTimeSet.getStatus());
+                        }
+
+                        if ((null != positionDetailBOs) && (!positionDetailBOs.isEmpty())) {
+                            bo.setDepart(positionDetailBOs.get(0).getDepartmentName());
+                            bo.setModule(positionDetailBOs.get(0).getModuleName());
+                            bo.setPosition(positionDetailBOs.get(0).getPosition());
+                        }
+                    }
+                }
+                if (!list.isEmpty()) {
+                    FatherBO fatherBO = BeanTransform.copyProperties(father, FatherBO.class);
+                    fatherBO.setEventBOs(eventBOs);
+                    boList.add(fatherBO);
+                }
+            }
+        }
+        return boList;
+    }
+
+    /**
+     * 根据日期和名字 查询当太年是否创建过数据库
+     *      如果已经创建，就不需要新增
+     *      如果没有创建，就新增一条记录
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    public List<Father> findByDateName(EventTO dto) throws SerException {
+        String sql = "SELECT a.id,startDate,functionChineseName,functionEnglishName FROM event_father a LEFT JOIN event_event b ON a.id = b.father_id WHERE a.startDate = '"+dto.getStartDate()+"' AND b.name = '"+dto.getName()+"'";
+        String[] fields = {"id","functionChineseName","functionEnglishName"};
+        List<Father> fathers = super.findBySql(sql,Father.class,fields);
+
+        return fathers;
+    }
+
+    /**
+     * 判断新增计划是否为空
+     *      主表(Father)一天一个人 只有一条记录
+     *          比如: 2017-12-29
+     *                  8：30 - 10：00
+     *                  10：00 - 12：00
+     *                  13：30 - 15：00
+     *                  15：00 - 18：00
+     *      Father 只可以存在一条记录 (ID) 关联
+     *          子表 可以存在多条记录 (father.id) 关联
+     *
+     * @Date:2017-12-29
+     *
+     */
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public EventBO saveEvTo(EventTO to) throws SerException {
+        Event entity = BeanTransform.copyProperties(to, Event.class, true);
+        Father father = null;
+
+        /**
+         *  保存父级表 Father表格
+         */
+        if ( findByDateName(to).size() > 0 && !findByDateName(to).isEmpty() ) {
+            father = findByDateName(to).get(0);
+        }else {
+            father = new Father();
+            father.setProjectChineseName(to.getProjectChineseName());
+            father.setProjectEnglishName(to.getProjectEnglishName());
+            father.setFunctionChineseName(to.getFunctionChineseName());
+            father.setFunctionEnglishName(to.getFunctionEnglishName());
+            father.setStartDate( DateUtil.parseDate(to.getStartDate()) );
+            fatherSer.save(father);
+        }
+        /**
+        * 保存事件子表  event
+        */
+        UserBO userBO = userAPI.findByUsername(entity.getName());
+        List<PositionDetailBO> positionDetailBOs = null;
+        if (userBO != null) {
+            positionDetailBOs = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        }
+        if (positionDetailBOs != null && positionDetailBOs.size()>0) {
+            entity.setArea(positionDetailBOs.get(0).getArea());
+        }
+        entity.setGetTime(LocalDateTime.now());
+        entity.setFather(father);
+        entity.setEventStatus(EventStatus.NOSEENODEAL);
+        entity.setYear(LocalDateTime.now().getYear());
+        entity.setMonth(LocalDateTime.now().getMonthValue());
+        super.save(entity);
+
+        /**
+         * 保存event间隔时间设置
+         */
+        EventTimeSet eventTimeSet = new EventTimeSet();
+        eventTimeSet.setEvent(entity);
+        eventTimeSet.setInterval(5);
+        eventTimeSet.setStatus(to.geteStatus());
+        eventTimeSet.setName(entity.getName());
+        eventTimeSet.setEventTime(to.getEventTime());
+        eventTimeSet.setIntervalType(IntervalType.MINUTE);
+        eventTimeSetSer.save(eventTimeSet);
+
+        return BeanTransform.copyProperties(entity, EventBO.class);
+    }
+
+
+    @Override
+    public EventBO update(EventTO to) throws SerException {
+        Event event = super.findById(to.getId());
+        if (null == event){
+            throw new SerException("实体对象不存在!");
+        }else {
+            if (event.getEventStatus().name().equals(EventStatus.NOSEENODEAL.name())){
+                event.setEventStatus(EventStatus.HAVEDEAL);
+            }else {
+                event.setEventStatus(EventStatus.NOSEENODEAL);
+            }
+            super.update(event);
+            return BeanTransform.copyProperties(event, EventBO.class);
+        }
     }
 }
