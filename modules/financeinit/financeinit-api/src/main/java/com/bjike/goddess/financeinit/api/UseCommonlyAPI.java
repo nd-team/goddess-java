@@ -65,4 +65,12 @@ public interface UseCommonlyAPI {
     default UseCommonlyBO addUse(UseCommonlyTO useCommonlyTO) throws SerException {
         return null;
     }
+    /**
+     * 删除
+     *
+     * @param id 常用摘要id
+     */
+    default void delete(String id) throws SerException {
+        return;
+    }
 }

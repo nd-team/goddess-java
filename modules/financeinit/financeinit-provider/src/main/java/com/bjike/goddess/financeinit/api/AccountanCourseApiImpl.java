@@ -37,7 +37,7 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     }
 
     @Override
-    public Long countCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+    public Long countCourse(AccountanCourseDTO accountanCourseDTO, CategoryName belongCategory) throws SerException {
         return accountanCourseSer.countCourse(accountanCourseDTO,belongCategory);
     }
 
@@ -47,8 +47,13 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     }
 
     @Override
-    public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO,CategoryName belongCategory) throws SerException {
+    public List<AccountanCourseBO> listCourse(AccountanCourseDTO accountanCourseDTO, CategoryName belongCategory) throws SerException {
         return accountanCourseSer.listCourse(accountanCourseDTO,belongCategory);
+    }
+
+    @Override
+    public CategoryName belongByName(String accountanName) throws SerException {
+        return accountanCourseSer.belongByName(accountanName);
     }
 
     @Override
@@ -57,8 +62,48 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     }
 
     @Override
-    public AccountanCourseBO addCourse(AccountanCourseTO accountanCourseTO) throws SerException {
-        return accountanCourseSer.addCourse(accountanCourseTO);
+    public List<AccountanCourseBO> findSendSubjectByOne(String id) throws SerException {
+        return accountanCourseSer.findSendSubjectByOne(id);
+    }
+
+    @Override
+    public List<AccountanCourseBO> findThirdSubjectBySend(String id) throws SerException {
+        return accountanCourseSer.findThirdSubjectBySend(id);
+    }
+
+    @Override
+    public List<String> findSendNameByOne(String id) throws SerException {
+        return accountanCourseSer.findSendNameByOne(id);
+    }
+
+    @Override
+    public List<String> findThirdNameBySend(String id) throws SerException {
+        return accountanCourseSer.findThirdNameBySend(id);
+    }
+
+    @Override
+    public List<AccountAddDateBO> findNameCode() throws SerException {
+        return accountanCourseSer.findNameCode();
+    }
+
+    @Override
+    public List<AccountAddDateBO> findFirstNameCode() throws SerException {
+        return accountanCourseSer.findFirstNameCode();
+    }
+
+    @Override
+    public AccountanCourseBO addOneCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return accountanCourseSer.addOneCourse(accountanCourseTO);
+    }
+
+    @Override
+    public AccountanCourseBO addSendCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return accountanCourseSer.addSendCourse(accountanCourseTO);
+    }
+
+    @Override
+    public AccountanCourseBO addThreeCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return accountanCourseSer.addThreeCourse(accountanCourseTO);
     }
 
     @Override
@@ -87,21 +132,6 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     }
 
     @Override
-    public CategoryName belongByName(String accountanName) throws SerException {
-        return accountanCourseSer.belongByName(accountanName);
-    }
-
-    @Override
-    public List<AccountAddDateBO> findNameCode() throws SerException {
-        return accountanCourseSer.findNameCode();
-    }
-
-    @Override
-    public List<String> findSendNameByCode(String code) throws SerException {
-        return accountanCourseSer.findSendNameByCode(code);
-    }
-
-    @Override
     public List<AccountAddDateBO> findSecondName(String code) throws SerException {
         return accountanCourseSer.findSecondName(code);
     }
@@ -109,16 +139,6 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     @Override
     public List<AccountAddDateBO> findThirdName(String secondCode) throws SerException {
         return accountanCourseSer.findThirdName(secondCode);
-    }
-
-    @Override
-    public List<String> findThirdNameByCode(String code) throws SerException {
-        return accountanCourseSer.findThirdNameByCode(code);
-    }
-
-    @Override
-    public List<AccountAddDateBO> findFirstNameCode() throws SerException {
-        return accountanCourseSer.findFirstNameCode();
     }
 
     @Override

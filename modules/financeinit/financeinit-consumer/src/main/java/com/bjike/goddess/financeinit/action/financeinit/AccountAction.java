@@ -202,8 +202,9 @@ public class AccountAction extends BaseFileAction {
 
     /**
      * 获取所有的会计科目名称和对应的代码
-     * @version v1
+     *
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/accountanNameCode")
     public Result findAccountanNameCode() throws ActException {
@@ -215,10 +216,12 @@ public class AccountAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-/**
+
+    /**
      * 获取所有的一级科目名称和对应的代码
-     * @version v1
+     *
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/firstNameCode")
     public Result findFirstNameCode() throws ActException {
@@ -233,28 +236,30 @@ public class AccountAction extends BaseFileAction {
 
     /**
      * 根据一级科目代码获取二级科目名称
-     * @version v1
+     *
      * @throws ActException
+     * @version v1
      */
-    @GetMapping("v1/sendName/code")
-    public Result findSendNameByCode(@RequestParam String code) throws ActException {
+    @GetMapping("v1/sendName/id")
+    public Result findSendNameByCode(@RequestParam String id) throws ActException {
         try {
-            List<String> names = accountanCourseAPI.findSendNameByCode(code);
+            List<String> names = accountanCourseAPI.findSendNameByOne(id);
             return ActResult.initialize(names);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 根据一级科目代码获取三级科目名称
      *
-     * @version v1
      * @throws ActException
+     * @version v1
      */
     @GetMapping("v1/thirdName/code")
-    public Result findThirdNameByCode(@RequestParam String code) throws ActException {
+    public Result findThirdNameByCode(@RequestParam String id) throws ActException {
         try {
-            List<String> names = accountanCourseAPI.findThirdNameByCode(code);
+            List<String> names = accountanCourseAPI.findThirdNameBySend(id);
             return ActResult.initialize(names);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

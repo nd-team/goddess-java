@@ -67,4 +67,14 @@ public class InitDateEntryApiImpl implements InitDateEntryAPI {
     public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         return initDateEntrySer.findBySubject(firstSubject);
     }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        return initDateEntrySer.exportExcel();
+    }
+
+    @Override
+    public void importExcel(List<InitDateEntryTO> initDateEntryTOS) throws SerException {
+        initDateEntrySer.importExcel(initDateEntryTOS);
+    }
 }

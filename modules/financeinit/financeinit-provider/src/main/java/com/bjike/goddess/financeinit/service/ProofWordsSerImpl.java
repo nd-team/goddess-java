@@ -186,4 +186,10 @@ public class ProofWordsSerImpl extends ServiceImpl<ProofWords, ProofWordsDTO> im
         super.save(proofWords);
         return BeanTransform.copyProperties(proofWords,ProofWordsBO.class);
     }
+
+    @Transactional(rollbackFor = {SerException.class})
+    @Override
+    public void delete(String id) throws SerException {
+        super.remove(id);
+    }
 }

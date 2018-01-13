@@ -132,4 +132,21 @@ public class ProofWordsAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 删除
+     *
+     * @param id id
+     * @des 根据id删除凭证字
+     * @version v1
+     */
+    @LoginAuth
+    @DeleteMapping("v1/delete/{id}")
+    public Result deleteAccount(@PathVariable String id) throws ActException {
+        try {
+            proofWordsAPI.delete(id);
+            return new ActResult("delete success!");
+        } catch (SerException e) {
+            throw new ActException("删除失败：" + e.getMessage());
+        }
+    }
 }

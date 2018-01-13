@@ -90,4 +90,17 @@ public interface InitDateEntrySer extends Ser<InitDateEntry, InitDateEntryDTO> {
     default InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         return null;
     }
+    /**
+     * 导出Excel
+     *
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+    /**
+     * 导入
+     *
+     * @param initDateEntryTOS 财务初始化TO
+     */
+    void importExcel(List<InitDateEntryTO> initDateEntryTOS) throws SerException;
 }

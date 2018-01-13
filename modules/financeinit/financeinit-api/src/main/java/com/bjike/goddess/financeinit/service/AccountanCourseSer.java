@@ -80,24 +80,47 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
     }
 
     /**
-     * 根据一级科目代码获取二级会计科目名称
+     * 根据一级会计科目id获取二级会计科目
      *
-     * @param code
+     * @param id 会计科目id
      * @return
      * @throws SerException
      */
-    default List<String> findSendNameByCode(String code) throws SerException {
+    default List<AccountanCourseBO> findSendSubjectByOne(String id) throws SerException {
         return null;
     }
 
     /**
-     * 根据一级科目代码获取三级会计科目名称
+     * 根据二级会计科目id获取三级会计科目
      *
-     * @param code
+     * @param id 会计科目id
      * @return
      * @throws SerException
      */
-    default List<String> findThirdNameByCode(String code) throws SerException {
+    default List<AccountanCourseBO> findThirdSubjectBySend(String id) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据一级科目id获取所有对应的二级会计科目名称
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default List<String> findSendNameByOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目id获取所有对应的二级会计科目名称
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default List<String> findThirdNameBySend(String id) throws SerException {
         return null;
     }
 
@@ -122,12 +145,31 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
     }
 
     /**
-     * 添加
+     * 一级科目添加
      *
      * @param accountanCourseTO 会计科目
-     * @return class CompanyBasicInfoBO
+     * @return class AccountanCourseBO
      */
-    default AccountanCourseBO addCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+    default AccountanCourseBO addOneCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 二级科目添加
+     *
+     * @param accountanCourseTO 会计科目
+     * @return class AccountanCourseBO
+     */
+    default AccountanCourseBO addSendCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return null;
+    }
+    /**
+     * 三级科目添加
+     *
+     * @param accountanCourseTO 会计科目
+     * @return class AccountanCourseBO
+     */
+    default AccountanCourseBO addThreeCourse(AccountanCourseTO accountanCourseTO) throws SerException {
         return null;
     }
 

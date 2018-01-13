@@ -21,8 +21,6 @@ import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
-import com.bjike.goddess.financeinit.vo.AccountanCourseVO;
-import com.bjike.goddess.financeinit.vo.CourseDateVO;
 import com.bjike.goddess.financeinit.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -310,7 +308,7 @@ public class AccountanCourseAction extends BaseFileAction {
     }
 
     /**
-     * 添加会计科目
+     * 添加一级会计科目
      *
      * @param accountanCourseTO 会计科目数据to
      * @return class AccountanCourseVO
@@ -318,10 +316,48 @@ public class AccountanCourseAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @PostMapping("v1/add")
-    public Result addAccount(@Validated(value = ADD.class) AccountanCourseTO accountanCourseTO, BindingResult bindingResult) throws ActException {
+    @PostMapping("v1/addOne")
+    public Result addOneAccount(@Validated(value = ADD.class) AccountanCourseTO accountanCourseTO, BindingResult bindingResult) throws ActException {
         try {
-            AccountanCourseBO accountanCourseBO = accountanCourseAPI.addCourse(accountanCourseTO);
+            AccountanCourseBO accountanCourseBO = accountanCourseAPI.addOneCourse(accountanCourseTO);
+            return ActResult.initialize(BeanTransform.copyProperties(accountanCourseBO, AccountanCourseVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加二级会计科目
+     *
+     * @param accountanCourseTO 会计科目数据to
+     * @return class AccountanCourseVO
+     * @des 添加会计科目
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/addSend")
+    public Result addSendAccount(@Validated(value = ADD.class) AccountanCourseTO accountanCourseTO, BindingResult bindingResult) throws ActException {
+        try {
+            AccountanCourseBO accountanCourseBO = accountanCourseAPI.addSendCourse(accountanCourseTO);
+            return ActResult.initialize(BeanTransform.copyProperties(accountanCourseBO, AccountanCourseVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加三级会计科目
+     *
+     * @param accountanCourseTO 会计科目数据to
+     * @return class AccountanCourseVO
+     * @des 添加会计科目
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/addThird")
+    public Result addThirdAccount(@Validated(value = ADD.class) AccountanCourseTO accountanCourseTO, BindingResult bindingResult) throws ActException {
+        try {
+            AccountanCourseBO accountanCourseBO = accountanCourseAPI.addThreeCourse(accountanCourseTO);
             return ActResult.initialize(BeanTransform.copyProperties(accountanCourseBO, AccountanCourseVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -400,7 +436,7 @@ public class AccountanCourseAction extends BaseFileAction {
      * @des 导出会计科目
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(HttpServletResponse response, @RequestParam CategoryName belongCategory) throws ActException {
         try {
@@ -519,33 +555,33 @@ public class AccountanCourseAction extends BaseFileAction {
     }
 
 
-
     /**
      * 获取所有二级科目
-     *
-     * @des 根据一级科目的代码获取所有二级科目
+     * @param id 一级科目id
+     * @des 根据一级科目的id获取所有二级科目
      * @version v1
      */
     @GetMapping("v1/listSecondSubject/{code}")
-    public Result listSecondByCode(@PathVariable String code ) throws ActException {
+    public Result listSecondByCode(@PathVariable String id) throws ActException {
         try {
-            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName( code );
+            List<AccountAddDateBO> list = accountanCourseAPI.findSecondName(id);
 
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取所有三级科目
-     *
-     * @des 根据二级科目的代码获取所有三级科目
+     * @param id 二级科目id
+     * @des 根据二级科目的id获取所有三级科目
      * @version v1
      */
     @GetMapping("v1/listThirdSubject/{code}")
-    public Result listThirdByCode(@PathVariable String code ) throws ActException {
+    public Result listThirdByCode(@PathVariable String id) throws ActException {
         try {
-            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName( code );
+            List<AccountAddDateBO> list = accountanCourseAPI.findThirdName(id);
 
             return ActResult.initialize(list);
         } catch (SerException e) {

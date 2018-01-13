@@ -186,4 +186,10 @@ public class UseCommonlySerImpl extends ServiceImpl<UseCommonly, UseCommonlyDTO>
         super.save(useCommonly);
         return BeanTransform.copyProperties(useCommonly,UseCommonlyBO.class);
     }
+
+    @Transactional(rollbackFor = {SerException.class})
+    @Override
+    public void delete(String id) throws SerException {
+        super.remove(id);
+    }
 }

@@ -25,6 +25,7 @@ public class DispatchCarInfoBO extends BaseBO {
      */
     private String number;
 
+
     /**
      * 司机名称
      */

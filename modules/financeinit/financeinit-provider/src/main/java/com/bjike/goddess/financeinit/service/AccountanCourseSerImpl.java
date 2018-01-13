@@ -22,7 +22,10 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -30,7 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -183,6 +188,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public Long countCourse(AccountanCourseDTO accountanCourseDTO, CategoryName belongCategory) throws SerException {
         searchCodi(accountanCourseDTO);
         accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "一级科目"));
         Long count = super.count(accountanCourseDTO);
         return count;
     }
@@ -209,6 +215,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         searchCodi(accountanCourseDTO);
         accountanCourseDTO.getSorts().add("code=asc");
         accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
+        accountanCourseDTO.getConditions().add(Restrict.isNull("belongSubjectsId"));
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "一级科目"));
         List<AccountanCourse> list = super.findByCis(accountanCourseDTO, true);
         return BeanTransform.copyProperties(list, AccountanCourseBO.class);
     }
@@ -245,51 +253,94 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         return courseDateBO;
     }
 
+
     @Override
-    public List<String> findSendNameByCode(String code) throws SerException {
-        List<String> names = new ArrayList<>();
-        if (StringUtils.isNotBlank(code)) {
-            String[] field = {"code", "accountanName", "belongCategory", "balanceDirection"};
-            String sql = " SELECT b.code,b.accountanName,b.belongCategory,b.balanceDirection FROM " +
-                    " (SELECT substring(code,1,1) as code,id " +
-                    " FROM financeinit_accountancourse)a, " +
-                    " financeinit_accountancourse b " +
-                    " where a.id=b.id and a.code='%s' ";
-            sql = String.format(sql, code.substring(0, 1));
-            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql, AccountanCourseBO.class, field);
-            if (accountanCourseBOS != null && accountanCourseBOS.size() > 0) {
-                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS) {
-                    if (accountanCourseBO.getCode().length() == 6) {
-                        names.add(accountanCourseBO.getAccountanName());
-                    }
-                }
-            }
-        }
-        return names;
+    public List<AccountanCourseBO> findSendSubjectByOne(String id) throws SerException {
+        AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "二级科目"));
+        List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
+        return BeanTransform.copyProperties(accountanCourseList, AccountanCourseBO.class);
     }
 
     @Override
-    public List<String> findThirdNameByCode(String code) throws SerException {
-        List<String> names = new ArrayList<>();
-        if (StringUtils.isNotBlank(code)) {
-            String[] field = {"code", "accountanName", "belongCategory", "balanceDirection"};
-            String sql = " SELECT b.code,b.accountanName,b.belongCategory,b.balanceDirection FROM " +
-                    " (SELECT substring(code,1,1) as code,id " +
-                    " FROM financeinit_accountancourse)a, " +
-                    " financeinit_accountancourse b " +
-                    " where a.id=b.id and a.code='%s' ";
-            sql = String.format(sql, code.substring(0, 1));
-            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql, AccountanCourseBO.class, field);
-            if (accountanCourseBOS != null && accountanCourseBOS.size() > 0) {
-                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS) {
-                    if (accountanCourseBO.getCode().length() == 8) {
-                        names.add(accountanCourseBO.getAccountanName());
-                    }
-                }
-            }
-        }
-        return names;
+    public List<AccountanCourseBO> findThirdSubjectBySend(String id) throws SerException {
+        AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "三级科目"));
+        List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
+        return BeanTransform.copyProperties(accountanCourseList, AccountanCourseBO.class);
     }
+
+    @Override
+    public List<String> findSendNameByOne(String id) throws SerException {
+        AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "二级科目"));
+        List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
+        if (CollectionUtils.isEmpty(accountanCourseList)) {
+            return Collections.emptyList();
+        }
+        return accountanCourseList.stream().map(AccountanCourse::getAccountanName).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findThirdNameBySend(String id) throws SerException {
+        AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
+        accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "三级科目"));
+        List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
+        if (CollectionUtils.isEmpty(accountanCourseList)) {
+            return Collections.emptyList();
+        }
+        return accountanCourseList.stream().map(AccountanCourse::getAccountanName).distinct().collect(Collectors.toList());
+    }
+
+//    @Override
+//    public List<String> findSendNameByCode(String code) throws SerException {
+//        List<String> names = new ArrayList<>();
+//        if (StringUtils.isNotBlank(code)) {
+//            String[] field = {"code", "accountanName", "belongCategory", "balanceDirection"};
+//            String sql = " SELECT b.code,b.accountanName,b.belongCategory,b.balanceDirection FROM " +
+//                    " (SELECT substring(code,1,1) as code,id " +
+//                    " FROM financeinit_accountancourse)a, " +
+//                    " financeinit_accountancourse b " +
+//                    " where a.id=b.id and a.code='%s' ";
+//            sql = String.format(sql, code.substring(0, 1));
+//            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql, AccountanCourseBO.class, field);
+//            if (accountanCourseBOS != null && accountanCourseBOS.size() > 0) {
+//                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS) {
+//                    if (accountanCourseBO.getCode().length() == 6) {
+//                        names.add(accountanCourseBO.getAccountanName());
+//                    }
+//                }
+//            }
+//        }
+//        return names;
+//    }
+//
+//    @Override
+//    public List<String> findThirdNameByCode(String code) throws SerException {
+//        List<String> names = new ArrayList<>();
+//        if (StringUtils.isNotBlank(code)) {
+//            String[] field = {"code", "accountanName", "belongCategory", "balanceDirection"};
+//            String sql = " SELECT b.code,b.accountanName,b.belongCategory,b.balanceDirection FROM " +
+//                    " (SELECT substring(code,1,1) as code,id " +
+//                    " FROM financeinit_accountancourse)a, " +
+//                    " financeinit_accountancourse b " +
+//                    " where a.id=b.id and a.code='%s' ";
+//            sql = String.format(sql, code.substring(0, 1));
+//            List<AccountanCourseBO> accountanCourseBOS = super.findBySql(sql, AccountanCourseBO.class, field);
+//            if (accountanCourseBOS != null && accountanCourseBOS.size() > 0) {
+//                for (AccountanCourseBO accountanCourseBO : accountanCourseBOS) {
+//                    if (accountanCourseBO.getCode().length() == 8) {
+//                        names.add(accountanCourseBO.getAccountanName());
+//                    }
+//                }
+//            }
+//        }
+//        return names;
+//    }
 
     @Override
     public List<AccountAddDateBO> findNameCode() throws SerException {
@@ -300,6 +351,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         if (accountanCourses != null && accountanCourses.size() > 0) {
             for (AccountanCourse accountanCourse : accountanCourses) {
                 AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
+                accountAddDateBO.setId(accountanCourse.getId());
                 accountAddDateBO.setCode(accountanCourse.getCode());
                 accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
                 accountAddDateBOS.add(accountAddDateBO);
@@ -312,38 +364,116 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public List<AccountAddDateBO> findFirstNameCode() throws SerException {
         AccountanCourseDTO dto = new AccountanCourseDTO();
         dto.getSorts().add("code=asc");
+        dto.getConditions().add(Restrict.eq("subjectsLeve", "一级科目"));
         List<AccountanCourse> accountanCourses = super.findByCis(dto);
         List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
         if (accountanCourses != null && accountanCourses.size() > 0) {
             for (AccountanCourse accountanCourse : accountanCourses) {
-                if (accountanCourse.getCode().length() == 4) {
-                    AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
-                    accountAddDateBO.setCode(accountanCourse.getCode());
-                    accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
-                    accountAddDateBOS.add(accountAddDateBO);
-                }
+                AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
+                accountAddDateBO.setId(accountanCourse.getId());
+                accountAddDateBO.setCode(accountanCourse.getCode());
+                accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
+                accountAddDateBOS.add(accountAddDateBO);
             }
         }
         return accountAddDateBOS;
     }
 
-    @Transactional(rollbackFor = {SerException.class})
     @Override
-    public AccountanCourseBO addCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+    @Transactional(rollbackFor = {SerException.class})
+    public AccountanCourseBO addOneCourse(AccountanCourseTO accountanCourseTO) throws SerException {
         checkAddIdentity();
+        //将to接收的数据cope到实体类中
         AccountanCourse accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true);
+        //设置开始时间
         accountanCourse.setCreateTime(LocalDateTime.now());
+        //调此方法添加进来的一定是一级科目
+        accountanCourse.setSubjectsLeve("一级科目");
+        //将转换的数据插入到数据库中
         super.save(accountanCourse);
-        //如果代码是四位数(该数据是一级科目)添加到财务初始化表中
-        if (accountanCourse.getCode().length() == 4) {
-            InitDateEntry initDateEntry = new InitDateEntry();
-            initDateEntry.setCode(accountanCourse.getCode());
-            initDateEntry.setAccountanName(accountanCourse.getAccountanName());
-            initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
-            initDateEntrySer.save(initDateEntry);
-        }
+        //一级科目添加到财务初始化表中
+        InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
+        initDateEntry.setCode(accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse.getAccountanName());
+        initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
+        initDateEntrySer.save(initDateEntry);
         return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
     }
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public AccountanCourseBO addSendCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        checkAddIdentity();
+
+        //对应的一级科目数据
+        AccountanCourse accountanCourse2 = super.findById(accountanCourseTO.getBelongSubjectsId());
+
+        //将to接收的数据cope到实体类中
+        AccountanCourse accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true);
+        //设置开始时间
+        accountanCourse.setCreateTime(LocalDateTime.now());
+        //调此方法添加进来的一定是二级科目
+        accountanCourse.setSubjectsLeve("二级科目");
+        //将转换的数据插入到数据库中
+        super.save(accountanCourse);
+
+        //二级科目添加到财务初始化表中
+        InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
+        initDateEntry.setCode(accountanCourse2.getAccountanName() + "-" + accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse.getAccountanName());
+        initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
+        initDateEntrySer.save(initDateEntry);
+
+        return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
+    public AccountanCourseBO addThreeCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        checkAddIdentity();
+
+        //对应的二级科目数据
+        AccountanCourse accountanCourse2 = super.findById(accountanCourseTO.getBelongSubjectsId());
+        //二级科目数据对应的一级科目数据
+        AccountanCourse accountanCourse3 = super.findById(accountanCourse2.getBelongSubjectsId());
+
+
+        //将to接收的数据cope到实体类中
+        AccountanCourse accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true);
+        //设置开始时间
+        accountanCourse.setCreateTime(LocalDateTime.now());
+        //调此方法添加进来的一定是二级科目
+        accountanCourse.setSubjectsLeve("三级科目");
+        //将转换的数据插入到数据库中
+        super.save(accountanCourse);
+
+        //二级科目添加到财务初始化表中
+        InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
+        initDateEntry.setCode(accountanCourse3.getAccountanName() + "-" + accountanCourse2.getAccountanName() + "-" + accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse.getAccountanName());
+        initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
+        initDateEntrySer.save(initDateEntry);
+
+        return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
+    }
+
+//    @Transactional(rollbackFor = {SerException.class})
+//    @Override
+//    public AccountanCourseBO addCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+//        checkAddIdentity();
+//        AccountanCourse accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true);
+//        accountanCourse.setCreateTime(LocalDateTime.now());
+//        super.save(accountanCourse);
+//        //如果代码是四位数(该数据是一级科目)添加到财务初始化表中
+//        if (accountanCourse.getCode().length() == 4) {
+//            InitDateEntry initDateEntry = new InitDateEntry();
+//            initDateEntry.setCode(accountanCourse.getCode());
+//            initDateEntry.setAccountanName(accountanCourse.getAccountanName());
+//            initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
+//            initDateEntrySer.save(initDateEntry);
+//        }
+//        return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
+//    }
 
     @Transactional(rollbackFor = {SerException.class})
     @Override
@@ -351,9 +481,13 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         checkAddIdentity();
         AccountanCourse accountanCourse = super.findById(accountanCourseTO.getId());
         LocalDateTime date = accountanCourse.getCreateTime();
-        accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true);
+        String belongSubjectsId = accountanCourse.getBelongSubjectsId();
+        String subjectsLeve = accountanCourse.getSubjectsLeve();
+        accountanCourse = BeanTransform.copyProperties(accountanCourseTO, AccountanCourse.class, true, "belongSubjectsId", "subjectsLeve");
         accountanCourse.setCreateTime(date);
         accountanCourse.setModifyTime(LocalDateTime.now());
+        accountanCourse.setBelongSubjectsId(belongSubjectsId);
+        accountanCourse.setSubjectsLeve(subjectsLeve);
         super.update(accountanCourse);
         return BeanTransform.copyProperties(accountanCourse, AccountanCourseBO.class);
     }
@@ -362,7 +496,41 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     @Override
     public void deleteCourse(String id) throws SerException {
         checkAddIdentity();
-        super.remove(id);
+        AccountanCourse accountanCourse = super.findById(id);
+        List<AccountanCourse> accountanCourseList = new ArrayList<>();
+        //判断这条数据是一级科目还是二级科目还是三级科目
+        switch (accountanCourse.getSubjectsLeve()) {
+            //如果是一级科目就要删除对应的二级和对应的三级
+            case "一级科目":
+                accountanCourseList.add(accountanCourse);
+                AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
+                accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
+                List<AccountanCourse> accountanCourseList1 = super.findByCis(accountanCourseDTO);
+                if (accountanCourseList1 != null && accountanCourseList1.size() > 0) {
+                    accountanCourseList.addAll(accountanCourseList1);
+                    for (AccountanCourse accountanCourse1 : accountanCourseList) {
+                        AccountanCourseDTO accountanCourseDTO1 = new AccountanCourseDTO();
+                        accountanCourseDTO1.getConditions().add(Restrict.eq("belongSubjectsId", accountanCourse1.getId()));
+                        List<AccountanCourse> accountanCourseList2 = super.findByCis(accountanCourseDTO);
+                        accountanCourseList.addAll(accountanCourseList2);
+                    }
+                }
+                super.remove(accountanCourseList);
+                break;
+            //如果是二级科目就删除对应的三级科目
+            case "二级科目":
+                accountanCourseList.add(accountanCourse);
+                AccountanCourseDTO accountanCourseDTO2 = new AccountanCourseDTO();
+                accountanCourseDTO2.getConditions().add(Restrict.eq("belongSubjectsId", id));
+                List<AccountanCourse> accountanCourseList2 = super.findByCis(accountanCourseDTO2);
+                accountanCourseList.addAll(accountanCourseList2);
+                super.remove(accountanCourseList);
+                break;
+            default:
+                super.remove(id);
+                break;
+        }
+
     }
 
     @Override
@@ -370,16 +538,46 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 //        checkAddIdentity();
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
         accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
-        List<AccountanCourse> list = super.findByCis(accountanCourseDTO);
-        List<AccountanCourseExport> accountanCourseExports = new ArrayList<>();
+        accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "一级科目"));
+        List<AccountanCourse> firsts = super.findByCis(accountanCourseDTO);
+        //一级科目
+        List<AccountanCourse> datas = new ArrayList<>();
+        if (firsts != null && firsts.size() > 0) {
 
-        for (AccountanCourse accountanCourse : list) {
-            AccountanCourseExport excel = BeanTransform.copyProperties(accountanCourse, AccountanCourseExport.class);
-            accountanCourseExports.add(excel);
-        }
-        Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(accountanCourseExports, excel);
-        return bytes;
+            for (AccountanCourse accountanCourse : firsts) {
+                AccountanCourseDTO accountanCourseDTO1 = new AccountanCourseDTO();
+                accountanCourseDTO1.getConditions().add(Restrict.eq("belongSubjectsId", accountanCourse.getId()));
+                accountanCourseDTO1.getConditions().add(Restrict.eq("subjectsLeve", "二级科目"));
+                List<AccountanCourse> seconds = super.findByCis(accountanCourseDTO1);
+                accountanCourse.setLevel(seconds);
+                //二级科目
+                if (seconds != null && seconds.size() > 0) {
+                    for (AccountanCourse accountanCourse1 : seconds) {
+                        AccountanCourseDTO accountanCourseDTO2 = new AccountanCourseDTO();
+                        accountanCourseDTO2.getConditions().add(Restrict.eq("belongSubjectsId", accountanCourse1.getId()));
+                        accountanCourseDTO2.getConditions().add(Restrict.eq("subjectsLeve", "三级科目"));
+                        List<AccountanCourse> three = super.findByCis(accountanCourseDTO2);
+                        accountanCourse1.setLevel(three);
+                        }
+                    }
+                }
+            }
+            int size=0;
+            List<Integer> rows = new ArrayList<>();
+            for(AccountanCourse accountanCourse:firsts){
+                    size = accountanCourse.getLevel().size();//二级的长度
+                    for(AccountanCourse ac:accountanCourse.getLevel()){
+                        size += ac.getLevel().size();//三级的长度
+                    }
+                rows.add(size);
+            }
+
+          XSSFWorkbook wb = new XSSFWorkbook();
+          XSSFSheet sheet = wb.createSheet("test");
+        System.out.println(datas);
+        return null;
+
+
     }
 
     @Override
@@ -610,12 +808,12 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
         List<String> names = new ArrayList<>();
         if (accountanCourseList != null && accountanCourseList.size() > 0) {
-            String code = accountanCourseList.get(0).getCode();
+            String id = accountanCourseList.get(0).getId();
             String[] files = new String[]{"secondSubjectCode", "secondSubject"};
             //查询二级科目代码
             StringBuilder sql = new StringBuilder("select code as secondSubjectCode ,accountanName as secondSubject from financeinit_accountancourse ");
-            sql.append(" where substring(code,1,4) = '" + code + "' ");
-            sql.append(" and LENGTH(code) = 6 ");
+            sql.append(" where belongSubjectsId = '" + id + "' ");
+            sql.append(" and subjectsLeve = '二级科目' ");
             List<SecondSubjectDataBO> bos = super.findBySql(sql.toString(), SecondSubjectDataBO.class, files);
             if (bos != null && bos.size() > 0) {
                 for (SecondSubjectDataBO secondSubjectDataBO : bos) {
@@ -642,18 +840,15 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     @Override
     public List<String> findDepreciationAccount() throws SerException {
         List<String> depreciationAccount = new ArrayList<>();
-        StringBuffer sql = new StringBuffer("select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
-        sql.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '管理费用') ");
-        sql.append(" and LENGTH(code) = 6 ");
+        StringBuffer sql = new StringBuffer("SELECT code from financeinit_accountancourse WHERE accountanName = '折旧费' AND belongSubjectsId in (SELECT id from financeinit_accountancourse WHERE accountanName = '管理费用' AND subjectsLeve = '一级科目') ");
         List<Object> objectList = super.findBySql(sql.toString());
         if (objectList != null && objectList.size() > 0) {
             String code = String.valueOf(objectList.get(0));
             String name = code + "费用管理-折旧费";
             depreciationAccount.add(name);
         }
-        StringBuffer sql1 = new StringBuffer(" select code from financeinit_accountancourse  where accountanName = '折旧费' and ");
-        sql1.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '研发费用') ");
-        sql1.append(" and LENGTH(code) = 6 ");
+        StringBuffer sql1 = new StringBuffer(" SELECT code from financeinit_accountancourse WHERE accountanName = '折旧费' AND belongSubjectsId in (SELECT id from financeinit_accountancourse WHERE accountanName = '研发费用' AND subjectsLeve = '一级科目') ");
+
         List<Object> objectList1 = super.findBySql(sql1.toString());
         if (objectList1 != null && objectList1.size() > 0) {
             String code = String.valueOf(objectList1.get(0));
@@ -667,10 +862,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public String findtaxSubject() throws SerException {
         StringBuffer sql = new StringBuffer();
         String name = "";
-        sql.append(" select code from financeinit_accountancourse  where accountanName = '进项税额' and ");
-        sql.append(" substring(code,1,6) = (select code from financeinit_accountancourse  where accountanName = '应交增值税' and ");
-        sql.append(" substring(code,1,4) = (select code from financeinit_accountancourse where accountanName = '应交税金' and LENGTH(code) = 4) ");
-        sql.append(" and LENGTH(code) = 6) AND LENGTH(code) = 8 ");
+        sql.append(" SELECT id FROM financeinit_accountancourse WHERE accountanName = '进项税额' AND belongSubjectsId IN ");
+        sql.append(" (SELECT id FROM financeinit_accountancourse WHERE accountanName = '应交增值税' AND belongSubjectsId IN ");
+        sql.append(" (SELECT id FROM financeinit_accountancourse WHERE accountanName = '应交税金' AND subjectsLeve = '一级科目')) ");
         List<Object> objectList = super.findBySql(sql.toString());
         if (objectList != null && objectList.size() > 0) {
             String code = String.valueOf(objectList.get(0));

@@ -21,6 +21,10 @@ import javax.validation.constraints.NotNull;
 public class AccountanCourseTO extends BaseTO {
 
     /**
+     * 所属科目id
+     */
+    private String belongSubjectsId;
+    /**
      * 代码
      */
     @NotBlank(message = "代码不能为空",groups = {ADD.class, EDIT.class})
@@ -44,6 +48,14 @@ public class AccountanCourseTO extends BaseTO {
     @NotNull(message = "余额方向不能为空",groups = {ADD.class, EDIT.class})
     private BalanceDirection balanceDirection;
 
+
+    public String getBelongSubjectsId() {
+        return belongSubjectsId;
+    }
+
+    public void setBelongSubjectsId(String belongSubjectsId) {
+        this.belongSubjectsId = belongSubjectsId;
+    }
 
     public String getCode() {
         return code;

@@ -55,4 +55,9 @@ public class ProofWordsApiImpl implements ProofWordsAPI {
     public ProofWordsBO addProof(ProofWordsTO proofWordsTO) throws SerException {
         return proofWordsSer.addProof(proofWordsTO);
     }
+
+    @Override
+    public void delete(String id) throws SerException {
+        proofWordsSer.delete(id);
+    }
 }
