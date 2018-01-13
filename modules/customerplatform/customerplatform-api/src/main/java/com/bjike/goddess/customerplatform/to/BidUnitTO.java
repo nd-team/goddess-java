@@ -229,17 +229,6 @@ public class BidUnitTO extends BaseTO {
         this.wechat = wechat;
     }
 
-<<<<<<< HEAD
-    public String getBusinessType() {
-        return businessType;
-    }
-
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
-    }
-
-=======
->>>>>>> upstream/develop
     public String getProjectType() {
         return projectType;
     }
