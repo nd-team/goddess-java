@@ -178,7 +178,7 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        List<Site> sites = super.findByCis(dto);
+        List<Site> sites = super.findByCis(dto,true);
         List<SiteBO> siteBOs = BeanTransform.copyProperties(sites, SiteBO.class, false);
         if (null != siteBOs && siteBOs.size() > 0) {
             for(SiteBO bo : siteBOs){

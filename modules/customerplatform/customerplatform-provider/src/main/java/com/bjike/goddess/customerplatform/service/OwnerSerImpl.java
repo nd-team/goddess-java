@@ -176,7 +176,7 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        List<Owner> owners = super.findByCis(dto);
+        List<Owner> owners = super.findByCis(dto,true);
         List<OwnerBO> ownerBOs = BeanTransform.copyProperties(owners, OwnerBO.class, false);
         if (null != ownerBOs && ownerBOs.size() > 0) {
             for(OwnerBO bo : ownerBOs){

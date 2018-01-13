@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,6 +50,7 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidyStandardBO save(SubsidyStandardTO to) throws SerException {
         if (this.findByArrangement(to.getArrangement()) != null)
@@ -59,6 +61,7 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         return BeanTransform.copyProperties(entity, SubsidyStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidyStandardBO update(SubsidyStandardTO to) throws SerException {
         SubsidyStandard entity = super.findById(to.getId());
@@ -72,6 +75,7 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         return BeanTransform.copyProperties(entity, SubsidyStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidyStandardBO delete(String id) throws SerException {
         SubsidyStandard entity = super.findById(id);
@@ -101,6 +105,7 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         return BeanTransform.copyProperties(entity, SubsidyStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidyStandardBO congeal(String id) throws SerException {
         SubsidyStandard entity = super.findById(id);
@@ -111,6 +116,7 @@ public class SubsidyStandardSerImpl extends ServiceImpl<SubsidyStandard, Subsidy
         return BeanTransform.copyProperties(entity, SubsidyStandardBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public SubsidyStandardBO thaw(String id) throws SerException {
         SubsidyStandard entity = super.findById(id);

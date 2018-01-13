@@ -227,7 +227,7 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        List<BidUnit> bidUnits = super.findByCis(dto);
+        List<BidUnit> bidUnits = super.findByCis(dto,true);
         List<BidUnitBO> bidUnitBOs = BeanTransform.copyProperties(bidUnits, BidUnitBO.class, false);
         if (null != bidUnitBOs && bidUnitBOs.size() > 0) {
             for(BidUnitBO bo : bidUnitBOs){
