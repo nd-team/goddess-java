@@ -63,19 +63,42 @@ public class UserLoginSerImpl implements UserLoginSer {
         if (null != userBO) {
             User user = BeanTransform.copyProperties(userBO, User.class, true);
             boolean authCode = validateAuthCode(account, loginTO.getAuthCode());
-            if (authCode) { //验证码正确
+//            if (authCode) { //验证码正确
                 token = validatePassword(loginTO, user);  //验证密码
                 if (StringUtils.isNotBlank(token)) { //登录成功处理业务
                     PwdErrSession.remove(account);//删除密码验证错误次数统计
-                    AuthCodeSession.remove(account);//清除验证码
+//                    AuthCodeSession.remove(account);//清除验证码
                     saveLoginLog(loginTO, user);  //记录登录日志
                     LoginUser loginUser = saveToSessionAndRedis(user, token); //保存登录用户到session和redis
 //                    setPermission(loginUser, token);
                 } else {
                     throw new SerException("账号或者密码错误");
                 }
+//            } else {
+//                throw new SerException("验证码错误");
+//            }
+        } else {
+            throw new SerException("账号或者密码错误");
+        }
+        return token;
+    }
+
+    @Transactional
+    @Override
+    public String logins(UserLoginTO loginTO) throws SerException {
+        String token = null;
+        String account = loginTO.getAccount();
+        UserBO userBO = userSer.findByAccountNumber(account); //通过用户名/手机号/或者邮箱查找用户
+        if (null != userBO) {
+            User user = BeanTransform.copyProperties(userBO, User.class, true);
+            boolean authCode = validateAuthCode(account, loginTO.getAuthCode());
+            token = validatePassword(loginTO, user);  //验证密码
+            if (StringUtils.isNotBlank(token)) { //登录成功处理业务
+                PwdErrSession.remove(account);//删除密码验证错误次数统计
+                saveLoginLog(loginTO, user);  //记录登录日志
+                LoginUser loginUser = saveToSessionAndRedis(user, token); //保存登录用户到session和redis
             } else {
-                throw new SerException("验证码错误");
+                throw new SerException("账号或者密码错误");
             }
         } else {
             throw new SerException("账号或者密码错误");
