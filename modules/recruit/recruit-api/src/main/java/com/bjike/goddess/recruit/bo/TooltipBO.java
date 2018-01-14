@@ -1,7 +1,5 @@
 package com.bjike.goddess.recruit.bo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 /**
  * 悬停提示传输对象
  *

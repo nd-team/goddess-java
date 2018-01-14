@@ -1,7 +1,15 @@
 package com.bjike.goddess.recruit.service;
+import com.alibaba.druid.sql.visitor.functions.If;
+import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.recruit.bo.CheckIndexBO;
+import com.bjike.goddess.recruit.bo.EmotionOneBO;
+import com.bjike.goddess.recruit.dao.EmotionOneRep;
 import com.bjike.goddess.recruit.dto.EmotionOneDTO;
 import com.bjike.goddess.recruit.entity.EmotionOne;
+import com.bjike.goddess.recruit.to.EmotionOneTO;
+import com.sun.xml.internal.fastinfoset.algorithm.BASE64EncodingAlgorithm;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -10,7 +18,10 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -27,14 +38,33 @@ import java.util.concurrent.TimeoutException;
 public class EmotionOneSerImpl extends ServiceImpl<EmotionOne, EmotionOneDTO> implements EmotionOneSer {
 
 
-    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException {
-        System.out.println("hh");
+    @Autowired
+    private EmotionOneRep emotionOneRep;
 
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public List<EmotionOneBO> list() throws SerException {
+        List<EmotionOneBO> emotionOneBOS = BeanTransform.wanycopyProperties(emotionOneRep.findAll(),EmotionOneBO.class);
+        return emotionOneBOS;
     }
 
-
-    public void test() {
-
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void add(EmotionOneBO bo) throws SerException {
+        EmotionOne emotionOne = BeanTransform.wanycopyProperties(bo,EmotionOne.class);
+        super.save(emotionOne);
     }
 
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void delete(String id) throws SerException {
+        emotionOneRep.deleteById(id);
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public EmotionOneBO edit(String id) throws SerException {
+        EmotionOneBO bo = BeanTransform.wanycopyProperties(super.findById(id),EmotionOneBO.class);
+        return bo;
+    }
 }

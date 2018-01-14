@@ -2,17 +2,16 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.enterprise.inject.New;
-
 /**
  * 转正图形展示传数对象
+ *
  * @Author: [lijuntao]
  * @Date: [2017-09-09 15:32]
  * @Description: [转正图形展示传数对象 ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class OptionBO extends BaseBO{
+public class OptionBO extends BaseBO {
 
     public OptionBO() {
 
@@ -21,6 +20,7 @@ public class OptionBO extends BaseBO{
     public OptionBO(SeriesBO[] series) {
         this.series = series;
     }
+
     /**
      * 标题
      */
@@ -44,7 +44,7 @@ public class OptionBO extends BaseBO{
     /**
      * 柱状图数据
      */
-    private SeriesBO[] series = {new SeriesBO(),new SeriesBO()};
+    private SeriesBO[] series = {new SeriesBO(), new SeriesBO()};
 
     /**
      * 柱状图数据

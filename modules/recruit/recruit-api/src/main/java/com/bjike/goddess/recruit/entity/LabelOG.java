@@ -23,13 +23,13 @@ public class LabelOG extends BaseEntity {
     /**
      * 标签名称
      */
-    @Column(name = "labelName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标签名称'")
+    @Column(name = "labelName",  columnDefinition = "VARCHAR(255)   COMMENT '标签名称'")
     private String labelName;
 
     /**
      * 标签说明
      */
-    @Column(name = "labelExplain", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标签说明'")
+    @Column(name = "labelExplain",  columnDefinition = "VARCHAR(255)   COMMENT '标签说明'")
     private String labelExplain;
 
 

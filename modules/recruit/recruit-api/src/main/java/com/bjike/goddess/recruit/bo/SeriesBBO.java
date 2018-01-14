@@ -6,13 +6,14 @@ import java.util.List;
 
 /**
  * 转正图形展示数据传输对象
+ *
  * @Author: [lijuntao]
  * @Date: [2017-09-09 15:32]
  * @Description: [转正图形展示数据传输对象 ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class SeriesBBO extends BaseBO{
+public class SeriesBBO extends BaseBO {
     /**
      * 名称
      */

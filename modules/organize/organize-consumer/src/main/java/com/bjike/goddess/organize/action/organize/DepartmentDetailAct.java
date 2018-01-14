@@ -23,6 +23,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,7 @@ public class DepartmentDetailAct {
      * @return class DepartmentDetailVO
      * @version v1
      */
+    @CacheEvict(value = "listCache", allEntries = true)
     @PostMapping("v1/save")
     public Result save(@Validated(ADD.class) DepartmentDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -74,6 +77,7 @@ public class DepartmentDetailAct {
      * @return class DepartmentDetailVO
      * @version v1
      */
+    @CacheEvict(value = "listCache", allEntries = true)
     @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) DepartmentDetailTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
@@ -106,6 +110,7 @@ public class DepartmentDetailAct {
      * @return class DepartmentDetailVO
      * @version v1
      */
+    @CacheEvict(value = "listCache", key = "#id", allEntries = true, condition = "#id != ''")
     @DeleteMapping("v1/delete/{id}")
     public Result delete(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
@@ -123,6 +128,7 @@ public class DepartmentDetailAct {
      * @return class DepartmentDetailVO
      * @version v1
      */
+    @Cacheable(value = {"listCache"}, key = "#dto.toString()")
     @GetMapping("v1/maps")
     public Result maps(DepartmentDetailDTO dto, HttpServletRequest request) throws ActException {
         try {
