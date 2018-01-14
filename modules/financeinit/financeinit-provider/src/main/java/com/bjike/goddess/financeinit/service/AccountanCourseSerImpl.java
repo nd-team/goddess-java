@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.ClazzUtils;
 import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.bo.*;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
@@ -24,18 +26,22 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -541,7 +547,6 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "一级科目"));
         List<AccountanCourse> firsts = super.findByCis(accountanCourseDTO);
         //一级科目
-        List<AccountanCourse> datas = new ArrayList<>();
         if (firsts != null && firsts.size() > 0) {
 
             for (AccountanCourse accountanCourse : firsts) {
@@ -558,24 +563,121 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                         accountanCourseDTO2.getConditions().add(Restrict.eq("subjectsLeve", "三级科目"));
                         List<AccountanCourse> three = super.findByCis(accountanCourseDTO2);
                         accountanCourse1.setLevel(three);
-                        }
                     }
                 }
             }
-            int size=0;
-            List<Integer> rows = new ArrayList<>();
-            for(AccountanCourse accountanCourse:firsts){
-                    size = accountanCourse.getLevel().size();//二级的长度
-                    for(AccountanCourse ac:accountanCourse.getLevel()){
-                        size += ac.getLevel().size();//三级的长度
+        }
+
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("test");
+
+        XSSFCellStyle headerStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
+        headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+        headerStyle.setWrapText(true);
+        int rowIndex = 0;
+        XSSFRow row = null;
+        row = sheet.createRow(rowIndex++);
+        List<Field> fields = ClazzUtils.getFields(new AccountanCourseExport().getClass()); //获得列表对象属性
+        List<ExcelHeader> excelHeaders = ExcelUtil.getExcelHeaders(fields, null); //获得表头
+        int i = 0;
+        for (ExcelHeader eh : excelHeaders) {
+            XSSFCell cell = row.createCell(i++);
+            cell.setCellValue(eh.name());
+        }
+        //创建内容行
+        int startIndex = 1;
+        int secondIndex = 1;
+        for (AccountanCourse ac1 : firsts) {
+            List<AccountanCourse> seconds = ac1.getLevel();
+            if (null != seconds && seconds.size() > 0) {
+                for (AccountanCourse ac2 : seconds) {
+                    List<AccountanCourse> threes = ac2.getLevel();
+                    if (null != threes && threes.size() > 0) {
+                        for (AccountanCourse ac3 : threes) {
+                            //从三级节点开始创建行数据
+                            row = sheet.createRow(rowIndex++);
+                            row.createCell(0).setCellValue(ac1.getCode());
+                            row.createCell(1).setCellValue(ac1.getAccountanName());
+                            row.createCell(2).setCellValue(ac1.getBelongCategory().getCode());
+                            row.createCell(3).setCellValue(ac1.getBalanceDirection().getCode());
+                            row.createCell(4).setCellValue(ac2.getCode());
+                            row.createCell(5).setCellValue(ac2.getAccountanName());
+                            row.createCell(6).setCellValue(ac2.getBelongCategory().getCode());
+                            row.createCell(7).setCellValue(ac2.getBalanceDirection().getCode());
+                            row.createCell(8).setCellValue(ac3.getCode());
+                            row.createCell(9).setCellValue(ac3.getAccountanName());
+                            row.createCell(10).setCellValue(ac3.getBelongCategory().getCode());
+                            row.createCell(11).setCellValue(ac3.getBalanceDirection().getCode());
+                        }
+
+                    } else {
+                        //假如没有三级节点 创建二级行数据 row
+                        row = sheet.createRow(rowIndex++);
+                        row.createCell(0).setCellValue(ac1.getCode());
+                        row.createCell(1).setCellValue(ac1.getAccountanName());
+                        row.createCell(2).setCellValue(ac1.getBelongCategory().getCode());
+                        row.createCell(3).setCellValue(ac1.getBalanceDirection().getCode());
+                        row.createCell(4).setCellValue(ac2.getCode());
+                        row.createCell(5).setCellValue(ac2.getAccountanName());
+                        row.createCell(6).setCellValue(ac2.getBelongCategory().getCode());
+                        row.createCell(7).setCellValue(ac2.getBalanceDirection().getCode());
                     }
-                rows.add(size);
+                    //1-3 4-5 6-6 7-7
+                    int start = secondIndex;
+                    int end =rowIndex-1;
+                    if(end-start>0){
+                        sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 4, 4));
+                        sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 5, 5));
+                        sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 6, 6));
+                        sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 7, 7));
+                    }
+                    secondIndex=rowIndex;
+
+
+                }
+
+            } else {
+                //假如没有二级节点  创建一级行数据 row
+                row = sheet.createRow(rowIndex++);
+                row.createCell(0).setCellValue(ac1.getCode());
+                row.createCell(1).setCellValue(ac1.getAccountanName());
+                row.createCell(2).setCellValue(ac1.getBelongCategory().getCode());
+                row.createCell(3).setCellValue(ac1.getBalanceDirection().getCode());
+
+            }
+            if ((rowIndex - 1) - startIndex > 1) {//超过两行才合并
+                sheet.addMergedRegion(new CellRangeAddress(startIndex, rowIndex - 1, 0, 0));
+                sheet.addMergedRegion(new CellRangeAddress(startIndex, rowIndex - 1, 1, 1));
+                sheet.addMergedRegion(new CellRangeAddress(startIndex, rowIndex - 1, 2, 2));
+                sheet.addMergedRegion(new CellRangeAddress(startIndex, rowIndex - 1, 3, 3));
+                startIndex = rowIndex - 1;
+
+            }
+//            //设置样式
+           int rows =  sheet.getLastRowNum();
+            for(int j=0;j<rows;j++){
+                if(j!=0){
+                    XSSFRow xrow = sheet.getRow(j);
+                    for(int k=0;k<xrow.getLastCellNum();k++){
+                        xrow.getCell(k).setCellStyle(headerStyle);
+                    }
+                }
+
             }
 
-          XSSFWorkbook wb = new XSSFWorkbook();
-          XSSFSheet sheet = wb.createSheet("test");
-        System.out.println(datas);
-        return null;
+
+        }
+
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
 
 
     }
