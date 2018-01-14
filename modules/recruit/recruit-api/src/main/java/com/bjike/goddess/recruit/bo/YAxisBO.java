@@ -14,7 +14,17 @@ public class YAxisBO extends BaseBO{
     /**
      * 数据
      */
+    private String type = "value";
+
     private Integer[] data;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Integer[] getData() {
         return data;

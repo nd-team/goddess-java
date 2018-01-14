@@ -2,6 +2,7 @@ package com.bjike.goddess.recruit;
 
 import com.bjike.goddess.recruit.config.AppRoot;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+@ImportResource()
 public class Application {
 
     static AnnotationConfigApplicationContext context = null;

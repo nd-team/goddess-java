@@ -12,15 +12,15 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [com.bjike]
  */
 public class LegendBO extends BaseBO {
-    private String orient;
+    private String orient = "horizontal";
     /**
      * 数据字体位置
      */
-    private String left;
+    private String left = "center";
     /**
      * 数据
      */
-    private String[] data;
+    private String[] data = {"本部门需招聘人数","本部门近期招聘人数"};
 
     public String getOrient() {
         return orient;
