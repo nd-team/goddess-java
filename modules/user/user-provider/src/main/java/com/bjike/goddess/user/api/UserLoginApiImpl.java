@@ -26,6 +26,11 @@ public class UserLoginApiImpl implements UserLoginAPI {
     }
 
     @Override
+    public String logins(UserLoginTO loginTO) throws SerException {
+        return userLoginSer.logins(loginTO);
+    }
+
+    @Override
     public Boolean signOut(String token) throws SerException {
         return userLoginSer.signOut(token);
     }
