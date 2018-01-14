@@ -1332,6 +1332,6 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         String moduleId = moduleTypeAPI.findModuleId("账务模块");
-        return positionDetailUserAPI.checkAsUserModule(userBO.getUsername(), moduleId);
+        return positionDetailUserAPI.checkAsUserModule(userBO.getId(), moduleId);
     }
 }

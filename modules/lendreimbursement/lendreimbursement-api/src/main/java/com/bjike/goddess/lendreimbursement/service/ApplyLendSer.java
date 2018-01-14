@@ -653,6 +653,17 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
     byte[] returnExcel(ApplyLendDTO applyLendDTO) throws SerException;
 
     /**
+     * 账户核对导出
+     *
+     * @param applyLendDTO
+     * @return
+     * @throws SerException
+     */
+    default byte[] businessCheckOut(ApplyLendDTO applyLendDTO) throws SerException {
+        return null;
+    }
+
+    /**
      * 已收票导出excel
      *
      * @param applyLendDTO
@@ -891,6 +902,47 @@ public interface ApplyLendSer extends Ser<ApplyLend, ApplyLendDTO> {
      * @throws SerException
      */
     default ApplyLendBO analyse(ApplyLendTO applyLendTO) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 获取所有人名
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllName() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findAllArea() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findDepartment() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取全部的项目名称
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> findProject() throws SerException {
         return null;
     }
 }

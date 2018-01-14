@@ -13,6 +13,7 @@ import com.bjike.goddess.message.enums.MsgType;
 import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.regularization.api.RegularizationAPI;
@@ -128,7 +129,13 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
             bo.setRotationLevelId(entity.getRotationLevel().getId());
             bo.setRotationLevelArrangement(entity.getRotationLevel().getArrangement());
         }
-        bo.setApplyTime(entity.getCreateTime().toString());
+        String createTime = "";
+        if (null == entity.getCreateTime()) {
+            createTime = DateUtil.dateToString(LocalDateTime.now());
+        } else {
+            createTime = DateUtil.dateToString(entity.getCreateTime());
+        }
+        bo.setApplyTime(createTime);
         if (bo.getAudit().equals(AuditType.ALLOWED)) {
             bo.setGetTime(entity.getModifyTime().toString());
         }
@@ -145,6 +152,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CoverRotationBO save(CoverRotationTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -152,7 +160,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         RpcTransmit.transmitUserToken(userToken);
         CoverRotation entity = BeanTransform.copyProperties(to, CoverRotation.class, true);
         if (moduleAPI.isCheck("organize")) {
-            List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getId()).stream()
+            List<PositionDetailBO> positionDetailBOs = positionDetailUserAPI.findPositionByUser(user.getUsername()).stream()
                     .sorted(Comparator.comparing(PositionDetailBO::getArea)
                     .thenComparing(PositionDetailBO::getDepartmentId))
                     .collect(Collectors.toList());
@@ -206,11 +214,11 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         entity.setRegularTime(regularizationAPI.getTime(entity.getUsername()));
         if (null == entity.getApplyLevel())
             throw new SerException("申请的层级不存在");
-        super.save(entity);
-
+        entity = super.save(entity);
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CoverRotationBO update(CoverRotationTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -230,6 +238,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CoverRotationBO delete(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -254,6 +263,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public CoverRotationOpinionBO opinion(CoverRotationOpinionTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();

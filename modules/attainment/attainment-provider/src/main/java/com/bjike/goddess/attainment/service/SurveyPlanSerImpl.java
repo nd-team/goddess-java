@@ -161,7 +161,7 @@ public class SurveyPlanSerImpl extends ServiceImpl<SurveyPlan, SurveyPlanDTO> im
         if (null != surveyPlanList && surveyPlanList.size() > 0) {
             for (SurveyPlan entity : surveyPlanList) {
                 SurPlanBO surPlanbo = new SurPlanBO();
-//                surPlanbo.setTypeName(entity.getId());
+//                surPlanbo.setSurPlanId(entity.getId());
                 surPlanbo.setSerialNumber(entity.getSerialNumber());
                 list.add(surPlanbo);
             }

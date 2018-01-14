@@ -999,6 +999,24 @@ public class ApplyLendAction extends BaseFileAction {
     }
 
     /**
+     * 账户核对导出
+     *
+     * @version v1
+     */
+    @GetMapping("v1/businessCheckOut")
+    public Result businessCheckOut(ApplyLendDTO applyLendDTO, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "账户核对.xlsx";
+            super.writeOutFile(response, applyLendAPI.businessCheckOut(applyLendDTO), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
      * 帐务核对收到单据确认
      *
      * @param applyLendTO 申请借款基本信息数据bo
@@ -1408,5 +1426,60 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 获取所有人名
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAllName")
+    public Result findAllName() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findAllName());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findAllArea")
+    public Result findAllArea() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findAllArea());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部的项目组
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findDepartment")
+    public Result findDepartment() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findDepartment());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部的项目名称
+     *
+     * @version v1
+     */
+    @GetMapping("v1/findProject")
+    public Result findProject() throws ActException{
+        try {
+            return ActResult.initialize(applyLendAPI.findProject());
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }

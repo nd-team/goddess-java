@@ -600,39 +600,40 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
-        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
-        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "负责人"));
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
-        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
-        if (listDetails != null && listDetails.size() > 0) {
-            LendAuditDetail updateDetail = listDetails.get(0);
-            updateDetail.setAuditDate(LocalDate.now());
-            updateDetail.setAuditSuggest(applyLendTO.getChargerOpinion());
-            updateDetail.setPassOr(applyLendTO.getChargerPass());
-            updateDetail.setModifyTime(LocalDateTime.now());
-            lendAuditDetailSer.update(updateDetail);
-        } else {
-            List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
-            RpcTransmit.transmitUserToken(userToken);
-            String position = "";
-            if (positionBO != null && positionBO.size() > 0) {
-                position = positionBO.get(0).getPosition();
-            }
-            //职位名
-            LendAuditDetail lendAuditDetail = new LendAuditDetail();
-            lendAuditDetail.setPosition(position);
-            lendAuditDetail.setAuditIdentity("负责人");
-            lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
-            lendAuditDetail.setAuditor(userBO.getUsername());
-            lendAuditDetail.setAuditDate(LocalDate.now());
-            lendAuditDetail.setAuditSuggest(applyLendTO.getChargerOpinion());
-            lendAuditDetail.setPassOr(applyLendTO.getChargerPass());
-            lendAuditDetail.setApplyLendId(lend.getId());
-            lendAuditDetail.setCreateTime(LocalDateTime.now());
-            lendAuditDetailSer.save(lendAuditDetail);
+        //添加审核情况
+//        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+//        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "负责人"));
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+//        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+//        if (listDetails != null && listDetails.size() > 0) {
+//            LendAuditDetail updateDetail = listDetails.get(0);
+//            updateDetail.setAuditDate(LocalDate.now());
+//            updateDetail.setAuditSuggest(applyLendTO.getChargerOpinion());
+//            updateDetail.setPassOr(applyLendTO.getChargerPass());
+//            updateDetail.setModifyTime(LocalDateTime.now());
+//            lendAuditDetailSer.update(updateDetail);
+//        } else {
+        List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+        String position = "";
+        if (positionBO != null && positionBO.size() > 0) {
+            position = positionBO.get(0).getPosition();
         }
+        //职位名
+        LendAuditDetail lendAuditDetail = new LendAuditDetail();
+        lendAuditDetail.setPosition(position);
+        lendAuditDetail.setAuditIdentity("负责人");
+        lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+        lendAuditDetail.setAuditor(userBO.getUsername());
+        lendAuditDetail.setAuditDate(LocalDate.now());
+        lendAuditDetail.setAuditSuggest(applyLendTO.getChargerOpinion());
+        lendAuditDetail.setPassOr(applyLendTO.getChargerPass());
+        lendAuditDetail.setApplyLendId(lend.getId());
+        lendAuditDetail.setCreateTime(LocalDateTime.now());
+        lendAuditDetailSer.save(lendAuditDetail);
+//    }
 
         ApplyLendBO bo = BeanTransform.copyProperties(lend, ApplyLendBO.class, "lendStatus");
         bo.setLendStatus(lend.getLendStatus());
@@ -678,39 +679,40 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
 
-        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
-        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "财务"));
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
-        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
-        if (listDetails != null && listDetails.size() > 0) {
-            LendAuditDetail updateDetail = listDetails.get(0);
-            updateDetail.setAuditDate(LocalDate.now());
-            updateDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
-            updateDetail.setPassOr(applyLendTO.getFincerPass());
-            updateDetail.setModifyTime(LocalDateTime.now());
-            lendAuditDetailSer.update(updateDetail);
-        } else {
-            List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
-            RpcTransmit.transmitUserToken(userToken);
-            String position = "";
-            if (positionBO != null && positionBO.size() > 0) {
-                position = positionBO.get(0).getPosition();
-            }
-            //职位名
-            LendAuditDetail lendAuditDetail = new LendAuditDetail();
-            lendAuditDetail.setPosition(position);
-            lendAuditDetail.setAuditIdentity("财务");
-            lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
-            lendAuditDetail.setAuditor(userBO.getUsername());
-            lendAuditDetail.setAuditDate(LocalDate.now());
-            lendAuditDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
-            lendAuditDetail.setPassOr(applyLendTO.getFincerPass());
-            lendAuditDetail.setApplyLendId(lend.getId());
-            lendAuditDetail.setCreateTime(LocalDateTime.now());
-            lendAuditDetailSer.save(lendAuditDetail);
+        //添加审核情况
+//        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+//        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "财务"));
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+//        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+//        if (listDetails != null && listDetails.size() > 0) {
+//            LendAuditDetail updateDetail = listDetails.get(0);
+//            updateDetail.setAuditDate(LocalDate.now());
+//            updateDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+//            updateDetail.setPassOr(applyLendTO.getFincerPass());
+//            updateDetail.setModifyTime(LocalDateTime.now());
+//            lendAuditDetailSer.update(updateDetail);
+//        } else {
+        List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+        String position = "";
+        if (positionBO != null && positionBO.size() > 0) {
+            position = positionBO.get(0).getPosition();
         }
+        //职位名
+        LendAuditDetail lendAuditDetail = new LendAuditDetail();
+        lendAuditDetail.setPosition(position);
+        lendAuditDetail.setAuditIdentity("财务");
+        lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+        lendAuditDetail.setAuditor(userBO.getUsername());
+        lendAuditDetail.setAuditDate(LocalDate.now());
+        lendAuditDetail.setAuditSuggest(applyLendTO.getFincerOpinion());
+        lendAuditDetail.setPassOr(applyLendTO.getFincerPass());
+        lendAuditDetail.setApplyLendId(lend.getId());
+        lendAuditDetail.setCreateTime(LocalDateTime.now());
+        lendAuditDetailSer.save(lendAuditDetail);
+//        }
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
@@ -754,40 +756,40 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             throw new SerException("该条数据已经申请过冻结，不能再操作");
         }
 
-
-        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
-        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "总经办"));
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
-        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
-        if (listDetails != null && listDetails.size() > 0) {
-            LendAuditDetail updateDetail = listDetails.get(0);
-            updateDetail.setAuditDate(LocalDate.now());
-            updateDetail.setAuditSuggest(applyLendTO.getManagerOpinion());
-            updateDetail.setPassOr(applyLendTO.getManagerPass());
-            updateDetail.setModifyTime(LocalDateTime.now());
-            lendAuditDetailSer.update(updateDetail);
-        } else {
-            List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
-            RpcTransmit.transmitUserToken(userToken);
-            String position = "";
-            if (positionBO != null && positionBO.size() > 0) {
-                position = positionBO.get(0).getPosition();
-            }
-            //职位名
-            LendAuditDetail lendAuditDetail = new LendAuditDetail();
-            lendAuditDetail.setPosition(position);
-            lendAuditDetail.setAuditIdentity("总经办");
-            lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
-            lendAuditDetail.setAuditor(userBO.getUsername());
-            lendAuditDetail.setAuditDate(LocalDate.now());
-            lendAuditDetail.setAuditSuggest(applyLendTO.getManagerOpinion());
-            lendAuditDetail.setPassOr(applyLendTO.getManagerPass());
-            lendAuditDetail.setApplyLendId(lend.getId());
-            lendAuditDetail.setCreateTime(LocalDateTime.now());
-            lendAuditDetailSer.save(lendAuditDetail);
+        //添加审核情况
+//        //存审核详情表,先查一下是否审核过,若审核过则修改，否则添加
+//        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("empNumber", userBO.getEmployeeNumber()));
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("auditIdentity", "总经办"));
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+//        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+//        if (listDetails != null && listDetails.size() > 0) {
+//            LendAuditDetail updateDetail = listDetails.get(0);
+//            updateDetail.setAuditDate(LocalDate.now());
+//            updateDetail.setAuditSuggest(applyLendTO.getManagerOpinion());
+//            updateDetail.setPassOr(applyLendTO.getManagerPass());
+//            updateDetail.setModifyTime(LocalDateTime.now());
+//            lendAuditDetailSer.update(updateDetail);
+//        } else {
+        List<PositionDetailBO> positionBO = positionDetailUserAPI.findPositionByUser(userBO.getId());
+        RpcTransmit.transmitUserToken(userToken);
+        String position = "";
+        if (positionBO != null && positionBO.size() > 0) {
+            position = positionBO.get(0).getPosition();
         }
+        //职位名
+        LendAuditDetail lendAuditDetail = new LendAuditDetail();
+        lendAuditDetail.setPosition(position);
+        lendAuditDetail.setAuditIdentity("总经办");
+        lendAuditDetail.setEmpNumber(userBO.getEmployeeNumber());
+        lendAuditDetail.setAuditor(userBO.getUsername());
+        lendAuditDetail.setAuditDate(LocalDate.now());
+        lendAuditDetail.setAuditSuggest(applyLendTO.getManagerOpinion());
+        lendAuditDetail.setPassOr(applyLendTO.getManagerPass());
+        lendAuditDetail.setApplyLendId(lend.getId());
+        lendAuditDetail.setCreateTime(LocalDateTime.now());
+        lendAuditDetailSer.save(lendAuditDetail);
+//        }
 
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
@@ -1059,11 +1061,11 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
 
         super.update(lend);
 
-        //清掉审核记录
-        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
-        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
-        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
-        lendAuditDetailSer.remove(listDetails);
+//        //清掉审核记录
+//        LendAuditDetailDTO lendAuditDetailDTO = new LendAuditDetailDTO();
+//        lendAuditDetailDTO.getConditions().add(Restrict.eq("applyLendId", lend.getId()));
+//        List<LendAuditDetail> listDetails = lendAuditDetailSer.findByCis(lendAuditDetailDTO);
+//        lendAuditDetailSer.remove(listDetails);
 
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
@@ -1092,13 +1094,13 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             applyLendCopySer.remove(ac);
         }
 
-        //删除审核详情记录
-        LendAuditDetailDTO ladDTO = new LendAuditDetailDTO();
-        ladDTO.getConditions().add(Restrict.eq("applyLendId", id));
-        List<LendAuditDetail> details = lendAuditDetailSer.findByCis(ladDTO);
-        if (details != null && details.size() > 0) {
-            lendAuditDetailSer.remove(details);
-        }
+//        //删除审核详情记录
+//        LendAuditDetailDTO ladDTO = new LendAuditDetailDTO();
+//        ladDTO.getConditions().add(Restrict.eq("applyLendId", id));
+//        List<LendAuditDetail> details = lendAuditDetailSer.findByCis(ladDTO);
+//        if (details != null && details.size() > 0) {
+//            lendAuditDetailSer.remove(details);
+//        }
 
     }
 
@@ -2162,6 +2164,45 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
         applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
         List<ApplyLend> list = super.findByCis(applyLendDTO);
+
+        List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
+        list.stream().forEach(str -> {
+            ApplyLendExcel excel = BeanTransform.copyProperties(str, ApplyLendExcel.class, "lendStatus");
+            excel.setLendStatus(LendStatus.exportStrConvert(str.getLendStatus()));
+
+            applyLendExcels.add(excel);
+        });
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(applyLendExcels, excel);
+        return bytes;
+    }
+
+    @Override
+    public byte[] businessCheckOut(ApplyLendDTO applyLendDTO) throws SerException {
+        LocalDate start = LocalDate.now();
+        LocalDate end = LocalDate.now();
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime())) {
+            start = DateUtil.parseDate(applyLendDTO.getStartTime());
+        }
+        if (StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            end = DateUtil.parseDate(applyLendDTO.getEndTime());
+        }
+        LocalDate lendDate[] = new LocalDate[]{start, end};
+
+        if (StringUtils.isNotBlank(applyLendDTO.getStartTime()) || StringUtils.isNotBlank(applyLendDTO.getEndTime())) {
+            applyLendDTO.getConditions().add(Restrict.between("lendDate", lendDate));//借款时间段查询
+        }
+
+        //账务核对是借款金额和借款金额>0
+        applyLendDTO.getConditions().add(Restrict.gt("reimMoney", 0));
+        applyLendDTO.getConditions().add(Restrict.gt("lendMoney", 0));
+        //还款状态为未处理和审核不通过的情况
+        applyLendDTO.getConditions().add(Restrict.in("lendRetunStatus", new Integer[]{0, 1, 3}));
+
+        applyLendDTO = addCondition(applyLendDTO);
+        applyLendDTO.getSorts().add("createTime=desc");
+
+        List<ApplyLend> list = super.findByCis(applyLendDTO, true);
 
         List<ApplyLendExcel> applyLendExcels = new ArrayList<>();
         list.stream().forEach(str -> {
@@ -3889,6 +3930,36 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
+    }
+
+    @Override
+    public List<String> findAllName() throws SerException {
+        List<UserBO> userBOs = positionDetailUserAPI.findUserListInOrgan();
+        if (null != userBOs && userBOs.size() > 0) {
+            List<String> list = userBOs.stream().map(UserBO::getUsername).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> findAllArea() throws SerException {
+        List<AreaBO> areaBOs = departmentDetailAPI.findArea();
+        if (null != areaBOs && areaBOs.size() > 0) {
+            List<String> list = areaBOs.stream().map(AreaBO::getArea).distinct().collect(Collectors.toList());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> findDepartment() throws SerException {
+        return positionDetailUserAPI.getAllDepartment();
+    }
+
+    @Override
+    public List<String> findProject() throws SerException {
+        return departmentDetailAPI.findAllProject();
     }
 
     //柱状图数据

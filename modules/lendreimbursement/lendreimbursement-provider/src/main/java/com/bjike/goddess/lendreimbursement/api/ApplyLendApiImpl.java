@@ -483,4 +483,29 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
         return applyLendSer.analyse(applyLendTO);
     }
 
+    @Override
+    public byte[] businessCheckOut(ApplyLendDTO applyLendDTO) throws SerException {
+        return applyLendSer.businessCheckOut(applyLendDTO);
+    }
+
+    @Override
+    public List<String> findAllName() throws SerException {
+        return applyLendSer.findAllName();
+    }
+
+    @Override
+    public List<String> findAllArea() throws SerException {
+        return applyLendSer.findAllArea();
+    }
+
+    @Override
+    public List<String> findDepartment() throws SerException {
+        return applyLendSer.findDepartment();
+    }
+
+    @Override
+    public List<String> findProject() throws SerException {
+        return applyLendSer.findProject();
+    }
+
 }

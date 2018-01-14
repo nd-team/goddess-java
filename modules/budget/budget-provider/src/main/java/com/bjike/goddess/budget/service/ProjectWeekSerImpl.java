@@ -241,7 +241,7 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
                                     actualWorkSum += entity.getActualWork();
                                     workDifferencesSum += (targetWorkSum - actualWorkSum);
                                     priceSum += entity.getPrice();
-                                    if (null != entity.getTargetIncome()) {
+                                    if (null == entity.getTargetIncome()) {
                                         entity.setTargetIncome(0d);
                                     }
                                     targetIncomeSum += entity.getTargetIncome();
@@ -309,6 +309,9 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             projectMonthSer.save(projectMonthTO);
         }
+        //地区收入周
+        arrivalWeekSer.deleteAll();
+        List<ArrivalWeekTO> arrivalWeekTOs = countArea();
     }
 
     @Override
@@ -334,6 +337,9 @@ public class ProjectWeekSerImpl extends ServiceImpl<ProjectWeek, ProjectWeekDTO>
             projectMonthTO.setIncomeDifferences(bo.getIncomeDifferencesSum());
             projectMonthSer.save(projectMonthTO);
         }
+        //地区收入周
+        arrivalWeekSer.deleteAll();
+        List<ArrivalWeekTO> arrivalWeekTOs = countArea();
     }
 
     @Override

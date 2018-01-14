@@ -309,4 +309,18 @@ public class AccountSerImpl extends ServiceImpl<Account, AccountDTO> implements 
         }
         return amount;
     }
+
+    @Override
+    public List<String> findSubjects(String name) throws SerException {
+        AccountDTO dto = new AccountDTO();
+        dto.getConditions().add(Restrict.eq("name",name));
+        List<Account> accounts = super.findByCis(dto);
+        List<String> list = new ArrayList<>(0);
+        if(null != accounts && accounts.size() > 0){
+            list.add(accounts.get(0).getFirstSubject());
+            list.add(accounts.get(0).getSecondSubject());
+            list.add(accounts.get(0).getThirdSubject());
+        }
+        return list;
+    }
 }

@@ -222,12 +222,10 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
 
     @Override
     public List<BidUnitBO> maps(BidUnitDTO dto) throws SerException {
-        List<BidUnit> bidUnits = super.findByCis(dto);
-        List<BidUnitBO> bidUnitBOs = BeanTransform.copyProperties(bidUnits, BidUnitBO.class, false);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        List<BidUnit> bidUnits = super.findByCis(dto);
+        List<BidUnit> bidUnits = super.findByCis(dto,true);
         List<BidUnitBO> bidUnitBOs = BeanTransform.copyProperties(bidUnits, BidUnitBO.class, false);
         if (null != bidUnitBOs && bidUnitBOs.size() > 0) {
             for(BidUnitBO bo : bidUnitBOs){
@@ -250,7 +248,6 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
         if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
-        return BeanTransform.copyProperties(entity, BidUnitBO.class);
         BidUnitBO bo = BeanTransform.copyProperties(entity, BidUnitBO.class);
         // TODO: 18-1-5 判断是否是vip
         Boolean tar = false;
