@@ -25,6 +25,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.SubjectCollectBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -1325,7 +1326,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             return String.valueOf(total);
         }
     }
-
+private Logger logger = Logger.getLogger(ProfitSerImpl.class);
     //判断是否是账务模块
     private Boolean isAccountingModule() throws SerException {
         String userToken = RpcTransmit.getUserToken();

@@ -20,7 +20,7 @@ public class LegendBO extends BaseBO {
     /**
      * 数据
      */
-    private String[] data = {"本部门需招聘人数","本部门近期招聘人数"};
+    private String[] data = {"本部门需招聘人数", "本部门近期招聘人数"};
 
     public String getOrient() {
         return orient;

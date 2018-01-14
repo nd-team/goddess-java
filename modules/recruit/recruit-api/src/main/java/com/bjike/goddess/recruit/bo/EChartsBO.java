@@ -1,7 +1,8 @@
 package com.bjike.goddess.recruit.bo;
+
 import java.io.Serializable;
 
-public class EChartsBO implements Serializable{
+public class EChartsBO implements Serializable {
     private String name;
     private Integer[] dates;
 

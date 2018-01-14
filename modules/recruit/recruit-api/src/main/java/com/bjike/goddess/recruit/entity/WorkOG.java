@@ -24,85 +24,85 @@ public class WorkOG extends BaseEntity {
     /**
      * 部门
      */
-    @Column(name = "department", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '部门'")
+    @Column(name = "department", columnDefinition = "VARCHAR(255)   COMMENT '部门'")
     private String department;
 
     /**
      * 岗位
      */
-    @Column(name = "quarters", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
+    @Column(name = "quarters", columnDefinition = "VARCHAR(255)   COMMENT '岗位'")
     private String quarters;
 
     /**
      * 模块
      */
-    @Column(name = "modular", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '模块'")
+    @Column(name = "modular", columnDefinition = "VARCHAR(255)   COMMENT '模块'")
     private String modular;
 
     /**
      * 评分对象
      */
-    @Column(name = "scoringOB", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '评分对象'")
+    @Column(name = "scoringOB", columnDefinition = "VARCHAR(255)   COMMENT '评分对象'")
     private String scoringOB;
 
     /**
      * 评分者
      */
-    @Column(name = "raters", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '评分者'")
+    @Column(name = "raters", columnDefinition = "VARCHAR(255)   COMMENT '评分者'")
     private String raters;
 
     /**
      * 项目流程
      */
-    @Column(name = "projectPRO", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '项目流程'")
+    @Column(name = "projectPRO", columnDefinition = "VARCHAR(255)   COMMENT '项目流程'")
     private String projectPRO;
 
     /**
      * 节点内容
      */
-    @Column(name = "nodeCON", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '节点内容'")
+    @Column(name = "nodeCON", columnDefinition = "VARCHAR(255)   COMMENT '节点内容'")
     private String nodeCON;
 
     /**
      * 时间
      */
-    @Column(name = "time", nullable = false, columnDefinition = "DATE   COMMENT '时间'")
+    @Column(name = "time", columnDefinition = "DATE   COMMENT '时间'")
     private LocalDate time;
 
     /**
      * 对赌总比例
      */
-    @Column(name = "proportionOG", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '对赌总比例'")
+    @Column(name = "proportionOG", columnDefinition = "VARCHAR(255)   COMMENT '对赌总比例'")
     private String proportionOG;
 
     /**
      * 各标签对赌比例
      */
-    @Column(name = "labelPRO", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '各标签对赌比例'")
+    @Column(name = "labelPRO", columnDefinition = "VARCHAR(255)   COMMENT '各标签对赌比例'")
     private String labelPRO;
 
     /**
      * 指标类型
      */
-    @Column(name = "indexType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '指标类型'")
+    @Column(name = "indexType", columnDefinition = "VARCHAR(255)   COMMENT '指标类型'")
     private String indexType;
 
     /**
      * 工作指标
      */
-    @Column(name = "workIndex", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '工作指标'")
+    @Column(name = "workIndex", columnDefinition = "VARCHAR(255)   COMMENT '工作指标'")
     private String workIndex;
 
     /**
      * 各标签评分
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '各标签评分'")
+    @Column( columnDefinition = "INT(10)   COMMENT '各标签评分'")
     private Integer labelSCO;
 
     /**
      * 得分
      */
-    @Column(name = "score", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '得分'")
+    @Column(name = "score", columnDefinition = "VARCHAR(255)   COMMENT '得分'")
     private String score;
 
 

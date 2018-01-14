@@ -22,8 +22,8 @@ public class CheckIndex extends BaseEntity {
     /**
      * 考核名称
      */
-    @Column(name = "CheckName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '考核名称'")
-    private String CheckName;
+    @Column(name = "checkName",  columnDefinition = "VARCHAR(255)   COMMENT '考核名称'")
+    private String checkName;
 
     /**
      * 对赌标签
@@ -34,11 +34,11 @@ public class CheckIndex extends BaseEntity {
 
 
     public String getCheckName() {
-        return CheckName;
+        return checkName;
     }
 
-    public void setCheckName(String CheckName) {
-        this.CheckName = CheckName;
+    public void setCheckName(String checkName) {
+        this.checkName = checkName;
     }
 
     public Set<LabelOG> getLabelOG() {

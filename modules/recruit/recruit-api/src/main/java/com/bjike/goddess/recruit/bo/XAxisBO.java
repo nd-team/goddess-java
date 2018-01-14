@@ -2,23 +2,22 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import javax.enterprise.inject.New;
-
 /**
  * 转正图形展示横坐标传输对象
+ *
  * @Author: [lijuntao]
  * @Date: [2017-09-09 15:32]
  * @Description: [转正图形展示纵坐标传数对象 ]
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class XAxisBO extends BaseBO{
+public class XAxisBO extends BaseBO {
     /**
      * 数据
      */
     private String type = "category";
     private boolean boundaryGap = false;
-    private String[] data = {" ","一季","二季","三季","四季"," "};
+    private String[] data = {" ", "一季", "二季", "三季", "四季", " "};
     private AxisLabelBO axisLabel = new AxisLabelBO();
 
     public boolean isBoundaryGap() {

@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 招聘管理进度汇总
@@ -172,13 +175,15 @@ public class RecruitProgressAction {
 
     /**
      * 输出ECharts表格
+     *
+     * @version v1
      */
     @GetMapping("v1/echarts")
     public Result getECharts() throws SerException {
         OptionBO bo = new OptionBO();
         String[] dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-");
-        Integer[] integers = new Integer[dates.length-1];
-        for (int i = 0; i < dates.length-1; i++) {
+        Integer[] integers = new Integer[dates.length - 1];
+        for (int i = 0; i < dates.length - 1; i++) {
             integers[i] = Integer.parseInt(dates[i]);
         }
 
@@ -189,6 +194,6 @@ public class RecruitProgressAction {
         map.put("series", list);
 //        System.out.println(new SimpleDateFormat("yyyy-mm-dd").format(new Date()));
 
-        return new ActResult("success",map);
+        return new ActResult("success", map);
     }
 }

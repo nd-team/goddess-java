@@ -22,13 +22,13 @@ public class EmotionTwo extends BaseEntity {
     /**
      * 标签名称
      */
-    @Column(name = "labelName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '标签名称'")
+    @Column(name = "labelName", columnDefinition = "VARCHAR(255)   COMMENT '标签名称'")
     private String labelName;
 
     /**
      * 三级标签
      */
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "emotionTwo_id")
     private Set<EmotionThree> emotionThree;
 
