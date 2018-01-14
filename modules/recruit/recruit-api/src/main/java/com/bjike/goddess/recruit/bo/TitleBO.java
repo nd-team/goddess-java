@@ -1,7 +1,6 @@
 package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import scala.util.parsing.combinator.testing.Str;
 
 /**
  * 转正图形展示传输对象
@@ -15,7 +14,7 @@ public class TitleBO extends BaseBO{
     /**
      * 名称
      */
-    private String text;
+    private String text = "招聘";
     /**
      * 小名称
      */

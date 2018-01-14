@@ -2,6 +2,8 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import javax.enterprise.inject.New;
+
 /**
  * 转正图形展示传数对象
  * @Author: [lijuntao]
@@ -11,35 +13,43 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [com.bjike]
  */
 public class OptionBO extends BaseBO{
+
+    public OptionBO() {
+
+    }
+
+    public OptionBO(SeriesBO[] series) {
+        this.series = series;
+    }
     /**
      * 标题
      */
-    private TitleBO title;
+    private TitleBO title = new TitleBO();
 
     /**
      * 柱状图文字描述
      */
-    private LegendBO legend;
+    private LegendBO legend = new LegendBO();
 
     /**
      * 横坐标
      */
-    private XAxisBO xAxis;
+    private XAxisBO xAxis = new XAxisBO();
 
     /**
      * 纵坐标
      */
-    private YAxisBO yAxis;
+    private YAxisBO yAxis = new YAxisBO();
 
     /**
      * 柱状图数据
      */
-    private SeriesBO[] series;
+    private SeriesBO[] series = {new SeriesBO(),new SeriesBO()};
 
     /**
      * 柱状图数据
      */
-    private TooltipBO tooltip;
+    private TooltipBO tooltip = new TooltipBO();
 
     public TitleBO getTitle() {
         return title;

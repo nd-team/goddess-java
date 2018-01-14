@@ -2,6 +2,8 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import javax.enterprise.inject.New;
+
 /**
  * 转正图形展示横坐标传输对象
  * @Author: [lijuntao]
@@ -14,8 +16,26 @@ public class XAxisBO extends BaseBO{
     /**
      * 数据
      */
-    private String[] data;
-    private AxisLabelBO axisLabel;
+    private String type = "category";
+    private boolean boundaryGap = false;
+    private String[] data = {" ","一季","二季","三季","四季"," "};
+    private AxisLabelBO axisLabel = new AxisLabelBO();
+
+    public boolean isBoundaryGap() {
+        return boundaryGap;
+    }
+
+    public void setBoundaryGap(boolean boundaryGap) {
+        this.boundaryGap = boundaryGap;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String[] getData() {
         return data;

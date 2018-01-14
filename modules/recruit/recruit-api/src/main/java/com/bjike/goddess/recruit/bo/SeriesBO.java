@@ -11,18 +11,33 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [com.bjike]
  */
 public class SeriesBO extends BaseBO{
+
+    public SeriesBO() {
+
+    }
+
+    public SeriesBO(Integer[] data) {
+        this.data = data;
+    }
+
+    public SeriesBO(Integer[] data, String name) {
+        this.data = data;
+        this.name = name;
+    }
+
     /**
      * 名称
      */
-    private String name;
+    private String name = "邮件营销";
     /**
      * 类型
      */
-    private String type;
+    private String type = "line";
     /**
      * 数据
      */
-    private Integer[] data;
+    private Integer[] data = {12,12,234,545,123,55};
+
 
     public String getName() {
         return name;
