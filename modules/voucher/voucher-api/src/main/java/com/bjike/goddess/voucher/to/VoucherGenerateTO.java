@@ -23,6 +23,8 @@ public class VoucherGenerateTO extends BaseTO {
     }
     public interface TestPost {
     }
+    public interface Update {}
+    public interface Audit {}
 
     /**
      * id数组
@@ -160,6 +162,18 @@ public class VoucherGenerateTO extends BaseTO {
      * 修改时间
      */
     private String modifyTime;
+
+    /**
+     * 二级列表(存firstSubject、firstSubject、firstSubject、firstSubject、loanMoney)
+     */
+    @NotNull(groups = {VoucherGenerateTO.Update.class} , message = "二级列表不能为空")
+    private List<VoucherGenerateChildTO> details;
+
+    /**
+     * 唯一标识uid
+     */
+    @NotNull(groups = {VoucherGenerateTO.Audit.class} , message = "uId不能为空")
+    private String uId;
 
 
     public String getVoucherWord() {
@@ -360,5 +374,22 @@ public class VoucherGenerateTO extends BaseTO {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+
+    public List<VoucherGenerateChildTO> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<VoucherGenerateChildTO> details) {
+        this.details = details;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
     }
 }

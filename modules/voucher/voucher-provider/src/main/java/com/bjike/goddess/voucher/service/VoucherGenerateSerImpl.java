@@ -31,10 +31,8 @@ import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
 import com.bjike.goddess.voucher.enums.*;
 import com.bjike.goddess.voucher.excel.*;
-import com.bjike.goddess.voucher.to.AnalysisTO;
-import com.bjike.goddess.voucher.to.ExportSubjectCollectTO;
-import com.bjike.goddess.voucher.to.GuidePermissionTO;
-import com.bjike.goddess.voucher.to.VoucherGenerateTO;
+import com.bjike.goddess.voucher.to.*;
+import net.sf.ehcache.pool.Size;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -54,6 +52,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.rmi.server.UID;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -346,14 +346,23 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public void antiCheckAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        List<VoucherGenerate> list = new ArrayList<>(0);
+       /* List<VoucherGenerate> list = new ArrayList<>(0);
         for (String id : voucherGenerateTO.getIds()) {
             VoucherGenerate vg = super.findById(id);
             vg.setCheckStatus(CheckStatus.NONE);
             vg.setModifyTime(LocalDateTime.now());
             list.add(vg);
         }
-        super.update(list);
+        super.update(list);*/
+
+        //@see 修改
+        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+            throw new SerException("uId不能为空");
+        }
+        StringBuffer sql = new StringBuffer();
+        sql.append("update voucher_vouchergenerate set checkStatus = 0, modifyTime = NOW() where " +
+                " uId = '" + voucherGenerateTO.getuId()+ "'");
+        super.executeSql(sql.toString());
     }
 
     @Override
@@ -1191,31 +1200,209 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public Long countVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
-        Long count = super.count(voucherGenerateDTO);
-        return count;
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
+//        Long count = super.count(voucherGenerateDTO);
+        //@update 修改：查询分组之后的总数
+
+        return executeVoucherCountSql(voucherGenerateDTO, "1");
     }
 
     @Override
-    public List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-//        voucherGenerateDTO.getSorts().add("createTime=desc");
-        voucherGenerateDTO.getSorts().add("voucherDate=asc");
-//        voucherGenerateDTO.getSorts().add("voucherNum=asc");
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
-
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+    public List<VoucherGenerateBO> listVoucherGenerate(VoucherGenerateDTO dto) throws SerException {
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getSorts().add("voucherDate=asc");
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+        List<VoucherGenerate> list = executeVoucherSql(dto, "1");
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if (listBO != null && listBO.size() > 0) {
-            for (VoucherGenerateBO str : listBO) {
-                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-                if (vt != null) {
-                    str.setMoneyTotal(vt.getMoney());
+        if (listBO == null || listBO.size() == 0) {
+            return null;
+        }
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            if (vt != null) {
+                str.setMoneyTotal(vt.getMoney());
+            }
+        }
+
+        return convertVoucher(listBO, null);
+    }
+
+    /**
+     * 记账凭证条数查询
+     * @param dto
+     * @param type
+     * @return
+     * @throws SerException
+     */
+    Long executeVoucherCountSql (VoucherGenerateDTO dto, String type) throws SerException{
+        StringBuffer sql = new StringBuffer();
+        sql.append("select ifnull(count(*), 0) from (");
+        sql.append("select count(1) as n from voucher_vouchergenerate where 1 = 1 ");
+        switch (type) {
+            case "1":
+                sql.append("and auditStatus = 0 ");
+                break;
+            case "2":
+                sql.append("and auditStatus = 1 and transferStatus = 0 and checkStatus = 0 ");
+                break;
+            case "3":
+                sql.append("and auditStatus = 1 and transferStatus = 1 and checkStatus = 0 ");
+                break;
+            case "4":
+                sql.append("and auditStatus = 1 and transferStatus = 1 and checkStatus = 1 ");
+                break;
+            case "5":
+                sql.append("");
+                break;
+            default:
+                break;
+        }
+        sql.append("group by uId) m");
+        long amount = Long.parseLong(String.valueOf(super.findBySql(sql.toString()).get(0)));
+        return amount;
+    }
+
+    /**
+     * 记账凭证列表查询
+     * @param dto
+     * @param type
+     * @return
+     * @throws SerException
+     */
+    List<VoucherGenerate> executeVoucherSql (VoucherGenerateDTO dto, String type) throws SerException{
+        int page = dto.getPage() == 0 ? 1 : dto.getPage();
+        int startRow = (page - 1) * dto.getLimit();
+        int endRow = page * dto.getLimit();
+
+        StringBuffer sql = new StringBuffer();
+        String colums = "id, voucherWord, voucherNum, voucherDate, firstSubject, secondSubject, thirdSubject" +
+                ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
+                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId ";
+        sql.append("select "+ colums +" from voucher_vouchergenerate a  where a.uId in ");
+        sql.append("(select * from (select uId from voucher_vouchergenerate where 1 = 1 ");
+        switch (type) {
+            case "1":
+                sql.append("and auditStatus = 0 ");
+                break;
+            case "2":
+                sql.append("and auditStatus = 1 and transferStatus = 0 and checkStatus = 0 ");
+                break;
+            case "3":
+                sql.append("and auditStatus = 1 and transferStatus = 1 and checkStatus = 0 ");
+                break;
+            case "4":
+                sql.append("and auditStatus = 1 and transferStatus = 1 and checkStatus = 1 ");
+                break;
+            case "5":
+                sql.append("");
+                break;
+            default:
+                break;
+        }
+        if (StringUtils.isNotBlank(dto.getFirstSubject())) {
+            sql.append("and firstSubject like '%"+ dto.getFirstSubject() +"%' ");
+        }
+        if (StringUtils.isNotBlank(dto.getSecondSubject())) {
+            sql.append("and secondSubject like '%"+ dto.getSecondSubject() +"%' ");
+        }
+        if (StringUtils.isNotBlank(dto.getThirdSubject())) {
+            sql.append("and thirdSubject like '%"+ dto.getThirdSubject() +"%' ");
+        }
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            sql.append("and voucherDate between '"+ dto.getStartTime()+"' and '"+ dto.getEndTime() +"' ");
+        }
+        sql.append("group by uId limit "+ startRow +", "+ endRow +")m) ");
+        if ("降序".equals(dto.getAscOrDesc())) {
+            sql.append(" order by voucherNum desc");
+        } else {
+            sql.append(" order by voucherNum asc ");
+        }
+
+        String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
+                , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
+                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId"};
+        List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
+        return list;
+    }
+
+    /**
+     * 整合记账凭证: uId相同的的数据合并为一条
+     * @param bos
+     * @param type
+     * @return
+     * @throws SerException
+     */
+    List<VoucherGenerateBO> convertVoucher(List<VoucherGenerateBO> bos, String type) throws SerException {
+        List<VoucherGenerateBO> list = new ArrayList<>();
+        int len = bos.size();
+        for (int i = 0; i < len; i ++) {
+            if (null == bos.get(i).getuId()) {
+                continue;
+            }
+            List<VoucherGenerateBO> details = new ArrayList<>();
+            for (int j = 0; j < len; j ++) {
+                if (bos.get(i).getuId().equals(bos.get(j).getuId())) {
+                    VoucherGenerateBO bo = new VoucherGenerateBO();
+                    bo.setFirstSubject(bos.get(j).getFirstSubject());
+                    bo.setSecondSubject(bos.get(j).getSecondSubject());
+                    bo.setThirdSubject(bos.get(j).getThirdSubject());
+                    bo.setBorrowMoney(bos.get(j).getLoanMoney());
+                    bo.setLoanMoney(bos.get(j).getLoanMoney());
+                    bo.setId(bos.get(j).getId());
+                    details.add(bo);
+                    bos.get(i).setDetails(details);
+                    bos.get(i).setFirstSubject(null);
+                    bos.get(i).setSecondSubject(null);
+                    bos.get(i).setThirdSubject(null);
+                    bos.get(i).setBorrowMoney(null);
+                    bos.get(i).setLoanMoney(null);
+                    bos.get(i).setId(null);
+                    if (i != j) {
+                        bos.remove(j);
+                        len = len - 1;
+//                        continue;
+                    }
                 }
             }
         }
-        return listBO;
+        /**
+         * int len = bos.size();
+         for (int i = 0; i < bos.size(); i ++) {
+         List<VoucherGenerateBO> details = new ArrayList<>();
+         VoucherGenerateBO bo = new VoucherGenerateBO();
+         bo = bos.get(i);
+         for (int j = i; j < bos.size() - i; j ++) {
+         if (bos.get(i).getuId().equals(bos.get(j).getuId())) {
+         VoucherGenerateBO bo1 = new VoucherGenerateBO();
+         bo1.setFirstSubject(bos.get(j).getFirstSubject());
+         bo1.setSecondSubject(bos.get(j).getSecondSubject());
+         bo1.setThirdSubject(bos.get(j).getThirdSubject());
+         bo1.setBorrowMoney(bos.get(j).getLoanMoney());
+         bo1.setLoanMoney(bos.get(j).getLoanMoney());
+         bo1.setId(bos.get(j).getId());
+         details.add(bo1);
+         //                    bos.get(i).setDetails(details);
+         bo.setDetails(details);
+
+         //                    bos.get(j).setFirstSubject(null);
+         //                    bos.get(j).setSecondSubject(null);
+         //                    bos.get(j).setThirdSubject(null);
+         //                    bos.get(j).setBorrowMoney(null);
+         //                    bos.get(j).setLoanMoney(null);
+         //                    bos.get(j).setId(null);
+         if (i != j) {
+         bos.remove(i);
+         //                        len = len - 1;
+         continue;
+         }
+         }
+         }
+         list.add(bo);
+         }
+         */
+        return bos;
     }
 
     private void searchCondition(VoucherGenerateDTO dto) throws SerException {
@@ -1315,12 +1502,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         String userName = voucherGenerateTO.getTicketer();
 //        String userName = userBO.getUsername();
+
+        StringBuffer uuId = new StringBuffer();
+        uuId.append(UUID.randomUUID());
         for (int i = 0; i < voucherGenerateTO.getFirstSubjects().size(); i++) {
 
             VoucherGenerate temp = new VoucherGenerate();
             BeanUtils.copyProperties(voucherGenerate, temp);
             temp.setCreateTime(LocalDateTime.now());
             temp.setFirstSubject(first.get(i));
+            //todo 修改firstSubject：加上一级、二级、三级科目的编码
             temp.setSecondSubject(second.get(i));
             temp.setThirdSubject(third == null ? "" : third.get(i));
             temp.setBorrowMoney(borrow.get(i));
@@ -1331,6 +1522,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             temp.setAuditStatus(AuditStatus.NONE);
             temp.setTotalId(vt.getId());
             temp.setVoucherNum(num);
+            //设置唯一标识id
+            temp.setuId(uuId.toString());
 
             list.add(temp);
         }
@@ -1341,23 +1534,69 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Transactional(rollbackFor = SerException.class)
     @Override
     public VoucherGenerateBO editVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        if (StringUtils.isBlank(voucherGenerateTO.getId())) {
-            throw new SerException("id不能为空");
+        //测试　todo
+//        List<VoucherGenerateChildTO> details = new ArrayList<>();
+//        details.add(new VoucherGenerateChildTO("first", "second","third", 0.0, 0.0, "45f9dd82-e4b8-4ba1-9ab8-593a9be7a971"));
+//        details.add(new VoucherGenerateChildTO("first", "second","third", 0.0, 0.0, "06808b53-2c4e-4097-83e7-6c8692da51c3"));
+//        voucherGenerateTO.setDetails(details);
+
+
+        for (VoucherGenerateChildTO childTO : voucherGenerateTO.getDetails()) {
+            if (StringUtils.isBlank(childTO.getId())) {
+                throw new SerException("二级列表id不能为空");
+            }
+            if (StringUtils.isBlank(childTO.getFirstSubject())) {
+                throw new SerException("一级科目不能为空");
+            }
+
+
         }
-        if (voucherGenerateTO.getFirstSubjects() == null || voucherGenerateTO.getFirstSubjects().size() <= 0) {
-            throw new SerException("一级科目不能为空");
+        Double borrowSum1 = voucherGenerateTO.getDetails().stream().mapToDouble(VoucherGenerateChildTO::getBorrowMoney).sum();
+        Double loanSum1 = voucherGenerateTO.getDetails().stream().mapToDouble(VoucherGenerateChildTO::getLoanMoney).sum();
+        if (!borrowSum1.equals(loanSum1)) {
+            throw new SerException("借方和贷方金额不相等，不能编辑");
         }
 
+        List<VoucherGenerate> entities = new ArrayList<>();
+
+        for (VoucherGenerateChildTO childTO : voucherGenerateTO.getDetails()) {
+            VoucherGenerate entity = super.findById(childTO.getId());
+            entity.setId(childTO.getId());
+            entity.setBorrowMoney(childTO.getBorrowMoney());
+            entity.setLoanMoney(childTO.getLoanMoney());
+            entity.setFirstSubject(childTO.getFirstSubject());
+            entity.setSecondSubject(childTO.getSecondSubject());
+            entity.setThirdSubject(childTO.getThirdSubject());
+            entity.setModifyTime(LocalDateTime.now());
+            entities.add(entity);
+        }
+        super.update(entities);
+
+        VoucherTotal vt = voucherTotalSer.findById(voucherGenerateTO.getTotalId());
+        vt.setMoney(borrowSum1);
+        vt.setModifyTime(LocalDateTime.now());
+        voucherTotalSer.update(vt);
+        return null;
+
+
+
+       /* if (StringUtils.isBlank(voucherGenerateTO.getId())) {
+            throw new SerException("id不能为空");
+        }
         VoucherGenerate temp = super.findById(voucherGenerateTO.getId());
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         dto.getConditions().add(Restrict.eq("totalId", temp.getTotalId()));
         dto.getConditions().add(Restrict.ne("id", temp.getId()));
         List<VoucherGenerate> otherList = super.findByCis(dto);
 
-        Double borrowSum = voucherGenerateTO.getBorrowMoneys().stream().mapToDouble(Double::shortValue).sum()
-                + otherList.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
-        Double loanSum = voucherGenerateTO.getLoanMoneys().stream().mapToDouble(Double::shortValue).sum()
-                + otherList.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+        Double borrowSum = otherList.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        if (voucherGenerateTO.getBorrowMoneys() != null) {
+            borrowSum += voucherGenerateTO.getBorrowMoneys().stream().mapToDouble(Double::shortValue).sum();
+        }
+        Double loanSum = otherList.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+        if (voucherGenerateTO.getLoanMoneys() != null) {
+            loanSum += voucherGenerateTO.getLoanMoneys().stream().mapToDouble(Double::shortValue).sum();
+        }
         if (!borrowSum.equals(loanSum)) {
             throw new SerException("借方和贷方金额不相等，不能编辑");
         }
@@ -1406,7 +1645,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         super.update(temp);
         VoucherGenerateBO bo = BeanTransform.copyProperties(temp, VoucherGenerateBO.class);
-        return bo;
+        return bo;*/
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -1415,7 +1654,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isBlank(id)) {
             throw new SerException("id不能为空");
         }
-        VoucherGenerate voucherGenerate = super.findById(id);
+        //修改为根据uId属性删除
+        StringBuffer sql = new StringBuffer();
+        sql.append("delete from voucher_vouchergenerate where uId = " + id);
+        super.executeSql(sql.toString());
+
+        /*VoucherGenerate voucherGenerate = super.findById(id);
         if (voucherGenerate != null) {
 
             Double borrow = voucherGenerate.getBorrowMoney();
@@ -1435,35 +1679,40 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (list == null || list.size() <= 0) {
                 voucherTotalSer.remove(totalId);
             }
-        }
+        }*/
     }
 
 
     @Override
     public Long countAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
-        Long count = super.count(voucherGenerateDTO);
-        return count;
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
+//        Long count = super.count(voucherGenerateDTO);
+        return executeVoucherCountSql(voucherGenerateDTO, "1");
     }
 
     @Override
-    public List<VoucherGenerateBO> listAudit(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getSorts().add("createTime=desc");
-        voucherGenerateDTO.getSorts().add("totalId=desc");
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
-
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+    public List<VoucherGenerateBO> listAudit(VoucherGenerateDTO dto) throws SerException {
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getSorts().add("createTime=desc");
+//        voucherGenerateDTO.getSorts().add("totalId=desc");
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.NONE));
+//
+        List<VoucherGenerate> list = executeVoucherSql(dto, "1");
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if (listBO != null) {
-            for (VoucherGenerateBO str : listBO) {
-                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-                str.setMoneyTotal(vt.getMoney());
-            }
+        if (listBO == null || listBO.size() == 0) {
+            return null;
         }
 
-        return listBO;
+
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+//        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
+        }
+
+        return convertVoucher(listBO, null);
     }
 
     @Transactional(rollbackFor = SerException.class)
@@ -1536,81 +1785,115 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void audit(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
-        voucherGenerateDTO.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
-        List<VoucherGenerate> vgs = super.findByCis(voucherGenerateDTO);
-        vgs.stream().forEach(str -> {
-            str.setAuditStatus(AuditStatus.CHECK);
-            str.setModifyTime(LocalDateTime.now());
-        });
-        super.update(vgs);
+//        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
+//        voucherGenerateDTO.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
+//        List<VoucherGenerate> vgs = super.findByCis(voucherGenerateDTO);
+//        vgs.stream().forEach(str -> {
+//            str.setAuditStatus(AuditStatus.CHECK);
+//            str.setModifyTime(LocalDateTime.now());
+//        });
+//        super.update(vgs);
+
+        //修改
+        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+            throw new SerException("uId不能为空");
+        }
+
+        StringBuffer sql = new StringBuffer();
+        sql.append("update voucher_vouchergenerate set auditStatus = 1, modifyTime = NOW() where" +
+                " uId = '" + voucherGenerateTO.getuId()+ "'");
+        super.executeSql(sql.toString());
     }
 
     @Override
     public Long countAudited(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.NONE));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
-        Long count = super.count(voucherGenerateDTO);
-        return count;
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.NONE));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
+//        Long count = super.count(voucherGenerateDTO);
+        return executeVoucherCountSql(voucherGenerateDTO, "2");
     }
 
     @Override
-    public List<VoucherGenerateBO> listAudited(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.NONE));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
-        voucherGenerateDTO.getSorts().add("createTime=desc");
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+    public List<VoucherGenerateBO> listAudited(VoucherGenerateDTO dto) throws SerException {
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.NONE));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
+//        voucherGenerateDTO.getSorts().add("createTime=desc");
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+
+        List<VoucherGenerate> list = executeVoucherSql(dto, "2");
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if (listBO != null) {
-            for (VoucherGenerateBO str : listBO) {
-                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-                str.setMoneyTotal(vt.getMoney());
-            }
+        if (listBO == null || listBO.size() == 0) {
+            return null;
+        }
+//        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
         }
 
-        return listBO;
+        return convertVoucher(listBO, null);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public Long posting(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
-            throw new SerException("id数组不能为空,至少要有一个");
-        }
-        VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
-        List<VoucherGenerate> vgList = super.findByCis(dto);
-        vgList.stream().forEach(obj -> {
-            obj.setTransferStatus(TransferStatus.CHECK);
-            obj.setModifyTime(LocalDateTime.now());
-        });
-        super.update(vgList);
-        //提示还有几张记账凭证未审核
-        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
-        return countAudit(voucherGenerateDTO);
+
+//        if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
+//            throw new SerException("id数组不能为空,至少要有一个");
+//        }
+//        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+//        dto.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
+//        List<VoucherGenerate> vgList = super.findByCis(dto);
+//        vgList.stream().forEach(obj -> {
+//            obj.setTransferStatus(TransferStatus.CHECK);
+//            obj.setModifyTime(LocalDateTime.now());
+//        });
+//        super.update(vgList);
+//        //提示还有几张记账凭证未审核
+//        VoucherGenerateDTO voucherGenerateDTO = new VoucherGenerateDTO();
+//        return countAudit(voucherGenerateDTO);
 //        return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);
+
+        //@see 修改
+        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+            throw new SerException("uId不能为空");
+        }
+        StringBuffer sql = new StringBuffer();
+        sql.append("update voucher_vouchergenerate set transferStatus = 1, modifyTime = NOW() where " +
+                " uId = '" + voucherGenerateTO.getuId()+ "'");
+        super.executeSql(sql.toString());
+        return null;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void antiAudit(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
-            throw new SerException("id数组不能为空,至少要有一个");
+//        if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
+//            throw new SerException("id数组不能为空,至少要有一个");
+//        }
+//        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+//        dto.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
+//        List<VoucherGenerate> vgList = super.findByCis(dto);
+//        vgList.stream().forEach(obj -> {
+//            obj.setAuditStatus(AuditStatus.NONE);
+//            obj.setTransferStatus(TransferStatus.NONE);
+//            obj.setModifyTime(LocalDateTime.now());
+//        });
+//        super.update(vgList);
+        //@see 修改
+        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+            throw new SerException("uId不能为空");
         }
-        VoucherGenerateDTO dto = new VoucherGenerateDTO();
-        dto.getConditions().add(Restrict.in("id", voucherGenerateTO.getIds()));
-        List<VoucherGenerate> vgList = super.findByCis(dto);
-        vgList.stream().forEach(obj -> {
-            obj.setAuditStatus(AuditStatus.NONE);
-            obj.setTransferStatus(TransferStatus.NONE);
-            obj.setModifyTime(LocalDateTime.now());
-        });
-        super.update(vgList);
+        StringBuffer sql = new StringBuffer();
+        sql.append("update voucher_vouchergenerate set auditStatus = 0, modifyTime = NOW() where " +
+                " uId = '" + voucherGenerateTO.getuId()+ "'");
+        super.executeSql(sql.toString());
     }
 
 
@@ -1625,7 +1908,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = new ArrayList<>();
         //若没有选一级、二级、三级科目，表头是：(一级科目/借方金额/贷方金额)
         if (StringUtils.isBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
-            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject , ifnull(sum(borrowMoney), 0) as borrowMoney , ifnull(sum(loanMoney), 0) as loanMoney ")
                     .append(" from voucher_vouchergenerate where 1=1 and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -1638,7 +1921,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and auditStatus = 1 ");
 
@@ -1652,7 +1935,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject , ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -1667,7 +1950,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
 
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
@@ -1741,7 +2024,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = new ArrayList<>();
         //若没有选一级、二级、三级科目，表头是：(地区/借方金额/贷方金额)
         if (StringUtils.isBlank(group)) {
-            sql.append(" select projectGroup , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select projectGroup , ifnull(sum(borrowMoney), 0) as borrowMoney , ifnull(sum(loanMoney), 0) as loanMoney ")
                     .append(" from voucher_vouchergenerate where 1=1 and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -1754,7 +2037,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
+            sql.append(" select firstSubject, secondSubject, thirdSubject ,  ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -1790,7 +2073,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         //若没有选一级、二级、三级科目，表头是：(地区/借方金额/贷方金额)
 
         if (StringUtils.isBlank(projectName)) {
-            sql.append(" select projectName , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select projectName , ifnull(sum(borrowMoney), 0) as borrowMoney , ifnull(sum(loanMoney), 0) as loanMoney ")
                     .append(" from voucher_vouchergenerate where 1=1 and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -1803,7 +2086,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
                     "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
-            sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
+            sql.append(" select firstSubject,secondSubject, thirdSubject ,  ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
                     .append(" , voucherDate , area , projectGroup , projectName ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and auditStatus = 1 ");
 
@@ -1833,24 +2116,30 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public Long countChecked(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
-        Long count = super.count(voucherGenerateDTO);
-        return count;
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
+//        Long count = super.count(voucherGenerateDTO);
+        return executeVoucherCountSql(voucherGenerateDTO, "3");
     }
 
     @Override
-    public List<VoucherGenerateBO> listChecked(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
-        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
-        voucherGenerateDTO.getSorts().add("createTime=desc");
-        voucherGenerateDTO.getSorts().add("totalId=desc");
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+    public List<VoucherGenerateBO> listChecked(VoucherGenerateDTO dto) throws SerException {
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("transferStatus", TransferStatus.CHECK));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("auditStatus", AuditStatus.CHECK));
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.NONE));
+//        voucherGenerateDTO.getSorts().add("createTime=desc");
+//        voucherGenerateDTO.getSorts().add("totalId=desc");
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+
+        List<VoucherGenerate> list = executeVoucherSql(dto, "3");
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        if (listBO == null || listBO.size() == 0) {
+            return null;
+        }
+//        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (listBO != null) {
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
@@ -1858,13 +2147,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
         }
 
-        return listBO;
+        return convertVoucher(listBO, null);
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
-        if (null == to.getIds()) {
+        /*if (null == to.getIds()) {
             throw new SerException("id不能为空");
         }
         for (String id : to.getIds()) {
@@ -1876,14 +2165,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             vg.setModifyTime(LocalDateTime.now());
             super.update(vg);
 //            return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
+        }*/
+        //@see 修改
+        if (StringUtils.isBlank(to.getuId())) {
+            throw new SerException("uId不能为空");
         }
+        StringBuffer sql = new StringBuffer();
+        sql.append("update voucher_vouchergenerate set transferStatus = 0, modifyTime = NOW() where " +
+                " uId = '" + to.getuId()+ "'");
+        super.executeSql(sql.toString());
         return null;
     }
 
     @Transactional(rollbackFor = SerException.class)
     @Override
     public VoucherGenerateBO checkAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
-        if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
+        /*if (voucherGenerateTO.getIds() == null || voucherGenerateTO.getIds().length <= 0) {
             throw new SerException("id数组不能为空,至少要有一个");
         }
 
@@ -1897,7 +2194,17 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             list.add(obj);
         });
         super.update(list);
-        return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);
+        return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);*/
+
+        //@see 修改
+        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+            throw new SerException("uId不能为空");
+        }
+        StringBuffer sql = new StringBuffer();
+        sql.append("update voucher_vouchergenerate set checkStatus = 1, modifyTime = NOW() where " +
+                " uId = '" + voucherGenerateTO.getuId()+ "'");
+        super.executeSql(sql.toString());
+        return null;
     }
 
     @Override
@@ -2144,20 +2451,25 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public Long countCkRecord(VoucherGenerateDTO voucherGenerateDTO) throws
             SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
-        Long count = super.count(voucherGenerateDTO);
-        return count;
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
+//        Long count = super.count(voucherGenerateDTO);
+        return executeVoucherCountSql(voucherGenerateDTO, "4");
     }
 
     @Override
     public List<VoucherGenerateBO> listCkRecord(VoucherGenerateDTO
-                                                        voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
-        voucherGenerateDTO.getSorts().add("voucherDate=desc");
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+                                                        dto) throws SerException {
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getConditions().add(Restrict.eq("checkStatus", CheckStatus.CHECK));
+//        voucherGenerateDTO.getSorts().add("voucherDate=desc");
+        List<VoucherGenerate> list = executeVoucherSql(dto, "4");
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        if (listBO == null || listBO.size() == 0) {
+            return null;
+        }
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+//        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (listBO != null) {
             for (VoucherGenerateBO str : listBO) {
                 VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
@@ -2166,7 +2478,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
 
 
-        return listBO;
+        return convertVoucher(listBO, null);
     }
 
     @Override
@@ -2407,25 +2719,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public Long countRecord(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        Long count = super.count(voucherGenerateDTO);
-        return count;
+//        Long count = super.count(voucherGenerateDTO);
+        return executeVoucherCountSql(voucherGenerateDTO, "5");
     }
 
     @Override
-    public List<VoucherGenerateBO> listRecord(VoucherGenerateDTO voucherGenerateDTO) throws SerException {
-        searchCondition(voucherGenerateDTO);
-        voucherGenerateDTO.getSorts().add("createTime=desc");
-        voucherGenerateDTO.getSorts().add("totalId=desc");
-        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+    public List<VoucherGenerateBO> listRecord(VoucherGenerateDTO dto) throws SerException {
+//        searchCondition(voucherGenerateDTO);
+//        voucherGenerateDTO.getSorts().add("createTime=desc");
+//        voucherGenerateDTO.getSorts().add("totalId=desc");
+//        List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO, true);
+//        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+
+        List<VoucherGenerate> list = executeVoucherSql(dto, "5");
         List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
-        if (listBO != null) {
-            for (VoucherGenerateBO str : listBO) {
-                VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
-                str.setMoneyTotal(vt.getMoney());
-            }
+        if (listBO == null || listBO.size() == 0) {
+            return null;
+        }
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            str.setMoneyTotal(vt.getMoney());
         }
 
-        return listBO;
+        return convertVoucher(listBO, null);
     }
 
     @Override
@@ -2672,7 +2988,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<AccountAddDateBO> list = accountanCourseAPI.findFirstNameCode();
         if (null != list && list.size() > 0) {
             list.stream().forEach(obj -> {
-                stringList.add(obj.getCode() + ":" + obj.getAccountanName());
+//                stringList.add(obj.getCode() + ":" + obj.getAccountanName());
+                stringList.add(obj.getAccountanName());
             });
         }
         return stringList;

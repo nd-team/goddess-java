@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.BusinessNegotiationBO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
 import com.bjike.goddess.contractcommunicat.entity.BusinessNegotiation;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.service.BusinessNegotiationSer;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
@@ -26,7 +27,7 @@ public class BusinessNegotiationApiImpl implements BusinessNegotiationAPI {
     @Autowired
     private BusinessNegotiationSer businessNegotiationSer;
     @Override
-    public Boolean sonPermission() throws SerException {
+    public List<SonPermissionObject> sonPermission() throws SerException {
         return businessNegotiationSer.sonPermission();
     }
 

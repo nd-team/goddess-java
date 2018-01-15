@@ -3,6 +3,7 @@ package com.bjike.goddess.contractcommunicat.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.contractcommunicat.bo.BusinessNegotiationBO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 
@@ -21,7 +22,7 @@ public interface BusinessNegotiationAPI {
     /**
      * 下拉导航权限
      */
-    default Boolean sonPermission() throws SerException {
+    default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
 

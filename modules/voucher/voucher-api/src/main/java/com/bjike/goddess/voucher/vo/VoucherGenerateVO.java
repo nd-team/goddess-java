@@ -1,5 +1,6 @@
 package com.bjike.goddess.voucher.vo;
 
+import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
 import com.bjike.goddess.voucher.enums.AuditStatus;
 import com.bjike.goddess.voucher.enums.CheckStatus;
 import com.bjike.goddess.voucher.enums.TransferStatus;
@@ -177,6 +178,16 @@ public class VoucherGenerateVO {
      * 贷方金额且数据与借方金额相反填如0-1
      */
     private List<Double> loanMoneys;
+
+    /**
+     *　凭证标志
+     */
+    private String uId;
+
+    /**
+     * 子凭证
+     */
+    private List<VoucherGenerateBO> details;
 
 
     public String getId() {
@@ -433,5 +444,21 @@ public class VoucherGenerateVO {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public List<VoucherGenerateBO> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<VoucherGenerateBO> details) {
+        this.details = details;
     }
 }

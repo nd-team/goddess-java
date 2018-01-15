@@ -7,6 +7,7 @@ import com.bjike.goddess.voucher.enums.TransferStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 /**
@@ -148,6 +149,14 @@ public class VoucherGenerate extends BaseEntity {
      */
     @Column(name = "totalId", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '合计id'")
     private String totalId;
+
+    /**
+     * 凭证唯一id(一个凭证多个科目的uId一样)
+     */
+    @Column(name = "uId", nullable = false, columnDefinition = "VARCHAR(60)   COMMENT '凭证唯一id(一个凭证多个科目的uId一样)'")
+    private String uId;
+
+
 
 
     public String getVoucherWord() {
@@ -316,5 +325,13 @@ public class VoucherGenerate extends BaseEntity {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
     }
 }
