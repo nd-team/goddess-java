@@ -187,7 +187,7 @@ public class VoucherGenerateVO {
     /**
      * 子凭证
      */
-    private List<VoucherGenerateBO> details;
+    private List<VoucherGenerateChildVO> details;
 
 
     public String getId() {
@@ -454,11 +454,11 @@ public class VoucherGenerateVO {
         this.uId = uId;
     }
 
-    public List<VoucherGenerateBO> getDetails() {
+    public List<VoucherGenerateChildVO> getDetails() {
         return details;
     }
 
-    public void setDetails(List<VoucherGenerateBO> details) {
+    public void setDetails(List<VoucherGenerateChildVO> details) {
         this.details = details;
     }
 }

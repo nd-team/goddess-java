@@ -1341,10 +1341,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             if (null == bos.get(i).getuId()) {
                 continue;
             }
-            List<VoucherGenerateBO> details = new ArrayList<>();
+            List<VoucherGenerateChildBO> details = new ArrayList<>();
             for (int j = 0; j < len; j ++) {
                 if (bos.get(i).getuId().equals(bos.get(j).getuId())) {
-                    VoucherGenerateBO bo = new VoucherGenerateBO();
+                    VoucherGenerateChildBO bo = new VoucherGenerateChildBO();
                     bo.setFirstSubject(bos.get(j).getFirstSubject());
                     bo.setSecondSubject(bos.get(j).getSecondSubject());
                     bo.setThirdSubject(bos.get(j).getThirdSubject());

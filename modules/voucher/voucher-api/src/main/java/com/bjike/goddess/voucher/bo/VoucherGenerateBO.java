@@ -181,7 +181,7 @@ public class VoucherGenerateBO extends BaseBO {
     /**
      * 子凭证
      */
-    private List<VoucherGenerateBO> details;
+    private List<VoucherGenerateChildBO> details;
 
 
     public String getVoucherWord() {
@@ -440,11 +440,11 @@ public class VoucherGenerateBO extends BaseBO {
         this.uId = uId;
     }
 
-    public List<VoucherGenerateBO> getDetails() {
+    public List<VoucherGenerateChildBO> getDetails() {
         return details;
     }
 
-    public void setDetails(List<VoucherGenerateBO> details) {
+    public void setDetails(List<VoucherGenerateChildBO> details) {
         this.details = details;
     }
 }
