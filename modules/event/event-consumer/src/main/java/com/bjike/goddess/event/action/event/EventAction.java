@@ -1,5 +1,6 @@
 package com.bjike.goddess.event.action.event;
 
+import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -13,20 +14,21 @@ import com.bjike.goddess.event.dto.EventDTO;
 import com.bjike.goddess.event.dto.FatherDTO;
 import com.bjike.goddess.event.enums.EventStatus;
 import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.event.vo.AppListDataVO;
 import com.bjike.goddess.event.vo.ContentVO;
+import com.bjike.goddess.event.vo.EventVO;
 import com.bjike.goddess.event.vo.FatherVO;
+import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.entity.rbac.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 事件
@@ -42,6 +44,9 @@ import java.util.List;
 public class EventAction {
     @Autowired
     private EventAPI eventAPI;
+
+    @Autowired
+    private UserAPI userAPI;
 
     /**
      * 事件列表
@@ -157,4 +162,77 @@ public class EventAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据计划类型获取对应的数据
+     * 计划类型 分为  月计划 周计划 日计划
+     *              month week  day
+     *
+     * @param dto dto
+     * @return class FatherVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findByPlanType")
+    public Result findByPlanType(@Validated(EventDTO.MONTH.class) EventDTO dto, BindingResult result,HttpServletRequest request) throws ActException {
+        try {
+            List<FatherBO> list = eventAPI.findByPlanType(dto);
+            return ActResult.initialize(BeanTransform.copyProperties(list,FatherVO.class,request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 判断新增计划是否为空
+     *      主表(Father)一天一个人 只有一条记录
+     *          比如: 2017-12-29
+     *                  8：30 - 10：00
+     *                  10：00 - 12：00
+     *                  13：30 - 15：00
+     *                  15：00 - 18：00
+     *      Father 只可以存在一条记录 (ID) 关联
+     *          子表 可以存在多条记录 (father.id) 关联
+     *
+     * @Date:2017-12-29
+     * @version v1
+     *
+     */
+    @PostMapping("v1/saveEvTo")
+    public Result saveEvTo(@Validated(ADD.class) EventTO to, BindingResult result) throws ActException {
+        try {
+            to.setProjectChineseName("日历代办");
+            to.setProjectEnglishName("CalendarAgent");
+            to.setFunctionChineseName("日历代办");
+            to.setFunctionEnglishName("CalendarAgent");
+            to.setPermissions(Permissions.ADUIT);
+            to.setStatus("待审核");
+            to.setName(userAPI.currentUser().getUsername());
+            to.setEventId(UUID.randomUUID().toString());
+
+            eventAPI.saveEvTo(to);
+            return new ActResult("添加成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 修改event
+     *
+     * @version v1
+     */
+    @PutMapping("v1/update/{id}")
+    public Result update(EventTO to, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(eventAPI.update(to), EventVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
+
 }

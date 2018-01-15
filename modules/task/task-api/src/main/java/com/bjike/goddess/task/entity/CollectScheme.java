@@ -63,19 +63,19 @@ public class CollectScheme extends BaseEntity {
     /**
      * 提醒间隔值
      */
-    @Column(name = "remindVal", nullable = false, columnDefinition = "INT(11)   COMMENT '提醒间隔值'")
+    @Column(name = "remindVal",  columnDefinition = "INT(11)   COMMENT '提醒间隔值'")
     private Integer remindVal;
 
     /**
      * 发送时间
      */
-    @Column(name = "sendTime", nullable = false, columnDefinition = "DATETIME   COMMENT '发送时间'")
+    @Column(name = "sendTime",  columnDefinition = "DATETIME   COMMENT '发送时间'")
     private LocalDateTime sendTime;
 
     /**
      * 上次发送时间
      */
-    @Column(name = "lastTime", nullable = false, columnDefinition = "DATETIME   COMMENT '上次发送时间'")
+    @Column(name = "lastTime",  columnDefinition = "DATETIME   COMMENT '上次发送时间'")
     private LocalDateTime lastTime;
 
     /**
@@ -87,7 +87,7 @@ public class CollectScheme extends BaseEntity {
     /**
      * 汇总表头排序
      */
-    @Column(name = "sortType", nullable = false, columnDefinition = "TINYINT(2)  COMMENT '汇总表头排序'")
+    @Column(name = "sortType",  columnDefinition = "TINYINT(2)  COMMENT '汇总表头排序'")
     private SortType sortType;
 
     /**

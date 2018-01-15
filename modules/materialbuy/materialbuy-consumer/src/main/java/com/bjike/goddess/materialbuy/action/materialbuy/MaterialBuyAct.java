@@ -446,4 +446,22 @@ public class MaterialBuyAct extends BaseFileAction{
         }
     }
 
+
+    /**
+     * 汇总
+     *
+     * @param dto dto
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/materialBuySum")
+    public Result materialBuySum(MaterialBuyDTO dto) throws ActException {
+        try {
+            return ActResult.initialize(materialBuyAPI.materialBuySum(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

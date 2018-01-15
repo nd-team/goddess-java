@@ -3,6 +3,7 @@ package com.bjike.goddess.task.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.task.dto.TableDTO;
 import com.bjike.goddess.task.dto.ValDTO;
 import com.bjike.goddess.task.enums.CollectSuitation;
 import com.bjike.goddess.task.enums.DateType;
@@ -44,10 +45,50 @@ public class CustomizeTO extends BaseTO {
      */
     @NotNull(groups = {ADD.class, EDIT.class,CustomizeTO.VALUE.class,CustomizeTO.FIELD.class}, message = "任务id不能为空")
     private String[] tablesId;
+
+    /**
+     * 新增汇总类型
+     * 2018-01-05
+     *      目前只有2中汇总类型
+     *          1.明细汇总
+     *              --今日完成情况 1
+     *              --明日完成情况 2
+     *          2.数量汇总
+     *              --日周月      1
+     *              --自定义      2
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总类型不能为空")
+    private String type;
+
+    /**
+     * 新增汇总说明
+     * 2018-01-05
+     *      目前只有2中汇总类型
+     *          1.明细汇总
+     *              --今日完成情况 1
+     *              --明日完成情况 2
+     *          2.数量汇总
+     *              --日周月      1
+     *              --自定义      2
+     */
+    @NotNull(groups = {ADD.class, EDIT.class}, message = "汇总类型说明不能为空")
+    private String typeExplain;
+
+    /**
+     *  json格式输送
+     *  字段格式
+     *     包括 汇总字段 汇总条件 汇总内容
+     *
+     */
+    private String fieldsJson;
+
     /**
      * 是否需要固定表头
+     *
+     * 2018-01-05去掉 增加 删除限制
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否需要固定表头不能为空")
+//    @NotNull(groups = {ADD.class, EDIT.class}, message = "是否需要固定表头不能为空")
+//    @NotNull( message = "是否需要固定表头不能为空")
     private Boolean needFixed;
 
     /**
@@ -82,13 +123,13 @@ public class CustomizeTO extends BaseTO {
     /**
      * 提醒间隔值
      */
-    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "提醒间隔值不能为空")
+//    @NotNull(groups = {CustomizeTO.NOTICE.class}, message = "提醒间隔值不能为空")
     private Integer dateVal;
 
     /**
      * 提醒时间
      */
-    @NotBlank(groups = {CustomizeTO.NOTICE.class}, message = "提醒时间不能为空")
+//    @NotBlank(groups = {CustomizeTO.NOTICE.class}, message = "提醒时间不能为空")
     private String sendTime;
 
     /**
@@ -119,6 +160,19 @@ public class CustomizeTO extends BaseTO {
      */
     @NotNull(groups = {CustomizeTO.VALUE.class}, message = "条件不能为空")
     private CollectSuitation collectSuitation;
+
+    /**
+     * 项目ids
+     */
+    private String[] projectIds;
+
+    public String[] getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(String[] projectIds) {
+        this.projectIds = projectIds;
+    }
 
     public String getField() {
         return field;
@@ -238,6 +292,30 @@ public class CustomizeTO extends BaseTO {
 
     public void setProjectId(String projectId) {
         this.projectId = projectId;
+    }
+
+    public String getFieldsJson() {
+        return fieldsJson;
+    }
+
+    public void setFieldsJson(String fieldsJson) {
+        this.fieldsJson = fieldsJson;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeExplain() {
+        return typeExplain;
+    }
+
+    public void setTypeExplain(String typeExplain) {
+        this.typeExplain = typeExplain;
     }
 
     public String[] getTablesId() {

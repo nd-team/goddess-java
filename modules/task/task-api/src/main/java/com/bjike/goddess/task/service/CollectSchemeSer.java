@@ -107,4 +107,12 @@ public interface CollectSchemeSer extends Ser<CollectScheme, CollectSchemeDTO> {
      * @throws SerException
      */
     String detail(String id) throws SerException;
+
+    /**
+     * 现在通报
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    void send(String id) throws SerException;
 }

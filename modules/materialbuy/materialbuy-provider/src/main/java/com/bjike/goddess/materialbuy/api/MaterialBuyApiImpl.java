@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.service.MaterialBuySer;
@@ -226,5 +227,15 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     @Override
     public List<String> findRequisitioner() throws SerException {
         return materialBuySer.findRequisitioner();
+    }
+
+    @Override
+    public byte[] exportExcel(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.exportExcel(dto);
+    }
+
+    @Override
+    public List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException {
+        return materialBuySer.materialBuySum(dto);
     }
 }

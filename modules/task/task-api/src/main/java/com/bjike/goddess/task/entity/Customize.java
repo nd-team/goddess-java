@@ -29,7 +29,7 @@ public class Customize extends BaseEntity {
     /**
      * 汇总项目id
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '项目id' ", nullable = false)
+    @Column(columnDefinition = "TEXT COMMENT '项目id,多个' ", nullable = false)
     private String projectId;
 
     /**
@@ -96,6 +96,49 @@ public class Customize extends BaseEntity {
      */
     @Column(columnDefinition = "DATETIME COMMENT '上次发送时间'")
     private LocalDateTime lastTime;
+
+
+    /**
+     * 新增汇总类型
+     * 2018-01-05
+     *      目前只有2中汇总类型
+     *          1.明细汇总
+     *              --今日完成情况 1
+     *              --明日完成情况 2
+     *          2.数量汇总
+     *              --日周月      1
+     *              --自定义      2
+     *
+     * @return
+     */
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '新增汇总类型' ", nullable = false)
+    private String type;
+
+    /**
+     * 新增汇总类型说明
+     * 2018-01-05
+     * @return
+     */
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '新增汇总类型说明' ", nullable = false)
+    private String typeExplain;
+
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeExplain() {
+        return typeExplain;
+    }
+
+    public void setTypeExplain(String typeExplain) {
+        this.typeExplain = typeExplain;
+    }
 
     public Boolean getNeedFixed() {
         return needFixed;

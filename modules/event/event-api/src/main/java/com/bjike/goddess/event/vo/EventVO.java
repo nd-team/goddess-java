@@ -2,6 +2,7 @@ package com.bjike.goddess.event.vo;
 
 import com.bjike.goddess.event.enums.EventStatus;
 import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.enums.Status;
 
 /**
  * 事件表现层对象
@@ -92,6 +93,16 @@ public class EventVO {
      * 待办事件对应状态
      */
     private String status;
+
+    private Status eStatus;
+
+    public Status geteStatus() {
+        return eStatus;
+    }
+
+    public void seteStatus(Status eStatus) {
+        this.eStatus = eStatus;
+    }
 
     public String getId() {
         return id;

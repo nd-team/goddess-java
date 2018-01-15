@@ -2,6 +2,7 @@ package com.bjike.goddess.event.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.enums.PlanType;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +19,14 @@ public class EventDTO extends BaseDTO {
     public interface MONTH{}
     public interface AREA{}
     public interface CLASSIFY{}
+
+    /**
+     * 2017-12-27 新增传输层字段 用于日历代办功能点
+     * 按 月 周 日来划分 定义一个枚举类型
+     * @return
+     */
+    private PlanType[] planTypes;
+
     /**
      * 年份
      */
@@ -33,6 +42,11 @@ public class EventDTO extends BaseDTO {
      * 周数
      */
     private Integer week;
+
+    /**
+     * 天数  01|10|27
+     */
+    private Integer day;
 
     /**
      * 地区数组
@@ -84,5 +98,19 @@ public class EventDTO extends BaseDTO {
 
     public void setMonth(Integer month) {
         this.month = month;
+    }
+
+    public PlanType[] getPlanTypes() { return planTypes; }
+
+    public void setPlanTypes(PlanType[] planTypes) {
+        this.planTypes = planTypes;
+    }
+
+    public Integer getDay() {
+        return day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
     }
 }

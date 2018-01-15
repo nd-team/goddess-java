@@ -72,23 +72,6 @@ public class CollectSchemeAction {
         }
     }
 
-    /**
-     * 添加
-     *
-     * @param to 汇总方案传输对象
-     * @return class CollectSchemeVO
-     * @throws ActException
-     * @version v1
-     */
-    @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) CollectSchemeTO to, BindingResult result) throws ActException {
-        try {
-            collectSchemeAPI.save(to);
-            return new ActResult("添加成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
 
     /**
      * 通过id查找
@@ -125,22 +108,7 @@ public class CollectSchemeAction {
         }
     }
 
-    /**
-     * 删除
-     *
-     * @param id 汇总方案id
-     * @throws ActException
-     * @version v1
-     */
-    @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
-        try {
-            collectSchemeAPI.delete(id);
-            return new ActResult("删除成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
     /**
      * 查找总记录数
@@ -174,22 +142,7 @@ public class CollectSchemeAction {
         }
     }
 
-    /**
-     * 现在通报
-     *
-     * @param to to
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/notice")
-    public Result notice(@Validated(CollectSchemeTO.NOTICE.class) CollectSchemeTO to, BindingResult result) throws ActException {
-        try {
-            collectSchemeAPI.notice(to);
-            return new ActResult("通报成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
     /**
      * 汇总字段
@@ -202,6 +155,49 @@ public class CollectSchemeAction {
     public Result fileds(@Validated(CollectSchemeTO.FIELD.class) CollectSchemeTO to, BindingResult result) throws ActException {
         try {
             return ActResult.initialize(collectSchemeAPI.fileds(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
+
+    /**
+     * _-------------------------------------------------------------
+     *  新增功能点
+     */
+
+    /**
+     * 添加
+     *
+     * @param to 汇总方案传输对象
+     * @return class CollectSchemeVO
+     * @throws ActException
+     * @version v1
+     */
+    @PostMapping("v1/save")
+    public Result save(@Validated(ADD.class) CollectSchemeTO to, BindingResult result) throws ActException {
+        try {
+            collectSchemeAPI.save(to);
+            return new ActResult("添加成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 汇总方案id
+     * @throws ActException
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result delete(@PathVariable String id) throws ActException {
+        try {
+            collectSchemeAPI.delete(id);
+            return new ActResult("删除成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -222,4 +218,46 @@ public class CollectSchemeAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 现在通报
+     *
+     * @param
+     * @throws ActException
+     * @version v1
+     *
+     */
+    @GetMapping("v1/send/{id}")
+    public Result send(@PathVariable String id) throws ActException {
+        try {
+            collectSchemeAPI.send(id);
+            return new ActResult("通报成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 设置通报
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/notice")
+    public Result notice(@Validated(CollectSchemeTO.NOTICE.class) CollectSchemeTO to, BindingResult result) throws ActException {
+        try {
+            collectSchemeAPI.notice(to);
+            return new ActResult("设置通报成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
+
+
+
 }

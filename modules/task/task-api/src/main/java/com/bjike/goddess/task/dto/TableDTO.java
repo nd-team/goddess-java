@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.dto.BaseDTO;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.task.enums.ExecStatus;
 
+import java.util.List;
+
 /**
  * @Author: [liguiqin]
  * @Date: [2017-09-15 17:09]
@@ -24,6 +26,19 @@ public class TableDTO extends BaseDTO {
      * 项目id
      */
     private String projectId;
+
+    /**
+     * 任务ID
+     */
+    private List<String> tables;
+
+    public List<String> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<String> tables) {
+        this.tables = tables;
+    }
 
     public Status getStatus() {
         return status;

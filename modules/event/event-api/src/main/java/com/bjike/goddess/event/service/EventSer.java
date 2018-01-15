@@ -199,4 +199,32 @@ public interface EventSer extends Ser<Event, EventDTO> {
      */
     Long currentUserEvenCount() throws SerException;
 
+    /**
+     * 根据计划类型获取对应的数据
+     * 计划类型 分为  月计划 周计划 日计划
+     *              month week  day
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<FatherBO> findByPlanType(EventDTO dto) throws SerException;
+
+
+    /**
+     * 添加
+     *
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    EventBO saveEvTo(EventTO to) throws SerException;
+
+    /**
+     *  修改event实体
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    EventBO update(EventTO to) throws SerException;
 }

@@ -41,6 +41,8 @@ public class CustomizeSon extends BaseEntity {
 
     /**
      * 任务类型
+     * 2018-01-05
+     * 内容
      */
     @Column(name = "type", nullable = false, columnDefinition = "TEXT   COMMENT '任务类型'")
     private String type;

@@ -10,7 +10,7 @@ public class JapiTest {
 
     public static void main(String[] args) throws IOException {
 //        JapiClient.delete(true);
-        JapiClient.setPrefixPath("/home/ike/github/ljt/goddess-java/");//路径前缀
+        JapiClient.setPrefixPath("/home/ike/github/goddess-java/");//路径前缀
         JapiClient.setpostfixPath("/src/main/java");
         JapiClient.setProjectJavaPath("modules/event/event-consumer");//主项目位置
         JapiClient.setActionReletivePath("com/bjike/goddess/event/action");//主项目action位置

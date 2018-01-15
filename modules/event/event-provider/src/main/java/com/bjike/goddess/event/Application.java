@@ -22,6 +22,7 @@ public class Application {
         context = new AnnotationConfigApplicationContext(AppRoot.class);
         context.start();
         System.in.read(); // 按任意键退出
+
     }
 }
 
