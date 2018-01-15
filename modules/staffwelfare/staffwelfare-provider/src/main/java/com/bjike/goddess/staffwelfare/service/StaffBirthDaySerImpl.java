@@ -8,9 +8,10 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
 import com.bjike.goddess.dimission.entity.DimissionInfo;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.StaffEntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
-import com.bjike.goddess.staffentry.entity.EntryBasicInfo;
+import com.bjike.goddess.staffentry.bo.LinkDateStaffEntryBO;
+import com.bjike.goddess.staffentry.entity.StaffEntryRegister;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthDayBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthDayDTO;
 import com.bjike.goddess.staffwelfare.entity.StaffBirthDay;
@@ -40,7 +41,7 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
     private DimissionInfoAPI dimissionInfoAPI;
 
     @Autowired
-    private EntryBasicInfoAPI entryBasicInfoAPI;
+    private StaffEntryRegisterAPI staffEntryRegisterAPI;
 
     @Autowired
     private ModuleAPI moduleAPI;
@@ -203,12 +204,12 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
                         List<DimissionInfo> infoList = dimissionInfoAPI.findByName(staffRecordsBO.getUsername());
                         if (infoList != null && infoList.size() > 0) {
                             for (DimissionInfo dimissionInfo : infoList) {
-                                List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
+                                LinkDateStaffEntryBO entryBO = staffEntryRegisterAPI.findByEmpNum(staffRecordsBO.getSerialNumber());
                                 StaffBirthDayBO staffBirthDayBO = new StaffBirthDayBO();
-                                if (entryBasicInfo != null && !entryBasicInfo.isEmpty()) {
-                                    staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
-                                    staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
-                                    staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
+                                if (entryBO != null ) {
+                                    staffBirthDayBO.setArea(entryBO.getArea());
+                                    staffBirthDayBO.setDepartment(entryBO.getDepartment());
+                                    staffBirthDayBO.setUserName(entryBO.getUserName());
                                     staffBirthDayBO.setIfDimission(true);
                                     staffBirthDayBO.setDimissionDate(dimissionInfo.getDimissionDate().toString().replace("T", " "));
                                     staffBirthDayBO.setMonth(dto.getMonth());
@@ -219,11 +220,11 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
                             }
                         } else {
                             StaffBirthDayBO staffBirthDayBO = new StaffBirthDayBO();
-                            List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
-                            if (entryBasicInfo != null && !entryBasicInfo.isEmpty()) {
-                                staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
-                                staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
-                                staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
+                            LinkDateStaffEntryBO entryBO = staffEntryRegisterAPI.findByEmpNum(staffRecordsBO.getSerialNumber());
+                            if (entryBO != null ) {
+                                staffBirthDayBO.setArea(entryBO.getArea());
+                                staffBirthDayBO.setDepartment(entryBO.getDepartment());
+                                staffBirthDayBO.setUserName(entryBO.getUserName());
                                 staffBirthDayBO.setMonth(dto.getMonth());
                             } else {
                                 throw new SerException("公司不存在该员工");
@@ -235,12 +236,12 @@ public class StaffBirthDaySerImpl extends ServiceImpl<StaffBirthDay, StaffBirthD
 //                }
             } else {
                 for (StaffRecordsBO staffRecordsBO : staffRecordsBOS) {
-                    List<EntryBasicInfoBO> entryBasicInfo = entryBasicInfoAPI.getByEmpNumber(staffRecordsBO.getSerialNumber());
+                    LinkDateStaffEntryBO entryBO = staffEntryRegisterAPI.findByEmpNum(staffRecordsBO.getSerialNumber());
                     StaffBirthDayBO staffBirthDayBO = new StaffBirthDayBO();
-                    if (entryBasicInfo != null && entryBasicInfo.size() > 0) {
-                        staffBirthDayBO.setArea(entryBasicInfo.get(0).getArea());
-                        staffBirthDayBO.setDepartment(entryBasicInfo.get(0).getDepartment());
-                        staffBirthDayBO.setUserName(entryBasicInfo.get(0).getName());
+                    if (entryBO != null ) {
+                        staffBirthDayBO.setArea(entryBO.getArea());
+                        staffBirthDayBO.setDepartment(entryBO.getDepartment());
+                        staffBirthDayBO.setUserName(entryBO.getUserName());
                         staffBirthDayBO.setMonth(dto.getMonth());
                     } else {
                         throw new SerException("公司不存在该员工");

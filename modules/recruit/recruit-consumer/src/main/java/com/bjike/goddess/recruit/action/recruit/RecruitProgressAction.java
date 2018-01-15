@@ -5,7 +5,10 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.recruit.api.RecruitDemandPlanAPI;
+import com.bjike.goddess.recruit.bo.EChartsBO;
+import com.bjike.goddess.recruit.bo.OptionBO;
 import com.bjike.goddess.recruit.bo.RecruitProgressBO;
+import com.bjike.goddess.recruit.service.RecruitDemandPlanSer;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -15,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 招聘管理进度汇总
@@ -26,11 +33,15 @@ import java.util.List;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+
 @RestController
 @RequestMapping("recruitprogress")
 public class RecruitProgressAction {
     @Autowired
     private RecruitDemandPlanAPI recruitDemandPlanAPI;
+
+    @Autowired
+    private RecruitDemandPlanSer recruitDemandPlanSer;
 
     /**
      * 功能导航权限
@@ -162,5 +173,27 @@ public class RecruitProgressAction {
         }
     }
 
+    /**
+     * 输出ECharts表格
+     *
+     * @version v1
+     */
+    @GetMapping("v1/echarts")
+    public Result getECharts() throws SerException {
+        OptionBO bo = new OptionBO();
+        String[] dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-");
+        Integer[] integers = new Integer[dates.length - 1];
+        for (int i = 0; i < dates.length - 1; i++) {
+            integers[i] = Integer.parseInt(dates[i]);
+        }
 
+        List<EChartsBO> list = recruitDemandPlanSer.getECharts();
+        Map map = new HashMap();
+        String[] strings = {"本部门需招聘人数", "本部门近期招聘人数"};
+        map.put("legend", strings);
+        map.put("series", list);
+//        System.out.println(new SimpleDateFormat("yyyy-mm-dd").format(new Date()));
+
+        return new ActResult("success", map);
+    }
 }

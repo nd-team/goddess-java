@@ -7,7 +7,6 @@ import com.bjike.goddess.financeinit.dto.AccountDTO;
 import com.bjike.goddess.financeinit.entity.Account;
 import com.bjike.goddess.financeinit.to.AccountTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
-import org.hibernate.boot.jaxb.SourceType;
 
 import java.util.List;
 import java.util.Set;
@@ -159,4 +158,11 @@ public interface AccountSer extends Ser<Account, AccountDTO> {
     Double findTotalAmount() throws SerException;
 
 
+    /**
+     * zkq
+     * 通过用户名称(账户来源)获取一级二级三级科目
+     */
+    default List<String> findSubjects(String name) throws SerException {
+        return null;
+    }
 }

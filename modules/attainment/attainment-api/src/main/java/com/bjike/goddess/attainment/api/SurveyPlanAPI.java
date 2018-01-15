@@ -2,6 +2,7 @@ package com.bjike.goddess.attainment.api;
 
 import com.bjike.goddess.attainment.bo.*;
 import com.bjike.goddess.attainment.dto.SurveyPlanDTO;
+import com.bjike.goddess.attainment.entity.SurveyPlan;
 import com.bjike.goddess.attainment.to.GuidePermissionTO;
 import com.bjike.goddess.attainment.to.SurveyActualizesTO;
 import com.bjike.goddess.attainment.to.SurveyPlanTO;
@@ -114,7 +115,7 @@ public interface SurveyPlanAPI {
     /**
      * 获取调研计划
      */
-    default List<SurPlanbo> getSurveyPlan() throws SerException {
+    default List<SurPlanBO> getSurveyPlan() throws SerException {
         return null;
     }
 
@@ -146,7 +147,7 @@ public interface SurveyPlanAPI {
         return null;
     }
 
-    default List<SurPlanbo> getPlanId() throws SerException {
+    default List<SurPlanBO> getPlanId() throws SerException {
         return null;
     }
 

@@ -9,4 +9,5 @@ dependencies {
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:marketdevelopment:marketdevelopment-api")
     compile project(":modules:staffentry:staffentry-api")
+    compile project(":modules:accommodation:accommodation-api")
 }

@@ -10,9 +10,11 @@ import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.enums.AuditState;
+import com.bjike.goddess.materialbuy.enums.DateType;
 import com.bjike.goddess.materialbuy.enums.GuideAddrStatus;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
@@ -704,4 +706,114 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         }
         return list;
     }
+
+    @Override
+    public byte[] exportExcel(MaterialBuyDTO dto) throws SerException {
+        return new byte[0];
+    }
+
+    /**
+     * 物资购买汇总说明
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException {
+        List<MaterialBuySummaryBO> materialBuySummaryBOS = this.findByBuySum(dto);
+
+        for (int i = 0;i<materialBuySummaryBOS.size();i++){
+            MaterialBuySummaryBO buySummaryBO = materialBuySummaryBOS.get(i);
+            List<MaterialBuySummaryBO> list =  this.findByTempBuySum(dto,buySummaryBO);
+            if (list.size() > 0 ){
+                buySummaryBO.setIfStockSatisfy(list.get(0).getIfStockSatisfy());
+                buySummaryBO.setIfFinanceAudit(list.get(0).getIfFinanceAudit());
+                buySummaryBO.setApplyQuantity(list.get(0).getApplyQuantity());
+            }else {
+                buySummaryBO.setIfStockSatisfy("0");
+                buySummaryBO.setIfFinanceAudit("0");
+                buySummaryBO.setApplyQuantity("0");
+            }
+        }
+        return materialBuySummaryBOS;
+    }
+
+    /**
+     * 物资购买汇总
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    public List<MaterialBuySummaryBO> findByBuySum(MaterialBuyDTO dto) throws SerException {
+        List<MaterialBuySummaryBO> materialBuySummaryBOS = new ArrayList<>();
+        /**
+         * 是否要根据日期进行汇总
+         */
+        if (dto.getDateType() != null) {
+            if(DateType.YEAR.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.MONTH.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.WEEK.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.DAY.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.QUARTER.name().equals(dto.getDateType().name())){
+
+            }
+        }else {
+            String sql = "SELECT area,projectTeam,deviceType,deviceName,model\n" +
+                    "    ,ifnull((case any_value(ifReplaceBorrow) WHEN '1' THEN  any_value(count(ifReplaceBorrow)) end),0) ifReplaceBorrow\n" +
+                    "    ,ifnull((case any_value(ifPayment) WHEN '1' THEN  any_value(count(ifPayment)) end),0) ifPayment\n" +
+                    "    ,ifnull((case any_value(ifArrival) WHEN '1' THEN  any_value(count(ifArrival)) end),0) ifArrival\n" +
+                    "    ,ifnull((case any_value(ifCommerceAudit) WHEN '1' THEN  any_value(count(ifCommerceAudit)) end),0) ifCommerceAudit\n" +
+                    "    ,any_value(sum(quantity)) buyQuantity ,any_value(sum(totalSum)) totalSum\n" +
+                    "FROM materialbuy_materialbuy\n" +
+                    "GROUP BY area,projectTeam,deviceType,deviceName,model;\n";
+            String[] fields = {"area","projectTeam","deviceType","deviceName","model","ifReplaceBorrow","ifPayment","ifArrival","ifCommerceAudit","buyQuantity","totalSum"};
+            materialBuySummaryBOS = super.findBySql(sql,MaterialBuySummaryBO.class,fields);
+        }
+
+        return materialBuySummaryBOS;
+    }
+
+    /**
+     * 临时物资需求汇总
+     * @param dto
+     * @param bo
+     * @return
+     * @throws SerException
+     */
+    public List<MaterialBuySummaryBO> findByTempBuySum(MaterialBuyDTO dto,MaterialBuySummaryBO bo) throws SerException {
+        List<MaterialBuySummaryBO> materialBuySummaryBOS = new ArrayList<>();
+        /**
+         * 是否要根据日期进行汇总
+         */
+        if (dto.getDateType() != null) {
+            if(DateType.YEAR.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.MONTH.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.WEEK.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.DAY.name().equals(dto.getDateType().name())){
+
+            }else if (DateType.QUARTER.name().equals(dto.getDateType().name())){
+
+            }
+        }else {
+            String sql =  "SELECT  " +
+                    "   ifnull((case any_value(ifStockSatisfy) WHEN '1' THEN  any_value(count(ifStockSatisfy)) end),0) ifStockSatisfy\n" +
+                    "  ,ifnull((case any_value(ifFinanceAudit) WHEN '1' THEN  any_value(count(ifFinanceAudit)) end),0) ifFinanceAudit\n" +
+                    "  ,any_value(sum(quantity))  applyQuantity\n" +
+                    "FROM materialbuy_tempmatterdemand "  +
+                    "WHERE area = '"+bo.getArea()+"' AND projectTeam = '"+bo.getProjectTeam()+"' AND deviceType = '"+bo.getDeviceType()+"' AND deviceName = '"+bo.getDeviceName()+"' AND model = '"+bo.getModel()+"'" +
+                    "GROUP BY area,projectTeam,deviceType,deviceName,model;";
+            String[] fields = {"ifStockSatisfy","ifFinanceAudit","applyQuantity"};
+            materialBuySummaryBOS = super.findBySql(sql,MaterialBuySummaryBO.class,fields);
+        }
+        return materialBuySummaryBOS;
+    }
+
+
 }

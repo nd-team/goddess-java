@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RotationStatisticsBO save(RotationStatisticsTO to) throws SerException {
         RotationStatistics entity = BeanTransform.copyProperties(to, RotationStatistics.class, true);
@@ -123,6 +125,7 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
             throw new SerException(String.format("周期内补贴天数不能大于%d", entity.getCycle()));
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RotationStatisticsBO update(RotationStatisticsTO to) throws SerException {
         RotationStatistics entity = super.findById(to.getId());
@@ -137,6 +140,7 @@ public class RotationStatisticsSerImpl extends ServiceImpl<RotationStatistics, R
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RotationStatisticsBO delete(String id) throws SerException {
         RotationStatistics entity = super.findById(id);

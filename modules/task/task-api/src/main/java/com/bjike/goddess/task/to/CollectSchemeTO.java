@@ -57,19 +57,19 @@ public class CollectSchemeTO extends BaseTO {
     /**
      * 提醒间隔值
      */
-    @NotNull(groups = {ADD.class, EDIT.class},message = "提醒间隔值不能为空")
+//    @NotNull(groups = {ADD.class, EDIT.class},message = "提醒间隔值不能为空")
     private Integer remindVal;
 
     /**
      * 发送时间
      */
-    @NotBlank(groups = {ADD.class, EDIT.class},message = "发送时间不能为空")
+//    @NotBlank(groups = {ADD.class, EDIT.class},message = "发送时间不能为空")
     private String sendTime;
 
     /**
      * 是否启用
      */
-    @NotNull(groups = {ADD.class, EDIT.class},message = "汇总方案不能为空")
+    @NotNull(groups = {ADD.class, EDIT.class},message = "是否启用不能为空")
     private Boolean enable;
 
     /**
@@ -80,7 +80,7 @@ public class CollectSchemeTO extends BaseTO {
     /**
      * 汇总表头排序
      */
-    @NotNull(groups = {ADD.class, EDIT.class},message = "汇总表头排序不能为空")
+//    @NotNull(groups = {ADD.class, EDIT.class},message = "汇总表头排序不能为空")
     private SortType sortType;
     /**
      * 字段

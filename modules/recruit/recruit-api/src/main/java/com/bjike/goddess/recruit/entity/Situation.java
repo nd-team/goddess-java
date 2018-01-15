@@ -24,109 +24,109 @@ public class Situation extends BaseEntity {
     /**
      * 日期
      */
-    @Column(name = "date", nullable = false, columnDefinition = "DATE   COMMENT '日期'")
+    @Column(name = "date",  columnDefinition = "DATE   COMMENT '日期'")
     private LocalDate date;
 
     /**
      * 招聘地区
      */
-    @Column(name = "recruitArea", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '招聘地区'")
+    @Column(name = "recruitArea",  columnDefinition = "VARCHAR(255)   COMMENT '招聘地区'")
     private String recruitArea;
 
     /**
      * 招聘部门项目组
      */
-    @Column(name = "recruitDepart", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '招聘部门项目组'")
+    @Column(name = "recruitDepart",  columnDefinition = "VARCHAR(255)   COMMENT '招聘部门项目组'")
     private String recruitDepart;
 
     /**
      * 招聘岗位
      */
-    @Column(name = "recruitPosition", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '招聘岗位'")
+    @Column(name = "recruitPosition",  columnDefinition = "VARCHAR(255)   COMMENT '招聘岗位'")
     private String recruitPosition;
 
     /**
      * 计划日简历筛选量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '计划日简历筛选量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '计划日简历筛选量'")
     private Integer planFilterCount;
 
     /**
      * 实际日简历筛选量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际日简历筛选量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '实际日简历筛选量'")
     private Integer actualFilterCount;
 
     /**
      * 日简历筛选量差异
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '日简历筛选量差异'")
+    @Column( columnDefinition = "INT(10)   COMMENT '日简历筛选量差异'")
     private Integer dayFilterCountDiff;
 
     /**
      * 使用建立点数
      */
-    @Column(name = "buildCount", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '使用建立点数'")
+    @Column(name = "buildCount",  columnDefinition = "VARCHAR(255)   COMMENT '使用建立点数'")
     private String buildCount;
 
     /**
      * 计划日邀约面试量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '计划日邀约面试量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '计划日邀约面试量'")
     private Integer planInviteCount;
 
     /**
      * 实际日邀约面试量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际日邀约面试量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '实际日邀约面试量'")
     private Integer actualInviteCount;
 
     /**
      * 日邀约面试量差异
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '日邀约面试量差异'")
+    @Column( columnDefinition = "INT(10)   COMMENT '日邀约面试量差异'")
     private Integer dayInviteCountDiff;
 
     /**
      * 计划日面试量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '计划日面试量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '计划日面试量'")
     private Integer planInterviewCount;
 
     /**
      * 实际日面试量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际日面试量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '实际日面试量'")
     private Integer actualInterviewCount;
 
     /**
      * 日面试量差异
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '日面试量差异'")
+    @Column( columnDefinition = "INT(10)   COMMENT '日面试量差异'")
     private Integer dayInterviewCountDiff;
 
     /**
      * 计划日成功通过面试量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '计划日成功通过面试量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '计划日成功通过面试量'")
     private Integer planPassInterviewCount;
 
     /**
      * 实际日成功通过面试量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '实际日成功通过面试量'")
+    @Column( columnDefinition = "INT(10)   COMMENT '实际日成功通过面试量'")
     private Integer actualPassInterviewCount;
 
     /**
      * 日成功通过面试量差异
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '日成功通过面试量差异'")
+    @Column( columnDefinition = "INT(10)   COMMENT '日成功通过面试量差异'")
     private Integer dayPassInterviewCount;
 
     /**
      * 负责招聘员工
      */
-    @Column(name = "principalStaff", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '负责招聘员工'")
+    @Column(name = "principalStaff",  columnDefinition = "VARCHAR(255)   COMMENT '负责招聘员工'")
     private String principalStaff;
 
 

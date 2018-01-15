@@ -2,7 +2,7 @@ package com.bjike.goddess.staffwelfare.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
-import com.bjike.goddess.staffentry.bo.EntryBasicInfoBO;
+import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.staffwelfare.bo.StaffBirthdaySchemeBO;
 import com.bjike.goddess.staffwelfare.dto.StaffBirthdaySchemeDTO;
 import com.bjike.goddess.staffwelfare.entity.StaffBirthdayScheme;
@@ -27,6 +27,7 @@ public interface StaffBirthdaySchemeSer extends Ser<StaffBirthdayScheme, StaffBi
     default Boolean sonPermission() throws SerException {
         return null;
     }
+
     /**
      * 导航权限
      */
@@ -84,13 +85,15 @@ public interface StaffBirthdaySchemeSer extends Ser<StaffBirthdayScheme, StaffBi
 
     /**
      * 查询员工所属部门和所属地区
+     *
      * @return
      * @throws SerException
      */
-    List<EntryBasicInfoBO> findEntry() throws SerException;
+    List<EntryRegisterBO> findEntry() throws SerException;
 
     /**
      * 查询总条数
+     *
      * @param dto
      * @throws SerException
      */
@@ -99,6 +102,7 @@ public interface StaffBirthdaySchemeSer extends Ser<StaffBirthdayScheme, StaffBi
 
     /**
      * 根据id查询单个数据
+     *
      * @param id
      * @throws SerException
      */

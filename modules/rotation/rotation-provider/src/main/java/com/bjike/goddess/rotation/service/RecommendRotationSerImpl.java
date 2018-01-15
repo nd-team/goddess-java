@@ -31,6 +31,8 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -117,6 +119,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         return bos;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RecommendRotationBO save(RecommendRotationTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -173,8 +176,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         return this.transformBO(entity);
     }
 
-
-
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RecommendRotationBO update(RecommendRotationTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -228,6 +230,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RecommendRotationBO delete(String id) throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -242,6 +245,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         return this.transformBO(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RecommendRotationBO opinion(RecommendRotationTO to) throws SerException {
         String userToken = RpcTransmit.getUserToken();

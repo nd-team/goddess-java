@@ -1,7 +1,6 @@
 package com.bjike.goddess.staffshares.service;
 
 import com.bjike.goddess.assemble.api.ModuleAPI;
-import com.bjike.goddess.assistance.api.AgeAssistAPI;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
@@ -10,7 +9,8 @@ import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
-import com.bjike.goddess.staffentry.api.EntryBasicInfoAPI;
+import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
+import com.bjike.goddess.staffentry.bo.EntryOptionBO;
 import com.bjike.goddess.staffshares.bo.ApplicationBO;
 import com.bjike.goddess.staffshares.dto.ApplicationDTO;
 import com.bjike.goddess.staffshares.entity.Application;
@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,8 +50,8 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
     private UserAPI userAPI;
     @Autowired
     private PositionDetailUserAPI positionDetailUserAPI;
-//    @Autowired
-//    private EntryBasicInfoAPI entryBasicInfoAPI;
+    @Autowired
+    private EntryRegisterAPI entryRegisterAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
     @Autowired
@@ -67,8 +68,8 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
     private SellscheduleSer sellscheduleSer;
     @Autowired
     private ModuleAPI moduleAPI;
-    @Autowired
-    private AgeAssistAPI ageAssistAPI;
+//    @Autowired
+//    private AgeAssistAPI ageAssistAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -311,12 +312,12 @@ public class ApplicationSerImpl extends ServiceImpl<Application, ApplicationDTO>
         entity.setDepartment(positionDetailBOs.get(0).getDepartmentName());
         entity.setPosition(positionDetailBOs.get(0).getPosition());
         int months = 0;
-//        List<EntryBasicInfoBO> entryBasicInfoBOs = entryBasicInfoAPI.getEntryBasicInfoByName(userBO.getUsername());
-//        if (!CollectionUtils.isEmpty(entryBasicInfoBOs)) {
-//            months = getMonthSpace(entryBasicInfoBOs.get(0).getEntryTime(), LocalDate.now().toString());
-//        }
+        EntryOptionBO entryOptionBO = entryRegisterAPI.getEntryOptionByEmpNum(userBO.getUsername());
+        if (null != entryOptionBO) {
+            months = getMonthSpace(entryOptionBO.getEntryTime(), LocalDate.now().toString());
+        }
         if (moduleAPI.isCheck("assistance")) {
-            months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
+//            months = ageAssistAPI.getJobAge(userBO.getUsername()).intValue();
         }
         entity.setMonths(months);
         entity.setReason(to.getReason());

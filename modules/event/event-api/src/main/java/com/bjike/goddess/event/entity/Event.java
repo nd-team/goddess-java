@@ -105,6 +105,36 @@ public class Event extends BaseEntity {
     @Column(name = "status",nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '待办事件对应状态'")
     private String status;
 
+    /**2017-12-28新增字段
+     * 任务开始时间
+     * @Author:zhangzhiguang
+     */
+    @Column(name = "startTime", columnDefinition = "DATETIME   COMMENT '任务开始时间'")
+    private LocalDateTime startTime;
+    /**2017-12-28新增字段
+     * 任务结束时间
+     * @Author:zhangzhiguang
+     */
+    @Column(name = "endTime", columnDefinition = "DATETIME   COMMENT '任务结束时间'")
+    private LocalDateTime endTime;
+
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     public Integer getYear() {
         return year;
     }

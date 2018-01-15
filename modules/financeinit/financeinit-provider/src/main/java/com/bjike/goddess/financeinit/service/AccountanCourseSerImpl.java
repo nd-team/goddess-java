@@ -549,9 +549,19 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                     }
                     //如果三级科目是职能部门,一级科目加上其他应收款,其他应付款
                     if ("职能部门".equals(department)) {
+                        firstSubjectDataBOList = new ArrayList<>(0);
+                        FirstSubjectDataBO firstSubjectDataBO1 = findFirst("管理费用");
+                        if(null != firstSubjectDataBO1){
+                            firstSubjectDataBOList.add(firstSubjectDataBO1);
+                        }
                         findOtherFirstSubject(firstSubjectDataBOList);
 //                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
                     } else if ("商务发展部".equals(department)) {
+                        firstSubjectDataBOList = new ArrayList<>(0);
+                        FirstSubjectDataBO firstSubjectDataBO1 = findFirst("营业费用");
+                        if(null != firstSubjectDataBO1){
+                            firstSubjectDataBOList.add(firstSubjectDataBO1);
+                        }
                         findOtherFirstSubject(firstSubjectDataBOList);
 //                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
                     } else if ("一线项目".equals(department)) {
@@ -583,24 +593,48 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     //获取其他应收款和其他应付款
     private void findOtherFirstSubject(List<FirstSubjectDataBO> firstSubjectDataBOList) throws SerException {
         //获取其他应收款和其他应付款
+//        AccountanCourseDTO dto = new AccountanCourseDTO();
+//        dto.getConditions().add(Restrict.eq("accountanName", "其他应收款"));
+//        List<AccountanCourse> accountanCourses3 = super.findByCis(dto);
+//        if (null != accountanCourses3 && accountanCourses3.size() > 0) {
+//            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+//            firstSubjectDataBO.setFirstSubject(accountanCourses3.get(0).getAccountanName());
+//            firstSubjectDataBO.setFirstSubjectCode(accountanCourses3.get(0).getCode());
+//            firstSubjectDataBOList.add(firstSubjectDataBO);
+//        }
+        FirstSubjectDataBO firstSubjectDataBO1 = findFirst("其他应收款");
+        if(null != firstSubjectDataBO1){
+            firstSubjectDataBOList.add(firstSubjectDataBO1);
+        }
+
+        FirstSubjectDataBO firstSubjectDataBO2 = findFirst("其他应付款");
+        if(null != firstSubjectDataBO2){
+            firstSubjectDataBOList.add(firstSubjectDataBO2);
+        }
+
+//        dto = new AccountanCourseDTO();
+//        dto.getConditions().add(Restrict.eq("accountanName", "其他应付款"));
+//        List<AccountanCourse> accountanCourses4 = super.findByCis(dto);
+//        if (null != accountanCourses4 && accountanCourses4.size() > 0) {
+//            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+//            firstSubjectDataBO.setFirstSubject(accountanCourses4.get(0).getAccountanName());
+//            firstSubjectDataBO.setFirstSubjectCode(accountanCourses4.get(0).getCode());
+//            firstSubjectDataBOList.add(firstSubjectDataBO);
+//        }
+    }
+
+    //获取一级科目
+    private FirstSubjectDataBO findFirst(String subjectName) throws SerException{
         AccountanCourseDTO dto = new AccountanCourseDTO();
-        dto.getConditions().add(Restrict.eq("accountanName", "其他应收款"));
+        dto.getConditions().add(Restrict.eq("accountanName", subjectName));
         List<AccountanCourse> accountanCourses3 = super.findByCis(dto);
         if (null != accountanCourses3 && accountanCourses3.size() > 0) {
             FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
             firstSubjectDataBO.setFirstSubject(accountanCourses3.get(0).getAccountanName());
             firstSubjectDataBO.setFirstSubjectCode(accountanCourses3.get(0).getCode());
-            firstSubjectDataBOList.add(firstSubjectDataBO);
+            return firstSubjectDataBO;
         }
-        dto = new AccountanCourseDTO();
-        dto.getConditions().add(Restrict.eq("accountanName", "其他应付款"));
-        List<AccountanCourse> accountanCourses4 = super.findByCis(dto);
-        if (null != accountanCourses4 && accountanCourses4.size() > 0) {
-            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
-            firstSubjectDataBO.setFirstSubject(accountanCourses4.get(0).getAccountanName());
-            firstSubjectDataBO.setFirstSubjectCode(accountanCourses4.get(0).getCode());
-            firstSubjectDataBOList.add(firstSubjectDataBO);
-        }
+        return null;
     }
 
     @Override

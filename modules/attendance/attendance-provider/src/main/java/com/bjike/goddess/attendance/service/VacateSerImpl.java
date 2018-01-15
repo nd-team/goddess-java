@@ -38,6 +38,7 @@ import com.bjike.goddess.organize.bo.PositionDetailUserBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -97,6 +98,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     private String content1 = "%s提交了%d天的请假申请，时间为%s至%s,请注意工作交接情况";
     private String title = "%s的请假申请";
 
+
+    private Logger log = Logger.getLogger(VacateSerImpl.class);
     /**
      * 核对查看权限（部门级别）
      */
@@ -300,6 +303,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void save(VacateTO to) throws SerException {
+        title = "%s的请假申请";
+
         String userToken = RpcTransmit.getUserToken();
         String startDate = to.getStartDate();
         String startTime = to.getStartTime().toString() + ":00";
@@ -417,6 +422,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
 //                eventAPI.save(eventTO);
 //            }
 //        }
+
+
     }
 
 
@@ -666,6 +673,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
     @Override
     @Transactional(rollbackFor = SerException.class)
     public void audit(VacateTO to) throws SerException {
+
+
         checkAddIdentity();
         Vacate entity = super.findById(to.getId());
         if (null == entity) {

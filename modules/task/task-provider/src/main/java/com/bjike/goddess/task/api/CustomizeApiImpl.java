@@ -1,16 +1,26 @@
 package com.bjike.goddess.task.api;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.bo.CustomizeBO;
+import com.bjike.goddess.task.bo.DataBO;
+import com.bjike.goddess.task.dto.CollectDTO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
+import com.bjike.goddess.task.dto.CustomizeSonDTO;
+import com.bjike.goddess.task.entity.CustomizeSon;
 import com.bjike.goddess.task.service.CustomizeSer;
+import com.bjike.goddess.task.service.CustomizeSonSer;
 import com.bjike.goddess.task.to.CustomizeTO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.api.TableAPI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.crypto.Data;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [liguiqin]
@@ -23,6 +33,8 @@ import java.util.List;
 public class CustomizeApiImpl implements CustomizeAPI {
     @Autowired
     private CustomizeSer customizeSer;
+    @Autowired
+    private CustomizeSonSer customizeSonSer;
     @Autowired
     private ProjectAPI projectAPI;
     @Autowired
@@ -45,6 +57,10 @@ public class CustomizeApiImpl implements CustomizeAPI {
 
     @Override
     public void delete(String id) throws SerException {
+        CustomizeSonDTO customizeSonDTO = new CustomizeSonDTO();
+        customizeSonDTO.getConditions().add(Restrict.eq("customizeId",id));
+        List<CustomizeSon> list = customizeSonSer.findByCis(customizeSonDTO);
+        customizeSonSer.remove(list);
         customizeSer.remove(id);
     }
 
@@ -76,5 +92,20 @@ public class CustomizeApiImpl implements CustomizeAPI {
     @Override
     public String detail(String id) throws SerException {
         return customizeSer.detail(id);
+    }
+
+    @Override
+    public String gather(CollectDTO to) throws SerException {
+        return customizeSer.gather(to);
+    }
+
+    @Override
+    public List<String> values(CustomizeTO to) throws SerException {
+        return customizeSer.values(to);
+    }
+
+    @Override
+    public void send(String id) throws SerException {
+        customizeSer.send(id);
     }
 }

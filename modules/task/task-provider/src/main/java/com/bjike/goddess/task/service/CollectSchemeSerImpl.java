@@ -78,48 +78,58 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
     public void save(CollectSchemeTO to) throws SerException {
         String name = userAPI.currentUser().getUsername();
         CollectScheme entity = BeanTransform.copyProperties(to, CollectScheme.class, true);
-        LocalDateTime sendTime = entity.getSendTime();
-        int remindVal = entity.getRemindVal();
-        LocalDateTime lastTime = null;
-        switch (entity.getRemindType()) {
-            case MINTUE:
-                lastTime = sendTime.minusMinutes(remindVal);
-                break;
-            case HOUR:
-                lastTime = sendTime.minusHours(remindVal);
-                break;
-            case DAY:
-                lastTime = sendTime.minusDays(remindVal);
-                break;
-            case WEEK:
-                lastTime = sendTime.minusWeeks(remindVal);
-                break;
-            case MONTH:
-                lastTime = sendTime.minusMonths(remindVal);
-                break;
-        }
-        entity.setLastTime(lastTime);
         entity.setCollectObject(StringUtils.join(to.getCollectObjects(), ","));
         entity.setTables(StringUtils.join(to.getTabless(), ","));
         entity.setCreater(name);
         super.save(entity);
-        SortType sortType = to.getSortType();
-        List<String> fileds = new ArrayList<>();
-        switch (sortType) {
-            case ACQUIESCENCE:
-                fileds = fileds(to);
-                break;
-            case CUSTOM:
-                fileds = to.getFileds();
-                break;
-        }
-        for (int i = 0; i < fileds.size(); i++) {
-            SchemeSon son = new SchemeSon();
-            son.setTitle(fileds.get(i));
-            son.setSchemeId(entity.getId());
-            son.setTitleIndex(i);
-            schemeSonSer.save(son);
-        }
+
+
+
+
+
+
+//        LocalDateTime sendTime = entity.getSendTime();
+//        int remindVal = entity.getRemindVal();
+//        LocalDateTime lastTime = null;
+//        switch (entity.getRemindType()) {
+//            case MINTUE:
+//                lastTime = sendTime.minusMinutes(remindVal);
+//                break;
+//            case HOUR:
+//                lastTime = sendTime.minusHours(remindVal);
+//                break;
+//            case DAY:
+//                lastTime = sendTime.minusDays(remindVal);
+//                break;
+//            case WEEK:
+//                lastTime = sendTime.minusWeeks(remindVal);
+//                break;
+//            case MONTH:
+//                lastTime = sendTime.minusMonths(remindVal);
+//                break;
+//        }
+//        entity.setLastTime(lastTime);
+//        entity.setCollectObject(StringUtils.join(to.getCollectObjects(), ","));
+//        entity.setTables(StringUtils.join(to.getTabless(), ","));
+//        entity.setCreater(name);
+//        super.save(entity);
+//        SortType sortType = to.getSortType();
+//        List<String> fileds = new ArrayList<>();
+//        switch (sortType) {
+//            case ACQUIESCENCE:
+//                fileds = fileds(to);
+//                break;
+//            case CUSTOM:
+//                fileds = to.getFileds();
+//                break;
+//        }
+//        for (int i = 0; i < fileds.size(); i++) {
+//            SchemeSon son = new SchemeSon();
+//            son.setTitle(fileds.get(i));
+//            son.setSchemeId(entity.getId());
+//            son.setTitleIndex(i);
+//            schemeSonSer.save(son);
+//        }
     }
 
     @Override
@@ -463,38 +473,165 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
 
     @Override
     public void notice(CollectSchemeTO to) throws SerException {
+//        CollectScheme entity = super.findById(to.getId());
+//        if (entity == null) {
+//            throw new SerException("该对象不存在");
+//        }
+//        Set<String> departEmails = new HashSet<>();
+//        if (to.getSendDepart()) {   //抄送给本部门
+//            String[] cutomizeIds = entity.getTables().split(",");
+//            for (String cutomizeId : cutomizeIds) {
+//                Customize customize = customizeSer.findById(cutomizeId);
+//                String projectId = customize.getProjectId();
+//                String depart = projectAPI.findByID(projectId).getDepart();
+//                CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
+//                if (null != commonalityBO) {
+//                    departEmails.add(commonalityBO.getEmail());
+//                }
+//            }
+//        }
+//        String[] recivers = to.getCollectObjects();
+//        if (null != recivers && recivers.length > 0) {
+//            List<String> set = Arrays.asList(recivers);
+//            MessageTO messageTO = new MessageTO();
+//            messageTO.setTitle("汇总方案汇总");
+//            messageTO.setContent(html(entity));
+//            messageTO.setMsgType(MsgType.SYS);
+//            messageTO.setSendType(SendType.EMAIL);
+//            messageTO.setRangeType(RangeType.SPECIFIED);
+//            //定时发送必须写
+//            messageTO.setSenderId("SYSTEM");
+//            messageTO.setSenderName("SYSTEM");
+//            if (!departEmails.isEmpty()) {
+//                for (String s : departEmails) {
+//                    if (!set.contains(s)) {
+//                        set.add(s);
+//                    }
+//                }
+//                String[] strings = new String[set.size()];
+//                strings = set.toArray(strings);
+//                messageTO.setReceivers(strings);
+//            } else {
+//                messageTO.setReceivers(recivers);
+//            }
+//            try {
+//                messageAPI.send(messageTO);
+//            } catch (Exception e) {
+//                if (e.getMessage().indexOf("Forbid consumer") != -1) {
+//                    LOGGER.error("message模块服务不可用!");
+//                }
+//            }
+//        }
         CollectScheme entity = super.findById(to.getId());
         if (entity == null) {
             throw new SerException("该对象不存在");
         }
+        entity.setCollectType(to.getCollectType());
+        entity.setRemindType(to.getRemindType());
+        entity.setSendDepart(to.getSendDepart());
+        entity.setCollectObject(StringUtils.join(to.getCollectObjects(), ","));
+        entity.setEnable(to.getEnable());
+        entity.setModifyTime(LocalDateTime.now());
+        super.update(entity);
+    }
+
+    @Override
+    public String detail(String id) throws SerException {
+//        CollectScheme entity = super.findById(id);
+//        if (entity == null) {
+//            throw new SerException("该对象不存在");
+//        }
+//        String[] tableIds = entity.getTables().split(",");
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < tableIds.length; i++) {
+//            if (i == tableIds.length - 1) {
+//                sb.append(customizeSer.findById(tableIds[i]).getName());
+//            } else {
+//                sb.append(customizeSer.findById(tableIds[i]).getName() + "、");
+//            }
+//        }
+//        String nameTr = "<tr style='width: 350px ;height:30px;background-color: #00aaee'>";
+//        String valTr = "<tr style='height: 20px'>";
+//        String endTr = "</tr>";
+//        StringBuilder result = new StringBuilder("<table style='text-align:center;' border=1 width='95%' height='30px'  cellspacing='0'>");
+//        result.append(nameTr);
+//        result.append("<td>汇总方案名称</td>");
+//        result.append("<td>选用汇总表</td>");
+//        result.append("<td>汇总表头字段</td>");
+//        result.append(endTr);
+//        result.append(valTr);
+//        SchemeSonDTO sonDTO = new SchemeSonDTO();
+//        sonDTO.getConditions().add(Restrict.eq("schemeId", entity.getId()));
+//        sonDTO.getSorts().add("titleIndex=asc");
+//        List<SchemeSon> sons = schemeSonSer.findByCis(sonDTO);
+//        result.append("<td rowspan='" + sons.size() + "'>" + entity.getName() + "</td>");
+//        result.append("<td rowspan='" + sons.size() + "'>" + sb.toString() + "</td>");
+//        for (int i = 0; i < sons.size(); i++) {
+//            if (0 != i) {
+//                result.append(valTr);
+//            }
+//            result.append("<td>" + sons.get(i).getTitle() + "</td>");
+//            result.append(endTr);
+//        }
+//        result.append("</table>");
+//        return result.toString();
+        StringBuilder result = new StringBuilder();
+        CollectScheme entity = super.findById(id);
+        if (entity == null) {
+            throw new SerException("该对象不存在");
+        }
+        String[] tableIds = entity.getTables().split(",");
+
+        for (String str:tableIds){
+            result.append(customizeSer.detail(str));
+        }
+        return result.toString();
+    }
+
+
+    @Override
+    public void send(String id) throws SerException {
+        /** * 内容 */
+        StringBuffer context = new StringBuffer();
+        /** * 标题 */
+        StringBuffer title = new StringBuffer("汇总方案");
+        CollectScheme entity = super.findById(id);
+        if (null == entity) {
+            throw new SerException("该对象不存在");
+        }
+        String[] tableIds = entity.getTables().split(",");
+        /** * 内容 */
+        for (String str:tableIds){
+            context.append(customizeSer.detail(str));
+        }
+        //是否抄送本部门
         Set<String> departEmails = new HashSet<>();
-        if (to.getSendDepart()) {   //抄送给本部门
+        if (entity.getSendDepart()) {   //抄送给本部门
             String[] cutomizeIds = entity.getTables().split(",");
             for (String cutomizeId : cutomizeIds) {
                 Customize customize = customizeSer.findById(cutomizeId);
                 String projectId = customize.getProjectId();
                 String depart = projectAPI.findByID(projectId).getDepart();
-//                List<DepartmentDetailBO> departmentDetailBOS = departmentDetailAPI.departByName(new String[]{depart});
-//                if (null != departmentDetailBOS) {
                 CommonalityBO commonalityBO = commonalityAPI.findByDepartment(depart);
                 if (null != commonalityBO) {
                     departEmails.add(commonalityBO.getEmail());
-//                    }
                 }
             }
         }
-        String[] recivers = to.getCollectObjects();
+
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle(title.toString());
+        messageTO.setContent(context.toString());
+        messageTO.setMsgType(MsgType.SYS);
+        messageTO.setSendType(SendType.EMAIL);
+        messageTO.setRangeType(RangeType.SPECIFIED);
+        //定时发送必须写
+        messageTO.setSenderId("SYSTEM");
+        messageTO.setSenderName("SYSTEM");
+
+        String[] recivers = entity.getCollectObject().split(",");
         if (null != recivers && recivers.length > 0) {
             List<String> set = Arrays.asList(recivers);
-            MessageTO messageTO = new MessageTO();
-            messageTO.setTitle("汇总方案汇总");
-            messageTO.setContent(html(entity));
-            messageTO.setMsgType(MsgType.SYS);
-            messageTO.setSendType(SendType.EMAIL);
-            messageTO.setRangeType(RangeType.SPECIFIED);
-            //定时发送必须写
-            messageTO.setSenderId("SYSTEM");
-            messageTO.setSenderName("SYSTEM");
             if (!departEmails.isEmpty()) {
                 for (String s : departEmails) {
                     if (!set.contains(s)) {
@@ -507,55 +644,7 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
             } else {
                 messageTO.setReceivers(recivers);
             }
-            try {
-                messageAPI.send(messageTO);
-            } catch (Exception e) {
-                if (e.getMessage().indexOf("Forbid consumer") != -1) {
-                    LOGGER.error("message模块服务不可用!");
-                }
-            }
+            messageAPI.send(messageTO);
         }
-    }
-
-    @Override
-    public String detail(String id) throws SerException {
-        CollectScheme entity = super.findById(id);
-        if (entity == null) {
-            throw new SerException("该对象不存在");
-        }
-        String[] tableIds = entity.getTables().split(",");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tableIds.length; i++) {
-            if (i == tableIds.length - 1) {
-                sb.append(customizeSer.findById(tableIds[i]).getName());
-            } else {
-                sb.append(customizeSer.findById(tableIds[i]).getName() + "、");
-            }
-        }
-        String nameTr = "<tr style='width: 350px ;height:30px;background-color: #00aaee'>";
-        String valTr = "<tr style='height: 20px'>";
-        String endTr = "</tr>";
-        StringBuilder result = new StringBuilder("<table style='text-align:center;' border=1 width='95%' height='30px'  cellspacing='0'>");
-        result.append(nameTr);
-        result.append("<td>汇总方案名称</td>");
-        result.append("<td>选用汇总表</td>");
-        result.append("<td>汇总表头字段</td>");
-        result.append(endTr);
-        result.append(valTr);
-        SchemeSonDTO sonDTO = new SchemeSonDTO();
-        sonDTO.getConditions().add(Restrict.eq("schemeId", entity.getId()));
-        sonDTO.getSorts().add("titleIndex=asc");
-        List<SchemeSon> sons = schemeSonSer.findByCis(sonDTO);
-        result.append("<td rowspan='" + sons.size() + "'>" + entity.getName() + "</td>");
-        result.append("<td rowspan='" + sons.size() + "'>" + sb.toString() + "</td>");
-        for (int i = 0; i < sons.size(); i++) {
-            if (0 != i) {
-                result.append(valTr);
-            }
-            result.append("<td>" + sons.get(i).getTitle() + "</td>");
-            result.append(endTr);
-        }
-        result.append("</table>");
-        return result.toString();
     }
 }
