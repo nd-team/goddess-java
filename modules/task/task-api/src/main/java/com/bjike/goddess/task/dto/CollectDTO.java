@@ -58,6 +58,78 @@ public class CollectDTO extends BaseDTO {
      */
     private List<String> tableFields;
 
+    /**
+     * 新增汇总类型
+     * 2018-01-05
+     *      目前只有2中汇总类型
+     *          1.明细汇总
+     *              --今日完成情况 1
+     *              --明日完成情况 2
+     *          2.数量汇总
+     *              --日周月      1
+     *              --自定义      2
+     */
+    private String type;
+
+    /**
+     * 新增汇总说明
+     * 2018-01-05
+     *      目前只有2中汇总类型
+     *          1.明细汇总
+     *              --今日完成情况 1
+     *              --明日完成情况 2
+     *          2.数量汇总
+     *              --日周月      1
+     *              --自定义      2
+     */
+    private String typeExplain;
+
+    /**
+     * 新增 可以多选项目 区分以前单选
+     *
+     */
+    private List<String> projectIds;
+
+    /**
+     * 新增 任务ID
+     * projectIds[0]：xxx
+     * --tabs[0].tables[0]：xxx
+     * --tabs[0].tables[1]：xxx
+     */
+    private List<TableDTO> tabs;
+
+    public List<String> getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(List<String> projectIds) {
+        this.projectIds = projectIds;
+    }
+
+    public List<TableDTO> getTabs() {
+        return tabs;
+    }
+
+    public void setTabs(List<TableDTO> tabs) {
+        this.tabs = tabs;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeExplain() {
+        return typeExplain;
+    }
+
+    public void setTypeExplain(String typeExplain) {
+        this.typeExplain = typeExplain;
+    }
+
     public String getStartTime() {
         return startTime;
     }

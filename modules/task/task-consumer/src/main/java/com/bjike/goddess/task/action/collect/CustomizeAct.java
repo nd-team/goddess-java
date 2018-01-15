@@ -19,10 +19,13 @@ import com.bjike.goddess.task.api.CustomizeAPI;
 import com.bjike.goddess.task.api.ScheduleAPI;
 import com.bjike.goddess.task.bo.CustomizeBO;
 import com.bjike.goddess.task.bo.CustomizeSonBO;
+import com.bjike.goddess.task.bo.DataBO;
 import com.bjike.goddess.task.dto.CollectDTO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
 import com.bjike.goddess.task.to.CustomizeTO;
 import com.bjike.goddess.task.to.TaskNodeExcel;
+import com.bjike.goddess.task.vo.CustomizeVO;
+import com.bjike.goddess.task.vo.DataVO;
 import com.bjike.goddess.taskallotment.api.ProjectAPI;
 import com.bjike.goddess.taskallotment.vo.ProjectVO;
 import com.bjike.goddess.taskallotment.vo.TableVO;
@@ -46,7 +49,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 自定义汇总
@@ -88,44 +93,6 @@ public class CustomizeAct {
     }
 
     /**
-     * 列表
-     *
-     * @return class CustomizeBO
-     * @version v1
-     */
-    @GetMapping("v1/list")
-    public Result list(CustomizeDTO dto) throws ActException {
-        try {
-            List<CustomizeBO> customizeBOS = customizeAPI.list(dto);
-            return ActResult.initialize(customizeBOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 通过id查找
-     *
-     * @param id id
-     * @return class CustomizeBO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/customize/{id}")
-    public Result customize(@PathVariable String id) throws ActException {
-        try {
-            CustomizeBO customizeBOS = customizeAPI.one(id);
-            List<CustomizeSonBO> sons=customizeBOS.getSons();
-            for (CustomizeSonBO son:sons){
-                son.setTypes(son.getType().split("、"));
-            }
-            return ActResult.initialize(customizeBOS);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
      * 数据量
      *
      * @return {name:'data',type:'int',defaultValue:'',description:'数据量.'}
@@ -139,105 +106,6 @@ public class CustomizeAct {
             throw new ActException(e.getMessage());
         }
     }
-
-    /**
-     * 添加
-     *
-     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
-     * @version v1
-     */
-    @PostMapping("v1/add")
-    public Result count(@Validated({ADD.class}) CustomizeTO to, BindingResult rs) throws ActException {
-        try {
-            customizeAPI.add(to);
-            return ActResult.initialize(true);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 编辑
-     *
-     * @param to to
-     * @throws ActException
-     * @version v1
-     */
-    @PutMapping("v1/edit")
-    public Result edit(@Validated({EDIT.class}) CustomizeTO to, BindingResult rs) throws ActException {
-        try {
-            customizeAPI.edit(to);
-            return ActResult.initialize(true);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 删除
-     *
-     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
-     * @version v1
-     */
-    @DeleteMapping("v1/delete/{id}")
-    public Result count(@PathVariable String id) throws ActException {
-        try {
-            customizeAPI.delete(id);
-            return ActResult.initialize(true);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 查看详情
-     *
-     * @param id id
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/detail/{id}")
-    public Result detail(@PathVariable String id) throws ActException {
-        try {
-            return ActResult.initialize(customizeAPI.detail(id));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 字段对应的值
-     *
-     * @param to to
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/values")
-    public Result values(@Validated({CustomizeTO.VALUE.class}) CustomizeTO to, BindingResult rs) throws ActException {
-        try {
-            return ActResult.initialize(scheduleAPI.values(to));
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
-    /**
-     * 设置通报
-     *
-     * @param to to
-     * @throws ActException
-     * @version v1
-     */
-    @PutMapping("v1/notice")
-    public Result notice(@Validated({CustomizeTO.NOTICE.class}) CustomizeTO to, BindingResult rs) throws ActException {
-        try {
-            customizeAPI.notice(to);
-            return ActResult.initialize("设置通报成功");
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
-
     /**
      * 获取所有项目
      *
@@ -271,28 +139,7 @@ public class CustomizeAct {
         }
     }
 
-    /**
-     * 所有汇总字段
-     *
-     * @param to to
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/fileds")
-    public Result fileds(@Validated(CustomizeTO.FIELD.class) CustomizeTO to, BindingResult result) throws ActException {
-        try {
-            List<String> list = new ArrayList<>();
-            List<Field> fields = ClazzUtils.getFields(TaskNodeExcel.class);
-            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
-            for (int i = 0; i < headers.size(); i++) {
-                list.add(headers.get(i).name());
-            }
-            list.addAll(projectAPI.fileds(to.getTablesId()));
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+
 
 
 //    /**
@@ -416,4 +263,233 @@ public class CustomizeAct {
         return ActResult.initialize(list);
 
     }
+
+
+
+
+
+    //-------------------------------------------------------------
+    /**
+     * 新功能点
+     */
+    /**
+     * 自定义汇总
+     *
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
+     */
+    @PostMapping("v1/gather")
+    public Result gather(CollectDTO dto, BindingResult rs) throws ActException {
+        try {
+            String result = customizeAPI.gather(dto);
+            return ActResult.initialize(result);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有项目+所有的任务
+     *
+     * @return class ProjectVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/findAllByProjects")
+    public Result findAllByProjects(HttpServletRequest request) throws ActException {
+        try {
+            return ActResult.initialize(BeanTransform.copyProperties(projectAPI.findAllByProjects(), ProjectVO.class, request));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 所有汇总字段
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/fileds")
+    public Result fileds( HttpServletRequest request) throws ActException {
+        try {
+            List<Map<String,Object>> dataList = new ArrayList<>();
+            List<String> detailedList = new ArrayList<>();
+            List<String> numberList = new ArrayList<>();
+            Map<String,Object> map = new HashMap<>();
+            List<Field> fields = ClazzUtils.getFields(TaskNodeExcel.class);
+            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            for (int i = 0; i < headers.size(); i++) {
+                if ("人数".equals(headers.get(i).name()) ||
+                    "总任务量".equals(headers.get(i).name()) ||
+                    "已完成任务量".equals(headers.get(i).name()) ||
+                    "未完成任务量".equals(headers.get(i).name())){
+                    numberList.add(headers.get(i).name());
+                }else {
+                    detailedList.add(headers.get(i).name());
+                }
+            }
+            map.put("detailed",detailedList);
+            map.put("number",numberList);
+            dataList.add(map);
+            return ActResult.initialize(dataList);
+        } catch ( Exception e ) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 字段对应的值
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/values")
+    public Result values(@Validated({CustomizeTO.VALUE.class}) CustomizeTO to, BindingResult rs) throws ActException {
+        try {
+            return ActResult.initialize(customizeAPI.values(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 添加
+     *
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
+     */
+    @PostMapping("v1/add")
+    public Result count(CustomizeTO to, BindingResult rs) throws ActException {
+        try {
+            customizeAPI.add(to);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result count(@PathVariable String id) throws ActException {
+        try {
+            customizeAPI.delete(id);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 列表
+     *
+     * @return class CustomizeBO
+     * @version v1
+     */
+    @GetMapping("v1/list")
+    public Result list(CustomizeDTO dto) throws ActException {
+        try {
+            List<CustomizeBO> customizeBOS = customizeAPI.list(dto);
+            return ActResult.initialize(BeanTransform.copyProperties ( customizeBOS, CustomizeVO.class ));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 通过id查找
+     *
+     * @param id id
+     * @return class CustomizeBO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/customize/{id}")
+    public Result customize(@PathVariable String id) throws ActException {
+        try {
+            CustomizeBO customizeBOS = customizeAPI.one(id);
+            List<CustomizeSonBO> sons=customizeBOS.getSons();
+            for (CustomizeSonBO son:sons){
+                son.setTypes(son.getType().split(","));
+            }
+            return ActResult.initialize(customizeBOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 编辑
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/edit")
+    public Result edit(CustomizeTO to, BindingResult rs) throws ActException {
+        try {
+            customizeAPI.edit(to);
+            return ActResult.initialize(true);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看详情
+     *
+     * @param id id
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/detail/{id}")
+    public Result detail(@PathVariable String id) throws ActException {
+        try {
+            return ActResult.initialize(customizeAPI.detail(id));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 设置通报
+     *
+     * @param to to
+     * @throws ActException
+     * @version v1
+     */
+    @PutMapping("v1/notice")
+    public Result notice(@Validated({CustomizeTO.NOTICE.class}) CustomizeTO to, BindingResult rs) throws ActException {
+        try {
+            customizeAPI.notice(to);
+            return ActResult.initialize("设置通报成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 现在通报
+     *
+     * @param
+     * @throws ActException
+     * @version v1
+     *
+     */
+    @GetMapping("v1/send/{id}")
+    public Result send(@PathVariable String id) throws ActException {
+        try {
+            customizeAPI.send(id);
+            return new ActResult("发送邮件成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

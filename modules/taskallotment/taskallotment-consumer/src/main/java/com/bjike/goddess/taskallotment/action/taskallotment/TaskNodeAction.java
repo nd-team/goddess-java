@@ -1,3 +1,5 @@
+
+
 package com.bjike.goddess.taskallotment.action.taskallotment;
 
 import com.bjike.goddess.common.api.entity.ADD;
@@ -669,6 +671,7 @@ public class TaskNodeAction extends BaseFileAction {
             return ActResult.initialize ( BeanTransform.copyProperties ( list, FinishCaseVO.class, request ) );
         } catch (SerException e) {
             throw new ActException ( e.getMessage () );
+            
         }
     }
 
@@ -1402,3 +1405,6 @@ public class TaskNodeAction extends BaseFileAction {
 //        }
 //    }
 }
+
+
+

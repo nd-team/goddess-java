@@ -88,4 +88,9 @@ public class CollectSchemeApiImpl implements CollectSchemeAPI {
     public List<CustomizeBO> all() throws SerException {
         return BeanTransform.copyProperties(customizeSer.findAll(),CustomizeBO.class);
     }
+
+    @Override
+    public void send(String id) throws SerException {
+        collectSchemeSer.send(id);
+    }
 }

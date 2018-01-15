@@ -277,4 +277,13 @@ public interface ProjectAPI {
      * @throws SerException
      */
     List<String> fileds(String[] tablesId) throws SerException;
+
+
+    /**
+     * 获取所有项目+所有的任务
+     * @return
+     * @throws SerException
+     */
+    List<ProjectBO> findAllByProjects() throws SerException;
+
 }
