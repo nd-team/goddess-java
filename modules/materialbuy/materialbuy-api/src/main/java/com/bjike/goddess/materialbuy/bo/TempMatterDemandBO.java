@@ -84,6 +84,31 @@ public class TempMatterDemandBO extends BaseBO {
      */
     private String auditOpinion;
 
+    /**
+     * 库存是否满足
+     */
+    private Boolean ifStockSatisfy;
+
+    /**
+     * 财务部审核通过数量
+     */
+    private Integer adoptNum;
+
+    public Boolean getIfStockSatisfy() {
+        return ifStockSatisfy;
+    }
+
+    public void setIfStockSatisfy(Boolean ifStockSatisfy) {
+        this.ifStockSatisfy = ifStockSatisfy;
+    }
+
+    public Integer getAdoptNum() {
+        return adoptNum;
+    }
+
+    public void setAdoptNum(Integer adoptNum) {
+        this.adoptNum = adoptNum;
+    }
 
     public String getArea() {
         return area;

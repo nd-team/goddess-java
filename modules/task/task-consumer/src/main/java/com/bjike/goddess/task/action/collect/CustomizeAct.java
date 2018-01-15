@@ -486,7 +486,7 @@ public class CustomizeAct {
     public Result send(@PathVariable String id) throws ActException {
         try {
             customizeAPI.send(id);
-            return new ActResult("发送邮件成功");
+            return new ActResult("通报成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

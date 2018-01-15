@@ -183,6 +183,48 @@ public class MaterialBuy extends BaseEntity {
     @Column(name = "auditOpinion", columnDefinition = "VARCHAR(255) COMMENT '审核意见'")
     private String auditOpinion;
 
+    /**
+     * 是否到货
+     * */
+    @Column(name = "ifArrival", columnDefinition = "TINYINT(1) DEFAULT 0  COMMENT '是否到货'")
+    private Boolean ifArrival;
+
+    /**
+    * 是否需要商务部审核
+    * */
+    @Column(name = "ifCommerceAudit", columnDefinition = "TINYINT(1) DEFAULT 0  COMMENT '是否需要商务部审核'")
+    private Boolean ifCommerceAudit;
+
+    /**
+     * 商务部审核通过数量
+     * 是否需商务部审核
+     */
+    @Column(name = "adoptQuantity", columnDefinition = "INT(11) COMMENT '商务部审核通过数量'")
+    private Integer adoptQuantity;
+
+    public Boolean getIfArrival() {
+        return ifArrival;
+    }
+
+    public void setIfArrival(Boolean ifArrival) {
+        this.ifArrival = ifArrival;
+    }
+
+    public Boolean getIfCommerceAudit() {
+        return ifCommerceAudit;
+    }
+
+    public void setIfCommerceAudit(Boolean ifCommerceAudit) {
+        this.ifCommerceAudit = ifCommerceAudit;
+    }
+
+    public Integer getAdoptQuantity() {
+        return adoptQuantity;
+    }
+
+    public void setAdoptQuantity(Integer adoptQuantity) {
+        this.adoptQuantity = adoptQuantity;
+    }
 
     public String getArea() {
         return area;
