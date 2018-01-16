@@ -196,4 +196,42 @@ public interface EventAPI {
      * @throws SerException
      */
     Long currentUserEvenCount() throws SerException;
+
+    /**
+     * 根据计划类型获取对应的数据
+     * 计划类型 分为  月计划 周计划 日计划
+     *              month week  day
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<FatherBO> findByPlanType(EventDTO dto) throws SerException;
+
+
+    /**
+     * 判断新增计划是否为空
+     *      主表(Father)一天一个人 只有一条记录
+     *          比如: 2017-12-29
+     *                  8：30 - 10：00
+     *                  10：00 - 12：00
+     *                  13：30 - 15：00
+     *                  15：00 - 18：00
+     *      Father 只可以存在一条记录 (ID) 关联
+     *          子表 可以存在多条记录 (father.id) 关联
+     *
+     * @Date:2017-12-29
+     *
+     */
+    EventBO saveEvTo(EventTO to) throws SerException;
+
+
+    /**
+     *  修改event实体
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    EventBO update(EventTO to) throws SerException;
+
 }

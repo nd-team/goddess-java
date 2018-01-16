@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.taskallotment.enums.FinishStatus;
 import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.enums.TaskType;
+import com.bjike.goddess.taskallotment.enums.TimeType;
 
 
 /**
@@ -43,8 +44,8 @@ public class TaskNodeExcel extends BaseTO {
     /**
      * 计划执行时间
      */
-    @ExcelHeader(name = "计划执行时间")
-    private String planTime;
+    //@ExcelHeader(name = "计划执行时间")
+    //private String planTime;
 
     /**
      * 任务类型
@@ -72,13 +73,13 @@ public class TaskNodeExcel extends BaseTO {
     /**
      * 任务开始时间
      */
-    @ExcelHeader(name = "任务开始时间")
-    private String startTime;
+    //@ExcelHeader(name = "任务开始时间")
+    //private String startTime;
     /**
      * 任务结束时间
      */
-    @ExcelHeader(name = "任务结束时间")
-    private String endTime;
+    //@ExcelHeader(name = "任务结束时间")
+    //private String endTime;
 
     /**
      * 备注
@@ -89,18 +90,18 @@ public class TaskNodeExcel extends BaseTO {
     /**
      * 开始执行时间
      */
-    @ExcelHeader(name = "开始执行时间")
-    private String startExecute;
+    //@ExcelHeader(name = "开始执行时间")
+    //private String startExecute;
     /**
      * 结束执行时间
      */
-    @ExcelHeader(name = "结束执行时间")
-    private String endExecute;
+    //@ExcelHeader(name = "结束执行时间")
+    //private String endExecute;
     /**
      * 完成时间
      */
-    @ExcelHeader(name = "完成时间")
-    private String finishTime;
+    //@ExcelHeader(name = "完成时间")
+    //private String finishTime;
     /**
      * 执行人地区
      */
@@ -120,44 +121,44 @@ public class TaskNodeExcel extends BaseTO {
     /**
      * 确认状态
      */
-    @ExcelHeader(name = "确认状态")
-    private Boolean confirm;
+    //@ExcelHeader(name = "确认状态")
+    //private Boolean confirm;
     /**
      * 不确认理由
      */
-    @ExcelHeader(name = "不确认理由")
-    private String reason;
+    //@ExcelHeader(name = "不确认理由")
+    //private String reason;
     /**
      * 是否发生费用报销
      */
-    @ExcelHeader(name = "是否发生费用报销")
-    private Boolean reimbursement;
+    //@ExcelHeader(name = "是否发生费用报销")
+    //private Boolean reimbursement;
 
     /**
      * 注意事项
      */
-    @ExcelHeader(name = "注意事项")
-    private String notice;
+    //@ExcelHeader(name = "注意事项")
+    //private String notice;
     /**
      * 是否上报
      */
-    @ExcelHeader(name = "是否上报")
-    private Boolean report;
+    //@ExcelHeader(name = "是否上报")
+    //private Boolean report;
     /**
      * 是否延期完成
      */
-    @ExcelHeader(name = "是否延期完成")
-    private Boolean delay;
+    //@ExcelHeader(name = "是否延期完成")
+    //private Boolean delay;
     /**
      * 上报原因
      */
-    @ExcelHeader(name = "上报原因")
-    private String reportReason;
+    //@ExcelHeader(name = "上报原因")
+    //private String reportReason;
     /**
      * 任务工作总结
      */
-    @ExcelHeader(name = "任务工作总结")
-    private String summary;
+    //@ExcelHeader(name = "任务工作总结")
+    //private String summary;
     /**
      * 任务状态
      */
@@ -171,8 +172,76 @@ public class TaskNodeExcel extends BaseTO {
     /**
      * 工作效率
      */
-    @ExcelHeader(name = "工作效率")
-    private Double efficiency;
+    //@ExcelHeader(name = "工作效率")
+    //private Double efficiency;
+
+    /**
+     * ---------------
+     * 2018-01-09
+     * 新增汇总字段
+     * 计划数
+     */
+    @ExcelHeader(name = "计划数")
+    private String count;
+
+    /**
+     * 执行时长
+     */
+    @ExcelHeader(name = "执行时长")
+    private String executeTime;
+    /**
+     * 执行时长时间类型
+     */
+    @ExcelHeader(name = "执行时长时间类型")
+    private TimeType executeType;
+
+    /**
+     * 所需时长
+     */
+    @ExcelHeader(name = "所需时长")
+    private String needTime;
+    /**
+     * 所需时长时间类型
+     */
+    @ExcelHeader(name = "所需时长时间类型")
+    private TimeType needType;
+
+    /**
+     * 实际时长
+     */
+    @ExcelHeader(name = "实际时长")
+    private String actualTime;
+
+    /**
+     * 实际时长时间类型
+     */
+    @ExcelHeader(name = "实际时长时间类型")
+    private TimeType actualType;
+
+    /**
+     * 人数
+     */
+    @ExcelHeader(name = "人数")
+    private String peopleNum;
+
+    /**
+     * 总任务量
+     */
+    @ExcelHeader(name = "总任务量")
+    private String taskVolume;
+
+    /**
+     * 已完成任务量
+     */
+    @ExcelHeader(name = "已完成任务量")
+    private String fiTaskVolume;
+
+    /**
+     * 未完成任务量
+     */
+    @ExcelHeader(name = "未完成任务量")
+    private String noTaskVolume;
+
 
     public String getInitiate() {
         return initiate;
@@ -204,14 +273,6 @@ public class TaskNodeExcel extends BaseTO {
 
     public void setExecute(String execute) {
         this.execute = execute;
-    }
-
-    public String getPlanTime() {
-        return planTime;
-    }
-
-    public void setPlanTime(String planTime) {
-        this.planTime = planTime;
     }
 
     public TaskType getTaskType() {
@@ -246,52 +307,12 @@ public class TaskNodeExcel extends BaseTO {
         this.actualNum = actualNum;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
     public String getRemark() {
         return remark;
     }
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getStartExecute() {
-        return startExecute;
-    }
-
-    public void setStartExecute(String startExecute) {
-        this.startExecute = startExecute;
-    }
-
-    public String getEndExecute() {
-        return endExecute;
-    }
-
-    public void setEndExecute(String endExecute) {
-        this.endExecute = endExecute;
-    }
-
-    public String getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(String finishTime) {
-        this.finishTime = finishTime;
     }
 
     public String getExecuteArea() {
@@ -318,70 +339,6 @@ public class TaskNodeExcel extends BaseTO {
         this.finishStatus = finishStatus;
     }
 
-    public Boolean getConfirm() {
-        return confirm;
-    }
-
-    public void setConfirm(Boolean confirm) {
-        this.confirm = confirm;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public Boolean getReimbursement() {
-        return reimbursement;
-    }
-
-    public void setReimbursement(Boolean reimbursement) {
-        this.reimbursement = reimbursement;
-    }
-
-    public String getNotice() {
-        return notice;
-    }
-
-    public void setNotice(String notice) {
-        this.notice = notice;
-    }
-
-    public Boolean getReport() {
-        return report;
-    }
-
-    public void setReport(Boolean report) {
-        this.report = report;
-    }
-
-    public Boolean getDelay() {
-        return delay;
-    }
-
-    public void setDelay(Boolean delay) {
-        this.delay = delay;
-    }
-
-    public String getReportReason() {
-        return reportReason;
-    }
-
-    public void setReportReason(String reportReason) {
-        this.reportReason = reportReason;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public TaskStatus getTaskStatus() {
         return taskStatus;
     }
@@ -398,11 +355,91 @@ public class TaskNodeExcel extends BaseTO {
         this.priority = priority;
     }
 
-    public Double getEfficiency() {
-        return efficiency;
+    public String getCount() {
+        return count;
     }
 
-    public void setEfficiency(Double efficiency) {
-        this.efficiency = efficiency;
+    public void setCount(String count) {
+        this.count = count;
+    }
+
+    public String getPeopleNum() {
+        return peopleNum;
+    }
+
+    public void setPeopleNum(String peopleNum) {
+        this.peopleNum = peopleNum;
+    }
+
+    public String getTaskVolume() {
+        return taskVolume;
+    }
+
+    public void setTaskVolume(String taskVolume) {
+        this.taskVolume = taskVolume;
+    }
+
+    public String getFiTaskVolume() {
+        return fiTaskVolume;
+    }
+
+    public void setFiTaskVolume(String fiTaskVolume) {
+        this.fiTaskVolume = fiTaskVolume;
+    }
+
+    public String getNoTaskVolume() {
+        return noTaskVolume;
+    }
+
+    public void setNoTaskVolume(String noTaskVolume) {
+        this.noTaskVolume = noTaskVolume;
+    }
+
+    public String getExecuteTime() {
+        return executeTime;
+    }
+
+    public void setExecuteTime(String executeTime) {
+        this.executeTime = executeTime;
+    }
+
+    public TimeType getExecuteType() {
+        return executeType;
+    }
+
+    public void setExecuteType(TimeType executeType) {
+        this.executeType = executeType;
+    }
+
+    public String getNeedTime() {
+        return needTime;
+    }
+
+    public void setNeedTime(String needTime) {
+        this.needTime = needTime;
+    }
+
+    public TimeType getNeedType() {
+        return needType;
+    }
+
+    public void setNeedType(TimeType needType) {
+        this.needType = needType;
+    }
+
+    public String getActualTime() {
+        return actualTime;
+    }
+
+    public void setActualTime(String actualTime) {
+        this.actualTime = actualTime;
+    }
+
+    public TimeType getActualType() {
+        return actualType;
+    }
+
+    public void setActualType(TimeType actualType) {
+        this.actualType = actualType;
     }
 }

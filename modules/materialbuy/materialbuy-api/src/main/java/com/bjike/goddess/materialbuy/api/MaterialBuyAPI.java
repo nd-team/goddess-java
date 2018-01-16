@@ -3,7 +3,9 @@ package com.bjike.goddess.materialbuy.api;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
+import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
+import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.MaterialBuyTO;
 import com.bjike.goddess.materialbuy.vo.SonPermissionObject;
@@ -240,4 +242,24 @@ public interface MaterialBuyAPI {
     default List<String> findRequisitioner() throws SerException {
         return null;
     }
+
+    /**
+     * 导出excel
+     * chenjunhao
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel(MaterialBuyDTO dto) throws SerException;
+
+
+    /**
+     * 物质购买汇总
+     *
+     * @return class AreaBuyStatusDayCollectBO
+     * @throws SerException
+     */
+    List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException;
+
 }

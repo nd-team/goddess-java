@@ -191,7 +191,7 @@ public class InitDateEntryAction extends BaseFileAction{
      * @des 导出财务初始化
      * @version v1
      */
-    @LoginAuth
+//    @LoginAuth
     @GetMapping("v1/export")
     public Result exportReport(HttpServletResponse response) throws ActException {
         try {

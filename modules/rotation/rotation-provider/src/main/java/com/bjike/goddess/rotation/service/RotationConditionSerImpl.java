@@ -15,6 +15,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class RotationConditionSerImpl extends ServiceImpl<RotationCondition, Rot
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RotationConditionBO save(RotationConditionTO to) throws SerException {
         RotationCondition entity = BeanTransform.copyProperties(to, RotationCondition.class);
@@ -44,6 +46,7 @@ public class RotationConditionSerImpl extends ServiceImpl<RotationCondition, Rot
         return BeanTransform.copyProperties(entity, RotationConditionBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RotationConditionBO update(RotationConditionTO to) throws SerException {
         RotationCondition entity = super.findById(to.getId());
@@ -55,6 +58,7 @@ public class RotationConditionSerImpl extends ServiceImpl<RotationCondition, Rot
         return BeanTransform.copyProperties(entity, RotationConditionBO.class);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public RotationConditionBO delete(String id) throws SerException {
         RotationCondition entity = super.findById(id);

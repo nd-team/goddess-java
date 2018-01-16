@@ -16,60 +16,171 @@ import com.bjike.goddess.financeinit.enums.CategoryName;
  * @Copy: [ com.bjike ]
  */
 public class AccountanCourseExportTemple extends BaseBO {
+    /**
+     * 一级科目代码
+     */
+    @ExcelHeader(name="一级科目代码",notNull = true)
+    private String oneCode;
 
     /**
-     * 代码
+     * 一级科目会计科目名称
      */
-    @ExcelHeader(name="代码",notNull = true)
-    private String code;
+    @ExcelHeader(name="一级会计科目名称",notNull = true)
+    private String oneAccountanName;
 
     /**
-     * 会计科目名称
+     * 一级科目所属类别
      */
-    @ExcelHeader(name="会计科目名称",notNull = true)
-    private String accountanName;
+    @ExcelHeader(name="一级科目所属类别",notNull = true)
+    private String oneBelongCategory;
 
     /**
-     * 所属类别
+     * 一级科目余额方向
      */
-    @ExcelHeader(name="所属类别",notNull = true)
-    private String belongCategory;
+    @ExcelHeader(name="一级科目余额方向",notNull = true)
+    private String oneBalanceDirection;
 
     /**
-     * 余额方向
+     * 二级科目代码
      */
-    @ExcelHeader(name="余额方向",notNull = true)
-    private String balanceDirection;
+    @ExcelHeader(name="二级科目代码",notNull = true)
+    private String sendCode;
 
-    public String getCode() {
-        return code;
+    /**
+     * 二级科目会计科目名称
+     */
+    @ExcelHeader(name="二级会计科目名称",notNull = true)
+    private String sendAccountanName;
+
+    /**
+     * 二级科目所属类别
+     */
+    @ExcelHeader(name="二级科目所属类别",notNull = true)
+    private String sendBelongCategory;
+
+    /**
+     * 二级科目余额方向
+     */
+    @ExcelHeader(name="二级科目余额方向",notNull = true)
+    private String sendBalanceDirection;
+
+    /**
+     * 三级科目代码
+     */
+    @ExcelHeader(name="三级科目代码",notNull = true)
+    private String thirdCode;
+
+    /**
+     * 三级科目会计科目名称
+     */
+    @ExcelHeader(name="三级会计科目名称",notNull = true)
+    private String thirdAccountanName;
+
+    /**
+     * 三级科目所属类别
+     */
+    @ExcelHeader(name="三级科目所属类别",notNull = true)
+    private String thirdBelongCategory;
+
+    /**
+     * 三级科目余额方向
+     */
+    @ExcelHeader(name="三级科目余额方向",notNull = true)
+    private String thirdBalanceDirection;
+
+    public String getOneCode() {
+        return oneCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setOneCode(String oneCode) {
+        this.oneCode = oneCode;
     }
 
-    public String getAccountanName() {
-        return accountanName;
+    public String getOneAccountanName() {
+        return oneAccountanName;
     }
 
-    public void setAccountanName(String accountanName) {
-        this.accountanName = accountanName;
+    public void setOneAccountanName(String oneAccountanName) {
+        this.oneAccountanName = oneAccountanName;
     }
 
-    public String getBelongCategory() {
-        return belongCategory;
+    public String getOneBelongCategory() {
+        return oneBelongCategory;
     }
 
-    public void setBelongCategory(String belongCategory) {
-        this.belongCategory = belongCategory;
+    public void setOneBelongCategory(String oneBelongCategory) {
+        this.oneBelongCategory = oneBelongCategory;
     }
 
-    public String getBalanceDirection() {
-        return balanceDirection;
+    public String getOneBalanceDirection() {
+        return oneBalanceDirection;
     }
 
-    public void setBalanceDirection(String balanceDirection) {
-        this.balanceDirection = balanceDirection;
+    public void setOneBalanceDirection(String oneBalanceDirection) {
+        this.oneBalanceDirection = oneBalanceDirection;
+    }
+
+    public String getSendCode() {
+        return sendCode;
+    }
+
+    public void setSendCode(String sendCode) {
+        this.sendCode = sendCode;
+    }
+
+    public String getSendAccountanName() {
+        return sendAccountanName;
+    }
+
+    public void setSendAccountanName(String sendAccountanName) {
+        this.sendAccountanName = sendAccountanName;
+    }
+
+    public String getSendBelongCategory() {
+        return sendBelongCategory;
+    }
+
+    public void setSendBelongCategory(String sendBelongCategory) {
+        this.sendBelongCategory = sendBelongCategory;
+    }
+
+    public String getSendBalanceDirection() {
+        return sendBalanceDirection;
+    }
+
+    public void setSendBalanceDirection(String sendBalanceDirection) {
+        this.sendBalanceDirection = sendBalanceDirection;
+    }
+
+    public String getThirdCode() {
+        return thirdCode;
+    }
+
+    public void setThirdCode(String thirdCode) {
+        this.thirdCode = thirdCode;
+    }
+
+    public String getThirdAccountanName() {
+        return thirdAccountanName;
+    }
+
+    public void setThirdAccountanName(String thirdAccountanName) {
+        this.thirdAccountanName = thirdAccountanName;
+    }
+
+    public String getThirdBelongCategory() {
+        return thirdBelongCategory;
+    }
+
+    public void setThirdBelongCategory(String thirdBelongCategory) {
+        this.thirdBelongCategory = thirdBelongCategory;
+    }
+
+    public String getThirdBalanceDirection() {
+        return thirdBalanceDirection;
+    }
+
+    public void setThirdBalanceDirection(String thirdBalanceDirection) {
+        this.thirdBalanceDirection = thirdBalanceDirection;
     }
 }

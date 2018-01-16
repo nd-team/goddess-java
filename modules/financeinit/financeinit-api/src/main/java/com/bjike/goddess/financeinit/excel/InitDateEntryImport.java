@@ -24,13 +24,13 @@ public class InitDateEntryImport extends BaseBO {
     /**
      * 代码
      */
-    @ExcelHeader(name = "代码",notNull = true)
+    @ExcelHeader(name = "代码(不可编辑列)",notNull = true)
     private String code;
 
     /**
      * 会计科目名称
      */
-    @ExcelHeader(name = "会计科目名称",notNull = true)
+    @ExcelHeader(name = "会计科目名称(不可编辑列)",notNull = true)
     private String accountanName;
 
     /**
@@ -48,7 +48,7 @@ public class InitDateEntryImport extends BaseBO {
     /**
      * 方向
      */
-    @ExcelHeader(name = "方向",notNull = true)
+    @ExcelHeader(name = "方向(不可编辑列)",notNull = true)
     private BalanceDirection balanceDirection;
 
     /**

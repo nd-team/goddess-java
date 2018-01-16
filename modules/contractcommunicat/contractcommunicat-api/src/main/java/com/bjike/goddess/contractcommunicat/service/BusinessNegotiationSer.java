@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.contractcommunicat.bo.BusinessNegotiationBO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
 import com.bjike.goddess.contractcommunicat.entity.BusinessNegotiation;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 
@@ -23,7 +24,7 @@ public interface BusinessNegotiationSer extends Ser<BusinessNegotiation, Busines
     /**
      * 下拉导航权限
      */
-    default Boolean sonPermission() throws SerException {
+    default List<SonPermissionObject> sonPermission() throws SerException {
         return null;
     }
 

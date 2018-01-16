@@ -1,7 +1,5 @@
 package com.bjike.goddess.recruit.bo;
 
-import com.bjike.goddess.common.api.bo.BaseBO;
-
 /**
  * 悬停提示传输对象
  *
@@ -11,9 +9,9 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class TooltipBO extends BaseBO {
+public class TooltipBO {
 
-    private String trigger;
+    private String trigger = "axis";
     private String formatter;
 
     public String getTrigger() {

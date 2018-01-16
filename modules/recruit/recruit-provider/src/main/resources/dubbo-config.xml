@@ -32,6 +32,11 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.RecruitDemandPlanAPI" ref="recruitDemandPlanApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.CusPermissionAPI" ref="cusPermissionApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.CusPermissionOperateAPI" ref="cusPermissionOperateApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.service.RecruitDemandPlanSer" ref="recruitDemandPlanSerImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.CheckIndexAPI" ref="checkIndexApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.EmotionOneAPI" ref="emotionOneApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.EmotionTwoAPI" ref="emotionTwoApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.EmotionThreeAPI" ref="emotionThreeApiImpl"></dubbo:service>
 
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>

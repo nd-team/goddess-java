@@ -6,8 +6,17 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MyPage implements Serializable {
+    /**
+     * 总条数
+     */
     private Long totalElements;
+    /**
+     * 当前页数
+     */
     private Integer number;
+    /**
+     * 公司
+     */
     private List<CompanyBO> content;
 
     public Long getTotalElements() {

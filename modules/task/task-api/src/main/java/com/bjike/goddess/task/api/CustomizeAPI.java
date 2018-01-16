@@ -2,10 +2,14 @@ package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.task.bo.CustomizeBO;
+import com.bjike.goddess.task.bo.DataBO;
+import com.bjike.goddess.task.dto.CollectDTO;
 import com.bjike.goddess.task.dto.CustomizeDTO;
 import com.bjike.goddess.task.to.CustomizeTO;
 
+import javax.xml.crypto.Data;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author: [liguiqin]
@@ -104,5 +108,29 @@ public interface CustomizeAPI {
      */
     String detail(String id) throws SerException;
 
+    /**
+     * 自定义汇总
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    String gather(CollectDTO to) throws SerException;
 
+
+
+    /**
+     * 字段对应的值
+     * @param to
+     * @return
+     * @throws SerException
+     */
+    List<String> values(CustomizeTO to) throws SerException;
+
+    /**
+     * 发送邮件
+     *
+     * @param id
+     * @throws SerException
+     */
+    void send(String id) throws SerException;
 }

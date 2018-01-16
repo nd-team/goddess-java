@@ -41,7 +41,7 @@
 	<dubbo:reference  validation="true" id="messageApiImpl" interface="com.bjike.goddess.message.api.MessageAPI" />
 	<dubbo:reference  validation="true" id="baseInfoManageApiImpl" interface="com.bjike.goddess.businessproject.api.BaseInfoManageAPI" />
 	<dubbo:reference  validation="true" id="moduleApiImpl" interface="com.bjike.goddess.assemble.api.ModuleAPI" />
-	<dubbo:reference  validation="true" id="projectProblemAccApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProjectProblemAccAPI" />
+	<dubbo:reference  validation="true" id="projectProblemAccApiImpl" interface="com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI" />
 
 
 </beans>

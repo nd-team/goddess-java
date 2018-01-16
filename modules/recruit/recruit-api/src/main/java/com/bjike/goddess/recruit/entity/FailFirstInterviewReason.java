@@ -18,7 +18,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "recruit_failfirstinterviewreason")
 public class FailFirstInterviewReason extends BaseEntity {
-
     /**
      * 未应约初试原因类型
      */

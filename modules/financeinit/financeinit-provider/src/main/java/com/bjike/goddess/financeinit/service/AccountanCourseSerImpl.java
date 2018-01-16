@@ -13,6 +13,7 @@ import com.bjike.goddess.financeinit.bo.*;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.entity.InitDateEntry;
+import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
@@ -35,8 +36,10 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -425,8 +428,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
         //二级科目添加到财务初始化表中
         InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
-        initDateEntry.setCode(accountanCourse2.getAccountanName() + "-" + accountanCourse.getCode());
-        initDateEntry.setAccountanName(accountanCourse.getAccountanName());
+        initDateEntry.setCode( accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse2.getAccountanName() + "-" +accountanCourse.getAccountanName());
         initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
         initDateEntrySer.save(initDateEntry);
 
@@ -455,8 +458,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
         //二级科目添加到财务初始化表中
         InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
-        initDateEntry.setCode(accountanCourse3.getAccountanName() + "-" + accountanCourse2.getAccountanName() + "-" + accountanCourse.getCode());
-        initDateEntry.setAccountanName(accountanCourse.getAccountanName());
+        initDateEntry.setCode( accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse3.getAccountanName() + "-" + accountanCourse2.getAccountanName() + "-" +accountanCourse.getAccountanName());
         initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
         initDateEntrySer.save(initDateEntry);
 
@@ -541,7 +544,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
     @Override
     public byte[] exportExcel(CategoryName belongCategory) throws SerException {
-//        checkAddIdentity();
+        checkAddIdentity();
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
         accountanCourseDTO.getConditions().add(Restrict.eq("belongCategory", belongCategory));
         accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "一级科目"));
@@ -598,16 +601,16 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                             row = sheet.createRow(rowIndex++);
                             row.createCell(0).setCellValue(ac1.getCode());
                             row.createCell(1).setCellValue(ac1.getAccountanName());
-                            row.createCell(2).setCellValue(ac1.getBelongCategory().getCode());
-                            row.createCell(3).setCellValue(ac1.getBalanceDirection().getCode());
+                            row.createCell(2).setCellValue(CategoryName.enumToString(ac1.getBelongCategory()));//枚举
+                            row.createCell(3).setCellValue(BalanceDirection.enumToString(ac1.getBalanceDirection()));
                             row.createCell(4).setCellValue(ac2.getCode());
                             row.createCell(5).setCellValue(ac2.getAccountanName());
-                            row.createCell(6).setCellValue(ac2.getBelongCategory().getCode());
-                            row.createCell(7).setCellValue(ac2.getBalanceDirection().getCode());
+                            row.createCell(6).setCellValue(CategoryName.enumToString(ac2.getBelongCategory()));
+                            row.createCell(7).setCellValue(BalanceDirection.enumToString(ac2.getBalanceDirection()));
                             row.createCell(8).setCellValue(ac3.getCode());
                             row.createCell(9).setCellValue(ac3.getAccountanName());
-                            row.createCell(10).setCellValue(ac3.getBelongCategory().getCode());
-                            row.createCell(11).setCellValue(ac3.getBalanceDirection().getCode());
+                            row.createCell(10).setCellValue(CategoryName.enumToString(ac3.getBelongCategory()));
+                            row.createCell(11).setCellValue(BalanceDirection.enumToString(ac3.getBalanceDirection()));
                         }
 
                     } else {
@@ -615,23 +618,23 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                         row = sheet.createRow(rowIndex++);
                         row.createCell(0).setCellValue(ac1.getCode());
                         row.createCell(1).setCellValue(ac1.getAccountanName());
-                        row.createCell(2).setCellValue(ac1.getBelongCategory().getCode());
-                        row.createCell(3).setCellValue(ac1.getBalanceDirection().getCode());
+                        row.createCell(2).setCellValue(CategoryName.enumToString(ac1.getBelongCategory()));
+                        row.createCell(3).setCellValue(BalanceDirection.enumToString(ac1.getBalanceDirection()));
                         row.createCell(4).setCellValue(ac2.getCode());
                         row.createCell(5).setCellValue(ac2.getAccountanName());
-                        row.createCell(6).setCellValue(ac2.getBelongCategory().getCode());
-                        row.createCell(7).setCellValue(ac2.getBalanceDirection().getCode());
+                        row.createCell(6).setCellValue(CategoryName.enumToString(ac2.getBelongCategory()));
+                        row.createCell(7).setCellValue(BalanceDirection.enumToString(ac2.getBalanceDirection()));
                     }
                     //1-3 4-5 6-6 7-7
                     int start = secondIndex;
-                    int end =rowIndex-1;
-                    if(end-start>0){
+                    int end = rowIndex - 1;
+                    if (end - start > 0) {
                         sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 4, 4));
                         sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 5, 5));
                         sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 6, 6));
                         sheet.addMergedRegion(new CellRangeAddress(secondIndex, end, 7, 7));
                     }
-                    secondIndex=rowIndex;
+                    secondIndex = rowIndex;
 
 
                 }
@@ -641,8 +644,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                 row = sheet.createRow(rowIndex++);
                 row.createCell(0).setCellValue(ac1.getCode());
                 row.createCell(1).setCellValue(ac1.getAccountanName());
-                row.createCell(2).setCellValue(ac1.getBelongCategory().getCode());
-                row.createCell(3).setCellValue(ac1.getBalanceDirection().getCode());
+                row.createCell(2).setCellValue(CategoryName.enumToString(ac1.getBelongCategory()));
+                row.createCell(3).setCellValue(BalanceDirection.enumToString(ac1.getBalanceDirection()));
 
             }
             if ((rowIndex - 1) - startIndex > 1) {//超过两行才合并
@@ -654,11 +657,11 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
             }
 //            //设置样式
-           int rows =  sheet.getLastRowNum();
-            for(int j=0;j<rows;j++){
-                if(j!=0){
+            int rows = sheet.getLastRowNum();
+            for (int j = 0; j < rows; j++) {
+                if (j != 0) {
                     XSSFRow xrow = sheet.getRow(j);
-                    for(int k=0;k<xrow.getLastCellNum();k++){
+                    for (int k = 0; k < xrow.getLastCellNum(); k++) {
                         xrow.getCell(k).setCellStyle(headerStyle);
                     }
                 }
@@ -686,32 +689,206 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public byte[] templateExport() throws SerException {
         List<AccountanCourseExportTemple> accountanCourseExportTemples = new ArrayList<>();
         AccountanCourseExportTemple accountanCourseExportTemple = new AccountanCourseExportTemple();
-        accountanCourseExportTemple.setCode("1000101");
-        accountanCourseExportTemple.setAccountanName("一级科目");
-        accountanCourseExportTemple.setBelongCategory("资产类");
-        accountanCourseExportTemple.setBalanceDirection("借");
+        accountanCourseExportTemple.setOneCode("1001");
+        accountanCourseExportTemple.setOneAccountanName("现金");
+        accountanCourseExportTemple.setOneBelongCategory("资产类");
+        accountanCourseExportTemple.setOneBalanceDirection("借");
+        accountanCourseExportTemple.setSendCode("100101");
+        accountanCourseExportTemple.setSendAccountanName("备用金");
+        accountanCourseExportTemple.setSendBelongCategory("资产类");
+        accountanCourseExportTemple.setSendBalanceDirection("借");
+        accountanCourseExportTemple.setThirdCode("10010101");
+        accountanCourseExportTemple.setThirdAccountanName("一般户");
+        accountanCourseExportTemple.setThirdBelongCategory("资产类");
+        accountanCourseExportTemple.setThirdBalanceDirection("借");
         accountanCourseExportTemples.add(accountanCourseExportTemple);
-        Excel exce = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(accountanCourseExportTemples, exce);
-        return bytes;
+
+        AccountanCourseExportTemple accountanCourseExportTemple1 = new AccountanCourseExportTemple();
+        accountanCourseExportTemple1.setOneCode("1001");
+        accountanCourseExportTemple1.setOneAccountanName("现金");
+        accountanCourseExportTemple1.setOneBelongCategory("资产类");
+        accountanCourseExportTemple1.setOneBalanceDirection("借");
+        accountanCourseExportTemple1.setSendCode("100101");
+        accountanCourseExportTemple1.setSendAccountanName("备用金");
+        accountanCourseExportTemple1.setSendBelongCategory("资产类");
+        accountanCourseExportTemple1.setSendBalanceDirection("借");
+        accountanCourseExportTemple1.setThirdCode("10010102");
+        accountanCourseExportTemple1.setThirdAccountanName("基本户");
+        accountanCourseExportTemple1.setThirdBelongCategory("资产类");
+        accountanCourseExportTemple1.setThirdBalanceDirection("借");
+        accountanCourseExportTemples.add(accountanCourseExportTemple1);
+
+        AccountanCourseExportTemple accountanCourseExportTemple2 = new AccountanCourseExportTemple();
+        accountanCourseExportTemple2.setOneCode("1001");
+        accountanCourseExportTemple2.setOneAccountanName("现金");
+        accountanCourseExportTemple2.setOneBelongCategory("资产类");
+        accountanCourseExportTemple2.setOneBalanceDirection("借");
+        accountanCourseExportTemple2.setSendCode("100101");
+        accountanCourseExportTemple2.setSendAccountanName("备用金");
+        accountanCourseExportTemple2.setSendBelongCategory("资产类");
+        accountanCourseExportTemple2.setSendBalanceDirection("借");
+        accountanCourseExportTemple2.setThirdCode("10010103");
+        accountanCourseExportTemple2.setThirdAccountanName("流水户");
+        accountanCourseExportTemple2.setThirdBelongCategory("资产类");
+        accountanCourseExportTemple2.setThirdBalanceDirection("借");
+        accountanCourseExportTemples.add(accountanCourseExportTemple2);
+
+        AccountanCourseExportTemple accountanCourseExportTemple3 = new AccountanCourseExportTemple();
+        accountanCourseExportTemple3.setOneCode("1001");
+        accountanCourseExportTemple3.setOneAccountanName("现金");
+        accountanCourseExportTemple3.setOneBelongCategory("资产类");
+        accountanCourseExportTemple3.setOneBalanceDirection("借");
+        accountanCourseExportTemple3.setSendCode("100102");
+        accountanCourseExportTemple3.setSendAccountanName("银行存款");
+        accountanCourseExportTemple3.setSendBelongCategory("资产类");
+        accountanCourseExportTemple3.setSendBalanceDirection("借");
+        accountanCourseExportTemple3.setThirdCode("10010201");
+        accountanCourseExportTemple3.setThirdAccountanName("活期存款");
+        accountanCourseExportTemple3.setThirdBelongCategory("资产类");
+        accountanCourseExportTemple3.setThirdBalanceDirection("借");
+        accountanCourseExportTemples.add(accountanCourseExportTemple3);
+
+        AccountanCourseExportTemple accountanCourseExportTemple4 = new AccountanCourseExportTemple();
+        accountanCourseExportTemple4.setOneCode("1001");
+        accountanCourseExportTemple4.setOneAccountanName("现金");
+        accountanCourseExportTemple4.setOneBelongCategory("资产类");
+        accountanCourseExportTemple4.setOneBalanceDirection("借");
+        accountanCourseExportTemple4.setSendCode("100102");
+        accountanCourseExportTemple4.setSendAccountanName("银行存款");
+        accountanCourseExportTemple4.setSendBelongCategory("资产类");
+        accountanCourseExportTemple4.setSendBalanceDirection("借");
+        accountanCourseExportTemple4.setThirdCode("10010202");
+        accountanCourseExportTemple4.setThirdAccountanName("定期存款");
+        accountanCourseExportTemple4.setThirdBelongCategory("资产类");
+        accountanCourseExportTemple4.setThirdBalanceDirection("借");
+        accountanCourseExportTemples.add(accountanCourseExportTemple4);
+
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(accountanCourseExportTemples, excel);
+        XSSFWorkbook wb = null;
+        ByteArrayOutputStream os = null;
+        try {
+            InputStream is = new ByteArrayInputStream(bytes);
+            wb = new XSSFWorkbook(is);
+            XSSFSheet sheet;
+            sheet = wb.getSheetAt(0);
+            List<Field> fields = ClazzUtils.getFields(new AccountanCourseExport().getClass()); //获得列表对象属性
+//            List<ExcelHeader> headers = ExcelUtil.getExcelHeaders(fields, null);
+            for (int i = 0; i < 4; i++) {
+                sheet.addMergedRegion(new CellRangeAddress(1, 5, i, i));
+            }
+
+            for (int j = 4; j < 8; j++) {
+                sheet.addMergedRegion(new CellRangeAddress(1, 3, j, j));
+                sheet.addMergedRegion(new CellRangeAddress(4, 5, j, j));
+            }
+
+            os = new ByteArrayOutputStream();
+            wb.write(os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return os.toByteArray();
+
     }
 
     @Override
-    public void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException {
+    @Transactional(rollbackFor = SerException.class)
+    public void importExcel(List<AccountanCourseExport> tos) throws SerException {
         checkAddIdentity();
-        List<AccountanCourse> accountanCourses = BeanTransform.copyProperties(accountanCourseTOS, AccountanCourse.class, true);
-        for (AccountanCourse str : accountanCourses) {
-            str.setCreateTime(LocalDateTime.now());
-            str.setModifyTime(LocalDateTime.now());
-            super.save(str);
-            if (str.getCode().length() == 4) {
-                InitDateEntry initDateEntry = new InitDateEntry();
-                initDateEntry.setCode(str.getCode());
-                initDateEntry.setAccountanName(str.getAccountanName());
-                initDateEntry.setBalanceDirection(str.getBalanceDirection());
-                initDateEntrySer.save(initDateEntry);
+        //获取出所有的一级代码去重
+        List<String> oneCodes = tos.stream().map(AccountanCourseExport::getOneCode).distinct().collect(Collectors.toList());
+        if (oneCodes != null && oneCodes.size() > 0) {
+            List<AccountanCourseTO> accountanCourseTOList = new ArrayList<>();//一级科目
+            for (String oneCode : oneCodes) {
+
+                List<AccountanCourseTO> accountanCourseTOList1 = new ArrayList<>();//二级科目
+                //筛选出所有一级科目为oneCode所有数据
+                List<AccountanCourseExport> accountanCourseExports1 = tos.stream().filter(str -> oneCode.equals(str.getOneCode())).collect(Collectors.toList());
+                //获取出一级科目为oneCode的数据的所有的二级代码(去重)
+                List<String> secendCodes = accountanCourseExports1.stream().map(AccountanCourseExport::getSendCode).distinct().collect(Collectors.toList());
+                //获取二级科目数据
+                if (secendCodes != null && secendCodes.size() > 0) {
+                    for (String secendCode : secendCodes) {
+                        //筛选出所有二级科目为secendCode所有数据
+                        List<AccountanCourseTO> accountanCourseTOList2 = new ArrayList<>();//对应的三级科目
+                        List<AccountanCourseExport> accountanCourseExports2 = new ArrayList<>();//对应secendCode的二级科目的所有数据
+                        for (AccountanCourseExport accountanCourseExport2 : accountanCourseExports1) {
+                            if (secendCode.equals(accountanCourseExport2.getSendCode())) {
+                                accountanCourseExports2.add(accountanCourseExport2);
+                                if(checkObjectIsNull(accountanCourseExport2.getThirdCode(),accountanCourseExport2.getThirdAccountanName(),accountanCourseExport2.getThirdBelongCategory(),accountanCourseExport2.getThirdBalanceDirection(),"一级科目代码为"+accountanCourseExports1.get(0).getOneCode()+"的,一级科目会计名称为"+accountanCourseExports1.get(0).getOneAccountanName()+"的,三级科目")){
+                                    AccountanCourseTO accountanCourseTO1 = new AccountanCourseTO();
+                                    accountanCourseTO1.setCode(accountanCourseExport2.getThirdCode());
+                                    accountanCourseTO1.setAccountanName(accountanCourseExport2.getThirdAccountanName());
+                                    accountanCourseTO1.setBelongCategory(accountanCourseExport2.getThirdBelongCategory());
+                                    accountanCourseTO1.setBalanceDirection(accountanCourseExport2.getThirdBalanceDirection());
+                                    accountanCourseTOList2.add(accountanCourseTO1);
+                                }
+                            }
+                        }
+                        //对应二级科目
+                        if(checkObjectIsNull(accountanCourseExports2.get(0).getSendCode(),accountanCourseExports2.get(0).getSendAccountanName(),accountanCourseExports2.get(0).getSendBelongCategory(),accountanCourseExports2.get(0).getSendBalanceDirection(),"一级科目代码为"+accountanCourseExports1.get(0).getOneCode()+"的,一级科目会计名称为"+accountanCourseExports1.get(0).getOneAccountanName()+"的,二级科目")){
+                            AccountanCourseTO accountanCourseTO2 = new AccountanCourseTO();
+                            accountanCourseTO2.setCode(accountanCourseExports2.get(0).getSendCode());
+                            accountanCourseTO2.setAccountanName(accountanCourseExports2.get(0).getSendAccountanName());
+                            accountanCourseTO2.setBelongCategory(accountanCourseExports2.get(0).getSendBelongCategory());
+                            accountanCourseTO2.setBalanceDirection(accountanCourseExports2.get(0).getSendBalanceDirection());
+                            accountanCourseTO2.setLevel(accountanCourseTOList2);
+                            accountanCourseTOList1.add(accountanCourseTO2);
+                        }
+                    }
+                }
+                //一级科目
+                AccountanCourseTO accountanCourseTO = new AccountanCourseTO();
+                accountanCourseTO.setCode(accountanCourseExports1.get(0).getOneCode());
+                accountanCourseTO.setAccountanName(accountanCourseExports1.get(0).getOneAccountanName());
+                accountanCourseTO.setBelongCategory(accountanCourseExports1.get(0).getOneBelongCategory());
+                accountanCourseTO.setBalanceDirection(accountanCourseExports1.get(0).getOneBalanceDirection());
+                accountanCourseTO.setLevel(accountanCourseTOList1);
+                accountanCourseTOList.add(accountanCourseTO);
+
+
+            }
+            for (AccountanCourseTO accountanCourseTO : accountanCourseTOList) {
+                List<AccountanCourseTO> accountanCourseTOList1 = accountanCourseTO.getLevel();
+                AccountanCourseBO accountanCourseBO = addOneCourse(accountanCourseTO);
+                if (accountanCourseTOList1 != null && accountanCourseTOList1.size() > 0) {
+                    for (AccountanCourseTO accountanCourseTO1 : accountanCourseTOList1) {
+                        List<AccountanCourseTO> accountanCourseTOList2 = accountanCourseTO1.getLevel();
+                        accountanCourseTO1.setBelongSubjectsId(accountanCourseBO.getId());
+                        AccountanCourseBO accountanCourseBO2 = addSendCourse(accountanCourseTO1);
+                        if (accountanCourseTOList2 != null && accountanCourseTOList2.size() > 0) {
+                            for (AccountanCourseTO accountanCourseTO2 : accountanCourseTOList2) {
+                                accountanCourseTO2.setBelongSubjectsId(accountanCourseBO2.getId());
+                                addThreeCourse(accountanCourseTO2);
+                            }
+                        }
+                    }
+                }
             }
         }
+    }
+
+    private Boolean checkObjectIsNull(String code, String name, CategoryName categoryName, BalanceDirection balanceDirection,String zdName) throws SerException {
+        Boolean bool = true;
+
+        if (StringUtils.isBlank(code) && StringUtils.isBlank(name) && categoryName == null && balanceDirection == null) {
+            bool = false;
+        }else{
+            if(StringUtils.isBlank(code)){
+                throw new SerException(zdName+"的代码不能为空");
+            }
+            if(StringUtils.isBlank(name)){
+                throw new SerException(zdName+"的会计科目名称不能为空");
+            }
+            if(categoryName == null){
+                throw new SerException(zdName+"的所属类型不能为空");
+            }
+            if(balanceDirection == null){
+                throw new SerException(zdName+"的余额方向不能为空");
+            }
+        }
+        return bool;
     }
 
     @Override
@@ -849,9 +1026,19 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                     }
                     //如果三级科目是职能部门,一级科目加上其他应收款,其他应付款
                     if ("职能部门".equals(department)) {
+                        firstSubjectDataBOList = new ArrayList<>(0);
+                        FirstSubjectDataBO firstSubjectDataBO1 = findFirst("管理费用");
+                        if(null != firstSubjectDataBO1){
+                            firstSubjectDataBOList.add(firstSubjectDataBO1);
+                        }
                         findOtherFirstSubject(firstSubjectDataBOList);
 //                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
                     } else if ("商务发展部".equals(department)) {
+                        firstSubjectDataBOList = new ArrayList<>(0);
+                        FirstSubjectDataBO firstSubjectDataBO1 = findFirst("营业费用");
+                        if(null != firstSubjectDataBO1){
+                            firstSubjectDataBOList.add(firstSubjectDataBO1);
+                        }
                         findOtherFirstSubject(firstSubjectDataBOList);
 //                        bo.setFirstSubjectDataBOs(firstSubjectDataBOList);
                     } else if ("一线项目".equals(department)) {
@@ -883,24 +1070,48 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     //获取其他应收款和其他应付款
     private void findOtherFirstSubject(List<FirstSubjectDataBO> firstSubjectDataBOList) throws SerException {
         //获取其他应收款和其他应付款
+//        AccountanCourseDTO dto = new AccountanCourseDTO();
+//        dto.getConditions().add(Restrict.eq("accountanName", "其他应收款"));
+//        List<AccountanCourse> accountanCourses3 = super.findByCis(dto);
+//        if (null != accountanCourses3 && accountanCourses3.size() > 0) {
+//            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+//            firstSubjectDataBO.setFirstSubject(accountanCourses3.get(0).getAccountanName());
+//            firstSubjectDataBO.setFirstSubjectCode(accountanCourses3.get(0).getCode());
+//            firstSubjectDataBOList.add(firstSubjectDataBO);
+//        }
+        FirstSubjectDataBO firstSubjectDataBO1 = findFirst("其他应收款");
+        if(null != firstSubjectDataBO1){
+            firstSubjectDataBOList.add(firstSubjectDataBO1);
+        }
+
+        FirstSubjectDataBO firstSubjectDataBO2 = findFirst("其他应付款");
+        if(null != firstSubjectDataBO2){
+            firstSubjectDataBOList.add(firstSubjectDataBO2);
+        }
+
+//        dto = new AccountanCourseDTO();
+//        dto.getConditions().add(Restrict.eq("accountanName", "其他应付款"));
+//        List<AccountanCourse> accountanCourses4 = super.findByCis(dto);
+//        if (null != accountanCourses4 && accountanCourses4.size() > 0) {
+//            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
+//            firstSubjectDataBO.setFirstSubject(accountanCourses4.get(0).getAccountanName());
+//            firstSubjectDataBO.setFirstSubjectCode(accountanCourses4.get(0).getCode());
+//            firstSubjectDataBOList.add(firstSubjectDataBO);
+//        }
+    }
+
+    //获取一级科目
+    private FirstSubjectDataBO findFirst(String subjectName) throws SerException{
         AccountanCourseDTO dto = new AccountanCourseDTO();
-        dto.getConditions().add(Restrict.eq("accountanName", "其他应收款"));
+        dto.getConditions().add(Restrict.eq("accountanName", subjectName));
         List<AccountanCourse> accountanCourses3 = super.findByCis(dto);
         if (null != accountanCourses3 && accountanCourses3.size() > 0) {
             FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
             firstSubjectDataBO.setFirstSubject(accountanCourses3.get(0).getAccountanName());
             firstSubjectDataBO.setFirstSubjectCode(accountanCourses3.get(0).getCode());
-            firstSubjectDataBOList.add(firstSubjectDataBO);
+            return firstSubjectDataBO;
         }
-        dto = new AccountanCourseDTO();
-        dto.getConditions().add(Restrict.eq("accountanName", "其他应付款"));
-        List<AccountanCourse> accountanCourses4 = super.findByCis(dto);
-        if (null != accountanCourses4 && accountanCourses4.size() > 0) {
-            FirstSubjectDataBO firstSubjectDataBO = new FirstSubjectDataBO();
-            firstSubjectDataBO.setFirstSubject(accountanCourses4.get(0).getAccountanName());
-            firstSubjectDataBO.setFirstSubjectCode(accountanCourses4.get(0).getCode());
-            firstSubjectDataBOList.add(firstSubjectDataBO);
-        }
+        return null;
     }
 
     @Override

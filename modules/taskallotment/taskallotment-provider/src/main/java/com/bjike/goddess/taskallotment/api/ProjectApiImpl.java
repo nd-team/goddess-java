@@ -234,4 +234,23 @@ public class ProjectApiImpl implements ProjectAPI {
         }
         return new ArrayList<>(set);
     }
+
+
+    @Override
+    public List<ProjectBO> findAllByProjects() throws SerException {
+        List<ProjectBO> list = new ArrayList<>();
+        ProjectDTO dto = new ProjectDTO();
+        dto.getConditions().add(Restrict.eq("status", Status.START));
+        List<ProjectBO> projectBOS =  BeanTransform.copyProperties(projectSer.findByCis(dto), ProjectBO.class);
+
+        for (int i = 0;i<projectBOS.size();i++){
+            ProjectBO projectBO = projectBOS.get(i);
+            TableDTO tableDto = new TableDTO();
+            tableDto.getConditions().add(Restrict.eq("projectId",projectBO.getId()));
+            List<TableBO> tableBOS = BeanTransform.copyProperties( tableSer.findByCis(tableDto),TableBO.class);
+            projectBO.setTables(tableBOS);
+            list.add(projectBO);
+        }
+        return list;
+    }
 }

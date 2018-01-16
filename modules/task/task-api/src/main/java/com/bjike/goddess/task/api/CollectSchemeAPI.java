@@ -115,4 +115,13 @@ public interface CollectSchemeAPI {
      * @throws SerException
      */
     List<CustomizeBO> all() throws SerException;
+
+
+    /**
+     * 现在通报
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    void send(String id) throws SerException;
 }

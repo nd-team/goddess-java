@@ -4,7 +4,9 @@ import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
 import com.bjike.goddess.event.enums.EventStatus;
+import com.bjike.goddess.event.enums.EventTime;
 import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.enums.Status;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -92,6 +94,68 @@ public class EventTO extends BaseTO {
      */
     @NotNull(groups = ADD.class, message = "待办事件对应状态不能为空")
     private String status;
+
+    /**
+     * 2017-12-28新增字段
+     *
+     * 任务开始时间
+     */
+    private String startTime;
+    /**
+     * 2017-12-28新增字段
+     * 任务结束时间
+     */
+    private String endTime;
+
+    /**
+     * 2017-12-28 新增字段
+     *  创建日期
+     */
+    private String startDate;
+
+    /**
+     * 状态 是否重复
+     *2017-12-29 新增字段
+     */
+    private Status eStatus;
+
+    /**
+     * 提前多少分钟提醒
+     *2017-12-29 新增字段
+     * MINUTES_15 提前15分钟
+     * MINUTES_30 提前30分钟
+     * MINUTES_60 提前60分钟
+     *
+     */
+    private EventTime eventTime;
+
+    public Status geteStatus() {
+        return eStatus;
+    }
+
+    public void seteStatus(Status eStatus) {
+        this.eStatus = eStatus;
+    }
+
+    public EventTime getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(EventTime eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getStartTime() { return startTime;  }
+
+    public void setStartTime(String startTime) {  this.startTime = startTime;  }
+
+    public String getEndTime() {   return endTime;  }
+
+    public void setEndTime(String endTime) { this.endTime = endTime; }
+
+    public String getStartDate() { return startDate; }
+
+    public void setStartDate(String startDate) { this.startDate = startDate; }
 
     public EventStatus getEventStatus() {
         return eventStatus;

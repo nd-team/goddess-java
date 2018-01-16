@@ -1,5 +1,7 @@
 package com.bjike.goddess.financeinit.action.financeinit;
 
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.bjike.goddess.common.api.constant.RpcCommon;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
@@ -17,6 +19,7 @@ import com.bjike.goddess.financeinit.bo.AccountanCourseBO;
 import com.bjike.goddess.financeinit.bo.CourseDateBO;
 import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
+import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
@@ -33,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 会计科目
@@ -412,17 +416,12 @@ public class AccountanCourseAction extends BaseFileAction {
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
+//            String token=request.getHeader(RpcCommon.USER_TOKEN).toString();
             List<InputStream> inputStreams = super.getInputStreams(request);
             InputStream is = inputStreams.get(1);
             Excel excel = new Excel(0, 1);
-            List<AccountanCourseExport> tos = ExcelUtil.excelToClazz(is, AccountanCourseExport.class, excel);
-            List<AccountanCourseTO> tocs = new ArrayList<>();
-            for (AccountanCourseExport str : tos) {
-                AccountanCourseTO accountanCourseTO = BeanTransform.copyProperties(str, AccountanCourseTO.class, "effectiveDate", "surrInsurApplyDate", "birthDate");
-                tocs.add(accountanCourseTO);
-            }
-            //注意序列化
-            accountanCourseAPI.importExcel(tocs);
+            List<AccountanCourseExport> tos = ExcelUtil.mergeExcelToClazz(is, AccountanCourseExport.class, excel);
+            accountanCourseAPI.importExcel(tos);
             return new ActResult("导入成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -557,6 +556,7 @@ public class AccountanCourseAction extends BaseFileAction {
 
     /**
      * 获取所有二级科目
+     *
      * @param id 一级科目id
      * @des 根据一级科目的id获取所有二级科目
      * @version v1
@@ -574,6 +574,7 @@ public class AccountanCourseAction extends BaseFileAction {
 
     /**
      * 获取所有三级科目
+     *
      * @param id 二级科目id
      * @des 根据二级科目的id获取所有三级科目
      * @version v1

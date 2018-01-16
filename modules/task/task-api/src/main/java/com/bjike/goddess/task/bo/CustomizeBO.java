@@ -98,6 +98,42 @@ public class CustomizeBO extends BaseBO {
      */
     private List<CustomizeSonBO> sons;
 
+
+    /**
+     * 新增汇总类型
+     * 2018-01-05
+     *      目前只有2中汇总类型
+     *          1.明细汇总
+     *              --今日完成情况 1
+     *              --明日完成情况 2
+     *          2.数量汇总
+     *              --日周月      1
+     *              --自定义      2
+     */
+    private String type;
+
+    /**
+     * 新增汇总类型说明
+     * 2018-01-05
+     */
+    private String typeExplain;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeExplain() {
+        return typeExplain;
+    }
+
+    public void setTypeExplain(String typeExplain) {
+        this.typeExplain = typeExplain;
+    }
+
     public Boolean getSendDepart() {
         return sendDepart;
     }

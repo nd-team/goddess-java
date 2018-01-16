@@ -161,7 +161,7 @@ public class CaseLastBO extends BaseBO {
     }
 
     public Long getAdmininstrationNum() {
-        return admininstrationNum;
+        return admininstrationNum==null?0:admininstrationNum;
     }
 
     public void setAdmininstrationNum(Long admininstrationNum) {
@@ -169,7 +169,7 @@ public class CaseLastBO extends BaseBO {
     }
 
     public Long getEngineeringNum() {
-        return engineeringNum;
+        return engineeringNum==null?0:engineeringNum;
     }
 
     public void setEngineeringNum(Long engineeringNum) {
@@ -177,7 +177,7 @@ public class CaseLastBO extends BaseBO {
     }
 
     public Long getTrainingNum() {
-        return trainingNum;
+        return trainingNum==null?0:trainingNum;
     }
 
     public void setTrainingNum(Long trainingNum) {
@@ -185,7 +185,7 @@ public class CaseLastBO extends BaseBO {
     }
 
     public Long getTodayNum() {
-        return todayNum;
+        return todayNum==null?0:todayNum;
     }
 
     public void setTodayNum(Long todayNum) {

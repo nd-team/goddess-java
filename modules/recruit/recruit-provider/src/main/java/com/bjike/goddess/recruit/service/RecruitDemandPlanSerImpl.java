@@ -17,12 +17,14 @@ import com.bjike.goddess.recruit.type.GuideAddrStatus;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.google.common.base.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -916,6 +918,56 @@ public class RecruitDemandPlanSerImpl extends ServiceImpl<RecruitDemandPlan, Rec
         }
         return boList;
     }
+
+    @Override
+    public List<EChartsBO> getECharts() throws SerException {
+        String[] dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-");
+        Integer[] integers = new Integer[dates.length-1];
+        for (int i = 0; i < dates.length-1; i++) {
+            integers[i] = Integer.parseInt(dates[i]);
+        }
+        Integer[] completeNum = new Integer[4];
+        Integer[] planRecruitNum = new Integer[4];
+        Integer year = integers[0];
+        Integer month = integers[1];
+        for (int i = 0;i<4;i++) {
+            Integer week = i + 1;
+//            if (year == null || month == null || week == null) {
+//                year = LocalDate.now().getYear();
+//                month = LocalDate.now().getMonthValue();
+//                Calendar c = Calendar.getInstance();
+//                week = c.get(Calendar.WEEK_OF_MONTH);//获取是本月的第几周
+//            }
+            LocalDate[] date = DateUtil.getWeekTimes(year, month, week);
+            String startDate = String.valueOf(date[0]);
+            String endDate = String.valueOf(date[1]);
+
+            String sql = "SELECT\n" +
+                    "  sum(completeNum)    AS completeNum,\n" +
+                    "  sum(planRecruitNum) AS planRecruitNum\n" +
+                    "FROM recruit_recruitdemandplan\n" +
+                    "WHERE createTime BETWEEN '" + startDate + "' AND '" + endDate + "'";
+
+            String[] fields = {"completeNum", "planRecruitNum"};
+            List<RecruitDemandPlan> recruitDemandPlans = findBySql(sql, RecruitDemandPlan.class, fields);
+            Optional<Integer> optional1 = Optional.fromNullable(recruitDemandPlans.get(0).getCompleteNum());
+            Optional<Integer> optional2 = Optional.fromNullable(recruitDemandPlans.get(0).getPlanRecruitNum());
+            completeNum[i] = optional1.or(0);
+            planRecruitNum[i] = optional2.or(0);
+        }
+        EChartsBO chartsBO1 = new EChartsBO();
+        EChartsBO chartsBO2 = new EChartsBO();
+        chartsBO1.setName("本部门需招聘人数");
+        chartsBO1.setDates(planRecruitNum);
+        chartsBO2.setName("本部门近期招聘人数");
+        chartsBO2.setDates(completeNum);
+        List<EChartsBO> list = new ArrayList<>();
+        list.add(chartsBO1);
+        list.add(chartsBO2);
+        return list;
+    }
+
+
 //    public List<Object> countSituation(RecruitPlanDTO dto) throws SerException {
 //        checkSeeIdentity();
 //        List<Object> list = new ArrayList<>();

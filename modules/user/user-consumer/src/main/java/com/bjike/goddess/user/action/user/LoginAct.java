@@ -66,9 +66,28 @@ public class LoginAct {
     @GetMapping("v1/sign-out/{token}")
     public Result signOut( @PathVariable String token) throws ActException {
         try {
-
             Boolean result = userLoginAPI.signOut(token);
             return ActResult.initialize(result);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 移动端登录
+     *
+     * @param loginTO 登录用户传输数据对象
+     * @param request httpRequest
+     * @version v1
+     */
+    @PostMapping("v1/phone/login")
+    public Result phoneLogin(@Validated UserLoginTO loginTO, BindingResult result, HttpServletRequest request) throws ActException {
+        try {
+            LoginType type = LoginType.MOBILE;
+            loginTO.setLoginType(type);
+            loginTO.setIp(IpUtil.getIp(request));
+            String token = userLoginAPI.logins(loginTO);
+            return ActResult.initialize(token);
 
         } catch (SerException e) {
             throw new ActException(e.getMessage());

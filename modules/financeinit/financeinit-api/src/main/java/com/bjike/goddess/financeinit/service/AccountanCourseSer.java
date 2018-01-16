@@ -6,6 +6,7 @@ import com.bjike.goddess.financeinit.bo.*;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.enums.CategoryName;
+import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
@@ -209,9 +210,9 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
     /**
      * 导入
      *
-     * @param accountanCourseTOS 会计科目
+     * @param tos 会计科目
      */
-    void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException;
+    void importExcel(List<AccountanCourseExport> tos) throws SerException;
 
     /**
      * 根据一级科目代码获取二级科目名称

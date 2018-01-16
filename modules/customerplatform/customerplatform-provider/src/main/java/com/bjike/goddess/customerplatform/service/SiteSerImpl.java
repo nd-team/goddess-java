@@ -172,13 +172,11 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
 
     @Override
     public List<SiteBO> maps(SiteDTO dto) throws SerException {
-        List<Site> sites = super.findByCis(dto);
-        List<SiteBO> siteBOs = BeanTransform.copyProperties(sites, SiteBO.class, false);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        List<Site> sites = super.findByCis(dto);
+        List<Site> sites = super.findByCis(dto,true);
         List<SiteBO> siteBOs = BeanTransform.copyProperties(sites, SiteBO.class, false);
         if (null != siteBOs && siteBOs.size() > 0) {
             for(SiteBO bo : siteBOs){
@@ -202,7 +200,6 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
         if (null == entity) {
             throw new SerException("目标数据对象不能为空");
         }
-        return BeanTransform.copyProperties(entity, SiteBO.class);
         SiteBO bo =  BeanTransform.copyProperties(entity, SiteBO.class);
         // TODO: 18-1-5 判断是否是vip
         Boolean tar = false;

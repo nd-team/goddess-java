@@ -333,3 +333,8 @@ include ':modules:projectissuehandle:projectissuehandle-provider'
 include ':modules:enterpriseculturemanage:enterpriseculturemanage-api'
 include ':modules:enterpriseculturemanage:enterpriseculturemanage-consumer'
 include ':modules:enterpriseculturemanage:enterpriseculturemanage-provider'
+
+//materialbuy
+include ':modules:materialbuy:materialbuy-api'
+include ':modules:materialbuy:materialbuy-consumer'
+include ':modules:materialbuy:materialbuy-provider'

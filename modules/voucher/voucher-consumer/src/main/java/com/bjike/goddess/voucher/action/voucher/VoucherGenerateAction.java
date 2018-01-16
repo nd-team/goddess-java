@@ -20,6 +20,7 @@ import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
@@ -208,6 +209,7 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PostMapping("v1/add")
     public Result add(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
+            //todo 修改firstSubject：加上一级、二级、三级科目的编码
             List<VoucherGenerateBO> voucherGenerateBO1 = voucherGenerateAPI.addVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
@@ -226,7 +228,10 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result edit(@Validated(VoucherGenerateTO.Update.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
+        /*if (null == voucherGenerateTO.getDetails()) {
+            throw new ActException("二级列表不能为空");
+        }*/
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.editVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -238,15 +243,15 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 删除
      *
-     * @param id id
+     * @param uId uid
      * @des 根据id删除记账凭证信息记录
      * @version v1
      */
     @LoginAuth
     @DeleteMapping("v1/delete/{id}")
-    public Result delete(@PathVariable String id) throws ActException {
+    public Result delete(@PathVariable String uId) throws ActException {
         try {
-            voucherGenerateAPI.deleteVoucherGenerate(id);
+            voucherGenerateAPI.deleteVoucherGenerate(uId);
             return new ActResult("delete success!");
         } catch (SerException e) {
             throw new ActException("删除失败：" + e.getMessage());
@@ -301,7 +306,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/audit")
-    public Result audit(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result audit(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             voucherGenerateAPI.audit(voucherGenerateTO);
             return new ActResult("audit success");
@@ -376,7 +381,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/posting")
-    public Result posting(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result posting(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
 //            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.posting(voucherGenerateTO);
             return ActResult.initialize(voucherGenerateAPI.posting(voucherGenerateTO));
@@ -394,7 +399,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/antiAudit")
-    public Result antiAudit(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result antiAudit(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             voucherGenerateAPI.antiAudit(voucherGenerateTO);
             return new ActResult("antiAudit success");
@@ -519,14 +524,14 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 反过账
      *
-     * @param to 只需要传id数组就行
+     * @param to 只需要传uId就行
      * @return class VoucherGenerateVO
      * @des 反过账
      * @version v1
      */
     @LoginAuth
     @PutMapping("v1/antiPosting")
-    public Result antiPosting(VoucherGenerateTO to) throws ActException {
+    public Result antiPosting(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO to) throws ActException {
         try {
 //            VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.antiPosting ( ids );
 //            return ActResult.initialize ( BeanTransform.copyProperties ( voucherGenerateBO1, VoucherGenerateVO.class, true ) );
@@ -547,7 +552,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/checkAccount")
-    public Result checkAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
+    public Result checkAccount(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.checkAccount(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -680,7 +685,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/antiCheckAccount")
-    public Result antiCheckAccount(@Validated(VoucherGenerateTO.TestPost.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
+    public Result antiCheckAccount(@Validated(VoucherGenerateTO.Audit.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
             voucherGenerateAPI.antiCheckAccount(voucherGenerateTO);
             return new ActResult("antiCheckAccount success");

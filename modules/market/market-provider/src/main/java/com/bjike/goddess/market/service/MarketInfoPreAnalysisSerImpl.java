@@ -47,7 +47,7 @@ public class MarketInfoPreAnalysisSerImpl extends ServiceImpl<MarketInfoPreAnaly
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
-//    @Autowired
+    //    @Autowired
 //    private CalculationDetailAPI calculationDetailAPI;
     @Autowired
     private MessageAPI messageAPI;

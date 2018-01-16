@@ -2,6 +2,7 @@ package com.bjike.goddess.contractcommunicat.service;
 
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
+import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
@@ -12,11 +13,14 @@ import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationCollectDTO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
 import com.bjike.goddess.contractcommunicat.entity.BusinessNegotiation;
 import com.bjike.goddess.contractcommunicat.enums.CollectTimeType;
+import com.bjike.goddess.contractcommunicat.enums.GuideAddrStatus;
 import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationExport;
 import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationTemplateExcel;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.vo.BusinessNegotiationCollectVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -51,14 +55,140 @@ public class BusinessNegotiationCollectSerImpl extends ServiceImpl<BusinessNegot
     @Autowired
     BusinessNegotiationRep businessNegotiationRep;
 
-    @Override
-    public Boolean sonPermission() throws SerException {
-        return null;
-    }
+    @Autowired
+    UserAPI userAPI;
+    @Autowired
+    CusPermissionSer cusPermissionSer;
 
     @Override
-    public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
-        return null;
+    public Boolean guidePermission(GuidePermissionTO to) throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        GuideAddrStatus guideAddrStatus = to.getGuideAddrStatus();
+        Boolean flag = true;
+        switch (guideAddrStatus) {
+            case LIST:
+                flag = guideSeeIdentity();
+                break;
+            case ADD:
+                flag = guideAddIdentity();
+                break;
+            case EDIT:
+                flag = guideAddIdentity();
+                break;
+            case DELETE:
+                flag = guideAddIdentity();
+                break;
+            case IMPORT:
+                flag = guideAddIdentity();
+                break;
+            case EXPORT:
+                flag = guideAddIdentity();
+                break;
+            case UPLOAD:
+                flag = guideAddIdentity();
+                break;
+            case DOWNLOAD:
+                flag = guideAddIdentity();
+                break;
+            case SEE:
+                flag = guideSeeIdentity();
+                break;
+            case SEEFILE:
+                flag = guideSeeIdentity();
+                break;
+            default:
+                flag = true;
+                break;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对查看权限（部门级别）
+     */
+    private Boolean guideSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 导航栏核对添加修改删除审核权限（部门级别）
+     */
+    private Boolean guideAddIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    public void getCusPermission() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.busCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以操作");
+            }
+        }
+//        Boolean permission = cusPermissionSer.getCusPermission("1");
+//
+//        if (!permission) {
+//            throw new SerException("该模块只有商务部可操作，您的帐号尚无权限");
+//        }
+//    }
+    }
+
+    /**
+     * 核对查看权限（部门级别）
+     */
+    private void checkSeeIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("1");
+            if (!flag) {
+                throw new SerException("您不是相应部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+    }
+
+
+
+    @Override
+    public Boolean sonPermission() throws SerException {
+        String userToken = RpcTransmit.getUserToken();
+        Boolean flagSee = guideSeeIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagAdd = guideAddIdentity();
+        if (flagSee || flagAdd) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

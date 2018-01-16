@@ -14,11 +14,20 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contractcommunicat.api.BusinessNegotiationAPI;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationDTO;
 import com.bjike.goddess.contractcommunicat.excel.BusinessNegotiationExcel;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.vo.BusinessNegotiationVO;
 import com.bjike.goddess.contractcommunicat.vo.InProjectsVO;
 import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
+import com.bjike.goddess.projectissuehandle.api.ProblemAcceptAPI;
+import com.bjike.goddess.projectissuehandle.bo.ProblemAcceptBO;
+import com.bjike.goddess.projectissuehandle.dto.ProblemAcceptDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -29,7 +38,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商务洽谈
@@ -45,6 +56,40 @@ import java.util.List;
 public class BusinessNegotiationAction extends BaseFileAction{
     @Autowired
     private BusinessNegotiationAPI businessNegotiationAPI;
+
+    @Autowired
+    UserSetPermissionAPI userSetPermissionAPI;
+    @Autowired
+    ProblemAcceptAPI projectProblemAccAPI;
+    @Autowired
+    DepartmentDetailAPI departmentDetailAPI;
+
+
+    /**
+     * 模块设置导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/setButtonPermission")
+    public Result setButtonPermission() throws ActException {
+        List<SonPermissionObject> list = new ArrayList<>();
+        SonPermissionObject obj = new SonPermissionObject();
+        obj.setName("cuspermission");
+        obj.setDescribesion("设置");
+//            Boolean isHasPermission = userSetPermissionAPI.checkSetPermission();
+        Boolean isHasPermission = true;
+        if (!isHasPermission) {
+            //int code, String msg
+            obj.setFlag(false);
+        } else {
+            obj.setFlag(true);
+        }
+        list.add(obj);
+        return new ActResult(0, "设置权限", list);
+    }
+
     /**
      * 功能导航权限
      *
@@ -63,6 +108,25 @@ public class BusinessNegotiationAction extends BaseFileAction{
             } else {
                 return new ActResult(0, "有权限", true);
             }
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 下拉导航权限
+     *
+     * @throws ActException
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/sonPermission")
+    public Result sonPermission() throws ActException {
+        try {
+
+            List<SonPermissionObject> hasPermissionList = businessNegotiationAPI.sonPermission();
+            return new ActResult(0, "有权限", hasPermissionList);
+
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -175,7 +239,7 @@ public class BusinessNegotiationAction extends BaseFileAction{
      * @param request 注入HttpServletRequest对象
      * @version v1
      */
-//    @LoginAuth
+    @LoginAuth
     @PostMapping("v1/importExcel")
     public Result importExcel(HttpServletRequest request) throws ActException {
         try {
@@ -224,6 +288,49 @@ public class BusinessNegotiationAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 导出excel
+     *
+     * @param dto dto 商务洽谈
+     * @des 导出商务洽谈
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/exportExcel")
+    public Result exportReport(@Validated() BusinessNegotiationDTO dto, HttpServletResponse response, BindingResult
+            result) throws ActException {
+        try {
+            String fileName = "商务洽谈.xlsx";
+            super.writeOutFile(response, businessNegotiationAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 模板下载
+     *
+     * @des 下载模板商务洽谈
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/templateExport")
+    public Result templateExport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "商务洽谈导入模板.xlsx";
+            super.writeOutFile(response, businessNegotiationAPI.templateExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
     private Boolean stringToBool(String str,String fileName) throws ActException{
         Boolean bool = null;
         if(str != null){
@@ -242,45 +349,130 @@ public class BusinessNegotiationAction extends BaseFileAction{
         return bool;
     }
 
-
     /**
-     * 导出excel
+     * 洽谈准备
      *
-     * @param dto 商务洽谈
-     * @des 导出商务洽谈
+     * @param id 商务洽谈id
+     * @param skillLibraryId  谈判技巧库id
      * @version v1
      */
-//    @LoginAuth
-    @GetMapping("v1/export")
-    public Result exportReport(@Validated() BusinessNegotiationDTO dto, HttpServletResponse response, BindingResult
-            result) throws ActException {
+    @PostMapping("v1/prepareNegotiation")
+    public Result prepareNegotiation(String id, String skillLibraryId) throws ActException {
         try {
-            String fileName = "商务洽谈.xlsx";
-            super.writeOutFile(response, businessNegotiationAPI.exportExcel(dto), fileName);
-            return new ActResult("导出成功");
+            businessNegotiationAPI.addPrepareNegotiation(id, skillLibraryId);
+            return new ActResult("添加成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
-        } catch (IOException e1) {
-            throw new ActException(e1.getMessage());
         }
     }
 
     /**
-     * excel模板下载
+     * 重新洽谈洽谈
      *
-     * @des 下载模板商务洽谈
+     * @param id 商务洽谈id
+     * @param skillLibraryId  谈判技巧库id
      * @version v1
      */
-    @GetMapping("v1/templateExport")
-    public Result templateExport(HttpServletResponse response) throws ActException {
+    @PostMapping("v1/reNegotiation")
+    public Result reNegotiation(String id, String skillLibraryId) throws ActException {
         try {
-            String fileName = "商务项目合同导入模板.xlsx";
-            super.writeOutFile(response, businessNegotiationAPI.templateExcel(), fileName);
-            return new ActResult("导出成功");
+            businessNegotiationAPI.addPrepareNegotiation(id, skillLibraryId);
+            return new ActResult("添加成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
-        } catch (IOException e1) {
-            throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 获取全部部门
+     *
+     * @return class DepartmentDetailBO
+     * @version v1
+     */
+    @GetMapping("v1/allDepartments")
+    public Result allDepartment() throws ActException {
+        try {
+            List<DepartmentDetailBO> bos = departmentDetailAPI.view(new DepartmentDetailDTO());
+
+            return ActResult.initialize(BeanTransform.copyProperties(bos, DepartmentDetailVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取业务类型
+     *
+     * @version v1
+     */
+    @GetMapping("v1/businessType")
+    public Result listBusinessType() throws ActException {
+//        try {
+//            List<ProjectProblemAccBO> bos = projectProblemAccAPI.findListProjectProblem(new ProjectProblemAccDTO());
+        //todo 无法从“项目中的问题处理和受理”中获取
+        Set<String> set = new HashSet<>();
+        return ActResult.initialize(set);
+
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+    }
+
+    /**
+     * 获取地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result listArea() throws ActException {
+        try {
+            List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            Set<String> set = new HashSet<>();
+            for (ProblemAcceptBO bo : bos) {
+                set.add(bo.getArea());
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取项目组部门
+     *
+     * @version v1
+     */
+    @GetMapping("v1/department")
+    public Result listDepartment() throws ActException {
+        try {
+            List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            Set<String> set = new HashSet<>();
+            for (ProblemAcceptBO bo : bos) {
+//                set.add(bo.getAffectedDepartment());
+            }
+
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取问题受理编号（对内）
+     *
+     * @version v1
+     */
+    @GetMapping("v1/problemNum")
+    public Result problemNum() throws ActException {
+        try {
+            List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            Set<String> set = new HashSet<>();
+            for (ProblemAcceptBO bo : bos) {
+                set.add(bo.getProjectNum());
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

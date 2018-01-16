@@ -3,11 +3,14 @@ package com.bjike.goddess.financeinit.to;
 import com.bjike.goddess.common.api.entity.ADD;
 import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.to.BaseTO;
+import com.bjike.goddess.financeinit.entity.AccountanCourse;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.financeinit.enums.CategoryName;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 会计科目
@@ -20,6 +23,7 @@ import javax.validation.constraints.NotNull;
  */
 public class AccountanCourseTO extends BaseTO {
 
+    private List<AccountanCourseTO> level=new ArrayList<>();
     /**
      * 所属科目id
      */
@@ -48,6 +52,13 @@ public class AccountanCourseTO extends BaseTO {
     @NotNull(message = "余额方向不能为空",groups = {ADD.class, EDIT.class})
     private BalanceDirection balanceDirection;
 
+    public List<AccountanCourseTO> getLevel() {
+        return level;
+    }
+
+    public void setLevel(List<AccountanCourseTO> level) {
+        this.level = level;
+    }
 
     public String getBelongSubjectsId() {
         return belongSubjectsId;

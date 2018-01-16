@@ -51,49 +51,49 @@ public class AccountanCourseExport extends BaseBO {
     /**
      * 二级科目代码
      */
-    @ExcelHeader(name="二级科目代码",notNull = true)
+    @ExcelHeader(name="二级科目代码")
     private String sendCode;
 
     /**
      * 二级科目会计科目名称
      */
-    @ExcelHeader(name="二级会计科目名称",notNull = true)
+    @ExcelHeader(name="二级会计科目名称")
     private String sendAccountanName;
 
     /**
      * 二级科目所属类别
      */
-    @ExcelHeader(name="二级科目所属类别",notNull = true)
+    @ExcelHeader(name="二级科目所属类别")
     private CategoryName sendBelongCategory;
 
     /**
      * 二级科目余额方向
      */
-    @ExcelHeader(name="二级科目余额方向",notNull = true)
+    @ExcelHeader(name="二级科目余额方向")
     private BalanceDirection sendBalanceDirection;
 
     /**
      * 三级科目代码
      */
-    @ExcelHeader(name="三级科目代码",notNull = true)
+    @ExcelHeader(name="三级科目代码")
     private String thirdCode;
 
     /**
      * 三级科目会计科目名称
      */
-    @ExcelHeader(name="三级会计科目名称",notNull = true)
+    @ExcelHeader(name="三级会计科目名称")
     private String thirdAccountanName;
 
     /**
      * 三级科目所属类别
      */
-    @ExcelHeader(name="三级科目所属类别",notNull = true)
+    @ExcelHeader(name="三级科目所属类别")
     private CategoryName thirdBelongCategory;
 
     /**
      * 三级科目余额方向
      */
-    @ExcelHeader(name="三级科目余额方向",notNull = true)
+    @ExcelHeader(name="三级科目余额方向")
     private BalanceDirection thirdBalanceDirection;
 
     public String getOneCode() {

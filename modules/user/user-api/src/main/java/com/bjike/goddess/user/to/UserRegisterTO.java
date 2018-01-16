@@ -28,6 +28,9 @@ public class UserRegisterTO extends BaseTO {
     @NotBlank(message = "重复密码不能为空")
     private String rePassword;
 
+    @NotBlank(message = "手机号不能为空")
+    private String phone;
+
     /**
      * 验证码
      */

@@ -19,7 +19,7 @@ public enum BalanceDirection {
     /**
      * 贷
      */
-    @ExcelValue(name="贷")
+    @ExcelValue(name = "贷")
     CREDIT(1);
 
     private int code;
@@ -32,5 +32,20 @@ public enum BalanceDirection {
         return this.code;
     }
 
+    public static String enumToString(BalanceDirection balanceDirection) {
+        String name = "";
+        switch (balanceDirection) {
+            case BORROW:
+                name = "借";
+                break;
+            case CREDIT:
+                name = "贷";
+                break;
+            default:
+                name = "";
+                break;
+        }
+        return name;
+    }
 
 }

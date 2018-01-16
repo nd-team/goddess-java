@@ -3,6 +3,10 @@ package com.bjike.goddess.event.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.event.enums.EventStatus;
 import com.bjike.goddess.event.enums.Permissions;
+import com.bjike.goddess.event.enums.Status;
+
+import javax.persistence.Column;
+import java.time.LocalDateTime;
 
 /**
  * 事件业务传输对象
@@ -90,6 +94,48 @@ public class EventBO extends BaseBO {
      */
     private String status;
 
+
+    /**
+     * 2017-12-28新增字段
+     *
+     * 任务开始时间
+     */
+    private String startTime;
+    /**
+     * 2017-12-28新增字段
+     * 任务结束时间
+     */
+    private String endTime;
+
+    /**
+     * 是否重复
+     *2017-12-30新增字段
+     */
+    private Status eStatus;
+
+    public Status geteStatus() {
+        return eStatus;
+    }
+
+    public void seteStatus(Status eStatus) {
+        this.eStatus = eStatus;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public String getColor() {
         return color;

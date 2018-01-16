@@ -155,7 +155,7 @@ public class SkillLibraryAction {
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/remove")
+    @DeleteMapping("v1/remove/{id}")
     public Result remove(@PathVariable String id) throws ActException {
         try {
             skillLibraryAPI.remove(id);

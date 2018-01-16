@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.contacts.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.api.CusPermissionAPI;
 import com.bjike.goddess.contractcommunicat.bo.CusOperateBO;
 import com.bjike.goddess.contractcommunicat.bo.CusPermissionBO;
@@ -13,6 +14,7 @@ import com.bjike.goddess.contractcommunicat.dto.CusPermissionDTO;
 import com.bjike.goddess.contractcommunicat.to.CusPermissionTO;
 import com.bjike.goddess.contractcommunicat.vo.CusOperateVO;
 import com.bjike.goddess.contractcommunicat.vo.CusPermissionVO;
+import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -38,6 +40,10 @@ public class CusPermissionAction {
 
     @Autowired
     private CusPermissionAPI cusPermissionAPI;
+
+
+
+
 
     /**
      * 列表总条数

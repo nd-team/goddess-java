@@ -217,4 +217,7 @@ public interface RecruitDemandPlanSer extends Ser<RecruitDemandPlan, RecruitDema
      */
     List<String> getPosition() throws SerException;
 
+
+    List<EChartsBO> getECharts() throws SerException;
+
 }
