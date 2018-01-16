@@ -5,6 +5,7 @@ import com.bjike.goddess.contractcommunicat.bo.BNCollectEchartBO;
 import com.bjike.goddess.contractcommunicat.bo.BusinessNegotiationCollectBO;
 import com.bjike.goddess.contractcommunicat.dto.BusinessNegotiationCollectDTO;
 import com.bjike.goddess.contractcommunicat.enums.CollectTimeType;
+import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.service.BusinessNegotiationCollectSer;
 import com.bjike.goddess.contractcommunicat.service.BusinessNegotiationSer;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
@@ -33,7 +34,7 @@ public class BusinessNegotiationCollectApiImpl implements BusinessNegotiationCol
 
     @Override
     public Boolean sonPermission() throws SerException {
-        return businessNegotiationSer.sonPermission();
+        return null;
     }
 
     @Override

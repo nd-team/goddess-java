@@ -19,6 +19,11 @@ public class VoucherGenerateDTO extends BaseDTO {
     }
 
     /**
+     * 页数
+     */
+    private Integer page;
+
+    /**
      * 一级科目
      */
     private String firstSubject;
@@ -78,6 +83,14 @@ public class VoucherGenerateDTO extends BaseDTO {
      * 升降序
      */
     private String ascOrDesc;
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
 
     public Integer getYear() {
         return year;

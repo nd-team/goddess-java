@@ -173,6 +173,16 @@ public class VoucherGenerateBO extends BaseBO {
      */
     private List<Double> loanMoneys;
 
+    /**
+     *　凭证标志
+     */
+    private String uId;
+
+    /**
+     * 子凭证
+     */
+    private List<VoucherGenerateChildBO> details;
+
 
     public String getVoucherWord() {
         return voucherWord;
@@ -420,5 +430,21 @@ public class VoucherGenerateBO extends BaseBO {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public void setuId(String uId) {
+        this.uId = uId;
+    }
+
+    public List<VoucherGenerateChildBO> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<VoucherGenerateChildBO> details) {
+        this.details = details;
     }
 }
