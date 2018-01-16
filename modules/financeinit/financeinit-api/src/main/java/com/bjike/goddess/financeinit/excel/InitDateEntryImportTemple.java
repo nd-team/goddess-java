@@ -1,66 +1,61 @@
-package com.bjike.goddess.financeinit.entity;
+package com.bjike.goddess.financeinit.excel;
 
-import com.bjike.goddess.common.api.entity.BaseEntity;
+import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 
 /**
- * 初始化数据录入
+ * 初始化数据录入导出
  *
  * @Author: [ lijuntao ]
  * @Date: [ 2017-10-10 04:21 ]
- * @Description: [ 初始化数据录入 ]
+ * @Description: [ 初始化数据录入导出 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
-@Entity
-@Table(name = "financeinit_initdateentry")
-public class InitDateEntry extends BaseEntity {
+public class InitDateEntryImportTemple extends BaseBO {
 
     /**
      * 代码
      */
-    @Column(name = "code", nullable = false,unique = true, columnDefinition = "VARCHAR(255)   COMMENT '代码'")
+    @ExcelHeader(name = "代码",notNull = true)
     private String code;
 
     /**
      * 会计科目名称
      */
-    @Column(name = "accountanName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '会计科目名称'")
+    @ExcelHeader(name = "会计科目名称",notNull = true)
     private String accountanName;
 
     /**
      * 本年借方累计数
      */
-    @Column(name = "yearBorrowerNum", nullable = false,insertable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0  COMMENT '本年借方累计数'")
+    @ExcelHeader(name = "本年借方累计数",notNull = true)
     private Double yearBorrowerNum;
 
     /**
      * 本年贷方累计数
      */
-    @Column(name = "yearLenderNum", nullable = false,insertable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0  COMMENT '本年贷方累计数'")
+    @ExcelHeader(name = "本年贷方累计数",notNull = true)
     private Double yearLenderNum;
 
     /**
      * 方向
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '方向'")
-    private BalanceDirection balanceDirection;
+    @ExcelHeader(name = "方向",notNull = true)
+    private String balanceDirection;
 
     /**
      * 期初余额
      */
-    @Column(name = "begingBalance", nullable = false,insertable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0  COMMENT '期初余额'")
+    @ExcelHeader(name = "期初余额",notNull = true)
     private Double begingBalance;
 
     /**
      * 本年损益类累计数
      */
-    @Column(name = "yearProfitLossNum", nullable = false,insertable = false, columnDefinition = "DECIMAL(10,2) DEFAULT 0  COMMENT '本年损益类累计数'")
+    @ExcelHeader(name = "本年损益类累计数",notNull = true)
     private Double yearProfitLossNum;
 
 
@@ -96,11 +91,11 @@ public class InitDateEntry extends BaseEntity {
         this.yearLenderNum = yearLenderNum;
     }
 
-    public BalanceDirection getBalanceDirection() {
+    public String getBalanceDirection() {
         return balanceDirection;
     }
 
-    public void setBalanceDirection(BalanceDirection balanceDirection) {
+    public void setBalanceDirection(String balanceDirection) {
         this.balanceDirection = balanceDirection;
     }
 

@@ -5,11 +5,14 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
 import com.bjike.goddess.financeinit.dto.InitDateEntryDTO;
 import com.bjike.goddess.financeinit.entity.InitDateEntry;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
+import com.bjike.goddess.financeinit.excel.InitDateEntryImport;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.InitDateEntryTO;
 import com.bjike.goddess.user.api.UserAPI;
@@ -20,6 +23,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -197,21 +201,24 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     @Override
     public String trialBalance() throws SerException {
         checkAddIdentity();
-        List<InitDateEntry> initDateEntryList = super.findAll();
+        List<InitDateEntry> initDateEntryList = new ArrayList<>();
         Double yearBorrowerNum = 0d;//本年借方累计数
         Double yearLenderNum = 0d;//本年贷方累计数
         Double boorrowerBalance = 0d;//借方累计数加借方期初余额
         Double lendBalance = 0d;//待方累计数加借方期初余额
         if (initDateEntryList != null && initDateEntryList.size() > 0) {
             for (InitDateEntry initDateEntry : initDateEntryList) {
-                yearBorrowerNum += initDateEntry.getYearBorrowerNum();
-                yearLenderNum += initDateEntry.getYearLenderNum();
-                if (initDateEntry.getBalanceDirection() == BalanceDirection.BORROW) {
-                    boorrowerBalance += initDateEntry.getBegingBalance() + initDateEntry.getYearBorrowerNum();
-                    lendBalance += initDateEntry.getYearLenderNum();
-                } else {
-                    boorrowerBalance += initDateEntry.getYearBorrowerNum();
-                    lendBalance += initDateEntry.getBegingBalance() + initDateEntry.getYearLenderNum();
+                //将一级科目筛出来
+                if (initDateEntry.getCode().length() == 4) {
+                    yearBorrowerNum += initDateEntry.getYearBorrowerNum();
+                    yearLenderNum += initDateEntry.getYearLenderNum();
+                    if (initDateEntry.getBalanceDirection() == BalanceDirection.BORROW) {
+                        boorrowerBalance += initDateEntry.getBegingBalance() + initDateEntry.getYearBorrowerNum();
+                        lendBalance += initDateEntry.getYearLenderNum();
+                    } else {
+                        boorrowerBalance += initDateEntry.getYearBorrowerNum();
+                        lendBalance += initDateEntry.getBegingBalance() + initDateEntry.getYearLenderNum();
+                    }
                 }
             }
         }
@@ -222,9 +229,9 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
     @Override
     public InitDateEntryBO findByName(String name) throws SerException {
         InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
-        initDateEntryDTO.getConditions().add(Restrict.eq("accountanName",name));
+        initDateEntryDTO.getConditions().add(Restrict.eq("accountanName", name));
         InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
-        return BeanTransform.copyProperties(initDateEntry,InitDateEntryBO.class);
+        return BeanTransform.copyProperties(initDateEntry, InitDateEntryBO.class);
     }
 
     public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
@@ -239,5 +246,44 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
             return bos.get(0);
         }
         return null;
+    }
+
+    @Override
+    public byte[] exportExcel() throws SerException {
+        List<InitDateEntry> list = super.findAll();
+        List<InitDateEntryImport> initDateEntryImports = new ArrayList<>();
+
+        for (InitDateEntry initDateEntry : list) {
+            InitDateEntryImport excel = BeanTransform.copyProperties(initDateEntry, InitDateEntryImport.class);
+            initDateEntryImports.add(excel);
+        }
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(initDateEntryImports, excel);
+        return bytes;
+    }
+
+    @Override
+    public void importExcel(List<InitDateEntryTO> initDateEntryTOS) throws SerException {
+        checkAddIdentity();
+        if (initDateEntryTOS != null && initDateEntryTOS.size() > 0) {
+            List<InitDateEntry> initDateEntryList = new ArrayList<>();
+            for (InitDateEntryTO str : initDateEntryTOS) {
+                InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
+                initDateEntryDTO.getConditions().add(Restrict.eq("code", str.getCode()));
+                initDateEntryDTO.getConditions().add(Restrict.eq("accountanName", str.getAccountanName()));
+                InitDateEntry initDateEntry = super.findOne(initDateEntryDTO);
+                if (initDateEntry != null) {
+                    initDateEntry.setModifyTime(LocalDateTime.now());
+                    initDateEntry.setYearBorrowerNum(str.getYearBorrowerNum());
+                    initDateEntry.setYearLenderNum(str.getYearLenderNum());
+                    initDateEntry.setBegingBalance(str.getBegingBalance());
+                    initDateEntry.setYearProfitLossNum(str.getYearProfitLossNum());
+                    initDateEntryList.add(initDateEntry);
+                } else {
+                    throw new SerException("代码为:" + str.getCode() + "会计科目为:" + str.getAccountanName() + "匹配不到此条数据,请重新修改");
+                }
+            }
+            super.update(initDateEntryList);
+        }
     }
 }

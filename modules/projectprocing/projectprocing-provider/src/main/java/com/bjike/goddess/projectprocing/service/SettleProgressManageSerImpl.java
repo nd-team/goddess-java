@@ -405,25 +405,23 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
 
     @Override
     public List<String> findDispatName() throws SerException {
-        List<SettleProgressManage> settleProgressManageList = super.findAll();
+//        List<SettleProgressManage> settleProgressManageList = super.findAll();
         List<String> dispatNames = businessContractAPI.findSingleContractName();
-        List<String> returnDates = new ArrayList<>();
-        if (dispatNames != null && dispatNames.size() > 0) {
-            if (settleProgressManageList == null || settleProgressManageList.size() == 0) {
-                returnDates = dispatNames;
-            } else {
-                if (dispatNames != null && dispatNames.size() > 0) {
-                    for (String dispatName : dispatNames) {
-                        for (SettleProgressManage settleProgressManage : settleProgressManageList) {
-                            if (!dispatName.equals(settleProgressManage.getDispatName())) {
-                                returnDates.add(dispatName);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return returnDates;
+//        List<String> returnDates = new ArrayList<>();
+//        if (dispatNames != null && dispatNames.size() > 0) {
+//            if (settleProgressManageList == null || settleProgressManageList.size() == 0) {
+//                returnDates = dispatNames;
+//            } else {
+//                for (String dispatName : dispatNames) {
+//                    for (SettleProgressManage settleProgressManage : settleProgressManageList) {
+//                        if (!dispatName.equals(settleProgressManage.getDispatName())) {
+//                            returnDates.add(dispatName);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        return dispatNames;
     }
 
     @Override
@@ -449,45 +447,48 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         if (nodeHeadersCustomList != null && nodeHeadersCustomList.size() > 0) {
             for (NodeHeadersCustomBO nodeHeadersCustomBO : nodeHeadersCustomList) {
                 NodeHeadersCustomBO nodeHeadersCustomBO1 = nodeHeadersCustomSer.getByFatherId(nodeHeadersCustomBO.getFatherId());
-                AllotmentNodeDataBO allotmentNodeDataBO = new AllotmentNodeDataBO();
-                allotmentNodeDataBO.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO.setNodeHeader(nodeHeadersCustomBO1.getNodeOneHeader());
-                allotmentNodeDataBO.setNodeContent(nodeHeadersCustomBO.getNodeOneContent());
-                allotmentNodeDataBO.setContractNo(settleProgressManage.getContractNo());
-                allotmentNodeDataBO.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO.setPayableAmount(settleProgressManage.getPayableAmount());
-                allotmentNodeDataBO.setSaleContractNo(settleProgressManage.getSaleContractNo());
-                allotmentNodeDataBOList.add(allotmentNodeDataBO);
+                if (nodeHeadersCustomBO1 != null) {
 
-                AllotmentNodeDataBO allotmentNodeDataBO1 = new AllotmentNodeDataBO();
-                allotmentNodeDataBO1.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO1.setNodeHeader(nodeHeadersCustomBO1.getNodeTwoHeader());
-                allotmentNodeDataBO1.setNodeContent(nodeHeadersCustomBO.getNodeTwoContent());
-                allotmentNodeDataBO1.setContractNo(settleProgressManage.getContractNo());
-                allotmentNodeDataBO1.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO1.setPayableAmount(settleProgressManage.getPayableAmount());
-                allotmentNodeDataBO1.setSaleContractNo(settleProgressManage.getSaleContractNo());
-                allotmentNodeDataBOList.add(allotmentNodeDataBO1);
+                    AllotmentNodeDataBO allotmentNodeDataBO = new AllotmentNodeDataBO();
+                    allotmentNodeDataBO.setNodeId(nodeHeadersCustomBO.getId());
+                    allotmentNodeDataBO.setNodeHeader(nodeHeadersCustomBO1.getNodeOneHeader());
+                    allotmentNodeDataBO.setNodeContent(nodeHeadersCustomBO.getNodeOneContent());
+                    allotmentNodeDataBO.setContractNo(settleProgressManage.getContractNo());
+                    allotmentNodeDataBO.setDispatName(settleProgressManage.getDispatName());
+                    allotmentNodeDataBO.setPayableAmount(settleProgressManage.getPayableAmount());
+                    allotmentNodeDataBO.setSaleContractNo(settleProgressManage.getSaleContractNo());
+                    allotmentNodeDataBOList.add(allotmentNodeDataBO);
 
-                AllotmentNodeDataBO allotmentNodeDataBO2 = new AllotmentNodeDataBO();
-                allotmentNodeDataBO2.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO2.setNodeHeader(nodeHeadersCustomBO1.getNodeThreeHeader());
-                allotmentNodeDataBO2.setNodeContent(nodeHeadersCustomBO.getNodeThreeContent());
-                allotmentNodeDataBO2.setContractNo(settleProgressManage.getContractNo());
-                allotmentNodeDataBO2.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO2.setPayableAmount(settleProgressManage.getPayableAmount());
-                allotmentNodeDataBO2.setSaleContractNo(settleProgressManage.getSaleContractNo());
-                allotmentNodeDataBOList.add(allotmentNodeDataBO2);
+                    AllotmentNodeDataBO allotmentNodeDataBO1 = new AllotmentNodeDataBO();
+                    allotmentNodeDataBO1.setNodeId(nodeHeadersCustomBO.getId());
+                    allotmentNodeDataBO1.setNodeHeader(nodeHeadersCustomBO1.getNodeTwoHeader());
+                    allotmentNodeDataBO1.setNodeContent(nodeHeadersCustomBO.getNodeTwoContent());
+                    allotmentNodeDataBO1.setContractNo(settleProgressManage.getContractNo());
+                    allotmentNodeDataBO1.setDispatName(settleProgressManage.getDispatName());
+                    allotmentNodeDataBO1.setPayableAmount(settleProgressManage.getPayableAmount());
+                    allotmentNodeDataBO1.setSaleContractNo(settleProgressManage.getSaleContractNo());
+                    allotmentNodeDataBOList.add(allotmentNodeDataBO1);
 
-                AllotmentNodeDataBO allotmentNodeDataBO3 = new AllotmentNodeDataBO();
-                allotmentNodeDataBO3.setNodeId(nodeHeadersCustomBO.getId());
-                allotmentNodeDataBO3.setNodeHeader(nodeHeadersCustomBO1.getNodeFourHeader());
-                allotmentNodeDataBO3.setNodeContent(nodeHeadersCustomBO.getNodeFourContent());
-                allotmentNodeDataBO3.setContractNo(settleProgressManage.getContractNo());
-                allotmentNodeDataBO3.setDispatName(settleProgressManage.getDispatName());
-                allotmentNodeDataBO3.setPayableAmount(settleProgressManage.getPayableAmount());
-                allotmentNodeDataBO3.setSaleContractNo(settleProgressManage.getSaleContractNo());
-                allotmentNodeDataBOList.add(allotmentNodeDataBO3);
+                    AllotmentNodeDataBO allotmentNodeDataBO2 = new AllotmentNodeDataBO();
+                    allotmentNodeDataBO2.setNodeId(nodeHeadersCustomBO.getId());
+                    allotmentNodeDataBO2.setNodeHeader(nodeHeadersCustomBO1.getNodeThreeHeader());
+                    allotmentNodeDataBO2.setNodeContent(nodeHeadersCustomBO.getNodeThreeContent());
+                    allotmentNodeDataBO2.setContractNo(settleProgressManage.getContractNo());
+                    allotmentNodeDataBO2.setDispatName(settleProgressManage.getDispatName());
+                    allotmentNodeDataBO2.setPayableAmount(settleProgressManage.getPayableAmount());
+                    allotmentNodeDataBO2.setSaleContractNo(settleProgressManage.getSaleContractNo());
+                    allotmentNodeDataBOList.add(allotmentNodeDataBO2);
+
+                    AllotmentNodeDataBO allotmentNodeDataBO3 = new AllotmentNodeDataBO();
+                    allotmentNodeDataBO3.setNodeId(nodeHeadersCustomBO.getId());
+                    allotmentNodeDataBO3.setNodeHeader(nodeHeadersCustomBO1.getNodeFourHeader());
+                    allotmentNodeDataBO3.setNodeContent(nodeHeadersCustomBO.getNodeFourContent());
+                    allotmentNodeDataBO3.setContractNo(settleProgressManage.getContractNo());
+                    allotmentNodeDataBO3.setDispatName(settleProgressManage.getDispatName());
+                    allotmentNodeDataBO3.setPayableAmount(settleProgressManage.getPayableAmount());
+                    allotmentNodeDataBO3.setSaleContractNo(settleProgressManage.getSaleContractNo());
+                    allotmentNodeDataBOList.add(allotmentNodeDataBO3);
+                }
             }
         }
         return allotmentNodeDataBOList;
@@ -953,7 +954,7 @@ public class SettleProgressManageSerImpl extends ServiceImpl<SettleProgressManag
         settleProgressRecord.setAssistContent(scheduleDelayDataTO.getAssistContent());
         settleProgressRecord.setMoneyModule(moneyModuleName);
         if (positionDetailUserBOS != null && positionDetailUserBOS.size() > 0) {
-            settleProgressRecord.setMoneyModule(positionDetailUserBOS.get(0).getName());
+            settleProgressRecord.setGeneralManager(positionDetailUserBOS.get(0).getName());
         }
         settleProgressRecordSer.save(settleProgressRecord);
 

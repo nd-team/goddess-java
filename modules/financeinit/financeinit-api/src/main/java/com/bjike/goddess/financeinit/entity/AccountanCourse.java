@@ -3,10 +3,14 @@ package com.bjike.goddess.financeinit.entity;
 import com.bjike.goddess.common.api.entity.BaseEntity;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.financeinit.enums.CategoryName;
+import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,6 +26,20 @@ import javax.persistence.Table;
 @Table(name = "financeinit_accountancourse")
 public class AccountanCourse extends BaseEntity {
 
+    @Transient
+    private List<AccountanCourse> level=new ArrayList<>();
+    @Transient String name;
+
+    /**
+     * 所属科目id
+     */
+    @Column(name = "belongSubjectsId", columnDefinition = "VARCHAR(255)   COMMENT '所属科目id'")
+    private String belongSubjectsId;
+    /**
+     * 科目级别
+     */
+    @Column(name = "subjectsLeve", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '科目级别'")
+    private String subjectsLeve;
     /**
      * 代码
      */
@@ -76,5 +94,37 @@ public class AccountanCourse extends BaseEntity {
 
     public void setBalanceDirection(BalanceDirection balanceDirection) {
         this.balanceDirection = balanceDirection;
+    }
+
+    public String getBelongSubjectsId() {
+        return belongSubjectsId;
+    }
+
+    public void setBelongSubjectsId(String belongSubjectsId) {
+        this.belongSubjectsId = belongSubjectsId;
+    }
+
+    public String getSubjectsLeve() {
+        return subjectsLeve;
+    }
+
+    public void setSubjectsLeve(String subjectsLeve) {
+        this.subjectsLeve = subjectsLeve;
+    }
+
+    public List<AccountanCourse> getLevel() {
+        return level;
+    }
+
+    public void setLevel(List<AccountanCourse> level) {
+        this.level = level;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -55,4 +55,9 @@ public class UseCommonlyApiImpl implements UseCommonlyAPI {
     public UseCommonlyBO addUse(UseCommonlyTO useCommonlyTO) throws SerException {
         return useCommonlySer.addUse(useCommonlyTO);
     }
+
+    @Override
+    public void delete(String id) throws SerException {
+        useCommonlySer.delete(id);
+    }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.financeinit.bo.*;
 import com.bjike.goddess.financeinit.dto.AccountanCourseDTO;
 import com.bjike.goddess.financeinit.enums.CategoryName;
+import com.bjike.goddess.financeinit.excel.AccountanCourseExport;
 import com.bjike.goddess.financeinit.to.AccountanCourseTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 
@@ -60,6 +61,13 @@ public interface AccountanCourseAPI {
     }
 
     /**
+     * 根据会计科目名称查询所属类型
+     */
+    default CategoryName belongByName(String accountanName) throws SerException {
+        return null;
+    }
+
+    /**
      * 根据代码获取信息
      *
      * @param code
@@ -71,12 +79,96 @@ public interface AccountanCourseAPI {
     }
 
     /**
-     * 添加
+     * 根据一级会计科目id获取二级会计科目
+     *
+     * @param id 会计科目id
+     * @return
+     * @throws SerException
+     */
+    default List<AccountanCourseBO> findSendSubjectByOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据二级会计科目id获取三级会计科目
+     *
+     * @param id 会计科目id
+     * @return
+     * @throws SerException
+     */
+    default List<AccountanCourseBO> findThirdSubjectBySend(String id) throws SerException {
+        return null;
+    }
+
+
+    /**
+     * 根据一级科目id获取所有对应的二级会计科目名称
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default List<String> findSendNameByOne(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目id获取所有对应的二级会计科目名称
+     *
+     * @param id
+     * @return
+     * @throws SerException
+     */
+    default List<String> findThirdNameBySend(String id) throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的会计科目名称和对应的代码
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<AccountAddDateBO> findNameCode() throws SerException {
+        return null;
+    }
+
+    /**
+     * 获取所有的一级科目名称和对应的代码
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<AccountAddDateBO> findFirstNameCode() throws SerException {
+        return null;
+    }
+
+    /**
+     * 一级科目添加
      *
      * @param accountanCourseTO 会计科目
-     * @return class CompanyBasicInfoBO
+     * @return class AccountanCourseBO
      */
-    default AccountanCourseBO addCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+    default AccountanCourseBO addOneCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return null;
+    }
+
+    /**
+     * 二级科目添加
+     *
+     * @param accountanCourseTO 会计科目
+     * @return class AccountanCourseBO
+     */
+    default AccountanCourseBO addSendCourse(AccountanCourseTO accountanCourseTO) throws SerException {
+        return null;
+    }
+    /**
+     * 三级科目添加
+     *
+     * @param accountanCourseTO 会计科目
+     * @return class AccountanCourseBO
+     */
+    default AccountanCourseBO addThreeCourse(AccountanCourseTO accountanCourseTO) throws SerException {
         return null;
     }
 
@@ -116,37 +208,9 @@ public interface AccountanCourseAPI {
     /**
      * 导入
      *
-     * @param accountanCourseTOS 会计科目
+     * @param tos 会计科目
      */
-    void importExcel(List<AccountanCourseTO> accountanCourseTOS) throws SerException;
-
-    /**
-     * 根据会计科目名称查询所属类型
-     */
-    default CategoryName belongByName(String accountanName) throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取所有的会计科目名称和对应的代码
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<AccountAddDateBO> findNameCode() throws SerException {
-        return null;
-    }
-
-    /**
-     * 根据一级科目代码获取二级会计科目名称
-     *
-     * @param code
-     * @return
-     * @throws SerException
-     */
-    default List<String> findSendNameByCode(String code) throws SerException {
-        return null;
-    }
+    void importExcel(List<AccountanCourseExport> tos) throws SerException;
 
     /**
      * 根据一级科目代码获取二级科目名称
@@ -163,28 +227,6 @@ public interface AccountanCourseAPI {
     default List<AccountAddDateBO> findThirdName(String secondCode) throws SerException {
         return null;
     }
-
-    /**
-     * 根据一级科目代码获取三级会计科目名称
-     *
-     * @param code
-     * @return
-     * @throws SerException
-     */
-    default List<String> findThirdNameByCode(String code) throws SerException {
-        return null;
-    }
-
-    /**
-     * 获取所有的一级科目名称和对应的代码
-     *
-     * @return
-     * @throws SerException
-     */
-    default List<AccountAddDateBO> findFirstNameCode() throws SerException {
-        return null;
-    }
-
 
     /**
      * 根据报销人跟二级科目获取一级科目和三级科目
@@ -218,7 +260,6 @@ public interface AccountanCourseAPI {
     default List<SecondSubjectDataBO> findSecondSubject(String firstSubjectCode) throws SerException {
         return null;
     }
-
     /**
      * 获取一级科目为固定资产的所有对应的二级科目
      *
@@ -228,7 +269,6 @@ public interface AccountanCourseAPI {
     default List<String> findByFixedAssets() throws SerException {
         return null;
     }
-
     /**
      * 根据科目名称获取代码
      *
@@ -238,7 +278,6 @@ public interface AccountanCourseAPI {
     default String findByCourseName(String courseName) throws SerException {
         return null;
     }
-
     /**
      * 获取折旧费用科目
      *
@@ -248,7 +287,6 @@ public interface AccountanCourseAPI {
     default List<String> findDepreciationAccount() throws SerException {
         return null;
     }
-
     /**
      * 获取税金科目
      *

@@ -67,4 +67,12 @@ public interface ProofWordsSer extends Ser<ProofWords, ProofWordsDTO> {
     default ProofWordsBO addProof(ProofWordsTO proofWordsTO) throws SerException {
         return null;
     }
+    /**
+     * 删除
+     *
+     * @param id 常用摘要id
+     */
+    default void delete(String id) throws SerException {
+        return;
+    }
 }

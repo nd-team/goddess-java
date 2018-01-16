@@ -18,6 +18,15 @@ public class AccountanCourseVO {
      * id
      */
     private String id;
+
+    /**
+     * 所属科目id
+     */
+    private String belongSubjectsId;
+    /**
+     * 科目级别
+     */
+    private String subjectsLeve;
     /**
      * 代码
      */
@@ -44,6 +53,22 @@ public class AccountanCourseVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getBelongSubjectsId() {
+        return belongSubjectsId;
+    }
+
+    public void setBelongSubjectsId(String belongSubjectsId) {
+        this.belongSubjectsId = belongSubjectsId;
+    }
+
+    public String getSubjectsLeve() {
+        return subjectsLeve;
+    }
+
+    public void setSubjectsLeve(String subjectsLeve) {
+        this.subjectsLeve = subjectsLeve;
     }
 
     public String getCode() {

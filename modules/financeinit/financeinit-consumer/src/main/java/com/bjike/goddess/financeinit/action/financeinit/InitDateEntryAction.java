@@ -5,13 +5,17 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.InitDateEntryAPI;
 import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
 import com.bjike.goddess.financeinit.dto.InitDateEntryDTO;
 import com.bjike.goddess.financeinit.entity.InitDateEntry;
+import com.bjike.goddess.financeinit.excel.InitDateEntryImport;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.financeinit.to.InitDateEntryTO;
 import com.bjike.goddess.financeinit.vo.InitDateEntryVO;
@@ -21,6 +25,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +42,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("initdateentry")
-public class InitDateEntryAction {
+public class InitDateEntryAction extends BaseFileAction{
     @Autowired
     private InitDateEntryAPI initDateEntryAPI;
     /**
@@ -149,5 +157,53 @@ public class InitDateEntryAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 导入Excel
+     *
+     * @param request 注入HttpServletRequest对象
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/importExcel")
+    public Result importExcel(HttpServletRequest request) throws ActException {
+        try {
+            List<InputStream> inputStreams = super.getInputStreams(request);
+            InputStream is = inputStreams.get(1);
+            Excel excel = new Excel(0, 1);
+            List<InitDateEntryImport> tos = ExcelUtil.excelToClazz(is, InitDateEntryImport.class, excel);
+            List<InitDateEntryTO> tocs = new ArrayList<>();
+            for (InitDateEntryImport str : tos) {
+                InitDateEntryTO accountanCourseTO = BeanTransform.copyProperties(str, InitDateEntryTO.class);
+                tocs.add(accountanCourseTO);
+            }
+            //注意序列化
+            initDateEntryAPI.importExcel(tocs);
+            return new ActResult("导入成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 导出excel
+     *
+     * @des 导出财务初始化
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "财务初始化.xlsx";
+            super.writeOutFile(response, initDateEntryAPI.exportExcel(), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 
 }
