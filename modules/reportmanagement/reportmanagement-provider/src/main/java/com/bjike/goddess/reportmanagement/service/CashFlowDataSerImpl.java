@@ -65,7 +65,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         cashFlowDatumDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDatumDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
         cashFlowDatumDTO.getSorts().add("seqNum=asc");
-        List<CashFlowDatum> cashFlowDatumList = cashFlowDatumSer.findByCis(cashFlowDatumDTO);
+        List<CashFlowDatum> cashFlowDatumList = cashFlowDatumSer.findByPage(cashFlowDatumDTO);
         if (null != cashFlowDatumList && cashFlowDatumList.size() > 0) {
             for (CashFlowDatum cashFlowDatum : cashFlowDatumList) {
                 CashFlowDataBO cashFlowDataBO = BeanTransform.copyProperties(cashFlowDatum, CashFlowDataBO.class);

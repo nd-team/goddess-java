@@ -1,5 +1,6 @@
 package com.bjike.goddess.customerplatform.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -12,6 +13,7 @@ import com.bjike.goddess.customerplatform.to.GuidePermissionTO;
 import com.bjike.goddess.customerplatform.to.OwnerTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 业主业务实现
@@ -44,7 +49,7 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if( flagSee || flagAdd ){
+        if (flagSee || flagAdd) {
             return true;
         } else {
             return false;
@@ -170,14 +175,15 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
     }
 
     public List<OwnerBO> maps(OwnerDTO dto) throws SerException {
+        search(dto);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
 
-        List<Owner> owners1 = super.findByCis(dto,true);
+        List<Owner> owners1 = super.findByCis(dto, true);
         List<OwnerBO> ownerBOs1 = BeanTransform.copyProperties(owners1, OwnerBO.class, false);
         if (null != ownerBOs1 && ownerBOs1.size() > 0) {
-            for(OwnerBO bo : ownerBOs1){
+            for (OwnerBO bo : ownerBOs1) {
                 // TODO: 18-1-5 判断是否是vip
                 Boolean tar = false;
                 if (!tar) {
@@ -186,6 +192,39 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
             }
         }
         return ownerBOs1;
+    }
+
+    private List<OwnerBO> search(OwnerDTO dto) throws SerException {
+        //业主姓名
+        if (StringUtils.isNotBlank(dto.getOwnerName())) {
+            dto.getConditions().add(Restrict.like("ownerName",dto.getOwnerName()));
+        }
+        //业主地址
+        if(StringUtils.isNotBlank(dto.getOwneraddress())){
+            dto.getConditions().add(Restrict.like("owneraddress",dto.getOwneraddress()));
+        }
+        //省份
+        if(StringUtils.isNotBlank(dto.getProvinces())){
+            dto.getConditions().add(Restrict.eq("provinces",dto.getProvinces()));
+        }
+        //市
+        if(StringUtils.isNotBlank(dto.getCity())){
+            dto.getConditions().add(Restrict.eq("city",dto.getCity()));
+        }
+        //区
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.eq("area",dto.getArea()));
+        }
+        //需求类型
+        if(StringUtils.isNotBlank(dto.getDemandType())){
+            dto.getConditions().add(Restrict.like("demandType",dto.getDemandType()));
+        }
+        if(StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())){
+            dto.getConditions().add(Restrict.between("createTime",new String[]{dto.getStartTime(),dto.getEndTime()}));
+        }
+        List<Owner> owners = super.findByCis(dto);
+        List<OwnerBO> ownerBOs= BeanTransform.copyProperties(owners,OwnerBO.class);
+        return ownerBOs;
     }
 
     @Override
@@ -209,11 +248,53 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
 
     @Override
     public Long getTotal(OwnerDTO dto) throws SerException {
+        search(dto);
         return super.count(dto);
     }
 
     private String transPhone(String phone) throws SerException {
         phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
         return phone;
+    }
+    @Override
+    public List<String> getProvinces() throws SerException {
+        Set<String> set = new HashSet<>();
+        OwnerDTO dto = new OwnerDTO();
+        List<Owner> owners = super.findByCis(dto);
+        if(owners != null && owners.size()>0){
+            for(Owner owner:owners){
+                set.add(owner.getProvinces());
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getCity(String provinces) throws SerException {
+        Set<String> set = new HashSet<>();
+        OwnerDTO dto = new OwnerDTO();
+        dto.getConditions().add(Restrict.eq("provinces",provinces));
+        List<Owner> owners = super.findByCis(dto);
+        if(owners != null && owners.size()>0){
+            for(Owner owner:owners){
+                set.add(owner.getCity());
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getArea(String provinces,String city) throws SerException {
+        Set<String> set = new HashSet<>();
+        OwnerDTO dto = new OwnerDTO();
+        dto.getConditions().add(Restrict.eq("provinces",provinces));
+        dto.getConditions().add(Restrict.eq("city",city));
+        List<Owner> owners = super.findByCis(dto);
+        if(owners != null && owners.size()>0){
+            for(Owner owner:owners){
+                set.add(owner.getArea());
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

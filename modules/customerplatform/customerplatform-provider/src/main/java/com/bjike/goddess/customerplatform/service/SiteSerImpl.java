@@ -1,5 +1,6 @@
 package com.bjike.goddess.customerplatform.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -12,6 +13,7 @@ import com.bjike.goddess.customerplatform.to.GuidePermissionTO;
 import com.bjike.goddess.customerplatform.to.SiteTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 站点业务实现
@@ -172,6 +177,7 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
 
     @Override
     public List<SiteBO> maps(SiteDTO dto) throws SerException {
+        search(dto);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
@@ -187,6 +193,38 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
                 }
             }
         }
+        return siteBOs;
+    }
+    private List<SiteBO> search(SiteDTO dto) throws SerException{
+        //站点名称
+        if(StringUtils.isNotBlank(dto.getSiteName())){
+            dto.getConditions().add(Restrict.like("siteName",dto.getSiteName()));
+        }
+        //站点类型
+        if(StringUtils.isNotBlank(dto.getSiteType())){
+            dto.getConditions().add(Restrict.like("siteType",dto.getSiteType()));
+        }
+        //省份
+        if(StringUtils.isNotBlank(dto.getProvinces())){
+            dto.getConditions().add(Restrict.eq("provinces",dto.getProvinces()));
+        }
+        //市
+        if(StringUtils.isNotBlank(dto.getCity())){
+            dto.getConditions().add(Restrict.eq("city",dto.getCity()));
+        }
+        //区
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.eq("area",dto.getArea()));
+        }
+        //需求类型
+        if(StringUtils.isNotBlank(dto.getDemandType())){
+            dto.getConditions().add(Restrict.like("demandType",dto.getDemandType()));
+        }
+        if(StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())){
+            dto.getConditions().add(Restrict.between("createTime",new String[]{dto.getStartTime(),dto.getEndTime()}));
+        }
+        List<Site> sites = super.findByCis(dto);
+        List<SiteBO> siteBOs = BeanTransform.copyProperties(sites,SiteBO.class);
         return siteBOs;
     }
 
@@ -211,11 +249,53 @@ public class SiteSerImpl extends ServiceImpl<Site, SiteDTO> implements SiteSer {
 
     @Override
     public Long getTotal(SiteDTO dto) throws SerException {
+        search(dto);
         return super.count(dto);
     }
 
     private String transPhone(String phone) throws SerException {
         phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
         return phone;
+    }
+    @Override
+    public List<String> getProvinces() throws SerException {
+        Set<String> set = new HashSet<>();
+        SiteDTO dto = new SiteDTO();
+        List<Site> sites = super.findByCis(dto);
+        if(sites != null && sites.size()>0){
+            for(Site site :sites){
+                set.add(site.getProvinces());
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getCity(String provinces) throws SerException {
+        Set<String> set = new HashSet<>();
+        SiteDTO dto = new SiteDTO();
+        dto.getConditions().add(Restrict.eq("provinces",provinces));
+        List<Site> sites = super.findByCis(dto);
+        if(sites != null && sites.size()>0){
+            for(Site site :sites){
+                set.add(site.getCity());
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getArea(String provinces,String city) throws SerException {
+        Set<String> set = new HashSet<>();
+        SiteDTO dto = new SiteDTO();
+        dto.getConditions().add(Restrict.eq("provinces",provinces));
+        dto.getConditions().add(Restrict.eq("city",city));
+        List<Site> sites = super.findByCis(dto);
+        if(sites != null && sites.size()>0){
+            for(Site site :sites){
+                set.add(site.getArea());
+            }
+        }
+        return new ArrayList<>(set);
     }
 }

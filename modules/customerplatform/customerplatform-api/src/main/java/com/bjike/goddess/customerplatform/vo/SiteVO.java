@@ -16,6 +16,18 @@ public class SiteVO {
      */
     private String id;
     /**
+     * 省份
+     */
+    private String provinces;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String area;
+    /**
      * 站点名称
      */
     private String siteName;
@@ -77,6 +89,30 @@ public class SiteVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getSiteName() {

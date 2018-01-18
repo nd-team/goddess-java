@@ -151,5 +151,46 @@ public class OwnerAction {
             throw new ActException(e.getMessage());
         }
     }
+    /**
+     * 获取所有省份
+     *
+     * @version v1
+     */
+    @GetMapping("v1/provinces")
+    public Result getProvinces() throws ActException {
+        try {
+            return ActResult.initialize(ownerAPI.getProvinces());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据省份获取市
+     *
+     * @version v1
+     */
+    @GetMapping("v1/city")
+    public Result getCity(String provinces) throws ActException {
+        try {
+            return ActResult.initialize(ownerAPI.getCity(provinces));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据省份市获取区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result getArea(String provinces,String city) throws ActException {
+        try {
+            return ActResult.initialize(ownerAPI.getArea(provinces,city));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }
