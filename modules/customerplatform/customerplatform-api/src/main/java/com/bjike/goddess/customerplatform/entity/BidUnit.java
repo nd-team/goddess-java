@@ -52,9 +52,19 @@ public class BidUnit extends BaseEntity {
     private Double money;
 
     /**
-     * 地区
+     * 省份
      */
-    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地区'")
+    @Column(name = "provinces", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '省份'")
+    private String provinces;
+    /**
+     * 市
+     */
+    @Column(name = "city", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '市'")
+    private String city;
+    /**
+     * 区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '区'")
     private String area;
 
     /**
@@ -130,6 +140,21 @@ public class BidUnit extends BaseEntity {
     @Column(name = "remark", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getCompany() {
         return company;

@@ -169,7 +169,7 @@ public class DataSerImpl extends ServiceImpl<Data, DataDTO> implements DataSer {
     @Override
     public List<DataBO> list(DataDTO dto) throws SerException {
         dto.getSorts().add("createTime=asc");
-        List<Data> datas = super.findByPage(dto);
+        List<Data> datas = super.findByCis(dto,true);
         List<DataBO> dataBOs = BeanTransform.copyProperties(datas, DataBO.class);
         return dataBOs;
     }

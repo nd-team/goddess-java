@@ -19,6 +19,18 @@ public class OwnerVO {
      * 业主姓名
      */
     private String ownerName;
+    /**
+     * 省份
+     */
+    private String provinces;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String area;
 
     /**
      * 业主地址
@@ -82,6 +94,30 @@ public class OwnerVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getOwnerName() {

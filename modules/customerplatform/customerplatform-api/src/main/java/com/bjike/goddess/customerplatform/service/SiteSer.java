@@ -95,5 +95,25 @@ public interface SiteSer extends Ser<Site, SiteDTO> {
     default Long getTotal(SiteDTO dto) throws SerException {
         return null;
     }
+    /**
+     * 获取所有省份
+     *
+     * @throws SerException
+     */
+    List<String> getProvinces() throws SerException;
+
+    /**
+     * 根据省份获取市
+     *
+     * @throws SerException
+     */
+    List<String> getCity(String provinces) throws SerException;
+
+    /**
+     * 根据省份市获取区
+     *
+     * @throws SerException
+     */
+    List<String> getArea(String provinces,String city) throws SerException;
 
 }

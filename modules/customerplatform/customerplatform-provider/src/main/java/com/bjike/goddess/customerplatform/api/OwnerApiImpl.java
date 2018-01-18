@@ -64,4 +64,18 @@ public class OwnerApiImpl implements OwnerAPI {
     public Long getTotal(OwnerDTO dto) throws SerException {
         return ownerSer.getTotal(dto);
     }
+    @Override
+    public List<String> getProvinces() throws SerException {
+        return ownerSer.getProvinces();
+    }
+
+    @Override
+    public List<String> getCity(String provinces) throws SerException {
+        return ownerSer.getCity(provinces);
+    }
+
+    @Override
+    public List<String> getArea(String provinces,String city) throws SerException {
+        return ownerSer.getArea(provinces,city);
+    }
 }

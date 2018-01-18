@@ -68,7 +68,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         cashFlowDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
         cashFlowDTO.getSorts().add("num=asc");
 //        cashFlowDTO.getSorts().add("seqNum=asc");
-        List<CashFlow> cashFlows = cashFlowSer.findByCis(cashFlowDTO);
+        List<CashFlow> cashFlows = cashFlowSer.findByCis(cashFlowDTO,true);
         if (null != cashFlows && cashFlows.size() > 0) {
             for (CashFlow cashFlow : cashFlows) {
                 CashFlowProjectBO cashFlowProjectBO = BeanTransform.copyProperties(cashFlow, CashFlowProjectBO.class);
@@ -81,7 +81,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.getSorts().add("projectType=asc");
         projectDTO.getSorts().add("createTime=asc");
-        List<Project> projects = projectSer.findByCis(projectDTO);
+        List<Project> projects = projectSer.findByCis(projectDTO,true);
         Boolean b1 = true;
         Boolean b2 = true;
         Boolean b3 = true;

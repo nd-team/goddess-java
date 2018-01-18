@@ -95,4 +95,24 @@ public interface OwnerSer extends Ser<Owner, OwnerDTO> {
     default Long getTotal(OwnerDTO dto) throws SerException {
         return null;
     }
+    /**
+     * 获取所有省份
+     *
+     * @throws SerException
+     */
+    List<String> getProvinces() throws SerException;
+
+    /**
+     * 获取所有市
+     *
+     * @throws SerException
+     */
+    List<String> getCity(String provinces) throws SerException;
+
+    /**
+     * 获取所有区
+     *
+     * @throws SerException
+     */
+    List<String> getArea(String provinces,String city) throws SerException;
 }

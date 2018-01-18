@@ -1,5 +1,6 @@
 package com.bjike.goddess.customerplatform.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -23,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 中标单位业务实现
@@ -222,6 +225,7 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
 
     @Override
     public List<BidUnitBO> maps(BidUnitDTO dto) throws SerException {
+        search(dto);
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
@@ -236,6 +240,38 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
                 }
             }
         }
+        return bidUnitBOs;
+    }
+    private List<BidUnitBO> search(BidUnitDTO dto)throws SerException{
+        //企业名称
+        if(StringUtils.isNotBlank(dto.getCompany())){
+            dto.getConditions().add(Restrict.like("company",dto.getCompany()));
+        }
+        //公司类型
+        if(StringUtils.isNotBlank(dto.getCompanyType())){
+            dto.getConditions().add(Restrict.like("companyType",dto.getCompanyType()));
+        }
+        //省份
+        if(StringUtils.isNotBlank(dto.getProvinces())){
+            dto.getConditions().add(Restrict.eq("provinces",dto.getProvinces()));
+        }
+        //市
+        if(StringUtils.isNotBlank(dto.getCity())){
+            dto.getConditions().add(Restrict.eq("city",dto.getCity()));
+        }
+        //区
+        if(StringUtils.isNotBlank(dto.getArea())){
+            dto.getConditions().add(Restrict.eq("area",dto.getArea()));
+        }
+        //需求类型
+        if(StringUtils.isNotBlank(dto.getProjectType())){
+            dto.getConditions().add(Restrict.like("projectType",dto.getProjectType()));
+        }
+        if(StringUtils.isNotBlank(dto.getStartTime())&& StringUtils.isNotBlank(dto.getEndTime())){
+            dto.getConditions().add(Restrict.between("createTime",new String[]{dto.getStartTime(),dto.getEndTime()}));
+        }
+        List<BidUnit> bidUnits = super.findByCis(dto);
+        List<BidUnitBO> bidUnitBOs = BeanTransform.copyProperties(bidUnits,BidUnitBO.class);
         return bidUnitBOs;
     }
 
@@ -259,11 +295,54 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
 
     @Override
     public Long getTotal(BidUnitDTO dto) throws SerException {
+        search(dto);
         return super.count(dto);
     }
 
     private String transPhone(String phone) throws SerException {
         phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
         return phone;
+    }
+
+    @Override
+    public List<String> getProvinces() throws SerException {
+        Set<String> set = new HashSet<>();
+        BidUnitDTO dto = new BidUnitDTO();
+        List<BidUnit> bidUnits = super.findByCis(dto);
+        if(bidUnits != null && bidUnits.size()>0){
+            for(BidUnit bidUnit:bidUnits){
+                set.add(bidUnit.getProvinces());
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getCity(String provinces) throws SerException {
+        Set<String> set = new HashSet<>();
+        BidUnitDTO dto = new BidUnitDTO();
+        dto.getConditions().add(Restrict.eq("provinces",provinces));
+        List<BidUnit> bidUnits = super.findByCis(dto);
+        if(bidUnits != null && bidUnits.size()>0){
+            for(BidUnit bidUnit :bidUnits){
+                set.add(bidUnit.getCity());
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    @Override
+    public List<String> getArea(String provinces,String city) throws SerException {
+        Set<String> set = new HashSet<>();
+        BidUnitDTO dto = new BidUnitDTO();
+        dto.getConditions().add(Restrict.eq("provinces",provinces));
+        dto.getConditions().add(Restrict.eq("city",city));
+        List<BidUnit> bidUnits = super.findByCis(dto);
+        if(bidUnits != null && bidUnits.size()>0){
+            for(BidUnit bidUnit :bidUnits){
+                set.add(bidUnit.getArea());
+            }
+        }
+        return new ArrayList<>(set);
     }
 }
