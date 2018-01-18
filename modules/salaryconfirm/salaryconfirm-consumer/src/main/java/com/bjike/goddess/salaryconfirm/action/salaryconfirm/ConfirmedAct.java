@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI;
@@ -13,6 +14,8 @@ import com.bjike.goddess.salaryconfirm.vo.SalaryconfirmVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("confirmed")
-public class ConfirmedAct {
+public class ConfirmedAct extends BaseFileAction{
 
     @Autowired
     private SalaryconfirmAPI salaryconfirmAPI;
@@ -94,6 +97,25 @@ public class ConfirmedAct {
             salaryconfirmAPI.secondPay(id);
             return new ActResult("第二次付款成功!");
         } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 导出
+     *
+     * @param year　年
+     * @param month　月
+     * @return class
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(@RequestParam int year, @RequestParam int month, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = year + "年" + month + "月已确认薪资.xlsx";
+            super.writeOutFile(response, salaryconfirmAPI.exportConfirmedExcel(year, month), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException | IOException e) {
             throw new ActException(e.getMessage());
         }
     }

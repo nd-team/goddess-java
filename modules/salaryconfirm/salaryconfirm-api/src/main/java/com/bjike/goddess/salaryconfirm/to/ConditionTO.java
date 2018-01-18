@@ -19,6 +19,8 @@ public class ConditionTO extends BaseTO {
 
     private String userName;
 
+    private String type;
+
     public Integer getYear() {
         return year;
     }
@@ -57,5 +59,13 @@ public class ConditionTO extends BaseTO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

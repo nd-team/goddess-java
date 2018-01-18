@@ -173,7 +173,7 @@ public class VoucherGenerateTO extends BaseTO {
      * 唯一标识uid
      */
     @NotNull(groups = {VoucherGenerateTO.Audit.class} , message = "uId不能为空")
-    private String uId;
+    private String[] uIds;
 
 
     public String getVoucherWord() {
@@ -385,11 +385,11 @@ public class VoucherGenerateTO extends BaseTO {
         this.details = details;
     }
 
-    public String getuId() {
-        return uId;
+    public String[] getuIds() {
+        return uIds;
     }
 
-    public void setuId(String uId) {
-        this.uId = uId;
+    public void setuIds(String[] uIds) {
+        this.uIds = uIds;
     }
 }

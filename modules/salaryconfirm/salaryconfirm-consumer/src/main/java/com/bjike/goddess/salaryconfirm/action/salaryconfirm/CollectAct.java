@@ -128,6 +128,7 @@ public class CollectAct {
             to.setYear(year);
             to.setMonth(month);
             to.setArea(area);
+            to.setType("area");
             List<AreaCollectVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.collectByCondition(to), AreaCollectVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
@@ -168,6 +169,7 @@ public class CollectAct {
             to.setYear(year);
             to.setMonth(month);
             to.setDepartment(department);
+            to.setType("department");
             List<DepartmentCollectVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.collectByCondition(to), DepartmentCollectVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
@@ -208,6 +210,7 @@ public class CollectAct {
             to.setYear(year);
             to.setMonth(month);
             to.setUserName(userName);
+            to.setType("person");
             List<UserCollectVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.collectByCondition(to), UserCollectVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {

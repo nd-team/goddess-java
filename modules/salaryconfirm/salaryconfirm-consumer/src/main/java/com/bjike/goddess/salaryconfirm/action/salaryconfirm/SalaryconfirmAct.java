@@ -253,7 +253,7 @@ public class SalaryconfirmAct extends BaseFileAction {
     @GetMapping("v1/module")
     public Result exportModule(HttpServletResponse response) throws ActException {
         try {
-            String fileName = "薪资核算确认.xlsx";
+            String fileName = "薪资核算确认模板.xlsx";
             super.writeOutFile(response, salaryconfirmAPI.exportExcelModule(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {

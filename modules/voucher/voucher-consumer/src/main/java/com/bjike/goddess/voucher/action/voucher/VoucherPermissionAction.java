@@ -208,7 +208,7 @@ public class VoucherPermissionAction {
      * @des 获取所有明细账权限信息总条数
      * @version v1
      */
-    @GetMapping("v1/Subject/count")
+    @GetMapping("v1/subject/count")
     public Result countSubject(VoucherPermissionDTO voucherPermissionDTO) throws ActException {
         try {
             Long count = voucherPermissionAPI.countSubjectPermission(voucherPermissionDTO);
@@ -227,7 +227,7 @@ public class VoucherPermissionAction {
      * @des 获取所有明细账权限信息
      * @version v1
      */
-    @GetMapping("v1/Subject/list")
+    @GetMapping("v1/subject/list")
     public Result findListSubjectPermission(VoucherPermissionDTO voucherPermissionDTO, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             List<VoucherPermissionBO> boList = voucherPermissionAPI.listSubject(voucherPermissionDTO);

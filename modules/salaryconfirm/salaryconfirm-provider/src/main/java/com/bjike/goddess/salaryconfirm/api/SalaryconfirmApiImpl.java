@@ -133,4 +133,9 @@ public class SalaryconfirmApiImpl implements SalaryconfirmAPI {
     public SalaryconfirmBO findSalary(String salaryStart, String salaryEnd, String name) throws SerException {
         return salaryconfirmSer.findSalary(salaryStart,salaryEnd,name);
     }
+
+    @Override
+    public byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException {
+        return salaryconfirmSer.exportConfirmedExcel(year, month);
+    }
 }

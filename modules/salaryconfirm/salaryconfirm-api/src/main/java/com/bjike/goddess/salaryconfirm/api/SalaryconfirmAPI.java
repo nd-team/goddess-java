@@ -153,4 +153,13 @@ public interface SalaryconfirmAPI {
      * 根据计薪周期和员工姓名来查询薪资确认情况
      */
     SalaryconfirmBO findSalary(String salaryStart,String salaryEnd,String name) throws SerException;
+
+    /**
+     * 导出－"已确认薪资"
+     *
+     * @return class
+     * @version v1
+     */
+    byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException;
+
 }

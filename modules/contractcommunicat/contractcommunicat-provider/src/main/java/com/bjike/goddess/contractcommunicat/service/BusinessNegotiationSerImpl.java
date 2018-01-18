@@ -274,7 +274,7 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
     @Override
     public List<BusinessNegotiationBO> list(BusinessNegotiationDTO dto) throws SerException {
         if (StringUtils.isBlank(dto.getSearch())) { //当search为空时，Specification查询方式无法获取数据；暂时采用这种方式实现无条件查询
-            List<BusinessNegotiationBO> bo = BeanTransform.copyProperties(super.findByCis(dto), BusinessNegotiationBO.class);
+            List<BusinessNegotiationBO> bo = BeanTransform.copyProperties(super.findByPage(dto), BusinessNegotiationBO.class);
             return bo;
         }
         //原有的查询无法实现OR多个条件，故采用Specification方式实现

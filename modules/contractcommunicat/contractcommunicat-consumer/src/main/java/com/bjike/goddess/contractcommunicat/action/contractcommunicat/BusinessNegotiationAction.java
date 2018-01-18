@@ -174,7 +174,7 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @GetMapping("v1/list")
     public Result list(BusinessNegotiationDTO dto, HttpServletRequest request) throws ActException {
         try {
-            List<BusinessNegotiationVO> vo = BeanTransform.copyProperties(businessNegotiationAPI.list(dto), InProjectsVO.class);
+            List<BusinessNegotiationVO> vo = BeanTransform.copyProperties(businessNegotiationAPI.list(dto), BusinessNegotiationVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -192,7 +192,7 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @PostMapping("v1/add")
     public Result add(@Validated({ADD.class}) BusinessNegotiationTO to, BindingResult bindingResult) throws ActException {
         try {
-            BusinessNegotiationVO voList = BeanTransform.copyProperties(businessNegotiationAPI.insert(to), ProjectOutsourcingVO.class);
+            BusinessNegotiationVO voList = BeanTransform.copyProperties(businessNegotiationAPI.insert(to), BusinessNegotiationVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -210,7 +210,7 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @PutMapping("v1/edit")
     public Result edit(@Validated({EDIT.class}) BusinessNegotiationTO to, BindingResult bindingResult) throws ActException {
         try {
-            ProjectOutsourcingVO vo = BeanTransform.copyProperties(businessNegotiationAPI.edit(to), ProjectOutsourcingVO.class);
+            BusinessNegotiationVO vo = BeanTransform.copyProperties(businessNegotiationAPI.edit(to), BusinessNegotiationVO.class);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -224,7 +224,7 @@ public class BusinessNegotiationAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PutMapping("v1/remove")
+    @DeleteMapping("v1/remove/{id}")
     public Result remove(@PathVariable String id) throws ActException {
         try {
             businessNegotiationAPI.remove(id);
@@ -427,6 +427,9 @@ public class BusinessNegotiationAction extends BaseFileAction{
     public Result listArea() throws ActException {
         try {
             List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            if (null == bos) {
+                return ActResult.initialize(null);
+            }
             Set<String> set = new HashSet<>();
             for (ProblemAcceptBO bo : bos) {
                 set.add(bo.getArea());
@@ -446,6 +449,9 @@ public class BusinessNegotiationAction extends BaseFileAction{
     public Result listDepartment() throws ActException {
         try {
             List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            if (null == bos) {
+                return ActResult.initialize(null);
+            }
             Set<String> set = new HashSet<>();
             for (ProblemAcceptBO bo : bos) {
 //                set.add(bo.getAffectedDepartment());
