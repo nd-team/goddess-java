@@ -181,16 +181,16 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 一个记账凭证
      *
-     * @param id 记账凭证信息id
+     * @param uId 记账凭证信息id
      * @return class VoucherGenerateVO
      * @des 一个记账凭证
      * @version v1
      */
-    @GetMapping("v1/getOne/{id}")
-    public Result getOne(@PathVariable String id) throws ActException {
+    @GetMapping("v1/getOne/{uId}")
+    public Result getOne(@PathVariable String uId) throws ActException {
         try {
             VoucherGenerateVO voucherGenerateVOList = BeanTransform.copyProperties(
-                    voucherGenerateAPI.getById(id), VoucherGenerateVO.class);
+                    voucherGenerateAPI.getById(uId), VoucherGenerateVO.class);
             return ActResult.initialize(voucherGenerateVOList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -229,9 +229,6 @@ public class VoucherGenerateAction extends BaseFileAction {
     @LoginAuth
     @PutMapping("v1/edit")
     public Result edit(@Validated(VoucherGenerateTO.Update.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
-        /*if (null == voucherGenerateTO.getDetails()) {
-            throw new ActException("二级列表不能为空");
-        }*/
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.editVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
@@ -248,7 +245,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("v1/delete/{id}")
+    @DeleteMapping("v1/delete/{uId}")
     public Result delete(@PathVariable String uId) throws ActException {
         try {
             voucherGenerateAPI.deleteVoucherGenerate(uId);
@@ -1539,7 +1536,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @return class FirstSubjectVO
      * @version v1
      */
-    @GetMapping("v1/Subject/pageList")
+    @GetMapping("v1/subject/pagelist")
     public Result pageList(SubjectCollectsDTO subjectCollectsDTO) throws ActException {
         try {
             List<FirstSubjectBO> bos = voucherGenerateAPI.collect(subjectCollectsDTO);
@@ -1557,7 +1554,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      * @param response
      * @version v1
      */
-    @GetMapping("v1/Subject/exprot")
+    @GetMapping("v1/subject/exprot")
     public Result exportExcel(ExportSubjectCollectTO to, HttpServletResponse response) throws ActException {
         try {
             String fileName = "科目汇总.xlsx";

@@ -210,7 +210,7 @@ public class SkillLibrarySerImpl extends ServiceImpl<SkillLibrary, SkillLibraryD
         if (StringUtils.isNotBlank(dto.getSource())) {
             dto.getConditions().add(Restrict.eq("source", dto.getSource()));
         }
-        List<SkillLibrary> skillLibraries = super.findByCis(dto);
+        List<SkillLibrary> skillLibraries = super.findByPage(dto);
         List<SkillLibraryBO> skillLibraryBOS = BeanTransform.copyProperties(skillLibraries, SkillLibraryBO.class);
         return skillLibraryBOS;
     }

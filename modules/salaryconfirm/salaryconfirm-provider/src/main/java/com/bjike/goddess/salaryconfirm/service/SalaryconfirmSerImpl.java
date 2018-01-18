@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -78,6 +79,9 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         model.setTotalSalary(totalSalary);
 
         int days = model.getSalaryEnd().getDayOfYear() - model.getSalaryStart().getDayOfYear();
+        if (days == 0) {
+            throw new SerException("计薪周期开始时间和计薪周期结束时间不可相同");
+        }
         //日工资
         Double avgSalary = totalSalary / days;
         //加班费 = 工资总额 / 自然月天数 * 加班天数 * 3
@@ -106,6 +110,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         verifyData(model);
 
         model.setFindType(FindType.WAIT);
+        model.setNeedRatepaying(0.0);
         super.save(model);
         return BeanTransform.copyProperties(model, SalaryconfirmBO.class);
     }
@@ -238,11 +243,17 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
             dto.getConditions().add(Restrict.eq("employeeNumber", userBO.getEmployeeNumber()));
         }
 
+        dto.getSorts().add("year=desc");
+        dto.getSorts().add("month=desc");
+        dto.getSorts().add("salaryStart=desc");
         dto.getSorts().add("createTime=desc");
+
         List<SalaryconfirmBO> boList = BeanTransform.copyProperties(super.findByPage(dto), SalaryconfirmBO.class);
 
         if (boList != null && !boList.isEmpty()) {
             for (SalaryconfirmBO bo : boList) {
+
+
                 List<InvoiceSubmitBO> submitBOList = invoiceSubmitSer.findByCondition(bo.getEmployeeNumber(), bo.getYear(), bo.getMonth());
                 if (submitBOList != null && !submitBOList.isEmpty()) {
                     Double account = submitBOList.stream().filter(p -> p != null && p.getAmount() != null).mapToDouble(p -> p.getAmount()).sum();
@@ -285,6 +296,9 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
             throw new SerException("'第二次是否发放'已经确认，无需重复确认!");
         }
         model.setFirstPayedTime(LocalDateTime.now());
+        if (null == model.getSecondSalary()) {  //工资为一次性发放，无需确认第二次
+            model.setFindType(FindType.PAYED);
+        }
         super.update(model);
     }
 
@@ -310,6 +324,10 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         }
         model.setFirstConfirm(Boolean.TRUE);
         model.setFirstConfirmTime(LocalDateTime.now());
+
+      /*  if (null == model.getSecondSalary()) {  //工资为一次性发放，无需确认第二次
+            model.setFindType(FindType.PAYED);
+        }*/
         super.update(model);
     }
 
@@ -373,7 +391,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         Double actualSalaries = bolist.stream().filter(p -> p != null && p.getActualSalary() != null).mapToDouble(SalaryconfirmBO::getActualSalary).sum();
 
         SalaryconfirmBO totalBO = null;
-        if (!StringUtils.isEmpty(to.getArea())) {
+        /*if (!StringUtils.isEmpty(to.getArea())) {
             totalBO = new SalaryconfirmBO("area", to.getYear(), to.getMonth(), salaries,
                     cpSubsidies, dormitorySubsidies, yearSubsidies,
                     hotSubsidies, socialSubsidies, anotherSubsidies,
@@ -394,6 +412,34 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
                     totalSalaries, holidaySalaries, socialConsume,
                     dormitoryConsume, punishConsume, taxConsume,
                     vacationConsume, absenteeismConsume, actualSalaries);
+        }*/
+        switch (to.getType()) {
+            case "area":
+                totalBO = new SalaryconfirmBO("area", to.getYear(), to.getMonth(), salaries,
+                        cpSubsidies, dormitorySubsidies, yearSubsidies,
+                        hotSubsidies, socialSubsidies, anotherSubsidies,
+                        totalSalaries, holidaySalaries, socialConsume,
+                        dormitoryConsume, punishConsume, taxConsume,
+                        vacationConsume, absenteeismConsume, actualSalaries);
+                break;
+            case "department":
+                totalBO = new SalaryconfirmBO("department", to.getYear(), to.getMonth(), salaries,
+                        cpSubsidies, dormitorySubsidies, yearSubsidies,
+                        hotSubsidies, socialSubsidies, anotherSubsidies,
+                        totalSalaries, holidaySalaries, socialConsume,
+                        dormitoryConsume, punishConsume, taxConsume,
+                        vacationConsume, absenteeismConsume, actualSalaries);
+                break;
+            case "person":
+                totalBO = new SalaryconfirmBO("name", to.getYear(), to.getMonth(), salaries,
+                        cpSubsidies, dormitorySubsidies, yearSubsidies,
+                        hotSubsidies, socialSubsidies, anotherSubsidies,
+                        totalSalaries, holidaySalaries, socialConsume,
+                        dormitoryConsume, punishConsume, taxConsume,
+                        vacationConsume, absenteeismConsume, actualSalaries);
+                break;
+            default:
+                break;
         }
         bolist.add(totalBO);
 
@@ -411,9 +457,9 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
 
         StringBuilder lastSql = new StringBuilder(" SELECT ");
         StringBuilder lastBasicStr = new StringBuilder(" sum(s.actualSalary) as salary from salaryconfirm s where 0 = 0 ");
-        if (to.getMonth() == 12) {
+        if (to.getMonth() == 1) {
             lastBasicStr.append(" and s.year = " + (to.getYear() - 1));
-            lastBasicStr.append(" and s.month = 1 ");
+            lastBasicStr.append(" and s.month = 12 ");
         } else {
             lastBasicStr.append(" and s.year = " + to.getYear());
             lastBasicStr.append(" and s.month = " + (to.getMonth() - 1));
@@ -478,7 +524,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         List<AnalyzeBO> boList = super.findBySql(sql.toString(), AnalyzeBO.class, field);
         List<AnalyzeBO> lastBOList = super.findBySql(lastSql.toString(), AnalyzeBO.class, field);
 
-        return combination(boList, lastBOList, to);
+        return combination(boList, lastBOList, to, type);
     }
 
     @Override
@@ -664,27 +710,30 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
     }
 
     //组合分析数据
-    public List<AnalyzeBO> combination(List<AnalyzeBO> boList, List<AnalyzeBO> lastBOList, ConditionTO to) throws SerException {
+    public List<AnalyzeBO> combination(List<AnalyzeBO> boList, List<AnalyzeBO> lastBOList, ConditionTO to, String type) throws SerException {
 
         for (AnalyzeBO bo : boList) {
             bo.setYear(to.getYear());
             bo.setMonth(to.getMonth());
             for (AnalyzeBO lastBO : lastBOList) {
-
-                if (!StringUtils.isEmpty(to.getArea())) {
-                    if (bo.getArea().equals(lastBO.getArea())) {
-                        setProperties(bo, lastBO);
-                    }
-
-                } else if (!StringUtils.isEmpty(to.getDepartment())) {
-                    if (bo.getDepartment().equals(lastBO.getDepartment())) {
-                        setProperties(bo, lastBO);
-                    }
-
-                } else if (!StringUtils.isEmpty(to.getUserName())) {
-                    if (bo.getName().equals(lastBO.getName())) {
-                        setProperties(bo, lastBO);
-                    }
+                switch (type) {
+                    case "area":
+                        if (bo.getArea().equals(lastBO.getArea())) {
+                            setProperties(bo, lastBO);
+                        }
+                        break;
+                    case "department":
+                        if (bo.getDepartment().equals(lastBO.getDepartment())) {
+                            setProperties(bo, lastBO);
+                        }
+                        break;
+                    case "name":
+                        if (bo.getName().equals(lastBO.getName())) {
+                            setProperties(bo, lastBO);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -694,6 +743,7 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
     public void setProperties(AnalyzeBO bo, AnalyzeBO lastBO) {
 
         bo.setBalance(bo.getSalary() - lastBO.getSalary());
+        bo.setBalance(new BigDecimal(bo.getBalance()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
         bo.setLastSalary(lastBO.getSalary());
         Double growUpRate = ((bo.getSalary() - lastBO.getSalary()) / lastBO.getSalary() * 100);
         DecimalFormat df = new DecimalFormat("#.00");
@@ -709,5 +759,28 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         Salaryconfirm salaryconfirm = super.findOne(dto);
         SalaryconfirmBO bo = BeanTransform.copyProperties(salaryconfirm,SalaryconfirmBO.class,false);
         return bo;
+    }
+
+    @Override
+    public byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException {
+        SalaryconfirmDTO dto = new SalaryconfirmDTO();
+        dto.getConditions().add(Restrict.eq("year", year));
+        dto.getConditions().add(Restrict.eq("month", month));
+        dto.getConditions().add(Restrict.eq("findType", FindType.CONFIRM));
+        List<Salaryconfirm> list = super.findByCis(dto);
+        List<SalaryconfirmExcel> excelList = new ArrayList<SalaryconfirmExcel>();
+        if (!CollectionUtils.isEmpty(list)) {
+            for (Salaryconfirm model : list) {
+                SalaryconfirmExcel excel = new SalaryconfirmExcel();
+                BeanUtils.copyProperties(model, excel);
+                excelList.add(excel);
+            }
+        } else {
+            excelList.add(new SalaryconfirmExcel());
+        }
+
+        Excel excel = new Excel(0, 2);
+        byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
+        return bytes;
     }
 }

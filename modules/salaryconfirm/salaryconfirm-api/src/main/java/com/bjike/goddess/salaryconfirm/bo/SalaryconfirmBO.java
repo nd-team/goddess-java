@@ -4,6 +4,8 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.salaryconfirm.enums.FindType;
 import com.bjike.goddess.salaryconfirm.enums.Ratepaying;
 
+import javax.persistence.Column;
+
 /**
  * 薪资核算确认业务传输对象
  *
@@ -214,6 +216,26 @@ public class SalaryconfirmBO extends BaseBO {
      * 累计上交发票金额
      */
     private Double totalSubmit;
+
+    /**
+     * 剩余加班天数
+     */
+    private Double overWorkDays;
+
+    /**
+     * 假期加班天数
+     */
+    private Double holidayWorkDays;
+
+    /**
+     * 旷工天数
+     */
+    private Double absenteeismDays;
+
+    /**
+     * 请假天数
+     */
+    private Double vacationDays;
 
 
     public Integer getYear() {
@@ -537,6 +559,38 @@ public class SalaryconfirmBO extends BaseBO {
 
     public void setEmployeeNumber(String employeeNumber) {
         this.employeeNumber = employeeNumber;
+    }
+
+    public Double getOverWorkDays() {
+        return overWorkDays;
+    }
+
+    public void setOverWorkDays(Double overWorkDays) {
+        this.overWorkDays = overWorkDays;
+    }
+
+    public Double getHolidayWorkDays() {
+        return holidayWorkDays;
+    }
+
+    public void setHolidayWorkDays(Double holidayWorkDays) {
+        this.holidayWorkDays = holidayWorkDays;
+    }
+
+    public Double getAbsenteeismDays() {
+        return absenteeismDays;
+    }
+
+    public void setAbsenteeismDays(Double absenteeismDays) {
+        this.absenteeismDays = absenteeismDays;
+    }
+
+    public Double getVacationDays() {
+        return vacationDays;
+    }
+
+    public void setVacationDays(Double vacationDays) {
+        this.vacationDays = vacationDays;
     }
 
     //地区汇总对象

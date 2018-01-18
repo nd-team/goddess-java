@@ -127,5 +127,11 @@ public interface SalaryconfirmSer extends Ser<Salaryconfirm, SalaryconfirmDTO> {
      */
     SalaryconfirmBO findSalary(String salaryStart,String salaryEnd,String name) throws SerException;
 
-
+    /**
+     * 导出－"已确认薪资"
+     *
+     * @return class
+     * @version v1
+     */
+    byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException;
 }

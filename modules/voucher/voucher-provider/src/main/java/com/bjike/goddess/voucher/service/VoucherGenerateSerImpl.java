@@ -309,7 +309,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public VoucherGenerateBO getById(String id) throws SerException {
-        VoucherGenerate vg = super.findById(id);
+        /*VoucherGenerate vg = super.findById(id);
         VoucherGenerateBO bo = BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
         bo.setFirstSubjects(Arrays.asList(bo.getFirstSubject()));
         bo.setSecondSubjects(Arrays.asList(bo.getSecondSubject()));
@@ -318,9 +318,30 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         bo.setBorrowMoneys(Arrays.asList(bo.getBorrowMoney()));
 
         VoucherTotal vt = voucherTotalSer.findById(vg.getTotalId());
-        bo.setMoneyTotal(vt.getMoney());
+        bo.setMoneyTotal(vt.getMoney());*/
 
-        return bo;
+        String colums = "id, voucherWord, voucherNum, voucherDate, firstSubject, secondSubject, thirdSubject" +
+                ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
+                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId";
+        StringBuffer sql = new StringBuffer();
+        sql.append("select "+ colums +" from voucher_vouchergenerate where uId = '"+ id +"'");
+        String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
+                , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
+                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId"};
+        List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
+        List<VoucherGenerateBO> listBO = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        if (listBO == null || listBO.size() == 0) {
+            return null;
+        }
+        for (VoucherGenerateBO str : listBO) {
+            VoucherTotal vt = voucherTotalSer.findById(str.getTotalId());
+            if (vt != null) {
+                str.setMoneyTotal(vt.getMoney());
+            }
+        }
+        List<VoucherGenerateBO> listBOs = convertVoucher(listBO, null);
+
+        return listBOs == null ? null : listBOs.get(0);
 
     }
 
@@ -345,6 +366,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
+    @Transactional(rollbackFor = SerException.class)
     public void antiCheckAccount(VoucherGenerateTO voucherGenerateTO) throws SerException {
        /* List<VoucherGenerate> list = new ArrayList<>(0);
         for (String id : voucherGenerateTO.getIds()) {
@@ -356,12 +378,18 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         super.update(list);*/
 
         //@see 修改
-        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+        if (null == voucherGenerateTO.getuIds() || voucherGenerateTO.getuIds().length == 0) {
             throw new SerException("uId不能为空");
         }
+
+        String uIds = "";
+        for (String id : voucherGenerateTO.getuIds()) {
+            uIds += ",'" + id + "'";
+        }
+        uIds = uIds.substring(1, uIds.length());
         StringBuffer sql = new StringBuffer();
         sql.append("update voucher_vouchergenerate set checkStatus = 0, modifyTime = NOW() where " +
-                " uId = '" + voucherGenerateTO.getuId()+ "'");
+                " uId in(" + uIds + ")");
         super.executeSql(sql.toString());
     }
 
@@ -1348,7 +1376,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     bo.setFirstSubject(bos.get(j).getFirstSubject());
                     bo.setSecondSubject(bos.get(j).getSecondSubject());
                     bo.setThirdSubject(bos.get(j).getThirdSubject());
-                    bo.setBorrowMoney(bos.get(j).getLoanMoney());
+                    bo.setBorrowMoney(bos.get(j).getBorrowMoney());
                     bo.setLoanMoney(bos.get(j).getLoanMoney());
                     bo.setId(bos.get(j).getId());
                     details.add(bo);
@@ -1367,41 +1395,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 }
             }
         }
-        /**
-         * int len = bos.size();
-         for (int i = 0; i < bos.size(); i ++) {
-         List<VoucherGenerateBO> details = new ArrayList<>();
-         VoucherGenerateBO bo = new VoucherGenerateBO();
-         bo = bos.get(i);
-         for (int j = i; j < bos.size() - i; j ++) {
-         if (bos.get(i).getuId().equals(bos.get(j).getuId())) {
-         VoucherGenerateBO bo1 = new VoucherGenerateBO();
-         bo1.setFirstSubject(bos.get(j).getFirstSubject());
-         bo1.setSecondSubject(bos.get(j).getSecondSubject());
-         bo1.setThirdSubject(bos.get(j).getThirdSubject());
-         bo1.setBorrowMoney(bos.get(j).getLoanMoney());
-         bo1.setLoanMoney(bos.get(j).getLoanMoney());
-         bo1.setId(bos.get(j).getId());
-         details.add(bo1);
-         //                    bos.get(i).setDetails(details);
-         bo.setDetails(details);
 
-         //                    bos.get(j).setFirstSubject(null);
-         //                    bos.get(j).setSecondSubject(null);
-         //                    bos.get(j).setThirdSubject(null);
-         //                    bos.get(j).setBorrowMoney(null);
-         //                    bos.get(j).setLoanMoney(null);
-         //                    bos.get(j).setId(null);
-         if (i != j) {
-         bos.remove(i);
-         //                        len = len - 1;
-         continue;
-         }
-         }
-         }
-         list.add(bo);
-         }
-         */
         return bos;
     }
 
@@ -1656,7 +1650,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         //修改为根据uId属性删除
         StringBuffer sql = new StringBuffer();
-        sql.append("delete from voucher_vouchergenerate where uId = " + id);
+        sql.append("delete from voucher_vouchergenerate where uId = '"+ id +"'");
         super.executeSql(sql.toString());
 
         /*VoucherGenerate voucherGenerate = super.findById(id);
@@ -1797,13 +1791,18 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        super.update(vgs);
 
         //修改
-        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+        if (null == voucherGenerateTO.getuIds() || voucherGenerateTO.getuIds().length == 0) {
             throw new SerException("uId不能为空");
         }
 
+        String uIds = "";
+        for (String id : voucherGenerateTO.getuIds()) {
+            uIds += ",'" + id + "'";
+        }
+        uIds = uIds.substring(1, uIds.length());
         StringBuffer sql = new StringBuffer();
         sql.append("update voucher_vouchergenerate set auditStatus = 1, modifyTime = NOW() where" +
-                " uId = '" + voucherGenerateTO.getuId()+ "'");
+                " uId in ("+ uIds +")");
         super.executeSql(sql.toString());
     }
 
@@ -1861,12 +1860,18 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);
 
         //@see 修改
-        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+        if (null == voucherGenerateTO.getuIds() || voucherGenerateTO.getuIds().length == 0) {
             throw new SerException("uId不能为空");
         }
+
+        String uIds = "";
+        for (String id : voucherGenerateTO.getuIds()) {
+            uIds += ",'" + id + "'";
+        }
+        uIds = uIds.substring(1, uIds.length());
         StringBuffer sql = new StringBuffer();
         sql.append("update voucher_vouchergenerate set transferStatus = 1, modifyTime = NOW() where " +
-                " uId = '" + voucherGenerateTO.getuId()+ "'");
+                " uId in (" + uIds+ ")");
         super.executeSql(sql.toString());
         return null;
     }
@@ -1887,12 +1892,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        });
 //        super.update(vgList);
         //@see 修改
-        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+        if (null == voucherGenerateTO.getuIds() || voucherGenerateTO.getuIds().length == 0) {
             throw new SerException("uId不能为空");
         }
+
+        String uIds = "";
+        for (String id : voucherGenerateTO.getuIds()) {
+            uIds += ",'" + id + "'";
+        }
+        uIds = uIds.substring(1, uIds.length());
+
         StringBuffer sql = new StringBuffer();
         sql.append("update voucher_vouchergenerate set auditStatus = 0, modifyTime = NOW() where " +
-                " uId = '" + voucherGenerateTO.getuId()+ "'");
+                " uId in("+ uIds +")");
         super.executeSql(sql.toString());
     }
 
@@ -2152,7 +2164,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Transactional(rollbackFor = SerException.class)
     @Override
-    public VoucherGenerateBO antiPosting(VoucherGenerateTO to) throws SerException {
+    public VoucherGenerateBO antiPosting(VoucherGenerateTO voucherGenerateTO) throws SerException {
         /*if (null == to.getIds()) {
             throw new SerException("id不能为空");
         }
@@ -2167,12 +2179,18 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //            return BeanTransform.copyProperties(vg, VoucherGenerateBO.class);
         }*/
         //@see 修改
-        if (StringUtils.isBlank(to.getuId())) {
+        if (null == voucherGenerateTO.getuIds() || voucherGenerateTO.getuIds().length == 0) {
             throw new SerException("uId不能为空");
         }
+
+        String uIds = "";
+        for (String id : voucherGenerateTO.getuIds()) {
+            uIds += ",'" + id + "'";
+        }
+        uIds = uIds.substring(1, uIds.length());
         StringBuffer sql = new StringBuffer();
         sql.append("update voucher_vouchergenerate set transferStatus = 0, modifyTime = NOW() where " +
-                " uId = '" + to.getuId()+ "'");
+                " uId in (" + uIds + ")");
         super.executeSql(sql.toString());
         return null;
     }
@@ -2197,12 +2215,18 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return BeanTransform.copyProperties(voucherGenerateTO, VoucherGenerateBO.class);*/
 
         //@see 修改
-        if (StringUtils.isBlank(voucherGenerateTO.getuId())) {
+        if (null == voucherGenerateTO.getuIds() || voucherGenerateTO.getuIds().length == 0) {
             throw new SerException("uId不能为空");
         }
+
+        String uIds = "";
+        for (String id : voucherGenerateTO.getuIds()) {
+            uIds += ",'" + id + "'";
+        }
+        uIds = uIds.substring(1, uIds.length());
         StringBuffer sql = new StringBuffer();
         sql.append("update voucher_vouchergenerate set checkStatus = 1, modifyTime = NOW() where " +
-                " uId = '" + voucherGenerateTO.getuId()+ "'");
+                " uId in(" + uIds + ")");
         super.executeSql(sql.toString());
         return null;
     }
@@ -2997,14 +3021,14 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     @Override
     public List<String> listSubByFirst(String firstSub) throws SerException {
-        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
+//        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
         List<String> list = accountanCourseAPI.findSendNameByCode(firstSub);
         return list;
     }
 
     @Override
     public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
-        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
+//        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
         List<String> list = accountanCourseAPI.findThirdNameByCode(firstSub);
         return list;
     }
