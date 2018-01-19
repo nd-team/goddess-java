@@ -7,11 +7,11 @@ import com.bjike.goddess.salaryconfirm.enums.Ratepaying;
 import javax.persistence.Column;
 
 /**
- * 薪资核算确认表现层对象
+ * 薪资核算确认业务传输对象
  *
  * @Author: [ Jason ]
  * @Date: [ 2017-05-16 03:22 ]
- * @Description: [ 薪资核算确认表现层对象 ]
+ * @Description: [ 薪资核算确认业务传输对象 ]
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
@@ -217,6 +217,10 @@ public class SalaryconfirmBO extends BaseBO {
      */
     private Double totalSubmit;
 
+    /**
+     * 剩余加班天数
+     */
+    private Double overWorkDays;
 
     /**
      * 假期加班天数
@@ -227,11 +231,6 @@ public class SalaryconfirmBO extends BaseBO {
      * 旷工天数
      */
     private Double absenteeismDays;
-
-    /**
-     * 剩余加班天数
-     */
-    private Double overWorkDays;
 
     /**
      * 请假天数
@@ -285,14 +284,6 @@ public class SalaryconfirmBO extends BaseBO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmployeeNumber() {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
     }
 
     public String getDepartment() {
@@ -479,6 +470,30 @@ public class SalaryconfirmBO extends BaseBO {
         this.secondSalary = secondSalary;
     }
 
+    public Double getNeedRatepaying() {
+        return needRatepaying;
+    }
+
+    public void setNeedRatepaying(Double needRatepaying) {
+        this.needRatepaying = needRatepaying;
+    }
+
+    public Double getTotalRatepayed() {
+        return totalRatepayed;
+    }
+
+    public void setTotalRatepayed(Double totalRatepayed) {
+        this.totalRatepayed = totalRatepayed;
+    }
+
+    public Double getTotalSubmit() {
+        return totalSubmit;
+    }
+
+    public void setTotalSubmit(Double totalSubmit) {
+        this.totalSubmit = totalSubmit;
+    }
+
     public Boolean getFirstConfirm() {
         return firstConfirm;
     }
@@ -535,28 +550,23 @@ public class SalaryconfirmBO extends BaseBO {
         this.findType = findType;
     }
 
-    public Double getNeedRatepaying() {
-        return needRatepaying;
+    public SalaryconfirmBO() {
     }
 
-    public void setNeedRatepaying(Double needRatepaying) {
-        this.needRatepaying = needRatepaying;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public Double getTotalRatepayed() {
-        return totalRatepayed;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
-    public void setTotalRatepayed(Double totalRatepayed) {
-        this.totalRatepayed = totalRatepayed;
+    public Double getOverWorkDays() {
+        return overWorkDays;
     }
 
-    public Double getTotalSubmit() {
-        return totalSubmit;
-    }
-
-    public void setTotalSubmit(Double totalSubmit) {
-        this.totalSubmit = totalSubmit;
+    public void setOverWorkDays(Double overWorkDays) {
+        this.overWorkDays = overWorkDays;
     }
 
     public Double getHolidayWorkDays() {
@@ -575,19 +585,46 @@ public class SalaryconfirmBO extends BaseBO {
         this.absenteeismDays = absenteeismDays;
     }
 
-    public Double getOverWorkDays() {
-        return overWorkDays;
-    }
-
-    public void setOverWorkDays(Double overWorkDays) {
-        this.overWorkDays = overWorkDays;
-    }
-
     public Double getVacationDays() {
         return vacationDays;
     }
 
     public void setVacationDays(Double vacationDays) {
         this.vacationDays = vacationDays;
+    }
+
+    //地区汇总对象
+    public SalaryconfirmBO(String type, Integer year, Integer month, Double salary,
+                           Double cpSubsidy, Double dormitorySubsidy, Double yearSubsidy,
+                           Double hotSubsidy, Double socialSubsidy, Double anotherSubsidy,
+                           Double totalSalary, Double holidaySalary, Double socialConsume,
+                           Double dormitoryConsume, Double punishConsume, Double taxConsume,
+                           Double vacationConsume, Double absenteeismConsume, Double actualSalary) {
+        if (type.equals("area")) {
+            this.area = "合计";
+        } else if (type.equals("department")) {
+            this.department = "合计";
+        } else if (type.equals("name")) {
+            this.name = "合计";
+        }
+
+        this.year = year;
+        this.month = month;
+        this.salary = salary;
+        this.cpSubsidy = cpSubsidy;
+        this.dormitorySubsidy = dormitorySubsidy;
+        this.yearSubsidy = yearSubsidy;
+        this.hotSubsidy = hotSubsidy;
+        this.socialSubsidy = socialSubsidy;
+        this.anotherSubsidy = anotherSubsidy;
+        this.totalSalary = totalSalary;
+        this.holidaySalary = holidaySalary;
+        this.socialConsume = socialConsume;
+        this.dormitoryConsume = dormitoryConsume;
+        this.punishConsume = punishConsume;
+        this.taxConsume = taxConsume;
+        this.vacationConsume = vacationConsume;
+        this.absenteeismConsume = absenteeismConsume;
+        this.actualSalary = actualSalary;
     }
 }
