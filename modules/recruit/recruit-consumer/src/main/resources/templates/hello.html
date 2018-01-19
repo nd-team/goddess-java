@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+    <h1>hello world</h1>
+    <input id="text" type="text" /><button onclick="send()">Send</button><button onclick="closeWebSocket()">Close</button>
+    <div id="message"> </div>
+</body>
+    <script>
+        var websocket = null;
+        if('WebSocket' in window){
+            websocket = new WebSocket("ws://localhost:51100/websocket");
+        }else{
+            alert('Not support websocket')
+        }
+
+        websocket.onerror = function(){
+            setMessageInnerHTML("error");
+        }
+
+        websocket.onopen = function(event){
+            setMessageInnerHTML("open");
+        }
+
+        websocket.onmessage = function(event){
+            setMessageInnerHTML(event.data);
+        }
+
+        websocket.onclose = function(){
+            setMessageInnerHTML("close");
+        }
+
+        window.onbeforeunload = function(){
+            websocket.close();
+        }
+
+        function setMessageInnerHTML(innerHTML){
+            document.getElementById('message').innerHTML += innerHTML + '<br/>';
+        }
+
+        function closeWebSocket(){
+            websocket.close();
+        }
+
+        function send(){
+            var message = document.getElementById('text').value;
+            websocket.send(message);
+        }
+    </script>
+</html>

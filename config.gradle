@@ -64,6 +64,7 @@ allprojects {
         spring_data_mongodb_version = '1.9.4.RELEASE'
         spring_boot_gradle_plugin_version = '1.4.1.RELEASE'
         spring_jpa_version = '1.10.3.RELEASE'
+//        spring_amqp_version = '1.7.5.RELEASE'
         spring_version = '4.3.7.RELEASE'
         spring_boot_version = '1.5.2.RELEASE'
         spring_jdbc_version = '4.3.5.RELEASE'

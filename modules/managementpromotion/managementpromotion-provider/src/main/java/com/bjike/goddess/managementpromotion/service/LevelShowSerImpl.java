@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -233,5 +234,16 @@ public class LevelShowSerImpl extends ServiceImpl<LevelShow, LevelShowDTO> imple
         dto.getConditions().add(Restrict.eq("employeeId",employeeId));
         LevelShow levelShow = super.findOne(dto);
         return BeanTransform.copyProperties(levelShow,LevelShowBO.class);
+    }
+
+    @Override
+    public LevelShowBO findByName() throws SerException {
+        String sql = "SELECT\n" +
+                "  currentLevel,\n" +
+                "  promotionNum\n" +
+                "FROM managementpromotion_levelshow";
+        String[] fields = {"currentLevel", "promotionNum"};
+        List<LevelShowBO> list = super.findBySql(sql, LevelShowBO.class, fields);
+        return list.get(0);
     }
 }

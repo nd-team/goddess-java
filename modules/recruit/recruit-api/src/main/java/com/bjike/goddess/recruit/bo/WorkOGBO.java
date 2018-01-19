@@ -2,7 +2,7 @@ package com.bjike.goddess.recruit.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * 工作对赌业务传输对象
@@ -53,7 +53,7 @@ public class WorkOGBO extends BaseBO {
     /**
      * 时间
      */
-    private LocalDate time;
+    private String time;
 
     /**
      * 对赌总比例
@@ -85,6 +85,67 @@ public class WorkOGBO extends BaseBO {
      */
     private String score;
 
+    private Set<AlertIndexBO> alertIndexBOS;
+
+    /**
+     * 状态
+     */
+    private String state;
+
+    /**
+     * 接受时间
+     */
+    private String acceptTime;
+
+    /**
+     * 评分内容
+     */
+    private String scoreContent;
+
+    /**
+     * 对赌内容
+     */
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getScoreContent() {
+        return scoreContent;
+    }
+
+    public void setScoreContent(String scoreContent) {
+        this.scoreContent = scoreContent;
+    }
+
+    public String getAcceptTime() {
+        return acceptTime;
+    }
+
+    public void setAcceptTime(String acceptTime) {
+        this.acceptTime = acceptTime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Set<AlertIndexBO> getAlertIndexBOS() {
+        return alertIndexBOS;
+    }
+
+    public void setAlertIndexBOS(Set<AlertIndexBO> alertIndexBOS) {
+        this.alertIndexBOS = alertIndexBOS;
+    }
 
     public String getDepartment() {
         return department;
@@ -142,11 +203,11 @@ public class WorkOGBO extends BaseBO {
         this.nodeCON = nodeCON;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -196,5 +257,26 @@ public class WorkOGBO extends BaseBO {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkOGBO{" +
+                "department='" + department + '\'' +
+                ", quarters='" + quarters + '\'' +
+                ", modular='" + modular + '\'' +
+                ", scoringOB='" + scoringOB + '\'' +
+                ", raters='" + raters + '\'' +
+                ", projectPRO='" + projectPRO + '\'' +
+                ", nodeCON='" + nodeCON + '\'' +
+                ", time='" + time + '\'' +
+                ", proportionOG='" + proportionOG + '\'' +
+                ", labelPRO='" + labelPRO + '\'' +
+                ", indexType='" + indexType + '\'' +
+                ", workIndex='" + workIndex + '\'' +
+                ", labelSCO=" + labelSCO +
+                ", score='" + score + '\'' +
+                ", alertIndexBOS=" + alertIndexBOS +
+                '}';
     }
 }

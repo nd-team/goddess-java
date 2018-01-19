@@ -82,7 +82,7 @@ public class Competitor extends BaseEntity {
     /**
      * 影响区域数
      */
-    @Column(name = "affectedAreaNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '影响区域数'")
+    @Column(name = "affectedAreaNum", nullable = false, columnDefinition = "INT(255)   COMMENT '影响区域数'")
     private Integer affectedAreaNum;
 
     /**
@@ -94,7 +94,7 @@ public class Competitor extends BaseEntity {
     /**
      * 影响业务数
      */
-    @Column(name = "impactOnBusinessNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '影响业务数'")
+    @Column(name = "impactOnBusinessNum", nullable = false, columnDefinition = "INT(255)   COMMENT '影响业务数'")
     private Integer impactOnBusinessNum;
 
     /**
@@ -103,11 +103,11 @@ public class Competitor extends BaseEntity {
     @Column(name = "informationCollector", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '信息收集人'")
     private String informationCollector;
 
-    /**
-     * 客户信息编号
-     */
-    @Column(name = "customerNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
-    private String customerNum;
+//    /**
+//     * 客户信息编号
+//     */
+//    @Column(name = "customerNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '客户信息编号'")
+//    private String customerNum;
 
     /**
      * 相关联系人
@@ -115,17 +115,17 @@ public class Competitor extends BaseEntity {
     @Column(name = "relatedContact", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '相关联系人'")
     private String relatedContact;
 
-    /**
-     * 电话/座机
-     */
-    @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '电话/座机'")
-    private String phone;
+//    /**
+//     * 电话/座机
+//     */
+//    @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '电话/座机'")
+//    private String phone;
 
-    /**
-     * 职务/权职
-     */
-    @Column(name = "workRight", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职务/权职'")
-    private String workRight;
+//    /**
+//     * 职务/权职
+//     */
+//    @Column(name = "workRight", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职务/权职'")
+//    private String workRight;
 
     /**
      * 竞争对手动态
@@ -268,13 +268,13 @@ public class Competitor extends BaseEntity {
         this.informationCollector = informationCollector;
     }
 
-    public String getCustomerNum() {
-        return customerNum;
-    }
-
-    public void setCustomerNum(String customerNum) {
-        this.customerNum = customerNum;
-    }
+//    public String getCustomerNum() {
+//        return customerNum;
+//    }
+//
+//    public void setCustomerNum(String customerNum) {
+//        this.customerNum = customerNum;
+//    }
 
     public String getRelatedContact() {
         return relatedContact;
@@ -284,21 +284,21 @@ public class Competitor extends BaseEntity {
         this.relatedContact = relatedContact;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getWorkRight() {
-        return workRight;
-    }
-
-    public void setWorkRight(String workRight) {
-        this.workRight = workRight;
-    }
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//
+//    public String getWorkRight() {
+//        return workRight;
+//    }
+//
+//    public void setWorkRight(String workRight) {
+//        this.workRight = workRight;
+//    }
 
     public String getCompetitorDynamics() {
         return competitorDynamics;
@@ -324,31 +324,4 @@ public class Competitor extends BaseEntity {
         this.competitorInformation = competitorInformation;
     }
 
-    @Override
-    public String toString() {
-        return "Competitor{" +
-                "competitorCollectTime=" + competitorCollectTime +
-                ", competitorSource='" + competitorSource + '\'' +
-                ", marketInfoNum='" + marketInfoNum + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", area='" + area + '\'' +
-                ", rivalCompany='" + rivalCompany + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", address='" + address + '\'' +
-                ", organizationStructure='" + organizationStructure + '\'' +
-                ", affectedArea='" + affectedArea + '\'' +
-                ", affectedAreaNum=" + affectedAreaNum +
-                ", impactOnBusiness='" + impactOnBusiness + '\'' +
-                ", impactOnBusinessNum=" + impactOnBusinessNum +
-                ", informationCollector='" + informationCollector + '\'' +
-                ", customerNum='" + customerNum + '\'' +
-                ", relatedContact='" + relatedContact + '\'' +
-                ", phone='" + phone + '\'' +
-                ", workRight='" + workRight + '\'' +
-                ", competitorDynamics='" + competitorDynamics + '\'' +
-                ", note='" + note + '\'' +
-                ", competitorInformation=" + competitorInformation +
-                ", organizationSD=" + organizationSD +
-                '}';
-    }
 }

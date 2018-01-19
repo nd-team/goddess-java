@@ -37,6 +37,9 @@
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.EmotionOneAPI" ref="emotionOneApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.EmotionTwoAPI" ref="emotionTwoApiImpl"></dubbo:service>
 	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.EmotionThreeAPI" ref="emotionThreeApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.WorkOGAPI" ref="workOGApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.LifeOGAPI" ref="lifeOGApiImpl"></dubbo:service>
+	<dubbo:service validation="true" interface="com.bjike.goddess.recruit.api.IntelligentMsgAPI" ref="intelligentMsgApiImpl"></dubbo:service>
 
 
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>

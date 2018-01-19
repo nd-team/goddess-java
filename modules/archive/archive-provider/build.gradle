@@ -35,5 +35,6 @@ dependencies {
     compile project(":modules:dimission:dimission-api")
     compile project(":modules:bonus:bonus-api")
     compile project(":common:common-utils")
+    compile project(":modules:secure:secure-api")
 }
 

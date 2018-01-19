@@ -7,6 +7,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.*;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.dto.PositionDetailDTO;
@@ -940,4 +941,13 @@ public class PositionDetailUserSerImpl extends ServiceImpl<PositionDetailUser, P
         }
         return strs;
     }
+
+    /**
+     * wany
+     */
+    @Override
+    public List<PositionDetailUserBO> wanyfindAll() throws SerException {
+        return BeanTransform.wanycopyProperties(super.findAll(), PositionDetailUserBO.class);
+    }
+
 }

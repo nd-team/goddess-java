@@ -87,7 +87,7 @@ public class CompetitorAction extends BaseFileAction {
     //取得竞争对手管理列表
     @GetMapping("v1/getlist")
     public Result getList() throws SerException {
-        return new ActResult("success", BeanTransform.copyProperties(competitorAPI.getList(), CompetitorVO.class));
+        return new ActResult("success",BeanTransform.copyProperties(competitorAPI.getList(), CompetitorVO.class));
     }
 
     //添加单个竞争对手
@@ -199,13 +199,13 @@ public class CompetitorAction extends BaseFileAction {
     @GetMapping("v1/search/{condition}")
     public Result search(@PathVariable String condition) throws SerException {
         List<CompetitorVO> vos = BeanTransform.copyProperties(competitorAPI.search(condition), CompetitorVO.class);
-        return new ActResult("success",vos);
+        return new ActResult("success", vos);
     }
 
     //组织结构详情
     @GetMapping("v1/org")
     public Result organizationSD(CompetitorTO to) throws SerException {
         OrganizationSD sdbo = competitorAPI.organizationSD("64f9c059-dada-4bef-9813-dfdede68c3c4");
-        return new ActResult("success",sdbo);
+        return new ActResult("success", sdbo);
     }
 }

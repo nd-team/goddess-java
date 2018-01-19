@@ -58,6 +58,8 @@ public class InterviewInforAct extends BaseFileAction {
     private ModuleAPI moduleAPI;
     @Autowired
     private RentalAPI rentalAPI;
+    @Autowired
+    private MyWebSocket myWebSocket;
 
     /**
      * 功能导航权限
@@ -202,7 +204,14 @@ public class InterviewInforAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/firstIdea")
-    public Result firstIdea(@Validated(value = {IdeaTO.FirstIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+    public Result firstIdea(@Validated(value = {IdeaTO.FirstIdea.class}) IdeaTO to, BindingResult result) throws ActException, IOException, SerException {
+        if (to.getWhetherFirstTestPass()) {
+            myWebSocket.sendMsg1("初试是否通过", "亲，您安排的“应聘者姓名”已通过初试，\n" +
+                    "初试面试官：“应聘者姓名”已通过您的初试，感谢您的付出\n" +
+                    "薪资面谈负责人：“应聘者姓名”已通过初试，请您尽快前来和应聘者面谈薪资");
+        } else {
+            myWebSocket.sendMsg1("fuck", "亲，“应聘者姓名”虽然未能通过面试，但是您的付出与努力并没有辜负下一位会更棒的，加油");
+        }
         try {
             interviewInforAPI.firstIdea(to);
             return new ActResult("edit success!");
@@ -220,7 +229,12 @@ public class InterviewInforAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/reexamineIdea")
-    public Result reexamineIdea(@Validated(value = {IdeaTO.SecondIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+    public Result reexamineIdea(@Validated(value = {IdeaTO.SecondIdea.class}) IdeaTO to, BindingResult result) throws ActException, IOException, SerException {
+        if (to.getWhetherSecondTestPass()) {
+            myWebSocket.sendMsg1("复试是否通过", "复试没啥好说的");
+        } else {
+            myWebSocket.sendMsg1("fuck", "同上");
+        }
         try {
             interviewInforAPI.reexamineIdea(to);
             return new ActResult("edit success!");
@@ -238,7 +252,8 @@ public class InterviewInforAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/wagesIdea")
-    public Result wagesIdea(@Validated(value = {IdeaTO.WagesIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+    public Result wagesIdea(@Validated(value = {IdeaTO.WagesIdea.class}) IdeaTO to, BindingResult result) throws ActException, IOException, SerException {
+        myWebSocket.sendMsg1("提交","“应聘者姓名”已通过初试、复试、薪资面谈，请尽快给出审批意见");
         try {
             interviewInforAPI.wagesIdea(to);
             return new ActResult("edit success!");
@@ -256,7 +271,12 @@ public class InterviewInforAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/zjbAudit")
-    public Result zjbAudit(@Validated(value = {IdeaTO.BossIdea.class}) IdeaTO to, BindingResult result) throws ActException {
+    public Result zjbAudit(@Validated(value = {IdeaTO.BossIdea.class}) IdeaTO to, BindingResult result) throws ActException, IOException, SerException {
+        if (to.getWhetherAcceptAdmit()) {
+            myWebSocket.sendMsg1("是否同意录用", "应聘者姓名”已被总经办审批录用，请尽快通知录用者，确定入职时间");
+        } else {
+            myWebSocket.sendMsg1("fuck","“应聘者姓名”未被审批录用");
+        }
         try {
             interviewInforAPI.zjbAudit(to);
             return new ActResult("edit success!");
@@ -274,7 +294,16 @@ public class InterviewInforAct extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/staffEntryInfo")
-    public Result staffEntryInfo(@Validated(value = {IdeaTO.StaffEntry.class}) IdeaTO to, BindingResult result) throws ActException {
+    public Result staffEntryInfo(@Validated(value = {IdeaTO.StaffEntry.class}) IdeaTO to, BindingResult result) throws ActException, IOException, SerException {
+        if (to.getWhetherEntry()) {
+            myWebSocket.sendMsg1("是否入职", "亲，新人即将到来，记得做好准备哦：\n" +
+                    "            详情信息如下：\n" +
+                    "            “应聘部门”+“岗位”+“姓名”\n" +
+                    "综合资源部：“应聘者姓名”于“入职时间”前来入职，请最好接待工作\n" +
+                    "同岗员工、部门负责人、商务部、总经办：新员工“应聘者姓名”已来入职");
+        } else {
+            myWebSocket.sendMsg1("fuck","“应聘者姓名”未来入职，请继续寻找下一位人选");
+        }
         try {
             interviewInforAPI.staffEntryInfo(to);
             return new ActResult("edit success!");
@@ -282,7 +311,6 @@ public class InterviewInforAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
-
 
     /**
      * 获取所有第一次电访记录的姓名名单

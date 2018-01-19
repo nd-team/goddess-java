@@ -25,7 +25,7 @@ public class SummarySerImpl extends ServiceImpl<Summary, SummaryDTO> implements 
 
     @Override
     public List<SummaryBO> getSum() throws SerException {
-        String[] fields = {"name","qualifiNum","adminNum","majorNum","zteNum","huaweiNum","finishProNum","impProNum"};
+        String[] fields = {"name", "qualifiNum", "adminNum", "majorNum", "zteNum", "huaweiNum", "finishProNum", "impProNum"};
         return super.findBySql(sql(), SummaryBO.class, fields);
     }
 

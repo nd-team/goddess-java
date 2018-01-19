@@ -392,4 +392,9 @@ public interface PositionDetailUserSer extends Ser<PositionDetailUser, PositionD
      */
     List<String> planningPerson() throws SerException;
 
+    /**
+     * wany
+     */
+    List<PositionDetailUserBO> wanyfindAll() throws SerException;
+
 }

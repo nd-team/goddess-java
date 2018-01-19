@@ -3,6 +3,8 @@ package com.bjike.goddess.salaryconfirm.vo;
 import com.bjike.goddess.salaryconfirm.enums.FindType;
 import com.bjike.goddess.salaryconfirm.enums.Ratepaying;
 
+import javax.persistence.Column;
+
 /**
  * 薪资核算确认表现层对象
  *
@@ -218,10 +220,6 @@ public class SalaryconfirmVO {
      */
     private Double totalSubmit;
 
-    /**
-     * 剩余加班天数
-     */
-    private Double overWorkDays;
 
     /**
      * 假期加班天数
@@ -234,10 +232,14 @@ public class SalaryconfirmVO {
     private Double absenteeismDays;
 
     /**
+     * 剩余加班天数
+     */
+    private Double overWorkDays;
+
+    /**
      * 请假天数
      */
     private Double vacationDays;
-
 
     public String getId() {
         return id;
@@ -293,6 +295,14 @@ public class SalaryconfirmVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
     public String getDepartment() {
@@ -479,30 +489,6 @@ public class SalaryconfirmVO {
         this.secondSalary = secondSalary;
     }
 
-    public Double getNeedRatepaying() {
-        return needRatepaying;
-    }
-
-    public void setNeedRatepaying(Double needRatepaying) {
-        this.needRatepaying = needRatepaying;
-    }
-
-    public Double getTotalRatepayed() {
-        return totalRatepayed;
-    }
-
-    public void setTotalRatepayed(Double totalRatepayed) {
-        this.totalRatepayed = totalRatepayed;
-    }
-
-    public Double getTotalSubmit() {
-        return totalSubmit;
-    }
-
-    public void setTotalSubmit(Double totalSubmit) {
-        this.totalSubmit = totalSubmit;
-    }
-
     public Boolean getFirstConfirm() {
         return firstConfirm;
     }
@@ -559,20 +545,28 @@ public class SalaryconfirmVO {
         this.findType = findType;
     }
 
-    public String getEmployeeNumber() {
-        return employeeNumber;
+    public Double getNeedRatepaying() {
+        return needRatepaying;
     }
 
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
+    public void setNeedRatepaying(Double needRatepaying) {
+        this.needRatepaying = needRatepaying;
     }
 
-    public Double getOverWorkDays() {
-        return overWorkDays;
+    public Double getTotalRatepayed() {
+        return totalRatepayed;
     }
 
-    public void setOverWorkDays(Double overWorkDays) {
-        this.overWorkDays = overWorkDays;
+    public void setTotalRatepayed(Double totalRatepayed) {
+        this.totalRatepayed = totalRatepayed;
+    }
+
+    public Double getTotalSubmit() {
+        return totalSubmit;
+    }
+
+    public void setTotalSubmit(Double totalSubmit) {
+        this.totalSubmit = totalSubmit;
     }
 
     public Double getHolidayWorkDays() {
@@ -589,6 +583,14 @@ public class SalaryconfirmVO {
 
     public void setAbsenteeismDays(Double absenteeismDays) {
         this.absenteeismDays = absenteeismDays;
+    }
+
+    public Double getOverWorkDays() {
+        return overWorkDays;
+    }
+
+    public void setOverWorkDays(Double overWorkDays) {
+        this.overWorkDays = overWorkDays;
     }
 
     public Double getVacationDays() {

@@ -390,4 +390,9 @@ public interface PositionDetailUserAPI {
      */
     List<String> planningPerson() throws SerException;
 
+    /**
+     * wany
+     */
+    List<PositionDetailUserBO> wanyfindAll() throws SerException;
+
 }
