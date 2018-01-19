@@ -1178,4 +1178,92 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
             return BeanTransform.copyProperties(event, EventBO.class);
         }
     }
+
+    /**
+     * 通过计划类型获取对应的数据内容
+     *      month   月计划
+     *      week    周计划
+     *      day     日计划
+     *
+     * 当计划类型为 (MONTH)月份
+     *      只需要传输 年-月
+     * 当计划类型为 (WEEK)周
+     *      只需要传输 年-月-周数
+     * 当计划类型为 (DAY)日
+     *      只需要传输 年-月-日
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public List<FatherBO> findByName(EventDTO dto,String name) throws SerException {
+        FatherDTO fatherDTO = new FatherDTO();
+        Integer year = dto.getYear();
+        Integer month = dto.getMonth();
+        List<FatherBO> boList = new ArrayList<>();
+
+        if (dto.getPlanTypes() != null) {
+            if (PlanType.MONTH.name().equals(dto.getPlanTypes()[0].name())) {
+                LocalDate startDate = DateUtil.getStartDayOfMonth(year,month);
+                LocalDate endDate = DateUtil.getEndDaYOfMonth(year,month);
+                fatherDTO.getConditions().add(Restrict.between("startDate", new LocalDate[]{startDate, endDate}));
+            } else if (PlanType.WEEK.name().equals(dto.getPlanTypes()[0].name())) {
+                Integer week = dto.getWeek();
+                LocalDate[] WeekStr = DateUtil.getWeekTimes(year, month, week);
+                LocalDate startDate = WeekStr[0];
+                LocalDate endDate = WeekStr[1];
+                fatherDTO.getConditions().add(Restrict.between("startDate", new LocalDate[]{startDate, endDate}));
+            } else if (PlanType.DAY.name().equals(dto.getPlanTypes()[0].name())) {
+                Integer day = dto.getDay();
+                String monthStr = "";
+                String dayStr = "";
+                if (month < 10){
+                    monthStr = "0"+month;
+                }else {
+                    monthStr = month+"";
+                }
+                if (day < 10){
+                    dayStr = "0"+day;
+                }else {
+                    dayStr = day+"";
+                }
+                fatherDTO.getConditions().add(Restrict.between("startDate", new LocalDate[]{DateUtil.parseDate(year + "-" + monthStr + "-" + dayStr), DateUtil.parseDate(year + "-" + monthStr + "-" + dayStr)}));
+            } else if (PlanType.ALL.name().equals(dto.getPlanTypes()[0].name())) {
+
+            }
+
+            List<Father> fathers = fatherSer.findByCis(fatherDTO);
+
+            for (Father father : fathers) {
+                EventDTO eventDTO = new EventDTO();
+                eventDTO.getSorts().add("requestTime=asc");
+
+                eventDTO.getConditions().add(Restrict.eq("father.id", father.getId()));
+                eventDTO.getConditions().add(Restrict.eq("name", name));
+                List<Event> list = super.findByCis(eventDTO);
+                List<EventBO> eventBOs = BeanTransform.copyProperties(list, EventBO.class);
+                if (null != eventBOs) {
+                    for (EventBO bo : eventBOs) {
+
+                        EventTimeSetDTO eventTimeSetDTO = new EventTimeSetDTO();
+                        eventTimeSetDTO.getConditions().add(Restrict.eq("event.id",bo.getId()));
+                        EventTimeSet eventTimeSet = eventTimeSetSer.findOne(eventTimeSetDTO);
+                        if (eventTimeSet != null && null != eventTimeSet){
+                            bo.setRemindTime(eventTimeSet.getEventTime().name());
+                            bo.seteStatus(eventTimeSet.getStatus());
+                        }
+
+                    }
+                }
+                if (!list.isEmpty()) {
+                    FatherBO fatherBO = BeanTransform.copyProperties(father, FatherBO.class);
+                    fatherBO.setEventBOs(eventBOs);
+                    boList.add(fatherBO);
+                }
+            }
+        }
+        return boList;
+    }
+
+
 }

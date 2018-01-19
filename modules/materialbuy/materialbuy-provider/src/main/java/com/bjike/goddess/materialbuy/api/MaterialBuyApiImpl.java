@@ -5,6 +5,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
+import com.bjike.goddess.materialbuy.bo.OptionBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.service.MaterialBuySer;
@@ -237,5 +238,15 @@ public class MaterialBuyApiImpl implements MaterialBuyAPI {
     @Override
     public List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException {
         return materialBuySer.materialBuySum(dto);
+    }
+
+    @Override
+    public OptionBO GUI(String year, String month) throws SerException {
+        return materialBuySer.GUI( year,  month);
+    }
+
+    @Override
+    public OptionBO GuiByWeek(String year, String month, String week) throws SerException {
+        return materialBuySer.GuiByWeek(year,month,week);
     }
 }

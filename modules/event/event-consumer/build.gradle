@@ -40,5 +40,6 @@ dependencies {
     compile project(":modules:event:event-api")
 
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-websocket")
 }
 

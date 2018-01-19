@@ -463,5 +463,30 @@ public class MaterialBuyAct extends BaseFileAction{
         }
     }
 
+    /**
+     * 图形化汇总
+     * @version v1
+     */
+    @GetMapping("v1/Gui")
+    public Result GUI(String year,String month) throws ActException{
+        try {
+            return ActResult.initialize(materialBuyAPI.GUI(year,month));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 图形化汇总--周汇总
+     * @version v1
+     */
+    @GetMapping("v1/GuiByWeek")
+    public Result GuiByWeek(String year,String month,String week) throws ActException{
+        try {
+            return ActResult.initialize(materialBuyAPI.GuiByWeek(year,month,week));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 
 }
