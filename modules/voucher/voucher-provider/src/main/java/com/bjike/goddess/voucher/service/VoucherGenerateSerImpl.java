@@ -18,6 +18,7 @@ import com.bjike.goddess.financeinit.api.CategoryAPI;
 import com.bjike.goddess.financeinit.api.InitDateEntryAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.financeinit.bo.InitDateEntryBO;
+import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
 import com.bjike.goddess.financeinit.enums.BalanceDirection;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -3022,14 +3023,22 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     @Override
     public List<String> listSubByFirst(String firstSub) throws SerException {
 //        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
-        List<String> list = accountanCourseAPI.findSendNameByCode(firstSub);
-        return list;
+        List<String> seconds = new ArrayList<>();
+        String code = accountanCourseAPI.findByCourseName(firstSub);
+        List<SecondSubjectDataBO> list = accountanCourseAPI.findSecondSubject(code);
+        if (null == list) {
+            return null;
+        }
+        for (SecondSubjectDataBO bo : list) {
+            seconds.add(bo.getSecondSubject());
+        }
+        return seconds;
     }
 
     @Override
     public List<String> listTubByFirst(String firstSub, String secondSub) throws SerException {
 //        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
-        List<String> list = accountanCourseAPI.findThirdNameByCode(firstSub);
+        List<String> list = accountanCourseAPI.findByFirstName(firstSub);
         return list;
     }
 
