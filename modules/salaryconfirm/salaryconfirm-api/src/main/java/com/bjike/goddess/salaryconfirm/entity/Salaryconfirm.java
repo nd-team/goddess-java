@@ -35,7 +35,7 @@ public class Salaryconfirm extends BaseEntity {
     /**
      * 月份
      */
-    @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份'")
+    @Column(name = "month", nullable = false, columnDefinition = "INT(11)   COMMENT '月份' default 0")
     private Integer month;
 
     /**
@@ -143,13 +143,13 @@ public class Salaryconfirm extends BaseEntity {
     /**
      * 剩余加班天数
      */
-    @Column(name = "overWorkDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '剩余加班天数'")
+    @Column(name = "overWorkDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '剩余加班天数' default 0")
     private Double overWorkDays;
 
     /**
      * 假期加班天数
      */
-    @Column(name = "holidayWorkDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '假期加班费'")
+    @Column(name = "holidayWorkDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '假期加班费' default 0")
     private Double holidayWorkDays;
 
     /**
@@ -191,7 +191,7 @@ public class Salaryconfirm extends BaseEntity {
     /**
      * 请假天数
      */
-    @Column(name = "vacationDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '请假天数'")
+    @Column(name = "vacationDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '请假天数' default 0")
     private Double vacationDays;
 
     /**
@@ -203,7 +203,7 @@ public class Salaryconfirm extends BaseEntity {
     /**
      * 旷工天数
      */
-    @Column(name = "absenteeismDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '旷工天数'")
+    @Column(name = "absenteeismDays", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '旷工天数' default 0")
     private Double absenteeismDays;
 
     /**
@@ -526,6 +526,7 @@ public class Salaryconfirm extends BaseEntity {
     }
 
     public Boolean getSecondConfirm() {
+
         return secondConfirm;
     }
 

@@ -10,10 +10,13 @@ import com.bjike.goddess.common.api.restful.Result;
 import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.bean.WanyJackson;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
 import com.bjike.goddess.recruit.api.FailFirstInterviewReasonAPI;
 import com.bjike.goddess.recruit.bo.FailFirstInterviewReasonBO;
+import com.bjike.goddess.recruit.bo.WorkOGBO;
 import com.bjike.goddess.recruit.dto.FailFirstInterviewReasonDTO;
+import com.bjike.goddess.recruit.entity.WorkOG;
 import com.bjike.goddess.recruit.to.FailFirstInterviewReasonTO;
 import com.bjike.goddess.recruit.to.GuidePermissionTO;
 import com.bjike.goddess.recruit.vo.FailFirstInterviewReasonVO;
@@ -24,8 +27,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 未应约初试原因
@@ -241,6 +246,11 @@ public class FailFirstInterviewReasonAct {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println(UUID.randomUUID().toString().replace("-",""));
+
     }
 
 }

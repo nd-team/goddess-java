@@ -12,6 +12,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [com.bjike]
  */
 public class SkillLevelCollectBO extends BaseBO {
+
     /**
      * 地区
      */

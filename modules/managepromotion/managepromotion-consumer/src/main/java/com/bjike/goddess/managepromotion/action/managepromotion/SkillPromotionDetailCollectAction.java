@@ -1,5 +1,6 @@
 package com.bjike.goddess.managepromotion.action.managepromotion;
 
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
@@ -14,6 +15,9 @@ import com.bjike.goddess.managepromotion.vo.ProfessionalSkillCollectVO;
 import com.bjike.goddess.managepromotion.vo.SkillPromotionDetailCollectAVO;
 import com.bjike.goddess.managepromotion.vo.SkillPromotionDetailCollectVO;
 import com.bjike.goddess.managepromotion.vo.StaffSkillCollectVO;
+import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +61,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 技能晋升明细月汇总
      *
@@ -75,6 +80,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 技能晋升明细累计汇总
      *
@@ -93,6 +99,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 各专业技能日汇总
      *
@@ -111,6 +118,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 各专业技能周汇总
      *
@@ -129,6 +137,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 各专业技能月汇总
      *
@@ -147,6 +156,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 各专业技能累计汇总
      *
@@ -165,6 +175,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 人员技能&晋升日汇总
      *
@@ -183,6 +194,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 人员技能&晋升周汇总
      *
@@ -201,6 +213,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 人员技能&晋升月汇总
      *
@@ -219,6 +232,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 人员技能&晋升累计汇总
      *
@@ -237,6 +251,7 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 获取当前月有几周
      *
@@ -261,5 +276,12 @@ public class SkillPromotionDetailCollectAction {
             throw new ActException(e.getMessage());
         }
     }
-
+@Autowired
+private UserAPI userAPI;
+    @GetMapping("v1/getECharts")
+    public Result getECharts() throws SerException{
+        UserBO userBO = userAPI.currentUser();
+        userBO.getUsername();
+        return new ActResult();
+    }
 }

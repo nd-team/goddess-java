@@ -3,9 +3,6 @@ package com.bjike.goddess.abilitydisplay.service;
 import com.bjike.goddess.abilitydisplay.dto.ComCulturalDTO;
 import com.bjike.goddess.abilitydisplay.entity.ComCultural;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 

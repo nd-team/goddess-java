@@ -14,6 +14,11 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class CollectBO extends BaseBO {
 
     /**
+     * 业务类型
+     */
+    private String businessType;
+
+    /**
      * 跟市场关联的竞争对手
      */
     private Integer MAcompetitor;
@@ -43,6 +48,13 @@ public class CollectBO extends BaseBO {
      */
     private Integer AFbusinessNum;
 
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
 
     public Integer getMAcompetitor() {
         return MAcompetitor;

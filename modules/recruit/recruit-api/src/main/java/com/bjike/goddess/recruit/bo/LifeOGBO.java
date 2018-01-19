@@ -3,6 +3,7 @@ package com.bjike.goddess.recruit.bo;
 import com.bjike.goddess.common.api.bo.BaseBO;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * 工作对赌业务传输对象
@@ -53,7 +54,7 @@ public class LifeOGBO extends BaseBO {
     /**
      * 时间
      */
-    private LocalDate time;
+    private String time;
 
     /**
      * 生活情感标签一级分类
@@ -80,6 +81,15 @@ public class LifeOGBO extends BaseBO {
      */
     private String score;
 
+    private Set<ScoreWithStartBO> scoreWithStartBOS;
+
+    public Set<ScoreWithStartBO> getScoreWithStartBOS() {
+        return scoreWithStartBOS;
+    }
+
+    public void setScoreWithStartBOS(Set<ScoreWithStartBO> scoreWithStartBOS) {
+        this.scoreWithStartBOS = scoreWithStartBOS;
+    }
 
     public String getDepartment() {
         return department;
@@ -137,11 +147,11 @@ public class LifeOGBO extends BaseBO {
         this.nodeCON = nodeCON;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

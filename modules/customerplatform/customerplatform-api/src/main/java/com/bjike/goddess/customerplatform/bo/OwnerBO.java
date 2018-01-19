@@ -24,6 +24,18 @@ public class OwnerBO extends BaseBO {
     private String owneraddress;
 
     /**
+     * 省份
+     */
+    private String provinces;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String area;
+    /**
      * 业主联系方式（电话）
      */
     private String ownerPhone;
@@ -73,6 +85,29 @@ public class OwnerBO extends BaseBO {
      */
     private String remark;
 
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getOwnerName() {
         return ownerName;

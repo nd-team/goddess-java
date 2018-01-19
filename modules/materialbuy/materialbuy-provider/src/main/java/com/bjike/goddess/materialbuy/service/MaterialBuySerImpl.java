@@ -12,6 +12,7 @@ import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
+import com.bjike.goddess.materialbuy.entity.DeviceType;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.enums.AuditState;
 import com.bjike.goddess.materialbuy.enums.DateType;
@@ -29,6 +30,7 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.google.common.collect.Ordering;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -251,6 +253,10 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
         checkSeeIdentity();
         List<MaterialBuy> list = super.findByPage(dto);
         List<MaterialBuyBO> listBO = BeanTransform.copyProperties(list, MaterialBuyBO.class);
+        if (listBO != null) {
+
+        }
+
         return listBO;
     }
 

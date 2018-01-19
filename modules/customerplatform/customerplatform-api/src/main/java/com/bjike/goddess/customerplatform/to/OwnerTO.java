@@ -21,6 +21,21 @@ public class OwnerTO extends BaseTO {
      */
     @NotBlank(message = "业主姓名不能为空", groups = {ADD.class, EDIT.class})
     private String ownerName;
+    /**
+     * 省份
+     */
+    @NotBlank(message = "省份不能为空", groups = {ADD.class, EDIT.class})
+    private String provinces;
+    /**
+     * 市
+     */
+    @NotBlank(message = "市不能为空", groups = {ADD.class, EDIT.class})
+    private String city;
+    /**
+     * 区
+     */
+    @NotBlank(message = "区不能为空", groups = {ADD.class, EDIT.class})
+    private String area;
 
     /**
      * 业主地址
@@ -83,6 +98,29 @@ public class OwnerTO extends BaseTO {
      */
     private String remark;
 
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getOwnerName() {
         return ownerName;

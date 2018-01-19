@@ -22,6 +22,18 @@ public class SiteBO extends BaseBO {
      * 站点类型
      */
     private String siteType;
+    /**
+     * 省份
+     */
+    private String provinces;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String area;
 
     /**
      * 联系人姓名
@@ -68,6 +80,30 @@ public class SiteBO extends BaseBO {
      */
     private String remark;
 
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getSiteName() {
         return siteName;

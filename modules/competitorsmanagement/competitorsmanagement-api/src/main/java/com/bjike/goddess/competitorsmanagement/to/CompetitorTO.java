@@ -84,25 +84,25 @@ public class CompetitorTO extends BaseTO {
      */
     private String informationCollector;
 
-    /**
-     * 客户信息编号
-     */
-    private String customerNum;
+//    /**
+//     * 客户信息编号
+//     */
+//    private String customerNum;
 
     /**
      * 相关联系人
      */
     private String relatedContact;
 
-    /**
-     * 电话/座机
-     */
-    private String phone;
-
-    /**
-     * 职务/权职
-     */
-    private String workRight;
+//    /**
+//     * 电话/座机
+//     */
+//    private String phone;
+//
+//    /**
+//     * 职务/权职
+//     */
+//    private String workRight;
 
     /**
      * 竞争对手动态
@@ -241,13 +241,13 @@ public class CompetitorTO extends BaseTO {
         this.informationCollector = informationCollector;
     }
 
-    public String getCustomerNum() {
-        return customerNum;
-    }
-
-    public void setCustomerNum(String customerNum) {
-        this.customerNum = customerNum;
-    }
+//    public String getCustomerNum() {
+//        return customerNum;
+//    }
+//
+//    public void setCustomerNum(String customerNum) {
+//        this.customerNum = customerNum;
+//    }
 
     public String getRelatedContact() {
         return relatedContact;
@@ -257,21 +257,21 @@ public class CompetitorTO extends BaseTO {
         this.relatedContact = relatedContact;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getWorkRight() {
-        return workRight;
-    }
-
-    public void setWorkRight(String workRight) {
-        this.workRight = workRight;
-    }
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//
+//    public String getWorkRight() {
+//        return workRight;
+//    }
+//
+//    public void setWorkRight(String workRight) {
+//        this.workRight = workRight;
+//    }
 
     public String getCompetitorDynamics() {
         return competitorDynamics;

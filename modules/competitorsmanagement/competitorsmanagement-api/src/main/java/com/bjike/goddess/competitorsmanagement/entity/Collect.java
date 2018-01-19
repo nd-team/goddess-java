@@ -21,6 +21,12 @@ import javax.persistence.Table;
 public class Collect extends BaseEntity {
 
     /**
+     * 业务类型
+     */
+    @Column(name = "businessType", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业务类型'")
+    private String businessType;
+
+    /**
      * 跟市场关联的竞争对手
      */
     @Column(name = "MAcompetitor", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '跟市场关联的竞争对手'")
@@ -56,6 +62,14 @@ public class Collect extends BaseEntity {
     @Column(name = "AFbusinessNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '影响业务数'")
     private Integer AFbusinessNum;
 
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
 
     public Integer getMAcompetitor() {
         return MAcompetitor;

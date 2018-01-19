@@ -37,9 +37,16 @@ public class BidUnitBO extends BaseBO {
      * 注册资金
      */
     private Double money;
-
     /**
-     * 地区
+     * 省份
+     */
+    private String provinces;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
      */
     private String area;
 
@@ -103,6 +110,21 @@ public class BidUnitBO extends BaseBO {
      */
     private String remark;
 
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getCompany() {
         return company;

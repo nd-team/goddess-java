@@ -22,11 +22,13 @@ import com.bjike.goddess.salaryconfirm.enums.FindType;
 import com.bjike.goddess.salaryconfirm.enums.GuideAddrStatus;
 import com.bjike.goddess.salaryconfirm.enums.Ratepaying;
 import com.bjike.goddess.salaryconfirm.excel.SalaryconfirmExcel;
+import com.bjike.goddess.salaryconfirm.excel.SalaryconfirmExport;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
 import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.to.SalaryconfirmTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.google.common.base.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -540,15 +543,27 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         dto.getConditions().add(Restrict.eq("year", year));
         dto.getConditions().add(Restrict.eq("month", month));
         List<Salaryconfirm> list = super.findByCis(dto);
-        List<SalaryconfirmExcel> excelList = new ArrayList<SalaryconfirmExcel>();
+        List<SalaryconfirmExport> excelList = new ArrayList<SalaryconfirmExport>();
         if (!CollectionUtils.isEmpty(list)) {
             for (Salaryconfirm model : list) {
-                SalaryconfirmExcel excel = new SalaryconfirmExcel();
-                BeanUtils.copyProperties(model, excel);
-                excelList.add(excel);
+                SalaryconfirmExport export = new SalaryconfirmExport();
+                BeanTransform.copyProperties(model, export,"firstConfirm","secondConfirm");
+                Optional<Boolean> first = Optional.fromNullable(model.getFirstConfirm());
+                if (first.or(false)) {
+                    export.setFirstConfirm("是");
+                } else {
+                    export.setFirstConfirm("否");
+                }
+                Optional<Boolean> second = Optional.fromNullable(model.getSecondConfirm());
+                if (second.or(false)) {
+                    export.setSecondConfirm("是");
+                } else {
+                    export.setSecondConfirm("否");
+                }
+                excelList.add(export);
             }
         } else {
-            excelList.add(new SalaryconfirmExcel());
+            excelList.add(new SalaryconfirmExport());
         }
 
         Excel excel = new Excel(0, 2);
@@ -783,4 +798,29 @@ public class SalaryconfirmSerImpl extends ServiceImpl<Salaryconfirm, Salaryconfi
         byte[] bytes = ExcelUtil.clazzToExcel(excelList, excel);
         return bytes;
     }
+    /**
+     * 正常的个人汇总
+     *
+     * @param year
+     * @param mouth
+     * @param name
+     */
+
+
+//    @Override
+//    public List<SalaryconfirmBO> findByGood(Integer year, Integer mouth, String name) throws SerException {
+//        String sql = "";
+//        List<SalaryconfirmBO> list = null;
+//        if (name == null) {
+//            sql = "SELECT * FROM salaryconfirm WHERE year = '" + year + "' AND month = '" + mouth + "'";
+//            String[] fields = {"year", "month", "department","salary"};
+//            list = super.findBySql(sql, SalaryconfirmBO.class, fields);
+//        } else {
+//            sql = "SELECT * FROM salaryconfirm WHERE year = '" + year + "' AND month = '" + mouth + "' AND name = '" + name + "'";
+//            String[] fields = {"year", "month", "name", "actualSalary"};
+//            list = super.findBySql(sql, SalaryconfirmBO.class, fields);
+//        }
+//        return list;
+//    }
+
 }

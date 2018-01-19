@@ -8,14 +8,8 @@ import com.bjike.goddess.recruit.bo.EmotionOneBO;
 import com.bjike.goddess.recruit.dao.EmotionOneRep;
 import com.bjike.goddess.recruit.dto.EmotionOneDTO;
 import com.bjike.goddess.recruit.entity.EmotionOne;
-import com.bjike.goddess.recruit.to.EmotionOneTO;
-import com.sun.xml.internal.fastinfoset.algorithm.BASE64EncodingAlgorithm;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

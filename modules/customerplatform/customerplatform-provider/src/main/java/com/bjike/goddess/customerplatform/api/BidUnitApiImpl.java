@@ -65,4 +65,19 @@ public class BidUnitApiImpl implements BidUnitAPI {
     public Long getTotal(BidUnitDTO dto) throws SerException {
         return bidUnitSer.getTotal(dto);
     }
+
+    @Override
+    public List<String> getProvinces() throws SerException {
+        return bidUnitSer.getProvinces();
+    }
+
+    @Override
+    public List<String> getCity(String provinces) throws SerException {
+        return bidUnitSer.getCity(provinces);
+    }
+
+    @Override
+    public List<String> getArea(String provinces,String city) throws SerException {
+        return bidUnitSer.getArea(provinces,city);
+    }
 }

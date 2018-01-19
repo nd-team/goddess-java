@@ -29,19 +29,6 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:recruit:recruit-api")
-    compile project(":modules:user:user-api")
-    compile project(":modules:organize:organize-api")
-    compile group: 'org.springframework.amqp', name: 'spring-amqp', version: '1.7.5.RELEASE'
-    compile group: 'org.springframework.amqp', name: 'spring-rabbit', version: '1.7.5.RELEASE'
-    
-//    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '1.5.2.RELEASE'){
-//        exclude group:'org.slf4j', module:'log4j-over-slf4j'
-//        exclude group:'org.slf4j', module:'jcl-over-slf4j'
-//        exclude group:'org.slf4j', module:'slf4j-log4j12'
-//        exclude group:'io.netty', module:'netty'
-//        exclude group:'log4j', module:'log4j'
-//    }
-
     compile project(":common:common-utils")
 }
 

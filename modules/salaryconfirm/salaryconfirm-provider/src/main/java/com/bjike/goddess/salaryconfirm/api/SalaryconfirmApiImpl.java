@@ -138,4 +138,16 @@ public class SalaryconfirmApiImpl implements SalaryconfirmAPI {
     public byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException {
         return salaryconfirmSer.exportConfirmedExcel(year, month);
     }
+    /**
+     * 好的个人汇总
+     *
+     * @param year
+     * @param mouth
+     * @param name
+     * @return
+     */
+//    @Override
+//    public List<SalaryconfirmBO> collectByGood(Integer year, Integer mouth, String name) throws SerException {
+//        return salaryconfirmSer.findByGood(year,mouth,name);
+//    }
 }

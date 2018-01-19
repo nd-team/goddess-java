@@ -25,6 +25,21 @@ public class Owner extends BaseEntity {
      */
     @Column(name = "ownerName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '业主姓名'")
     private String ownerName;
+    /**
+     * 省份
+     */
+    @Column(name = "provinces", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '省份'")
+    private String provinces;
+    /**
+     * 市
+     */
+    @Column(name = "city", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '市'")
+    private String city;
+    /**
+     * 区
+     */
+    @Column(name = "area", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '区'")
+    private String area;
 
     /**
      * 业主地址
@@ -92,6 +107,29 @@ public class Owner extends BaseEntity {
     @Column(name = "remark", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
 
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public String getOwnerName() {
         return ownerName;

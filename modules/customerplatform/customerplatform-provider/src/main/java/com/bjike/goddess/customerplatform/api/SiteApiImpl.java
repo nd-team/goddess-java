@@ -65,4 +65,18 @@ public class SiteApiImpl implements SiteAPI {
     public Long getTotal(SiteDTO dto) throws SerException {
         return siteSer.getTotal(dto);
     }
+    @Override
+    public List<String> getProvinces() throws SerException {
+        return siteSer.getProvinces();
+    }
+
+    @Override
+    public List<String> getCity(String provinces) throws SerException {
+        return siteSer.getCity(provinces);
+    }
+
+    @Override
+    public List<String> getArea(String provinces,String city) throws SerException {
+        return siteSer.getArea(provinces,city);
+    }
 }

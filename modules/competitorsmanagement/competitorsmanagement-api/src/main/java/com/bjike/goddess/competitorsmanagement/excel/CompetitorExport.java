@@ -98,11 +98,11 @@ public class CompetitorExport extends BaseBO {
     @ExcelHeader(name = "信息收集人")
     private String informationCollector;
 
-    /**
-     * 客户信息编号
-     */
-    @ExcelHeader(name = "客户信息编号")
-    private String customerNum;
+//    /**
+//     * 客户信息编号
+//     */
+//    @ExcelHeader(name = "客户信息编号")
+//    private String customerNum;
 
     /**
      * 相关联系人
@@ -110,17 +110,17 @@ public class CompetitorExport extends BaseBO {
     @ExcelHeader(name = "相关联系人")
     private String relatedContact;
 
-    /**
-     * 电话/座机
-     */
-    @ExcelHeader(name = "电话")
-    private String phone;
+//    /**
+//     * 电话/座机
+//     */
+//    @ExcelHeader(name = "电话")
+//    private String phone;
 
-    /**
-     * 职务/权职
-     */
-    @ExcelHeader(name = "职务")
-    private String workRight;
+//    /**
+//     * 职务/权职
+//     */
+//    @ExcelHeader(name = "职务")
+//    private String workRight;
 
     /**
      * 竞争对手动态
@@ -253,13 +253,13 @@ public class CompetitorExport extends BaseBO {
         this.informationCollector = informationCollector;
     }
 
-    public String getCustomerNum() {
-        return customerNum;
-    }
-
-    public void setCustomerNum(String customerNum) {
-        this.customerNum = customerNum;
-    }
+//    public String getCustomerNum() {
+//        return customerNum;
+//    }
+//
+//    public void setCustomerNum(String customerNum) {
+//        this.customerNum = customerNum;
+//    }
 
     public String getRelatedContact() {
         return relatedContact;
@@ -269,21 +269,21 @@ public class CompetitorExport extends BaseBO {
         this.relatedContact = relatedContact;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getWorkRight() {
-        return workRight;
-    }
-
-    public void setWorkRight(String workRight) {
-        this.workRight = workRight;
-    }
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//
+//    public String getWorkRight() {
+//        return workRight;
+//    }
+//
+//    public void setWorkRight(String workRight) {
+//        this.workRight = workRight;
+//    }
 
     public String getCompetitorDynamics() {
         return competitorDynamics;

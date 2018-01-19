@@ -45,9 +45,19 @@ public class BidUnitTO extends BaseTO {
     private Double money;
 
     /**
-     * 地区
+     * 省份
      */
-    @NotBlank(message = "地区不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "省份不能为空", groups = {ADD.class, EDIT.class})
+    private String provinces;
+    /**
+     * 市
+     */
+    @NotBlank(message = "市不能为空", groups = {ADD.class, EDIT.class})
+    private String city;
+    /**
+     * 区
+     */
+    @NotBlank(message = "区不能为空", groups = {ADD.class, EDIT.class})
     private String area;
 
     /**
@@ -116,6 +126,22 @@ public class BidUnitTO extends BaseTO {
      */
     private String remark;
 
+
+    public String getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(String provinces) {
+        this.provinces = provinces;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getCompany() {
         return company;

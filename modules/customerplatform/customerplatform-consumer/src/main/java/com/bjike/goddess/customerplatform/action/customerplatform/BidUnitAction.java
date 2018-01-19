@@ -134,7 +134,7 @@ public class BidUnitAction {
      * @param to 中标单位传输对象
      * @version v1
      */
-        @PutMapping("v1/update/{id}")
+    @PutMapping("v1/update/{id}")
     public Result update(@Validated(EDIT.class) BidUnitTO to, BindingResult result) throws ActException {
         try {
             bidUnitAPI.update(to);
@@ -207,4 +207,45 @@ public class BidUnitAction {
         }
     }
 
+    /**
+     * 获取所有省份
+     *
+     * @version v1
+     */
+    @GetMapping("v1/provinces")
+    public Result getProvinces() throws ActException {
+        try {
+            return ActResult.initialize(bidUnitAPI.getProvinces());
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据省份获取市
+     *
+     * @version v1
+     */
+    @GetMapping("v1/city")
+    public Result getCity(String provinces) throws ActException {
+        try {
+            return ActResult.initialize(bidUnitAPI.getCity(provinces));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据省份市获取区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result getArea(String provinces,String city) throws ActException {
+        try {
+            return ActResult.initialize(bidUnitAPI.getArea(provinces,city));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
 }
