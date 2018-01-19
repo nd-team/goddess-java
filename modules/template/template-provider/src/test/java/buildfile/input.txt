@@ -1,13 +1,10 @@
-模块名:marketdevelopment
-类名:WeekFiles
-作者:zhuangkaiqin
-描述:周计划的表头数据
+模块名:taskallotment
+类名:TaskNodeBase
+作者:chenyang
+描述:计划任务节点集合
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
-String weekCycleId 周计划的周期id;
-Integer index 表头下标;
-String table 表头;
-String context 内容;
-String fatherId 父级id;
+Private List<TaskNode> tasknode 计划任务节点集合;
+
 )

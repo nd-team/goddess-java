@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
@@ -112,7 +113,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default UserBO add(TransactionContext context,UserTO userTO) throws SerException {
+    default UserBO add(TransactionContext context, UserTO userTO) throws SerException {
         return null;
     }
 
@@ -129,6 +130,7 @@ public interface UserAPI {
     /**
      * 修改密码
      * tanghaixiang
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -139,6 +141,7 @@ public interface UserAPI {
     /**
      * 忘记密码修改密码
      * chenyang
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -149,6 +152,7 @@ public interface UserAPI {
     /**
      * 修改手机号码
      * chenyang
+     *
      * @param userTO
      * @return
      * @throws SerException
@@ -245,6 +249,7 @@ public interface UserAPI {
     default UserBO updateUser(UserTO userTO) throws SerException {
         return null;
     }
+
     /**
      * 员工入职注册删除用户
      *
@@ -261,7 +266,7 @@ public interface UserAPI {
      * @return UserBO
      * @throws SerException
      */
-    default String maxUserEmpNumber( ) throws SerException {
+    default String maxUserEmpNumber() throws SerException {
         return null;
     }
 
@@ -288,11 +293,12 @@ public interface UserAPI {
 
     /**
      * 获取部门人员
-     *@param department id或者部门名
+     *
+     * @param department id或者部门名
      * @return UserBO
      * @throws SerException
      */
-    default List<UserBO> findByDept(String ... department  ) throws SerException {
+    default List<UserBO> findByDept(String... department) throws SerException {
         return null;
     }
 
@@ -315,4 +321,5 @@ public interface UserAPI {
     default List<UserDetailBO> myTeam() throws SerException {
         return null;
     }
+
 }

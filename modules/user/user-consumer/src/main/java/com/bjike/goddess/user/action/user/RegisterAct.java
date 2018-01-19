@@ -193,22 +193,22 @@ public class RegisterAct {
         }
     }
 
-    /**
-     * 邀请码
-     *
-     * @param id
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/shareCode")
-    public Result shareCode(@RequestParam long id) throws ActException {
-        try {
-            String num = userRegisterAPI.shareCode(id);
-            return ActResult.initialize(num);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 邀请码
+//     *
+//     * @param id
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/shareCode")
+//    public Result shareCode(@RequestParam long id) throws ActException {
+//        try {
+//            String num = userRegisterAPI.shareCode(id);
+//            return ActResult.initialize(num);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
     /**
      * 移动端邀请员工注册
      *

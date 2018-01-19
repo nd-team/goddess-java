@@ -23,6 +23,7 @@
 	<dubbo:reference  validation="true" id="taskRemindApiImpl" interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" />
 	<dubbo:reference  validation="true" id="timeSetApiImpl" interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" />
 	<dubbo:reference  validation="true" id="questionApiImpl" interface="com.bjike.goddess.taskallotment.api.QuestionAPI" />
+	<dubbo:reference  validation="true" id="taskNodeBaseApiImpl" interface="com.bjike.goddess.taskallotment.api.TaskNodeBaseAPI" />
 	<dubbo:reference  validation="true" id="confirmCountEmailApiImpl" interface="com.bjike.goddess.taskallotment.api.ConfirmCountEmailAPI" />
 	<dubbo:reference  validation="true" id="finishCountEmailApiImpl" interface="com.bjike.goddess.taskallotment.api.FinishCountEmailAPI" />
 	<dubbo:reference  validation="true" id="cusPermission" interface="com.bjike.goddess.taskallotment.api.CusPermissionAPI" />

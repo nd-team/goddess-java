@@ -35,6 +35,7 @@ import com.bjike.goddess.taskallotment.excel.WholeTaskExcel;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.DeleteFileTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
+import com.bjike.goddess.taskallotment.to.TaskNodeBaseTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.taskallotment.vo.*;
 import com.bjike.goddess.user.bo.UserBO;
@@ -121,23 +122,42 @@ public class TaskNodeAction extends BaseFileAction {
         }
     }
 
+//    /**
+//     * 设置任务节点
+//     *
+//     * @param to 任务节点传输对象
+//     * @return class TaskNodeVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @PostMapping("v1/save")
+//    public Result save(@Validated(ADD.class) TaskNodeTO to, BindingResult result) throws ActException {
+//        try {
+//            taskNodeAPI.save ( to );
+//            return new ActResult ( "添加成功" );
+//        } catch (SerException e) {
+//            throw new ActException ( e.getMessage () );
+//        }
+//    }
+
     /**
      * 设置任务节点
      *
-     * @param to 任务节点传输对象
+     * @param to
      * @return class TaskNodeVO
      * @throws ActException
      * @version v1
      */
-    @PostMapping("v1/save")
-    public Result save(@Validated(ADD.class) TaskNodeTO to, BindingResult result) throws ActException {
+    @PostMapping("v1/saves")
+    public Result saves(@Validated(ADD.class) TaskNodeBaseTO to, BindingResult result) throws ActException {
         try {
-            taskNodeAPI.save ( to );
+            taskNodeAPI.saves ( to );
             return new ActResult ( "添加成功" );
         } catch (SerException e) {
             throw new ActException ( e.getMessage () );
         }
     }
+
 
     /**
      * 查看任务节点详细内容（通过id查找）

@@ -347,6 +347,7 @@ public class TaskNodeTO extends BaseTO {
      */
     private List<CustomTitleTO> customTitles;
 
+
     public String getReason() {
         return reason;
     }

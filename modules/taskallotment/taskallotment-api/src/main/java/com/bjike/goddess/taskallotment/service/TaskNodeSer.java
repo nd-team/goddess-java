@@ -3,9 +3,9 @@ package com.bjike.goddess.taskallotment.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.taskallotment.bo.*;
-import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportCountBO;
 import com.bjike.goddess.taskallotment.bo.DayReport.DayReportMailBO;
+import com.bjike.goddess.taskallotment.bo.DayReport.DaysBO;
 import com.bjike.goddess.taskallotment.bo.figure.DataBO;
 import com.bjike.goddess.taskallotment.bo.figure.OptionBO;
 import com.bjike.goddess.taskallotment.dto.TableDTO;
@@ -16,6 +16,7 @@ import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
+import com.bjike.goddess.taskallotment.to.TaskNodeBaseTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 
@@ -57,6 +58,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 总条数
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -72,9 +74,20 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      */
     void save(TaskNodeTO to) throws SerException;
 
+    void saves(TaskNodeBaseTO to) throws SerException;
+
+    /**
+     * 添加
+     *
+     * @param to
+     * @return class TaskNodeBO
+     */
+    default List<TaskNodeBO> savea(TaskNodeTO to) throws SerException {
+        return null;
+    }
+
     /**
      * 编辑
-     *
      *
      * @param to
      * @throws SerException
@@ -287,6 +300,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 个人汇总图形化
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -304,6 +318,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 人员标准工时汇总图形化
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -321,6 +336,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 分配及确认汇总图形化
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -329,6 +345,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 分配及确认汇总饼状图
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -346,6 +363,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 完成情况汇总图形化
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -391,6 +409,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 日报汇总邮件
+     *
      * @param startTime
      * @param endTime
      * @param departIds
@@ -410,6 +429,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 获取某些人某天的任务完成情况
+     *
      * @param names
      * @param date
      * @return
@@ -419,6 +439,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 导出excel
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -427,18 +448,20 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 导入excel
+     *
      * @param toList
      * @param tableId
      * @throws SerException
      */
     void leadExcel(List<TaskNodeLeadTO> toList, String tableId) throws SerException;
+
     /**
      * 整体进度导入任务excel
      *
      * @param toList
      * @throws SerException
      */
-    void leadWholeTableExcel(List<WholeTaskLeadTO> toList , String projectId ) throws SerException;
+    void leadWholeTableExcel(List<WholeTaskLeadTO> toList, String projectId) throws SerException;
 
     /**
      * 整体进度导出任务excel
@@ -446,9 +469,11 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @param projectId
      * @throws SerException
      */
-    byte[] wholeExportExcel( String projectId) throws SerException;
+    byte[] wholeExportExcel(String projectId) throws SerException;
+
     /**
      * 根据项目表id获取任务名称
+     *
      * @param tableID
      * @return
      * @throws SerException
@@ -457,25 +482,33 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
 
     /**
      * 个人项目汇总
+     *
      * @param collectDataTO
      * @return
      * @throws SerException
      * @desc 根据某个用户名汇总返回用户和参与的项目名称
      * @author tanghaixiang
      */
-    default CollectDataVO personProjectCollect (CollectDataTO collectDataTO) throws SerException{return null;};
+    default CollectDataVO personProjectCollect(CollectDataTO collectDataTO) throws SerException {
+        return null;
+    }
+
+    ;
 
     List<TaskNodeExcel> findByDTO(TaskNodeDTO dto) throws SerException;
 
     /**
      * 编辑状态
+     *
      * @param id
      * @param taskStatus
      * @throws SerException
      */
     void editStatus(String id, TaskStatus taskStatus) throws SerException;
+
     /**
      * 完成情况汇总(phone)
+     *
      * @return
      * @throws SerException
      */

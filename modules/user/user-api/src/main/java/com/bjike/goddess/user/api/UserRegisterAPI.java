@@ -100,9 +100,6 @@ public interface UserRegisterAPI {
         return null;
     }
 
-    default String shareCode(long id) throws SerException {
-        return null;
-    }
     /**
      * 移动端邀请员工注册
      * lijuntao
@@ -113,4 +110,15 @@ public interface UserRegisterAPI {
     default void inviteReg(String inviteUrl,AppUserRegisterTO appUserRegisterTO) throws SerException {
         return;
     }
+
+    /**
+     * 保存邀请码
+     *
+     * @param appUserRegisterTO
+     * @throws SerException
+     */
+    default void save(AppUserRegisterTO appUserRegisterTO) throws SerException {
+
+    }
+
 }

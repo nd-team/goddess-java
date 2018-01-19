@@ -20,10 +20,13 @@ import com.bjike.goddess.staffentry.vo.EntryRegisterVO;
 import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.bo.FileBO;
 import com.bjike.goddess.storage.to.FileInfo;
+import com.bjike.goddess.user.api.ShareCodeAPI;
 import com.bjike.goddess.user.api.UserAPI;
+import com.bjike.goddess.user.bo.ShareCodeBO;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.to.UserTO;
+import com.bjike.goddess.user.vo.ShareCodeVO;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +68,8 @@ public class UserAct extends BaseFileAction {
     private ReimburseRecordAPI reimburseRecordAPI;
     @Autowired
     private EntryRegisterAPI entryRegisterAPI;
+    @Autowired
+    private ShareCodeAPI shareCodeAPI;
 
     /**
      * 手机号码是否存在
@@ -399,6 +404,25 @@ public class UserAct extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 根据邀请码获取邀请人ID
+     *
+     * @param code
+     * @return class ShareCodeVO
+     * @version v1
+     */
+    @GetMapping("v1/getByCode")
+    public Result getByCode(String code) throws ActException {
+        try{
+        ShareCodeBO shareCodeBO = shareCodeAPI.getByCode(code);
+            return ActResult.initialize(BeanTransform.copyProperties(shareCodeBO, ShareCodeVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 
 
 }

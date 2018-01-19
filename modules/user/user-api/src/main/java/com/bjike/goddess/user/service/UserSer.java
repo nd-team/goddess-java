@@ -7,6 +7,7 @@ import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.bo.rbac.PermissionBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.entity.User;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 
@@ -293,4 +294,5 @@ public interface UserSer extends Ser<User, UserDTO> {
     default List<UserDetailBO> myTeam() throws SerException {
         return null;
     }
+
 }

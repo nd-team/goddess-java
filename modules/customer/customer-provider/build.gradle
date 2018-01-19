@@ -29,6 +29,7 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:customer:customer-api")
+//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '1.5.4.RELEASE'
     compile project(":common:common-utils")
 }
 

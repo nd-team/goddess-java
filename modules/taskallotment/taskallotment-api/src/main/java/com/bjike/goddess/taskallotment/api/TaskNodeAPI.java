@@ -15,6 +15,7 @@ import com.bjike.goddess.taskallotment.excel.TaskNodeLeadTO;
 import com.bjike.goddess.taskallotment.excel.WholeTaskLeadTO;
 import com.bjike.goddess.taskallotment.to.CollectDataTO;
 import com.bjike.goddess.taskallotment.to.GuidePermissionTO;
+import com.bjike.goddess.taskallotment.to.TaskNodeBaseTO;
 import com.bjike.goddess.taskallotment.to.TaskNodeTO;
 import com.bjike.goddess.taskallotment.vo.CollectDataVO;
 
@@ -70,6 +71,18 @@ public interface TaskNodeAPI {
      * @throws SerException
      */
     void save(TaskNodeTO to) throws SerException;
+
+    void saves(TaskNodeBaseTO to) throws SerException;
+
+    /**
+     * 添加
+     *
+     * @param to
+     * @return class TaskNodeBO
+     */
+    default List<TaskNodeBO> savea(TaskNodeTO to) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑

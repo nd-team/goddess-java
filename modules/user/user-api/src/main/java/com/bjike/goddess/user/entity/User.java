@@ -171,4 +171,5 @@ public class User extends BaseEntity {
     public void setUserType(UserType userType) {
         this.userType = userType;
     }
+
 }

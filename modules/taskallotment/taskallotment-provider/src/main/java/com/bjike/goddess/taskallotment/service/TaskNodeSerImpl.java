@@ -84,6 +84,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Autowired
     private TimeSetSer timeSetSer;
     @Autowired
+    private TaskNodeBaseSer taskNodeBaseSer;
+    @Autowired
     private EventAPI eventAPI;
 
     /**
@@ -182,6 +184,106 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
+    public void saves(TaskNodeBaseTO to ) throws SerException {
+//        String tableId = to.getTableId();
+//        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
+//        entity.setTableId(tableId);
+//        TaskType taskType = entity.getTaskType();
+//        entity.setType(type(taskType));
+
+        TaskNodeBase entity = BeanTransform.copyProperties(to, TaskNodeBase.class, true);
+        taskNodeBaseSer.save(entity);
+
+        List<TaskNodeTO> taskNodeTOS = to.getTaskNodeList();
+        List<TaskNode> list = new ArrayList<>();
+        if (null != taskNodeTOS) {
+            int i = 0;
+            for (TaskNodeTO taskNodeTO : taskNodeTOS) {
+                i++;
+                TaskNode taskNode = BeanTransform.copyProperties(taskNodeTO, TaskNode.class, true);
+                taskNode.setTableId(taskNodeTOS.get(0).getTableId());
+                TaskType taskType = taskNode.getTaskType();
+                taskNode.setType(type(taskType));
+                list.add(taskNode);
+
+                super.save(list);
+            }
+//
+                for (int k = 0; k < taskNodeTOS.size(); k++) {
+                    List<CustomTitleTO> titleTOS = taskNodeTOS.get(k).getCustomTitles();
+//            List<CustomTitleTO> titleTOS = taskNodeTOS.get(i).getCustomTitles();
+
+                    List<CustomTitle> titles = new ArrayList<>();
+                    if (null != titleTOS) {
+                        int j = 0;
+                        for (CustomTitleTO titleTO : titleTOS) {
+                            j++;
+                            if (titleTO.getMandatory()) {
+                                if (null == titleTO.getContent()) {
+                                    throw new SerException(titleTO.getTitle() + "为必填字段");
+                                }
+                            }
+                            titleTO.setId(null);
+                            CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
+                            customTitle.setTitleIndex(j);
+                            customTitle.setTaskNodeId(list.get(k).getId());
+                            titles.add(customTitle);
+                    }
+                }
+                customTitleSer.save(titles);
+            }
+                }
+
+        }
+
+
+    @Override
+    public List<TaskNodeBO> savea(TaskNodeTO to) throws SerException {
+//        String tableId = to.getTableId();
+//        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
+//        entity.setTableId(tableId);
+//        TaskType taskType = entity.getTaskType();
+//        entity.setType(type(taskType));
+//        super.save(entity);
+//        int i = 0;
+        List<TaskNode> list = BeanTransform.copyProperties(to, TaskNode.class, true,"tableId");
+        for (TaskNode taskNode : list) {
+            String tableId = to.getTableId();
+            TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
+            taskNode.setTableId(tableId);
+            TaskType taskType = entity.getTaskType();
+            taskNode.setType(type(taskType));
+            list.add(taskNode);
+            super.save(list);
+//            i++;
+//            taskNode.setTableId(list.get(i).getTableId());
+//
+//            super.save(taskNode);
+            List<CustomTitleTO> titleTOS = to.getCustomTitles();
+            List<CustomTitle> titles = new ArrayList<>();
+            if (null != titleTOS) {
+                int i = 0;
+                for (CustomTitleTO titleTO : titleTOS) {
+                    i++;
+                    if (titleTO.getMandatory()) {
+                        if (null == titleTO.getContent()) {
+                            throw new SerException(titleTO.getTitle() + "为必填字段");
+                        }
+                    }
+                    titleTO.setId(null);
+                    CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
+                    customTitle.setTitleIndex(i);
+                    customTitle.setTaskNodeId(taskNode.getId());
+                    titles.add(customTitle);
+                }
+            }
+            customTitleSer.save(titles);
+        }
+        return BeanTransform.copyProperties(list, TaskNodeBO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {SerException.class})
     public void edit(TaskNodeTO to) throws SerException {
 
         TaskNode entity = update(to);
@@ -267,6 +369,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     public List<TableBO> list(TableDTO dto) throws SerException {
         List<TableBO> tableBOS = new ArrayList<>();
+
         dto.getConditions().add(Restrict.eq("projectId", dto.getProjectId()));
         List<Table> tables = tableSer.findByCis(dto, true);
         for (Table t : tables) {
