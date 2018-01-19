@@ -155,4 +155,9 @@ public class EventApiImpl implements EventAPI {
     public EventBO update(EventTO to) throws SerException {
         return eventSer.update(to);
     }
+
+    @Override
+    public List<FatherBO> findByName(EventDTO dto, String name) throws SerException {
+        return eventSer.findByName(dto,name);
+    }
 }

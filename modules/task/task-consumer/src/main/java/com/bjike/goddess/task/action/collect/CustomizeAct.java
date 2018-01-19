@@ -264,17 +264,9 @@ public class CustomizeAct {
 
     }
 
-
-
-
-
-    //-------------------------------------------------------------
-    /**
-     * 新功能点
-     */
+    //新功能点
     /**
      * 自定义汇总
-     *
      * @return {name:'data',type:'boolean',defaultValue:'',description:'true/false.'}
      * @version v1
      */
@@ -477,7 +469,6 @@ public class CustomizeAct {
     /**
      * 现在通报
      *
-     * @param
      * @throws ActException
      * @version v1
      *
@@ -491,5 +482,8 @@ public class CustomizeAct {
             throw new ActException(e.getMessage());
         }
     }
+
+
+
 
 }

@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
 import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
+import com.bjike.goddess.materialbuy.bo.OptionBO;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
@@ -253,5 +254,23 @@ public interface MaterialBuySer extends Ser<MaterialBuy, MaterialBuyDTO> {
      * @throws SerException
      */
     List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException;
+
+    /**
+     * 图形化汇总
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    OptionBO GUI(String year, String month) throws SerException;
+
+    /**
+     * 图形化周汇总
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    OptionBO GuiByWeek(String year,String month,String week) throws SerException;
 
 }

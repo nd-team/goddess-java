@@ -5,15 +5,15 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.contacts.api.CommonalityAPI;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.CommonalityBO;
-import com.bjike.goddess.materialbuy.bo.AreaBuyStatusDayCollectBO;
-import com.bjike.goddess.materialbuy.bo.MaterialBuyBO;
-import com.bjike.goddess.materialbuy.bo.MaterialBuySummaryBO;
+import com.bjike.goddess.materialbuy.bo.*;
 import com.bjike.goddess.materialbuy.dto.MaterialBuyDTO;
-import com.bjike.goddess.materialbuy.entity.DeviceType;
+import com.bjike.goddess.materialbuy.dto.TempMatterDemandDTO;
 import com.bjike.goddess.materialbuy.entity.MaterialBuy;
+import com.bjike.goddess.materialbuy.entity.TempMatterDemand;
 import com.bjike.goddess.materialbuy.enums.AuditState;
 import com.bjike.goddess.materialbuy.enums.DateType;
 import com.bjike.goddess.materialbuy.enums.GuideAddrStatus;
@@ -30,7 +30,6 @@ import com.bjike.goddess.organize.bo.OpinionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.google.common.collect.Ordering;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -318,10 +318,10 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
             if (!list1.isEmpty()) {
                 String[] names = new String[list1.size()];
                 names = list1.toArray(names);
-                List<String> mails=internalContactsAPI.getEmails(names);
-                if (!mails.isEmpty()){
-                    String[] strings=new String[mails.size()];
-                    strings=mails.toArray(strings);
+                List<String> mails = internalContactsAPI.getEmails(names);
+                if (!mails.isEmpty()) {
+                    String[] strings = new String[mails.size()];
+                    strings = mails.toArray(strings);
                     send(title, content, strings);
                 }
             }
@@ -720,6 +720,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
 
     /**
      * 物资购买汇总说明
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -727,15 +728,14 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
     @Override
     public List<MaterialBuySummaryBO> materialBuySum(MaterialBuyDTO dto) throws SerException {
         List<MaterialBuySummaryBO> materialBuySummaryBOS = this.findByBuySum(dto);
-
-        for (int i = 0;i<materialBuySummaryBOS.size();i++){
+        for (int i = 0; i < materialBuySummaryBOS.size(); i++) {
             MaterialBuySummaryBO buySummaryBO = materialBuySummaryBOS.get(i);
-            List<MaterialBuySummaryBO> list =  this.findByTempBuySum(dto,buySummaryBO);
-            if (list.size() > 0 ){
+            List<MaterialBuySummaryBO> list = this.findByTempBuySum(dto, buySummaryBO);
+            if (list.size() > 0) {
                 buySummaryBO.setIfStockSatisfy(list.get(0).getIfStockSatisfy());
                 buySummaryBO.setIfFinanceAudit(list.get(0).getIfFinanceAudit());
                 buySummaryBO.setApplyQuantity(list.get(0).getApplyQuantity());
-            }else {
+            } else {
                 buySummaryBO.setIfStockSatisfy("0");
                 buySummaryBO.setIfFinanceAudit("0");
                 buySummaryBO.setApplyQuantity("0");
@@ -746,6 +746,7 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
 
     /**
      * 物资购买汇总
+     *
      * @param dto
      * @return
      * @throws SerException
@@ -756,28 +757,23 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
          * 是否要根据日期进行汇总
          */
         if (dto.getDateType() != null) {
-            if(DateType.YEAR.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.MONTH.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.WEEK.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.DAY.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.QUARTER.name().equals(dto.getDateType().name())){
-
+            if (DateType.YEAR.name().equals(dto.getDateType().name())) {
+            } else if (DateType.MONTH.name().equals(dto.getDateType().name())) {
+            } else if (DateType.WEEK.name().equals(dto.getDateType().name())) {
+            } else if (DateType.DAY.name().equals(dto.getDateType().name())) {
+            } else if (DateType.QUARTER.name().equals(dto.getDateType().name())) {
             }
-        }else {
-            String sql = "SELECT area,projectTeam,deviceType,deviceName,model\n" +
-                    "    ,ifnull((case any_value(ifReplaceBorrow) WHEN '1' THEN  any_value(count(ifReplaceBorrow)) end),0) ifReplaceBorrow\n" +
-                    "    ,ifnull((case any_value(ifPayment) WHEN '1' THEN  any_value(count(ifPayment)) end),0) ifPayment\n" +
-                    "    ,ifnull((case any_value(ifArrival) WHEN '1' THEN  any_value(count(ifArrival)) end),0) ifArrival\n" +
-                    "    ,ifnull((case any_value(ifCommerceAudit) WHEN '1' THEN  any_value(count(ifCommerceAudit)) end),0) ifCommerceAudit\n" +
-                    "    ,any_value(sum(quantity)) buyQuantity ,any_value(sum(totalSum)) totalSum\n" +
-                    "FROM materialbuy_materialbuy\n" +
-                    "GROUP BY area,projectTeam,deviceType,deviceName,model;\n";
-            String[] fields = {"area","projectTeam","deviceType","deviceName","model","ifReplaceBorrow","ifPayment","ifArrival","ifCommerceAudit","buyQuantity","totalSum"};
-            materialBuySummaryBOS = super.findBySql(sql,MaterialBuySummaryBO.class,fields);
+        } else {
+            String sql = "SELECT area,projectTeam,deviceType,deviceName,model " +
+                    "    ,ifnull((case any_value(ifReplaceBorrow) WHEN '1' THEN  any_value(count(ifReplaceBorrow)) end),0) ifReplaceBorrow " +
+                    "    ,ifnull((case any_value(ifPayment) WHEN '1' THEN  any_value(count(ifPayment)) end),0) ifPayment " +
+                    "    ,ifnull((case any_value(ifArrival) WHEN '1' THEN  any_value(count(ifArrival)) end),0) ifArrival " +
+                    "    ,ifnull((case any_value(ifCommerceAudit) WHEN '1' THEN  any_value(count(ifCommerceAudit)) end),0) ifCommerceAudit " +
+                    "    ,any_value(sum(quantity)) buyQuantity ,any_value(sum(totalSum)) totalSum " +
+                    " FROM materialbuy_materialbuy " +
+                    "GROUP BY area,projectTeam,deviceType,deviceName,model; ";
+            String[] fields = {"area", "projectTeam", "deviceType", "deviceName", "model", "ifReplaceBorrow", "ifPayment", "ifArrival", "ifCommerceAudit", "buyQuantity", "totalSum"};
+            materialBuySummaryBOS = super.findBySql(sql, MaterialBuySummaryBO.class, fields);
         }
 
         return materialBuySummaryBOS;
@@ -785,41 +781,251 @@ public class MaterialBuySerImpl extends ServiceImpl<MaterialBuy, MaterialBuyDTO>
 
     /**
      * 临时物资需求汇总
+     *
      * @param dto
      * @param bo
      * @return
      * @throws SerException
      */
-    public List<MaterialBuySummaryBO> findByTempBuySum(MaterialBuyDTO dto,MaterialBuySummaryBO bo) throws SerException {
+    public List<MaterialBuySummaryBO> findByTempBuySum(MaterialBuyDTO dto, MaterialBuySummaryBO bo) throws SerException {
         List<MaterialBuySummaryBO> materialBuySummaryBOS = new ArrayList<>();
         /**
          * 是否要根据日期进行汇总
          */
         if (dto.getDateType() != null) {
-            if(DateType.YEAR.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.MONTH.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.WEEK.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.DAY.name().equals(dto.getDateType().name())){
-
-            }else if (DateType.QUARTER.name().equals(dto.getDateType().name())){
-
+            if (DateType.YEAR.name().equals(dto.getDateType().name())) {
+            } else if (DateType.MONTH.name().equals(dto.getDateType().name())) {
+            } else if (DateType.WEEK.name().equals(dto.getDateType().name())) {
+            } else if (DateType.DAY.name().equals(dto.getDateType().name())) {
+            } else if (DateType.QUARTER.name().equals(dto.getDateType().name())) {
             }
-        }else {
-            String sql =  "SELECT  " +
-                    "   ifnull((case any_value(ifStockSatisfy) WHEN '1' THEN  any_value(count(ifStockSatisfy)) end),0) ifStockSatisfy\n" +
-                    "  ,ifnull((case any_value(ifFinanceAudit) WHEN '1' THEN  any_value(count(ifFinanceAudit)) end),0) ifFinanceAudit\n" +
-                    "  ,any_value(sum(quantity))  applyQuantity\n" +
-                    "FROM materialbuy_tempmatterdemand "  +
-                    "WHERE area = '"+bo.getArea()+"' AND projectTeam = '"+bo.getProjectTeam()+"' AND deviceType = '"+bo.getDeviceType()+"' AND deviceName = '"+bo.getDeviceName()+"' AND model = '"+bo.getModel()+"'" +
+        } else {
+            String sql = "SELECT  " +
+                    "   ifnull((case any_value(ifStockSatisfy) WHEN '1' THEN  any_value(count(ifStockSatisfy)) end),0) ifStockSatisfy " +
+                    "  ,ifnull((case any_value(ifFinanceAudit) WHEN '1' THEN  any_value(count(ifFinanceAudit)) end),0) ifFinanceAudit " +
+                    "  ,any_value(sum(quantity))  applyQuantity " +
+                    "FROM materialbuy_tempmatterdemand " +
+                    "WHERE area = '" + bo.getArea() + "' AND projectTeam = '" + bo.getProjectTeam() + "' AND deviceType = '" + bo.getDeviceType() + "' AND deviceName = '" + bo.getDeviceName() + "' AND model = '" + bo.getModel() + "'" +
                     "GROUP BY area,projectTeam,deviceType,deviceName,model;";
-            String[] fields = {"ifStockSatisfy","ifFinanceAudit","applyQuantity"};
-            materialBuySummaryBOS = super.findBySql(sql,MaterialBuySummaryBO.class,fields);
+            String[] fields = {"ifStockSatisfy", "ifFinanceAudit", "applyQuantity"};
+            materialBuySummaryBOS = super.findBySql(sql, MaterialBuySummaryBO.class, fields);
         }
         return materialBuySummaryBOS;
     }
 
+    @Override
+    public OptionBO GUI(String year, String month) throws SerException {
+        OptionBO bo = new OptionBO();
+        Integer y = Integer.parseInt(year);
+        Integer m = Integer.parseInt(month);
 
+        List<Integer> list = new ArrayList<>();
+        List<LocalDate[]> localDates = new ArrayList<>();
+        Integer num = DateUtil.getWeekNum(y, m);//根据年月 获取有几周
+        for (int i = 0; i < num; i++) {
+            LocalDate[] localDate = DateUtil.getWeekTimes(y, m, i + 1);
+            localDates.add(localDate);
+        }
+        for (int i = 0; i < localDates.size(); i++) {
+            LocalDate[] localDate = localDates.get(i);
+            list.add(todayWeek(localDate[0]));
+        }
+        //根据年月获取全部的项目组
+        List<String> projects = getProjects(year, month);
+        //seriser 数据列
+        List<SeriesBO> seriesBOS = new ArrayList<>();
+
+        //开始获取全部项目组 全部周数的总额
+        for (int i = 0; i < projects.size(); i++) {
+            Double[] doubles = new Double[num];
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(projects.get(i));
+            seriesBO.setType("line");
+            for (int j = 0; j < list.size(); j++) {
+                String sql = "SELECT sum(totalSum) AS totalSum FROM " +
+                        "  materialbuy_materialbuy " +
+                        " WHERE WEEK(subscribeDate) = '" + list.get(j) + "' AND projectTeam = '" + projects.get(i) + "' " +
+                        " GROUP BY projectTeam";
+                List<Object> l = super.findBySql(sql);
+                if (l.size() > 0) {
+                    doubles[j] = Double.parseDouble(l.get(0) + "");
+                } else {
+                    doubles[j] = Double.parseDouble("0");
+                }
+            }
+            seriesBO.setData(doubles);
+            seriesBOS.add(seriesBO);
+        }
+        SeriesBO[] series = new SeriesBO[seriesBOS.size()];
+        for (int i = 0; i < seriesBOS.size(); i++) {
+            SeriesBO seriesBO = seriesBOS.get(i);
+            series[i] = seriesBO;
+        }
+
+        TitleBO title = new TitleBO();
+        title.setText(String.format("物资购买月汇总（%s年%s月）", year, month));
+        TooltipBO tooltipBO = new TooltipBO();
+        tooltipBO.setTrigger("item");
+        LegendBO legendBO = new LegendBO();
+        String[] d = (String[]) projects.toArray(new String[projects.size()]);
+        legendBO.setData(d);
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] data = new String[]{"第一周", "第二周", "第三周", "第四周", "第五周"};
+        xAxisBO.setData(data);
+        YAxisBO yAxisBO = new YAxisBO();
+        yAxisBO.setType("value");
+
+        bo.setTitle(title);
+        bo.setTooltip(tooltipBO);
+        bo.setLegend(legendBO);
+        bo.setxAxis(xAxisBO);
+        bo.setyAxis(yAxisBO);
+        bo.setSeries(series);
+        return bo;
+    }
+
+    /**
+     * 获取当前时间是当前年份第几周
+     *
+     * @param localDate 传入的日期
+     * @return
+     * @throws SerException
+     */
+    public static int todayWeek(LocalDate localDate) throws SerException {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(DateUtil.dateToString(localDate));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int weekOfMonth = calendar.get(Calendar.WEEK_OF_YEAR);
+            return weekOfMonth;
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据年月获取全部的项目组
+     *
+     * @param year
+     * @param month
+     * @return
+     * @throws SerException
+     */
+    public List<String> getProjects(String year, String month) throws SerException {
+        List<String> projects = new ArrayList<>();
+        Integer y = Integer.parseInt(year);
+        Integer m = Integer.parseInt(month);
+        LocalDate startDate = DateUtil.getStartDayOfMonth(y, m);
+        LocalDate endDate = DateUtil.getEndDaYOfMonth(y, m);
+
+        String sql = "SELECT projectTeam  FROM  materialbuy_materialbuy " +
+                "WHERE subscribeDate BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY projectTeam ";
+        List<Object> list = super.findBySql(sql);
+
+        for (int i = 0; i < list.size(); i++) {
+            projects.add(list.get(i) + "");
+        }
+        return projects;
+    }
+
+    /**
+     * 根据年月周汇总各个部门情况
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public OptionBO GuiByWeek(String year, String month, String week) throws SerException {
+        OptionBO bo = new OptionBO();
+        Integer y = Integer.parseInt(year);
+        Integer m = Integer.parseInt(month);
+        Integer w = Integer.parseInt(week);
+        //获取当前你年月周 日期
+        LocalDate[] localDate = DateUtil.getWeekTimes(y, m, w);
+        //获取开始日期 ，结束日期
+        LocalDate startDate = localDate[0];
+        LocalDate endDate = localDate[1];
+
+        List<String> projects = getProjects(startDate, endDate);
+        SeriesBO[] series = new SeriesBO[projects.size()];
+
+        for (int i = 0; i < projects.size(); i++) {
+            Double applyNum = 0D;
+            Double buyNum = 0D;
+            Double arrivalNum = 0D;
+            Double[] doubles = new Double[3];
+            MaterialBuyDTO dto = new MaterialBuyDTO();
+            dto.getConditions().add(Restrict.between("subscribeDate", new LocalDate[]{startDate, endDate}));
+            dto.getConditions().add(Restrict.eq("projectTeam", projects.get(i)));
+            List<MaterialBuy> materialBuys = super.findByCis(dto);
+
+            TempMatterDemandDTO demandDTO = new TempMatterDemandDTO();
+            demandDTO.getConditions().add(Restrict.between("requiredDate", new LocalDate[]{startDate, endDate}));
+            demandDTO.getConditions().add(Restrict.eq("projectTeam", projects.get(i)));
+            List<TempMatterDemand> tempMatterDemands = tempMatterDemandSer.findByCis(demandDTO);
+
+            for (MaterialBuy buy : materialBuys) {
+                buyNum += buy.getQuantity();
+                if (buy.getIfArrival()) {
+                    arrivalNum += buy.getQuantity();
+                }
+            }
+
+            for (TempMatterDemand tempMatterDemand : tempMatterDemands) {
+                applyNum += tempMatterDemand.getQuantity();
+            }
+            doubles[0] = applyNum;
+            doubles[1] = buyNum;
+            doubles[2] = arrivalNum;
+            SeriesBO seriesBO = new SeriesBO();
+            seriesBO.setName(projects.get(i));
+            seriesBO.setType("line");
+            seriesBO.setData(doubles);
+            series[i] = seriesBO;
+        }
+
+        TitleBO title = new TitleBO();
+        title.setText(String.format("物资购买周汇总（%s年%s月%s～%s)", year, month, startDate, endDate));
+        TooltipBO tooltipBO = new TooltipBO();
+        tooltipBO.setTrigger("item");
+        LegendBO legendBO = new LegendBO();
+        String[] d = (String[]) projects.toArray(new String[projects.size()]);
+        legendBO.setData(d);
+        XAxisBO xAxisBO = new XAxisBO();
+        String[] data = new String[]{"物资需求申请数", "物资购买数量", "到货数"};
+        xAxisBO.setData(data);
+        YAxisBO yAxisBO = new YAxisBO();
+        yAxisBO.setType("value");
+
+        bo.setTitle(title);
+        bo.setTooltip(tooltipBO);
+        bo.setLegend(legendBO);
+        bo.setxAxis(xAxisBO);
+        bo.setyAxis(yAxisBO);
+        bo.setSeries(series);
+        return bo;
+    }
+
+    /**
+     * 根据开始日期 结束日期获取全部的项目组
+     *
+     * @return
+     * @throws SerException
+     */
+    public List<String> getProjects(LocalDate startDate, LocalDate endDate) throws SerException {
+        List<String> projects = new ArrayList<>();
+
+        String sql = "SELECT projectTeam  FROM  materialbuy_materialbuy " +
+                "WHERE subscribeDate BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY projectTeam ";
+        List<Object> list = super.findBySql(sql);
+
+        for (int i = 0; i < list.size(); i++) {
+            projects.add(list.get(i) + "");
+        }
+        return projects;
+    }
 }

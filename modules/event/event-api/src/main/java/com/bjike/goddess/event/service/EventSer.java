@@ -227,4 +227,15 @@ public interface EventSer extends Ser<Event, EventDTO> {
      * @throws SerException
      */
     EventBO update(EventTO to) throws SerException;
+
+    /**
+     * 根据计划类型获取对应的数据
+     * 计划类型 分为  月计划 周计划 日计划
+     *              month week  day
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<FatherBO> findByName(EventDTO dto,String name) throws SerException;
 }

@@ -282,6 +282,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         if (!sons.isEmpty()) {
             customizeSonSer.remove(sons);
         }
+
         /**
          * 在保存新的对象
          */
@@ -730,7 +731,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             TableDTO tableDTO = new TableDTO();
             List<String> tables = new ArrayList<>();
             for (String str:tablesId){
-                String sql = "SELECT * FROM taskallotment_table b " +
+                String sql = "SELECT * FROM goddess_taskallotment.taskallotment_table b " +
                         " WHERE " +
                         "   b.project_id = '"+projects+"' AND " +
                         "   b.id = '"+str+"'";
@@ -743,7 +744,6 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         }
         /** * 任务ids */
         dto.setTabs(tabs);
-
 
         List<String> fields = new ArrayList<>();
         List<CollectSuitation> collectSuitations = new ArrayList<>();
@@ -898,7 +898,11 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                                             valContext.append("'"+values.get(j)+"'");
                                         }
                                     }
-                                    fieldContext.append(title + " IN (" + valContext +")");
+                                    if(valContext.indexOf("全部")!=-1){
+                                        fieldContext.append(title + " IS NOT NULL "  ) ;
+                                    }else{
+                                        fieldContext.append(title + " IN (" + valContext +")");
+                                    }
                                 } else if (CollectSuitation.NULL.equals(collectSuitation)) {
                                     fieldContext.append(title + " IS NULL "  ) ;
                                 } else if (CollectSuitation.NOTNULL.equals(collectSuitation)) {
@@ -1021,7 +1025,11 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                                             valContext.append("'"+values.get(j)+"'");
                                         }
                                     }
-                                    fieldContext.append(title + " IN (" + valContext +")");
+                                    if(valContext.indexOf("全部")!=-1){
+                                        fieldContext.append(title + " IS NOT NULL "  ) ;
+                                    }else{
+                                        fieldContext.append(title + " IN (" + valContext +")");
+                                    }
                                 } else if (CollectSuitation.NULL.equals(collectSuitation)) {
                                     fieldContext.append(title + " IS NULL "  ) ;
                                 } else if (CollectSuitation.NOTNULL.equals(collectSuitation)) {
@@ -1386,9 +1394,9 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 "       any_value(ifnull(c.remark,'无')) AS remark,any_value(ifnull(c.executeArea,'无')) AS executeArea, " +
                 "       any_value(ifnull(c.executeDepart,'无')) AS executeDepart,any_value(ifnull(c.finishStatus,'无')) AS finishStatus, " +
                 "       any_value(ifnull(c.priority,'无')) AS priority,any_value(ifnull(c.taskStatus,'无')) AS taskStatus, " +
-                "       any_value(count(*)) AS count FROM taskallotment_project a " +
-                "      LEFT JOIN taskallotment_table b ON a.id = b.project_id " +
-                "      LEFT JOIN taskallotment_tasknode c ON  b.id = c.table_id" +
+                "       any_value(count(*)) AS count FROM goddess_taskallotment.taskallotment_project a " +
+                "      LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                "      LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id" +
                 "   WHERE b.id IN ("+tablesId+") " +
                 "   AND c.startTime BETWEEN '"+startTime+"' AND '"+endTime+"'" +
                 "   GROUP BY c.table_id,c.taskType ) m";
@@ -1562,33 +1570,33 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         if (startTime.length()>0&&endTime.length()>0){
             if (fieldsTxt.size()>0){
                 sql = "SELECT planNum,finishStatus " +
-                        "FROM  taskallotment_project a " +
-                        "LEFT JOIN taskallotment_table b ON a.id = b.project_id " +
-                        "LEFT JOIN taskallotment_tasknode c ON  b.id = c.table_id " +
+                        "FROM  goddess_taskallotment.taskallotment_project a " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id " +
                         "WHERE b.id IN ( "+tablesId+" ) " +
                         " AND "+ fieldsTxt.get(0) +
                         " AND c.startTime BETWEEN '"+startTime+"' AND '"+endTime+"'";
             }else {
                 sql = "SELECT planNum,finishStatus " +
-                        "FROM  taskallotment_project a " +
-                        "LEFT JOIN taskallotment_table b ON a.id = b.project_id " +
-                        "LEFT JOIN taskallotment_tasknode c ON  b.id = c.table_id " +
+                        "FROM  goddess_taskallotment.taskallotment_project a " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id " +
                         "WHERE b.id IN ( "+tablesId+" ) " +
                         "AND c.startTime BETWEEN '"+startTime+"' AND '"+endTime+"'";
             }
         }else {
             if (fieldsTxt.size()>0){
                 sql = "SELECT planNum,finishStatus " +
-                        "FROM  taskallotment_project a " +
-                        "LEFT JOIN taskallotment_table b ON a.id = b.project_id " +
-                        "LEFT JOIN taskallotment_tasknode c ON  b.id = c.table_id " +
+                        "FROM  goddess_taskallotment.taskallotment_project a " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id " +
                         "WHERE b.id IN ( "+tablesId+" ) " +
                         " AND "+ fieldsTxt.get(0) ;
             }else {
                 sql = "SELECT planNum,finishStatus " +
-                        "FROM  taskallotment_project a " +
-                        "LEFT JOIN taskallotment_table b ON a.id = b.project_id " +
-                        "LEFT JOIN taskallotment_tasknode c ON  b.id = c.table_id " +
+                        "FROM  goddess_taskallotment.taskallotment_project a " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                        "LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id " +
                         "WHERE b.id IN ( "+tablesId+" ) ";
             }
 
@@ -1628,9 +1636,9 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 }
                 StringBuffer sql = new StringBuffer();
                 if ("peopleNum".equals(title)){
-                    sql.append("SELECT initiate FROM taskallotment_tasknode WHERE table_id in ("+tables+") GROUP BY initiate " );
+                    sql.append("SELECT initiate FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") GROUP BY initiate " );
                 }else {
-                    sql.append("SELECT " + title +" FROM taskallotment_tasknode WHERE table_id in ("+tables+") GROUP BY " + title );
+                    sql.append("SELECT " + title +" FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") GROUP BY " + title );
                 }
 
                 List<Object> datas = customizeSonSer.findBySql(sql.toString());
@@ -1706,8 +1714,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             }
         }
 
-        String sql = "SELECT execute FROM  taskallotment_project a LEFT JOIN taskallotment_table b ON a.id = b.project_id " +
-                "  LEFT JOIN taskallotment_tasknode c ON  b.id = c.table_id WHERE " +
+        String sql = "SELECT execute FROM  goddess_taskallotment.taskallotment_project a LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                "  LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id WHERE " +
                 "  b.id IN ("+tablesId+")  AND execute IN ("+nameVal+") " +
                 " GROUP BY execute";
         List<Object> datas = customizeSonSer.findBySql(sql);

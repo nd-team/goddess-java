@@ -1,7 +1,6 @@
 package com.bjike.goddess.materialbuy.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
-import com.bjike.goddess.event.dto.EventDTO;
 import com.bjike.goddess.materialbuy.enums.DateType;
 
 import javax.validation.constraints.NotNull;

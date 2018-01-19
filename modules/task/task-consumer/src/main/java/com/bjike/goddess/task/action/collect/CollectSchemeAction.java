@@ -109,7 +109,6 @@ public class CollectSchemeAction {
     }
 
 
-
     /**
      * 查找总记录数
      *
@@ -143,7 +142,6 @@ public class CollectSchemeAction {
     }
 
 
-
     /**
      * 汇总字段
      *
@@ -161,13 +159,7 @@ public class CollectSchemeAction {
     }
 
 
-
-
-    /**
-     * _-------------------------------------------------------------
-     *  新增功能点
-     */
-
+    //新增功能点
     /**
      * 添加
      *
@@ -225,7 +217,6 @@ public class CollectSchemeAction {
      * @param
      * @throws ActException
      * @version v1
-     *
      */
     @GetMapping("v1/send/{id}")
     public Result send(@PathVariable String id) throws ActException {
@@ -254,10 +245,6 @@ public class CollectSchemeAction {
             throw new ActException(e.getMessage());
         }
     }
-
-
-
-
 
 
 }

@@ -1,5 +1,5 @@
 select title , if(titleType=1 or titleType=2,sum(content) ,count(content))as value,tid,titleType from (
-select a.title,a.content,a.titleType,tid  from taskallotment_customtitle a ,(
+select a.title,a.content,a.titleType,tid  from 	goddess_taskallotment.taskallotment_customtitle a ,(
 select a.* from(
 select tc.title,tc.tasknode_id ,t.id as tid from goddess_taskallotment.taskallotment_project  p,
 goddess_taskallotment.taskallotment_table t,goddess_taskallotment.taskallotment_tasknode tn,goddess_taskallotment.taskallotment_customtitle tc
