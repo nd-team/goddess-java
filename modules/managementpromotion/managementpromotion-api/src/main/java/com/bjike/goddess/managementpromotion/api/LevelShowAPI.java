@@ -118,4 +118,7 @@ public interface LevelShowAPI {
      * jiangzaixuan
      */
     LevelShowBO findEmployeeId(String employeeId) throws SerException;
+
+
+    LevelShowBO findByName() throws SerException;
 }

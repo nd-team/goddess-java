@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
+
 @Entity
 @Table(name = "organize_instruction_classify")
 public class InstructionClassify extends BaseEntity {
@@ -32,7 +33,6 @@ public class InstructionClassify extends BaseEntity {
      */
     @Column(columnDefinition = "VARCHAR(255) COMMENT '描述'")
     private String description;
-
 
     /**
      * 使用状态

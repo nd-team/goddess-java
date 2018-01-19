@@ -1,11 +1,11 @@
 package com.bjike.goddess.recruit.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
+import javafx.scene.control.Alert;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 
 /**
@@ -66,8 +66,8 @@ public class WorkOG extends BaseEntity {
     /**
      * 时间
      */
-    @Column(name = "time", columnDefinition = "DATE   COMMENT '时间'")
-    private LocalDate time;
+    @Column(name = "time", columnDefinition = "VARCHAR(255)   COMMENT '时间'")
+    private String time;
 
     /**
      * 对赌总比例
@@ -105,6 +105,77 @@ public class WorkOG extends BaseEntity {
     @Column(name = "score", columnDefinition = "VARCHAR(255)   COMMENT '得分'")
     private String score;
 
+    /**
+     *
+     */
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "workog_id")
+    private Set<AlertIndex> alertIndices ;
+
+    /**
+     * 状态
+     */
+    @Column(name = "state",columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    private String state;
+
+    /**
+     * 接受时间
+     */
+    @Column(name = "acceptTime",columnDefinition = "VARCHAR(255)   COMMENT '接受时间'")
+    private String acceptTime;
+
+    /**
+     * 评分内容
+     */
+    @Column(name = "scoreContent", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '评分内容'")
+    private String scoreContent;
+
+    /**
+     *对赌内容
+     */
+    @Column(name = "content",columnDefinition = "VARCHAR(255)   COMMENT '对赌内容'")
+    private String content;
+
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getScoreContent() {
+        return scoreContent;
+    }
+
+    public void setScoreContent(String scoreContent) {
+        this.scoreContent = scoreContent;
+    }
+
+    public String getAcceptTime() {
+        return acceptTime;
+    }
+
+    public void setAcceptTime(String acceptTime) {
+        this.acceptTime = acceptTime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Set<AlertIndex> getAlertIndices() {
+        return alertIndices;
+    }
+
+    public void setAlertIndices(Set<AlertIndex> alertIndices) {
+        this.alertIndices = alertIndices;
+    }
 
     public String getDepartment() {
         return department;
@@ -162,11 +233,11 @@ public class WorkOG extends BaseEntity {
         this.nodeCON = nodeCON;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -216,5 +287,29 @@ public class WorkOG extends BaseEntity {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkOG{" +
+                "department='" + department + '\'' +
+                ", quarters='" + quarters + '\'' +
+                ", modular='" + modular + '\'' +
+                ", scoringOB='" + scoringOB + '\'' +
+                ", raters='" + raters + '\'' +
+                ", projectPRO='" + projectPRO + '\'' +
+                ", nodeCON='" + nodeCON + '\'' +
+                ", time='" + time + '\'' +
+                ", proportionOG='" + proportionOG + '\'' +
+                ", labelPRO='" + labelPRO + '\'' +
+                ", indexType='" + indexType + '\'' +
+                ", workIndex='" + workIndex + '\'' +
+                ", labelSCO=" + labelSCO +
+                ", score='" + score + '\'' +
+                ", alertIndices=" + alertIndices +
+                ", state='" + state + '\'' +
+                ", acceptTime='" + acceptTime + '\'' +
+                ", scoreContent='" + scoreContent + '\'' +
+                '}';
     }
 }

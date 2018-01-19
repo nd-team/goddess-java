@@ -10,16 +10,16 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.OpinionVO;
 import com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI;
+import com.bjike.goddess.salaryconfirm.entity.Salaryconfirm;
 import com.bjike.goddess.salaryconfirm.to.ConditionTO;
 import com.bjike.goddess.salaryconfirm.to.GuidePermissionTO;
 import com.bjike.goddess.salaryconfirm.vo.*;
 import com.bjike.goddess.user.vo.UserVO;
+import com.google.common.base.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -176,6 +176,20 @@ public class CollectAct {
             throw new ActException(e.getMessage());
         }
     }
+//    public Result departmentCollect(@RequestParam Integer year, @RequestParam Integer month, String department, HttpServletRequest request) throws ActException, SerException {
+//            try {
+//                Optional<String> optional = Optional.fromNullable(department);
+//                ConditionTO to = new ConditionTO();
+//                to.setYear(year);
+//                to.setMonth(month);
+//                to.setDepartment(optional.or(""));
+//                List<DepartmentCollectVO> voList = BeanTransform.copyProperties(salaryconfirmAPI.collectByCondition(to), DepartmentCollectVO.class);
+//                return ActResult.initialize(voList);
+//            } catch (SerException e) {
+//                throw new ActException(e.getMessage());
+//            }
+//
+//    }
 
     /**
      * 部门分析

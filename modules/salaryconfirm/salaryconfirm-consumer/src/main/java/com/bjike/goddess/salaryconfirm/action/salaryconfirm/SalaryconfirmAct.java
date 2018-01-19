@@ -235,8 +235,13 @@ public class SalaryconfirmAct extends BaseFileAction {
     @GetMapping("v1/export")
     public Result exportExcel(@RequestParam Integer year, @RequestParam Integer month, HttpServletResponse response) throws ActException {
         try {
-            String fileName = year + "年" + month + "月薪资核算确认.xlsx";
-            super.writeOutFile(response, salaryconfirmAPI.exportExcel(year, month), fileName);
+//            String fileName = year + "年" + month + "月薪资核算确认";
+            StringBuilder fileName = new StringBuilder(year);
+            fileName.append("年");
+            fileName.append(month);
+            fileName.append("月-薪资核算确认");
+//            StringBuilder file = new StringBuilder("月薪资核算确认.xlsx");
+            super.writeOutFile(response, salaryconfirmAPI.exportExcel(year, month), fileName.toString());
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

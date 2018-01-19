@@ -2,10 +2,9 @@ package com.bjike.goddess.recruit.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 
 /**
@@ -67,7 +66,7 @@ public class LifeOG extends BaseEntity {
      * 时间
      */
     @Column(name = "time",  columnDefinition = "DATE   COMMENT '时间'")
-    private LocalDate time;
+    private String time;
 
     /**
      * 生活情感标签一级分类
@@ -99,6 +98,31 @@ public class LifeOG extends BaseEntity {
     @Column(name = "score",  columnDefinition = "VARCHAR(255)   COMMENT '得分'")
     private String score;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lifeog_id")
+    private Set<ScoreWithStart> scoreWithStarts;
+
+    /**
+     * 接受时间
+     */
+    @Column(name = "acceptTime", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '接受时间'")
+    private String acceptTime;
+
+    public String getAcceptTime() {
+        return acceptTime;
+    }
+
+    public void setAcceptTime(String acceptTime) {
+        this.acceptTime = acceptTime;
+    }
+
+    public Set<ScoreWithStart> getScoreWithStarts() {
+        return scoreWithStarts;
+    }
+
+    public void setScoreWithStarts(Set<ScoreWithStart> scoreWithStarts) {
+        this.scoreWithStarts = scoreWithStarts;
+    }
 
     public String getDepartment() {
         return department;
@@ -156,11 +180,11 @@ public class LifeOG extends BaseEntity {
         this.nodeCON = nodeCON;
     }
 
-    public LocalDate getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDate time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

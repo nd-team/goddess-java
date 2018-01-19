@@ -235,4 +235,12 @@ public class PositionDetailUserApiImpl implements PositionDetailUserAPI {
     public List<String> planningPerson() throws SerException {
         return positionDetailUserSer.planningPerson();
     }
+
+    /**
+     * wany
+     */
+    @Override
+    public List<PositionDetailUserBO> wanyfindAll() throws SerException {
+        return positionDetailUserSer.wanyfindAll();
+    }
 }

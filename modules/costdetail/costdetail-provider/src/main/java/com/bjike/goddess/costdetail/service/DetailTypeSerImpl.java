@@ -47,10 +47,8 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
     private BusinessIncomeDetailSer businessIncomeDetailSer;
     @Autowired
     private CostDetailsSer costDetailsSer;
-
     @Autowired
     private UserAPI userAPI;
-
     @Autowired
     private CusPermissionSer cusPermissionSer;
 
@@ -277,39 +275,39 @@ public class DetailTypeSerImpl extends ServiceImpl<DetailType, DetailTypeDTO> im
     public void delete(String id) throws SerException {
         checkPermission();
         DetailType type = super.findById(id);
-        if(type.getParNode().equals("劳务成本")){
+        if (type.getParNode().equals("劳务成本")) {
             LaborCostDetailDTO laborCostDetailDTO = new LaborCostDetailDTO();
-            laborCostDetailDTO.getConditions().add(Restrict.eq("typeName",type.getTypeName()));
+            laborCostDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
             List<LaborCostDetail> laborCostDetails = laborCostDetailSer.findByCis(laborCostDetailDTO);
-            if (laborCostDetails!= null && laborCostDetails.size()>0){
+            if (laborCostDetails != null && laborCostDetails.size() > 0) {
                 throw new SerException("该明细已被使用,不能被删除");
             }
-        }else if(type.getParNode().equals("公司借入")){
+        } else if (type.getParNode().equals("公司借入")) {
             CompanyBorrowedDetailDTO companyBorrowedDetailDTO = new CompanyBorrowedDetailDTO();
-            companyBorrowedDetailDTO.getConditions().add(Restrict.eq("typeName",type.getTypeName()));
+            companyBorrowedDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
             List<CompanyBorrowedDetail> companyBorrowedDetails = companyBorrowedDetailSer.findByCis(companyBorrowedDetailDTO);
-            if (companyBorrowedDetails!= null && companyBorrowedDetails.size()>0){
+            if (companyBorrowedDetails != null && companyBorrowedDetails.size() > 0) {
                 throw new SerException("该明细已被使用,不能被删除");
             }
-        }else if(type.getParNode().equals("实收资本")) {
+        } else if (type.getParNode().equals("实收资本")) {
             PaidCapitalDetailDTO paidCapitalDetailDTO = new PaidCapitalDetailDTO();
             paidCapitalDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
             List<PaidCapitalDetail> paidCapitalDetails = paidCapitalDetailSer.findByCis(paidCapitalDetailDTO);
-            if (paidCapitalDetails!= null && paidCapitalDetails.size() > 0) {
+            if (paidCapitalDetails != null && paidCapitalDetails.size() > 0) {
                 throw new SerException("该明细已被使用,不能被删除");
             }
-        }else if(type.getParNode().equals("公司借出")) {
+        } else if (type.getParNode().equals("公司借出")) {
             CompanyLendDetailDTO companyLendDetailDTO = new CompanyLendDetailDTO();
             companyLendDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
             List<CompanyLendDetail> companyLendDetails = companyLendDetailSer.findByCis(companyLendDetailDTO);
-            if (companyLendDetails!= null && companyLendDetails.size() > 0) {
+            if (companyLendDetails != null && companyLendDetails.size() > 0) {
                 throw new SerException("该明细已被使用,不能被删除");
             }
-        }else if(type.getParNode().equals("主营业务收入")) {
+        } else if (type.getParNode().equals("主营业务收入")) {
             BusinessIncomeDetailDTO businessIncomeDetailDTO = new BusinessIncomeDetailDTO();
             businessIncomeDetailDTO.getConditions().add(Restrict.eq("typeName", type.getTypeName()));
             List<BusinessIncomeDetail> businessIncomeDetails = businessIncomeDetailSer.findByCis(businessIncomeDetailDTO);
-            if (businessIncomeDetails!= null && businessIncomeDetails.size() > 0) {
+            if (businessIncomeDetails != null && businessIncomeDetails.size() > 0) {
                 throw new SerException("该明细已被使用,不能被删除");
             }
         }

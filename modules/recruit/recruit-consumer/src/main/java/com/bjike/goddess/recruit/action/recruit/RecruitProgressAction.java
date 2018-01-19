@@ -173,27 +173,27 @@ public class RecruitProgressAction {
         }
     }
 
-    /**
-     * 输出ECharts表格
-     *
-     * @version v1
-     */
-    @GetMapping("v1/echarts")
-    public Result getECharts() throws SerException {
-        OptionBO bo = new OptionBO();
-        String[] dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-");
-        Integer[] integers = new Integer[dates.length - 1];
-        for (int i = 0; i < dates.length - 1; i++) {
-            integers[i] = Integer.parseInt(dates[i]);
-        }
-
-        List<EChartsBO> list = recruitDemandPlanSer.getECharts();
-        Map map = new HashMap();
-        String[] strings = {"本部门需招聘人数", "本部门近期招聘人数"};
-        map.put("legend", strings);
-        map.put("series", list);
-//        System.out.println(new SimpleDateFormat("yyyy-mm-dd").format(new Date()));
-
-        return new ActResult("success", map);
-    }
+//    /**
+//     * 输出ECharts表格
+//     *
+//     * @version v1
+//     */
+//    @GetMapping("v1/echarts")
+//    public Result getECharts() throws SerException {
+//        OptionBO bo = new OptionBO();
+//        String[] dates = new SimpleDateFormat("yyyy-MM-dd").format(new Date()).split("-");
+//        Integer[] integers = new Integer[dates.length - 1];
+//        for (int i = 0; i < dates.length - 1; i++) {
+//            integers[i] = Integer.parseInt(dates[i]);
+//        }
+//
+//        List<EChartsBO> list = recruitDemandPlanSer.getECharts();
+//        Map map = new HashMap();
+//        String[] strings = {"本部门需招聘人数", "本部门近期招聘人数"};
+//        map.put("legend", strings);
+//        map.put("series", list);
+////        System.out.println(new SimpleDateFormat("yyyy-mm-dd").format(new Date()));
+//
+//        return new ActResult("success", map);
+//    }
 }

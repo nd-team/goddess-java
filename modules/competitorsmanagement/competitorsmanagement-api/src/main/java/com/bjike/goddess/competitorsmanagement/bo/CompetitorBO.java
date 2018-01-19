@@ -84,25 +84,25 @@ public class CompetitorBO extends BaseBO {
      */
     private String informationCollector;
 
-    /**
-     * 客户信息编号
-     */
-    private String customerNum;
+//    /**
+//     * 客户信息编号
+//     */
+//    private String customerNum;
 
     /**
      * 相关联系人
      */
     private String relatedContact;
 
-    /**
-     * 电话/座机
-     */
-    private String phone;
-
-    /**
-     * 职务/权职
-     */
-    private String workRight;
+//    /**
+//     * 电话/座机
+//     */
+//    private String phone;
+//
+//    /**
+//     * 职务/权职
+//     */
+//    private String workRight;
 
     /**
      * 竞争对手动态
@@ -245,13 +245,13 @@ public class CompetitorBO extends BaseBO {
         this.informationCollector = informationCollector;
     }
 
-    public String getCustomerNum() {
-        return customerNum;
-    }
-
-    public void setCustomerNum(String customerNum) {
-        this.customerNum = customerNum;
-    }
+//    public String getCustomerNum() {
+//        return customerNum;
+//    }
+//
+//    public void setCustomerNum(String customerNum) {
+//        this.customerNum = customerNum;
+//    }
 
     public String getRelatedContact() {
         return relatedContact;
@@ -261,21 +261,21 @@ public class CompetitorBO extends BaseBO {
         this.relatedContact = relatedContact;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getWorkRight() {
-        return workRight;
-    }
-
-    public void setWorkRight(String workRight) {
-        this.workRight = workRight;
-    }
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//
+//    public String getWorkRight() {
+//        return workRight;
+//    }
+//
+//    public void setWorkRight(String workRight) {
+//        this.workRight = workRight;
+//    }
 
     public String getCompetitorDynamics() {
         return competitorDynamics;
@@ -301,31 +301,4 @@ public class CompetitorBO extends BaseBO {
         this.competitorInformation = competitorInformation;
     }
 
-    @Override
-    public String toString() {
-        return "CompetitorBO{" +
-                "competitorCollectTime='" + competitorCollectTime + '\'' +
-                ", competitorSource='" + competitorSource + '\'' +
-                ", marketInfoNum='" + marketInfoNum + '\'' +
-                ", projectName='" + projectName + '\'' +
-                ", area='" + area + '\'' +
-                ", rivalCompany='" + rivalCompany + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", address='" + address + '\'' +
-                ", organizationStructure='" + organizationStructure + '\'' +
-                ", affectedArea='" + affectedArea + '\'' +
-                ", affectedAreaNum=" + affectedAreaNum +
-                ", impactOnBusiness='" + impactOnBusiness + '\'' +
-                ", impactOnBusinessNum=" + impactOnBusinessNum +
-                ", informationCollector='" + informationCollector + '\'' +
-                ", customerNum='" + customerNum + '\'' +
-                ", relatedContact='" + relatedContact + '\'' +
-                ", phone='" + phone + '\'' +
-                ", workRight='" + workRight + '\'' +
-                ", competitorDynamics='" + competitorDynamics + '\'' +
-                ", note='" + note + '\'' +
-                ", competitorInformation=" + competitorInformation +
-                ", organizationSDBO=" + organizationSD +
-                '}';
-    }
 }

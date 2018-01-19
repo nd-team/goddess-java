@@ -4,7 +4,6 @@ import com.bjike.goddess.abilitydisplay.dto.ComCertificateDTO;
 import com.bjike.goddess.abilitydisplay.entity.ComCertificate;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**

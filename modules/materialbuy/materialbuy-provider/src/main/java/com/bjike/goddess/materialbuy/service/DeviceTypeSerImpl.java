@@ -12,7 +12,9 @@ import com.bjike.goddess.materialbuy.to.DeviceTypeTO;
 import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.google.common.collect.Ordering;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -177,6 +179,15 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
         checkSeeIdentity();
         List<DeviceType> list = super.findByPage(dto);
         List<DeviceTypeBO> listBO = BeanTransform.copyProperties(list, DeviceTypeBO.class);
+        if (listBO != null) {
+            Comparator<DeviceTypeBO> comparator = new Comparator<DeviceTypeBO>() {
+                @Override
+                public int compare(DeviceTypeBO o1, DeviceTypeBO o2) {
+                    return o2.getCreateTime().compareTo(o1.getCreateTime());
+                }
+            };
+            listBO = Ordering.from(comparator).sortedCopy(listBO);
+        }
         return listBO;
     }
 
@@ -237,7 +248,7 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
      * @throws SerException
      */
     private void updateDeviceType(DeviceTypeTO to, DeviceType model) throws SerException {
-        BeanTransform.copyProperties(to, model, true);
+        BeanUtils.copyProperties(to, model);
         model.setModifyTime(LocalDateTime.now());
         super.update(model);
     }

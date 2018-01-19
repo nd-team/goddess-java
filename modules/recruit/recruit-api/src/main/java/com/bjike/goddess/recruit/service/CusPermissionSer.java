@@ -31,19 +31,25 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
 
     /**
      * 客户权限列表
+     *
      * @param cusPermissionDTO 客户权限数据
      * @return CusPermissionBO
      * @throws SerException
      */
-    default List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException{return null;}
+    default List<CusPermissionBO> list(CusPermissionDTO cusPermissionDTO) throws SerException {
+        return null;
+    }
 
     /**
      * 一个客户权限
+     *
      * @param id 客户权限id
      * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO getOneById(String id) throws SerException{return null;}
+    default CusPermissionBO getOneById(String id) throws SerException {
+        return null;
+    }
 
 
     /**
@@ -53,32 +59,41 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @return OpinionBO 返回数据
      * @throws SerException
      */
-    default List<OpinionBO>  listOperateById(String id) throws SerException {
+    default List<OpinionBO> listOperateById(String id) throws SerException {
         return null;
     }
 
     /**
      * 添加客户权限
+     *
      * @param cusPermissionTO 客户权限数据
      * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO add(List<CusPermissionTO> cusPermissionTO) throws SerException{return null;}
+    default CusPermissionBO add(List<CusPermissionTO> cusPermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 编辑客户权限
+     *
      * @param cusPermissionTO 客户权限数据
      * @return CusPermissionBO
      * @throws SerException
      */
-    default CusPermissionBO edit(CusPermissionTO cusPermissionTO) throws SerException{return null;}
+    default CusPermissionBO edit(CusPermissionTO cusPermissionTO) throws SerException {
+        return null;
+    }
 
     /**
      * 根据idFlag查询可以某种操作的客户权限
+     *
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean getCusPermission(String idFlag, UserBO userBO) throws SerException{return null;}
+    default Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
+        return null;
+    }
 
     /**
      * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
@@ -86,19 +101,19 @@ public interface CusPermissionSer extends Ser<CusPermission, CusPermissionDTO> {
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean busCusPermission(String idFlag, UserBO userBO) throws SerException {
+    default Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
+
     /**
      * 根据idFlag查询只有商务模块的才可以进行添加编辑删除操作
      *
      * @param idFlag 客户权限idFlag
      * @throws SerException
      */
-    default Boolean manCusPermission(String idFlag, UserBO userBO) throws SerException {
+    default Boolean manCusPermission(String idFlag, UserBO user) throws SerException {
         return null;
     }
-
 
 
 }

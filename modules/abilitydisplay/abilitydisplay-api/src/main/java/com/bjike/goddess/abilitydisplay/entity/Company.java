@@ -20,7 +20,7 @@ import java.util.List;
 public class Company extends BaseEntity {
 
     /**
-     * 用途类型String
+     * 用途类型
      */
     @Column(name = "type", columnDefinition = "VARCHAR(255)   COMMENT '用途类型String'")
     private String type;

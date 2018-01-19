@@ -7,11 +7,13 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.competitorsmanagement.bo.CompetitorBO;
 import com.bjike.goddess.competitorsmanagement.bo.OrganizationSDBO;
+import com.bjike.goddess.competitorsmanagement.dao.CompetitorRep;
 import com.bjike.goddess.competitorsmanagement.dto.CompetitorDTO;
 import com.bjike.goddess.competitorsmanagement.entity.Competitor;
 import com.bjike.goddess.competitorsmanagement.entity.OrganizationSD;
 import com.bjike.goddess.competitorsmanagement.excel.CompetitorExport;
 import com.bjike.goddess.competitorsmanagement.to.CompetitorTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -32,15 +34,16 @@ import java.util.List;
 @Service
 public class CompetitorSerImpl extends ServiceImpl<Competitor, CompetitorDTO> implements CompetitorSer {
 
-//    @Autowired
-//    private OrganizationSDSer organizationSDSer;
+
+    @Autowired
+    private CompetitorRep competitorRep;
 
     @Override
     public List<CompetitorBO> getList() throws SerException {
         List<Competitor> list = super.findAll();
-        System.out.println(list);
+        List<Competitor> competitors = competitorRep.find();
+        System.out.println(competitors);
         List<CompetitorBO> bOlist = BeanTransform.copyProperties(list,CompetitorBO.class);
-        System.out.println(bOlist);
         return BeanTransform.copyProperties(super.findAll(), CompetitorBO.class);
     }
 

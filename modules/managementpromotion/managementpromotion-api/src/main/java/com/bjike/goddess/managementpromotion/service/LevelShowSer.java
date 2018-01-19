@@ -119,4 +119,7 @@ public interface LevelShowSer extends Ser<LevelShow, LevelShowDTO> {
      * jinagzaixuan
      */
     LevelShowBO findEmployeeId(String employeeId) throws SerException;
+
+
+    LevelShowBO findByName() throws SerException;
 }

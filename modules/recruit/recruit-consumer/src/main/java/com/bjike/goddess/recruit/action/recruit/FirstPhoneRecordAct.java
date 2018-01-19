@@ -14,7 +14,6 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.recruit.api.FirstPhoneRecordAPI;
 import com.bjike.goddess.recruit.bo.FirstPhoneRecordBO;
 import com.bjike.goddess.recruit.dto.FirstPhoneRecordDTO;
-import com.bjike.goddess.recruit.entity.FirstPhoneRecord;
 import com.bjike.goddess.recruit.excel.FirstPhoneRecordExcel;
 import com.bjike.goddess.recruit.to.DeleteFileTO;
 import com.bjike.goddess.recruit.to.FirstPhoneRecordTO;
@@ -47,11 +46,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("firstPhoneRecord")
-public class FirstPhoneRecordAct extends BaseFileAction{
+public class FirstPhoneRecordAct extends BaseFileAction {
     @Autowired
     private FirstPhoneRecordAPI firstPhoneRecordAPI;
     @Autowired
     private FileAPI fileAPI;
+    @Autowired
+    private MyWebSocket myWebSocket;
 
     /**
      * 功能导航权限
@@ -224,7 +225,13 @@ public class FirstPhoneRecordAct extends BaseFileAction{
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result add(@Validated(value = {ADD.class}) FirstPhoneRecordTO to, BindingResult result, HttpServletRequest request) throws ActException {
+    public Result add(@Validated(value = {ADD.class}) FirstPhoneRecordTO to, BindingResult result, HttpServletRequest request) throws ActException, IOException, SerException {
+        if (to.getWhetherFirstInterview()) {
+            myWebSocket.sendMsg1("是否初试", "亲，有一份公司面试待安排哦：详情信息如下：\n" +
+                    "“应聘地区”+“应聘部门”+“应聘者姓名”+“邀约初试时间”+“初试地点”");
+        } else {
+            myWebSocket.sendMsg1("fuck", "亲，虽然失去一位面试者，但是下一位会更棒的，加油！");
+        }
         try {
             FirstPhoneRecordBO bo = firstPhoneRecordAPI.save(to);
             FirstPhoneRecordVO vo = BeanTransform.copyProperties(bo, FirstPhoneRecordVO.class, request);
@@ -269,6 +276,7 @@ public class FirstPhoneRecordAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 导入Excel
      *
@@ -286,67 +294,67 @@ public class FirstPhoneRecordAct extends BaseFileAction{
             List<FirstPhoneRecordTO> tocs = new ArrayList<>();
             for (FirstPhoneRecordExcel str : tos) {
                 FirstPhoneRecordTO recordTO = BeanTransform.copyProperties(str, FirstPhoneRecordTO.class,
-                        "whetherPass","whetherPhoneSuccess","whetherWorkExperience",
-                        "whetherFirstInviteSuccess","whetherFirstInterview","whetherFaceTest",
+                        "whetherPass", "whetherPhoneSuccess", "whetherWorkExperience",
+                        "whetherFirstInviteSuccess", "whetherFirstInterview", "whetherFaceTest",
                         "retrial");
                 //简历筛选是否通过
-                if(null != str.getWhetherPass()){
-                    if(str.getWhetherPass().equals("是")){
+                if (null != str.getWhetherPass()) {
+                    if (str.getWhetherPass().equals("是")) {
                         recordTO.setWhetherPass(true);
-                    }else {
+                    } else {
                         recordTO.setWhetherPass(false);
                     }
 
                 }
                 //通话是否成功
-                if(null != str.getWhetherPhoneSuccess()){
-                    if(str.getWhetherPhoneSuccess().equals("是")){
+                if (null != str.getWhetherPhoneSuccess()) {
+                    if (str.getWhetherPhoneSuccess().equals("是")) {
                         recordTO.setWhetherPhoneSuccess(true);
-                    }else {
+                    } else {
                         recordTO.setWhetherPhoneSuccess(false);
                     }
 
                 }
                 //是否有相关工作经验
                 if (null != str.getWhetherWorkExperience()) {
-                    if(str.getWhetherWorkExperience().equals("是")){
+                    if (str.getWhetherWorkExperience().equals("是")) {
                         recordTO.setWhetherWorkExperience(true);
-                    }else {
+                    } else {
                         recordTO.setWhetherWorkExperience(false);
                     }
                 }
                 //是否成功邀约初试
-                if(null != str.getWhetherFirstInviteSuccess()){
-                    if(str.getWhetherFirstInviteSuccess().equals("是")){
+                if (null != str.getWhetherFirstInviteSuccess()) {
+                    if (str.getWhetherFirstInviteSuccess().equals("是")) {
                         recordTO.setWhetherFirstInviteSuccess(true);
-                    }else {
+                    } else {
                         recordTO.setWhetherFirstInviteSuccess(false);
                     }
 
                 }
                 //是否初试
-                if(null != str.getWhetherFirstInterview()){
-                    if(str.getWhetherFirstInterview().equals("是")){
+                if (null != str.getWhetherFirstInterview()) {
+                    if (str.getWhetherFirstInterview().equals("是")) {
                         recordTO.setWhetherFirstInterview(true);
-                    }else {
+                    } else {
                         recordTO.setWhetherFirstInterview(false);
                     }
 
                 }
                 //初试是否为面试
-                if(null != str.getWhetherFaceTest()){
-                    if(str.getWhetherFaceTest().equals("是")){
+                if (null != str.getWhetherFaceTest()) {
+                    if (str.getWhetherFaceTest().equals("是")) {
                         recordTO.setWhetherFaceTest(true);
-                    }else {
+                    } else {
                         recordTO.setWhetherFaceTest(false);
                     }
 
                 }
                 //是否需要复试
-                if(null != str.getRetrial()){
-                    if(str.getRetrial().equals("是")){
+                if (null != str.getRetrial()) {
+                    if (str.getRetrial().equals("是")) {
                         recordTO.setRetrial(true);
-                    }else {
+                    } else {
                         recordTO.setRetrial(false);
                     }
 
@@ -371,7 +379,7 @@ public class FirstPhoneRecordAct extends BaseFileAction{
      */
 //    @LoginAuth
     @GetMapping("v1/export")
-    public Result exportReport( FirstPhoneRecordDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
+    public Result exportReport(FirstPhoneRecordDTO dto, HttpServletResponse response, BindingResult result) throws ActException {
         try {
             String fileName = "第一次电访记录.xlsx";
             super.writeOutFile(response, firstPhoneRecordAPI.exportExcel(dto), fileName);
@@ -401,5 +409,5 @@ public class FirstPhoneRecordAct extends BaseFileAction{
             throw new ActException(e1.getMessage());
         }
     }
-    
+
 }

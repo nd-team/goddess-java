@@ -46,7 +46,7 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
             if (!flag) {
                 throw new SerException("您不是相应部门的人员，不可以操作");
             }
@@ -64,7 +64,7 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3",null);
+            flag = cusPermissionSer.busCusPermission("3", null);
             if (!flag) {
                 throw new SerException("您不是规划模块的人员，不可以操作");
             }
@@ -82,7 +82,7 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.getCusPermission("1",null);
+            flag = cusPermissionSer.getCusPermission("1", null);
         } else {
             flag = true;
         }
@@ -99,7 +99,7 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("2",null);
+            flag = cusPermissionSer.busCusPermission("2", null);
         } else {
             flag = true;
         }
@@ -116,7 +116,7 @@ public class TemplateManageSerImpl extends ServiceImpl<TemplateManage, TemplateM
         RpcTransmit.transmitUserToken(userToken);
         String userName = userBO.getUsername();
         if (!"admin".equals(userName.toLowerCase())) {
-            flag = cusPermissionSer.busCusPermission("3",null);
+            flag = cusPermissionSer.busCusPermission("3", null);
         } else {
             flag = true;
         }

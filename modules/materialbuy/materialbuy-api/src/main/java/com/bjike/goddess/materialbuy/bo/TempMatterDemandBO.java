@@ -14,6 +14,7 @@ import com.bjike.goddess.materialbuy.enums.AuditState;
  */
 public class TempMatterDemandBO extends BaseBO {
 
+    private String createTime;
     /**
      * 地区
      */

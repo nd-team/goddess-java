@@ -9,7 +9,11 @@ import com.bjike.goddess.competitorsmanagement.entity.Competitor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,43 +31,25 @@ public class CollectSerImpl extends ServiceImpl<Collect, CollectDTO> implements 
 
     @Override
     public List<CollectBO> getCollet() throws SerException {
-        String sql = "SELECT businessType\n" +
-                "FROM competitorsmanagement_competitor\n" +
-                "GROUP BY businessType";
-        String[] fields = {"MAcompetitor", "COnumber", "CIcompetitior", "UNCIcompetitior", "AFareaNum", "AFbusinessNum"};
-        List<Object> competitors = super.findBySql(sql);
-        List<CollectBO> collectBOS = new ArrayList<>();
-        for (int i = 0; i < competitors.size(); i++) {
-            List<CollectBO> list = super.findBySql(sql(), CollectBO.class, fields);
-            collectBOS.add(list.get(0));
-        }
-
-        System.out.println(collectBOS);
-        return collectBOS;
+        String[] fields = {"businessType","MAcompetitor", "COnumber", "CIcompetitior", "UNCIcompetitior", "AFareaNum", "AFbusinessNum"};
+        List<CollectBO> list = super.findBySql(sql(), CollectBO.class, fields);
+        System.out.println(list);
+        return list;
     }
 
     private String sql() {
         String sql = "SELECT\n" +
-                "  (SELECT count(marketInfoNum)\n" +
-                "   FROM competitorsmanagement_competitor\n" +
-                "   WHERE marketInfoNum NOT IN (NULL) AND createTime BETWEEN '2017-12-15' AND '2017-12-16')  AS MAcompetitor,\n" +
-                "  (SELECT count(id)\n" +
-                "   FROM competitorsmanagement_competitor)                                                   AS COnumber,\n" +
-                "  (SELECT count(id)\n" +
-                "   FROM competitorsmanagement_competitor\n" +
-                "   WHERE is_competitorInformation = 1 AND createTime BETWEEN '2017-12-14' AND '2017-12-15') AS CIcompetitior,\n" +
-                "  (SELECT count(id)\n" +
-                "   FROM competitorsmanagement_competitor\n" +
-                "   WHERE is_competitorInformation = 0 AND createTime BETWEEN '2017-12-14' AND '2017-12-15') AS UNCIcompetitior,\n" +
-                "  (SELECT sum(affectedAreaNum)\n" +
-                "   FROM competitorsmanagement_competitor\n" +
-                "   WHERE businessType = 'csdc' AND createTime BETWEEN '2017-12-14' AND '2017-12-15')        AS AFareaNum,\n" +
-                "  (SELECT sum(impactOnBusinessNum)\n" +
-                "   FROM competitorsmanagement_competitor\n" +
-                "   WHERE businessType = 'csdc' AND createTime BETWEEN '2017-12-14' AND '2017-12-15')        AS AFbusinessNum\n" +
+                "  businessType,\n" +
+                "  count(if(marketInfoNum != '', TRUE, NULL))            AS MAcompetitor,\n" +
+                "  count(id)                                             AS COnumber,\n" +
+                "  count(if(is_competitorInformation = 1, TRUE, NULL))   AS CIcompetitior,\n" +
+                "  count((if(is_competitorInformation = 0, TRUE, NULL))) AS UNCIcompetitior,\n" +
+                "  sum(affectedAreaNum)                                  AS AFareaNum,\n" +
+                "  sum(impactOnBusinessNum)                              AS AFbusinessNum\n" +
                 "FROM competitorsmanagement_competitor\n" +
-                "GROUP BY businessType\n" +
-                "HAVING businessType = 'csdc';";
+                "WHERE createTime BETWEEN '2017-12-14' AND '2017-12-17'\n" +
+                "GROUP BY businessType;";
         return sql;
     }
+
 }

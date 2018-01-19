@@ -29,6 +29,8 @@ dependencies {
     compile project(":common:common-jpa")
     compile project(":common:common-provider")
     compile project(":modules:costdetail:costdetail-api")
+    compile project(":modules:storage:storage-api")
     compile project(":common:common-utils")
+
 }
 

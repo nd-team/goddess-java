@@ -1,5 +1,7 @@
 package com.bjike.goddess.salaryconfirm.enums;
 
+import com.bjike.goddess.common.utils.excel.ExcelValue;
+
 /**
  * 薪资核算确认类型
  * <p>
@@ -10,18 +12,22 @@ public enum FindType {
     /**
      * 等待确认薪资
      */
+    @ExcelValue(name = "等待确认薪资")
     WAIT(0),
     /**
      * 已确认薪资
      */
+    @ExcelValue(name = "已确认薪资")
     CONFIRM(1),
     /**
      * 已付薪资
      */
+    @ExcelValue(name = "已付薪资")
     PAYED(2),
     /**
      * 已确认收款薪资
      */
+    @ExcelValue(name = "已确认收款薪资")
     RECEIVED(3);
 
     private int code;

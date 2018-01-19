@@ -134,4 +134,9 @@ public interface SalaryconfirmSer extends Ser<Salaryconfirm, SalaryconfirmDTO> {
      * @version v1
      */
     byte[] exportConfirmedExcel(Integer year, Integer month) throws SerException;
+
+    /**
+     * 正常的个人汇总
+     */
+//    List<SalaryconfirmBO> findByGood(Integer year, Integer mouth, String name) throws SerException;
 }

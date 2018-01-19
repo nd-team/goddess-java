@@ -25,6 +25,15 @@ public class DeviceTypeBO extends BaseBO {
      */
     private String subject;
 
+    private String createTime;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public String getType() {
         return type;

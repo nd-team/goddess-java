@@ -303,14 +303,14 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean getCusPermission(String idFlag,UserBO user) throws SerException {
+    public Boolean getCusPermission(String idFlag, UserBO user) throws SerException {
         String ss = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = new UserBO();
-        if(null == user ) {
+        if (null == user) {
             userBO = userAPI.currentUser();
-        }else{
+        } else {
             userBO = user;
         }
         String userId = userBO.getId();
@@ -353,7 +353,7 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         Boolean depart = positionDetailUserAPI.checkAsUserDepartment(userId, operateIds);
 
         //TODO 部门
-        if (depart ) {
+        if (depart) {
             flag = true;
         } else {
             flag = false;
@@ -363,14 +363,14 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
     }
 
     @Override
-    public Boolean busCusPermission(String idFlag,UserBO user) throws SerException {
+    public Boolean busCusPermission(String idFlag, UserBO user) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = new UserBO();
-        if(null == user ) {
+        if (null == user) {
             userBO = userAPI.currentUser();
-        }else{
+        } else {
             userBO = user;
         }
         String userId = userBO.getId();
@@ -417,15 +417,16 @@ public class CusPermissionSerImpl extends ServiceImpl<CusPermission, CusPermissi
         String aa = RpcTransmit.getUserToken();
         return flag;
     }
+
     @Override
     public Boolean manCusPermission(String idFlag, UserBO user) throws SerException {
         String userToken = RpcTransmit.getUserToken();
         Boolean flag = false;
         //但前用户
         UserBO userBO = new UserBO();
-        if(null == user ) {
+        if (null == user) {
             userBO = userAPI.currentUser();
-        }else{
+        } else {
             userBO = user;
         }
         String userId = userBO.getId();

@@ -23,13 +23,13 @@ public class CompanyAuth extends BaseEntity {
     /**
      * 中兴技能认证证书数量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '中兴技能认证证书数量'")
+    @Column(name = "zteNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '中兴技能认证证书数量'")
     private Integer zteNum;
 
     /**
      * 华为技能认证证书数量
      */
-    @Column(name = "", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '华为技能认证证书数量'")
+    @Column(name = "huaweiNum", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '华为技能认证证书数量'")
     private Integer huaweiNum;
 
     /**
