@@ -278,6 +278,8 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
                 boList.add(sumBO);
                 beginSum = 0;
                 endSum = 0;    //置为0
+                DebtBO debtBO1 = new DebtBO();
+                boList.add(debtBO1);
                 DebtBO debtBO = new DebtBO();
                 debtBO.setDebt("所有者权益(或股东权益)：");
                 boList.add(debtBO);

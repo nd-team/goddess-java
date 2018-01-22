@@ -6,6 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.organize.api.ModuleTypeAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
@@ -16,6 +19,7 @@ import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.ProfitType;
 import com.bjike.goddess.reportmanagement.enums.Type;
+import com.bjike.goddess.reportmanagement.excel.ProfitExportExcel;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
@@ -26,12 +30,23 @@ import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.SubjectCollectBO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,6 +86,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 //    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
+
+    @Autowired
+    private CompanyBasicInfoAPI companyBasicInfoAPI;
 
 
     /**
@@ -1334,5 +1352,61 @@ private Logger logger = Logger.getLogger(ProfitSerImpl.class);
         RpcTransmit.transmitUserToken(userToken);
         String moduleId = moduleTypeAPI.findModuleId("账务模块");
         return positionDetailUserAPI.checkAsUserModule(userBO.getId(), moduleId);
+    }
+
+    @Override
+    public byte[] exportExcel(ProfitDTO dto) throws SerException {
+        List<ProfitExportExcel> list = new ArrayList<>();
+        List<ProfitBO> profitBOList = this.list(dto);
+        for (ProfitBO profitBO: profitBOList) {
+            ProfitExportExcel profitExportExcel = BeanTransform.copyProperties(profitBO,ProfitExportExcel.class);
+            list.add(profitExportExcel);
+        }
+
+        Excel excel = new Excel(2, 3);
+        byte[] bytes1 = ExcelUtil.clazzToExcel(list, excel);
+        XSSFWorkbook wb = null;
+        String comp = "";
+//        List<String> comps = companyBasicInfoAPI.findCompanyName();
+//        if(comps!=null && comps.size()>0){
+//            comp = comps.get(0);
+//        }
+        try {
+            InputStream is = new ByteArrayInputStream(bytes1);
+            wb = new XSSFWorkbook(is);// 创建一个工作execl文档
+            XSSFCellStyle headerStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+            headerStyle.setWrapText(true);
+            XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFRow row = sheet.createRow(0);
+            XSSFRow row1 = sheet.createRow(1);
+            //标题
+            for(int o = 0;o<4;o++){
+                row.createCell(o).setCellValue("利润表");
+            }
+            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 3);
+            sheet.addMergedRegion(cra);//这个干嘛的
+            //公司和单位
+            row1.createCell(0).setCellValue("编制单位");
+            row1.createCell(1).setCellValue(comp+"公司");
+            row1.createCell(2).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(3).setCellValue("单位:元");
+
+            row.getCell(0).setCellStyle(headerStyle);
+            row1.getCell(2).setCellStyle(headerStyle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
     }
 }

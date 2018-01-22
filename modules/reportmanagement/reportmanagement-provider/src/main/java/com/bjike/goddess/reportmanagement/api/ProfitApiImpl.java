@@ -141,4 +141,9 @@ public class ProfitApiImpl implements ProfitAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return profitSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] exportExcel(ProfitDTO dto) throws SerException {
+        return profitSer.exportExcel(dto);
+    }
 }

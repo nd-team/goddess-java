@@ -11,6 +11,7 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
+import com.bjike.goddess.reportmanagement.api.AssetAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
@@ -1131,9 +1132,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 list.add(assetAndDebtExportExcel);
             }
         }
-        Excel excel = new Excel(0, 2);
+        Excel excel = new Excel(2, 3);
         byte[] bytes1 = ExcelUtil.clazzToExcel(list, excel);
-//        byte[] bytes2 = ExcelUtil.clazzToExcel(null, null);
         XSSFWorkbook wb = null;
         String comp = "";
         List<String> comps = companyBasicInfoAPI.findCompanyName();
@@ -1147,8 +1147,8 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
             headerStyle.setWrapText(true);
             XSSFSheet sheet = wb.getSheetAt(0);
-            XSSFRow row = sheet.getRow(0);
-            XSSFRow row1 = sheet.getRow(1);
+            XSSFRow row = sheet.createRow(0);
+            XSSFRow row1 = sheet.createRow(1);
             //标题
             for(int o = 0;o<8;o++){
                 row.createCell(o).setCellValue("资产负债表");
@@ -1185,7 +1185,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             throw new RuntimeException(e.getMessage());
         }
 
-        return os.toByteArray();
+      return os.toByteArray();
     }
 
     @Override
