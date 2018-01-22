@@ -310,12 +310,12 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
         BeanUtils.copyProperties(dto, assetDTO, "sorts");
         Long size = assetSer.count(assetDTO);
 
-        if (size + 10 > boList.size() + 2) {
-            for (int i = 0; i < size + 10 - (boList.size() + 2); i++) {
-                DebtBO debtBO = new DebtBO();
-                boList.add(debtBO);
-            }
-        }
+//        if (size + 10 > boList.size() + 2) {
+//            for (int i = 0; i < size + 10 - (boList.size() + 2); i++) {
+//                DebtBO debtBO = new DebtBO();
+//                boList.add(debtBO);
+//            }
+//        }
 
         DebtBO lastTwo = new DebtBO();
         lastTwo.setDebt("所有者权益(或股东权益)合计");

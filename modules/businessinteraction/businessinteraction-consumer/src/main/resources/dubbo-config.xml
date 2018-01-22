@@ -20,9 +20,7 @@
 	<dubbo:reference  validation="true" id="cooperCapabilityApiImpl" interface="com.bjike.goddess.capability.api.CooperCapabilityAPI" />
 	<dubbo:reference  validation="true" id="demandApiImpl" interface="com.bjike.goddess.businessinteraction.api.DemandAPI" />
 	<dubbo:reference  validation="true" id="interactionRelationApiImpl" interface="com.bjike.goddess.businessinteraction.api.InteractionRelationAPI" />
-	<dubbo:reference  validation="true" id="leavingMessageApiImpl" interface="com.bjike.goddess.businessinteraction.api.LeavingMessageAPI" />
 	<dubbo:reference  validation="true" id="talkDetailApiImpl" interface="com.bjike.goddess.businessinteraction.api.TalkDetailAPI" />
-	<dubbo:reference  validation="true" id="collectEmailApiImpl" interface="com.bjike.goddess.businessinteraction.api.CollectEmailAPI" />
 
 
 	<dubbo:reference  validation="true" id="departmentDetailApiImpl" interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" />

@@ -69,6 +69,12 @@ public class SettleWorkProgreManage extends BaseEntity {
     private String responsible;
 
     /**
+     * 分配人
+     */
+    @Column(name = "allocationPeople", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '分配人'")
+    private String allocationPeople;
+
+    /**
      * 是否完成
      */
     @Column(name = "is_complete", columnDefinition = "TINYINT(1)  COMMENT '是否完成'")
@@ -145,5 +151,13 @@ public class SettleWorkProgreManage extends BaseEntity {
 
     public void setComplete(Boolean complete) {
         this.complete = complete;
+    }
+
+    public String getAllocationPeople() {
+        return allocationPeople;
+    }
+
+    public void setAllocationPeople(String allocationPeople) {
+        this.allocationPeople = allocationPeople;
     }
 }

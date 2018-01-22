@@ -9,6 +9,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
@@ -26,12 +27,23 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +89,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private CashFlowSer cashFlowSer;
+    @Autowired
+    private CompanyBasicInfoAPI companyBasicInfoAPI;
+
 
 
     /**
@@ -1117,8 +1132,60 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             }
         }
         Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
-        return bytes;
+        byte[] bytes1 = ExcelUtil.clazzToExcel(list, excel);
+//        byte[] bytes2 = ExcelUtil.clazzToExcel(null, null);
+        XSSFWorkbook wb = null;
+        String comp = "";
+        List<String> comps = companyBasicInfoAPI.findCompanyName();
+        if(comps!=null && comps.size()>0){
+            comp = comps.get(0);
+        }
+        try {
+            InputStream is = new ByteArrayInputStream(bytes1);
+            wb = new XSSFWorkbook(is);// 创建一个工作execl文档
+            XSSFCellStyle headerStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+            headerStyle.setWrapText(true);
+            XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFRow row = sheet.getRow(0);
+            XSSFRow row1 = sheet.getRow(1);
+            //标题
+            for(int o = 0;o<8;o++){
+                row.createCell(o).setCellValue("资产负债表");
+            }
+            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 7);
+            sheet.addMergedRegion(cra);//这个干嘛的
+            //公司和单位
+            row1.createCell(0).setCellValue("编制单位");
+            row1.createCell(1).setCellValue(comp+"公司");
+            row1.createCell(2).setCellValue(comp+"公司");
+            row1.createCell(3).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(4).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(5).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(6).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(7).setCellValue("单位:元");
+
+            CellRangeAddress cra1=new CellRangeAddress(1, 1, 1, 2);
+            sheet.addMergedRegion(cra1);//这个干嘛的
+            CellRangeAddress cra2=new CellRangeAddress(1, 1, 3, 6);
+            sheet.addMergedRegion(cra2);//这个干嘛的
+
+            row.getCell(0).setCellStyle(headerStyle);
+            row1.getCell(3).setCellStyle(headerStyle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
     }
 
     @Override

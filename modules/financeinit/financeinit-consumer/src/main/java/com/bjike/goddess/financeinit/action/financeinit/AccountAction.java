@@ -237,14 +237,16 @@ public class AccountAction extends BaseFileAction {
     /**
      * 根据一级科目代码获取二级科目名称
      *
+     * @return class AccountAddDateVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/sendName/id")
     public Result findSendNameByCode(@RequestParam String id) throws ActException {
         try {
-            List<String> names = accountanCourseAPI.findSendNameByOne(id);
-            return ActResult.initialize(names);
+            List<AccountAddDateBO> names = accountanCourseAPI.findSendNameByOne(id);
+            List<AccountAddDateVO> accountAddDateVOS = BeanTransform.copyProperties(names,AccountAddDateVO.class);
+            return ActResult.initialize(accountAddDateVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -253,14 +255,16 @@ public class AccountAction extends BaseFileAction {
     /**
      * 根据一级科目代码获取三级科目名称
      *
+     * @return class  AccountAddDateVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/thirdName/code")
     public Result findThirdNameByCode(@RequestParam String id) throws ActException {
         try {
-            List<String> names = accountanCourseAPI.findThirdNameBySend(id);
-            return ActResult.initialize(names);
+            List<AccountAddDateBO> names = accountanCourseAPI.findSendNameByOne(id);
+            List<AccountAddDateVO> accountAddDateVOS = BeanTransform.copyProperties(names,AccountAddDateVO.class);
+            return ActResult.initialize(accountAddDateVOS);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

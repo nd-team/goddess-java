@@ -79,7 +79,7 @@ public class SummationVO {
     /**
      * 介绍给别的承包商数
      */
-    private Integer IntroduceOtherNum;
+    private Integer introduceOtherNum;
 
     /**
      * 服务费用
@@ -196,11 +196,11 @@ public class SummationVO {
     }
 
     public Integer getIntroduceOtherNum() {
-        return IntroduceOtherNum;
+        return introduceOtherNum;
     }
 
     public void setIntroduceOtherNum(Integer introduceOtherNum) {
-        IntroduceOtherNum = introduceOtherNum;
+        this.introduceOtherNum = introduceOtherNum;
     }
 
     public Double getServiceFee() {

@@ -1,6 +1,7 @@
 package com.bjike.goddess.reportmanagement.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.reportmanagement.enums.AccessRules;
 import com.bjike.goddess.reportmanagement.enums.Form;
 
 /**
@@ -23,6 +24,11 @@ public class FormulaBO extends BaseBO {
      * 公式方向
      */
     private Form form;
+
+    /**
+     * 取数规则
+     */
+    private AccessRules accessRules;
 
     /**
      * 年初数
@@ -103,5 +109,13 @@ public class FormulaBO extends BaseBO {
 
     public void setForm(Form form) {
         this.form = form;
+    }
+
+    public AccessRules getAccessRules() {
+        return accessRules;
+    }
+
+    public void setAccessRules(AccessRules accessRules) {
+        this.accessRules = accessRules;
     }
 }

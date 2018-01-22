@@ -108,7 +108,7 @@ public interface AccountanCourseAPI {
      * @return
      * @throws SerException
      */
-    default List<String> findSendNameByOne(String id) throws SerException {
+    default List<AccountAddDateBO> findSendNameByOne(String id) throws SerException {
         return null;
     }
 
@@ -119,7 +119,7 @@ public interface AccountanCourseAPI {
      * @return
      * @throws SerException
      */
-    default List<String> findThirdNameBySend(String id) throws SerException {
+    default List<AccountAddDateBO> findThirdNameBySend(String id) throws SerException {
         return null;
     }
 
