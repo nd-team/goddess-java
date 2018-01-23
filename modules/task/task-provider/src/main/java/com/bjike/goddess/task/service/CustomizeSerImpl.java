@@ -98,6 +98,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
     @Override
     public List<CustomizeBO> list(CustomizeDTO dto) throws SerException {
         List<CustomizeBO> bos = new ArrayList<>();
+        dto.getSorts().add("createTime=desc");
         for (Customize customize : super.findByPage(dto)) {
             bos.add(tranBO(customize));
         }
@@ -914,6 +915,9 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                         }
                         String sql =  getSql(titles,tablesId.toString(),fieldsTxt,"1");
                         List<Object> datas = customizeSonSer.findBySql(sql);
+
+                        System.out.println(sql);
+
                         for (int i = 0;i<datas.size();i++){
                             result.append(valTr);
                             Object o = datas.get(i);
@@ -1041,6 +1045,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                         }
                         String sql =  getSql(titles,tablesId.toString(),fieldsTxt,"2");
                         List<Object> datas = customizeSonSer.findBySql(sql);
+                        System.out.println(sql);
                         for (int i = 0;i<datas.size();i++){
                             result.append(valTr);
                             Object o = datas.get(i);
@@ -1140,7 +1145,9 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                             }
 
                             String sql = getSql(tables,t,fieldsTxt);
+                            System.out.println(sql);
                             List<Object> datas = customizeSonSer.findBySql(sql);
+
                             double taskVolume = 0;             //总任务量
                             double fiTaskVolume = 0;           //完成任务量
                             double noTaskVolume = 0;           //未完成任务量
@@ -1266,6 +1273,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                         }
 
                         String sql = getSql(tables, "", fieldsTxt);
+                        System.out.println(sql);
                         List<Object> datas = customizeSonSer.findBySql(sql);
                         double taskVolume = 0;             //总任务量
                         double fiTaskVolume = 0;           //完成任务量
@@ -1354,6 +1362,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         StringBuffer sql = new StringBuffer();
         StringBuffer field = new StringBuffer();
         StringBuffer txt = new StringBuffer();
+        StringBuffer GroupByTxt = new StringBuffer();
 
         for (int i = 0; i < fields.size(); i++) {
             if (field.length() > 0 ){
@@ -1361,6 +1370,14 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 field.append(fields.get(i));
             }else {
                 field.append(fields.get(i));
+            }
+            if (!"count".equals(fields.get(i))){
+                if (GroupByTxt.length() > 0 ){
+                    GroupByTxt.append(",");
+                    GroupByTxt.append(fields.get(i));
+                }else {
+                    GroupByTxt.append(fields.get(i));
+                }
             }
         }
         for (int i = 0; i < fieldsTxt.size(); i++) {
@@ -1383,6 +1400,8 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
             endTime = DateUtil.dateToString(to)+" 23:59:59";
         }
 
+        //goddess_taskallotment.
+
         str = "(SELECT any_value(ifnull(a.project,'无')) AS project,any_value(ifnull(b.name,'无')) AS name, " +
                 "       any_value(ifnull(c.initiate,'无')) AS initiate,any_value(ifnull(c.taskName,'无')) AS taskName, " +
                 "       any_value(ifnull(c.charge,'无')) AS charge,any_value(ifnull(c.execute,'无')) AS execute, " +
@@ -1399,7 +1418,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 "      LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id" +
                 "   WHERE b.id IN ("+tablesId+") " +
                 "   AND c.startTime BETWEEN '"+startTime+"' AND '"+endTime+"'" +
-                "   GROUP BY c.table_id,c.taskType ) m";
+                "   GROUP BY "+GroupByTxt+" ) m";
         sql.append(" SELECT " + field +" FROM " + str + " WHERE " + txt );
 
         return sql.toString();
@@ -1636,9 +1655,9 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 }
                 StringBuffer sql = new StringBuffer();
                 if ("peopleNum".equals(title)){
-                    sql.append("SELECT initiate FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") GROUP BY initiate " );
+                    sql.append("SELECT initiate FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") AND initiate IS NOT NULL GROUP BY initiate " );
                 }else {
-                    sql.append("SELECT " + title +" FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") GROUP BY " + title );
+                    sql.append("SELECT " + title +" FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") AND "+title+" IS NOT NULL GROUP BY " + title );
                 }
 
                 List<Object> datas = customizeSonSer.findBySql(sql.toString());

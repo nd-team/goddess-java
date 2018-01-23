@@ -222,4 +222,12 @@ public class TempMatterDemandBO extends BaseBO {
     public void setAuditOpinion(String auditOpinion) {
         this.auditOpinion = auditOpinion;
     }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 }

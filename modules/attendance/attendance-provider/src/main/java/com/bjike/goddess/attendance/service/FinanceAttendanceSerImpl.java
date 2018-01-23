@@ -20,6 +20,7 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.dimission.api.DimissionInfoAPI;
 import com.bjike.goddess.message.api.MessageAPI;
@@ -31,6 +32,14 @@ import com.bjike.goddess.taskallotment.bo.ObjectBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +48,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.lang.model.util.ElementScanner6;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -996,7 +1008,9 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
                 }
             }
         }
-        FinanceCountBO bo3 = new FinanceCountBO(cycleTime + "天", a, false, false);
+
+        long salaryDate = DateUtil.misDay(start,end);
+        FinanceCountBO bo3 = new FinanceCountBO(salaryDate + "天", a, false, false);
         bos.add(bo3);
         a++;
         FinanceCountBO bo4 = new FinanceCountBO(dismissTime, a, false, false);
@@ -1285,5 +1299,321 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         return list;
     }
 
+
+    /**
+     * -----------------------------------------------------------------------------------------------------------
+     */
+    /**
+     * 自定义Excel
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    @Override
+    public ByteArrayOutputStream excelExport(FinanceAttendanceDTO dto) throws SerException {
+        XSSFWorkbook wb = new XSSFWorkbook(); // 创建一个工作execl文档
+        XSSFSheet sheet = wb.createSheet("财务出勤表" + DateUtil.dateToString(LocalDate.now()));
+        List<FinanceCountFieldBO> fieldsBO = fields(dto);
+        List<FinanceCountFieldBO> fields = new ArrayList<>();
+        for (FinanceCountFieldBO bo : fieldsBO ){
+            if (bo.getSons().size()>0){
+                fields.add(bo);
+            }
+        }
+
+        XSSFCellStyle titleStyle = this.createTitleSytle(wb);
+        XSSFCellStyle contentStyle = this.createCotentSytle(wb);
+
+        initHeader( wb, sheet, titleStyle , fields); //初始化表头
+        List<List<FinanceCountBO>> financeCountBOS = financeCounts(dto); //获取数据
+
+
+        initRows(wb, sheet, contentStyle,financeCountBOS); //初始化内容
+        ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+        try {
+            wb.write(os);
+        } catch (IOException e) {
+            throw new SerException("文件写入错误");
+        }
+        return os;
+    }
+
+    /**
+     * 创建内容行
+     * @param wb
+     * @param sheet
+     */
+    public static void initRows(XSSFWorkbook wb, XSSFSheet sheet,XSSFCellStyle contentStyle , List<List<FinanceCountBO>> financeCountBOS) {
+        int rowCount = 2;
+        for (List<FinanceCountBO> bos:financeCountBOS){
+            XSSFRow row = sheet.createRow(rowCount++);
+            row.setHeight((short) 1300);
+            int cellIndex = 0;
+            for (FinanceCountBO bo : bos){
+                if (bo.getGreen()!=null && bo.getRed()!=null){
+                    if (bo.getRed()){
+                        contentStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                        contentStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+                    }
+                }
+
+                XSSFCell cell = row.createCell(cellIndex);
+                String val = String.valueOf(bo.getValue());
+                cell.setCellStyle(contentStyle);
+                cell.setCellValue(val);
+//                sheet.setColumnWidth(cellIndex, val.getBytes().length*2*256);//设置自动宽度
+                cellIndex++;
+
+            }
+        }
+    }
+
+    /**
+     * 重写方法
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    public List<List<FinanceCountBO>> financeCounts(FinanceAttendanceDTO dto) throws SerException {
+        List<List<FinanceCountBO>> b = new ArrayList<>();
+        List<LocalDate> dates = getDate(dto);
+        LocalDate start = dates.get(0);
+        LocalDate end = dates.get(1);
+        List<FinanceCountBO> bos = new ArrayList<>();
+        List<FinanceAttendanceBO> list = noSaveList(dto);
+        List<String> names = list.stream().map(FinanceAttendanceBO::getName).distinct().collect(Collectors.toList());
+        for (String name : names) {
+            List<FinanceAttendanceBO> financeAttendanceBOS = list.stream().filter(financeAttendanceBO -> name.equals(financeAttendanceBO.getName())).collect(Collectors.toList());
+            List<FinanceCountBO> nameAll = fixationValue(name, financeAttendanceBOS, start, end);
+            bos.addAll(nameAll);
+            int a = nameAll.get(nameAll.size() - 1).getIndex() + 1;   //值下标
+            for (FinanceAttendanceBO financeAttendanceBO : financeAttendanceBOS) {
+                LocalDate time = DateUtil.parseDate(financeAttendanceBO.getTime());
+                FinanceAttendanceDTO financeAttendanceDTO = new FinanceAttendanceDTO();
+                financeAttendanceDTO.getConditions().add(Restrict.eq("name", financeAttendanceBO.getName()));
+                financeAttendanceDTO.getConditions().add(Restrict.eq("time", time));
+                FinanceAttendance financeAttendance = super.findOne(financeAttendanceDTO);
+                FinanceCountBO bo = getBO(financeAttendance, financeAttendanceBO, a);
+                bos.add(bo);
+                a++;
+            }
+            Map<List<FinanceAttendanceBO>, List<String>> map = get(new String[]{name}, DateUtil.misDay(end, start), start, end);
+            Set<List<FinanceAttendanceBO>> set = map.keySet();
+            List<String> strings = null;
+            for (List<FinanceAttendanceBO> bo : set) {
+                strings = map.get(bo);
+            }
+            for (String s : strings) {
+                FinanceCountBO bo = new FinanceCountBO();
+                bo.setIndex(a);
+                bo.setValue(s);
+                bo.setRed(false);
+                bo.setGreen(false);
+                bos.add(bo);
+                a++;
+            }
+            b.add(bos);
+        }
+        return b;
+    }
+
+
+    /**
+     * 创建表头
+     *  创建标题行内容
+     *    返回标题行内容插入顺序
+     * @param sheet
+     * @param fields
+     */
+    public static List<String> initHeader(XSSFWorkbook wb ,XSSFSheet sheet, XSSFCellStyle titleStyle,List<FinanceCountFieldBO> fields) {
+        //存储内容存放顺序
+        List<String> orderLiser = new LinkedList<String>();
+
+        XSSFRow titleRow1 = sheet.createRow(0);
+        XSSFRow titleRow2 = sheet.createRow(1);
+        XSSFRow titleRow3 = sheet.createRow(2);
+        XSSFRow titleRow4 = sheet.createRow(3);
+        XSSFRow titleRow5 = sheet.createRow(4);
+
+        titleRow1.setHeight((short) 800);
+        titleRow2.setHeight((short) 800);
+        titleRow3.setHeight((short) 800);
+        titleRow4.setHeight((short) 800);
+        titleRow5.setHeight((short) 800);
+
+        //合并单元格 向下合并
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 1, 1));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 2, 2));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 3, 3));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 4, 4));
+
+        XSSFCell cell = null;
+        cell = titleRow1.createCell(0);
+        cell.setCellValue("区域");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(0, (short)(10 * 256));
+
+
+        cell = titleRow1.createCell(1);
+        cell.setCellValue("姓名");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(1, (short)(10 * 256));
+
+        cell = titleRow1.createCell(2);
+        cell.setCellValue("入职时间");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(2, (short)(10 * 256));
+
+        cell = titleRow1.createCell(3);
+        cell.setCellValue("薪资计算周期内在职时间");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(3, (short)(10 * 256));
+
+        cell = titleRow1.createCell(4);
+        cell.setCellValue("离职时间");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(4, (short)(10 * 256));
+
+        int merge = 0;    //合并的行数
+        int intiNum = 0;  //每一个新的单元格起始位置
+
+        String oldStr = "";  //存放 一级目录
+        String newStr = "";  //存放 一级目录
+
+        for (int i = 0;i < fields.size();i++){
+            FinanceCountFieldBO bo = fields.get(i);
+            List<FinanceCountFieldBO> sons = bo.getSons();
+
+            for (int j = 0 ; j < sons.size() ; j++){
+                newStr = bo.getTitle();
+                if("".equals(oldStr)){     //起始，旧值为空
+                    intiNum = 5+i;
+                    cell = titleRow1.createCell(intiNum);
+                    cell.setCellValue(newStr);
+                    cell.setCellStyle(titleStyle);
+                    sheet.setColumnWidth(intiNum, (short)(10 * 256));
+                }else if(!oldStr.equals(newStr)){      //判断新值是否等于旧值，否就新增一个单元格
+                   // sheet.addMergedRegion(new CellRangeAddress(0, 0, intiNum, intiNum + merge));    //合并单元格
+                    cell = titleRow1.createCell(intiNum + merge + 1);
+                    cell.setCellValue(newStr);
+                    cell.setCellStyle(titleStyle);
+                    sheet.setColumnWidth(intiNum + merge + 1, (short)(10 * 256));
+                    intiNum = intiNum + merge + 1;
+                    merge = 0;
+                }else{
+                    merge++;
+                }
+
+                cell = titleRow2.createCell(intiNum + merge);
+                cell.setCellValue(sons.get(j).getTitle());
+                cell.setCellStyle(titleStyle);
+                sheet.setColumnWidth(intiNum + merge, (short)(10 * 256));
+
+                oldStr = newStr;   //把新值赋给旧值
+            }
+            if (sons.size()>1){
+                sheet.addMergedRegion(new CellRangeAddress(0, 0, intiNum, intiNum + merge));//合并最后一个单元格
+            }
+        }
+
+        //------------------------------------------
+        int sum = 0;
+        for (int i = 0;i < fields.size();i++){
+            FinanceCountFieldBO bo = fields.get(i);
+            List<FinanceCountFieldBO> sons = bo.getSons();
+
+            if (sons.size()>1){
+                sum = sum + sons.size();
+            }else {
+                sum = sum + 1;
+            }
+        }
+
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, sum+5, sum+5));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, sum+6, sum+6));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, sum+7, sum+7));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, sum+8, sum+8));
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, sum+9, sum+9));
+
+
+        cell = titleRow1.createCell(sum+5);
+        cell.setCellValue("2018-01-27前剩余加班天数");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(sum+5, (short)(10 * 256));
+
+        cell = titleRow1.createCell(sum+6);
+        cell.setCellValue("加班抵事假和其他假的的天数");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(sum+6, (short)(10 * 256));
+
+        cell = titleRow1.createCell(sum+7);
+        cell.setCellValue("抵扣事假和其他假后剩余加班天数");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(sum+7, (short)(10 * 256));
+
+        cell = titleRow1.createCell(sum+8);
+        cell.setCellValue("月工作日");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(sum+8, (short)(10 * 256));
+
+        cell = titleRow1.createCell(sum+9);
+        cell.setCellValue("可享受带薪天数");
+        cell.setCellStyle(titleStyle);
+        sheet.setColumnWidth(sum+9, (short)(10 * 256));
+
+        return orderLiser;
+    }
+
+    /**
+     * 创建内容样式
+     * @param workBook
+     * @return
+     */
+    private XSSFCellStyle createCotentSytle(XSSFWorkbook workBook) {
+        XSSFCellStyle contentStyle=workBook.createCellStyle();
+        contentStyle.setWrapText(true);
+        XSSFFont contentFont=workBook.createFont();
+        contentFont.setFontName("宋体");
+        contentStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+        contentFont.setFontHeightInPoints((short)10);
+        contentStyle.setFont(contentFont);
+        contentStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 居中
+
+
+        //---设置边框:
+        contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        contentStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        contentStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+
+        return contentStyle;
+    }
+
+    /**
+     * //创建标题样式
+     * @param workBook
+     * @return
+     */
+    private XSSFCellStyle createTitleSytle(XSSFWorkbook workBook){
+        XSSFCellStyle titleStyle = workBook.createCellStyle();
+        XSSFFont titlefont=workBook.createFont();
+        titlefont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+        titlefont.setFontName("宋体");
+        titleStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+        titleStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+        titleStyle.setWrapText(true);
+        titlefont.setFontHeightInPoints((short)11);
+        titleStyle.setFont(titlefont);
+        titleStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        //---设置边框:
+        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+
+        return titleStyle;
+    }
 
 }

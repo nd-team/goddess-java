@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -44,13 +45,13 @@ public class MyWebSocket {
 
     private static int onlineCount = 0;
 
-    private static CopyOnWriteArraySet<MyWebSocket> webSocketSet = new CopyOnWriteArraySet<MyWebSocket>();
+    public static CopyOnWriteArraySet<MyWebSocket> webSocketSet = new CopyOnWriteArraySet<MyWebSocket>();
 
-    private static ConcurrentHashMap<String, Session> map = new ConcurrentHashMap<String, Session>();
+    public static ConcurrentHashMap<String, Session> map = new ConcurrentHashMap<String, Session>();
 
-    private static ConcurrentHashMap<String, List<String>> userMap = new ConcurrentHashMap<String, List<String>>();
+    public static ConcurrentHashMap<String, List<String>> userMap = new ConcurrentHashMap<String, List<String>>();
 
-    private static ConcurrentHashMap<String, String> userList = new ConcurrentHashMap<String, String>();
+    public static ConcurrentHashMap<String, String> userList = new ConcurrentHashMap<String, String>();
 
     @OnOpen
 

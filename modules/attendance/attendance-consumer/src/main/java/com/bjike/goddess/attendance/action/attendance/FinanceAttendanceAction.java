@@ -9,11 +9,14 @@ import com.bjike.goddess.attendance.vo.FinanceAttendanceVO;
 import com.bjike.goddess.attendance.vo.FinanceCountFieldVO;
 import com.bjike.goddess.attendance.vo.FinanceCountVO;
 import com.bjike.goddess.common.api.entity.EDIT;
+import com.bjike.goddess.common.api.entity.GET;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
+import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
 import com.bjike.goddess.user.vo.UserVO;
@@ -23,6 +26,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -36,7 +41,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("financeattendance")
-public class FinanceAttendanceAction {
+public class FinanceAttendanceAction extends BaseFileAction {
     @Autowired
     private FinanceAttendanceAPI financeAttendanceAPI;
     @Autowired
@@ -259,4 +264,28 @@ public class FinanceAttendanceAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * excel导出
+     *
+     * @param dto
+     * @return {name:'data',type:'byte',defaultValue:'',description:'文件流.'}
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/excel/export")
+    public Result excelExport(FinanceAttendanceDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            try {
+                byte[] bytes = financeAttendanceAPI.excelExport(dto);
+                writeOutFile(response, bytes, "财务出勤表" + DateUtil.dateToString(LocalDate.now()) + ".xlsx");
+            } catch (Exception e) {
+            }
+            return ActResult.initialize(financeAttendanceAPI.excelExport(dto));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
 }

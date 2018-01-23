@@ -101,4 +101,15 @@ public interface FinanceAttendanceAPI {
      * @throws SerException
      */
     Double vacateDay(String name, String date) throws SerException;
+
+
+    /**
+     * 导出数据
+     *
+     * @param dto
+     * @throws SerException
+     */
+    default byte[] excelExport(FinanceAttendanceDTO dto) throws SerException {
+        return  null;
+    }
 }

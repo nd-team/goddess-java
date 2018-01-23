@@ -44,7 +44,6 @@ import static java.lang.Thread.sleep;
 @Component
 public class WebSocketAction {
 
-
     private EventAPI eventAPI;
 
     //当前登陆人
@@ -218,6 +217,8 @@ public class WebSocketAction {
 //                e.printStackTrace();
 //            }
 //        }
+
+
     }
 
     public void sendMessage(String message) throws IOException{
@@ -272,4 +273,6 @@ public class WebSocketAction {
     }
 
 //    Timer timer = new Timer();
+
+
 }
