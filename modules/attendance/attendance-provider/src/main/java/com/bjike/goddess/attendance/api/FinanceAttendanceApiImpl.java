@@ -81,4 +81,10 @@ public class FinanceAttendanceApiImpl implements FinanceAttendanceAPI {
     public Boolean guidePermission(GuidePermissionTO guidePermissionTO) throws SerException {
         return financeAttendanceSer.guidePermission(guidePermissionTO);
     }
+
+    @Override
+    public byte[] excelExport(FinanceAttendanceDTO dto) throws SerException {
+        return financeAttendanceSer.excelExport(dto).toByteArray();
+    }
+
 }

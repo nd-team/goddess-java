@@ -1,6 +1,7 @@
 package com.bjike.goddess.event;
 
 import com.bjike.goddess.event.action.event.WebSocketAction;
+import com.bjike.goddess.recruit.action.recruit.CusPermissionAction;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.validation.ValidationAutoConfigura
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.*;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
@@ -20,13 +22,15 @@ import java.io.IOException;
  * @Copy: [com.bjike]
  */
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.bjike.goddess.event.action","com.bjike.goddess.event.config", "com.bjike.goddess.common.consumer"},
+@ComponentScan(basePackages = {"com.bjike.goddess.event.action","com.bjike.goddess.event.config","com.bjike.goddess.event.jods", "com.bjike.goddess.common.consumer"},
         excludeFilters = {@ComponentScan.Filter(
                 type = FilterType.ANNOTATION,
-                value = {})})
+                value = {}
+                )})
 @PropertySource(value = {"classpath:permission.properties"},encoding="utf-8")
 @ImportResource({"classpath:app.xml"})
 @EnableAutoConfiguration(exclude = {ValidationAutoConfiguration.class})
+@EnableScheduling
 public class Application {
     public static void main(String[] args) throws IOException {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);

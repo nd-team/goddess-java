@@ -573,16 +573,16 @@ public class PhoneApplyLendAction extends BaseFileAction {
      * @des 根据一级科目的代码获取所有三级科目
      * @version v1
      */
-    @GetMapping("v1/listThirdSubject/{code}")
-    public Result listThirdByCode(@PathVariable String code) throws ActException {
-        try {
-            List<String> list = accountanCourseAPI.findThirdNameByCode(code);
-
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/listThirdSubject/{code}")
+//    public Result listThirdByCode(@PathVariable String code) throws ActException {
+//        try {
+//            List<String> list = accountanCourseAPI.findThirdNameByCode(code);
+//
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
 
     /**
@@ -591,16 +591,16 @@ public class PhoneApplyLendAction extends BaseFileAction {
      * @des 根据三级科目和说明获取所有二级科目
      * @version v1
      */
-    @GetMapping("v1/listSecond/{code}")
-    public Result listSecond(@PathVariable String code) throws ActException {
-        try {
-            List<String> list = accountanCourseAPI.findSendNameByCode(code);
-
-            return ActResult.initialize(list);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    @GetMapping("v1/listSecond/{code}")
+//    public Result listSecond(@PathVariable String code) throws ActException {
+//        try {
+//            List<String> list = accountanCourseAPI.findSendNameByCode(code);
+//
+//            return ActResult.initialize(list);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 手机版获取所有一级科目和代码
