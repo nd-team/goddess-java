@@ -398,12 +398,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public Double specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    public SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         return voucherGenerateSer.specialCurr(i,firstSubject,startTime,endTime,tar);
     }
 
     @Override
-    public Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
+    public SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
         return voucherGenerateSer.getCurrentBySumary(i,sumary,startTime,endTime,tar);
     }
 
@@ -448,7 +448,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
         return voucherGenerateSer.findFirstSubject ();}
 
     @Override
-    public Double getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    public SubjectCollectBO getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         return voucherGenerateSer.getCurrent(i,firstSubject,  startTime,  endTime,  tar);
+    }
+
+    @Override
+    public SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+        return voucherGenerateSer.findCurrent(i,firstSubject,startTime,endTime);
     }
 }

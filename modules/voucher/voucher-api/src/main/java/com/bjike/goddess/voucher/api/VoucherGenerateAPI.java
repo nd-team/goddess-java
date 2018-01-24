@@ -707,7 +707,7 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default Double specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {return null;}
+    default SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {return null;}
 
     /**
      * 获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
@@ -719,7 +719,7 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
+    default SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
 
     default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
         return null;
@@ -798,7 +798,20 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     //tar:true,获取借方,false,获取贷方
-    default Double getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    default SubjectCollectBO getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目,时间获取本期或本年
+     * @param i 区分方法标识
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrent(int i,String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
 }
