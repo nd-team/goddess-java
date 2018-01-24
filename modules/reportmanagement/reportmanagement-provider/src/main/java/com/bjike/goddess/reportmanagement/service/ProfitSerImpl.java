@@ -47,6 +47,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     private ModuleTypeAPI moduleTypeAPI;
     @Autowired
     private ProfitFormulaSer profitFormulaSer;
-//    @Autowired
+    //    @Autowired
 //    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
@@ -606,8 +607,8 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             for (Profit profit : list) {
                 SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), startTime, endTime);
                 if (subjectCollectBO != null) {
-                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class,"project");
-                    bo.setProject(joingTogether(bo.getProject(),bo.getProjectType()));
+                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class, "project");
+                    bo.setProject(joingTogether(bo.getProject(), bo.getProjectType()));
                     bo.setCurrentMonthAmount(subjectCollectBO.getCurrentAmount());
                     bo.setCurrentYearAmount(subjectCollectBO.getYearAmount());
 
@@ -651,7 +652,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             boList.add(twoBO);
                             b5 = false;
                         }
-                    }else if (ProfitType.DNETPROFIT.equals(profit.getProfitType())) {
+                    } else if (ProfitType.DNETPROFIT.equals(profit.getProfitType())) {
                         if (b) {
                             ProfitBO twoBO = new ProfitBO();
                             twoBO.setProject("四、净利润");
@@ -665,7 +666,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             boList.add(twoBO);
                             b = false;
                         }
-                    }else if (ProfitType.DISTRIBUTABLEPROFITS.equals(profit.getProfitType())) {
+                    } else if (ProfitType.DISTRIBUTABLEPROFITS.equals(profit.getProfitType())) {
                         if (b1) {
                             ProfitBO twoBO = new ProfitBO();
                             twoBO.setProject("五、可供分配的利润");
@@ -679,7 +680,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             boList.add(twoBO);
                             b1 = false;
                         }
-                    }else if (ProfitType.PROFITSACAILABLE.equals(profit.getProfitType())) {
+                    } else if (ProfitType.PROFITSACAILABLE.equals(profit.getProfitType())) {
                         if (b3) {
                             ProfitBO twoBO = new ProfitBO();
                             twoBO.setProject("六、可供投资者分配的利润");
@@ -693,7 +694,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             boList.add(twoBO);
                             b3 = false;
                         }
-                    }else if (ProfitType.PREVIOUSANNUAL.equals(profit.getProfitType())) {
+                    } else if (ProfitType.PREVIOUSANNUAL.equals(profit.getProfitType())) {
                         if (b4) {
                             ProfitBO twoBO = new ProfitBO();
                             twoBO.setProject("七、以前年度损益调整");
@@ -727,42 +728,47 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         return boList;
     }
 
-    public String joingTogether(String firstSubject,String projectType) throws SerException{
-        return projectType==null?firstSubject:(projectType+":"+firstSubject);
+    public String joingTogether(String firstSubject, String projectType) throws SerException {
+        return projectType == null ? firstSubject : (projectType + ":" + firstSubject);
     }
 
     @Override
     public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
         List<ProfitLevelBO> profitLevelBOList = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("######0.00");
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
             dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
         }
         String endDate = dto.getEndTime();
         //开始值的数据
-        String startValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(),DateUtil.parseDate(dto.getStartTime()).getMonthValue(),1));
-        String startValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(),DateUtil.parseDate(dto.getStartTime()).getMonthValue(),DateUtil.getDayByDate(DateUtil.parseDate(dto.getStartTime()).getYear(),DateUtil.parseDate(dto.getStartTime()).getMonthValue())));
+        String startValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), 1));
+        String startValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue())));
         dto.setStartTime(startValueStartDate);
         dto.setEndTime(startValueEndDate);
         List<ProfitBO> profitBOS1 = list(dto);
         //结束值的数据
-        String endValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(),DateUtil.parseDate(endDate).getMonthValue(),1));
-        String endValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(),DateUtil.parseDate(endDate).getMonthValue(),DateUtil.getDayByDate(DateUtil.parseDate(endDate).getYear(),DateUtil.parseDate(endDate).getMonthValue())));
+        String endValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue(), 1));
+        String endValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue())));
         dto.setStartTime(endValueStartDate);
         dto.setEndTime(endValueEndDate);
         List<ProfitBO> profitBOS2 = list(dto);
-        if(profitBOS1!=null && profitBOS1.size()>0){
-            for (ProfitBO profitBO : profitBOS1){
-                for(ProfitBO profitBO1 : profitBOS2){
-                    if(profitBO.getProject().equals(profitBO1.getProject())){
+        if (profitBOS1 != null && profitBOS1.size() > 0) {
+            for (ProfitBO profitBO : profitBOS1) {
+                for (ProfitBO profitBO1 : profitBOS2) {
+                    if (profitBO.getProject().equals(profitBO1.getProject())) {
                         ProfitLevelBO profitLevelBO = new ProfitLevelBO();
                         profitLevelBO.setProject(profitBO.getProject());
-//                        profitLevelBO.set
+                        profitLevelBO.setStart(profitBO.getCurrentMonthAmount());
+                        profitLevelBO.setEnd(profitBO1.getCurrentMonthAmount());
+                        profitLevelBO.setChange(profitBO1.getCurrentMonthAmount() - profitBO.getCurrentMonthAmount());
+                        profitLevelBO.setChangeScale((profitBO.getCurrentMonthAmount() == 0 ? 0d : (Double.parseDouble(df.format((profitBO1.getCurrentMonthAmount() - profitBO.getCurrentMonthAmount()) / profitBO.getCurrentMonthAmount())))) + "%");
+                        profitLevelBOList.add(profitLevelBO);
                     }
                 }
             }
         }
-        return null;
+        return profitLevelBOList;
 
     }
 //    public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
@@ -1148,49 +1154,117 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
         checkSeeIdentity();
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
+        List<DetailBO> boList = new ArrayList<>();
+        Double beginningCreditAmount = 0d;//期初余额
+        Double beginningDebitAmount = 0d;//期初借方余额
+        Double beginningCrAmount = 0d;//期初贷方余额
+        Double issueDebitAmount = 0d;//本期借方总额
+        Double issueCreditAmount = 0d;//本期贷方总额
+        Double issueTotalAmount = 0d;//本期合计余额
+        Double endDebitAmount = 0d;//期末借方总额
+        Double endCreditAmount = 0d;//期末贷方总额
+        Double endTotalAmount = 0d;//本年累计额
+
+        String startTime = dto.getStartTime() == null ? DateUtil.dateToString(LocalDate.now()) : dto.getStartTime();
+        String endTime = dto.getEndTime() == null ? DateUtil.dateToString(LocalDate.now()) : dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
-        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
-        List<DetailBO> boList = new ArrayList<>();
-        if ((list != null) && (!list.isEmpty())) {
-            FormulaBO last = list.get(list.size() - 1);
-            double begin = last.getBegin();
-            double current = last.getCurrent();
-            Form form = last.getForm();
-            double currentSum = 0;
-            String project = findByID(id).getProject();
-            String term = startTime + "~" + endTime;
-            DetailBO currentBO = new DetailBO();
-            currentBO.setProject(project);
-            currentBO.setTerm(term);
-            currentBO.setState("本期合计");
-            currentBO.setForm(form);
-            if (Form.DEBIT.equals(form)) {
-                currentSum = begin + current;
-                currentBO.setDebit(current);
-            } else if (Form.CREDIT.equals(form)) {
-                currentSum = begin - current;
-                currentBO.setCredit(current);
-            }
-            currentBO.setRemain(currentSum);
-            double year = currentSum;
-            DetailBO beginBO = new DetailBO();
-            beginBO.setProject(project);
-            beginBO.setTerm(term);
-            beginBO.setState("期初余额");
-            beginBO.setForm(form);
-            beginBO.setRemain(begin);
-            boList.add(beginBO);
-            boList.add(currentBO);
-            DetailBO yearBO = new DetailBO();
-            yearBO.setTerm(term);
-            yearBO.setState("本年累计");
-            yearBO.setForm(form);
-            yearBO.setRemain(year);
-            boList.add(yearBO);
+//        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
+        Profit profit = super.findById(id);
+        Form form = formulaSer.FindWayByFid(id);
+        //期初余额
+        String qcStartTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue(), 1));
+        String qcEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue())));
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrent(2, profit.getProject(), qcStartTime, qcEndTime);
+
+        String term = startTime + "~" + endTime;
+        DetailBO currentBO = new DetailBO();
+        if (subjectCollectBO != null) {
+            beginningCreditAmount = subjectCollectBO.getCurrentAmount();
+            beginningDebitAmount = subjectCollectBO.getIssueDebitAmount();
+            beginningCrAmount = subjectCollectBO.getIssueCreditAmount();
         }
+        currentBO.setProject(profit.getProject());
+        currentBO.setTerm(term);
+        currentBO.setState("期初余额");
+        currentBO.setForm(form);
+        currentBO.setDebit(beginningDebitAmount);
+        currentBO.setCredit(beginningCrAmount);
+        currentBO.setRemain(beginningCreditAmount);
+        boList.add(currentBO);
+
+        //本期合计
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrent(2, profit.getProject(), startTime, endTime);
+        if (subjectCollectBO1 != null) {
+            issueTotalAmount = subjectCollectBO.getCurrentAmount();
+            issueDebitAmount = subjectCollectBO.getIssueDebitAmount();
+            issueCreditAmount = subjectCollectBO.getIssueCreditAmount();
+        }
+
+        DetailBO beginBO = new DetailBO();
+        beginBO.setProject(profit.getProject());
+        beginBO.setTerm(term);
+        beginBO.setState("本期合计");
+        beginBO.setForm(form);
+        currentBO.setDebit(issueDebitAmount);
+        currentBO.setCredit(issueCreditAmount);
+        currentBO.setRemain(issueTotalAmount);
+        boList.add(beginBO);
+
+        //本年累计
+        String ljStartTime = DateUtil.parseDate(startTime).getYear()+"-01-01";
+        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrent(2, profit.getProject(), ljStartTime, endTime);
+        if (subjectCollectBO1 != null) {
+            endTotalAmount = subjectCollectBO2.getCurrentAmount();
+            endDebitAmount = subjectCollectBO2.getIssueDebitAmount();
+            endCreditAmount = subjectCollectBO2.getIssueCreditAmount();
+        }
+        DetailBO yearBO = new DetailBO();
+        yearBO.setTerm(term);
+        yearBO.setState("本年累计");
+        yearBO.setForm(form);
+        currentBO.setDebit(endDebitAmount);
+        currentBO.setCredit(endCreditAmount);
+        currentBO.setRemain(endTotalAmount);
+        boList.add(yearBO);
+
+//        List<DetailBO> boList = new ArrayList<>();
+//        if ((list != null) && (!list.isEmpty())) {
+//            FormulaBO last = list.get(list.size() - 1);
+//            double begin = last.getBegin();
+//            double current = last.getCurrent();
+//            Form form = last.getForm();
+//            double currentSum = 0;
+//            String project = findByID(id).getProject();
+//            String term = startTime + "~" + endTime;
+//            DetailBO currentBO = new DetailBO();
+//            currentBO.setProject(project);
+//            currentBO.setTerm(term);
+//            currentBO.setState("本期合计");
+//            currentBO.setForm(form);
+//            if (Form.DEBIT.equals(form)) {
+//                currentSum = begin + current;
+//                currentBO.setDebit(current);
+//            } else if (Form.CREDIT.equals(form)) {
+//                currentSum = begin - current;
+//                currentBO.setCredit(current);
+//            }
+//            currentBO.setRemain(currentSum);
+//            double year = currentSum;
+//            DetailBO beginBO = new DetailBO();
+//            beginBO.setProject(project);
+//            beginBO.setTerm(term);
+//            beginBO.setState("期初余额");
+//            beginBO.setForm(form);
+//            beginBO.setRemain(begin);
+//            boList.add(beginBO);
+//            boList.add(currentBO);
+//            DetailBO yearBO = new DetailBO();
+//            yearBO.setTerm(term);
+//            yearBO.setState("本年累计");
+//            yearBO.setForm(form);
+//            yearBO.setRemain(year);
+//            boList.add(yearBO);
         return boList;
     }
 
@@ -1358,7 +1432,9 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             return String.valueOf(total);
         }
     }
-private Logger logger = Logger.getLogger(ProfitSerImpl.class);
+
+    private Logger logger = Logger.getLogger(ProfitSerImpl.class);
+
     //判断是否是账务模块
     private Boolean isAccountingModule() throws SerException {
         String userToken = RpcTransmit.getUserToken();
@@ -1372,8 +1448,8 @@ private Logger logger = Logger.getLogger(ProfitSerImpl.class);
     public byte[] exportExcel(ProfitDTO dto) throws SerException {
         List<ProfitExportExcel> list = new ArrayList<>();
         List<ProfitBO> profitBOList = this.list(dto);
-        for (ProfitBO profitBO: profitBOList) {
-            ProfitExportExcel profitExportExcel = BeanTransform.copyProperties(profitBO,ProfitExportExcel.class);
+        for (ProfitBO profitBO : profitBOList) {
+            ProfitExportExcel profitExportExcel = BeanTransform.copyProperties(profitBO, ProfitExportExcel.class);
             list.add(profitExportExcel);
         }
 
@@ -1395,15 +1471,15 @@ private Logger logger = Logger.getLogger(ProfitSerImpl.class);
             XSSFRow row = sheet.createRow(0);
             XSSFRow row1 = sheet.createRow(1);
             //标题
-            for(int o = 0;o<4;o++){
+            for (int o = 0; o < 4; o++) {
                 row.createCell(o).setCellValue("利润表");
             }
-            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 3);
+            CellRangeAddress cra = new CellRangeAddress(0, 0, 0, 3);
             sheet.addMergedRegion(cra);//这个干嘛的
             //公司和单位
             row1.createCell(0).setCellValue("编制单位");
-            row1.createCell(1).setCellValue(comp+"公司");
-            row1.createCell(2).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(1).setCellValue(comp + "公司");
+            row1.createCell(2).setCellValue("所属期:" + dto.getEndTime());
             row1.createCell(3).setCellValue("单位:元");
 
             row.getCell(0).setCellStyle(headerStyle);

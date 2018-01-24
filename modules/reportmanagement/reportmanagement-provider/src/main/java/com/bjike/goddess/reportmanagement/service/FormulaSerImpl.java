@@ -494,13 +494,7 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         double beginSum = 0;
         double yearSum = 0;
         double currentSum = 0;
-        Double beginningCreditAmount = 0d;//期初余额
-        Double issueDebitAmount = 0d;//本期借方总额
-        Double issueCreditAmount = 0d;//本期贷方总额
-        Double issueTotalAmount = 0d;//本期合计余额
-        Double endDebitAmount = 0d;//期末借方总额
-        Double endCreditAmount = 0d;//期末贷方总额
-        Double endTotalAmount = 0d;//本年累计额
+
 
 //        double yearSum = 0;
         String[] strings = new String[]{foreignId};
@@ -531,17 +525,17 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                     bo.setOperation("-");
                 }
                 if("年初未分配利润".equals(f.getProject())){
-                    bo.setCurrent(voucherGenerateAPI.specialCurr(2,f.getProject(),s,e,tar));
-                    bo.setYear(voucherGenerateAPI.specialCurr(1,f.getProject(),s,e,tar));
+                    bo.setCurrent(voucherGenerateAPI.specialCurr(2,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.specialCurr(1,f.getProject(),s,e,tar).getCurrentAmount());
                 }else if("其他转入".equals(f.getProject())){
-                    bo.setCurrent(voucherGenerateAPI.getCurrentBySumary(1,f.getProject(),s,e,tar));
-                    bo.setYear(voucherGenerateAPI.getCurrentBySumary(1,f.getProject(),s,e,tar));
+                    bo.setCurrent(voucherGenerateAPI.getCurrentBySumary(1,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.getCurrentBySumary(1,f.getProject(),s,e,tar).getCurrentAmount());
                 }else if("转作资本（或股本）的普通股股利".equals(f.getProject())){
-                    bo.setCurrent(voucherGenerateAPI.getCurrentBySumary(2,f.getProject(),s,e,tar));
-                    bo.setYear(voucherGenerateAPI.getCurrentBySumary(2,f.getProject(),s,e,tar));
+                    bo.setCurrent(voucherGenerateAPI.getCurrentBySumary(2,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.getCurrentBySumary(2,f.getProject(),s,e,tar).getCurrentAmount());
                 }else{
-                    bo.setCurrent(voucherGenerateAPI.getCurrent(2,f.getProject(),s,e,tar));
-                    bo.setYear(voucherGenerateAPI.getCurrent(1,f.getProject(),s,e,tar));
+                    bo.setCurrent(voucherGenerateAPI.getCurrent(2,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.getCurrent(1,f.getProject(),s,e,tar).getCurrentAmount());
                 }
 
                 if ("1".equals(f.getType1())) {     //1代表加
@@ -584,6 +578,17 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 
         boList.add(bo);
         return boList;
+    }
+
+    @Override
+    public Form FindWayByFid(String foreignId) throws SerException {
+        FormulaDTO formulaDTO = new FormulaDTO();
+        formulaDTO.getConditions().add(Restrict.eq("foreignId",foreignId));
+        List<Formula> formulaList = super.findByCis(formulaDTO);
+        if(formulaList!=null && formulaList.size()>0){
+            return formulaList.get(0).getForm();
+        }
+        return null;
     }
 
     @Override

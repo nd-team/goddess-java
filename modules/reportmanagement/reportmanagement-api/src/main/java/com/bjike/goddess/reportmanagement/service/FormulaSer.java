@@ -6,6 +6,7 @@ import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.entity.Formula;
+import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 
@@ -54,6 +55,15 @@ public interface FormulaSer extends Ser<Formula, FormulaDTO> {
      * @throws SerException
      */
     List<FormulaBO> profitFindByFid(String foreignId, FormulaDTO dto) throws SerException;
+    /**
+     * 利润表根据对应科目id获取一个公式对应的方向
+     *
+     * @param foreignId
+     * @return
+     * @throws SerException
+     */
+    Form FindWayByFid(String foreignId) throws SerException;
+
 
     /**
      * 利润分析

@@ -752,8 +752,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             return null;
         }
         SubjectCollectBO bo = new SubjectCollectBO();
-        bo.setCurrentAmount(findCurrent(2, firstSubject, startTime, endTime));
-        bo.setYearAmount(findCurrent(1, firstSubject, startTime.substring(0, 4) + "-01-01", endTime));
+        Double currentAmount = 0d;
+        Double yearAmount = 0d;
+        SubjectCollectBO subjectCollectBO = findCurrent(2, firstSubject, startTime, endTime);
+        SubjectCollectBO subjectCollectBO1 = findCurrent(1, firstSubject, startTime.substring(0, 4) + "-01-01", endTime);
+        if(null !=subjectCollectBO ){
+            currentAmount = subjectCollectBO.getCurrentAmount();
+        }
+        if(null !=subjectCollectBO1 ){
+            yearAmount = subjectCollectBO1.getCurrentAmount();
+        }
+
+        bo.setCurrentAmount(currentAmount);
+        bo.setYearAmount(yearAmount);
         return bo;
     }
 
@@ -769,10 +780,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public Double findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+    public SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+        SubjectCollectBO subjectCollectBO = new SubjectCollectBO();
         if (StringUtils.isBlank(firstSubject)) {
             return null;
         }
+        Double debitAmount = 0d;
+        Double creditAmount = 0d;
         Double current = 0d;
         Double year = 0d;
         String[] times = new String[]{startTime, endTime};
@@ -781,164 +795,194 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = super.findByCis(dto);
         if (null != list && list.size() > 0) {
             if ("营业收入".equals(firstSubject)) {
-                current = getCurrent(i, "主营业务收入", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "主营业务收入", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("营业成本".equals(firstSubject)) {
-                current = getCurrent(i, "主营业务成本", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "主营业务成本", startTime, endTime, true);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("营业税金及附加".equals(firstSubject)) {
-                current = getCurrent(i, "城建税", startTime, endTime, true) +
-                        getCurrent(i, "教育附加", startTime, endTime, true) +
-                        getCurrent(i, "地方教育附加", startTime, endTime, true);
+
+                SubjectCollectBO subjectCollectBO1 = getCurrent(i, "城建税", startTime, endTime, true);
+                SubjectCollectBO subjectCollectBO2 = getCurrent(i, "教育附加", startTime, endTime, true);
+                SubjectCollectBO subjectCollectBO3 = getCurrent(i, "地方教育附加", startTime, endTime, true);
+                debitAmount = subjectCollectBO1.getIssueDebitAmount() + subjectCollectBO2.getIssueDebitAmount() + subjectCollectBO3.getIssueDebitAmount();
+                creditAmount = subjectCollectBO1.getIssueCreditAmount() + subjectCollectBO2.getIssueCreditAmount() + subjectCollectBO3.getIssueCreditAmount();
+                current = subjectCollectBO1.getCurrentAmount() + subjectCollectBO2.getCurrentAmount() + subjectCollectBO3.getCurrentAmount();
+
+                subjectCollectBO.setIssueDebitAmount(debitAmount);
+                subjectCollectBO.setIssueCreditAmount(creditAmount);
+                subjectCollectBO.setCurrentAmount(current);
+
             } else if ("销售费用".equals(firstSubject)) {
-                current = getCurrent(i, "销售费用", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "销售费用", startTime, endTime, true);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("管理费用".equals(firstSubject)) {
-                current = getCurrent(i, "管理费用", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "管理费用", startTime, endTime, true);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("财务费用".equals(firstSubject)) {
-                current = getCurrent(i, "财务费用", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "财务费用", startTime, endTime, true);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("营业外收入".equals(firstSubject)) {
-                current = getCurrent(i, "营业外收入", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "营业外收入", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("营业外支出".equals(firstSubject)) {
-                current = getCurrent(i, "营业外支出", startTime, endTime, false);
+                subjectCollectBO = getCurrent(i, "营业外支出", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("营业利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, true) -
-                        getCurrent(i, "营业成本", startTime, endTime, true) -
-                        (getCurrent(i, "城建税", startTime, endTime, true) +
-                                getCurrent(i, "教育附加", startTime, endTime, true) +
-                                getCurrent(i, "地方教育附加", startTime, endTime, true)) +
-                        getCurrent(i, "其他业务收入", startTime, endTime, true) -
-                        getCurrent(i, "其他业务支出", startTime, endTime, true) -
-                        getCurrent(i, "营业费用", startTime, endTime, true) -
-                        getCurrent(i, "管理费用", startTime, endTime, true) -
-                        getCurrent(i, "财务费用", startTime, endTime, true);
+                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                        (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount();
             } else if ("利润总额".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, true) -
-                        getCurrent(i, "营业成本", startTime, endTime, true) -
-                        (getCurrent(i, "城建税", startTime, endTime, true) +
-                                getCurrent(i, "教育附加", startTime, endTime, true) +
-                                getCurrent(i, "地方教育附加", startTime, endTime, true)) +
-                        getCurrent(i, "其他业务收入", startTime, endTime, true) -
-                        getCurrent(i, "其他业务支出", startTime, endTime, true) -
-                        getCurrent(i, "营业费用", startTime, endTime, true) -
-                        getCurrent(i, "管理费用", startTime, endTime, true) -
-                        getCurrent(i, "财务费用", startTime, endTime, true) +
-                        getCurrent(i, "补贴收入", startTime, endTime, true) +
-                        getCurrent(i, "营业外收入", startTime, endTime, true) -
-                        getCurrent(i, "营业外支出", startTime, endTime, true);
+                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                        (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount();
             } else if ("净利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, true) -
-                        getCurrent(i, "营业成本", startTime, endTime, true) -
-                        (getCurrent(i, "城建税", startTime, endTime, true) +
-                                getCurrent(i, "教育附加", startTime, endTime, true) +
-                                getCurrent(i, "地方教育附加", startTime, endTime, true)) +
-                        getCurrent(i, "其他业务收入", startTime, endTime, true) -
-                        getCurrent(i, "其他业务支出", startTime, endTime, true) -
-                        getCurrent(i, "营业费用", startTime, endTime, true) -
-                        getCurrent(i, "管理费用", startTime, endTime, true) -
-                        getCurrent(i, "财务费用", startTime, endTime, true) +
-                        getCurrent(i, "补贴收入", startTime, endTime, true) +
-                        getCurrent(i, "营业外收入", startTime, endTime, true) -
-                        getCurrent(i, "营业外支出", startTime, endTime, true) -
-                        getCurrent(i, "所得税", startTime, endTime, true);
+                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                        (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "所得税", startTime, endTime, true).getCurrentAmount();
             } else if ("年初未分配利润".equals(firstSubject)) {
-                current = specialCurr(i, "未分配利润", startTime, endTime, true);
+                subjectCollectBO = specialCurr(i, "未分配利润", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("其他转入".equals(firstSubject)) {
-                current = getCurrentBySumary(1, "其他转入", startTime, endTime, true);
+                subjectCollectBO = getCurrentBySumary(1, "其他转入", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("可供分配的利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, true) -
-                        getCurrent(i, "营业成本", startTime, endTime, true) -
-                        (getCurrent(i, "城建税", startTime, endTime, true) +
-                                getCurrent(i, "教育附加", startTime, endTime, true) +
-                                getCurrent(i, "地方教育附加", startTime, endTime, true)) +
-                        getCurrent(i, "其他业务收入", startTime, endTime, true) -
-                        getCurrent(i, "其他业务支出", startTime, endTime, true) -
-                        getCurrent(i, "营业费用", startTime, endTime, true) -
-                        getCurrent(i, "管理费用", startTime, endTime, true) -
-                        getCurrent(i, "财务费用", startTime, endTime, true) +
-                        getCurrent(i, "补贴收入", startTime, endTime, true) +
-                        getCurrent(i, "营业外收入", startTime, endTime, true) -
-                        getCurrent(i, "营业外支出", startTime, endTime, true) -
-                        getCurrent(i, "所得税", startTime, endTime, true) +
-                        specialCurr(i, "未分配利润", startTime, endTime, true) +
-                        getCurrentBySumary(1, "其他转入", startTime, endTime, true);
+                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                        (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "所得税", startTime, endTime, true).getCurrentAmount() +
+                        specialCurr(i, "未分配利润", startTime, endTime, false).getCurrentAmount() +
+                        getCurrentBySumary(1, "其他转入", startTime, endTime, false).getCurrentAmount();
             } else if ("提取法定盈余公积".equals(firstSubject)) {
-                current = getCurrent(i, "法定盈余公积", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "法定盈余公积", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("提取法定公益金".equals(firstSubject)) {
-                current = getCurrent(i, "法定公益金", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "法定公益金", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("提取职工奖励及福利基金".equals(firstSubject)) {
-                current = getCurrent(i, "职工奖励及福利基金", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "职工奖励及福利基金", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("提取储备基金".equals(firstSubject)) {
-                current = getCurrent(i, "储备基金", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "储备基金", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("提取企业发展基金".equals(firstSubject)) {
-                current = getCurrent(i, "企业发展基金", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "企业发展基金", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("利润归还投资".equals(firstSubject)) {
-                current = getCurrent(i, "归还投资", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "归还投资", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("可供投资者分配的利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, true) -
-                        getCurrent(i, "营业成本", startTime, endTime, true) -
-                        (getCurrent(i, "城建税", startTime, endTime, true) +
-                                getCurrent(i, "教育附加", startTime, endTime, true) +
-                                getCurrent(i, "地方教育附加", startTime, endTime, true)) +
-                        getCurrent(i, "其他业务收入", startTime, endTime, true) -
-                        getCurrent(i, "其他业务支出", startTime, endTime, true) -
-                        getCurrent(i, "营业费用", startTime, endTime, true) -
-                        getCurrent(i, "管理费用", startTime, endTime, true) -
-                        getCurrent(i, "财务费用", startTime, endTime, true) +
-                        getCurrent(i, "补贴收入", startTime, endTime, true) +
-                        getCurrent(i, "营业外收入", startTime, endTime, true) -
-                        getCurrent(i, "营业外支出", startTime, endTime, true) -
-                        getCurrent(i, "所得税", startTime, endTime, true) +
-                        specialCurr(i, "未分配利润", startTime, endTime, true) +
-                        getCurrentBySumary(1, "其他转入", startTime, endTime, true) -
-                        getCurrent(i, "法定盈余公积", startTime, endTime, true) -
-                        getCurrent(i, "法定公益金", startTime, endTime, true) -
-                        getCurrent(i, "职工奖励及福利基金", startTime, endTime, true) -
-                        getCurrent(i, "储备基金", startTime, endTime, true) -
-                        getCurrent(i, "企业发展基金", startTime, endTime, true) -
-                        getCurrent(i, "归还投资", startTime, endTime, true);
+                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                        (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "所得税", startTime, endTime, true).getCurrentAmount() +
+                        specialCurr(i, "未分配利润", startTime, endTime, false).getCurrentAmount() +
+                        getCurrentBySumary(1, "其他转入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "法定盈余公积", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "法定公益金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "职工奖励及福利基金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "储备基金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "企业发展基金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "归还投资", startTime, endTime, false).getCurrentAmount();
             } else if ("应付优先股股利".equals(firstSubject)) {
-                current = getCurrent(i, "应付优先股股利", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "应付优先股股利", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("提取任意盈余公积".equals(firstSubject)) {
-                current = getCurrent(i, "任意盈余公积", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "任意盈余公积", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("应付普通股股利".equals(firstSubject)) {
-                current = getCurrent(i, "应付普通股股利", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "应付普通股股利", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("转作资本（或股本）的普通股股利".equals(firstSubject)) {
-                current = getCurrentBySumary(2, "转作资本（或股本）的普通股股利", startTime, endTime, true);
+                subjectCollectBO = getCurrentBySumary(2, "转作资本（或股本）的普通股股利", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("以前年度损益调整".equals(firstSubject)) {
-                current = getCurrent(i, "以前年度损益", startTime, endTime, true);
+                subjectCollectBO = getCurrent(i, "以前年度损益", startTime, endTime, false);
+                current = subjectCollectBO.getCurrentAmount();
             } else if ("未分配利润".equals(firstSubject)) {
-                current = getCurrent(i, "营业收入", startTime, endTime, true) -
-                        getCurrent(i, "营业成本", startTime, endTime, true) -
-                        (getCurrent(i, "城建税", startTime, endTime, true) +
-                                getCurrent(i, "教育附加", startTime, endTime, true) +
-                                getCurrent(i, "地方教育附加", startTime, endTime, true)) +
-                        getCurrent(i, "其他业务收入", startTime, endTime, true) -
-                        getCurrent(i, "其他业务支出", startTime, endTime, true) -
-                        getCurrent(i, "营业费用", startTime, endTime, true) -
-                        getCurrent(i, "管理费用", startTime, endTime, true) -
-                        getCurrent(i, "财务费用", startTime, endTime, true) +
-                        getCurrent(i, "补贴收入", startTime, endTime, true) +
-                        getCurrent(i, "营业外收入", startTime, endTime, true) -
-                        getCurrent(i, "营业外支出", startTime, endTime, true) -
-                        getCurrent(i, "所得税", startTime, endTime, true) +
-                        specialCurr(i, "未分配利润", startTime, endTime, true) +
-                        getCurrentBySumary(1, "其他转入", startTime, endTime, true) -
-                        getCurrent(i, "法定盈余公积", startTime, endTime, true) -
-                        getCurrent(i, "法定公益金", startTime, endTime, true) -
-                        getCurrent(i, "职工奖励及福利基金", startTime, endTime, true) -
-                        getCurrent(i, "储备基金", startTime, endTime, true) -
-                        getCurrent(i, "企业发展基金", startTime, endTime, true) -
-                        getCurrent(i, "归还投资", startTime, endTime, true) -
-                        getCurrent(i, "应付优先股股利", startTime, endTime, true) -
-                        getCurrent(i, "任意盈余公积", startTime, endTime, true) -
-                        getCurrent(i, "应付普通股股利", startTime, endTime, true) -
-                        getCurrentBySumary(2, "转作资本（或股本）的普通股股利", startTime, endTime, true) -
-                        getCurrent(i, "以前年度损益", startTime, endTime, true);
+                current = getCurrent(i, "营业收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业成本", startTime, endTime, true).getCurrentAmount() -
+                        (getCurrent(i, "城建税", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "教育附加", startTime, endTime, true).getCurrentAmount() +
+                                getCurrent(i, "地方教育附加", startTime, endTime, true).getCurrentAmount()) +
+                        getCurrent(i, "其他业务收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "其他业务支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "营业费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "管理费用", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "财务费用", startTime, endTime, true).getCurrentAmount() +
+                        getCurrent(i, "补贴收入", startTime, endTime, false).getCurrentAmount() +
+                        getCurrent(i, "营业外收入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "营业外支出", startTime, endTime, true).getCurrentAmount() -
+                        getCurrent(i, "所得税", startTime, endTime, true).getCurrentAmount() +
+                        specialCurr(i, "未分配利润", startTime, endTime, false).getCurrentAmount() +
+                        getCurrentBySumary(1, "其他转入", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "法定盈余公积", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "法定公益金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "职工奖励及福利基金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "储备基金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "企业发展基金", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "归还投资", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "应付优先股股利", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "任意盈余公积", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "应付普通股股利", startTime, endTime, false).getCurrentAmount() -
+                        getCurrentBySumary(2, "转作资本（或股本）的普通股股利", startTime, endTime, false).getCurrentAmount() -
+                        getCurrent(i, "以前年度损益", startTime, endTime, false).getCurrentAmount();
                 ;
             } else {
-                current = getCurrent(i, firstSubject, startTime, endTime, true);
+                current = getCurrent(i, firstSubject, startTime, endTime, true).getCurrentAmount();
             }
-            return current;
+            subjectCollectBO.setCurrentAmount(current);
+            return subjectCollectBO;
         }
-        return 0d;
+        return subjectCollectBO;
     }
 
     @Override
@@ -1117,8 +1161,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
     //tar:true,获取借方,false,获取贷方
     @Override
-    public Double getCurrent(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    public SubjectCollectBO getCurrent(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         Double current = 0d;
+        Double borrowMoney = 0d;
+        Double loanMoney = 0d;
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         dto.getConditions().add(Restrict.between("voucherDate", times));
@@ -1149,6 +1195,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     voucherGenerateList.add(voucherGenerate);
                 }
             }
+            borrowMoney = voucherGenerateList.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            loanMoney = voucherGenerateList.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
             if (tar) {
                 current = voucherGenerateList.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - voucherGenerateList.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
             } else {
@@ -1165,8 +1213,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 }
             }
         }
-
-        return current;
+        SubjectCollectBO subjectCollectBO = new SubjectCollectBO();
+        subjectCollectBO.setIssueDebitAmount(borrowMoney);
+        subjectCollectBO.setIssueCreditAmount(loanMoney);
+        subjectCollectBO.setCurrentAmount(current);
+        return subjectCollectBO;
     }
 
     @Override
@@ -1253,8 +1304,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
 
     //获取年初未分配利润科目(1月)的数据
-    public Double specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    public SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         Double current = 0d;
+        Double borrowMoney = 0d;
+        Double loanMoney = 0d;
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         dto.getConditions().add(Restrict.between("voucherDate", times));
@@ -1285,6 +1338,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     voucherGenerateList.add(voucherGenerate);
                 }
             }
+            borrowMoney = voucherGenerateList.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            loanMoney = voucherGenerateList.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
             if (tar) {
                 current = voucherGenerateList.stream().filter(obj -> 1 == obj.getVoucherDate().getMonthValue()).mapToDouble(obj -> obj.getBorrowMoney()).sum() - voucherGenerateList.stream().filter(obj -> 1 == obj.getVoucherDate().getMonthValue()).mapToDouble(obj -> obj.getLoanMoney()).sum();
             } else {
@@ -1300,7 +1355,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 }
             }
         }
-        return current;
+        SubjectCollectBO subjectCollectBO = new SubjectCollectBO();
+        subjectCollectBO.setIssueDebitAmount(borrowMoney);
+        subjectCollectBO.setIssueCreditAmount(loanMoney);
+        subjectCollectBO.setCurrentAmount(current);
+        return subjectCollectBO;
     }
 
     public Double specialCurr(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO, Boolean tar) throws SerException {
@@ -1381,8 +1440,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     //获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
-    public Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
+    public SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
         Double current = 0d;
+        Double borrowMoney = 0d;
+        Double loanMoney = 0d;
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         dto.getConditions().add(Restrict.between("voucherDate", times));
@@ -1412,13 +1473,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
 
         if (null != list && list.size() > 0) {
+            borrowMoney = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            loanMoney = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
             if (tar) {
                 current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
             } else {
                 current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
             }
         }
-        return current;
+        SubjectCollectBO subjectCollectBO = new SubjectCollectBO();
+        subjectCollectBO.setIssueDebitAmount(borrowMoney);
+        subjectCollectBO.setIssueCreditAmount(loanMoney);
+        subjectCollectBO.setCurrentAmount(current);
+        return subjectCollectBO;
     }
 
     //获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)

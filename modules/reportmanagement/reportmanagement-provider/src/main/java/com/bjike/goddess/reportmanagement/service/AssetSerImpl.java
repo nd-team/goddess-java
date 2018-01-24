@@ -1064,7 +1064,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             boList.add(beginBO);
 
             DetailBO yearBO = new DetailBO();
-            yearBO.setProject(project);
+//            yearBO.setProject(project);
             yearBO.setTerm(term);
             yearBO.setState("本年累计");
             yearBO.setForm(form);

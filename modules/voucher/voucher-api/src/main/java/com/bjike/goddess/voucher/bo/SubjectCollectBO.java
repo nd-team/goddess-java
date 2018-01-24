@@ -47,7 +47,7 @@ public class SubjectCollectBO extends BaseBO {
     private Double yearAmount;
 
     /**
-     * 本期发生额
+     * 本期发生额(本月数)
      */
     private Double currentAmount;
 
