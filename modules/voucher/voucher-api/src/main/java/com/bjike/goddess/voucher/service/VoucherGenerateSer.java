@@ -724,6 +724,8 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return null;
     }
 
+
+
     /**
      * 获取所有的项目名称
      */
@@ -741,6 +743,18 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @throws SerException
      */
     default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
         return null;
     }
 
@@ -773,6 +787,10 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
         return null;
     }
 
+    default Double findCurrent(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
     /**
      * 获取年初未分配利润科目(1月)的数据
      * @param i 区分方法标识
@@ -796,6 +814,9 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @throws SerException
      */
     default Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
+
+    Double getCurrent(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO, Boolean tar) throws SerException;
+
     /**
      * 列表
      */

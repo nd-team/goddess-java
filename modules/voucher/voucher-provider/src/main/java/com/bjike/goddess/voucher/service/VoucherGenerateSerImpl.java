@@ -28,6 +28,7 @@ import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.voucher.entity.SubjectCollect;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
 import com.bjike.goddess.voucher.enums.*;
@@ -495,7 +496,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 to.setBrow(to.getBrow().substring(0, to.getBrow().indexOf("%")));
             }
         }
-        String month = "";
+        String month = to.getYear() + "-" + to.getMonth() + "-01";
         //得到偏差分析
         if ("偏差分析".equals(to.getAnalysis())) {
             return getVarianceAnalysisBOs(to, month);
@@ -655,7 +656,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double beginningCreditAmount = begin;
         VoucherGenerateDTO dto12 = new VoucherGenerateDTO();
         if (DateUtil.parseDate(sTime).getMonthValue() != 1) {
-            String beginStartTime = DateUtil.dateToString(DateUtil.parseDate(sTime).getYear() + "01-01");
+            String beginStartTime = DateUtil.parseDate(sTime).getYear() + "-01-01";
             String beginEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue() - 1, DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue() - 1)));
             String[] times4 = new String[]{beginStartTime, beginEndTime};
             dto12.getConditions().add(Restrict.eq("firstSubject", firstSubject));
@@ -688,7 +689,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         //获取查看金额明细中的本年累计数据
         endTotalAmount = begin;
         VoucherGenerateDTO dto22 = new VoucherGenerateDTO();
-        String eStartTime = DateUtil.parseDate(sTime).getYear() + "01-01";
+        String eStartTime = DateUtil.parseDate(sTime).getYear() + "-01-01";
         String[] times2 = new String[]{eStartTime, time};
         dto22.getConditions().add(Restrict.eq("firstSubject", firstSubject));
         dto22.getConditions().add(Restrict.between("voucherDate", times2));
@@ -753,6 +754,17 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         SubjectCollectBO bo = new SubjectCollectBO();
         bo.setCurrentAmount(findCurrent(2, firstSubject, startTime, endTime));
         bo.setYearAmount(findCurrent(1, firstSubject, startTime.substring(0, 4) + "-01-01", endTime));
+        return bo;
+    }
+
+    @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        SubjectCollectBO bo = new SubjectCollectBO();
+        bo.setCurrentAmount(findCurrent(2, firstSubject, subjectCollectDTO));
+        bo.setYearAmount(findCurrent(1, firstSubject, subjectCollectDTO));
         return bo;
     }
 
@@ -929,6 +941,179 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return 0d;
     }
 
+    @Override
+    public Double findCurrent(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        if (StringUtils.isBlank(firstSubject)) {
+            return null;
+        }
+        Double current = 0d;
+        Double year = 0d;
+        String[] times = new String[]{subjectCollectDTO.getStartTime(), subjectCollectDTO.getEndTime()};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null != list && list.size() > 0) {
+            if ("营业收入".equals(firstSubject)) {
+                current = getCurrent(i, "主营业务收入", subjectCollectDTO, true);
+            } else if ("营业成本".equals(firstSubject)) {
+                current = getCurrent(i, "主营业务成本", subjectCollectDTO, true);
+            } else if ("营业税金及附加".equals(firstSubject)) {
+                current = getCurrent(i, "城建税", subjectCollectDTO, true) +
+                        getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                        getCurrent(i, "地方教育附加", subjectCollectDTO, true);
+            } else if ("销售费用".equals(firstSubject)) {
+                current = getCurrent(i, "销售费用", subjectCollectDTO, true);
+            } else if ("管理费用".equals(firstSubject)) {
+                current = getCurrent(i, "管理费用", subjectCollectDTO, true);
+            } else if ("财务费用".equals(firstSubject)) {
+                current = getCurrent(i, "财务费用", subjectCollectDTO, true);
+            } else if ("营业外收入".equals(firstSubject)) {
+                current = getCurrent(i, "营业外收入", subjectCollectDTO, true);
+            } else if ("营业外支出".equals(firstSubject)) {
+                current = getCurrent(i, "营业外支出", subjectCollectDTO, false);
+            } else if ("营业利润".equals(firstSubject)) {
+                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                        (getCurrent(i, "城建税", subjectCollectDTO, true) +
+                                getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                                getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
+                        getCurrent(i, "其他业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
+                        getCurrent(i, "营业费用", subjectCollectDTO, true) -
+                        getCurrent(i, "管理费用", subjectCollectDTO, true) -
+                        getCurrent(i, "财务费用", subjectCollectDTO, true);
+            } else if ("利润总额".equals(firstSubject)) {
+                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                        (getCurrent(i, "城建税", subjectCollectDTO, true) +
+                                getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                                getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
+                        getCurrent(i, "其他业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
+                        getCurrent(i, "营业费用", subjectCollectDTO, true) -
+                        getCurrent(i, "管理费用", subjectCollectDTO, true) -
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "补贴收入", subjectCollectDTO, true) +
+                        getCurrent(i, "营业外收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业外支出", subjectCollectDTO, true);
+            } else if ("净利润".equals(firstSubject)) {
+                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                        (getCurrent(i, "城建税", subjectCollectDTO, true) +
+                                getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                                getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
+                        getCurrent(i, "其他业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
+                        getCurrent(i, "营业费用", subjectCollectDTO, true) -
+                        getCurrent(i, "管理费用", subjectCollectDTO, true) -
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "补贴收入", subjectCollectDTO, true) +
+                        getCurrent(i, "营业外收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业外支出", subjectCollectDTO, true) -
+                        getCurrent(i, "所得税", subjectCollectDTO, true);
+            } else if ("年初未分配利润".equals(firstSubject)) {
+                current = specialCurr(i, "未分配利润", subjectCollectDTO, true);
+            } else if ("其他转入".equals(firstSubject)) {
+                current = getCurrentBySumary(1, "其他转入", subjectCollectDTO, true);
+            } else if ("可供分配的利润".equals(firstSubject)) {
+                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                        (getCurrent(i, "城建税", subjectCollectDTO, true) +
+                                getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                                getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
+                        getCurrent(i, "其他业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
+                        getCurrent(i, "营业费用", subjectCollectDTO, true) -
+                        getCurrent(i, "管理费用", subjectCollectDTO, true) -
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "补贴收入", subjectCollectDTO, true) +
+                        getCurrent(i, "营业外收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业外支出", subjectCollectDTO, true) -
+                        getCurrent(i, "所得税", subjectCollectDTO, true) +
+                        specialCurr(i, "未分配利润", subjectCollectDTO, true) +
+                        getCurrentBySumary(1, "其他转入", subjectCollectDTO, true);
+            } else if ("提取法定盈余公积".equals(firstSubject)) {
+                current = getCurrent(i, "法定盈余公积", subjectCollectDTO, true);
+            } else if ("提取法定公益金".equals(firstSubject)) {
+                current = getCurrent(i, "法定公益金", subjectCollectDTO, true);
+            } else if ("提取职工奖励及福利基金".equals(firstSubject)) {
+                current = getCurrent(i, "职工奖励及福利基金", subjectCollectDTO, true);
+            } else if ("提取储备基金".equals(firstSubject)) {
+                current = getCurrent(i, "储备基金", subjectCollectDTO, true);
+            } else if ("提取企业发展基金".equals(firstSubject)) {
+                current = getCurrent(i, "企业发展基金", subjectCollectDTO, true);
+            } else if ("利润归还投资".equals(firstSubject)) {
+                current = getCurrent(i, "归还投资", subjectCollectDTO, true);
+            } else if ("可供投资者分配的利润".equals(firstSubject)) {
+                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                        (getCurrent(i, "城建税", subjectCollectDTO, true) +
+                                getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                                getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
+                        getCurrent(i, "其他业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
+                        getCurrent(i, "营业费用", subjectCollectDTO, true) -
+                        getCurrent(i, "管理费用", subjectCollectDTO, true) -
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "补贴收入", subjectCollectDTO, true) +
+                        getCurrent(i, "营业外收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业外支出", subjectCollectDTO, true) -
+                        getCurrent(i, "所得税", subjectCollectDTO, true) +
+                        specialCurr(i, "未分配利润", subjectCollectDTO, true) +
+                        getCurrentBySumary(1, "其他转入", subjectCollectDTO, true) -
+                        getCurrent(i, "法定盈余公积", subjectCollectDTO, true) -
+                        getCurrent(i, "法定公益金", subjectCollectDTO, true) -
+                        getCurrent(i, "职工奖励及福利基金", subjectCollectDTO, true) -
+                        getCurrent(i, "储备基金", subjectCollectDTO, true) -
+                        getCurrent(i, "企业发展基金", subjectCollectDTO, true) -
+                        getCurrent(i, "归还投资", subjectCollectDTO, true);
+            } else if ("应付优先股股利".equals(firstSubject)) {
+                current = getCurrent(i, "应付优先股股利", subjectCollectDTO, true);
+            } else if ("提取任意盈余公积".equals(firstSubject)) {
+                current = getCurrent(i, "任意盈余公积", subjectCollectDTO, true);
+            } else if ("应付普通股股利".equals(firstSubject)) {
+                current = getCurrent(i, "应付普通股股利", subjectCollectDTO, true);
+            } else if ("转作资本（或股本）的普通股股利".equals(firstSubject)) {
+                current = getCurrentBySumary(2, "转作资本（或股本）的普通股股利", subjectCollectDTO, true);
+            } else if ("以前年度损益调整".equals(firstSubject)) {
+                current = getCurrent(i, "以前年度损益",subjectCollectDTO, true);
+            } else if ("未分配利润".equals(firstSubject)) {
+                current = getCurrent(i, "营业收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业成本", subjectCollectDTO, true) -
+                        (getCurrent(i, "城建税", subjectCollectDTO, true) +
+                                getCurrent(i, "教育附加", subjectCollectDTO, true) +
+                                getCurrent(i, "地方教育附加", subjectCollectDTO, true)) +
+                        getCurrent(i, "其他业务收入", subjectCollectDTO, true) -
+                        getCurrent(i, "其他业务支出", subjectCollectDTO, true) -
+                        getCurrent(i, "营业费用", subjectCollectDTO, true) -
+                        getCurrent(i, "管理费用", subjectCollectDTO, true) -
+                        getCurrent(i, "财务费用", subjectCollectDTO, true) +
+                        getCurrent(i, "补贴收入", subjectCollectDTO, true) +
+                        getCurrent(i, "营业外收入", subjectCollectDTO, true) -
+                        getCurrent(i, "营业外支出", subjectCollectDTO, true) -
+                        getCurrent(i, "所得税", subjectCollectDTO, true) +
+                        specialCurr(i, "未分配利润", subjectCollectDTO, true) +
+                        getCurrentBySumary(1, "其他转入", subjectCollectDTO, true) -
+                        getCurrent(i, "法定盈余公积", subjectCollectDTO, true) -
+                        getCurrent(i, "法定公益金", subjectCollectDTO, true) -
+                        getCurrent(i, "职工奖励及福利基金", subjectCollectDTO, true) -
+                        getCurrent(i, "储备基金", subjectCollectDTO, true) -
+                        getCurrent(i, "企业发展基金", subjectCollectDTO, true) -
+                        getCurrent(i, "归还投资", subjectCollectDTO, true) -
+                        getCurrent(i, "应付优先股股利", subjectCollectDTO, true) -
+                        getCurrent(i, "任意盈余公积", subjectCollectDTO, true) -
+                        getCurrent(i, "应付普通股股利", subjectCollectDTO, true) -
+                        getCurrentBySumary(2, "转作资本（或股本）的普通股股利", subjectCollectDTO, true) -
+                        getCurrent(i, "以前年度损益", subjectCollectDTO, true);
+                ;
+            } else {
+                current = getCurrent(i, firstSubject, subjectCollectDTO, true);
+            }
+            return current;
+        }
+        return 0d;
+    }
+
 
     //tar:true,获取借方,false,获取贷方
     @Override
@@ -984,6 +1169,88 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return current;
     }
 
+    @Override
+    public Double getCurrent(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO, Boolean tar) throws SerException {
+        Double current = 0d;
+        String[] times = new String[]{subjectCollectDTO.getStartTime(), subjectCollectDTO.getEndTime()};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+
+        if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+            dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+        }
+        if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+            dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+        }
+        if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+            dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+        }
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+//        dto.getConditions().add(Restrict.like("sumary", "结转"));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null == list || list.size() < 1) {
+            VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
+            dto1.getConditions().add(Restrict.between("voucherDate", times));
+            if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+                dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+            }
+            if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+                dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+            }
+            if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+            }
+            dto1.getConditions().add(Restrict.eq("secondSubject", firstSubject));
+            list = super.findByCis(dto1);
+            if (null == list || list.size() < 1) {
+                VoucherGenerateDTO dto2 = new VoucherGenerateDTO();
+                dto2.getConditions().add(Restrict.between("voucherDate", times));
+                if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+                    dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+                }
+                if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+                    dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+                }
+                if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                    dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+                }
+                dto2.getConditions().add(Restrict.eq("thirdSubject", firstSubject));
+                list = super.findByCis(dto2);
+            }
+        }
+
+        if (null != list && list.size() > 0) {
+            List<VoucherGenerate> voucherGenerateList = new ArrayList<>();
+            for (VoucherGenerate voucherGenerate : list) {
+                if (voucherGenerate.getSumary().length() > 2) {
+                    if (!"结转".equals(voucherGenerate.getSumary().substring(0, 2))) {
+                        voucherGenerateList.add(voucherGenerate);
+                    }
+                } else {
+                    voucherGenerateList.add(voucherGenerate);
+                }
+            }
+            if (tar) {
+                current = voucherGenerateList.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - voucherGenerateList.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+            } else {
+                current = voucherGenerateList.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - voucherGenerateList.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            }
+        }
+
+        //如果传入的时间年份与财务初始化中的启用年份相等(就需要加上初始化表中的累计损益数)只针对于本年累计数
+        String firstTime = baseParameterAPI.findDoudap();
+        if (i == 1) {
+            if (StringUtils.isNotBlank(firstTime)) {
+                if (DateUtil.parseDate(firstTime).getYear() == DateUtil.parseDate(subjectCollectDTO.getStartTime()).getYear()) {
+                    current += initDateEntryAPI.findYearProfitLossNumByName(firstSubject);
+                }
+            }
+        }
+
+        return current;
+    }
+
+
 
     //获取年初未分配利润科目(1月)的数据
     public Double specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
@@ -1036,6 +1303,83 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         return current;
     }
 
+    public Double specialCurr(int i, String firstSubject, SubjectCollectDTO subjectCollectDTO, Boolean tar) throws SerException {
+        Double current = 0d;
+        String[] times = new String[]{subjectCollectDTO.getStartTime(), subjectCollectDTO.getEndTime()};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+            dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+        }
+        if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+            dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+        }
+        if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+            dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+        }
+        dto.getConditions().add(Restrict.eq("firstSubject", firstSubject));
+//        dto.getConditions().add(Restrict.like("sumary", "结转"));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null == list || list.size() < 1) {
+            VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
+            dto1.getConditions().add(Restrict.between("voucherDate", times));
+            if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+                dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+            }
+            if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+                dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+            }
+            if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+            }
+            dto1.getConditions().add(Restrict.eq("secondSubject", firstSubject));
+            list = super.findByCis(dto1);
+            if (null == list || list.size() < 1) {
+                VoucherGenerateDTO dto2 = new VoucherGenerateDTO();
+                dto2.getConditions().add(Restrict.between("voucherDate", times));
+                if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+                    dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+                }
+                if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+                    dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+                }
+                if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                    dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+                }
+                dto2.getConditions().add(Restrict.eq("thirdSubject", firstSubject));
+                list = super.findByCis(dto2);
+            }
+        }
+
+        if (null != list && list.size() > 0) {
+            List<VoucherGenerate> voucherGenerateList = new ArrayList<>();
+            for (VoucherGenerate voucherGenerate : list) {
+                if (voucherGenerate.getSumary().length() > 2) {
+                    if (!"结转".equals(voucherGenerate.getSumary().substring(0, 2))) {
+                        voucherGenerateList.add(voucherGenerate);
+                    }
+                } else {
+                    voucherGenerateList.add(voucherGenerate);
+                }
+            }
+            if (tar) {
+                current = voucherGenerateList.stream().filter(obj -> 1 == obj.getVoucherDate().getMonthValue()).mapToDouble(obj -> obj.getBorrowMoney()).sum() - voucherGenerateList.stream().filter(obj -> 1 == obj.getVoucherDate().getMonthValue()).mapToDouble(obj -> obj.getLoanMoney()).sum();
+            } else {
+                current = voucherGenerateList.stream().filter(obj -> 1 == obj.getVoucherDate().getMonthValue()).mapToDouble(obj -> obj.getLoanMoney()).sum() - voucherGenerateList.stream().filter(obj -> 1 == obj.getVoucherDate().getMonthValue()).mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            }
+        }
+        //如果传入的时间年份与财务初始化中的启用年份相等(就需要加上初始化表中的累计损益数)只针对于本年累计数
+        String firstTime = baseParameterAPI.findDoudap();
+        if (i == 1) {
+            if (StringUtils.isNotBlank(firstTime)) {
+                if (DateUtil.parseDate(firstTime).getYear() == DateUtil.parseDate(subjectCollectDTO.getStartTime()).getYear()) {
+                    current += initDateEntryAPI.findYearProfitLossNumByName(firstSubject);
+                }
+            }
+        }
+        return current;
+    }
+
     //获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
     public Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
         Double current = 0d;
@@ -1076,6 +1420,75 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         return current;
     }
+
+    //获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
+    public Double getCurrentBySumary(int i, String sumary, SubjectCollectDTO subjectCollectDTO, Boolean tar) throws SerException {
+        Double current = 0d;
+        String[] times = new String[]{subjectCollectDTO.getStartTime(), subjectCollectDTO.getEndTime()};
+        VoucherGenerateDTO dto = new VoucherGenerateDTO();
+        dto.getConditions().add(Restrict.between("voucherDate", times));
+        if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+            dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+        }
+        if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+            dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+        }
+        if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+            dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+        }
+        dto.getConditions().add(Restrict.eq("sumary", sumary));
+        if (i == 1) {
+            dto.getConditions().add(Restrict.eq("firstSubject", "未分配利润"));
+        }
+//        dto.getConditions().add(Restrict.like("sumary", "结转"));
+        List<VoucherGenerate> list = super.findByCis(dto);
+        if (null == list || list.size() < 1) {
+            VoucherGenerateDTO dto1 = new VoucherGenerateDTO();
+            dto1.getConditions().add(Restrict.between("voucherDate", times));
+            if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+                dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+            }
+            if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+                dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+            }
+            if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+            }
+            dto1.getConditions().add(Restrict.eq("sumary", sumary));
+            if (i == 1) {
+                dto1.getConditions().add(Restrict.eq("secondSubject", "未分配利润"));
+            }
+            list = super.findByCis(dto1);
+            if (null == list || list.size() < 1) {
+                VoucherGenerateDTO dto2 = new VoucherGenerateDTO();
+                dto2.getConditions().add(Restrict.between("voucherDate", times));
+                if (StringUtils.isNotBlank(subjectCollectDTO.getArea()[0])) {
+                    dto.getConditions().add(Restrict.eq("area", subjectCollectDTO.getArea()));
+                }
+                if (StringUtils.isNotBlank(subjectCollectDTO.getProjectGroup())) {
+                    dto.getConditions().add(Restrict.eq("projectGroup", subjectCollectDTO.getProjectGroup()));
+                }
+                if (StringUtils.isNotBlank( subjectCollectDTO.getProjectName())) {
+                    dto.getConditions().add(Restrict.eq("projectName", subjectCollectDTO.getProjectName()));
+                }
+                dto2.getConditions().add(Restrict.eq("sumary", sumary));
+                if (i == 1) {
+                    dto2.getConditions().add(Restrict.eq("thirdSubject", "未分配利润"));
+                }
+                list = super.findByCis(dto2);
+            }
+        }
+
+        if (null != list && list.size() > 0) {
+            if (tar) {
+                current = list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum() - list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum();
+            } else {
+                current = list.stream().mapToDouble(obj -> obj.getLoanMoney()).sum() - list.stream().mapToDouble(obj -> obj.getBorrowMoney()).sum();
+            }
+        }
+        return current;
+    }
+
 
 
     //柱状图数据
@@ -1585,8 +1998,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         StringBuffer sql = new StringBuffer();
         String colums = "id, voucherWord, voucherNum, voucherDate, firstSubject, secondSubject, thirdSubject" +
                 ", ifnull(borrowMoney, 0), ifnull(loanMoney, 0), sumary, source, area, projectName, projectGroup, ticketer, ticketNum, extraFile, " +
-                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId ";
-        sql.append("select " + colums + " from voucher_vouchergenerate a  where a.uId in ");
+                "auditor, auditStatus, transferStatus, checkStatus, totalId, uId, firstSubjectCode, secondSubjectCode, thirdSubjectCode";
+        sql.append("select "+ colums +" from voucher_vouchergenerate a  where a.uId in ");
         sql.append("(select * from (select uId from voucher_vouchergenerate where 1 = 1 ");
         switch (type) {
             case "1":
@@ -1621,15 +2034,24 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         sql.append("group by uId limit " + startRow + ", " + endRow + ")m) ");
         if ("降序".equals(dto.getAscOrDesc())) {
-            sql.append(" order by voucherNum desc");
+            sql.append(" order by voucherDate, voucherNum, borrowMoney desc");
         } else {
-            sql.append(" order by voucherNum asc ");
+            sql.append(" order by voucherDate, voucherNum asc, borrowMoney desc");
         }
 
         String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
                 , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
-                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId"};
+                "auditStatus", "transferStatus", "checkStatus", "totalId", "uId", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
         List<VoucherGenerate> list = super.findBySql(sql.toString(), VoucherGenerate.class, fields);
+        if (list == null) {
+            return null;
+        }
+        //一级科目编码展示
+        for (VoucherGenerate voucherGenerate : list) {
+            voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + voucherGenerate.getSecondSubjectCode()
+                    + voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+        }
+
         return list;
     }
 
@@ -1675,6 +2097,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
         }
 
+        for(int i = 0; i < bos.size(); i ++) {
+            for(int j = 0; j < bos.get(i).getDetails().size(); j ++) {
+                if(bos.get(i).getDetails().get(j).getBorrowMoney() == 0) {
+
+                }
+            }
+        }
         return bos;
     }
 
@@ -1784,7 +2213,6 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             BeanUtils.copyProperties(voucherGenerate, temp);
             temp.setCreateTime(LocalDateTime.now());
             temp.setFirstSubject(first.get(i));
-            //todo 修改firstSubject：加上一级、二级、三级科目的编码
             temp.setSecondSubject(second.get(i));
             temp.setThirdSubject(third == null ? "" : third.get(i));
             temp.setBorrowMoney(borrow.get(i));
@@ -1798,6 +2226,23 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             //设置唯一标识id
             temp.setuId(uuId.toString());
 
+            // 加上一级、二级、三级科目的编码
+            String code1 = accountanCourseAPI.findByCourseName(temp.getFirstSubject());
+            String arr1[] = code1.split(":");
+            String code2 = accountanCourseAPI.findByCourseName(temp.getSecondSubject());
+            String arr2[] = code2.split(":");
+            String code3 = accountanCourseAPI.findByCourseName(temp.getThirdSubject());
+            String arr3[] = code3.split(":");
+            if(arr1.length > 0) {
+                temp.setFirstSubjectCode(arr1[0]);
+            }
+            if(arr2.length > 0) {
+                temp.setSecondSubjectCode(arr2[0]);
+            }
+            if(arr3.length > 0) {
+                temp.setThirdSubjectCode(arr3[0]);
+            }
+
             list.add(temp);
         }
         super.save(list);
@@ -1809,8 +2254,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     public VoucherGenerateBO editVoucherGenerate(VoucherGenerateTO voucherGenerateTO) throws SerException {
         //测试　todo
 //        List<VoucherGenerateChildTO> details = new ArrayList<>();
-//        details.add(new VoucherGenerateChildTO("first", "second","third", 0.0, 0.0, "45f9dd82-e4b8-4ba1-9ab8-593a9be7a971"));
-//        details.add(new VoucherGenerateChildTO("first", "second","third", 0.0, 0.0, "06808b53-2c4e-4097-83e7-6c8692da51c3"));
+//        details.add(new VoucherGenerateChildTO("本年利润", "广州",null, 10000.0, 0.0, "248bfd4a-01ac-4ff5-a42c-c3ab499ac5db"));
+//        details.add(new VoucherGenerateChildTO("管理费用", "员工工资",null, 0.0, 10000.0, "fa0b9fdf-8261-40aa-88f2-33e5490d8e56"));
 //        voucherGenerateTO.setDetails(details);
 
 
@@ -2194,12 +2639,12 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String second = voucherGenerateDTO.getSecondSubject();
         String third = voucherGenerateDTO.getThirdSubject();
 
-        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney"};
+        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney", "firstSubjectCode"};
         StringBuffer sql = new StringBuffer("");
         List<VoucherGenerate> list = new ArrayList<>();
         //若没有选一级、二级、三级科目，表头是：(一级科目/借方金额/贷方金额)
         if (StringUtils.isBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
-            sql.append(" select firstSubject , ifnull(sum(borrowMoney), 0) as borrowMoney , ifnull(sum(loanMoney), 0) as loanMoney ")
+            sql.append(" select firstSubject , ifnull(sum(borrowMoney), 0) as borrowMoney , ifnull(sum(loanMoney), 0) as loanMoney, firstSubjectCode ")
                     .append(" from voucher_vouchergenerate where 1=1 and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -2211,9 +2656,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and auditStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2225,10 +2670,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isBlank(third)) {
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "' and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2240,10 +2685,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isNotBlank(third)) {
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "'")
                     .append(" and thirdSubject = '" + third + "' and auditStatus = 1 ");
@@ -2258,15 +2703,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
 
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setFirstSubject("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2291,9 +2750,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(area)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode")
                     .append(" from voucher_vouchergenerate where area = '" + area + "' and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -2303,7 +2762,32 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else {
             throw new SerException("请正确填写数据");
         }
-        return BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+
+        }
+
+        Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
+        Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
+        List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
+        if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setArea("合计");
+            voucherGenerateBOs.add(total);
+            return voucherGenerateBOs;
+        }
+        return null;
     }
 
     @Override
@@ -2327,9 +2811,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(group)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject, secondSubject, thirdSubject ,  ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and auditStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -2343,15 +2827,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectGroup("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
-        return null;
+        return voucherGenerateBOs;
     }
 
     @Override
@@ -2376,9 +2874,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(projectName)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  ifnull(borrowMoney, 0) ,  ifnull(loanMoney, 0) ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and auditStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2394,12 +2892,26 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
+
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectName("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
         return null;
@@ -2516,13 +3028,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String second = voucherGenerateDTO.getSecondSubject();
         String third = voucherGenerateDTO.getThirdSubject();
 
-        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney"};
+        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney", "firstSubjectCode"};
         StringBuffer sql = new StringBuffer("");
         List<VoucherGenerate> list = new ArrayList<>();
         //若没有选一级、二级、三级科目，表头是：(一级科目/借方金额/贷方金额)
         if (StringUtils.isBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
 
-            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney, firstSubjectCode")
                     .append(" from voucher_vouchergenerate where 1=1 and transferStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -2534,9 +3046,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and transferStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2548,10 +3060,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isBlank(third)) {
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "' and transferStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2563,10 +3075,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isNotBlank(third)) {
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney , loanMoney ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "'")
                     .append(" and thirdSubject = '" + third + "' and transferStatus = 1 ");
@@ -2583,14 +3095,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setFirstSubject("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2617,9 +3143,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(area)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where area = '" + area + "' and transferStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2635,14 +3161,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setArea("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2670,9 +3210,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(group)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney , loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and transferStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2688,14 +3228,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectGroup("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2722,9 +3276,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(projectName)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney , loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and transferStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2740,14 +3294,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectName("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2790,13 +3358,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String second = voucherGenerateDTO.getSecondSubject();
         String third = voucherGenerateDTO.getThirdSubject();
 
-        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney"};
+        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney", "firstSubjectCode"};
         StringBuffer sql = new StringBuffer("");
         List<VoucherGenerate> list = new ArrayList<>();
         //若没有选一级、二级、三级科目，表头是：(一级科目/借方金额/贷方金额)
         if (StringUtils.isBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
 
-            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney, firstSubjectCode ")
                     .append(" from voucher_vouchergenerate where 1=1 and checkStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -2808,9 +3376,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "' and checkStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2822,10 +3390,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isBlank(third)) {
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "' and checkStatus = 1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2837,10 +3405,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isNotBlank(third)) {
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney , loanMoney ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "'")
                     .append(" and thirdSubject = '" + third + "' and checkStatus = 1 ");
@@ -2857,14 +3425,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setFirstSubject("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2889,9 +3471,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(area)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where area = '" + area + "' and checkStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2907,14 +3489,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setArea("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2940,9 +3536,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(group)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "' and checkStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -2958,14 +3554,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectGroup("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -2991,9 +3601,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(projectName)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "' and checkStatus = 1 ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -3009,14 +3619,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectName("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -3053,13 +3677,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String second = voucherGenerateDTO.getSecondSubject();
         String third = voucherGenerateDTO.getThirdSubject();
 
-        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney"};
+        String[] field = new String[]{"firstSubject", "borrowMoney", "loanMoney", "firstSubjectCode"};
         StringBuffer sql = new StringBuffer("");
         List<VoucherGenerate> list = new ArrayList<>();
         //若没有选一级、二级、三级科目，表头是：(一级科目/借方金额/贷方金额)
         if (StringUtils.isBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
 
-            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney ")
+            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney, firstSubjectCode, ")
                     .append(" from voucher_vouchergenerate where 1=1   ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
@@ -3071,9 +3695,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
             //若有选一级，没选二级、三级科目，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'   ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -3085,10 +3709,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isBlank(third)) {
             //若有选二级，则一级必选，三级科目可选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "'   ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -3100,10 +3724,10 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(first) && StringUtils.isNotBlank(second) && StringUtils.isNotBlank(third)) {
             //若有选三级，则一级必选，二级科目必选，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney , loanMoney ")
 
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where firstSubject = '" + first + "'")
                     .append(" and secondSubject = '" + second + "'")
                     .append(" and thirdSubject = '" + third + "'   ");
@@ -3120,14 +3744,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setFirstSubject("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -3153,9 +3791,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(area)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject , borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where area = '" + area + "'  ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -3171,14 +3809,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setArea("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -3204,9 +3856,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(group)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectGroup = '" + group + "'  ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -3222,14 +3874,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectGroup("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -3255,9 +3921,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         } else if (StringUtils.isNotBlank(projectName)) {
             //若有选地区，表头是：(一级科目/二级科目/三级科目/借方金额/贷方金额/凭证日期/地区/项目组/项目名称)
             field = new String[]{"firstSubject", "secondSubject", "thirdSubject", "borrowMoney",
-                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName"};
+                    "loanMoney", "voucherDate", "area", "projectGroup", "projectName", "firstSubjectCode", "secondSubjectCode", "thirdSubjectCode"};
             sql.append(" select firstSubject,secondSubject, thirdSubject ,  borrowMoney ,  loanMoney ")
-                    .append(" , voucherDate , area , projectGroup , projectName ")
+                    .append(" , voucherDate , area , projectGroup , projectName, firstSubjectCode, secondSubjectCode, thirdSubjectCode ")
                     .append(" from voucher_vouchergenerate where projectName = '" + projectName + "'  ");
 
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
@@ -3273,14 +3939,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
+        //设置科目代码
+        for (VoucherGenerate voucherGenerate : list) {
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+            }
+            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+            }
+        }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
-            voucherGenerateBOs.stream().forEach(obj -> {
-                obj.setBorrowMoneyTotal(borrowMoneyTotal);
-                obj.setLoanMoneyTotal(loanMoneyTotal);
-            });
+            VoucherGenerateBO total = new VoucherGenerateBO();
+            total.setBorrowMoney(borrowMoneyTotal);
+            total.setLoanMoney(loanMoneyTotal);
+            total.setProjectName("合计");
+            voucherGenerateBOs.add(total);
             return voucherGenerateBOs;
         }
+
         return null;
     }
 
@@ -3431,6 +4111,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             String[] voucherDate = new String[]{dto.getStartTime(), dto.getEndTime()};
             dto.getConditions().add(Restrict.between("voucherDate", voucherDate));
         }
+        dto.getSorts().add("voucherDate=asc");
+        dto.getSorts().add("voucherNum=asc");
         List<AccountInfoBO> boList = new ArrayList<>();
         List<VoucherGenerate> list = super.findByCis(dto);
         List<AccountInfoBO> accountInfoBOS = BeanTransform.copyProperties(list, AccountInfoBO.class);
@@ -3913,7 +4595,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             default:
                 throw new SerException("请输入正确的数据状态");
         }
-        voucherGenerateDTO.getSorts().add("totalId=desc");
+        voucherGenerateDTO.getSorts().add("voucherDate=desc");
+        voucherGenerateDTO.getSorts().add("voucherNum=desc");
+        voucherGenerateDTO.getSorts().add("borrowMoney=desc");
         List<VoucherGenerate> list = super.findByCis(voucherGenerateDTO);
         System.out.println(JSON.toJSON(list));
 
@@ -4029,7 +4713,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             row.createCell(callIndex++).setCellValue(exportEntity.getVoucherDate());
             row.createCell(callIndex++).setCellValue(exportEntity.getFirstSubject());
             row.createCell(callIndex++).setCellValue(exportEntity.getSecondSubject());
-            row.createCell(callIndex++).setCellValue(exportEntity.getThirdSubject());
+            row.createCell(callIndex++).setCellValue(exportEntity.getThirdSubject() == null ? "" : exportEntity.getThirdSubject());
             row.createCell(callIndex++).setCellValue(exportEntity.getBorrowMoney());
             row.createCell(callIndex++).setCellValue(exportEntity.getLoanMoney());
             row.createCell(callIndex++).setCellValue(exportEntity.getSumary());

@@ -133,6 +133,23 @@ public class ProjectAction {
     }
 
     /**
+     * 删除
+     *
+     * @param id id
+     * @throws ActException
+     * @version v1
+     */
+    @DeleteMapping("v1/delete/{id}")
+    public Result edit(@PathVariable String id, BindingResult result) throws ActException {
+        try {
+            projectAPI.delete(id);
+            return new ActResult("删除成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
      * 查找总记录数
      *
      * @param dto 项目数据传输

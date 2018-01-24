@@ -156,6 +156,23 @@ public class VoucherGenerate extends BaseEntity {
     @Column(name = "uId", nullable = false, columnDefinition = "VARCHAR(60)   COMMENT '凭证唯一id(一个凭证多个科目的uId一样)'")
     private String uId;
 
+    /**
+     * 一级科目code
+     */
+    @Column(name = "firstSubjectCode", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '一级科目code'")
+    private String firstSubjectCode;
+
+    /**
+     * 二级科目code
+     */
+    @Column(name = "secondSubjectCode", columnDefinition = "VARCHAR(255)   COMMENT '二级科目code'")
+    private String secondSubjectCode;
+
+    /**
+     * 三级科目code
+     */
+    @Column(name = "thirdSubjectCode",  columnDefinition = "VARCHAR(255)   COMMENT '三级科目code'")
+    private String thirdSubjectCode;
 
 
 
@@ -333,5 +350,29 @@ public class VoucherGenerate extends BaseEntity {
 
     public void setuId(String uId) {
         this.uId = uId;
+    }
+
+    public String getFirstSubjectCode() {
+        return firstSubjectCode;
+    }
+
+    public void setFirstSubjectCode(String firstSubjectCode) {
+        this.firstSubjectCode = firstSubjectCode;
+    }
+
+    public String getSecondSubjectCode() {
+        return secondSubjectCode;
+    }
+
+    public void setSecondSubjectCode(String secondSubjectCode) {
+        this.secondSubjectCode = secondSubjectCode;
+    }
+
+    public String getThirdSubjectCode() {
+        return thirdSubjectCode;
+    }
+
+    public void setThirdSubjectCode(String thirdSubjectCode) {
+        this.thirdSubjectCode = thirdSubjectCode;
     }
 }

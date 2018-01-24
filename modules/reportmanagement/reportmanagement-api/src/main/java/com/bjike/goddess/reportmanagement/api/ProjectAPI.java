@@ -77,6 +77,16 @@ public interface ProjectAPI {
     }
 
     /**
+     * 编辑
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void delete(String id) throws SerException {
+        return;
+    }
+
+    /**
      * 查找总记录数
      *
      * @param dto
