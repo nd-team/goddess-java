@@ -78,6 +78,16 @@ public interface DataSer extends Ser<Data, DataDTO> {
     }
 
     /**
+     * 删除
+     *
+     * @param id
+     * @throws SerException
+     */
+    default void delete(String id) throws SerException {
+        return;
+    }
+
+    /**
      * 查找总记录数
      *
      * @param dto

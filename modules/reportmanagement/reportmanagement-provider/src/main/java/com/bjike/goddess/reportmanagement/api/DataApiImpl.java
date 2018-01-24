@@ -57,6 +57,11 @@ public class DataApiImpl implements DataAPI {
     }
 
     @Override
+    public void delete(String id) throws SerException {
+        dataSer.delete(id);
+    }
+
+    @Override
     public Long count(DataDTO dto) throws SerException {
         return dataSer.findCount(dto);
     }

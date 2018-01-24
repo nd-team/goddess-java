@@ -209,7 +209,6 @@ public class VoucherGenerateAction extends BaseFileAction {
     @PostMapping("v1/add")
     public Result add(@Validated(VoucherGenerateTO.TestAdd.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
-            //todo 修改firstSubject：加上一级、二级、三级科目的编码
             List<VoucherGenerateBO> voucherGenerateBO1 = voucherGenerateAPI.addVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));
         } catch (SerException e) {
@@ -228,7 +227,7 @@ public class VoucherGenerateAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result edit(@Validated(VoucherGenerateTO.Update.class) VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
+    public Result edit(VoucherGenerateTO voucherGenerateTO, BindingResult bindingResult) throws ActException {
         try {
             VoucherGenerateBO voucherGenerateBO1 = voucherGenerateAPI.editVoucherGenerate(voucherGenerateTO);
             return ActResult.initialize(BeanTransform.copyProperties(voucherGenerateBO1, VoucherGenerateVO.class, true));

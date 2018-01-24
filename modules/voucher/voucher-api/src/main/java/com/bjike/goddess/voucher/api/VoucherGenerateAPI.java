@@ -746,6 +746,20 @@ public interface VoucherGenerateAPI {
     }
 
     /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
+
+
+    /**
      * 获取所有一级科目为现金或者银行存款的数据
      */
     default List<VoucherGenerateBO> findByCourseName() throws SerException {

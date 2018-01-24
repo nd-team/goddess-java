@@ -18,11 +18,59 @@ public class CashAnalyseDTO extends BaseDTO {
      */
     private String time;
 
+    /**
+     * 地区
+     */
+    private String area;
+
+    /**
+     * 项目
+     */
+    private String projectName;
+
+    /**
+     * 项目组
+     */
+    private String projectGroup;
+
+    public CashAnalyseDTO() {
+    }
+    public CashAnalyseDTO(String time, String area, String projectName, String projectGroup) {
+        this.time = time;
+        this.area = area;
+        this.projectName = projectName;
+        this.projectGroup = projectGroup;
+    }
+
     public String getTime() {
         return time;
     }
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectGroup() {
+        return projectGroup;
+    }
+
+    public void setProjectGroup(String projectGroup) {
+        this.projectGroup = projectGroup;
     }
 }

@@ -92,4 +92,14 @@ public interface CashFlowProjectAPI {
     default void editRate(CashRateListTO to) throws SerException {
         return;
     }
+
+    /**
+     * 导出
+     *
+     * @param to
+     * @throws SerException
+     */
+    default byte[] export(CashFlowProjectDTO to) throws SerException {
+        return null;
+    }
 }

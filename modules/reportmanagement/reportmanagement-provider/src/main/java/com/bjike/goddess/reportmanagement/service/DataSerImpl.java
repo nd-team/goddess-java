@@ -202,6 +202,11 @@ public class DataSerImpl extends ServiceImpl<Data, DataDTO> implements DataSer {
     }
 
     @Override
+    public void delete(String id) throws SerException {
+        super.remove(id);
+    }
+
+    @Override
     public Long findCount(DataDTO dto) throws SerException {
         return super.count(dto);
     }

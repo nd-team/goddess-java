@@ -423,6 +423,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return voucherGenerateSer.findCurrentAndYear(firstSubject, subjectCollectDTO);
+    }
+
+    @Override
     public List<VoucherGenerateBO> findByCourseName() throws SerException {
         return voucherGenerateSer.findByCourseName();
     }

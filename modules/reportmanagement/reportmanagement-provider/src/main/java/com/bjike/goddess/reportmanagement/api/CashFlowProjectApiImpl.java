@@ -62,4 +62,9 @@ public class CashFlowProjectApiImpl implements CashFlowProjectAPI {
     public void editRate(CashRateListTO to) throws SerException {
         cashFlowProjectSer.editRate(to);
     }
+
+    @Override
+    public byte[] export(CashFlowProjectDTO to) throws SerException {
+        return cashFlowProjectSer.export(to);
+    }
 }

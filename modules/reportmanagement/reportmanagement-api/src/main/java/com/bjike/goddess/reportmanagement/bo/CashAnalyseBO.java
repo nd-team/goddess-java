@@ -36,11 +36,21 @@ public class CashAnalyseBO extends BaseBO {
 /**
 * 管理建议
 */
- private String  advice; 
+ private String  advice;
 
+ public CashAnalyseBO() {
+ }
 
+ public CashAnalyseBO(String project, String money, String rate, String analyse, String advice, String id) {
+  this.project = project;
+  this.money = money;
+  this.rate = rate;
+  this.analyse = analyse;
+  this.advice = advice;
+  this.id = id;
+ }
 
- public String getProject () { 
+ public String getProject () {
  return project;
  } 
  public void setProject (String project ) { 
