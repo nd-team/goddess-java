@@ -24,7 +24,23 @@ public enum ProfitType {
     /**
      * 净利润
      */
-    DNETPROFIT(3);
+    DNETPROFIT(3),
+    /**
+     * 可供分配的利润
+     */
+    DISTRIBUTABLEPROFITS(4),
+    /**
+     * 可供投资者分配的利润
+     */
+    PROFITSACAILABLE(5),
+    /**
+     * 以前年度损益调整
+     */
+    PREVIOUSANNUAL(6),
+    /**
+     * 未分配利润
+     */
+    UNDISTRIBUTED(7);
     private int code;
 
     ProfitType(int code) {

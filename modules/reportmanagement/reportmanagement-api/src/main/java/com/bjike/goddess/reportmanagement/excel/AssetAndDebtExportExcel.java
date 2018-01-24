@@ -51,15 +51,15 @@ public class AssetAndDebtExportExcel extends BaseBO {
     private Integer debtNum;
 
     /**
-     * 负债年初数
+     * 负债和所有者权益年初数
      */
-    @ExcelHeader(name = "负债年初数")
+    @ExcelHeader(name = "负债和所有者权益年初数")
     private Double beginDebt;
 
     /**
-     * 负债期末数
+     * 负债和所有者权益期末数
      */
-    @ExcelHeader(name = "负债期末数")
+    @ExcelHeader(name = "负债和所有者权益期末数")
     private Double endDebt;
 
     public String getAsset() {

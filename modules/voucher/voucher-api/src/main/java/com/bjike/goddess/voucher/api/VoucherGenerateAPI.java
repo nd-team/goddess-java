@@ -692,9 +692,34 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String time, Boolean tar) throws SerException {
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String starTime,String time, Boolean tar) throws SerException {
         return null;
     }
+
+
+    /**
+     * 获取年初未分配利润科目(1月)的数据
+     * @param i
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return
+     * @throws SerException
+     */
+    default Double specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {return null;}
+
+    /**
+     * 获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
+     * @param i
+     * @param sumary
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return
+     * @throws SerException
+     */
+    default Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
 
     default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
         return null;
@@ -759,7 +784,7 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     //tar:true,获取借方,false,获取贷方
-    default Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    default Double getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         return null;
     }
 }

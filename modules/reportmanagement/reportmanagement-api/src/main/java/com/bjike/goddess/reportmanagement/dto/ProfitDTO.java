@@ -1,6 +1,7 @@
 package com.bjike.goddess.reportmanagement.dto;
 
 import com.bjike.goddess.common.api.dto.BaseDTO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 利润表数据传输对象

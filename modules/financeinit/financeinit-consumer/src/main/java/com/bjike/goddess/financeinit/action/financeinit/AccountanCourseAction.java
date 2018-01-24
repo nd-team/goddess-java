@@ -561,7 +561,7 @@ public class AccountanCourseAction extends BaseFileAction {
      * @des 根据一级科目的id获取所有二级科目
      * @version v1
      */
-    @GetMapping("v1/listSecondSubject/{code}")
+    @GetMapping("v1/listSecondSubject/{id}")
     public Result listSecondByCode(@PathVariable String id) throws ActException {
         try {
             List<AccountAddDateBO> list = accountanCourseAPI.findSecondName(id);
@@ -579,12 +579,42 @@ public class AccountanCourseAction extends BaseFileAction {
      * @des 根据二级科目的id获取所有三级科目
      * @version v1
      */
-    @GetMapping("v1/listThirdSubject/{code}")
+    @GetMapping("v1/listThirdSubject/{id}")
     public Result listThirdByCode(@PathVariable String id) throws ActException {
         try {
             List<AccountAddDateBO> list = accountanCourseAPI.findThirdName(id);
 
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据一级科目id获取二级科目列表
+     *
+     * @param id 一级科目id
+     * @version v1
+     */
+    @GetMapping("v1/findSecondList/{id}")
+    public Result findSecondList(@PathVariable String id) throws ActException {
+        try {
+            List<AccountanCourseVO> list = BeanTransform.copyProperties(accountanCourseAPI.findSendSubjectByOne(id),AccountanCourseBO.class);
+            return ActResult.initialize(BeanTransform.copyProperties(list, AccountanCourseVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 根据二级科目id获取三级科目列表
+     *
+     * @param id 一级科目id
+     * @version v1
+     */
+    @GetMapping("v1/findThirdList/{id}")
+    public Result findThirdList(@PathVariable String id) throws ActException {
+        try {
+            List<AccountanCourseVO> list = BeanTransform.copyProperties(accountanCourseAPI.findThirdSubjectBySend(id),AccountanCourseBO.class);
+            return ActResult.initialize(BeanTransform.copyProperties(list, AccountanCourseVO.class));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

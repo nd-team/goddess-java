@@ -540,7 +540,7 @@ public class ExcelUtil {
      * @return
      */
     private static int initTitleAndHeader(XSSFWorkbook wb, XSSFSheet sheet, Excel excel, List<ExcelHeader> excelHeaders, int cellSize) {
-        int rowIndex = 0;
+        int rowIndex =excel.getHeaderStartRow();
         XSSFCellStyle titleStyle = wb.createCellStyle();  // 标题的样式
         titleStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
         titleStyle.setWrapText(true);

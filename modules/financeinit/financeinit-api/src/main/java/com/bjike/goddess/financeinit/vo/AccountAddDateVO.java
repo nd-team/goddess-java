@@ -14,6 +14,10 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 public class AccountAddDateVO {
 
     /**
+     * id
+     */
+    private String id;
+    /**
      * 代码
      */
     private String code;
@@ -22,6 +26,15 @@ public class AccountAddDateVO {
      * 会计科目名称
      */
     private String accountanName;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;

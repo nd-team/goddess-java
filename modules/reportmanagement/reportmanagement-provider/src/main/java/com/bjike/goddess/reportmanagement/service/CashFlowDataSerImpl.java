@@ -589,7 +589,7 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
     private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
