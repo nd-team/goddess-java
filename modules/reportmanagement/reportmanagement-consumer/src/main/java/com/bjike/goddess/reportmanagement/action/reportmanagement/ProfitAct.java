@@ -193,7 +193,7 @@ public class ProfitAct extends BaseFileAction{
         BeanUtils.copyProperties(dto, formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
+            List<FormulaBO> list = formulaAPI.profitFindByFid(id, formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());

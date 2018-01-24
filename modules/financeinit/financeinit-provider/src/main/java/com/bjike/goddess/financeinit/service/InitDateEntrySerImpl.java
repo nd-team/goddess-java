@@ -234,6 +234,18 @@ public class InitDateEntrySerImpl extends ServiceImpl<InitDateEntry, InitDateEnt
         return BeanTransform.copyProperties(initDateEntry, InitDateEntryBO.class);
     }
 
+    @Override
+    public Double findYearProfitLossNumByName(String name) throws SerException {
+        Double yearProfitLoss = 0d;
+         InitDateEntryDTO initDateEntryDTO = new InitDateEntryDTO();
+        initDateEntryDTO.getConditions().add(Restrict.eq("accountanName", name));
+        List<InitDateEntry> initDateEntrys = super.findByCis(initDateEntryDTO);
+        if(initDateEntrys!=null && initDateEntrys.size()>0){
+            yearProfitLoss = initDateEntrys.get(0).getYearProfitLossNum();
+        }
+        return yearProfitLoss;
+    }
+
     public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         if (StringUtils.isBlank(firstSubject)) {
             return null;

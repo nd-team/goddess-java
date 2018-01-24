@@ -64,6 +64,12 @@ public class InitDateEntryApiImpl implements InitDateEntryAPI {
     public InitDateEntryBO findByName(String name) throws SerException {
         return initDateEntrySer.findByName(name);
     }
+
+    @Override
+    public Double findYearProfitLossNumByName(String name) throws SerException {
+        return initDateEntrySer.findYearProfitLossNumByName(name);
+    }
+
     public InitDateEntryBO findBySubject(String firstSubject) throws SerException {
         return initDateEntrySer.findBySubject(firstSubject);
     }

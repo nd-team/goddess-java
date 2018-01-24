@@ -51,7 +51,7 @@ public class Account extends BaseEntity {
     /**
      * 二级科目
      */
-    @Column(name = "secondSubject",  columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
+    @Column(name = "secondSubject", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '二级科目'")
     private String secondSubject;
 
     /**

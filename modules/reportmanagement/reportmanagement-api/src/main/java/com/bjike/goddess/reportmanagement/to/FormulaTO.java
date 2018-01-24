@@ -31,7 +31,7 @@ public class FormulaTO extends BaseTO {
     /**
      * 取数规则
      */
-    @NotBlank(groups = {ADD.class, EDIT.class}, message = "取数规则不能为空")
+//    @NotBlank(groups = {ADD.class, EDIT.class}, message = "取数规则不能为空")
     private AccessRules accessRules;
 
     /**

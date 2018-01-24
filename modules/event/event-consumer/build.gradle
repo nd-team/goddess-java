@@ -36,8 +36,8 @@ dependencies {
     compile(project(":common:common-consumer")) {
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
-
     compile project(":modules:event:event-api")
+    compile project(":modules:recruit:recruit-consumer")
 
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-websocket")

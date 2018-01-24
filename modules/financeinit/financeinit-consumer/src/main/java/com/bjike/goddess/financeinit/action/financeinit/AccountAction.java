@@ -253,16 +253,16 @@ public class AccountAction extends BaseFileAction {
     }
 
     /**
-     * 根据一级科目代码获取三级科目名称
+     * 根据二级科目id获取三级科目名称
      *
      * @return class  AccountAddDateVO
      * @throws ActException
      * @version v1
      */
-    @GetMapping("v1/thirdName/code")
+    @GetMapping("v1/thirdName/id")
     public Result findThirdNameByCode(@RequestParam String id) throws ActException {
         try {
-            List<AccountAddDateBO> names = accountanCourseAPI.findSendNameByOne(id);
+            List<AccountAddDateBO> names = accountanCourseAPI.findThirdNameBySend(id);
             List<AccountAddDateVO> accountAddDateVOS = BeanTransform.copyProperties(names,AccountAddDateVO.class);
             return ActResult.initialize(accountAddDateVOS);
         } catch (SerException e) {

@@ -415,8 +415,8 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
                 sql.append(" (SELECT count(*) AS cooperationNum FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "' AND is_reachedCoop = 1)k, ");
                 sql.append(" (SELECT count(*) AS discardedNum FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "' AND is_reachedCoop = 0)l, ");
                 sql.append(" (SELECT count(*) AS IntroduceOtherNum FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "' AND is_introduceContra = 1)m, ");
-                sql.append(" (SELECT sum(serviceFee) AS serviceFee FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "')n, ");
-                sql.append(" (SELECT sum(intermediaryFee) AS intermediaryFee FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "')o ");
+                sql.append(" (SELECT ifnull(0,sum(serviceFee)) AS serviceFee FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "')n, ");
+                sql.append(" (SELECT ifnull(0,sum(intermediaryFee)) AS intermediaryFee FROM businessinteraction_demand WHERE demandDate < '" + endDate + "' AND businessTarget = '" + bussType + "')o ");
                 sql.append(" )");
                 List<Object> objectList = super.findBySql(sql.toString());
                 Object[] objects = (Object[]) objectList.get(0);
@@ -488,8 +488,8 @@ public class DemandSerImpl extends ServiceImpl<Demand, DemandDTO> implements Dem
                 sql.append(" (SELECT count(*) AS cooperationNum FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "' AND is_reachedCoop = 1)k, ");
                 sql.append(" (SELECT count(*) AS discardedNum FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "' AND is_reachedCoop = 0)l, ");
                 sql.append(" (SELECT count(*) AS IntroduceOtherNum FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "' AND is_introduceContra = 1)m, ");
-                sql.append(" (SELECT sum(serviceFee) AS serviceFee FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "')n, ");
-                sql.append(" (SELECT sum(intermediaryFee) AS intermediaryFee FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "')o ");
+                sql.append(" (SELECT ifnull(0,sum(serviceFee)) AS serviceFee FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "')n, ");
+                sql.append(" (SELECT ifnull(0,sum(intermediaryFee)) AS intermediaryFee FROM businessinteraction_demand WHERE demandDate BETWEEN '" + startDate + "' AND '" + endDate + "' AND businessTarget = '" + bussType + "')o ");
                 sql.append(" )");
                 List<Object> objectList = super.findBySql(sql.toString());
                 Object[] objects = (Object[]) objectList.get(0);

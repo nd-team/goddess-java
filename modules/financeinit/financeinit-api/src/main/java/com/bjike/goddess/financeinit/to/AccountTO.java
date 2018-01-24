@@ -34,6 +34,7 @@ public class AccountTO extends BaseTO {
     /**
      * 二级类别名
      */
+    @NotBlank(message = "二级类别名不能为空")
     private String secondSubject;
 
     /**

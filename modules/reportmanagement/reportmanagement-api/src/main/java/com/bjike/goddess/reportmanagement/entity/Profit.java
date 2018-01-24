@@ -41,6 +41,12 @@ public class Profit extends BaseEntity {
 //    private Double currentYearAmount;
 
     /**
+     * 项目类型
+     */
+    @Column(name = "projectType", columnDefinition = "VARCHAR(255)   COMMENT '项目类型'")
+    private String projectType;
+
+    /**
      * 利润类型
      */
     @Column(name = "profitType", columnDefinition = "TINYINT(2)   COMMENT '利润类型'")
@@ -76,4 +82,11 @@ public class Profit extends BaseEntity {
         this.project = project;
     }
 
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
 }

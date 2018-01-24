@@ -150,7 +150,7 @@ public interface AssetSer extends Ser<Asset, AssetDTO> {
     }
 
     /**
-     * 获取所有科目
+     * 获取所有一级科目
      *
      * @return
      * @throws SerException

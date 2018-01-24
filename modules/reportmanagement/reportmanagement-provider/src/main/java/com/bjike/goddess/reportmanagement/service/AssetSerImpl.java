@@ -1021,37 +1021,56 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             FormulaBO last = list.get(list.size() - 1);
             double begin = last.getBegin();
             double current = last.getCurrent();
-            Form form = last.getForm();
+
+            Double beginningCreditAmount = last.getBeginningCreditAmount();//期初余额
+            Double issueDebitAmount = last.getIssueDebitAmount();//本期借方总额
+            Double issueCreditAmount = last.getIssueCreditAmount();//本期贷方总额
+            Double issueTotalAmount = last.getIssueTotalAmount();//本期合计余额
+            Double endDebitAmount = last.getEndDebitAmount();//期末借方总额
+            Double endCreditAmount = last.getEndCreditAmount();//期末贷方总额
+            Double endTotalAmount = last.getEndTotalAmount();//本年累计额
+
+
+//            Form form = last.getForm();
+            Form form = Form.DEBIT;
             double currentSum = 0;
             String project = findByID(id).getAsset();
             String term = startTime + "~" + endTime;
+
             DetailBO currentBO = new DetailBO();
             currentBO.setProject(project);
             currentBO.setTerm(term);
             currentBO.setState("本期合计");
             currentBO.setForm(form);
-            if (Form.DEBIT.equals(form)) {
-                currentSum = begin + current;
-                currentBO.setDebit(current);
-            } else if (Form.CREDIT.equals(form)) {
-                currentSum = begin - current;
-                currentBO.setCredit(current);
-            }
-            currentBO.setRemain(currentSum);
+            currentBO.setDebit(issueDebitAmount);
+            currentBO.setCredit(issueCreditAmount);
+            currentBO.setRemain(issueTotalAmount);
+//            if (Form.DEBIT.equals(form)) {
+//                currentSum = begin + current;
+//                currentBO.setDebit(current);
+//            } else if (Form.CREDIT.equals(form)) {
+//                currentSum = begin - current;
+//                currentBO.setCredit(current);
+//            }
+            boList.add(currentBO);
+
             double year = currentSum;
             DetailBO beginBO = new DetailBO();
             beginBO.setProject(project);
             beginBO.setTerm(term);
             beginBO.setState("期初余额");
             beginBO.setForm(form);
-            beginBO.setRemain(begin);
+            beginBO.setRemain(beginningCreditAmount);
             boList.add(beginBO);
-            boList.add(currentBO);
+
             DetailBO yearBO = new DetailBO();
+            yearBO.setProject(project);
             yearBO.setTerm(term);
             yearBO.setState("本年累计");
             yearBO.setForm(form);
-            yearBO.setRemain(year);
+            yearBO.setDebit(endDebitAmount);
+            yearBO.setCredit(endCreditAmount);
+            yearBO.setRemain(endTotalAmount);
             boList.add(yearBO);
         }
         return boList;
@@ -1191,7 +1210,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     @Override
     public List<String> allFirstSubjects() throws SerException {
 //        if (moduleAPI.isCheck("financeinit")) {
-        List<AccountAddDateBO> bos = accountanCourseAPI.findNameCode();
+        List<AccountAddDateBO> bos = accountanCourseAPI.findFirstNameCode();
         if (null != bos && bos.size() > 0) {
             List<String> list = bos.stream().map(AccountAddDateBO::getAccountanName).distinct().collect(Collectors.toList());
             return list;

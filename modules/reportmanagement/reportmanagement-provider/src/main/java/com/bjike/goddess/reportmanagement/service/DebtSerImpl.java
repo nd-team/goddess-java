@@ -485,7 +485,16 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
             FormulaBO last = list.get(list.size() - 1);
             double begin = last.getBegin();
             double current = last.getCurrent();
-            Form form = last.getForm();
+
+            Double beginningCreditAmount = last.getBeginningCreditAmount();//期初余额
+            Double issueDebitAmount = last.getIssueDebitAmount();//本期借方总额
+            Double issueCreditAmount = last.getIssueCreditAmount();//本期贷方总额
+            Double issueTotalAmount = last.getIssueTotalAmount();//本期合计余额
+            Double endDebitAmount = last.getEndDebitAmount();//期末借方总额
+            Double endCreditAmount = last.getEndCreditAmount();//期末贷方总额
+            Double endTotalAmount = last.getEndTotalAmount();//本年累计额
+//            Form form = last.getForm();
+            Form form = Form.CREDIT;
             double currentSum = 0;
             String project = findByID(id).getDebt();
             String term = startTime + "~" + endTime;
@@ -494,28 +503,36 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
             currentBO.setTerm(term);
             currentBO.setState("本期合计");
             currentBO.setForm(form);
-            if (Form.DEBIT.equals(form)) {
-                currentSum = begin + current;
-                currentBO.setDebit(current);
-            } else if (Form.CREDIT.equals(form)) {
-                currentSum = begin - current;
-                currentBO.setCredit(current);
-            }
+            currentBO.setDebit(issueDebitAmount);
+            currentBO.setCredit(issueCreditAmount);
+            currentBO.setRemain(issueTotalAmount);
             currentBO.setRemain(currentSum);
+//            if (Form.DEBIT.equals(form)) {
+//                currentSum = begin + current;
+//                currentBO.setDebit(current);
+//            } else if (Form.CREDIT.equals(form)) {
+//                currentSum = begin - current;
+//                currentBO.setCredit(current);
+//            }
+            boList.add(currentBO);
+
             double year = currentSum;
             DetailBO beginBO = new DetailBO();
             beginBO.setProject(project);
             beginBO.setTerm(term);
             beginBO.setState("期初余额");
             beginBO.setForm(form);
-            beginBO.setRemain(begin);
+            beginBO.setRemain(beginningCreditAmount);
             boList.add(beginBO);
-            boList.add(currentBO);
+
             DetailBO yearBO = new DetailBO();
             yearBO.setTerm(term);
             yearBO.setState("本年累计");
             yearBO.setForm(form);
-            yearBO.setRemain(year);
+            yearBO.setDebit(endDebitAmount);
+            yearBO.setCredit(endCreditAmount);
+            yearBO.setRemain(endTotalAmount);
+//            yearBO.setRemain(year);
             boList.add(yearBO);
         }
         return boList;

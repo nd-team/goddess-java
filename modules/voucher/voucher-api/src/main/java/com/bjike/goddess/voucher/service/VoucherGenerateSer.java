@@ -716,7 +716,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String time, Boolean tar) throws SerException {
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO,String starTime, String time, Boolean tar) throws SerException {
         return null;
     }
 
@@ -746,7 +746,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
 
     /**
      * 根据一级科目,时间获取本期
-     *
+     * @param i 区分方法标识
      * @param firstSubject
      * @param startTime
      * @param endTime
@@ -754,21 +754,48 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
      * @return
      * @throws SerException
      */
-    default Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    default Double getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
         return null;
     }
 
+
+
     /**
      * 根据一级科目,时间获取本期或本年
+     * @param i 区分方法标识
      * @param firstSubject
      * @param startTime
      * @param endTime
      * @return
      * @throws SerException
      */
-    default Double findCurrent(String firstSubject, String startTime, String endTime) throws SerException {
+    default Double findCurrent(int i,String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * 获取年初未分配利润科目(1月)的数据
+     * @param i 区分方法标识
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return
+     * @throws SerException
+     */
+    default Double specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {return null;}
+
+    /**
+     * 获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
+     * @param i
+     * @param sumary
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return
+     * @throws SerException
+     */
+    default Double getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
     /**
      * 列表
      */

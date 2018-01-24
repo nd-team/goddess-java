@@ -406,7 +406,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         Double cash3 = 0d;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject("应收票据");
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, dto.getEndTime(), true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO,dto.getStartTime(), dto.getEndTime(), true);
         if (null != subjectCollectBO) {
             cash3 = subjectCollectBO.getBeginAmount() - subjectCollectBO.getEndAmount();
         }
@@ -1014,7 +1014,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
