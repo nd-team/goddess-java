@@ -608,7 +608,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), startTime, endTime);
                 if (subjectCollectBO != null) {
                     ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class, "project");
-                    bo.setProject(joingTogether(bo.getProject(), bo.getProjectType()));
+                    bo.setProject(joingTogether(profit.getProject(), profit.getProjectType()));
                     bo.setCurrentMonthAmount(subjectCollectBO.getCurrentAmount());
                     bo.setCurrentYearAmount(subjectCollectBO.getYearAmount());
 
@@ -1155,6 +1155,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
         checkSeeIdentity();
         List<DetailBO> boList = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("######0.00");
         Double beginningCreditAmount = 0d;//期初余额
         Double beginningDebitAmount = 0d;//期初借方余额
         Double beginningCrAmount = 0d;//期初贷方余额
@@ -1172,33 +1173,38 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 //        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
         Profit profit = super.findById(id);
         Form form = formulaSer.FindWayByFid(id);
-        //期初余额
-        String qcStartTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue(), 1));
-        String qcEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue())));
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrent(2, profit.getProject(), qcStartTime, qcEndTime);
+        if (form == null) {
+            throw new SerException("请先添加对应项目计算公式");
+        }
 
+        //期初余额
         String term = startTime + "~" + endTime;
         DetailBO currentBO = new DetailBO();
-        if (subjectCollectBO != null) {
-            beginningCreditAmount = subjectCollectBO.getCurrentAmount();
-            beginningDebitAmount = subjectCollectBO.getIssueDebitAmount();
-            beginningCrAmount = subjectCollectBO.getIssueCreditAmount();
+        if (DateUtil.parseDate(startTime).getMonthValue() != 1) {
+            String qcStartTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue() - 1, 1));
+            String qcEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue() - 1, DateUtil.getDayByDate(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue() - 1)));
+            SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrent(2, profit.getProject(), qcStartTime, qcEndTime);
+            if (subjectCollectBO != null) {
+                beginningCreditAmount = subjectCollectBO.getCurrentAmount() == null ? 0 : subjectCollectBO.getCurrentAmount();
+                beginningDebitAmount = subjectCollectBO.getIssueDebitAmount() == null ? 0 : subjectCollectBO.getIssueDebitAmount();
+                beginningCrAmount = subjectCollectBO.getIssueCreditAmount() == null ? 0 : subjectCollectBO.getIssueCreditAmount();
+            }
         }
         currentBO.setProject(profit.getProject());
         currentBO.setTerm(term);
         currentBO.setState("期初余额");
         currentBO.setForm(form);
-        currentBO.setDebit(beginningDebitAmount);
-        currentBO.setCredit(beginningCrAmount);
-        currentBO.setRemain(beginningCreditAmount);
+        currentBO.setDebit(Double.parseDouble(df.format(beginningDebitAmount)));
+        currentBO.setCredit(Double.parseDouble(df.format(beginningCrAmount)));
+        currentBO.setRemain(Double.parseDouble(df.format(beginningCreditAmount)));
         boList.add(currentBO);
 
         //本期合计
         SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrent(2, profit.getProject(), startTime, endTime);
         if (subjectCollectBO1 != null) {
-            issueTotalAmount = subjectCollectBO.getCurrentAmount();
-            issueDebitAmount = subjectCollectBO.getIssueDebitAmount();
-            issueCreditAmount = subjectCollectBO.getIssueCreditAmount();
+            issueTotalAmount = subjectCollectBO1.getCurrentAmount() == null ? 0 : subjectCollectBO1.getCurrentAmount();
+            issueDebitAmount = subjectCollectBO1.getIssueDebitAmount() == null ? 0 : subjectCollectBO1.getIssueDebitAmount();
+            issueCreditAmount = subjectCollectBO1.getIssueCreditAmount() == null ? 0 : subjectCollectBO1.getIssueCreditAmount();
         }
 
         DetailBO beginBO = new DetailBO();
@@ -1206,26 +1212,26 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         beginBO.setTerm(term);
         beginBO.setState("本期合计");
         beginBO.setForm(form);
-        currentBO.setDebit(issueDebitAmount);
-        currentBO.setCredit(issueCreditAmount);
-        currentBO.setRemain(issueTotalAmount);
+        beginBO.setDebit(Double.parseDouble(df.format(issueDebitAmount)));
+        beginBO.setCredit(Double.parseDouble(df.format(issueCreditAmount)));
+        beginBO.setRemain(Double.parseDouble(df.format(issueTotalAmount)) + Double.parseDouble(df.format(beginningCreditAmount)));
         boList.add(beginBO);
 
         //本年累计
-        String ljStartTime = DateUtil.parseDate(startTime).getYear()+"-01-01";
+        String ljStartTime = DateUtil.parseDate(startTime).getYear() + "-01-01";
         SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrent(2, profit.getProject(), ljStartTime, endTime);
-        if (subjectCollectBO1 != null) {
-            endTotalAmount = subjectCollectBO2.getCurrentAmount();
-            endDebitAmount = subjectCollectBO2.getIssueDebitAmount();
-            endCreditAmount = subjectCollectBO2.getIssueCreditAmount();
+        if (subjectCollectBO2 != null) {
+            endTotalAmount = subjectCollectBO2.getCurrentAmount() == null ? 0 : subjectCollectBO2.getCurrentAmount();
+            endDebitAmount = subjectCollectBO2.getIssueDebitAmount() == null ? 0 : subjectCollectBO2.getIssueDebitAmount();
+            endCreditAmount = subjectCollectBO2.getIssueCreditAmount() == null ? 0 : subjectCollectBO2.getIssueCreditAmount();
         }
         DetailBO yearBO = new DetailBO();
         yearBO.setTerm(term);
         yearBO.setState("本年累计");
         yearBO.setForm(form);
-        currentBO.setDebit(endDebitAmount);
-        currentBO.setCredit(endCreditAmount);
-        currentBO.setRemain(endTotalAmount);
+        yearBO.setDebit(Double.parseDouble(df.format(endDebitAmount)));
+        yearBO.setCredit(Double.parseDouble(df.format(endCreditAmount)));
+        yearBO.setRemain(Double.parseDouble(df.format(endTotalAmount)));
         boList.add(yearBO);
 
 //        List<DetailBO> boList = new ArrayList<>();
@@ -1440,8 +1446,14 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        String moduleId = moduleTypeAPI.findModuleId("账务模块");
-        return positionDetailUserAPI.checkAsUserModule(userBO.getId(), moduleId);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            String moduleId = moduleTypeAPI.findModuleId("账务模块");
+            return positionDetailUserAPI.checkAsUserModule(userBO.getId(), moduleId);
+        } else {
+            return true;
+        }
     }
 
     @Override

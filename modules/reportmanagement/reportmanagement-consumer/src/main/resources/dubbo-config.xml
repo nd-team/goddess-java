@@ -11,7 +11,7 @@
 	<context:property-placeholder location="classpath:dubbo.properties"/>
 
 	<dubbo:application name="${dubbo.application.name}" />
-	<dubbo:consumer check="false" timeout="15000" />
+	<dubbo:consumer check="false" timeout="20000" />
 	<dubbo:registry address="${dubbo.registry.address}" />
 
 	<!--配置暴露的公共接口-->
@@ -38,5 +38,5 @@
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.user.api.UserAPI" id="userApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.UserSetPermissionAPI" id="userSetPermissionApiImpl"/>
 	<dubbo:reference  validation="true"  interface="com.bjike.goddess.organize.api.DepartmentDetailAPI" id="departmentDetailApiImpl"/>
-
+	<dubbo:reference validation="true"  interface="com.bjike.goddess.assemble.api.ModuleAPI" id="moduleApiImpl"/>
 </beans>

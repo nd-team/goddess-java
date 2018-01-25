@@ -1052,7 +1052,6 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
 //                currentSum = begin - current;
 //                currentBO.setCredit(current);
 //            }
-            boList.add(currentBO);
 
             double year = currentSum;
             DetailBO beginBO = new DetailBO();
@@ -1062,6 +1061,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             beginBO.setForm(form);
             beginBO.setRemain(beginningCreditAmount);
             boList.add(beginBO);
+            boList.add(currentBO);
 
             DetailBO yearBO = new DetailBO();
 //            yearBO.setProject(project);
