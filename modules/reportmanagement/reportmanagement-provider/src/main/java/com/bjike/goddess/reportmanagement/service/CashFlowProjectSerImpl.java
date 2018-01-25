@@ -643,6 +643,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("营业收入", dto.getStartTime(), dto.getEndTime());
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getYearAmount();
+            cash1 = cash1 == null ? 0d : cash1;
         }
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.getConditions().add(Restrict.eq("projectName", "销售商品、提供劳务收到的现金"));
@@ -669,7 +670,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject("其他业务收入");
         cash2 = voucherGenerateAPI.getCurrent(subjectCollectDTO, dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
-
+        cash2 = cash2 == null ? 0d : cash2;
         CashRateDTO cashRateDTO1 = new CashRateDTO();
         cashRateDTO1.getConditions().add(Restrict.eq("projectId", projectId));
         cashRateDTO1.getConditions().add(Restrict.eq("formula", "其他业务收入/"));

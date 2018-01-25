@@ -758,9 +758,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         SubjectCollectBO subjectCollectBO1 = findCurrent(1, firstSubject, startTime.substring(0, 4) + "-01-01", endTime);
         if(null !=subjectCollectBO ){
             currentAmount = subjectCollectBO.getCurrentAmount();
+            currentAmount = currentAmount == null ? 0d : currentAmount;
         }
         if(null !=subjectCollectBO1 ){
             yearAmount = subjectCollectBO1.getCurrentAmount();
+            yearAmount = yearAmount == null ? 0d : yearAmount;
         }
 
         bo.setCurrentAmount(currentAmount);
