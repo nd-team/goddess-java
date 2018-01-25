@@ -92,7 +92,7 @@ public class CashFlowProjectAction extends BaseFileAction{
      * @version v1
      */
     @GetMapping("v1/findMoney")
-    public Result findMoney(CashFlowProjectDTO dto) throws ActException {
+    public Result findMoney(@Validated(CashFlowProjectDTO.LIST.class)CashFlowProjectDTO dto) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cashFlowProjectAPI.findMoney(dto), ReturnCashVO.class));
         } catch (SerException e) {
@@ -102,7 +102,7 @@ public class CashFlowProjectAction extends BaseFileAction{
 
     /**
      * 修改金额
-     *
+     * @param dto dto
      * @version v1
      */
     @PutMapping("v1/editMoney/{projectId}")
@@ -148,14 +148,14 @@ public class CashFlowProjectAction extends BaseFileAction{
 
     /**
      * 导出
-     *
+     * @param dto dto
      * @version v1
      */
     @GetMapping("v1/export")
-    public Result export(CashFlowProjectDTO to, HttpServletResponse response) throws ActException {
+    public Result export(@Validated(CashFlowProjectDTO.LIST.class)CashFlowProjectDTO dto, HttpServletResponse response) throws ActException {
         try {
             String fileName = "现金流量表.xlsx";
-            super.writeOutFile(response, cashFlowProjectAPI.export(to), fileName);
+            super.writeOutFile(response, cashFlowProjectAPI.export(dto), fileName);
             return new ActResult("导出成功");
         } catch (SerException | IOException e) {
             throw new ActException(e.getMessage());
