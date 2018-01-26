@@ -233,12 +233,16 @@ public class UserRegisterSerImpl implements UserRegisterSer{
                 user.setSystemNO(SeqUtil.generateSys(sysNO));
                 userSer.save(user);
                 if(appUserRegisterTO.getAuthCode() != null && !appUserRegisterTO.getAuthCode().equals("")) {
+                    String aa = String.valueOf(10);
+                    String bb = String.valueOf(2);
                     ShareCode shareCode = new ShareCode();
                     shareCode.setUserId(user.getId());
                     shareCode.setInviterShareCode(appUserRegisterTO.getAuthCode());
                     shareCode.setShareCode(ShareCodeUtils.generateShortUuid());
                     ShareCodeBO shareCodeBO = shareCodeSer.getByCode(appUserRegisterTO.getAuthCode());
                     shareCode.setInviterId(shareCodeBO.getId());
+                    shareCode.setIntegral(aa);
+                    shareCode.setInviterIntegral(aa);
                     shareCodeSer.save(shareCode);
                 }
             } else {

@@ -58,6 +58,11 @@ public class UserBO extends BaseBO {
      */
     private Status status;
 
+    /**
+     * 用户积分
+     */
+    private String integral;
+
     private String createTime;
 
     public String getSystemNO() {
@@ -146,5 +151,13 @@ public class UserBO extends BaseBO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
     }
 }

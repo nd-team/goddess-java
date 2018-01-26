@@ -22,7 +22,6 @@ import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.constant.UserCommon;
 import com.bjike.goddess.user.session.valid_right.LoginUser;
 import com.bjike.goddess.user.session.valid_right.UserSession;
-import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.UserTO;
 import com.bjike.goddess.user.utils.SeqUtil;
 import org.apache.commons.lang3.StringUtils;

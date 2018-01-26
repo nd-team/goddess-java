@@ -84,6 +84,12 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "TINYINT(2)  COMMENT '用户类型' ", nullable = false)
     private UserType userType;
 
+    /**
+     * 用户积分；
+     */
+    @Column(name = "integral", columnDefinition = "VARCHAR(255)   COMMENT '用户积分；'")
+    private String integral;
+
     public String getSystemNO() {
         return systemNO;
     }
@@ -172,4 +178,11 @@ public class User extends BaseEntity {
         this.userType = userType;
     }
 
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
+    }
 }

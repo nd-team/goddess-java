@@ -27,8 +27,6 @@ import com.bjike.goddess.storage.api.FileAPI;
 import com.bjike.goddess.storage.to.FileInfo;
 import com.bjike.goddess.storage.vo.FileVO;
 import com.bjike.goddess.user.api.UserAPI;
-import com.bjike.goddess.user.bo.UserBO;
-import com.bjike.goddess.user.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -567,6 +565,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
         }
     }
 
+
     /**
      * 获取所有三级科目
      *
@@ -583,6 +582,7 @@ public class PhoneApplyLendAction extends BaseFileAction {
 //            throw new ActException(e.getMessage());
 //        }
 //    }
+
 
 
     /**

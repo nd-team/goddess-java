@@ -1,11 +1,9 @@
 package com.bjike.goddess.user.entity;
 
 import com.bjike.goddess.common.api.entity.BaseEntity;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 
 
@@ -33,6 +31,18 @@ public class ShareCode extends BaseEntity {
      */
     @Column(name = "shareCode", columnDefinition = "VARCHAR(36)   COMMENT '邀请码'")
     private String shareCode;
+
+    /**
+     * 用户积分；
+     */
+    @Column(name = "integral", columnDefinition = "VARCHAR(255)   COMMENT '用户积分；'")
+    private String integral;
+
+    /**
+     * 邀请人积分；
+     */
+    @Column(name = "inviterIntegral", columnDefinition = "VARCHAR(255)   COMMENT '邀请人积分；'")
+    private String inviterIntegral;
 
     /**
      * 邀请人邀请码
@@ -77,5 +87,25 @@ public class ShareCode extends BaseEntity {
 
     public void setInviterShareCode(String inviterShareCode) {
         this.inviterShareCode = inviterShareCode;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
+    }
+
+    public String getInviterIntegral() {
+        return inviterIntegral;
+    }
+
+    public void setInviterIntegral(String inviterIntegral) {
+        this.inviterIntegral = inviterIntegral;
+    }
+
+    public String getInviterShareCode() {
+        return inviterShareCode;
     }
 }

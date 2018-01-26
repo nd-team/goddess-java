@@ -372,18 +372,68 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
         dto.getConditions().add(Restrict.eq("projectId", dto.getProjectId()));
         List<Table> tables = tableSer.findByCis(dto, true);
+        int j = 0;
         for (Table t : tables) {
+            j++;
             TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
             taskNodeDTO.getConditions().add(Restrict.eq("tableId", t.getId()));
             taskNodeDTO.getConditions().add(Restrict.isNull("fatherId"));
             List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
-            List<NodeBO> nodeBOS = BeanTransform.copyProperties(taskNodes, NodeBO.class);
+            List<TaskNode> list1 = new ArrayList<>();
+            int i = 0;
+            for (TaskNode taskNode0 : taskNodes) {
+                i++;
+                TaskNode taskNode = super.findById(taskNode0.getId());
+                TaskNodeDTO taskNodeDTOs = new TaskNodeDTO();
+                taskNodeDTOs.getConditions().add(Restrict.eq("fatherId", taskNode.getId()));
+                List<TaskNode> taskNodes3 = super.findByCis(taskNodeDTOs);
+                List<TaskStatus> tid = new ArrayList<>();
+                for (TaskNode taskNode2 : taskNodes3) {
+                    TaskStatus taskStatus = taskNode2.getTaskStatus();
+                    tid.add(taskStatus);
+                }
+
+                if (tid != null && tid.size() > 0) {
+                    TaskStatus taskStatus = tid.get(0);
+                    for (TaskStatus taskStatus1 : tid) {
+                        if (!taskStatus1.equals(taskStatus)) {
+                            System.out.println("有一个不相等，返回false");
+                            taskNode.setTaskStatus(taskNode0.getTaskStatus());
+                            list1.add(taskNode);
+                            break;
+                        } else {
+                            taskNode.setTaskStatus(tid.get(0));
+                        }
+                    }
+                }
+                list1.add(taskNode);
+            }
+            List<NodeBO> nodeBOS = BeanTransform.copyProperties(list1, NodeBO.class);
             TableBO tableBO = BeanTransform.copyProperties(t, TableBO.class);
             tableBO.setNodeS(nodeBOS);
             tableBOS.add(tableBO);
-        }
+    }
         return tableBOS;
     }
+
+//    @Override
+//    public List<TableBO> list(TableDTO dto) throws SerException {
+//        List<TableBO> tableBOS = new ArrayList<>();
+//
+//        dto.getConditions().add(Restrict.eq("projectId", dto.getProjectId()));
+//        List<Table> tables = tableSer.findByCis(dto, true);
+//        for (Table t : tables) {
+//            TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+//            taskNodeDTO.getConditions().add(Restrict.eq("tableId", t.getId()));
+//            taskNodeDTO.getConditions().add(Restrict.isNull("fatherId"));
+//            List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
+//            List<NodeBO> nodeBOS = BeanTransform.copyProperties(taskNodes, NodeBO.class);
+//            TableBO tableBO = BeanTransform.copyProperties(t, TableBO.class);
+//            tableBO.setNodeS(nodeBOS);
+//            tableBOS.add(tableBO);
+//        }
+//        return tableBOS;
+//    }
 
     @Override
     public Long count(TableDTO dto) throws SerException {
@@ -608,6 +658,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             son.setEndTime(et);
             son.setFatherId(entity.getId());
             son.setNeedTime(new BigDecimal(entity.getNeedTime() / day).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            son.setPlanNum(new BigDecimal(entity.getPlanNum() / day).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
             super.save(son);
             for (CustomTitle customTitle : customTitles) {
                 CustomTitle title = BeanTransform.copyProperties(customTitle, CustomTitle.class, true, "id", "taskNodeId");

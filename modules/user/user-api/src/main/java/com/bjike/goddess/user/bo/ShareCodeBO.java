@@ -1,7 +1,6 @@
 package com.bjike.goddess.user.bo;
 
 import com.bjike.goddess.common.api.to.BaseTO;
-import com.bjike.goddess.common.api.type.Status;
 
 /**
  * 邀请码业务传输对象
@@ -23,6 +22,22 @@ public class ShareCodeBO extends BaseTO {
      * 邀请码
      */
     private String shareCode;
+
+    /**
+     * 用户积分；
+     */
+    private String integral;
+
+    /**
+     * 邀请人积分；
+     */
+    private String inviterIntegral;
+
+    /**
+     * 邀请人邀请码
+     */
+    private String inviterShareCode;
+
     /**
      * 邀请人ID
      */
@@ -51,5 +66,29 @@ public class ShareCodeBO extends BaseTO {
 
     public void setShareCode(String shareCode) {
         this.shareCode = shareCode;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
+    }
+
+    public String getInviterIntegral() {
+        return inviterIntegral;
+    }
+
+    public void setInviterIntegral(String inviterIntegral) {
+        this.inviterIntegral = inviterIntegral;
+    }
+
+    public String getInviterShareCode() {
+        return inviterShareCode;
+    }
+
+    public void setInviterShareCode(String inviterShareCode) {
+        this.inviterShareCode = inviterShareCode;
     }
 }

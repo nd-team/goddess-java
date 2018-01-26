@@ -24,6 +24,22 @@ public class ShareCodeVO implements Serializable {
      * 邀请码
      */
     private String shareCode;
+
+    /**
+     * 用户积分；
+     */
+    private String integral;
+
+    /**
+     * 邀请人积分；
+     */
+    private String inviterIntegral;
+
+    /**
+     * 邀请人邀请码
+     */
+    private String inviterShareCode;
+
     /**
      * 邀请人ID
      */
@@ -52,5 +68,29 @@ public class ShareCodeVO implements Serializable {
 
     public void setShareCode(String shareCode) {
         this.shareCode = shareCode;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
+    }
+
+    public String getInviterIntegral() {
+        return inviterIntegral;
+    }
+
+    public void setInviterIntegral(String inviterIntegral) {
+        this.inviterIntegral = inviterIntegral;
+    }
+
+    public String getInviterShareCode() {
+        return inviterShareCode;
+    }
+
+    public void setInviterShareCode(String inviterShareCode) {
+        this.inviterShareCode = inviterShareCode;
     }
 }

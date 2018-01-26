@@ -53,6 +53,11 @@ public class UserVO {
      */
     private Status status;
 
+    /**
+     * 用户积分；String
+     */
+    private String integral;
+
     public String getUsername() {
         return username;
     }
@@ -123,5 +128,13 @@ public class UserVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
     }
 }

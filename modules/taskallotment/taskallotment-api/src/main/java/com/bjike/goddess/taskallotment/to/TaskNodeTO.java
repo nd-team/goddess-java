@@ -69,8 +69,11 @@ public class TaskNodeTO extends BaseTO {
     public interface WRITES {
     }
 
-    public interface PASS{}
-    public interface NOTPASS{}
+    public interface PASS {
+    }
+
+    public interface NOTPASS {
+    }
 
     /**
      * 地区
@@ -111,7 +114,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 执行人
      */
-    @NotBlank(groups = {TaskNodeTO.AGAIN.class, TaskNodeTO.CONFIRM.class}, message = "执行人不能为空")
+    @NotBlank(groups = {TaskNodeTO.AGAIN.class, TaskNodeTO.INITIATE.class, TaskNodeTO.CONFIRM.class}, message = "执行人不能为空")
     private String execute;
 
     /**
@@ -129,19 +132,19 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 时长类型
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "时长类型不能为空")
+    @NotNull(groups = {ADD.class, TaskNodeTO.INITIATE.class, EDIT.class}, message = "时长类型不能为空")
     private TimesType timesType;
 
     /**
      * 功能模块
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "功能模块不能为空")
+    @NotNull(groups = {ADD.class,TaskNodeTO.INITIATE.class, EDIT.class}, message = "功能模块不能为空")
     private String moudle;
 
     /**
      * 功能优先级
      */
-    @NotNull(groups = {ADD.class, EDIT.class}, message = "功能优先级不能为空")
+    @NotNull(groups = {ADD.class,TaskNodeTO.INITIATE.class, EDIT.class}, message = "功能优先级不能为空")
     private Integer gpriority;
 
     /**
@@ -154,8 +157,8 @@ public class TaskNodeTO extends BaseTO {
      * `
      * 计划任务量
      */
-    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "计划任务量必须大于0")
-    @NotNull(groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class,TaskNodeTO.CONFIRM.class}, message = "计划任务量")
+    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class, TaskNodeTO.CONFIRM.class}, message = "计划任务量必须大于0")
+    @NotNull(groups = {ADD.class, EDIT.class, TaskNodeTO.INITIATE.class, TaskNodeTO.ADDTASK.class, TaskNodeTO.AGAIN.class, TaskNodeTO.CONFIRM.class}, message = "计划任务量")
     private Double planNum;
     /**
      * 完成任务量
@@ -233,8 +236,8 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 实际时长
      */
-    @DecimalMin(value = "0.00", groups = {TaskNodeTO.WRITE.class, TaskNodeTO.CONFIRM.class,TaskNodeTO.WRITES.class}, message = "实际时长不能小于0")
-    @NotNull(groups = {TaskNodeTO.WRITE.class, TaskNodeTO.CONFIRM.class,TaskNodeTO.WRITES.class}, message = "实际时长不能为空")
+    @DecimalMin(value = "0.00", groups = {TaskNodeTO.WRITE.class, TaskNodeTO.CONFIRM.class, TaskNodeTO.WRITES.class}, message = "实际时长不能小于0")
+    @NotNull(groups = {TaskNodeTO.WRITE.class, TaskNodeTO.CONFIRM.class, TaskNodeTO.WRITES.class}, message = "实际时长不能为空")
     private Double actualTime;
     /**
      * 实际时长时间类型
@@ -276,7 +279,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 是否发生费用报销
      */
-    @NotNull(groups = {TaskNodeTO.WRITE.class, TaskNodeTO.CONFIRM.class,TaskNodeTO.WRITES.class}, message = "是否发生费用报销不能为空")
+    @NotNull(groups = {TaskNodeTO.WRITE.class, TaskNodeTO.CONFIRM.class, TaskNodeTO.WRITES.class}, message = "是否发生费用报销不能为空")
     private Boolean reimbursement;
 
     /**
@@ -290,7 +293,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 是否出现问题
      */
-    @NotNull(groups = {TaskNodeTO.WRITE.class,TaskNodeTO.WRITES.class}, message = "是否出现问题不能为空")
+    @NotNull(groups = {TaskNodeTO.WRITE.class, TaskNodeTO.WRITES.class}, message = "是否出现问题不能为空")
     private Boolean question;
 
     /**
@@ -331,7 +334,7 @@ public class TaskNodeTO extends BaseTO {
     /**
      * 任务工作总结
      */
-    @NotBlank(groups = {TaskNodeTO.WRITE.class,TaskNodeTO.WRITES.class}, message = "任务工作总结不能为空")
+    @NotBlank(groups = {TaskNodeTO.WRITE.class, TaskNodeTO.WRITES.class}, message = "任务工作总结不能为空")
     private String summary;
     /**
      * 任务状态

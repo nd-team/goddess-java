@@ -1,10 +1,7 @@
 package com.bjike.goddess.taskallotment.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
-import com.bjike.goddess.taskallotment.enums.FinishStatus;
-import com.bjike.goddess.taskallotment.enums.TaskStatus;
-import com.bjike.goddess.taskallotment.enums.TaskType;
-import com.bjike.goddess.taskallotment.enums.TimeType;
+import com.bjike.goddess.taskallotment.enums.*;
 
 import java.util.List;
 
@@ -70,6 +67,10 @@ public class TaskNodeBO extends BaseBO {
      * 任务类型
      */
     private TaskType taskType;
+    /**
+     * 时长类型
+     */
+    private TimesType timesType;
 
     /**
      * 类型
@@ -247,6 +248,14 @@ public class TaskNodeBO extends BaseBO {
      * 任务状态
      */
     private TaskStatus taskStatus;
+    /**
+     * 功能模块
+     */
+    private String moudle;
+    /**
+     * 功能优先级
+     */
+    private Integer gpriority;
     /**
      * 优先级
      */
@@ -732,5 +741,29 @@ public class TaskNodeBO extends BaseBO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public TimesType getTimesType() {
+        return timesType;
+    }
+
+    public void setTimesType(TimesType timesType) {
+        this.timesType = timesType;
+    }
+
+    public String getMoudle() {
+        return moudle;
+    }
+
+    public void setMoudle(String moudle) {
+        this.moudle = moudle;
+    }
+
+    public Integer getGpriority() {
+        return gpriority;
+    }
+
+    public void setGpriority(Integer gpriority) {
+        this.gpriority = gpriority;
     }
 }

@@ -4,6 +4,7 @@ import com.bjike.goddess.common.api.bo.BaseBO;
 import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.enums.TaskType;
 import com.bjike.goddess.taskallotment.enums.TimeType;
+import com.bjike.goddess.taskallotment.enums.TimesType;
 
 /**
  * 任务节点名称
@@ -31,6 +32,10 @@ public class NodeBO extends BaseBO {
      * 任务类型
      */
     private TaskType taskType;
+    /**
+     * 时长类型
+     */
+    private TimesType timesType;
     /**
      * 计划任务量
      */
@@ -123,5 +128,13 @@ public class NodeBO extends BaseBO {
 
     public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public TimesType getTimesType() {
+        return timesType;
+    }
+
+    public void setTimesType(TimesType timesType) {
+        this.timesType = timesType;
     }
 }

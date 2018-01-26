@@ -3,6 +3,7 @@ package com.bjike.goddess.taskallotment.vo;
 import com.bjike.goddess.taskallotment.enums.TaskStatus;
 import com.bjike.goddess.taskallotment.enums.TaskType;
 import com.bjike.goddess.taskallotment.enums.TimeType;
+import com.bjike.goddess.taskallotment.enums.TimesType;
 
 /**
  * 任务节点名称
@@ -34,6 +35,10 @@ public class NodeVO {
      * 任务类型
      */
     private TaskType taskType;
+    /**
+     * 时长类型
+     */
+    private TimesType timesType;
     /**
      * 计划任务量
      */
@@ -134,5 +139,13 @@ public class NodeVO {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    public TimesType getTimesType() {
+        return timesType;
+    }
+
+    public void setTimesType(TimesType timesType) {
+        this.timesType = timesType;
     }
 }

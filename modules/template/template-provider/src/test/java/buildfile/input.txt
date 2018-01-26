@@ -1,10 +1,11 @@
-模块名:taskallotment
-类名:TaskNodeBase
+模块名:user
+类名:Integrtal
 作者:chenyang
-描述:计划任务节点集合
+描述:用户积分
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
-Private List<TaskNode> tasknode 计划任务节点集合;
-
-)
+String userId 用户ID;
+String integral 用户积分；
+String inviterIntegral 邀请人积分你；
+String inviterId 邀请人ID；

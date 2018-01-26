@@ -271,7 +271,6 @@ public class DeviceTypeSerImpl extends ServiceImpl<DeviceType, DeviceTypeDTO> im
                 set.add(deviceType.getType());
             }
         }
-
         return new ArrayList<>(set);
     }
 
