@@ -160,4 +160,9 @@ public class EventApiImpl implements EventAPI {
     public List<FatherBO> findByName(EventDTO dto, String name) throws SerException {
         return eventSer.findByName(dto,name);
     }
+
+    @Override
+    public List<Object> findAllName(EventDTO dto) throws SerException {
+        return eventSer.findAllName(dto);
+    }
 }

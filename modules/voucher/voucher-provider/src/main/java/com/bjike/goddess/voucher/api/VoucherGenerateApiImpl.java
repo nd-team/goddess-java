@@ -393,8 +393,18 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     }
 
     @Override
-    public SubjectCollectBO getSum(SubjectCollectDTO dto, String time, Boolean tar) throws SerException {
-        return voucherGenerateSer.getSum(dto, time, tar);
+    public SubjectCollectBO getSum(SubjectCollectDTO dto,String starTime, String time, Boolean tar) throws SerException {
+        return voucherGenerateSer.getSum(dto,starTime, time, tar);
+    }
+
+    @Override
+    public SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.specialCurr(i,firstSubject,startTime,endTime,tar);
+    }
+
+    @Override
+    public SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrentBySumary(i,sumary,startTime,endTime,tar);
     }
 
     @Override
@@ -410,6 +420,11 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
     @Override
     public SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
         return voucherGenerateSer.findCurrentAndYear(firstSubject, startTime, endTime);
+    }
+
+    @Override
+    public SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return voucherGenerateSer.findCurrentAndYear(firstSubject, subjectCollectDTO);
     }
 
     @Override
@@ -433,7 +448,12 @@ public class VoucherGenerateApiImpl implements VoucherGenerateAPI {
         return voucherGenerateSer.findFirstSubject ();}
 
     @Override
-    public Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
-        return voucherGenerateSer.getCurrent(firstSubject,  startTime,  endTime,  tar);
+    public SubjectCollectBO getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return voucherGenerateSer.getCurrent(i,firstSubject,  startTime,  endTime,  tar);
+    }
+
+    @Override
+    public SubjectCollectBO findCurrent(int i, String firstSubject, String startTime, String endTime) throws SerException {
+        return voucherGenerateSer.findCurrent(i,firstSubject,startTime,endTime);
     }
 }

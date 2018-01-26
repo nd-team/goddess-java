@@ -42,6 +42,15 @@ public interface FormulaAPI {
      * @throws SerException
      */
     List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException;
+    /**
+     * 利润表根据对应科目id查找公式详细
+     *
+     * @param foreignId
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<FormulaBO> profitFindByFid(String foreignId, FormulaDTO dto) throws SerException;
 
     /**
      * 利润分析

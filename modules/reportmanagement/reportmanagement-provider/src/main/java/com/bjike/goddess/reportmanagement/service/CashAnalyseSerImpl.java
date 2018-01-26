@@ -15,6 +15,7 @@ import com.bjike.goddess.reportmanagement.entity.CashAnalyse;
 import com.bjike.goddess.reportmanagement.enums.AnalyseType;
 import com.bjike.goddess.reportmanagement.to.CashAnalyse1TO;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.PortableServer.POA;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -63,7 +64,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         List<CashAnalyse> cashAnalyseList = super.findByCis(cashAnaDTO);
         if (null != cashAnalyseList && cashAnalyseList.size() > 0) {
             bos = BeanTransform.copyProperties(cashAnalyseList, CashAnalyseBO.class);
-            return bos;
+            return convertAnalyse1(bos);
         }
 
         cashFlowProjectDTO.setStartTime(startTime);
@@ -73,7 +74,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         entity1.setStartTime(startTime);
         entity1.setEndTime(endTime);
         entity1.setNum(1);
-        entity1.setProject("商品、提供劳务收到的现金");
+        entity1.setProject("销售商品、提供劳务收到的现金");
         entity1.setMoney(cashFlowProjectSer.findCashByProject(entity1.getProject(), cashFlowProjectDTO).toString());
         entity1.setAnalyseType(AnalyseType.MANAGEMENT);
         entity1.setAnalyse("（将销售商品、提供劳务收到的现金与购进商品、接受劳务付出的现金进行比较。在企业经营正常、购销平衡的情况下，二者比较是有意义的。）比率大，说明企业的销售利润大，销售回款良好，创现能力强。");
@@ -83,7 +84,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         entity2.setStartTime(startTime);
         entity2.setEndTime(endTime);
         entity2.setNum(1);
-        entity2.setProject("购买商品、接受劳务支付的现金");
+        entity2.setProject("购进商品、接受劳务付出的现金");
         entity2.setMoney(cashFlowProjectSer.findCashByProject(entity2.getProject(), cashFlowProjectDTO).toString());
         entity2.setAnalyseType(AnalyseType.MANAGEMENT);
         entity2.setAnalyse(entity1.getAnalyse());
@@ -113,7 +114,30 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         bos.add(bo1);
         bos.add(bo2);
         bos.add(bo3);
-        return bos;
+        return convertAnalyse1(bos);
+    }
+
+    List<CashAnalyseBO> convertAnalyse1(List<CashAnalyseBO> bos) {
+        List<CashAnalyseBO> list = new ArrayList<>();
+        CashAnalyseBO bo1 = new CashAnalyseBO();
+        CashAnalyseBO bo2 = new CashAnalyseBO();
+        CashAnalyseBO bo3 = new CashAnalyseBO();
+        for (CashAnalyseBO bo : bos) {
+            if ("销售商品、提供劳务收到的现金".equals(bo.getProject())) {
+                bo1 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("购进商品、接受劳务付出的现金".equals(bo.getProject())) {
+                bo2 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("经营活动产生的现金流量净额".equals(bo.getProject())) {
+                bo3 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+        }
+        list.add(bo1);
+        list.add(bo2);
+        list.add(bo3);
+
+        return list;
     }
 
     @Override
@@ -139,7 +163,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         List<CashAnalyse> cashAnalyseList = super.findByCis(cashAnaDTO);
         if (null != cashAnalyseList && cashAnalyseList.size() > 0) {
             bos = BeanTransform.copyProperties(cashAnalyseList, CashAnalyseBO.class);
-            return bos;
+            return convertAnalyse2(bos);
         }
         bos = new ArrayList<>(0);
 
@@ -173,7 +197,25 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
 
         bos.add(bo1);
         bos.add(bo3);
-        return bos;
+        return convertAnalyse2(bos);
+    }
+
+    List<CashAnalyseBO> convertAnalyse2(List<CashAnalyseBO> bos) {
+        List<CashAnalyseBO> list = new ArrayList<>();
+        CashAnalyseBO bo1 = new CashAnalyseBO();
+        CashAnalyseBO bo2 = new CashAnalyseBO();
+        for (CashAnalyseBO bo : bos) {
+            if ("销售商品、提供劳务收到的现金".equals(bo.getProject())) {
+                bo1 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("经营活动流入的现金总额".equals(bo.getProject())) {
+                bo2 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+        }
+        list.add(bo1);
+        list.add(bo2);
+
+        return list;
     }
 
     @Override
@@ -223,7 +265,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         entity1.setAnalyseType(AnalyseType.MANAGEMENT);
         entity1.setAnalyse("（将本期经营活动现金净流量与上期比较）增长率越高，说明企业成长性越好。");
         entity1.setAdvice(" ");
-//        entity1.setRate();
+        entity1.setRate("0.0");//todo
 
         super.save(entity1);
         CashAnalyseManaBO bo1 = BeanTransform.copyProperties(entity1, CashAnalyseManaBO.class);
@@ -238,6 +280,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         bos.add(bo1);
         return bos;
     }
+
 
     @Override
     public CashAnalyse1BO findByid(String id) throws SerException {
@@ -304,7 +347,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         List<CashAnalyse> cashAnalyseList = super.findByCis(cashAnaDTO);
         if (null != cashAnalyseList && cashAnalyseList.size() > 0) {
             bos = BeanTransform.copyProperties(cashAnalyseList, CashAnalyseBO.class);
-            return bos;
+            return convertAnalyse4(bos);
         }
         bos = new ArrayList<>(0);
 
@@ -355,7 +398,30 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         bos.add(bo1);
         bos.add(bo2);
         bos.add(bo3);
-        return bos;
+        return convertAnalyse4(bos);
+    }
+
+    List<CashAnalyseBO> convertAnalyse4(List<CashAnalyseBO> bos) {
+        List<CashAnalyseBO> list = new ArrayList<>();
+        CashAnalyseBO bo1 = new CashAnalyseBO();
+        CashAnalyseBO bo2 = new CashAnalyseBO();
+        CashAnalyseBO bo3 = new CashAnalyseBO();
+        for (CashAnalyseBO bo : bos) {
+            if ("投资活动产生的现金流入量".equals(bo.getProject())) {
+                bo1 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("投资活动产生的现金流出量".equals(bo.getProject())) {
+                bo2 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("投资活动产生的现金流量净额".equals(bo.getProject())) {
+                bo3 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+        }
+        list.add(bo1);
+        list.add(bo2);
+        list.add(bo3);
+
+        return list;
     }
 
     @Override
@@ -379,7 +445,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         List<CashAnalyse> cashAnalyseList = super.findByCis(cashAnaDTO);
         if (null != cashAnalyseList && cashAnalyseList.size() > 0) {
             bos = BeanTransform.copyProperties(cashAnalyseList, CashAnalyseBO.class);
-            return bos;
+            return convertAnalyse5(bos);
         }
         bos = new ArrayList<>(0);
 
@@ -446,7 +512,35 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         bos.add(bo4);
         bos.add(bo2);
         bos.add(bo3);
-        return bos;
+        return convertAnalyse5(bos);
+    }
+
+    List<CashAnalyseBO> convertAnalyse5(List<CashAnalyseBO> bos) {
+        List<CashAnalyseBO> list = new ArrayList<>();
+        CashAnalyseBO bo1 = new CashAnalyseBO();
+        CashAnalyseBO bo2 = new CashAnalyseBO();
+        CashAnalyseBO bo3 = new CashAnalyseBO();
+        CashAnalyseBO bo4 = new CashAnalyseBO();
+        for (CashAnalyseBO bo : bos) {
+            if ("筹资活动产生的现金流入量".equals(bo.getProject())) {
+                bo1 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("其中：吸收投资所收到的现金".equals(bo.getProject())) {
+                bo2 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("筹资活动产生的现金流出量".equals(bo.getProject())) {
+                bo3 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+            if ("筹资活动产生的现金流量净额".equals(bo.getProject())) {
+                bo4 = new CashAnalyseBO(bo.getProject(), bo.getMoney(), bo.getRate(), bo.getAnalyse(), bo.getAdvice(), bo.getId());
+            }
+        }
+        list.add(bo1);
+        list.add(bo2);
+        list.add(bo3);
+        list.add(bo4);
+
+        return list;
     }
 
     @Override
@@ -611,6 +705,7 @@ public class CashAnalyseSerImpl extends ServiceImpl<CashAnalyse, CashAnalyseDTO>
         bos.add(bo4);
         return bos;
     }
+
 
     private void setCashAnalyseCash(CashAnalyseCashBO bo, CashAnalyse entity1, CashAnalyse entity2) throws SerException {
         bo.setProject1(entity2.getProject());

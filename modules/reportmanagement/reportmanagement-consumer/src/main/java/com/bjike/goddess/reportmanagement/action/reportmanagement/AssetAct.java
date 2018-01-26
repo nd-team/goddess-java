@@ -379,7 +379,7 @@ public class AssetAct extends BaseFileAction {
 //    }
 
     /**
-     * 获取所有科目
+     * 获取所有一级科目
      *
      * @throws ActException
      * @version v1

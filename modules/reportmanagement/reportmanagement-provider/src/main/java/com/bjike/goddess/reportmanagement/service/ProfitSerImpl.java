@@ -6,6 +6,9 @@ import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
+import com.bjike.goddess.common.utils.excel.Excel;
+import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.organize.api.ModuleTypeAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
@@ -16,6 +19,7 @@ import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.enums.ProfitType;
 import com.bjike.goddess.reportmanagement.enums.Type;
+import com.bjike.goddess.reportmanagement.excel.ProfitExportExcel;
 import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
@@ -26,12 +30,24 @@ import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.SubjectCollectBO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -67,10 +83,13 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     private ModuleTypeAPI moduleTypeAPI;
     @Autowired
     private ProfitFormulaSer profitFormulaSer;
-//    @Autowired
+    //    @Autowired
 //    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private VoucherGenerateAPI voucherGenerateAPI;
+
+    @Autowired
+    private CompanyBasicInfoAPI companyBasicInfoAPI;
 
 
     /**
@@ -586,11 +605,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         int num = 1;
         if ((list != null) && (!list.isEmpty())) {
             for (Profit profit : list) {
-//                List<FormulaBO> formulaBOs = formulaSer.findByFid(profit.getId(), formulaDTO);
                 SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear(profit.getProject(), startTime, endTime);
                 if (subjectCollectBO != null) {
-//                    FormulaBO formulaBO = formulaBOs.get(formulaBOs.size() - 1);
-                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
+                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class, "project");
+                    bo.setProject(joingTogether(profit.getProject(), profit.getProjectType()));
                     bo.setCurrentMonthAmount(subjectCollectBO.getCurrentAmount());
                     bo.setCurrentYearAmount(subjectCollectBO.getYearAmount());
 
@@ -615,8 +633,6 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                                 twoBO.setCurrentMonthAmount(subjectCollectBO2.getCurrentAmount());
                                 twoBO.setCurrentYearAmount(subjectCollectBO2.getYearAmount());
                             }
-//                            twoBO.setCurrentMonthAmount(incomeMonth);
-//                            twoBO.setCurrentYearAmount(incomeYear);
                             twoBO.setNum(num);
                             num++;
                             boList.add(twoBO);
@@ -631,100 +647,80 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                                 twoBO.setCurrentMonthAmount(subjectCollectBO3.getCurrentAmount());
                                 twoBO.setCurrentYearAmount(subjectCollectBO3.getYearAmount());
                             }
-//                            twoBO.setCurrentMonthAmount(incomeMonth);
-//                            twoBO.setCurrentYearAmount(incomeYear);
                             twoBO.setNum(num);
                             num++;
                             boList.add(twoBO);
                             b5 = false;
+                        }
+                    } else if (ProfitType.DNETPROFIT.equals(profit.getProfitType())) {
+                        if (b) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("四、净利润");
+                            SubjectCollectBO subjectCollectBO4 = voucherGenerateAPI.findCurrentAndYear("净利润", startTime, endTime);
+                            if (null != subjectCollectBO4) {
+                                twoBO.setCurrentMonthAmount(subjectCollectBO4.getCurrentAmount());
+                                twoBO.setCurrentYearAmount(subjectCollectBO4.getYearAmount());
+                            }
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b = false;
+                        }
+                    } else if (ProfitType.DISTRIBUTABLEPROFITS.equals(profit.getProfitType())) {
+                        if (b1) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("五、可供分配的利润");
+                            SubjectCollectBO subjectCollectBO5 = voucherGenerateAPI.findCurrentAndYear("可供分配的利润", startTime, endTime);
+                            if (null != subjectCollectBO5) {
+                                twoBO.setCurrentMonthAmount(subjectCollectBO5.getCurrentAmount());
+                                twoBO.setCurrentYearAmount(subjectCollectBO5.getYearAmount());
+                            }
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b1 = false;
+                        }
+                    } else if (ProfitType.PROFITSACAILABLE.equals(profit.getProfitType())) {
+                        if (b3) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("六、可供投资者分配的利润");
+                            SubjectCollectBO subjectCollectBO6 = voucherGenerateAPI.findCurrentAndYear("可供投资者分配的利润", startTime, endTime);
+                            if (null != subjectCollectBO6) {
+                                twoBO.setCurrentMonthAmount(subjectCollectBO6.getCurrentAmount());
+                                twoBO.setCurrentYearAmount(subjectCollectBO6.getYearAmount());
+                            }
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b3 = false;
+                        }
+                    } else if (ProfitType.PREVIOUSANNUAL.equals(profit.getProfitType())) {
+                        if (b4) {
+                            ProfitBO twoBO = new ProfitBO();
+                            twoBO.setProject("七、以前年度损益调整");
+                            SubjectCollectBO subjectCollectBO6 = voucherGenerateAPI.findCurrentAndYear("以前年度损益调整", startTime, endTime);
+                            if (null != subjectCollectBO6) {
+                                twoBO.setCurrentMonthAmount(subjectCollectBO6.getCurrentAmount());
+                                twoBO.setCurrentYearAmount(subjectCollectBO6.getYearAmount());
+                            }
+                            twoBO.setNum(num);
+                            num++;
+                            boList.add(twoBO);
+                            b4 = false;
                         }
                     }
                     bo.setNum(num);
                     num++;
                     boList.add(bo);
                 }
-// else {
-//                    ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class);
-//
-//                    if (ProfitType.AINCOME.equals(profit.getProfitType()) && b8) {
-//                        ProfitBO bo1 = new ProfitBO();
-//                        bo1.setProject("一、营业收入");
-//                        bo1.setNum(num);
-//                        boList.add(bo1);
-//                        num++;
-//                        b8 = false;
-//                    }
-//                    if (ProfitType.AINCOME.equals(profit.getProfitType())) {
-//                        if (Type.ADD.equals(profit.getType())) {
-//                            if (b) {
-//                                bo.setProject("加：" + profit.getProject());
-//                                b = false;
-//                            }
-//                        } else if (Type.REMOVE.equals(profit.getType())) {
-//                            if (b1) {
-//                                bo.setProject("减：" + profit.getProject());
-//                                b1 = false;
-//                            }
-//                        }
-//                    } else if (ProfitType.BPROFIT.equals(profit.getProfitType())) {
-//                        if (b2) {
-//                            ProfitBO twoBO = new ProfitBO();
-//                            twoBO.setProject("二、营业利润");
-//                            twoBO.setCurrentMonthAmount(incomeMonth);
-//                            twoBO.setCurrentYearAmount(incomeYear);
-//                            twoBO.setNum(num);
-//                            num++;
-//                            boList.add(twoBO);
-//                            b2 = false;
-//                        }
-//                        if (Type.ADD.equals(profit.getType())) {
-//                            if (b3) {
-//                                bo.setProject("加：" + profit.getProject());
-//                                b3 = false;
-//                            }
-//                        } else if (Type.REMOVE.equals(profit.getType())) {
-//                            if (b4) {
-//                                bo.setProject("减：" + profit.getProject());
-//                                b4 = false;
-//                            }
-//                        }
-//                    } else if (ProfitType.CSUM.equals(profit.getProfitType())) {
-//                        if (b5) {
-//                            ProfitBO twoBO = new ProfitBO();
-//                            twoBO.setProject("三、利润总额");
-//                            twoBO.setCurrentMonthAmount(incomeMonth);
-//                            twoBO.setCurrentYearAmount(incomeYear);
-//                            twoBO.setNum(num);
-//                            num++;
-//                            boList.add(twoBO);
-//                            b5 = false;
-//                        }
-//                        if (Type.ADD.equals(profit.getType())) {
-//                            if (b6) {
-//                                bo.setProject("加：" + profit.getProject());
-//                                b6 = false;
-//                            }
-//                        } else if (Type.REMOVE.equals(profit.getType())) {
-//                            if (b7) {
-//                                bo.setProject("减：" + profit.getProject());
-//                                b7 = false;
-//                            }
-//                        }
-//                    }
-//                    bo.setNum(num);
-//                    num++;
-//                    boList.add(bo);
-//                }
             }
             ProfitBO lastBO = new ProfitBO();
-            lastBO.setProject("四、净利润");
-            SubjectCollectBO subjectCollectBO4 = voucherGenerateAPI.findCurrentAndYear("净利润", startTime, endTime);
-            if (null != subjectCollectBO4) {
-                lastBO.setCurrentMonthAmount(subjectCollectBO4.getCurrentAmount());
-                lastBO.setCurrentYearAmount(subjectCollectBO4.getYearAmount());
+            lastBO.setProject("八、未分配利润");
+            SubjectCollectBO subjectCollectBO7 = voucherGenerateAPI.findCurrentAndYear("未分配利润", startTime, endTime);
+            if (null != subjectCollectBO7) {
+                lastBO.setCurrentMonthAmount(subjectCollectBO7.getCurrentAmount());
+                lastBO.setCurrentYearAmount(subjectCollectBO7.getYearAmount());
             }
-//            lastBO.setCurrentMonthAmount(incomeMonth);
-//            lastBO.setCurrentYearAmount(incomeYear);
             lastBO.setNum(num);
             num++;
             boList.add(lastBO);
@@ -732,172 +728,214 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         return boList;
     }
 
+    public String joingTogether(String firstSubject, String projectType) throws SerException {
+        return projectType == null ? firstSubject : (projectType + ":" + firstSubject);
+    }
+
     @Override
     public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
-        checkSeeIdentity();
+        List<ProfitLevelBO> profitLevelBOList = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("######0.00");
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
-            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
-            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+            dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
+            dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
         }
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
-//        String[] projectNames = dto.getProjectNames();
-        FormulaDTO formulaDTO = new FormulaDTO();
-        BeanUtils.copyProperties(dto, formulaDTO);
-        dto.getSorts().add("profitType=ASC");
-        List<Profit> list = super.findByCis(dto);
-        List<ProfitLevelBO> boList = new ArrayList<>();
-        boolean b = true;
-        boolean b1 = true;
-        boolean b2 = true;
-        boolean b3 = true;
-        boolean b4 = true;
-        boolean b5 = true;
-        boolean b6 = true;
-        boolean b7 = true;
-        double startSum = 0;
-        double endSum = 0;
-        if ((list != null) && (!list.isEmpty())) {
-            for (Profit p : list) {
-                List<FormulaBO> starts = formulaSer.profitAnalyze(p.getId(), startTime, dto);
-                List<FormulaBO> ends = formulaSer.profitAnalyze(p.getId(), endTime, dto);
-                double start = 0;
-                double end = 0;
-                if ((starts != null) && (!starts.isEmpty())) {
-                    start = starts.get(starts.size() - 1).getCurrent();
-                }
-                if ((ends != null) && (!ends.isEmpty())) {
-                    end = ends.get(ends.size() - 1).getCurrent();
-                }
-                double change = start - end;
-                if (change < 0) {
-                    change = -change;
-                }
-                ProfitLevelBO bo = new ProfitLevelBO();
-                bo.setProject(p.getProject());
-                bo.setStart(start);
-                bo.setEnd(end);
-                bo.setChange(change);
-                if (end == 0) {
-                    bo.setChangeScale("0%");
-                } else {
-                    bo.setChangeScale(String.format("%.2f", (change / end) * 100) + "%");
-                }
-                if (p == list.get(0)) {
-                    bo.setProject("一、" + p.getProject());
-                }
-                if (ProfitType.AINCOME.equals(p.getProfitType())) {
-                    bo.setProfitType(p.getProfitType());
-                    if (Type.ADD.equals(p.getType())) {
-                        startSum += bo.getStart();
-                        endSum += bo.getEnd();
-                        if (b) {
-                            bo.setProject("加：" + p.getProject());
-                            b = false;
-                        }
-                    } else if (Type.REMOVE.equals(p.getType())) {
-                        startSum -= bo.getStart();
-                        endSum -= bo.getEnd();
-                        if (b1) {
-                            bo.setProject("减：" + p.getProject());
-                            b1 = false;
-                        }
-                    }
-                } else if (ProfitType.BPROFIT.equals(p.getProfitType())) {
-                    bo.setProfitType(p.getProfitType());
-                    if (b2) {
-                        ProfitLevelBO twoBO = new ProfitLevelBO();
-                        twoBO.setProject("二、营业利润");
-                        twoBO.setStart(startSum);
-                        twoBO.setEnd(endSum);
-                        twoBO.setProfitType(p.getProfitType());
-                        double changeSum = startSum - endSum;
-                        if (changeSum < 0) {
-                            changeSum = -changeSum;
-                        }
-                        if (endSum == 0) {
-                            bo.setChangeScale("0%");
-                        } else {
-                            bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
-                        }
-                        boList.add(twoBO);
-                        b2 = false;
-                    }
-                    if (Type.ADD.equals(p.getType())) {
-                        startSum += bo.getStart();
-                        endSum += bo.getEnd();
-                        if (b3) {
-                            bo.setProject("加：" + p.getProject());
-                            b3 = false;
-                        }
-                    } else if (Type.REMOVE.equals(p.getType())) {
-                        startSum -= bo.getStart();
-                        endSum -= bo.getEnd();
-                        if (b4) {
-                            bo.setProject("减：" + p.getProject());
-                            b4 = false;
-                        }
-                    }
-                } else if (ProfitType.CSUM.equals(p.getProfitType())) {
-                    bo.setProfitType(p.getProfitType());
-                    if (b5) {
-                        ProfitLevelBO twoBO = new ProfitLevelBO();
-                        twoBO.setProject("三、利润总额");
-                        twoBO.setStart(startSum);
-                        twoBO.setEnd(endSum);
-                        twoBO.setProfitType(p.getProfitType());
-                        double changeSum = startSum - endSum;
-                        if (changeSum < 0) {
-                            changeSum = -changeSum;
-                        }
-                        if (endSum == 0) {
-                            bo.setChangeScale("0%");
-                        } else {
-                            bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
-                        }
-                        boList.add(twoBO);
-                        b5 = false;
-                    }
-                    if (Type.ADD.equals(p.getType())) {
-                        startSum += bo.getStart();
-                        endSum += bo.getEnd();
-                        if (b6) {
-                            bo.setProject("加：" + p.getProject());
-                            b6 = false;
-                        }
-                    } else if (Type.REMOVE.equals(p.getType())) {
-                        startSum -= bo.getStart();
-                        endSum -= bo.getEnd();
-                        if (b7) {
-                            bo.setProject("减：" + p.getProject());
-                            b7 = false;
-                        }
+        String endDate = dto.getEndTime();
+        //开始值的数据
+        String startValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), 1));
+        String startValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue())));
+        dto.setStartTime(startValueStartDate);
+        dto.setEndTime(startValueEndDate);
+        List<ProfitBO> profitBOS1 = list(dto);
+        //结束值的数据
+        String endValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue(), 1));
+        String endValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue())));
+        dto.setStartTime(endValueStartDate);
+        dto.setEndTime(endValueEndDate);
+        List<ProfitBO> profitBOS2 = list(dto);
+        if (profitBOS1 != null && profitBOS1.size() > 0) {
+            for (ProfitBO profitBO : profitBOS1) {
+                for (ProfitBO profitBO1 : profitBOS2) {
+                    if (profitBO.getProject().equals(profitBO1.getProject())) {
+                        ProfitLevelBO profitLevelBO = new ProfitLevelBO();
+                        profitLevelBO.setProject(profitBO.getProject());
+                        profitLevelBO.setStart(profitBO.getCurrentMonthAmount());
+                        profitLevelBO.setEnd(profitBO1.getCurrentMonthAmount());
+                        profitLevelBO.setChange(profitBO1.getCurrentMonthAmount() - profitBO.getCurrentMonthAmount());
+                        profitLevelBO.setChangeScale((profitBO.getCurrentMonthAmount() == 0 ? 0d : (Double.parseDouble(df.format((profitBO1.getCurrentMonthAmount() - profitBO.getCurrentMonthAmount()) / profitBO.getCurrentMonthAmount())))) + "%");
+                        profitLevelBOList.add(profitLevelBO);
                     }
                 }
-                boList.add(bo);
             }
-            ProfitLevelBO lastBO = new ProfitLevelBO();
-            lastBO.setProject("四、净利润");
-            lastBO.setStart(startSum);
-            lastBO.setEnd(endSum);
-            lastBO.setProfitType(ProfitType.DNETPROFIT);
-            double changeSum = startSum - endSum;
-            if (changeSum < 0) {
-                changeSum = -changeSum;
-            }
-            if (endSum == 0) {
-                lastBO.setChangeScale("0%");
-            } else {
-                lastBO.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
-            }
-            boList.add(lastBO);
         }
-        boList.stream().forEach(obj -> {
-            obj.setStartTime(dto.getStartTime());
-            obj.setEndTime(dto.getEndTime());
-        });
-        return boList;
+        return profitLevelBOList;
+
     }
+//    public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
+//        checkSeeIdentity();
+//        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+//            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
+//            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+//        }
+//        String startTime = dto.getStartTime();
+//        String endTime = dto.getEndTime();
+////        String[] projectNames = dto.getProjectNames();
+//        FormulaDTO formulaDTO = new FormulaDTO();
+//        BeanUtils.copyProperties(dto, formulaDTO);
+//        dto.getSorts().add("profitType=ASC");
+//        List<Profit> list = super.findByCis(dto);
+//        List<ProfitLevelBO> boList = new ArrayList<>();
+//        boolean b = true;
+//        boolean b1 = true;
+//        boolean b2 = true;
+//        boolean b3 = true;
+//        boolean b4 = true;
+//        boolean b5 = true;
+//        boolean b6 = true;
+//        boolean b7 = true;
+//        double startSum = 0;
+//        double endSum = 0;
+//        if ((list != null) && (!list.isEmpty())) {
+//            for (Profit p : list) {
+//                List<FormulaBO> starts = formulaSer.profitAnalyze(p.getId(), startTime, dto);
+//                List<FormulaBO> ends = formulaSer.profitAnalyze(p.getId(), endTime, dto);
+//                double start = 0;
+//                double end = 0;
+//                if ((starts != null) && (!starts.isEmpty())) {
+//                    start = starts.get(starts.size() - 1).getCurrent();
+//                }
+//                if ((ends != null) && (!ends.isEmpty())) {
+//                    end = ends.get(ends.size() - 1).getCurrent();
+//                }
+//                double change = start - end;
+//                if (change < 0) {
+//                    change = -change;
+//                }
+//                ProfitLevelBO bo = new ProfitLevelBO();
+//                bo.setProject(p.getProject());
+//                bo.setStart(start);
+//                bo.setEnd(end);
+//                bo.setChange(change);
+//                if (end == 0) {
+//                    bo.setChangeScale("0%");
+//                } else {
+//                    bo.setChangeScale(String.format("%.2f", (change / end) * 100) + "%");
+//                }
+//                if (p == list.get(0)) {
+//                    bo.setProject("一、" + p.getProject());
+//                }
+//                if (ProfitType.AINCOME.equals(p.getProfitType())) {
+//                    bo.setProfitType(p.getProfitType());
+//                    if (Type.ADD.equals(p.getType())) {
+//                        startSum += bo.getStart();
+//                        endSum += bo.getEnd();
+//                        if (b) {
+//                            bo.setProject("加：" + p.getProject());
+//                            b = false;
+//                        }
+//                    } else if (Type.REMOVE.equals(p.getType())) {
+//                        startSum -= bo.getStart();
+//                        endSum -= bo.getEnd();
+//                        if (b1) {
+//                            bo.setProject("减：" + p.getProject());
+//                            b1 = false;
+//                        }
+//                    }
+//                } else if (ProfitType.BPROFIT.equals(p.getProfitType())) {
+//                    bo.setProfitType(p.getProfitType());
+//                    if (b2) {
+//                        ProfitLevelBO twoBO = new ProfitLevelBO();
+//                        twoBO.setProject("二、营业利润");
+//                        twoBO.setStart(startSum);
+//                        twoBO.setEnd(endSum);
+//                        twoBO.setProfitType(p.getProfitType());
+//                        double changeSum = startSum - endSum;
+//                        if (changeSum < 0) {
+//                            changeSum = -changeSum;
+//                        }
+//                        if (endSum == 0) {
+//                            bo.setChangeScale("0%");
+//                        } else {
+//                            bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
+//                        }
+//                        boList.add(twoBO);
+//                        b2 = false;
+//                    }
+//                    if (Type.ADD.equals(p.getType())) {
+//                        startSum += bo.getStart();
+//                        endSum += bo.getEnd();
+//                        if (b3) {
+//                            bo.setProject("加：" + p.getProject());
+//                            b3 = false;
+//                        }
+//                    } else if (Type.REMOVE.equals(p.getType())) {
+//                        startSum -= bo.getStart();
+//                        endSum -= bo.getEnd();
+//                        if (b4) {
+//                            bo.setProject("减：" + p.getProject());
+//                            b4 = false;
+//                        }
+//                    }
+//                } else if (ProfitType.CSUM.equals(p.getProfitType())) {
+//                    bo.setProfitType(p.getProfitType());
+//                    if (b5) {
+//                        ProfitLevelBO twoBO = new ProfitLevelBO();
+//                        twoBO.setProject("三、利润总额");
+//                        twoBO.setStart(startSum);
+//                        twoBO.setEnd(endSum);
+//                        twoBO.setProfitType(p.getProfitType());
+//                        double changeSum = startSum - endSum;
+//                        if (changeSum < 0) {
+//                            changeSum = -changeSum;
+//                        }
+//                        if (endSum == 0) {
+//                            bo.setChangeScale("0%");
+//                        } else {
+//                            bo.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
+//                        }
+//                        boList.add(twoBO);
+//                        b5 = false;
+//                    }
+//                    if (Type.ADD.equals(p.getType())) {
+//                        startSum += bo.getStart();
+//                        endSum += bo.getEnd();
+//                        if (b6) {
+//                            bo.setProject("加：" + p.getProject());
+//                            b6 = false;
+//                        }
+//                    } else if (Type.REMOVE.equals(p.getType())) {
+//                        startSum -= bo.getStart();
+//                        endSum -= bo.getEnd();
+//                        if (b7) {
+//                            bo.setProject("减：" + p.getProject());
+//                            b7 = false;
+//                        }
+//                    }
+//                }
+//                boList.add(bo);
+//            }
+//            ProfitLevelBO lastBO = new ProfitLevelBO();
+//            lastBO.setProject("四、净利润");
+//            lastBO.setStart(startSum);
+//            lastBO.setEnd(endSum);
+//            lastBO.setProfitType(ProfitType.DNETPROFIT);
+//            double changeSum = startSum - endSum;
+//            if (changeSum < 0) {
+//                changeSum = -changeSum;
+//            }
+//            if (endSum == 0) {
+//                lastBO.setChangeScale("0%");
+//            } else {
+//                lastBO.setChangeScale(String.format("%.2f", (changeSum / endSum) * 100) + "%");
+//            }
+//            boList.add(lastBO);
+//        }
+//        boList.stream().forEach(obj -> {
+//            obj.setStartTime(dto.getStartTime());
+//            obj.setEndTime(dto.getEndTime());
+//        });
+//        return boList;
+//    }
 
     @Override
     public List<ProfitVerticalBO> verticalAnalyze(ProfitDTO dto) throws SerException {
@@ -1116,49 +1154,123 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
     @Override
     public List<DetailBO> findDetails(String id, ProfitDTO dto) throws SerException {
         checkSeeIdentity();
-        String startTime = dto.getStartTime();
-        String endTime = dto.getEndTime();
+        List<DetailBO> boList = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("######0.00");
+        Double beginningCreditAmount = 0d;//期初余额
+        Double beginningDebitAmount = 0d;//期初借方余额
+        Double beginningCrAmount = 0d;//期初贷方余额
+        Double issueDebitAmount = 0d;//本期借方总额
+        Double issueCreditAmount = 0d;//本期贷方总额
+        Double issueTotalAmount = 0d;//本期合计余额
+        Double endDebitAmount = 0d;//期末借方总额
+        Double endCreditAmount = 0d;//期末贷方总额
+        Double endTotalAmount = 0d;//本年累计额
+
+        String startTime = dto.getStartTime() == null ? DateUtil.dateToString(LocalDate.now()) : dto.getStartTime();
+        String endTime = dto.getEndTime() == null ? DateUtil.dateToString(LocalDate.now()) : dto.getEndTime();
         FormulaDTO formulaDTO = new FormulaDTO();
         BeanUtils.copyProperties(dto, formulaDTO);
-        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
-        List<DetailBO> boList = new ArrayList<>();
-        if ((list != null) && (!list.isEmpty())) {
-            FormulaBO last = list.get(list.size() - 1);
-            double begin = last.getBegin();
-            double current = last.getCurrent();
-            Form form = last.getForm();
-            double currentSum = 0;
-            String project = findByID(id).getProject();
-            String term = startTime + "~" + endTime;
-            DetailBO currentBO = new DetailBO();
-            currentBO.setProject(project);
-            currentBO.setTerm(term);
-            currentBO.setState("本期合计");
-            currentBO.setForm(form);
-            if (Form.DEBIT.equals(form)) {
-                currentSum = begin + current;
-                currentBO.setDebit(current);
-            } else if (Form.CREDIT.equals(form)) {
-                currentSum = begin - current;
-                currentBO.setCredit(current);
-            }
-            currentBO.setRemain(currentSum);
-            double year = currentSum;
-            DetailBO beginBO = new DetailBO();
-            beginBO.setProject(project);
-            beginBO.setTerm(term);
-            beginBO.setState("期初余额");
-            beginBO.setForm(form);
-            beginBO.setRemain(begin);
-            boList.add(beginBO);
-            boList.add(currentBO);
-            DetailBO yearBO = new DetailBO();
-            yearBO.setTerm(term);
-            yearBO.setState("本年累计");
-            yearBO.setForm(form);
-            yearBO.setRemain(year);
-            boList.add(yearBO);
+//        List<FormulaBO> list = formulaSer.findByFid(id, formulaDTO);
+        Profit profit = super.findById(id);
+        Form form = formulaSer.FindWayByFid(id);
+        if (form == null) {
+            throw new SerException("请先添加对应项目计算公式");
         }
+
+        //期初余额
+        String term = startTime + "~" + endTime;
+        DetailBO currentBO = new DetailBO();
+        if (DateUtil.parseDate(startTime).getMonthValue() != 1) {
+            String qcStartTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue() - 1, 1));
+            String qcEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue() - 1, DateUtil.getDayByDate(DateUtil.parseDate(startTime).getYear(), DateUtil.parseDate(startTime).getMonthValue() - 1)));
+            SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrent(2, profit.getProject(), qcStartTime, qcEndTime);
+            if (subjectCollectBO != null) {
+                beginningCreditAmount = subjectCollectBO.getCurrentAmount() == null ? 0 : subjectCollectBO.getCurrentAmount();
+                beginningDebitAmount = subjectCollectBO.getIssueDebitAmount() == null ? 0 : subjectCollectBO.getIssueDebitAmount();
+                beginningCrAmount = subjectCollectBO.getIssueCreditAmount() == null ? 0 : subjectCollectBO.getIssueCreditAmount();
+            }
+        }
+        currentBO.setProject(profit.getProject());
+        currentBO.setTerm(term);
+        currentBO.setState("期初余额");
+        currentBO.setForm(form);
+        currentBO.setDebit(Double.parseDouble(df.format(beginningDebitAmount)));
+        currentBO.setCredit(Double.parseDouble(df.format(beginningCrAmount)));
+        currentBO.setRemain(Double.parseDouble(df.format(beginningCreditAmount)));
+        boList.add(currentBO);
+
+        //本期合计
+        SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrent(2, profit.getProject(), startTime, endTime);
+        if (subjectCollectBO1 != null) {
+            issueTotalAmount = subjectCollectBO1.getCurrentAmount() == null ? 0 : subjectCollectBO1.getCurrentAmount();
+            issueDebitAmount = subjectCollectBO1.getIssueDebitAmount() == null ? 0 : subjectCollectBO1.getIssueDebitAmount();
+            issueCreditAmount = subjectCollectBO1.getIssueCreditAmount() == null ? 0 : subjectCollectBO1.getIssueCreditAmount();
+        }
+
+        DetailBO beginBO = new DetailBO();
+        beginBO.setProject(profit.getProject());
+        beginBO.setTerm(term);
+        beginBO.setState("本期合计");
+        beginBO.setForm(form);
+        beginBO.setDebit(Double.parseDouble(df.format(issueDebitAmount)));
+        beginBO.setCredit(Double.parseDouble(df.format(issueCreditAmount)));
+        beginBO.setRemain(Double.parseDouble(df.format(issueTotalAmount)) + Double.parseDouble(df.format(beginningCreditAmount)));
+        boList.add(beginBO);
+
+        //本年累计
+        String ljStartTime = DateUtil.parseDate(startTime).getYear() + "-01-01";
+        SubjectCollectBO subjectCollectBO2 = voucherGenerateAPI.findCurrent(2, profit.getProject(), ljStartTime, endTime);
+        if (subjectCollectBO2 != null) {
+            endTotalAmount = subjectCollectBO2.getCurrentAmount() == null ? 0 : subjectCollectBO2.getCurrentAmount();
+            endDebitAmount = subjectCollectBO2.getIssueDebitAmount() == null ? 0 : subjectCollectBO2.getIssueDebitAmount();
+            endCreditAmount = subjectCollectBO2.getIssueCreditAmount() == null ? 0 : subjectCollectBO2.getIssueCreditAmount();
+        }
+        DetailBO yearBO = new DetailBO();
+        yearBO.setTerm(term);
+        yearBO.setState("本年累计");
+        yearBO.setForm(form);
+        yearBO.setDebit(Double.parseDouble(df.format(endDebitAmount)));
+        yearBO.setCredit(Double.parseDouble(df.format(endCreditAmount)));
+        yearBO.setRemain(Double.parseDouble(df.format(endTotalAmount)));
+        boList.add(yearBO);
+
+//        List<DetailBO> boList = new ArrayList<>();
+//        if ((list != null) && (!list.isEmpty())) {
+//            FormulaBO last = list.get(list.size() - 1);
+//            double begin = last.getBegin();
+//            double current = last.getCurrent();
+//            Form form = last.getForm();
+//            double currentSum = 0;
+//            String project = findByID(id).getProject();
+//            String term = startTime + "~" + endTime;
+//            DetailBO currentBO = new DetailBO();
+//            currentBO.setProject(project);
+//            currentBO.setTerm(term);
+//            currentBO.setState("本期合计");
+//            currentBO.setForm(form);
+//            if (Form.DEBIT.equals(form)) {
+//                currentSum = begin + current;
+//                currentBO.setDebit(current);
+//            } else if (Form.CREDIT.equals(form)) {
+//                currentSum = begin - current;
+//                currentBO.setCredit(current);
+//            }
+//            currentBO.setRemain(currentSum);
+//            double year = currentSum;
+//            DetailBO beginBO = new DetailBO();
+//            beginBO.setProject(project);
+//            beginBO.setTerm(term);
+//            beginBO.setState("期初余额");
+//            beginBO.setForm(form);
+//            beginBO.setRemain(begin);
+//            boList.add(beginBO);
+//            boList.add(currentBO);
+//            DetailBO yearBO = new DetailBO();
+//            yearBO.setTerm(term);
+//            yearBO.setState("本年累计");
+//            yearBO.setForm(form);
+//            yearBO.setRemain(year);
+//            boList.add(yearBO);
         return boList;
     }
 
@@ -1326,13 +1438,77 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
             return String.valueOf(total);
         }
     }
-private Logger logger = Logger.getLogger(ProfitSerImpl.class);
+
+    private Logger logger = Logger.getLogger(ProfitSerImpl.class);
+
     //判断是否是账务模块
     private Boolean isAccountingModule() throws SerException {
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
-        String moduleId = moduleTypeAPI.findModuleId("账务模块");
-        return positionDetailUserAPI.checkAsUserModule(userBO.getId(), moduleId);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            String moduleId = moduleTypeAPI.findModuleId("账务模块");
+            return positionDetailUserAPI.checkAsUserModule(userBO.getId(), moduleId);
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public byte[] exportExcel(ProfitDTO dto) throws SerException {
+        List<ProfitExportExcel> list = new ArrayList<>();
+        List<ProfitBO> profitBOList = this.list(dto);
+        for (ProfitBO profitBO : profitBOList) {
+            ProfitExportExcel profitExportExcel = BeanTransform.copyProperties(profitBO, ProfitExportExcel.class);
+            list.add(profitExportExcel);
+        }
+
+        Excel excel = new Excel(2, 3);
+        byte[] bytes1 = ExcelUtil.clazzToExcel(list, excel);
+        XSSFWorkbook wb = null;
+        String comp = "";
+//        List<String> comps = companyBasicInfoAPI.findCompanyName();
+//        if(comps!=null && comps.size()>0){
+//            comp = comps.get(0);
+//        }
+        try {
+            InputStream is = new ByteArrayInputStream(bytes1);
+            wb = new XSSFWorkbook(is);// 创建一个工作execl文档
+            XSSFCellStyle headerStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+            headerStyle.setWrapText(true);
+            XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFRow row = sheet.createRow(0);
+            XSSFRow row1 = sheet.createRow(1);
+            //标题
+            for (int o = 0; o < 4; o++) {
+                row.createCell(o).setCellValue("利润表");
+            }
+            CellRangeAddress cra = new CellRangeAddress(0, 0, 0, 3);
+            sheet.addMergedRegion(cra);//这个干嘛的
+            //公司和单位
+            row1.createCell(0).setCellValue("编制单位");
+            row1.createCell(1).setCellValue(comp + "公司");
+            row1.createCell(2).setCellValue("所属期:" + dto.getEndTime());
+            row1.createCell(3).setCellValue("单位:元");
+
+            row.getCell(0).setCellStyle(headerStyle);
+            row1.getCell(2).setCellStyle(headerStyle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return os.toByteArray();
     }
 }

@@ -73,12 +73,12 @@ public class AccountanCourseApiImpl implements AccountanCourseAPI {
     }
 
     @Override
-    public List<String> findSendNameByOne(String id) throws SerException {
+    public List<AccountAddDateBO> findSendNameByOne(String id) throws SerException {
         return accountanCourseSer.findSendNameByOne(id);
     }
 
     @Override
-    public List<String> findThirdNameBySend(String id) throws SerException {
+    public List<AccountAddDateBO> findThirdNameBySend(String id) throws SerException {
         return accountanCourseSer.findThirdNameBySend(id);
     }
 

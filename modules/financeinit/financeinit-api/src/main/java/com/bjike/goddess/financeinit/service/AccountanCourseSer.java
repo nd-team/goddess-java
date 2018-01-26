@@ -104,24 +104,24 @@ public interface AccountanCourseSer extends Ser<AccountanCourse, AccountanCourse
 
 
     /**
-     * 根据一级科目id获取所有对应的二级会计科目名称
+     * 根据一级科目id获取所有对应的二级会计科目名称对应代码和id
      *
      * @param id
      * @return
      * @throws SerException
      */
-    default List<String> findSendNameByOne(String id) throws SerException {
+    default List<AccountAddDateBO> findSendNameByOne(String id) throws SerException {
         return null;
     }
 
     /**
-     * 根据一级科目id获取所有对应的二级会计科目名称
+     * 根据二级科目id获取所有对应的三级会计科目名称对应代码和id
      *
      * @param id
      * @return
      * @throws SerException
      */
-    default List<String> findThirdNameBySend(String id) throws SerException {
+    default List<AccountAddDateBO> findThirdNameBySend(String id) throws SerException {
         return null;
     }
 

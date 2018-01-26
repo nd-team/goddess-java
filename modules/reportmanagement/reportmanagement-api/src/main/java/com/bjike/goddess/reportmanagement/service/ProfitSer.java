@@ -240,4 +240,14 @@ public interface ProfitSer extends Ser<Profit, ProfitDTO> {
     default Long analysisChangesTotal(ProfitFormulaDTO dto) throws SerException {
         return null;
     }
+    /**
+     * 导出利润表
+     *
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    default byte[] exportExcel(ProfitDTO dto) throws SerException {
+        return null;
+    }
 }

@@ -11,6 +11,7 @@ import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -106,4 +107,14 @@ public interface FinanceAttendanceSer extends Ser<FinanceAttendance, FinanceAtte
      */
     Double vacateDay(String name, String date) throws SerException;
 
+
+    /**
+     * 导出数据
+     *
+     * @param dto
+     * @throws SerException
+     */
+    default ByteArrayOutputStream excelExport(FinanceAttendanceDTO dto) throws SerException {
+        return null;
+    }
 }

@@ -56,6 +56,11 @@ public class ProjectApiImpl implements ProjectAPI {
     }
 
     @Override
+    public void delete(String id) throws SerException {
+        projectSer.delete(id);
+    }
+
+    @Override
     public Long count(ProjectDTO dto) throws SerException {
         return projectSer.findCount(dto);
     }

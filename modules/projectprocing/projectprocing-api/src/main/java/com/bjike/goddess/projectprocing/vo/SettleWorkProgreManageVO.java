@@ -54,6 +54,11 @@ public class SettleWorkProgreManageVO {
      * 责任人
      */
     private String responsible;
+    /**
+     * 分配人
+     */
+    private String allocationPeople;
+
 
     /**
      * 是否完成
@@ -139,5 +144,13 @@ public class SettleWorkProgreManageVO {
 
     public void setComplete(Boolean complete) {
         this.complete = complete;
+    }
+
+    public String getAllocationPeople() {
+        return allocationPeople;
+    }
+
+    public void setAllocationPeople(String allocationPeople) {
+        this.allocationPeople = allocationPeople;
     }
 }

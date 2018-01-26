@@ -18,10 +18,6 @@ public class VoucherGenerateDTO extends BaseDTO {
     public interface TestList {
     }
 
-    /**
-     * 页数
-     */
-    private Integer page;
 
     /**
      * 一级科目

@@ -25,14 +25,12 @@ import com.bjike.goddess.message.enums.RangeType;
 import com.bjike.goddess.message.enums.SendType;
 import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
-import com.bjike.goddess.organize.bo.ArrangementBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.Even;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -1264,6 +1262,40 @@ public class EventSerImpl extends ServiceImpl<Event, EventDTO> implements EventS
         }
         return boList;
     }
+
+    @Override
+    public List<Object> findAllName(EventDTO dto) throws SerException {
+        List<Object> list = new ArrayList<>();
+        Integer year = dto.getYear();
+        Integer month = dto.getMonth();
+
+        if (dto.getPlanTypes() != null) {
+            if (PlanType.DAY.name().equals(dto.getPlanTypes()[0].name())) {
+                Integer day = dto.getDay();
+                String monthStr = "";
+                String dayStr = "";
+                if (month < 10){
+                    monthStr = "0"+month;
+                }else {
+                    monthStr = month+"";
+                }
+                if (day < 10){
+                    dayStr = "0"+day;
+                }else {
+                    dayStr = day+"";
+                }
+                String startDate = year + "-" + monthStr + "-" + dayStr;
+                StringBuffer sql = new StringBuffer();
+                sql.append("SELECT b.name " +
+                        "FROM event_father a LEFT JOIN event_event b ON a.id = b.father_id " +
+                        "WHERE a.startDate = '"+startDate+"' " +
+                        "GROUP BY b.name ");
+                list = super.findBySql(sql.toString());
+            }
+        }
+        return list;
+    }
+
 
 
 }

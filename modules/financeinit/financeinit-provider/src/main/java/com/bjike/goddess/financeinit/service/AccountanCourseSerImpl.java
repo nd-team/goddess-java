@@ -25,7 +25,6 @@ import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -43,7 +42,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -282,27 +280,41 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     }
 
     @Override
-    public List<String> findSendNameByOne(String id) throws SerException {
+    public List<AccountAddDateBO> findSendNameByOne(String id) throws SerException {
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
         accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
         accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "二级科目"));
         List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
-        if (CollectionUtils.isEmpty(accountanCourseList)) {
-            return Collections.emptyList();
+        List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
+        if (accountanCourseList != null && accountanCourseList.size() > 0) {
+            for (AccountanCourse accountanCourse : accountanCourseList) {
+                AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
+                accountAddDateBO.setId(accountanCourse.getId());
+                accountAddDateBO.setCode(accountanCourse.getCode());
+                accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
+                accountAddDateBOS.add(accountAddDateBO);
+            }
         }
-        return accountanCourseList.stream().map(AccountanCourse::getAccountanName).distinct().collect(Collectors.toList());
+        return accountAddDateBOS;
     }
 
     @Override
-    public List<String> findThirdNameBySend(String id) throws SerException {
+    public List<AccountAddDateBO> findThirdNameBySend(String id) throws SerException {
         AccountanCourseDTO accountanCourseDTO = new AccountanCourseDTO();
         accountanCourseDTO.getConditions().add(Restrict.eq("belongSubjectsId", id));
         accountanCourseDTO.getConditions().add(Restrict.eq("subjectsLeve", "三级科目"));
         List<AccountanCourse> accountanCourseList = super.findByCis(accountanCourseDTO);
-        if (CollectionUtils.isEmpty(accountanCourseList)) {
-            return Collections.emptyList();
+        List<AccountAddDateBO> accountAddDateBOS = new ArrayList<>();
+        if (accountanCourseList != null && accountanCourseList.size() > 0) {
+            for (AccountanCourse accountanCourse : accountanCourseList) {
+                AccountAddDateBO accountAddDateBO = new AccountAddDateBO();
+                accountAddDateBO.setId(accountanCourse.getId());
+                accountAddDateBO.setCode(accountanCourse.getCode());
+                accountAddDateBO.setAccountanName(accountanCourse.getAccountanName());
+                accountAddDateBOS.add(accountAddDateBO);
+            }
         }
-        return accountanCourseList.stream().map(AccountanCourse::getAccountanName).distinct().collect(Collectors.toList());
+        return accountAddDateBOS;
     }
 
 //    @Override
@@ -413,7 +425,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     @Transactional(rollbackFor = {SerException.class})
     public AccountanCourseBO addSendCourse(AccountanCourseTO accountanCourseTO) throws SerException {
         checkAddIdentity();
-
+        if (StringUtils.isBlank(accountanCourseTO.getBelongSubjectsId())) {
+            throw new SerException("所属一级科目id不能为空");
+        }
         //对应的一级科目数据
         AccountanCourse accountanCourse2 = super.findById(accountanCourseTO.getBelongSubjectsId());
 
@@ -428,8 +442,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
         //二级科目添加到财务初始化表中
         InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
-        initDateEntry.setCode( accountanCourse.getCode());
-        initDateEntry.setAccountanName(accountanCourse2.getAccountanName() + "-" +accountanCourse.getAccountanName());
+        initDateEntry.setCode(accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse2.getAccountanName() + "-" + accountanCourse.getAccountanName());
         initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
         initDateEntrySer.save(initDateEntry);
 
@@ -441,6 +455,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public AccountanCourseBO addThreeCourse(AccountanCourseTO accountanCourseTO) throws SerException {
         checkAddIdentity();
 
+        if (StringUtils.isBlank(accountanCourseTO.getBelongSubjectsId())) {
+            throw new SerException("所属二级科目id不能为空");
+        }
         //对应的二级科目数据
         AccountanCourse accountanCourse2 = super.findById(accountanCourseTO.getBelongSubjectsId());
         //二级科目数据对应的一级科目数据
@@ -458,8 +475,8 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 
         //二级科目添加到财务初始化表中
         InitDateEntry initDateEntry = new InitDateEntry();//初始化一个实体类
-        initDateEntry.setCode( accountanCourse.getCode());
-        initDateEntry.setAccountanName(accountanCourse3.getAccountanName() + "-" + accountanCourse2.getAccountanName() + "-" +accountanCourse.getAccountanName());
+        initDateEntry.setCode(accountanCourse.getCode());
+        initDateEntry.setAccountanName(accountanCourse3.getAccountanName() + "-" + accountanCourse2.getAccountanName() + "-" + accountanCourse.getAccountanName());
         initDateEntry.setBalanceDirection(accountanCourse.getBalanceDirection());
         initDateEntrySer.save(initDateEntry);
 
@@ -797,7 +814,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
     public void importExcel(List<AccountanCourseExport> tos) throws SerException {
         checkAddIdentity();
         //获取出所有的一级代码去重
-        List<String> oneCodes = tos.stream().map(AccountanCourseExport::getOneCode).distinct().collect(Collectors.toList());
+        List<String> oneCodes = tos.stream().filter(str -> null != str.getOneCode() && "" != str.getOneCode()).map(AccountanCourseExport::getOneCode).distinct().collect(Collectors.toList());
         if (oneCodes != null && oneCodes.size() > 0) {
             List<AccountanCourseTO> accountanCourseTOList = new ArrayList<>();//一级科目
             for (String oneCode : oneCodes) {
@@ -806,7 +823,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                 //筛选出所有一级科目为oneCode所有数据
                 List<AccountanCourseExport> accountanCourseExports1 = tos.stream().filter(str -> oneCode.equals(str.getOneCode())).collect(Collectors.toList());
                 //获取出一级科目为oneCode的数据的所有的二级代码(去重)
-                List<String> secendCodes = accountanCourseExports1.stream().map(AccountanCourseExport::getSendCode).distinct().collect(Collectors.toList());
+                List<String> secendCodes = accountanCourseExports1.stream().filter(str -> null != str.getSendCode() && "" != str.getSendCode()).map(AccountanCourseExport::getSendCode).distinct().collect(Collectors.toList());
                 //获取二级科目数据
                 if (secendCodes != null && secendCodes.size() > 0) {
                     for (String secendCode : secendCodes) {
@@ -816,7 +833,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                         for (AccountanCourseExport accountanCourseExport2 : accountanCourseExports1) {
                             if (secendCode.equals(accountanCourseExport2.getSendCode())) {
                                 accountanCourseExports2.add(accountanCourseExport2);
-                                if(checkObjectIsNull(accountanCourseExport2.getThirdCode(),accountanCourseExport2.getThirdAccountanName(),accountanCourseExport2.getThirdBelongCategory(),accountanCourseExport2.getThirdBalanceDirection(),"一级科目代码为"+accountanCourseExports1.get(0).getOneCode()+"的,一级科目会计名称为"+accountanCourseExports1.get(0).getOneAccountanName()+"的,三级科目")){
+                                if (checkObjectIsNull(accountanCourseExport2.getThirdCode(), accountanCourseExport2.getThirdAccountanName(), accountanCourseExport2.getThirdBelongCategory(), accountanCourseExport2.getThirdBalanceDirection(), "一级科目代码为" + accountanCourseExports1.get(0).getOneCode() + "的,一级科目会计名称为" + accountanCourseExports1.get(0).getOneAccountanName() + "的,三级科目")) {
                                     AccountanCourseTO accountanCourseTO1 = new AccountanCourseTO();
                                     accountanCourseTO1.setCode(accountanCourseExport2.getThirdCode());
                                     accountanCourseTO1.setAccountanName(accountanCourseExport2.getThirdAccountanName());
@@ -827,7 +844,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                             }
                         }
                         //对应二级科目
-                        if(checkObjectIsNull(accountanCourseExports2.get(0).getSendCode(),accountanCourseExports2.get(0).getSendAccountanName(),accountanCourseExports2.get(0).getSendBelongCategory(),accountanCourseExports2.get(0).getSendBalanceDirection(),"一级科目代码为"+accountanCourseExports1.get(0).getOneCode()+"的,一级科目会计名称为"+accountanCourseExports1.get(0).getOneAccountanName()+"的,二级科目")){
+                        if (checkObjectIsNull(accountanCourseExports2.get(0).getSendCode(), accountanCourseExports2.get(0).getSendAccountanName(), accountanCourseExports2.get(0).getSendBelongCategory(), accountanCourseExports2.get(0).getSendBalanceDirection(), "一级科目代码为" + accountanCourseExports1.get(0).getOneCode() + "的,一级科目会计名称为" + accountanCourseExports1.get(0).getOneAccountanName() + "的,二级科目")) {
                             AccountanCourseTO accountanCourseTO2 = new AccountanCourseTO();
                             accountanCourseTO2.setCode(accountanCourseExports2.get(0).getSendCode());
                             accountanCourseTO2.setAccountanName(accountanCourseExports2.get(0).getSendAccountanName());
@@ -869,23 +886,23 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         }
     }
 
-    private Boolean checkObjectIsNull(String code, String name, CategoryName categoryName, BalanceDirection balanceDirection,String zdName) throws SerException {
+    private Boolean checkObjectIsNull(String code, String name, CategoryName categoryName, BalanceDirection balanceDirection, String zdName) throws SerException {
         Boolean bool = true;
 
         if (StringUtils.isBlank(code) && StringUtils.isBlank(name) && categoryName == null && balanceDirection == null) {
             bool = false;
-        }else{
-            if(StringUtils.isBlank(code)){
-                throw new SerException(zdName+"的代码不能为空");
+        } else {
+            if (StringUtils.isBlank(code)) {
+                throw new SerException(zdName + "的代码不能为空");
             }
-            if(StringUtils.isBlank(name)){
-                throw new SerException(zdName+"的会计科目名称不能为空");
+            if (StringUtils.isBlank(name)) {
+                throw new SerException(zdName + "的会计科目名称不能为空");
             }
-            if(categoryName == null){
-                throw new SerException(zdName+"的所属类型不能为空");
+            if (categoryName == null) {
+                throw new SerException(zdName + "的所属类型不能为空");
             }
-            if(balanceDirection == null){
-                throw new SerException(zdName+"的余额方向不能为空");
+            if (balanceDirection == null) {
+                throw new SerException(zdName + "的余额方向不能为空");
             }
         }
         return bool;
@@ -1028,7 +1045,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                     if ("职能部门".equals(department)) {
                         firstSubjectDataBOList = new ArrayList<>(0);
                         FirstSubjectDataBO firstSubjectDataBO1 = findFirst("管理费用");
-                        if(null != firstSubjectDataBO1){
+                        if (null != firstSubjectDataBO1) {
                             firstSubjectDataBOList.add(firstSubjectDataBO1);
                         }
                         findOtherFirstSubject(firstSubjectDataBOList);
@@ -1036,7 +1053,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                     } else if ("商务发展部".equals(department)) {
                         firstSubjectDataBOList = new ArrayList<>(0);
                         FirstSubjectDataBO firstSubjectDataBO1 = findFirst("营业费用");
-                        if(null != firstSubjectDataBO1){
+                        if (null != firstSubjectDataBO1) {
                             firstSubjectDataBOList.add(firstSubjectDataBO1);
                         }
                         findOtherFirstSubject(firstSubjectDataBOList);
@@ -1080,12 +1097,12 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 //            firstSubjectDataBOList.add(firstSubjectDataBO);
 //        }
         FirstSubjectDataBO firstSubjectDataBO1 = findFirst("其他应收款");
-        if(null != firstSubjectDataBO1){
+        if (null != firstSubjectDataBO1) {
             firstSubjectDataBOList.add(firstSubjectDataBO1);
         }
 
         FirstSubjectDataBO firstSubjectDataBO2 = findFirst("其他应付款");
-        if(null != firstSubjectDataBO2){
+        if (null != firstSubjectDataBO2) {
             firstSubjectDataBOList.add(firstSubjectDataBO2);
         }
 
@@ -1100,8 +1117,9 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
 //        }
     }
 
+
     //获取一级科目
-    private FirstSubjectDataBO findFirst(String subjectName) throws SerException{
+    private FirstSubjectDataBO findFirst(String subjectName) throws SerException {
         AccountanCourseDTO dto = new AccountanCourseDTO();
         dto.getConditions().add(Restrict.eq("accountanName", subjectName));
         List<AccountanCourse> accountanCourses3 = super.findByCis(dto);
@@ -1213,4 +1231,5 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
         }
         return null;
     }
+
 }

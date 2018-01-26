@@ -107,5 +107,14 @@ public interface CashFlowProjectSer extends Ser<CashFlowProject, CashFlowProject
         return null;
     }
 
+    /**
+     * 导出
+     *
+     * @param dto
+     * @throws SerException
+     */
+    default byte[] export(CashFlowProjectDTO dto) throws SerException {
+        return null;
+    }
 
 }

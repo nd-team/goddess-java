@@ -32,6 +32,11 @@ public class FormulaApiImpl implements FormulaAPI {
     }
 
     @Override
+    public List<FormulaBO> profitFindByFid(String foreignId, FormulaDTO dto) throws SerException {
+        return formulaSer.profitFindByFid(foreignId,dto);
+    }
+
+    @Override
     public List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException {
         return formulaSer.profitAnalyze(foreignId, time, dto);
     }

@@ -10,6 +10,7 @@ import com.bjike.goddess.reportmanagement.bo.FormulaBO;
 import com.bjike.goddess.reportmanagement.dto.FormulaDTO;
 import com.bjike.goddess.reportmanagement.dto.ProfitDTO;
 import com.bjike.goddess.reportmanagement.entity.Formula;
+import com.bjike.goddess.reportmanagement.enums.AccessRules;
 import com.bjike.goddess.reportmanagement.enums.Form;
 import com.bjike.goddess.reportmanagement.enums.GuideAddrStatus;
 import com.bjike.goddess.reportmanagement.to.FormulaTO;
@@ -45,7 +46,7 @@ import java.util.List;
 @CacheConfig(cacheNames = "reportmanagementSerCache")
 @Service
 public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements FormulaSer {
-//    @Autowired
+    //    @Autowired
 //    private SubjectCollectAPI subjectCollectAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
@@ -382,180 +383,24 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
 
     @Override
     public List<FormulaBO> findByFid(String foreignId, FormulaDTO dto) throws SerException {
-//        String[] strings = new String[]{foreignId};
-//        List<Formula> list = null;
-//        for (String s : strings) {
-//            String sql = "select id,project,type1,form from reportmanagement_formula" +
-//                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
-//            String[] fileds = new String[]{"id","project", "type1", "form"};
-//            list = super.findBySql(sql, Formula.class, fileds);
-//        }
-//        Integer startMonth = 0;
-//        Integer endMonth = 0;
-//        LocalDate s = Utils.tranTime(dto.getStartTime());
-//        startMonth = s.getMonthValue();
-//        LocalDate e = Utils.tranTime(dto.getEndTime());
-//        endMonth = e.getMonthValue();
-//        String[] projectNames = dto.getProjectNames();
-//        String[] departs = dto.getDeparts();
-//        String[] areas = dto.getAreas();
-//        List<FormulaBO> boList = new ArrayList<FormulaBO>();
-//        if ((list != null) && (!list.isEmpty())) {
-//            double beginSum = 0;
-//            double endSum = 0;
-//            double currentSum = 0;
-//            double yearSum = 0;
-//            Form form = null;
-//            for (Formula f : list) {
-//                SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
-//                subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-//                if (projectNames != null) {
-//                    subjectCollectDTO.getConditions().add(Restrict.in("projectName", projectNames));
-//                }if (departs != null) {
-//                    subjectCollectDTO.getConditions().add(Restrict.in("projectGroup", departs));
-//                }if (areas != null) {
-//                    subjectCollectDTO.getConditions().add(Restrict.in("area", areas));
-//                }
-//                SubjectCollectDTO beginDTO = new SubjectCollectDTO();
-//                beginDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-//                if (projectNames != null) {
-//                    beginDTO.getConditions().add(Restrict.in("projectName", projectNames));
-//                }if (departs != null) {
-//                    beginDTO.getConditions().add(Restrict.in("projectGroup", departs));
-//                }if (areas != null) {
-//                    beginDTO.getConditions().add(Restrict.in("area", areas));
-//                }
-//                if (LocalDate.now().getYear() == e.getYear()) {
-//                    double year = 0;
-//                    Integer[] years = new Integer[]{1, endMonth};
-//                    subjectCollectDTO.getConditions().add(Restrict.between("months", years));
-//                    SubjectCollectBO yearBO = subjectCollectAPI.getSum(subjectCollectDTO);
-//                    FormulaBO bo1 = BeanTransform.copyProperties(f, FormulaBO.class);
-//                    if (Form.DEBIT.equals(bo1.getForm())) {
-//                        year = yearBO.getIssueDebitAmount();
-//                    } else if (Form.CREDIT.equals(bo1.getForm())) {
-//                        year = yearBO.getIssueCreditAmount();
-//                    }
-//                    if (LocalDate.now().getYear() == s.getYear()) {
-//                        Integer[] months = new Integer[]{startMonth, endMonth};
-//                        subjectCollectDTO.getConditions().add(Restrict.between("months", months));
-//                        SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
-//                        FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
-//                        bo.setYear(year);
-//                        form = bo.getForm();
-//                        if ("1".equals(f.getType1())) {
-//                            bo.setOperation("+");
-//                        } else if ("2".equals(f.getType1())) {
-//                            bo.setOperation("-");
-//                        }
-//                        if (Form.DEBIT.equals(bo.getForm())) {
-//                            bo.setEnd(subjectCollectBO.getEndDebitAmount());
-//                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
-//                        } else if (Form.CREDIT.equals(bo.getForm())) {
-//                            bo.setEnd(subjectCollectBO.getEndCreditAmount());
-//                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
-//                        }
-//                        if (startMonth != 1) {
-//                            beginDTO.getConditions().add(Restrict.eq("months", startMonth - 1));
-//                            SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
-//                            if (Form.DEBIT.equals(bo.getForm())) {
-//                                bo.setBegin(beginBO.getEndDebitAmount());
-//                            } else if (Form.CREDIT.equals(bo.getForm())) {
-//                                bo.setBegin(beginBO.getEndCreditAmount());
-//                            }
-//                            if ("1".equals(f.getType1())) {     //1代表加
-//                                beginSum += bo.getBegin();
-//                                endSum += bo.getEnd();
-//                                currentSum += bo.getCurrent();
-//                                yearSum += bo.getYear();
-//                            } else if ("2".equals(f.getType1())) {  //2代表减
-//                                beginSum = beginSum - bo.getBegin();
-//                                endSum = endSum - bo.getEnd();
-//                                currentSum = currentSum - bo.getCurrent();
-//                                yearSum -= bo.getYear();
-//                            }
-//                        } else {
-//                            beginDTO.getConditions().add(Restrict.eq("months", 1));
-//                            SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
-//                            if (Form.DEBIT.equals(bo.getForm())) {
-//                                bo.setBegin(beginBO.getBeginningDebitAmount());
-//                            } else if (Form.CREDIT.equals(bo.getForm())) {
-//                                bo.setBegin(beginBO.getBeginningCreditAmount());
-//                            }
-//                            if ("1".equals(f.getType1())) {     //1代表加
-//                                beginSum += bo.getBegin();
-//                                endSum += bo.getEnd();
-//                                currentSum += bo.getCurrent();
-//                                yearSum += bo.getYear();
-//                            } else if ("2".equals(f.getType1())) {  //2代表减
-//                                beginSum = beginSum - bo.getBegin();
-//                                endSum = endSum - bo.getEnd();
-//                                currentSum = currentSum - bo.getCurrent();
-//                                yearSum -= bo.getYear();
-//                            }
-//                        }
-//                        boList.add(bo);
-//                    } else {
-//                        Integer[] months = new Integer[]{1, endMonth};
-//                        subjectCollectDTO.getConditions().add(Restrict.between("months", months));
-//                        SubjectCollectBO subjectCollectBO = subjectCollectAPI.getSum(subjectCollectDTO);
-//                        FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
-//                        form = bo.getForm();
-//                        bo.setYear(year);
-//                        if ("1".equals(f.getType1())) {
-//                            bo.setOperation("+");
-//                        } else if ("2".equals(f.getType1())) {
-//                            bo.setOperation("-");
-//                        }
-//                        if (Form.DEBIT.equals(bo.getForm())) {
-//                            bo.setEnd(subjectCollectBO.getEndDebitAmount());
-//                            bo.setCurrent(subjectCollectBO.getIssueDebitAmount());
-//                        } else if (Form.CREDIT.equals(bo.getForm())) {
-//                            bo.setEnd(subjectCollectBO.getEndCreditAmount());
-//                            bo.setCurrent(subjectCollectBO.getIssueCreditAmount());
-//                        }
-//                        beginDTO.getConditions().add(Restrict.eq("months", 1));
-//                        SubjectCollectBO beginBO = subjectCollectAPI.getSum(beginDTO);
-//                        if (Form.DEBIT.equals(bo.getForm())) {
-//                            bo.setBegin(beginBO.getBeginningDebitAmount());
-//                        } else if (Form.CREDIT.equals(bo.getForm())) {
-//                            bo.setBegin(beginBO.getBeginningCreditAmount());
-//                        }
-//                        if ("1".equals(f.getType1())) {     //1代表加
-//                            currentSum += bo.getCurrent();
-//                            beginSum += bo.getBegin();
-//                            endSum += bo.getEnd();
-//                            yearSum += bo.getYear();
-//                        } else if ("2".equals(f.getType1())) {  //2代表减
-//                            currentSum = currentSum - bo.getCurrent();
-//                            beginSum = beginSum - bo.getBegin();
-//                            endSum = endSum - bo.getEnd();
-//                            yearSum -= bo.getYear();
-//                        }
-//                        boList.add(bo);
-//                    }
-//                }
-//            }
-//            FormulaBO bo = new FormulaBO();
-//            bo.setProject("合计：");
-////            bo.setForm(form);
-//            bo.setBegin(beginSum);
-//            bo.setEnd(endSum);
-//            bo.setCurrent(currentSum);
-//            bo.setYear(yearSum);
-//            boList.add(bo);
-//            return boList;
-//        }
         double beginSum = 0;
         double endSum = 0;
         double currentSum = 0;
+        Double beginningCreditAmount = 0d;//期初余额
+        Double issueDebitAmount = 0d;//本期借方总额
+        Double issueCreditAmount = 0d;//本期贷方总额
+        Double issueTotalAmount = 0d;//本期合计余额
+        Double endDebitAmount = 0d;//期末借方总额
+        Double endCreditAmount = 0d;//期末贷方总额
+        Double endTotalAmount = 0d;//本年累计额
+
 //        double yearSum = 0;
         String[] strings = new String[]{foreignId};
         List<Formula> list = null;
         for (String s : strings) {
-            String sql = "select id,project,type1,form from reportmanagement_formula" +
+            String sql = "select id,project,type1,form,accessRules from reportmanagement_formula" +
                     " where foreign_id='" + s + "' ORDER BY type1 ASC";
-            String[] fileds = new String[]{"id", "project", "type1", "form"};
+            String[] fileds = new String[]{"id", "project", "type1", "form", "accessRules"};
             list = super.findBySql(sql, Formula.class, fileds);
         }
         Integer startMonth = 0;
@@ -566,16 +411,21 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         endMonth = e.getMonthValue();
         List<FormulaBO> boList = new ArrayList<FormulaBO>();
         if ((list != null) && (!list.isEmpty())) {
-            Form form = null;
+//            Form form = null;
             for (Formula f : list) {
                 Boolean tar = false;
                 SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
                 subjectCollectDTO.setFirstSubject(f.getProject());
                 subjectCollectDTO.getConditions().add(Restrict.eq("firstSubject", f.getProject()));
-                if (Form.DEBIT.equals(f.getForm())) {
+                //判断取数规则和公式方向是否是借方(true)还是贷方(false)
+                if (AccessRules.BALANCE.equals(f.getAccessRules())) {
+                    if (Form.DEBIT.equals(f.getForm())) {
+                        tar = true;
+                    }
+                } else if (AccessRules.DEBIT.equals(f.getAccessRules())) {
                     tar = true;
                 }
-                SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, DateUtil.dateToString(e), tar);
+                SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, DateUtil.dateToString(s), DateUtil.dateToString(e), tar);
                 subjectCollectBO.setCurrentAmount(voucherGenerateAPI.getCurrent(subjectCollectDTO, DateUtil.dateToString(s), DateUtil.dateToString(e), tar));
                 FormulaBO bo = BeanTransform.copyProperties(f, FormulaBO.class);
                 if ("1".equals(f.getType1())) {
@@ -592,12 +442,31 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
                     beginSum += bo.getBegin();
                     endSum += bo.getEnd();
                     currentSum += bo.getCurrent();
+
+                    beginningCreditAmount += subjectCollectBO.getBeginningCreditAmount();//期初余额
+                    issueDebitAmount += subjectCollectBO.getIssueDebitAmount();//本期借方总额
+                    issueCreditAmount += subjectCollectBO.getIssueCreditAmount();//本期贷方总额
+                    issueTotalAmount += subjectCollectBO.getIssueTotalAmount();//本期合计余额
+                    endDebitAmount += subjectCollectBO.getEndDebitAmount();//期末借方总额
+                    endCreditAmount += subjectCollectBO.getEndCreditAmount();//期末贷方总额
+                    endTotalAmount += subjectCollectBO.getEndTotalAmount();//本年累计额
+
 //                    yearSum += bo.getYear();
                 } else if ("2".equals(f.getType1())) {  //2代表减
                     beginSum = beginSum - bo.getBegin();
                     endSum = endSum - bo.getEnd();
                     currentSum += bo.getCurrent();
 //                    yearSum += bo.getYear();
+
+                    beginningCreditAmount -= subjectCollectBO.getBeginningCreditAmount();//期初余额
+                    issueDebitAmount -= subjectCollectBO.getIssueDebitAmount();//本期借方总额
+                    issueCreditAmount -= subjectCollectBO.getIssueCreditAmount();//本期贷方总额
+                    issueTotalAmount -= subjectCollectBO.getIssueTotalAmount();//本期合计余额
+                    endDebitAmount -= subjectCollectBO.getEndDebitAmount();//期末借方总额
+                    endCreditAmount -= subjectCollectBO.getEndCreditAmount();//期末贷方总额
+                    endTotalAmount -= subjectCollectBO.getEndTotalAmount();//本年累计额
+
+
                 }
                 boList.add(bo);
             }
@@ -607,11 +476,120 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         bo.setBegin(beginSum);
         bo.setEnd(endSum);
         bo.setCurrent(currentSum);
-//        bo.setYear(yearSum);
+
+        bo.setBeginningCreditAmount(beginningCreditAmount);//期初余额
+        bo.setIssueDebitAmount(issueDebitAmount);//本期借方总额
+        bo.setIssueCreditAmount(issueCreditAmount);//本期贷方总额
+        bo.setIssueTotalAmount(issueTotalAmount);//本期合计余额
+        bo.setEndDebitAmount(endDebitAmount);//期末借方总额
+        bo.setEndCreditAmount(endCreditAmount);//期末贷方总额
+        bo.setEndTotalAmount(endTotalAmount);//本年累计额
+
         boList.add(bo);
         return boList;
     }
 
+    @Override
+    public List<FormulaBO> profitFindByFid(String foreignId, FormulaDTO dto) throws SerException {
+        double beginSum = 0;
+        double yearSum = 0;
+        double currentSum = 0;
+
+
+//        double yearSum = 0;
+        String[] strings = new String[]{foreignId};
+        List<Formula> list = null;
+        for (String s : strings) {
+            String sql = "select id,project,type1,form,accessRules from reportmanagement_formula" +
+                    " where foreign_id='" + s + "' ORDER BY type1 ASC";
+            String[] fileds = new String[]{"id", "project", "type1", "form"};
+            list = super.findBySql(sql, Formula.class, fileds);
+        }
+        String s = dto.getStartTime();
+        String e = dto.getEndTime();
+        List<FormulaBO> boList = new ArrayList<FormulaBO>();
+        if ((list != null) && (!list.isEmpty())) {
+//            Form form = null;
+            for (Formula f : list) {
+                Boolean tar = false;
+                //判断公式方向是否是借方(true)还是贷方(false)
+                if (Form.DEBIT.equals(f.getForm())) {
+                    tar = true;
+                }
+                FormulaBO bo = new FormulaBO();
+                bo.setProject(f.getProject());
+                bo.setForm(f.getForm());
+                if ("1".equals(f.getType1())) {
+                    bo.setOperation("+");
+                } else if ("2".equals(f.getType1())) {
+                    bo.setOperation("-");
+                }
+                if("年初未分配利润".equals(f.getProject())){
+                    bo.setCurrent(voucherGenerateAPI.specialCurr(2,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.specialCurr(1,f.getProject(),s,e,tar).getCurrentAmount());
+                }else if("其他转入".equals(f.getProject())){
+                    bo.setCurrent(voucherGenerateAPI.getCurrentBySumary(1,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.getCurrentBySumary(1,f.getProject(),s,e,tar).getCurrentAmount());
+                }else if("转作资本（或股本）的普通股股利".equals(f.getProject())){
+                    bo.setCurrent(voucherGenerateAPI.getCurrentBySumary(2,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.getCurrentBySumary(2,f.getProject(),s,e,tar).getCurrentAmount());
+                }else{
+                    bo.setCurrent(voucherGenerateAPI.getCurrent(2,f.getProject(),s,e,tar).getCurrentAmount());
+                    bo.setYear(voucherGenerateAPI.getCurrent(1,f.getProject(),s,e,tar).getCurrentAmount());
+                }
+
+                if ("1".equals(f.getType1())) {     //1代表加
+//                    beginSum += bo.getBegin();
+
+                    yearSum += bo.getYear();
+                    currentSum += bo.getCurrent();
+
+//                    beginningCreditAmount += subjectCollectBO.getBeginningCreditAmount();//期初余额
+//                    issueDebitAmount += subjectCollectBO.getIssueDebitAmount();//本期借方总额
+//                    issueCreditAmount += subjectCollectBO.getIssueCreditAmount();//本期贷方总额
+//                    issueTotalAmount += subjectCollectBO.getIssueTotalAmount();//本期合计余额
+//                    endDebitAmount += subjectCollectBO.getEndDebitAmount();//期末借方总额
+//                    endCreditAmount += subjectCollectBO.getEndCreditAmount();//期末贷方总额
+//                    endTotalAmount += subjectCollectBO.getEndTotalAmount();//本年累计额
+
+//                    yearSum += bo.getYear();
+                } else if ("2".equals(f.getType1())) {  //2代表减
+//                    beginSum = beginSum - bo.getBegin();
+                    yearSum = yearSum - bo.getYear();
+                    currentSum += bo.getCurrent();
+//                    yearSum += bo.getYear();
+                }
+                boList.add(bo);
+            }
+        }
+        FormulaBO bo = new FormulaBO();
+        bo.setProject("合计：");
+//        bo.setBegin(beginSum);
+        bo.setYear(yearSum);
+        bo.setCurrent(currentSum);
+
+//        bo.setBeginningCreditAmount(beginningCreditAmount);//期初余额
+//        bo.setIssueDebitAmount(issueDebitAmount);//本期借方总额
+//        bo.setIssueCreditAmount(issueCreditAmount);//本期贷方总额
+//        bo.setIssueTotalAmount(issueTotalAmount);//本期合计余额
+//        bo.setEndDebitAmount(endDebitAmount);//期末借方总额
+//        bo.setEndCreditAmount(endCreditAmount);//期末贷方总额
+//        bo.setEndTotalAmount(endTotalAmount);//本年累计额
+
+        boList.add(bo);
+        return boList;
+    }
+
+    @Override
+    public Form FindWayByFid(String foreignId) throws SerException {
+        FormulaDTO formulaDTO = new FormulaDTO();
+        formulaDTO.getConditions().add(Restrict.eq("foreignId",foreignId));
+        List<Formula> formulaList = super.findByCis(formulaDTO);
+        if(formulaList!=null && formulaList.size()>0){
+            return formulaList.get(0).getForm();
+        }
+        return null;
+    }
 
     @Override
     public List<FormulaBO> profitAnalyze(String foreignId, String time, ProfitDTO dto) throws SerException {
@@ -743,4 +721,5 @@ public class FormulaSerImpl extends ServiceImpl<Formula, FormulaDTO> implements 
         String endTime = sdf.format(lastDayOfMonth);
         return endTime;
     }
+
 }

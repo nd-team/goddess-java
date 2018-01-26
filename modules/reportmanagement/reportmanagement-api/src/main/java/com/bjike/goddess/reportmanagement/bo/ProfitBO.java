@@ -34,7 +34,10 @@ public class ProfitBO extends BaseBO {
      * 本年累计数
      */
     private Double currentYearAmount;
-
+    /**
+     * 项目类型
+     */
+    private String projectType;
     /**
      * 利润类型
      */
@@ -67,6 +70,14 @@ public class ProfitBO extends BaseBO {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
     }
     //    /**
 //     * 1季度

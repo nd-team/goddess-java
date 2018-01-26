@@ -692,9 +692,34 @@ public interface VoucherGenerateAPI {
      * @return
      * @throws SerException
      */
-    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String time, Boolean tar) throws SerException {
+    default SubjectCollectBO getSum(SubjectCollectDTO subjectCollectDTO, String starTime,String time, Boolean tar) throws SerException {
         return null;
     }
+
+
+    /**
+     * 获取年初未分配利润科目(1月)的数据
+     * @param i
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO specialCurr(int i, String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {return null;}
+
+    /**
+     * 获取摘要为传入的值的贷方借方余额(有一个特殊的传了一个i=1)
+     * @param i
+     * @param sumary
+     * @param startTime
+     * @param endTime
+     * @param tar
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO getCurrentBySumary(int i, String sumary, String startTime, String endTime, Boolean tar) throws SerException {return  null;}
 
     default Double getCurrent(SubjectCollectDTO subjectCollectDTO, String s, String s1, Boolean tar) throws SerException {
         return null;
@@ -719,6 +744,20 @@ public interface VoucherGenerateAPI {
     default SubjectCollectBO findCurrentAndYear(String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
+
+    /**
+     * 根据一级科目和时间获取本期发生额和本年累计数
+     *
+     * @param firstSubject
+     * @param subjectCollectDTO
+     * @return
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrentAndYear(String firstSubject, SubjectCollectDTO subjectCollectDTO) throws SerException {
+        return null;
+    }
+
+
 
     /**
      * 获取所有一级科目为现金或者银行存款的数据
@@ -759,7 +798,20 @@ public interface VoucherGenerateAPI {
      * @throws SerException
      */
     //tar:true,获取借方,false,获取贷方
-    default Double getCurrent(String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+    default SubjectCollectBO getCurrent(int i,String firstSubject, String startTime, String endTime, Boolean tar) throws SerException {
+        return null;
+    }
+
+    /**
+     * 根据一级科目,时间获取本期或本年
+     * @param i 区分方法标识
+     * @param firstSubject
+     * @param startTime
+     * @param endTime
+     * @return SubjectCollectBO
+     * @throws SerException
+     */
+    default SubjectCollectBO findCurrent(int i,String firstSubject, String startTime, String endTime) throws SerException {
         return null;
     }
 }

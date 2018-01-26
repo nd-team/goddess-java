@@ -129,6 +129,22 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
         }
         return flag;
     }
+    /**
+     * 进度模块负责人权限（岗位级别）
+     */
+    private Boolean guideListIdentity() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = cusPermissionSer.getCusPermission("10");
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
 
     @Override
     public List<SonPermissionObject> sonPermission() throws SerException {
@@ -263,7 +279,7 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
         Boolean flag = true;
         switch (guideAddrStatus) {
             case LIST:
-                flag = guideIdentity();
+                flag = true;
                 break;
             case ADD:
                 flag = guideIdentity();
@@ -301,10 +317,30 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
 
     @Override
     public List<SettleWorkProgreManageBO> listSettleWork(SettleWorkProgreManageDTO settleWorkProgreManageDTO) throws SerException {
-       checkPermission();
-        seachCondi(settleWorkProgreManageDTO);
-        List<SettleWorkProgreManage> settleWorkProgreManageList = super.findByCis(settleWorkProgreManageDTO, true);
-        return BeanTransform.copyProperties(settleWorkProgreManageList, SettleWorkProgreManageBO.class);
+//       checkPermission();
+        List<SettleWorkProgreManageBO> settleWorkProgreManageBOList = new ArrayList<>();
+        String userToken = RpcTransmit.getUserToken();
+        Boolean bool = guideListIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        if(bool){
+            seachCondi(settleWorkProgreManageDTO);
+            List<SettleWorkProgreManage> settleWorkProgreManageList = super.findByCis(settleWorkProgreManageDTO, true);
+            settleWorkProgreManageBOList = BeanTransform.copyProperties(settleWorkProgreManageList, SettleWorkProgreManageBO.class);
+        }else{
+            UserBO userBO = userAPI.currentUser();
+            RpcTransmit.transmitUserToken(userToken);
+            List<SettleWorkProgreManage> settleWorkProgreManageList = super.findByCis(settleWorkProgreManageDTO, true);
+            if(settleWorkProgreManageList!=null && settleWorkProgreManageList.size()>0){
+                for (SettleWorkProgreManage settleWorkProgreManage : settleWorkProgreManageList){
+                    String name = userBO.getUsername();
+                    RpcTransmit.transmitUserToken(userToken);
+                    if(name.equals(settleWorkProgreManage.getAllocationPeople()) || name.equals(settleWorkProgreManage.getResponsible())){
+                        settleWorkProgreManageBOList.add(BeanTransform.copyProperties(settleWorkProgreManage,SettleWorkProgreManageBO.class));
+                    }
+                }
+            }
+        }
+        return settleWorkProgreManageBOList;
     }
 
     private void seachCondi(SettleWorkProgreManageDTO settleWorkProgreManageDTO) throws SerException {
@@ -323,8 +359,13 @@ public class SettleWorkProgreManageSerImpl extends ServiceImpl<SettleWorkProgreM
     @Override
     public SettleWorkProgreManageBO addSettleWork(SettleWorkProgreManageTO settleWorkProgreManageTO) throws SerException {
        checkPermission();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
         SettleWorkProgreManage settleWorkProgreManage = BeanTransform.copyProperties(settleWorkProgreManageTO, SettleWorkProgreManage.class, true);
         settleWorkProgreManage.setCreateTime(LocalDateTime.now());
+        settleWorkProgreManage.setAllocationPeople(userBO.getUsername());
+        RpcTransmit.transmitUserToken(userToken);
         super.save(settleWorkProgreManage);
         return BeanTransform.copyProperties(settleWorkProgreManage, SettleWorkProgreManageBO.class);
     }

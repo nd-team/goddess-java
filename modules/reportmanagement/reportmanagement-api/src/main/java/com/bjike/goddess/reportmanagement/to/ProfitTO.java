@@ -40,7 +40,10 @@ public class ProfitTO extends BaseTO {
 //    @NotNull(groups = {ADD.class, EDIT.class}, message = "本年累计数不能为空")
 //    @DecimalMin(value = "0.00", groups = {ADD.class, EDIT.class}, message = "本年累计数不能小于0")
 //    private Double currentYearAmount;
-
+    /**
+     * 项目类型
+     */
+    private String projectType;
     /**
      * 利润类型
      */
@@ -77,4 +80,11 @@ public class ProfitTO extends BaseTO {
         this.project = project;
     }
 
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
+    }
 }

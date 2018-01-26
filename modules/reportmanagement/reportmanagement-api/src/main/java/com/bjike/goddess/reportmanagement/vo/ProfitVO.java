@@ -37,6 +37,11 @@ public class ProfitVO {
      * 本年累计数
      */
     private Double currentYearAmount;
+
+    /**
+     * 项目类型
+     */
+    private String projectType;
     /**
      * 利润类型
      */
@@ -61,6 +66,14 @@ public class ProfitVO {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public String getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(String projectType) {
+        this.projectType = projectType;
     }
     //    /**
 //     * 1季度

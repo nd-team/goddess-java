@@ -1,5 +1,6 @@
 package com.bjike.goddess.reportmanagement.vo;
 
+import com.bjike.goddess.reportmanagement.enums.AccessRules;
 import com.bjike.goddess.reportmanagement.enums.Form;
 
 /**
@@ -26,6 +27,11 @@ public class FormulaVO {
      * 公式方向
      */
     private Form form;
+
+    /**
+     * 取数规则
+     */
+    private AccessRules accessRules;
 
     /**
      * 年初数
@@ -114,5 +120,13 @@ public class FormulaVO {
 
     public void setForm(Form form) {
         this.form = form;
+    }
+
+    public AccessRules getAccessRules() {
+        return accessRules;
+    }
+
+    public void setAccessRules(AccessRules accessRules) {
+        this.accessRules = accessRules;
     }
 }

@@ -83,6 +83,12 @@ public interface InitDateEntrySer extends Ser<InitDateEntry, InitDateEntryDTO> {
      * @throws SerException
      */
     default InitDateEntryBO findByName(String name) throws SerException{return null;}
+    /**
+     * 根据会计科目名称获取本年损益类累计数
+     * @return
+     * @throws SerException
+     */
+    default Double findYearProfitLossNumByName(String name) throws SerException{return null;}
 
     /**
      * 根据科目获取期初数

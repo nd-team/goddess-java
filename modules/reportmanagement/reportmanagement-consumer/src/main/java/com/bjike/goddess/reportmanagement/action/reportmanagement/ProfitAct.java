@@ -5,6 +5,7 @@ import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.exception.ActException;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.restful.Result;
+import com.bjike.goddess.common.consumer.action.BaseFileAction;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.reportmanagement.api.FormulaAPI;
@@ -17,6 +18,8 @@ import com.bjike.goddess.reportmanagement.to.GuidePermissionTO;
 import com.bjike.goddess.reportmanagement.to.ProfitFormulaTO;
 import com.bjike.goddess.reportmanagement.to.ProfitTO;
 import com.bjike.goddess.reportmanagement.vo.*;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -24,6 +27,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,7 +42,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("profit")
-public class ProfitAct {
+public class ProfitAct extends BaseFileAction{
     @Autowired
     private ProfitAPI profitAPI;
     @Autowired
@@ -190,7 +195,7 @@ public class ProfitAct {
         BeanUtils.copyProperties(dto, formulaDTO);
         request.getSession().setAttribute("id", id);
         try {
-            List<FormulaBO> list = formulaAPI.findByFid(id, formulaDTO);
+            List<FormulaBO> list = formulaAPI.profitFindByFid(id, formulaDTO);
             return ActResult.initialize(BeanTransform.copyProperties(list, FormulaVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -400,6 +405,26 @@ public class ProfitAct {
             return ActResult.initialize(profitAPI.analysisChangesTotal(dto));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 导出excel
+     *
+     * @param dto 利润表
+     * @des 导出利润表
+     * @version v1
+     */
+//    @LoginAuth
+    @GetMapping("v1/export")
+    public Result exportReport(ProfitDTO dto, HttpServletResponse response) throws ActException {
+        try {
+            String fileName = "利润表.xlsx";
+            super.writeOutFile(response, profitAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
         }
     }
 }

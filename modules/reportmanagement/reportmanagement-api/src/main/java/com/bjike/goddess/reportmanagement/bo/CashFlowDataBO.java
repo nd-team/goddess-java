@@ -38,6 +38,15 @@ public class CashFlowDataBO extends BaseBO {
      */
     private Double money;
 
+    public CashFlowDataBO() {
+    }
+
+    public CashFlowDataBO(String data, Integer num, Double money, String id) {
+        this.data = data;
+        this.num = num;
+        this.money = money;
+        this.id = id;
+    }
 
     public String getStartTime() {
         return startTime;

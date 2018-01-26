@@ -9,7 +9,9 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
+import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
+import com.bjike.goddess.reportmanagement.api.AssetAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
@@ -26,12 +28,23 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +90,9 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     private VoucherGenerateAPI voucherGenerateAPI;
     @Autowired
     private CashFlowSer cashFlowSer;
+    @Autowired
+    private CompanyBasicInfoAPI companyBasicInfoAPI;
+
 
 
     /**
@@ -1005,37 +1021,56 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             FormulaBO last = list.get(list.size() - 1);
             double begin = last.getBegin();
             double current = last.getCurrent();
-            Form form = last.getForm();
+
+            Double beginningCreditAmount = last.getBeginningCreditAmount();//期初余额
+            Double issueDebitAmount = last.getIssueDebitAmount();//本期借方总额
+            Double issueCreditAmount = last.getIssueCreditAmount();//本期贷方总额
+            Double issueTotalAmount = last.getIssueTotalAmount();//本期合计余额
+            Double endDebitAmount = last.getEndDebitAmount();//期末借方总额
+            Double endCreditAmount = last.getEndCreditAmount();//期末贷方总额
+            Double endTotalAmount = last.getEndTotalAmount();//本年累计额
+
+
+//            Form form = last.getForm();
+            Form form = Form.DEBIT;
             double currentSum = 0;
             String project = findByID(id).getAsset();
             String term = startTime + "~" + endTime;
+
             DetailBO currentBO = new DetailBO();
             currentBO.setProject(project);
             currentBO.setTerm(term);
             currentBO.setState("本期合计");
             currentBO.setForm(form);
-            if (Form.DEBIT.equals(form)) {
-                currentSum = begin + current;
-                currentBO.setDebit(current);
-            } else if (Form.CREDIT.equals(form)) {
-                currentSum = begin - current;
-                currentBO.setCredit(current);
-            }
-            currentBO.setRemain(currentSum);
+            currentBO.setDebit(issueDebitAmount);
+            currentBO.setCredit(issueCreditAmount);
+            currentBO.setRemain(issueTotalAmount);
+//            if (Form.DEBIT.equals(form)) {
+//                currentSum = begin + current;
+//                currentBO.setDebit(current);
+//            } else if (Form.CREDIT.equals(form)) {
+//                currentSum = begin - current;
+//                currentBO.setCredit(current);
+//            }
+
             double year = currentSum;
             DetailBO beginBO = new DetailBO();
             beginBO.setProject(project);
             beginBO.setTerm(term);
             beginBO.setState("期初余额");
             beginBO.setForm(form);
-            beginBO.setRemain(begin);
+            beginBO.setRemain(beginningCreditAmount);
             boList.add(beginBO);
             boList.add(currentBO);
+
             DetailBO yearBO = new DetailBO();
+//            yearBO.setProject(project);
             yearBO.setTerm(term);
             yearBO.setState("本年累计");
             yearBO.setForm(form);
-            yearBO.setRemain(year);
+            yearBO.setDebit(endDebitAmount);
+            yearBO.setCredit(endCreditAmount);
+            yearBO.setRemain(endTotalAmount);
             boList.add(yearBO);
         }
         return boList;
@@ -1116,15 +1151,66 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 list.add(assetAndDebtExportExcel);
             }
         }
-        Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(list, excel);
-        return bytes;
+        Excel excel = new Excel(2, 3);
+        byte[] bytes1 = ExcelUtil.clazzToExcel(list, excel);
+        XSSFWorkbook wb = null;
+        String comp = "";
+        List<String> comps = companyBasicInfoAPI.findCompanyName();
+        if(comps!=null && comps.size()>0){
+            comp = comps.get(0);
+        }
+        try {
+            InputStream is = new ByteArrayInputStream(bytes1);
+            wb = new XSSFWorkbook(is);// 创建一个工作execl文档
+            XSSFCellStyle headerStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+            headerStyle.setWrapText(true);
+            XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFRow row = sheet.createRow(0);
+            XSSFRow row1 = sheet.createRow(1);
+            //标题
+            for(int o = 0;o<8;o++){
+                row.createCell(o).setCellValue("资产负债表");
+            }
+            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 7);
+            sheet.addMergedRegion(cra);//这个干嘛的
+            //公司和单位
+            row1.createCell(0).setCellValue("编制单位");
+            row1.createCell(1).setCellValue(comp+"公司");
+            row1.createCell(2).setCellValue(comp+"公司");
+            row1.createCell(3).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(4).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(5).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(6).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(7).setCellValue("单位:元");
+
+            CellRangeAddress cra1=new CellRangeAddress(1, 1, 1, 2);
+            sheet.addMergedRegion(cra1);//这个干嘛的
+            CellRangeAddress cra2=new CellRangeAddress(1, 1, 3, 6);
+            sheet.addMergedRegion(cra2);//这个干嘛的
+
+            row.getCell(0).setCellStyle(headerStyle);
+            row1.getCell(3).setCellStyle(headerStyle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+      return os.toByteArray();
     }
 
     @Override
     public List<String> allFirstSubjects() throws SerException {
 //        if (moduleAPI.isCheck("financeinit")) {
-        List<AccountAddDateBO> bos = accountanCourseAPI.findNameCode();
+        List<AccountAddDateBO> bos = accountanCourseAPI.findFirstNameCode();
         if (null != bos && bos.size() > 0) {
             List<String> list = bos.stream().map(AccountAddDateBO::getAccountanName).distinct().collect(Collectors.toList());
             return list;

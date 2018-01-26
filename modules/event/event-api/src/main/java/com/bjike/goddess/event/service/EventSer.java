@@ -238,4 +238,13 @@ public interface EventSer extends Ser<Event, EventDTO> {
      * @throws SerException
      */
     List<FatherBO> findByName(EventDTO dto,String name) throws SerException;
+
+    /**
+     *  获取全部的NAME
+     * @param dto
+     * @return
+     * @throws SerException
+     */
+    List<Object> findAllName(EventDTO dto) throws SerException;
+
 }

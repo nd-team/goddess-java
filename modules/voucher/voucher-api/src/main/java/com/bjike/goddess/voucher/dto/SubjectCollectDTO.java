@@ -43,6 +43,22 @@ public class SubjectCollectDTO extends BaseDTO {
      */
     private String endTime;
 
+    public SubjectCollectDTO() {
+    }
+
+    public SubjectCollectDTO(String firstSubject) {
+        this.firstSubject = firstSubject;
+    }
+
+    public SubjectCollectDTO(String[] area, String firstSubject, String projectName, String projectGroup, String startTime, String endTime) {
+        this.area = area;
+        this.firstSubject = firstSubject;
+        this.projectName = projectName;
+        this.projectGroup = projectGroup;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
     public String[] getArea() {
         return area;
     }

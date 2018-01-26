@@ -101,7 +101,7 @@ public class CashFlowDataAction {
      *
      * @version v1
      */
-    @PutMapping("v1/editMoney/{dataId}")
+    @PutMapping("v1/editMoney")
     public Result editMoney(@Validated(EDIT.class) CashFlowDataDTO dto) throws ActException {
         try {
             cashFlowDataAPI.editMoney(dto);

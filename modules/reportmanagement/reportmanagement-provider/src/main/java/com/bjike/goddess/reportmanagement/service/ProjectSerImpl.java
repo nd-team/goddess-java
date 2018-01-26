@@ -176,6 +176,10 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
     @Override
     public void add(ProjectTO to) throws SerException {
         Project entity = BeanTransform.copyProperties(to, Project.class);
+        //去除"："、":"后缀
+        if (entity.getProjectName().indexOf("：") > 0 || entity.getProjectName().indexOf(":") > 0) {
+            System.out.println(entity.getProjectName().substring(0, entity.getProjectName().length() - 1));
+        }
         super.save(entity);
     }
 
@@ -198,6 +202,11 @@ public class ProjectSerImpl extends ServiceImpl<Project, ProjectDTO> implements 
         BeanUtils.copyProperties(to, entity, "id");
         entity.setModifyTime(LocalDateTime.now());
         super.update(entity);
+    }
+
+    @Override
+    public void delete(String id) throws SerException {
+        super.remove(id);
     }
 
     @Override
