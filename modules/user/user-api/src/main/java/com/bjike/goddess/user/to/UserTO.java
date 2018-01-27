@@ -16,6 +16,14 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class UserTO extends BaseTO {
 
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
+    }
+
     public interface UPDATEPWD{}
 
     public interface UPDATEPHONE{}
@@ -66,6 +74,11 @@ public class UserTO extends BaseTO {
      * 用户类型
      */
     private UserType userType;
+
+    /**
+     * 用户积分；String
+     */
+    private String integral;
 
     public String getUsername() {
         return username;

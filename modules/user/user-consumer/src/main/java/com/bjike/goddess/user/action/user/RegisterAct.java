@@ -42,7 +42,7 @@ public class RegisterAct {
      * @version v1
      */
     @GetMapping("v2/sendSmsCode/{phone}")
-    public Result sendSmsCode(@PathVariable String phone ) throws ActException {
+    public Result sendSmsCode(@PathVariable String phone) throws ActException {
         try {
             SmsCodeParameterTO smsCodeParameterTO = new SmsCodeParameterTO();
             smsCodeParameterTO.setProduct(environment.getProperty("sms.product"));
@@ -52,7 +52,7 @@ public class RegisterAct {
             smsCodeParameterTO.setSignName(environment.getProperty("sms.signName"));
             smsCodeParameterTO.setTemplateCode(environment.getProperty("sms.templateCode"));
             smsCodeParameterTO.setRandomNum(environment.getProperty("sms.randomNum"));
-            smsCodeParameterTO.setPhoneNumber( phone );
+            smsCodeParameterTO.setPhoneNumber(phone);
             userRegisterAPI.sendSmsVerifyCode(smsCodeParameterTO);
             return new ActResult("send success!");
         } catch (SerException e) {
@@ -68,7 +68,7 @@ public class RegisterAct {
      * @version v1
      */
     @GetMapping("v2/phone/sendSmsCode/{phone}")
-    public Result sendSmsCodes(@PathVariable String phone ) throws ActException {
+    public Result sendSmsCodes(@PathVariable String phone) throws ActException {
         try {
             SmsCodeParameterTO smsCodeParameterTO = new SmsCodeParameterTO();
             smsCodeParameterTO.setProduct(environment.getProperty("sms.product"));
@@ -78,7 +78,7 @@ public class RegisterAct {
             smsCodeParameterTO.setSignName(environment.getProperty("sms.signName"));
             smsCodeParameterTO.setTemplateCode(environment.getProperty("sms.templateCode"));
             smsCodeParameterTO.setRandomNum(environment.getProperty("sms.randomNum"));
-            smsCodeParameterTO.setPhoneNumber( phone );
+            smsCodeParameterTO.setPhoneNumber(phone);
             userRegisterAPI.sendSmsVerifyCodes(smsCodeParameterTO);
             return new ActResult("send success!");
         } catch (SerException e) {
@@ -123,8 +123,6 @@ public class RegisterAct {
     }
 
 
-
-
     /**
      * 校验验证码是否正确
      *
@@ -133,9 +131,9 @@ public class RegisterAct {
      * @version v1
      */
     @PostMapping("v2/verifyCode")
-    public Result verifyCode( @Validated SmsCodeTO smsCodeTO,BindingResult bindingResult ) throws ActException {
+    public Result verifyCode(@Validated SmsCodeTO smsCodeTO, BindingResult bindingResult) throws ActException {
         try {
-           Boolean result=  userRegisterAPI.verifyCode(smsCodeTO.getPhoneNumber() ,smsCodeTO.getCode() );
+            Boolean result = userRegisterAPI.verifyCode(smsCodeTO.getPhoneNumber(), smsCodeTO.getCode());
             return ActResult.initialize(result);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -145,15 +143,15 @@ public class RegisterAct {
     /**
      * 移动端验证密码
      *
-     * @param password 密码
+     * @param password   密码
      * @param repassword 确认密码
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/checkPassword")
-    public Result checkPassword(@RequestParam String password, @RequestParam String repassword ) throws ActException {
+    public Result checkPassword(@RequestParam String password, @RequestParam String repassword) throws ActException {
         try {
-            userRegisterAPI.checkPassword(password ,repassword );
+            userRegisterAPI.checkPassword(password, repassword);
             return new ActResult("密码校验通过");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -168,14 +166,15 @@ public class RegisterAct {
      * @version v1
      */
     @PostMapping("v1/registerUser")
-    public Result registerUser(@Validated(ADD.class) AppUserRegisterTO appUserRegisterTO, BindingResult bindingResult ) throws ActException {
+    public Result registerUser(@Validated(ADD.class) AppUserRegisterTO appUserRegisterTO, BindingResult bindingResult) throws ActException {
         try {
-            userRegisterAPI.registerUser(appUserRegisterTO );
+            userRegisterAPI.registerUser(appUserRegisterTO);
             return new ActResult("注册成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
+
     /**
      * 移动端填写前五位字母自动生成用户编号
      *
@@ -186,29 +185,30 @@ public class RegisterAct {
     @GetMapping("v1/autogenerationNum")
     public Result autogenerationNum(@RequestParam String startNumber) throws ActException {
         try {
-            String num = userRegisterAPI.autogenerationNum(startNumber );
+            String num = userRegisterAPI.autogenerationNum(startNumber);
             return ActResult.initialize(num);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
-    /**
-     * 邀请码
-     *
-     * @param id
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/shareCode")
-    public Result shareCode(@RequestParam long id) throws ActException {
-        try {
-            String num = userRegisterAPI.shareCode(id);
-            return ActResult.initialize(num);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 邀请码
+//     *
+//     * @param id
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/shareCode")
+//    public Result shareCode(@RequestParam long id) throws ActException {
+//        try {
+//            String num = userRegisterAPI.shareCode(id);
+//            return ActResult.initialize(num);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
+
     /**
      * 移动端邀请员工注册
      *
@@ -217,9 +217,9 @@ public class RegisterAct {
      * @version v1
      */
     @PostMapping("v1/inviteReg")
-    public Result inviteReg(@RequestParam String inviteReg, @Validated AppUserRegisterTO appUserRegisterTO, BindingResult bindingResult ) throws ActException {
+    public Result inviteReg(@RequestParam String inviteReg, @Validated AppUserRegisterTO appUserRegisterTO, BindingResult bindingResult) throws ActException {
         try {
-            userRegisterAPI.inviteReg(inviteReg,appUserRegisterTO );
+            userRegisterAPI.inviteReg(inviteReg, appUserRegisterTO);
             return new ActResult("注册成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

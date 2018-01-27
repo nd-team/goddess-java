@@ -79,24 +79,24 @@ public class TempMatterDemandAct {
         }
     }
 
-    /**
-     * 分页查询临时物资需求
-     *
-     * @param dto 临时物资需求dto
-     * @return class TempMatterDemandVO
-     * @throws ActException
-     * @version v1
-     */
-    @GetMapping("v1/list")
-    public Result list(@Validated TempMatterDemandDTO dto, BindingResult bindingResult) throws ActException {
-        try {
-            List<TempMatterDemandBO> boList = tempMatterDemandAPI.list(dto);
-            List<TempMatterDemandVO> voList = BeanTransform.copyProperties(boList, TempMatterDemandVO.class);
-            return ActResult.initialize(voList);
-        } catch (SerException e) {
-            throw new ActException(e.getMessage());
-        }
-    }
+//    /**
+//     * 分页查询临时物资需求
+//     *
+//     * @param dto 临时物资需求dto
+//     * @return class TempMatterDemandVO
+//     * @throws ActException
+//     * @version v1
+//     */
+//    @GetMapping("v1/list")
+//    public Result list(@Validated TempMatterDemandDTO dto, BindingResult bindingResult) throws ActException {
+//        try {
+//            List<TempMatterDemandBO> boList = tempMatterDemandAPI.list(dto);
+//            List<TempMatterDemandVO> voList = BeanTransform.copyProperties(boList, TempMatterDemandVO.class);
+//            return ActResult.initialize(voList);
+//        } catch (SerException e) {
+//            throw new ActException(e.getMessage());
+//        }
+//    }
 
     /**
      * 添加临时物资需求

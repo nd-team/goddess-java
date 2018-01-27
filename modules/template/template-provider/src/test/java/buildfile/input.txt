@@ -1,13 +1,11 @@
-模块名:marketdevelopment
-类名:WeekFiles
-作者:zhuangkaiqin
-描述:周计划的表头数据
+模块名:user
+类名:Integrtal
+作者:chenyang
+描述:用户积分
 #参数[变量类型  变量名 ]
 #parameter--------------
 (
-String weekCycleId 周计划的周期id;
-Integer index 表头下标;
-String table 表头;
-String context 内容;
-String fatherId 父级id;
-)
+String userId 用户ID;
+String integral 用户积分；
+String inviterIntegral 邀请人积分你；
+String inviterId 邀请人ID；

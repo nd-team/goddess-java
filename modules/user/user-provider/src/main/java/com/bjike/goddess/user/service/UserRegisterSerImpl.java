@@ -5,7 +5,9 @@ import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.jpa.utils.PasswordHash;
 import com.bjike.goddess.common.utils.regex.Validator;
+import com.bjike.goddess.user.bo.ShareCodeBO;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.user.entity.ShareCode;
 import com.bjike.goddess.user.entity.User;
 import com.bjike.goddess.user.enums.UserType;
 import com.bjike.goddess.user.session.auth_code.AuthCodeSession;
@@ -13,7 +15,7 @@ import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.SmsCodeParameterTO;
 import com.bjike.goddess.user.to.UserRegisterTO;
 import com.bjike.goddess.user.utils.SeqUtil;
-import com.bjike.goddess.user.utils.ShareCodeUtil;
+import com.bjike.goddess.user.utils.ShareCodeUtils;
 import com.bjike.goddess.user.utils.SmsCodeUtil;
 import com.bjike.goddess.user.vo.SmsReceiveCodeVO;
 import org.apache.commons.lang3.StringUtils;
@@ -38,10 +40,12 @@ import java.util.regex.Pattern;
  */
 @CacheConfig(cacheNames = "userSerCache")
 @Service
-public class UserRegisterSerImpl implements UserRegisterSer {
+public class UserRegisterSerImpl implements UserRegisterSer{
 
     @Autowired
     private UserSer userSer;
+    @Autowired
+    private ShareCodeSer shareCodeSer;
 
 
     @Override
@@ -228,11 +232,22 @@ public class UserRegisterSerImpl implements UserRegisterSer {
                 user.setStatus(Status.THAW);
                 user.setSystemNO(SeqUtil.generateSys(sysNO));
                 userSer.save(user);
-
+                if(appUserRegisterTO.getAuthCode() != null && !appUserRegisterTO.getAuthCode().equals("")) {
+                    String aa = String.valueOf(10);
+                    String bb = String.valueOf(2);
+                    ShareCode shareCode = new ShareCode();
+                    shareCode.setUserId(user.getId());
+                    shareCode.setInviterShareCode(appUserRegisterTO.getAuthCode());
+                    shareCode.setShareCode(ShareCodeUtils.generateShortUuid());
+                    ShareCodeBO shareCodeBO = shareCodeSer.getByCode(appUserRegisterTO.getAuthCode());
+                    shareCode.setInviterId(shareCodeBO.getId());
+                    shareCode.setIntegral(aa);
+                    shareCode.setInviterIntegral(aa);
+                    shareCodeSer.save(shareCode);
+                }
             } else {
                 throw new SerException(appUserRegisterTO.getUsername() + "已被注册!");
             }
-
         } catch (Exception e) {
             throw new SerException(e.getMessage());
         }
@@ -253,18 +268,6 @@ public class UserRegisterSerImpl implements UserRegisterSer {
             }
         }
         return SeqUtil.appAutogeneration(startNumber);
-    }
-
-    @Override
-    public String shareCode(long id) throws SerException {
-        UserBO user = userSer.currentUser();
-//        Long aa = Long.valueOf(user.getId());
-//        System.out.print(Integer.valueOf(user.getId()).intValue());
-        int i=Integer.valueOf(user.getEmployeeNumber().trim()).intValue();
-        long aa = (int)i;
-//        id = Long.valueOf(user.getId()).longValue();
-//        id = Long.parseLong(user.getEmployeeNumber());
-        return ShareCodeUtil.toSerialCode(aa);
     }
 
     @Transactional(rollbackFor = SerException.class)

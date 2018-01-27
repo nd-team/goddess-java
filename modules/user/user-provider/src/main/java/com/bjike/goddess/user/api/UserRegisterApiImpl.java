@@ -61,11 +61,6 @@ public class UserRegisterApiImpl implements UserRegisterAPI {
     }
 
     @Override
-    public String shareCode(long id) throws SerException {
-        return userRegisterSer.shareCode(id);
-    }
-
-    @Override
     public void inviteReg(String inviteUrl, AppUserRegisterTO appUserRegisterTO) throws SerException {
         userRegisterSer.inviteReg(inviteUrl,appUserRegisterTO);
     }

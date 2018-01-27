@@ -22,6 +22,7 @@
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.ProjectAPI" ref="projectApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TableAPI" ref="tableApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskNodeAPI" ref="taskNodeApiImpl"/>
+	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskNodeBaseAPI" ref="taskNodeBaseApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TaskRemindAPI" ref="taskRemindApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.TimeSetAPI" ref="timeSetApiImpl"/>
 	<dubbo:service interface="com.bjike.goddess.taskallotment.api.QuestionAPI" ref="questionApiImpl"/>

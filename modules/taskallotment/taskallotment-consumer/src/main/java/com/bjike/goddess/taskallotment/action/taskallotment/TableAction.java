@@ -57,6 +57,16 @@ import java.util.stream.Collectors;
  * @Version: [ v1.0.0 ]
  * @Copy: [ com.bjike ]
  */
+
+/**
+ * 计划任务节点集合
+ * @Author:			[ chenyang ]
+ * @Date:			[  2018-01-18 11:58 ]
+ * @Description:	[ 计划任务节点集合 ]
+ * @Version:		[ v1.0.0 ]
+ * @Copy:   		[ com.bjike ]
+ */
+
 @RestController
 @RequestMapping("table")
 public class TableAction extends BaseFileAction {

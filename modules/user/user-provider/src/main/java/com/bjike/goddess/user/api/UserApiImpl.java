@@ -6,6 +6,7 @@ import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.bo.UserDetailBO;
 import com.bjike.goddess.user.dto.UserDTO;
 import com.bjike.goddess.user.service.UserSer;
+import com.bjike.goddess.user.to.AppUserRegisterTO;
 import com.bjike.goddess.user.to.UserTO;
 import org.mengyun.tcctransaction.api.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.util.List;
  * @Copy: [com.bjike]
  */
 @Service("userApiImpl")
-public class UserApiImpl implements UserAPI  {
+public class UserApiImpl implements UserAPI{
     @Autowired
     private UserSer userSer;
 
@@ -169,4 +170,5 @@ public class UserApiImpl implements UserAPI  {
     public List<UserDetailBO> myTeam() throws SerException {
         return userSer.myTeam ();
     }
+
 }

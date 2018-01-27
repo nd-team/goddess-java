@@ -30,7 +30,7 @@ dependencies {
     compile project(":common:common-provider")
     compile project(":modules:businessproject:businessproject-api")
     compile project(":common:common-utils")
-    compile project(":modules:projectcalculation:projectcalculation-api")
+//    compile project(":modules:projectcalculation:projectcalculation-api")
     compile group: 'com.belerweb', name: 'pinyin4j', version: '2.5.1'
 
 }

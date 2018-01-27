@@ -69,13 +69,13 @@ public class TaskNode extends BaseEntity {
     /**
      * 时长类型
      */
-    @Column(name = "timesType", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '任务类型'")
+    @Column(name = "timesType", columnDefinition = "TINYINT(2)   COMMENT '任务类型'")
     private TimesType timesType;
 
     /**
      * 功能模块
      */
-    @Column(name = "moudle", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '功能模块'")
+    @Column(name = "moudle", columnDefinition = "VARCHAR(255)   COMMENT '功能模块'")
     private String moudle;
 
     /**

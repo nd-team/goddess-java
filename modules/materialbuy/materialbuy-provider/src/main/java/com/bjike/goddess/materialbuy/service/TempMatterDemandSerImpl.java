@@ -12,7 +12,6 @@ import com.bjike.goddess.materialbuy.to.GuidePermissionTO;
 import com.bjike.goddess.materialbuy.to.TempMatterDemandTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
-import com.google.common.collect.Ordering;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -168,28 +166,33 @@ public class TempMatterDemandSerImpl extends ServiceImpl<TempMatterDemand, TempM
         return flag;
     }
 
+    @Override
+    public List<TempMatterDemandBO> list(TempMatterDemandDTO dto) throws SerException {
+        return null;
+    }
+
     /**
      * 分页查询临时物资需求
      *
      * @return class TempMatterDemandBO
      * @throws SerException
      */
-    @Override
-    public List<TempMatterDemandBO> list(TempMatterDemandDTO dto) throws SerException {
-        checkSeeIdentity();
-        List<TempMatterDemand> list = super.findByPage(dto);
-        List<TempMatterDemandBO> listBO = BeanTransform.copyProperties(list, TempMatterDemandBO.class);
-        if (listBO != null) {
-            Comparator<TempMatterDemandBO> comparator = new Comparator<TempMatterDemandBO>() {
-                @Override
-                public int compare(TempMatterDemandBO o1, TempMatterDemandBO o2) {
-                    return o2.getCreateTime().compareTo(o1.getCreateTime());
-                }
-            };
-            listBO = Ordering.from(comparator).sortedCopy(listBO);
-        }
-        return listBO;
-    }
+//    @Override
+//    public List<TempMatterDemandBO> list(TempMatterDemandDTO dto) throws SerException {
+//        checkSeeIdentity();
+//        List<TempMatterDemand> list = super.findByPage(dto);
+//        List<TempMatterDemandBO> listBO = BeanTransform.copyProperties(list, TempMatterDemandBO.class);
+//        if (listBO != null) {
+//            Comparator<TempMatterDemandBO> comparator = new Comparator<TempMatterDemandBO>() {
+//                @Override
+//                public int compare(TempMatterDemandBO o1, TempMatterDemandBO o2) {
+//                    return o2.getCreateTime().compareTo(o1.getCreateTime());
+//                }
+//            };
+//            listBO = Ordering.from(comparator).sortedCopy(listBO);
+//        }
+//        return listBO;
+//    }
 
     /**
      * 保存临时物资需求
