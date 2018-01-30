@@ -150,6 +150,25 @@ public class FundRecordSerImpl extends ServiceImpl<FundRecord, FundRecordDTO> im
         return returnList;
     }
 
+
+    @Override
+    public List<FundRecordBO> findList(FundRecordDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getDataSource())) {
+            dto.getConditions().add(Restrict.like("dataSource", dto.getDataSource()));
+        }
+        List<FundRecord> fundRecordList = super.findByCis(dto,true);
+        return BeanTransform.copyProperties(fundRecordList,FundRecordBO.class);
+    }
+
+    @Override
+    public Long findCount(FundRecordDTO dto) throws SerException {
+        if (StringUtils.isNotBlank(dto.getDataSource())) {
+            dto.getConditions().add(Restrict.like("dataSource", dto.getDataSource()));
+        }
+        Long count = super.count(dto);
+        return count;
+    }
+
     @Override
     @Transactional(rollbackFor = SerException.class)
     public MonthCollectBO month(Integer year, Integer month) throws SerException {

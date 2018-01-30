@@ -694,26 +694,24 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                             boList.add(twoBO);
                             b3 = false;
                         }
-                    } else if (ProfitType.PREVIOUSANNUAL.equals(profit.getProfitType())) {
-                        if (b4) {
-                            ProfitBO twoBO = new ProfitBO();
-                            twoBO.setProject("七、以前年度损益调整");
-                            SubjectCollectBO subjectCollectBO6 = voucherGenerateAPI.findCurrentAndYear("以前年度损益调整", startTime, endTime);
-                            if (null != subjectCollectBO6) {
-                                twoBO.setCurrentMonthAmount(subjectCollectBO6.getCurrentAmount());
-                                twoBO.setCurrentYearAmount(subjectCollectBO6.getYearAmount());
-                            }
-                            twoBO.setNum(num);
-                            num++;
-                            boList.add(twoBO);
-                            b4 = false;
-                        }
                     }
                     bo.setNum(num);
                     num++;
                     boList.add(bo);
                 }
             }
+
+            ProfitBO twoBO1 = new ProfitBO();
+            twoBO1.setProject("七、以前年度损益调整");
+            SubjectCollectBO subjectCollectBO6 = voucherGenerateAPI.findCurrentAndYear("以前年度损益调整", startTime, endTime);
+            if (null != subjectCollectBO6) {
+                twoBO1.setCurrentMonthAmount(subjectCollectBO6.getCurrentAmount());
+                twoBO1.setCurrentYearAmount(subjectCollectBO6.getYearAmount());
+            }
+            twoBO1.setNum(num);
+            num++;
+            boList.add(twoBO1);
+
             ProfitBO lastBO = new ProfitBO();
             lastBO.setProject("八、未分配利润");
             SubjectCollectBO subjectCollectBO7 = voucherGenerateAPI.findCurrentAndYear("未分配利润", startTime, endTime);

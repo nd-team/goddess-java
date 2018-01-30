@@ -64,6 +64,24 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
     List<FundRecordBO> findAllBO(FundRecordDTO dto, VoucherGenerateDTO generateDTO) throws SerException;
 
     /**
+     *
+     * 列表
+     * lijuntao
+     * @param dto 分页条件
+     * @return 列表
+     */
+    List<FundRecordBO> findList(FundRecordDTO dto) throws SerException;
+
+    /**
+     * 总条数
+     * lijuntao
+     * @param dto 分页条件
+     * @return 列表
+     */
+    Long findCount(FundRecordDTO dto) throws SerException;
+
+
+    /**
      * 月汇总
      *
      * @param year  年份
@@ -116,6 +134,7 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
 
     /**
      * 根据账户来源导出
+     *
      * @param dataSource 账户来源
      * @return
      * @throws SerException
@@ -130,12 +149,15 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
 
     /**
      * 账户来源下拉值
+     *
      * @return
      * @throws SerException
      */
     List<String> sourceAccountValue() throws SerException;
+
     /**
      * 导入资金流水
+     *
      * @return
      * @throws SerException
      */
@@ -155,86 +177,99 @@ public interface FundRecordSer extends Ser<FundRecord, FundRecordDTO> {
      *
      * @param year  年份
      * @param month 月份
-     * @param area 地区
+     * @param area  地区
      * @return 地区汇总结果集
      */
-    ConditionCollectBO areaSumma(Integer year, Integer month,String area) throws SerException;
+    ConditionCollectBO areaSumma(Integer year, Integer month, String area) throws SerException;
 
     /**
      * 项目组汇总lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year    年份
+     * @param month   月份
      * @param project 项目组
      * @return 项目组汇总结果集
      */
-    ConditionCollectBO projectSumma(Integer year, Integer month,String project) throws SerException;
+    ConditionCollectBO projectSumma(Integer year, Integer month, String project) throws SerException;
 
     /**
      * 项目名称汇总lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year        年份
+     * @param month       月份
      * @param projectName 项目名称
      * @return 项目组汇总结果集
      */
-    ConditionCollectBO projectNameSumma(Integer year, Integer month,String projectName) throws SerException;
+    ConditionCollectBO projectNameSumma(Integer year, Integer month, String projectName) throws SerException;
 
     /**
      * 获取所有地区
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllArea() throws SerException{return null;}
+    default List<String> findAllArea() throws SerException {
+        return null;
+    }
+
     /**
      * 获取所有账户来源
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllDataSource() throws SerException{return null;}
+    default List<String> findAllDataSource() throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有项目组
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllProjectGroup() throws SerException{return null;}
+    default List<String> findAllProjectGroup() throws SerException {
+        return null;
+    }
 
     /**
      * 获取所有项目名称
+     *
      * @return
      * @throws SerException
      */
-    default List<String> findAllProjectName() throws SerException{return null;}
+    default List<String> findAllProjectName() throws SerException {
+        return null;
+    }
 
     /**
      * 地区分析lijuntao
      *
      * @param year  年份
      * @param month 月份
-     * @param area 地区
+     * @param area  地区
      * @return 地区分析结果集
      */
-    AreaAnalyzeBO areaAnalysis(Integer year, Integer month,String area) throws SerException;
+    AreaAnalyzeBO areaAnalysis(Integer year, Integer month, String area) throws SerException;
 
     /**
      * 项目组分析lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year    年份
+     * @param month   月份
      * @param project 项目组
      * @return 项目组分析结果集
      */
-    GroupAnalyzeBO projectAnalysis(Integer year, Integer month,String project) throws SerException;
+    GroupAnalyzeBO projectAnalysis(Integer year, Integer month, String project) throws SerException;
 
     /**
      * 项目名称分析lijuntao
      *
-     * @param year  年份
-     * @param month 月份
+     * @param year        年份
+     * @param month       月份
      * @param projectName 项目名称
      * @return 项目名称分析结果集
      */
-    ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month,String projectName) throws SerException;
+    ProjectAnalyzeBO projectNameAnalysis(Integer year, Integer month, String projectName) throws SerException;
 
 }

@@ -61,6 +61,25 @@ public interface FundRecordAPI {
     Long count(FundRecordDTO dto) throws SerException;
 
     /**
+     *
+     * 列表
+     * lijuntao
+     * @param dto 分页条件
+     * @return 列表
+     */
+    List<FundRecordBO> findList(FundRecordDTO dto) throws SerException;
+
+    /**
+     * 总条数
+     * lijuntao
+     * @param dto 分页条件
+     * @return 列表
+     */
+    Long findCount(FundRecordDTO dto) throws SerException;
+
+
+
+    /**
      * 月汇总
      *
      * @param year  年份
