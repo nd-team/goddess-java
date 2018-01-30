@@ -11,7 +11,6 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.financeinit.bo.AccountAddDateBO;
-import com.bjike.goddess.reportmanagement.api.AssetAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.Asset;
@@ -92,7 +91,6 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
     private CashFlowSer cashFlowSer;
     @Autowired
     private CompanyBasicInfoAPI companyBasicInfoAPI;
-
 
 
     /**
@@ -539,12 +537,6 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             obj.setEndTime(dto.getEndTime());
         });
         return boList;
-    }
-
-    public static void main(String args[]) {
-        for (AssetType type : AssetType.values()) {
-            System.out.println(type);
-        }
     }
 
 
@@ -1156,7 +1148,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         XSSFWorkbook wb = null;
         String comp = "";
         List<String> comps = companyBasicInfoAPI.findCompanyName();
-        if(comps!=null && comps.size()>0){
+        if (comps != null && comps.size() > 0) {
             comp = comps.get(0);
         }
         try {
@@ -1169,24 +1161,24 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             XSSFRow row = sheet.createRow(0);
             XSSFRow row1 = sheet.createRow(1);
             //标题
-            for(int o = 0;o<8;o++){
+            for (int o = 0; o < 8; o++) {
                 row.createCell(o).setCellValue("资产负债表");
             }
-            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 7);
+            CellRangeAddress cra = new CellRangeAddress(0, 0, 0, 7);
             sheet.addMergedRegion(cra);//这个干嘛的
             //公司和单位
             row1.createCell(0).setCellValue("编制单位");
-            row1.createCell(1).setCellValue(comp+"公司");
-            row1.createCell(2).setCellValue(comp+"公司");
-            row1.createCell(3).setCellValue("所属期:"+dto.getEndTime());
-            row1.createCell(4).setCellValue("所属期:"+dto.getEndTime());
-            row1.createCell(5).setCellValue("所属期:"+dto.getEndTime());
-            row1.createCell(6).setCellValue("所属期:"+dto.getEndTime());
+            row1.createCell(1).setCellValue(comp + "公司");
+            row1.createCell(2).setCellValue(comp + "公司");
+            row1.createCell(3).setCellValue("所属期:" + dto.getEndTime());
+            row1.createCell(4).setCellValue("所属期:" + dto.getEndTime());
+            row1.createCell(5).setCellValue("所属期:" + dto.getEndTime());
+            row1.createCell(6).setCellValue("所属期:" + dto.getEndTime());
             row1.createCell(7).setCellValue("单位:元");
 
-            CellRangeAddress cra1=new CellRangeAddress(1, 1, 1, 2);
+            CellRangeAddress cra1 = new CellRangeAddress(1, 1, 1, 2);
             sheet.addMergedRegion(cra1);//这个干嘛的
-            CellRangeAddress cra2=new CellRangeAddress(1, 1, 3, 6);
+            CellRangeAddress cra2 = new CellRangeAddress(1, 1, 3, 6);
             sheet.addMergedRegion(cra2);//这个干嘛的
 
             row.getCell(0).setCellStyle(headerStyle);
@@ -1204,7 +1196,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
             throw new RuntimeException(e.getMessage());
         }
 
-      return os.toByteArray();
+        return os.toByteArray();
     }
 
     @Override

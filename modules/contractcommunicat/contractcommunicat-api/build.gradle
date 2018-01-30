@@ -10,6 +10,6 @@ dependencies {
     compile project(":modules:businessproject:businessproject-api")
     compile project(":modules:market:market-api")
     compile project(":modules:assemble:assemble-api")
-    compile project(":modules:projectissuehandle:projectissuehandle-api")
+    compile project(":modules:problemhandle:problemhandle-api")
     compile project(":modules:contacts:contacts-api")
 }

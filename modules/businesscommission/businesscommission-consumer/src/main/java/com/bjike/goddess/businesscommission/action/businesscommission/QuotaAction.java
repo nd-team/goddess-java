@@ -375,7 +375,7 @@ public class QuotaAction extends BaseFileAction {
 //    @GetMapping("v1/listMaintenance")
 //    public Result listMaintenance() throws ActException {
 //        try {
-//            if (moduleAPI.isCheck("projectissuehandle")) {
+//            if (moduleAPI.isCheck("problemhandle")) {
 //                List<String> list = problemHandlingResultAPI.getProblemHandler();
 //                return ActResult.initialize(list);
 //            } else {

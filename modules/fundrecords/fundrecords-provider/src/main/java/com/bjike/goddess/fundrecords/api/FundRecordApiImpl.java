@@ -57,6 +57,17 @@ public class FundRecordApiImpl implements FundRecordAPI {
         return (long)fundRecordSer.findAllBO(dto,new VoucherGenerateDTO()).size();
     }
 
+
+    @Override
+    public List<FundRecordBO> findList(FundRecordDTO dto) throws SerException {
+        return fundRecordSer.findList(dto);
+    }
+
+    @Override
+    public Long findCount(FundRecordDTO dto) throws SerException {
+        return fundRecordSer.findCount(dto);
+    }
+
     @Override
     public MonthCollectBO month(Integer year ,Integer month) throws SerException {
         return fundRecordSer.month(year ,month);

@@ -27,7 +27,10 @@ public class ConditionCollectVO extends BaseBO {
      * 支出
      */
     private Double expenditure;
-
+    /**
+     * 本月发生额
+     */
+    private Double incurredAmount;
     /**
      * 地区
      */
@@ -89,5 +92,13 @@ public class ConditionCollectVO extends BaseBO {
 
     public void setProjectGroup(String projectGroup) {
         this.projectGroup = projectGroup;
+    }
+
+    public Double getIncurredAmount() {
+        return incurredAmount;
+    }
+
+    public void setIncurredAmount(Double incurredAmount) {
+        this.incurredAmount = incurredAmount;
     }
 }

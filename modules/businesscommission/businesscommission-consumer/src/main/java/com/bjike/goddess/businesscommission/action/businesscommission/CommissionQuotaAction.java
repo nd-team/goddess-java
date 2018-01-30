@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 //import com.bjike.goddess.marketactivitymanage.api.MarketServeApplyAPI;
 //import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 //import com.bjike.goddess.organize.bo.AreaBO;
-//import com.bjike.goddess.projectissuehandle.api.ProblemHandlingResultAPI;
+//import com.bjike.goddess.problemhandle.api.ProblemHandlingResultAPI;
 //import com.bjike.goddess.storage.api.FileAPI;
 //import com.bjike.goddess.storage.to.FileInfo;
 //import com.bjike.goddess.storage.vo.FileVO;
@@ -409,7 +409,7 @@ public class CommissionQuotaAction extends BaseFileAction {
 //    @GetMapping("v1/listMaintenance")
 //    public Result listMaintenance() throws ActException {
 //        try {
-//            if (moduleAPI.isCheck("projectissuehandle")) {
+//            if (moduleAPI.isCheck("problemhandle")) {
 //                List<String> list = problemHandlingResultAPI.getProblemHandler();
 //                return ActResult.initialize(list);
 //            } else {

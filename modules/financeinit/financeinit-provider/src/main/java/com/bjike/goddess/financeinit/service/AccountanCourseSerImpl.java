@@ -534,7 +534,7 @@ public class AccountanCourseSerImpl extends ServiceImpl<AccountanCourse, Account
                 List<AccountanCourse> accountanCourseList1 = super.findByCis(accountanCourseDTO);
                 if (accountanCourseList1 != null && accountanCourseList1.size() > 0) {
                     accountanCourseList.addAll(accountanCourseList1);
-                    for (AccountanCourse accountanCourse1 : accountanCourseList) {
+                    for (AccountanCourse accountanCourse1 : accountanCourseList1) {
                         AccountanCourseDTO accountanCourseDTO1 = new AccountanCourseDTO();
                         accountanCourseDTO1.getConditions().add(Restrict.eq("belongSubjectsId", accountanCourse1.getId()));
                         List<AccountanCourse> accountanCourseList2 = super.findByCis(accountanCourseDTO);

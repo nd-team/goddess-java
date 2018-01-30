@@ -390,7 +390,7 @@ public class FundRecordAct extends BaseFileAction {
     @GetMapping("v1/list")
     public Result pageList(FundRecordDTO dto) throws ActException {
         try {
-            List<FundRecordVO> voList = BeanTransform.copyProperties(fundRecordAPI.pageList(dto), FundRecordVO.class);
+            List<FundRecordVO> voList = BeanTransform.copyProperties(fundRecordAPI.findList(dto), FundRecordVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -406,7 +406,7 @@ public class FundRecordAct extends BaseFileAction {
     @GetMapping("v1/count")
     public Result count(FundRecordDTO dto) throws ActException {
         try {
-            Long count = fundRecordAPI.count(dto);
+            Long count = fundRecordAPI.findCount(dto);
             return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
