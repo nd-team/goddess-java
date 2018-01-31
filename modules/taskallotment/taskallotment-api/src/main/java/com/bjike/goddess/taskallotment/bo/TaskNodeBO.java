@@ -202,6 +202,10 @@ public class TaskNodeBO extends BaseBO {
      * 是否发生费用报销
      */
     private Boolean reimbursement;
+    /**
+     * 不通过理由
+     */
+    private String notPassReason;
 
     /**
      * 注意事项
@@ -765,5 +769,13 @@ public class TaskNodeBO extends BaseBO {
 
     public void setGpriority(Integer gpriority) {
         this.gpriority = gpriority;
+    }
+
+    public String getNotPassReason() {
+        return notPassReason;
+    }
+
+    public void setNotPassReason(String notPassReason) {
+        this.notPassReason = notPassReason;
     }
 }

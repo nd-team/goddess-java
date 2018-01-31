@@ -185,15 +185,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     @Transactional(rollbackFor = {SerException.class})
     public void saves(TaskNodeBaseTO to ) throws SerException {
-//        String tableId = to.getTableId();
-//        TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
-//        entity.setTableId(tableId);
-//        TaskType taskType = entity.getTaskType();
-//        entity.setType(type(taskType));
-
         TaskNodeBase entity = BeanTransform.copyProperties(to, TaskNodeBase.class, true);
         taskNodeBaseSer.save(entity);
-
         List<TaskNodeTO> taskNodeTOS = to.getTaskNodeList();
         List<TaskNode> list = new ArrayList<>();
         if (null != taskNodeTOS) {
@@ -212,7 +205,6 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 for (int k = 0; k < taskNodeTOS.size(); k++) {
                     List<CustomTitleTO> titleTOS = taskNodeTOS.get(k).getCustomTitles();
 //            List<CustomTitleTO> titleTOS = taskNodeTOS.get(i).getCustomTitles();
-
                     List<CustomTitle> titles = new ArrayList<>();
                     if (null != titleTOS) {
                         int j = 0;
@@ -369,20 +361,15 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Override
     public List<TableBO> list(TableDTO dto) throws SerException {
         List<TableBO> tableBOS = new ArrayList<>();
-
         dto.getConditions().add(Restrict.eq("projectId", dto.getProjectId()));
         List<Table> tables = tableSer.findByCis(dto, true);
-        int j = 0;
         for (Table t : tables) {
-            j++;
             TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
             taskNodeDTO.getConditions().add(Restrict.eq("tableId", t.getId()));
             taskNodeDTO.getConditions().add(Restrict.isNull("fatherId"));
             List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
             List<TaskNode> list1 = new ArrayList<>();
-            int i = 0;
             for (TaskNode taskNode0 : taskNodes) {
-                i++;
                 TaskNode taskNode = super.findById(taskNode0.getId());
                 TaskNodeDTO taskNodeDTOs = new TaskNodeDTO();
                 taskNodeDTOs.getConditions().add(Restrict.eq("fatherId", taskNode.getId()));
@@ -403,6 +390,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                             break;
                         } else {
                             taskNode.setTaskStatus(tid.get(0));
+                            super.update(taskNode);
                         }
                     }
                 }
@@ -415,25 +403,6 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
         return tableBOS;
     }
-
-//    @Override
-//    public List<TableBO> list(TableDTO dto) throws SerException {
-//        List<TableBO> tableBOS = new ArrayList<>();
-//
-//        dto.getConditions().add(Restrict.eq("projectId", dto.getProjectId()));
-//        List<Table> tables = tableSer.findByCis(dto, true);
-//        for (Table t : tables) {
-//            TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
-//            taskNodeDTO.getConditions().add(Restrict.eq("tableId", t.getId()));
-//            taskNodeDTO.getConditions().add(Restrict.isNull("fatherId"));
-//            List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
-//            List<NodeBO> nodeBOS = BeanTransform.copyProperties(taskNodes, NodeBO.class);
-//            TableBO tableBO = BeanTransform.copyProperties(t, TableBO.class);
-//            tableBO.setNodeS(nodeBOS);
-//            tableBOS.add(tableBO);
-//        }
-//        return tableBOS;
-//    }
 
     @Override
     public Long count(TableDTO dto) throws SerException {
@@ -532,20 +501,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (!questions.isEmpty()) {
             questionSer.remove(questions);
         }
-//        TaskNodeDTO dto = new TaskNodeDTO ();
-//        dto.getConditions ().add ( Restrict.eq ( "fatherId", id ) );
-//        List<TaskNode> sons = super.findByCis ( dto );
-//        for (TaskNode son : sons) {
-//            QuestionDTO questionDTO1 = new QuestionDTO ();
-//            questionDTO1.getConditions ().add ( Restrict.eq ( "taskNodeId", son.getId () ) );
-//            List<Question> questions1 = questionSer.findByCis ( questionDTO1 );
-//            questionSer.remove ( questions1 );
-//        }
         CustomTitleDTO titleDTO = new CustomTitleDTO();
         titleDTO.getConditions().add(Restrict.eq("taskNodeId", id));
         List<CustomTitle> titles = customTitleSer.findByCis(titleDTO);
         if (!titles.isEmpty()) {
             customTitleSer.remove(titles);
+
+        }
+        if(entity.getFatherId() == null){
+            TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
+            taskNodeDTO.getConditions().add(Restrict.eq("fatherId",id));
+            List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
+            super.remove(taskNodes);
         }
         super.remove(id);
     }
@@ -605,21 +572,25 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (null == entity1) {
             throw new SerException("该对象不存在");
         }
-        if (null != entity1.getInitiate()) {
+        if (null != entity1.getInitiate() && entity1.getConfirm() == true) {
             throw new SerException("该任务已被分发，不能再次发起");
         }
-        RpcTransmit.transmitUserToken(token);
-        TaskNode entity = update(to);
-        entity.setInitiate(name);
-        entity.setTime(LocalDateTime.now());
-        super.update(entity);
-        if ((null != entity.getSplit()) && (entity.getSplit())) {
-            split(entity);
-        }
-        if (null != to.getExecute()) {
-            priority(entity);  //处理优先级
-        }
-        send(name, entity);
+//        if(entity1.getConfirm() == false  && entity1.getTaskStatus().equals(TaskStatus.RECEIVE) || entity1.getTaskStatus().equals(TaskStatus.NOTRECEIVE)){
+//            throw new SerException("您确定要重新发送任务，确定就发送成功，取消就停留在当前界面");
+//        }else {
+            RpcTransmit.transmitUserToken(token);
+            TaskNode entity = update(to);
+            entity.setInitiate(name);
+            entity.setTime(LocalDateTime.now());
+            super.update(entity);
+            if ((null != entity.getSplit()) && (entity.getSplit())) {
+                split(entity);
+            }
+            if (null != to.getExecute()) {
+                priority(entity);  //处理优先级
+            }
+            send(name, entity);
+//        }
         //TODO 发起任务保存代办事件
 //        if (null != entity.getExecute()) {
 //            EventTO eventTO = new EventTO();
@@ -1099,7 +1070,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("charge", name));
-        dto.getConditions().add(Restrict.isNull("haveSon"));
+        dto.getConditions().add(Restrict.isNotNull("haveSon"));
         dto.getSorts().add("time=desc");
         List<TaskNode> list = super.findByCis(dto, true);
         List<TaskNodeBO> bos = new ArrayList<>();
@@ -1126,7 +1097,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("charge", name));
-        dto.getConditions().add(Restrict.isNull("haveSon"));
+        dto.getConditions().add(Restrict.isNotNull("haveSon"));
         return super.count(dto);
     }
 
@@ -1441,7 +1412,6 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     private List<PersonCountBO> pCount(TaskNodeDTO dto, String[] areas, String[] departs, String[] names) throws
             SerException {
-
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.getConditions().add(Restrict.in("area", areas));
         projectDTO.getConditions().add(Restrict.in("depart", departs));

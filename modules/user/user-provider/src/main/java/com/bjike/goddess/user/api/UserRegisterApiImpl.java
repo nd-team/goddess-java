@@ -51,6 +51,11 @@ public class UserRegisterApiImpl implements UserRegisterAPI {
     }
 
     @Override
+    public void checkIntegral(String code) throws SerException {
+        userRegisterSer.checkIntegral(code);
+    }
+
+    @Override
     public void registerUser(AppUserRegisterTO appUserRegisterTO) throws SerException {
         userRegisterSer.registerUser(appUserRegisterTO);
     }

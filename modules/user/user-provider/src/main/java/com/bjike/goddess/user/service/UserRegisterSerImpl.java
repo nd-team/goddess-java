@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -202,6 +203,21 @@ public class UserRegisterSerImpl implements UserRegisterSer{
         }
     }
 
+    @Override
+    public void checkIntegral(String code) throws SerException {
+        ShareCodeBO shareCodeBO = shareCodeSer.getByCode(code);
+        List<ShareCode> shareCodes = new ArrayList<>();
+        String aa = String.valueOf(10 / 100);
+        if(shareCodeBO != null){
+            for(int i = 0;i < 50;i++){
+                ShareCodeBO shareCodeBO1 = shareCodeSer.getByCode(shareCodeBO.getShareCode());
+                ShareCode shareCode = new ShareCode();
+
+            }
+        }
+
+    }
+
     @Transactional(rollbackFor = SerException.class)
     @Override
     public void registerUser(AppUserRegisterTO appUserRegisterTO) throws SerException {
@@ -242,7 +258,7 @@ public class UserRegisterSerImpl implements UserRegisterSer{
                     ShareCodeBO shareCodeBO = shareCodeSer.getByCode(appUserRegisterTO.getAuthCode());
                     shareCode.setInviterId(shareCodeBO.getId());
                     shareCode.setIntegral(aa);
-                    shareCode.setInviterIntegral(aa);
+                    shareCode.setInviterIntegral(bb);
                     shareCodeSer.save(shareCode);
                 }
             } else {
