@@ -7,6 +7,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.financeinit.api.CompanyBasicInfoAPI;
 import com.bjike.goddess.reportmanagement.bo.*;
 import com.bjike.goddess.reportmanagement.dto.*;
 import com.bjike.goddess.reportmanagement.entity.*;
@@ -20,11 +21,22 @@ import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
 import com.bjike.goddess.voucher.entity.SubjectCollect;
 import com.bjike.goddess.voucher.excel.AccountInfoExport;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -57,6 +69,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     private CashFormulaSer cashFormulaSer;
     @Autowired
     private CashFlowDataSer cashFlowDataSer;
+    @Autowired
+    private CompanyBasicInfoAPI companyBasicInfoAPI;
 
     @Transactional(rollbackFor = SerException.class)
     @Override
@@ -244,7 +258,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 bo4 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("一、现金流入小计".equals(cashFlowProjectBO.getProjectName())) {
-                bo5 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo5 = new CashFlowProjectBO("现金流入小计", cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("购买商品接受劳务支付的现金".equals(cashFlowProjectBO.getProjectName())) {
                 bo6 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
@@ -259,7 +273,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 bo9 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("一、现金流出小计".equals(cashFlowProjectBO.getProjectName())) {
-                bo10 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo10 = new CashFlowProjectBO("现金流出小计", cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("经营活动产生的现金流量净额".equals(cashFlowProjectBO.getProjectName())) {
                 bo11 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
@@ -280,7 +294,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 bo16 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("二、现金流入小计".equals(cashFlowProjectBO.getProjectName())) {
-                bo17 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo17 = new CashFlowProjectBO("现金流入小计", cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("购建固定资产、无形资产和其他长期资产所支付的现金".equals(cashFlowProjectBO.getProjectName())) {
                 bo18 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
@@ -292,7 +306,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 bo20 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("二、现金流出小计".equals(cashFlowProjectBO.getProjectName())) {
-                bo21 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo21 = new CashFlowProjectBO("现金流出小计", cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("投资活动产生的现金流量净额".equals(cashFlowProjectBO.getProjectName())) {
                 bo22 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
@@ -310,7 +324,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 bo26 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("三、现金流入小计".equals(cashFlowProjectBO.getProjectName())) {
-                bo27 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo27 = new CashFlowProjectBO("现金流入小计", cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("偿还债务所支付的现金".equals(cashFlowProjectBO.getProjectName())) {
                 bo28 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
@@ -322,7 +336,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
                 bo30 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("三、现金流出小计".equals(cashFlowProjectBO.getProjectName())) {
-                bo31 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
+                bo31 = new CashFlowProjectBO("现金流出小计", cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
             }
             if ("筹资活动产生的现金流量净额".equals(cashFlowProjectBO.getProjectName())) {
                 bo32 = new CashFlowProjectBO(cashFlowProjectBO.getProjectName(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
@@ -493,6 +507,9 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         cashFlowDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
         CashFlow cashFlow = cashFlowSer.findOne(cashFlowDTO);
+        if (cashFlow == null) {
+          throw new SerException("指定实体不存在");
+        }
         cashFlow.setMoney(dto.getMoney());
         cashFlow.setModifyTime(LocalDateTime.now());
         cashFlowSer.update(cashFlow);
@@ -640,6 +657,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     private Double findCash(CashFlowProjectDTO dto) throws SerException {
         //利润表中主营业务收入(本年累计数)*(1+6%)   比率可更改
         Double cash1 = 0d;
+        //todo 利润表的
         SubjectCollectBO subjectCollectBO1 = voucherGenerateAPI.findCurrentAndYear("营业收入", dto.getStartTime(), dto.getEndTime());
         if (null != subjectCollectBO1) {
             cash1 = subjectCollectBO1.getYearAmount();
@@ -665,7 +683,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         }
         cash1 = cash1 * (1 + cashRate.getRate() / 100);
 
-        //其他业务收入(记账凭证~贷方-借方(本年累计))（剔除税金）/(1+X%)
+        //其他业务收入(记账凭证~贷方-借方(本年累计))（剔除税金）/(1+X%)     //todo 利润表中其他业务收入
         Double cash2 = 0d;
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject("其他业务收入");
@@ -687,7 +705,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         Double cash3 = 0d;
         SubjectCollectDTO subjectCollectDTO1 = new SubjectCollectDTO();
         subjectCollectDTO1.setFirstSubject("应收票据");
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO1,dto.getStartTime(), dto.getEndTime(), true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO1, dto.getStartTime(), dto.getEndTime(), true);
         if (null != subjectCollectBO) {
             cash3 = subjectCollectBO.getBeginAmount() - subjectCollectBO.getEndAmount();
         }
@@ -738,7 +756,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return cash1 + cash2 + cash3 + cash4 + cash5 - cash6;
     }
 
-    //收到的税费返还
+    //收到的税费返还 （应收补贴款期初余额－应收补贴款期末余额）＋补贴收入＋所得税本期贷方发生额累计数
     private Double findCash1(CashFlowProjectDTO dto) throws SerException {
         //（应收补贴款期初余额－应收补贴款期末余额）
         Double cash1 = 0d;
@@ -749,6 +767,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject("补贴收入");
         cash2 = voucherGenerateAPI.getCurrent(subjectCollectDTO, dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
+        //todo 没有减‘借方’
 
         //所得税本期贷方发生额累计数
         Double cash3 = 0d;
@@ -767,6 +786,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
 
         //补充资料中“经营活动产生的现金流量净额”－{（1+3）－(10+12+13+18) }   注意：里面的数字指的是行次
         Double cash1 = 0d;
+        //todo 经营活动产生的现金流量净额
         SubjectCollectBO subjectCollectBO = voucherGenerateAPI.findCurrentAndYear("净利润", dto.getStartTime(), dto.getEndTime());
         if (null != subjectCollectBO) {
             cash1 = subjectCollectBO.getYearAmount();
@@ -1067,8 +1087,11 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     //处置固定资产、无形资产和其他长期资产所收回的现金净额
     private Double findCash12(CashFlowProjectDTO dto) throws SerException {
         //“固定资产清理”的贷方余额(记账凭证)(贷方-借方本年累计)
-        Double cash1 = 0d;
-        cash1 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产清理"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
+        Double cash1_1 = 0d;
+        Double cash1_2 = 0d;
+        cash1_1 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产清理"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), false);
+        cash1_2 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("固定资产清理"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        Double cash1 = cash1_1 - cash1_2;
 
         //(无形资产期末数－无形资产期初数）
         Double cash2 = 0d;
@@ -1278,7 +1301,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     private Double findCash28(CashFlowProjectDTO dto) throws SerException {
         //存入公式
         saveFormula("筹资活动产生的现金流量净额", ProjectType.FINANCING, "现金流入小计 - 现金流出小计");
-        return findCash27(dto) - findCash23(dto);
+        return findCash23(dto) - findCash27(dto);
     }
 
     //四、汇率变动对现金的影响
@@ -1299,7 +1322,8 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
     private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+//        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, false);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
@@ -1441,9 +1465,57 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
             CashFlowExport export = BeanTransform.copyProperties(str, CashFlowExport.class);
             exports.add(export);
         });
-        Excel excel = new Excel(0, 2);
-        byte[] bytes = ExcelUtil.clazzToExcel(exports, excel);
-        return bytes;
+        Excel excel = new Excel(2, 3);
+        byte[] bytes1 = ExcelUtil.clazzToExcel(exports, excel);
+        XSSFWorkbook wb = null;
+        String comp = "";
+        List<String> comps = companyBasicInfoAPI.findCompanyName();
+        if(comps!=null && comps.size()>0){
+            comp = comps.get(0);
+        }
+        try {
+            InputStream is = new ByteArrayInputStream(bytes1);
+            wb = new XSSFWorkbook(is);// 创建一个工作execl文档
+            XSSFCellStyle headerStyle = ExcelUtil.getStyle(wb, IndexedColors.WHITE.getIndex());
+            headerStyle.setAlignment(HorizontalAlignment.CENTER); //水平布局：居中
+            headerStyle.setWrapText(true);
+            XSSFSheet sheet = wb.getSheetAt(0);
+            XSSFRow row = sheet.createRow(0);
+            XSSFRow row1 = sheet.createRow(1);
+            //标题
+            for(int o = 0; o<6; o++){
+                row.createCell(o).setCellValue("现金流量表");
+            }
+            CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 5);
+            sheet.addMergedRegion(cra);//这个干嘛的
+            //公司和单位
+            row1.createCell(0).setCellValue("编制单位");
+            row1.createCell(1).setCellValue(comp+"公司");
+            row1.createCell(2).setCellValue(comp+"公司");
+            row1.createCell(3).setCellValue("所属期:" + dto.getStartTime() + "至" + dto.getEndTime());
+            row1.createCell(4).setCellValue("所属期:" + dto.getStartTime() + "至" + dto.getEndTime());
+            row1.createCell(5).setCellValue("单位:元");
+
+            CellRangeAddress cra1=new CellRangeAddress(1, 1, 1, 2);
+            sheet.addMergedRegion(cra1);//这个干嘛的
+            CellRangeAddress cra2=new CellRangeAddress(1, 1, 3, 4);
+            sheet.addMergedRegion(cra2);//这个干嘛的
+
+            row.getCell(0).setCellStyle(headerStyle);
+            row1.getCell(3).setCellStyle(headerStyle);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            wb.write(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return os.toByteArray();
     }
 
     List<CashFlowExportBO> convertCashFlow (List<CashFlowProjectBO> bos1, List<CashFlowDataBO> bos2) {

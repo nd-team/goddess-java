@@ -657,7 +657,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         VoucherGenerateDTO dto12 = new VoucherGenerateDTO();
         if (DateUtil.parseDate(sTime).getMonthValue() != 1) {
             String beginStartTime = DateUtil.parseDate(sTime).getYear() + "-01-01";
-            String beginEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue() - 1, DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue() - 1)));
+            String beginEndTime = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue() - 1,
+                    DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue() - 1)));
             String[] times4 = new String[]{beginStartTime, beginEndTime};
             dto12.getConditions().add(Restrict.eq("firstSubject", firstSubject));
             dto12.getConditions().add(Restrict.between("voucherDate", times4));
@@ -724,6 +725,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         String[] times = new String[]{startTime, endTime};
         VoucherGenerateDTO dto = new VoucherGenerateDTO();
         BeanUtils.copyProperties(subjectCollectDTO, dto);
+        if (StringUtils.isNotBlank(subjectCollectDTO.getFirstSubject())) {
+            dto.getConditions().add(Restrict.eq("firstSubject", subjectCollectDTO.getFirstSubject()));
+        }
         dto.getConditions().add(Restrict.between("voucherDate", times));
         List<VoucherGenerate> list = super.findByCis(dto);
         if (null != list && list.size() > 0) {
@@ -2117,8 +2121,16 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         }
         //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
-            voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + voucherGenerate.getSecondSubjectCode()
-                    + voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
+            }
+
         }
 
         return list;
@@ -2166,13 +2178,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             }
         }
 
-        for(int i = 0; i < bos.size(); i ++) {
-            for(int j = 0; j < bos.get(i).getDetails().size(); j ++) {
-                if(bos.get(i).getDetails().get(j).getBorrowMoney() == 0) {
-
-                }
-            }
-        }
+//        for(int i = 0; i < bos.size(); i ++) {
+//            for(int j = 0; j < bos.get(i).getDetails().size(); j ++) {
+//                if(bos.get(i).getDetails().get(j).getBorrowMoney() == 0) {
+//
+//                }
+//            }
+//        }
         return bos;
     }
 
@@ -2300,18 +2312,19 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             String arr1[] = code1.split(":");
             String code2 = accountanCourseAPI.findByCourseName(temp.getSecondSubject());
             String arr2[] = code2.split(":");
-            String code3 = accountanCourseAPI.findByCourseName(temp.getThirdSubject());
-            String arr3[] = code3.split(":");
+            if (StringUtils.isNotBlank(temp.getThirdSubject())) {
+                String code3 = accountanCourseAPI.findByCourseName(temp.getThirdSubject());
+                String arr3[] = code3.split(":");
+                if(arr3.length > 0) {
+                    temp.setThirdSubjectCode(arr3[0]);
+                }
+            }
             if(arr1.length > 0) {
                 temp.setFirstSubjectCode(arr1[0]);
             }
             if(arr2.length > 0) {
                 temp.setSecondSubjectCode(arr2[0]);
             }
-            if(arr3.length > 0) {
-                temp.setThirdSubjectCode(arr3[0]);
-            }
-
             list.add(temp);
         }
         super.save(list);
@@ -2348,6 +2361,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 
         for (VoucherGenerateChildTO childTO : voucherGenerateTO.getDetails()) {
             VoucherGenerate entity = super.findById(childTO.getId());
+            if (entity == null) {
+                throw new SerException("更新实体不存在");
+            }
             entity.setId(childTO.getId());
             entity.setBorrowMoney(childTO.getBorrowMoney());
             entity.setLoanMoney(childTO.getLoanMoney());
@@ -2355,6 +2371,24 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             entity.setSecondSubject(childTO.getSecondSubject());
             entity.setThirdSubject(childTO.getThirdSubject());
             entity.setModifyTime(LocalDateTime.now());
+
+            // 加上一级、二级、三级科目的编码
+            String code1 = accountanCourseAPI.findByCourseName(entity.getFirstSubject());
+            String arr1[] = code1.split(":");
+            String code2 = accountanCourseAPI.findByCourseName(entity.getSecondSubject());
+            String arr2[] = code2.split(":");
+            String code3 = accountanCourseAPI.findByCourseName(entity.getThirdSubject());
+            String arr3[] = code3.split(":");
+            if(arr1.length > 0) {
+                entity.setFirstSubjectCode(arr1[0]);
+            }
+            if(arr2.length > 0) {
+                entity.setSecondSubjectCode(arr2[0]);
+            }
+            if(arr3.length > 0) {
+                entity.setThirdSubjectCode(arr3[0]);
+            }
+
             entities.add(entity);
         }
         super.update(entities);
@@ -4052,6 +4086,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
 //        firstSub = firstSub.substring(0, firstSub.indexOf(":"));
         List<String> seconds = new ArrayList<>();
         String code = accountanCourseAPI.findByCourseName(firstSub);
+        if(StringUtils.isBlank(code)) {
+            return null;
+        }
+        String arr[] = code.split(":");
+        code = arr[0];
         List<SecondSubjectDataBO> list = accountanCourseAPI.findSecondSubject(code);
         if (null == list) {
             return null;

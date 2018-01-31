@@ -140,7 +140,7 @@ public class ProjectAction {
      * @version v1
      */
     @DeleteMapping("v1/delete/{id}")
-    public Result edit(@PathVariable String id, BindingResult result) throws ActException {
+    public Result edit(@PathVariable String id) throws ActException {
         try {
             projectAPI.delete(id);
             return new ActResult("删除成功");

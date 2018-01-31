@@ -343,13 +343,25 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
             dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
             dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
         }
-        CashFlowDataDTO cashFlowDataDTO = new CashFlowDataDTO();
+        CashFlowDatumDTO cashFlowDataDTO = new CashFlowDatumDTO();
         cashFlowDataDTO.getConditions().add(Restrict.eq("dataId", dto.getDataId()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
-        CashFlowData cashFlowData = cashFlowDataSer.findOne(cashFlowDataDTO);
-        if (null != cashFlowData) {
-            ReturnCashDataBO bo = BeanTransform.copyProperties(cashFlowData, ReturnCashDataBO.class);
+        CashFlowDatum cashFlowDatum = cashFlowDatumSer.findOne(cashFlowDataDTO);
+//        CashFlowData cashFlowData = cashFlowDataSer.findOne(cashFlowDataDTO);
+//        String sql = "select endTime, id, money, startTime, data from reportmanagement_cashflowdata where dataId = '" + dto.getDataId() + "' and startTime = '" + dto.getStartTime()
+//                + "' and endTime = '" + dto.getEndTime() + "'";
+//        String[] fields = new String[]{"endTime", "id", "money", "startTime", "data"};
+//        List<CashFlowData> cashFlowData = cashFlowDataSer.findBySql(sql, CashFlowData.class, fields);
+//        if (cashFlowData == null || cashFlowData.size() == 0) {
+//            return null;
+//        }
+//        if (null != cashFlowData.get(0)) {
+//            ReturnCashDataBO bo = BeanTransform.copyProperties(cashFlowData.get(0), ReturnCashDataBO.class);
+//            return bo;
+//        }
+        if (null != cashFlowDatum) {
+            ReturnCashDataBO bo = BeanTransform.copyProperties(cashFlowDatum, ReturnCashDataBO.class);
             return bo;
         }
         return null;
@@ -357,15 +369,15 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
 
     @Override
     public void editMoney(CashFlowDataDTO dto) throws SerException {
-        CashFlowDataDTO cashFlowDataDTO = new CashFlowDataDTO();
-        cashFlowDataDTO.getConditions().add(Restrict.eq("id", dto.getDataId()));
+        CashFlowDatumDTO cashFlowDataDTO = new CashFlowDatumDTO();
+        cashFlowDataDTO.getConditions().add(Restrict.eq("dataId", dto.getDataId()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("startTime", dto.getStartTime()));
         cashFlowDataDTO.getConditions().add(Restrict.eq("endTime", dto.getEndTime()));
-        CashFlowData cashFlowData = cashFlowDataSer.findOne(cashFlowDataDTO);
+        CashFlowDatum cashFlowData = cashFlowDatumSer.findOne(cashFlowDataDTO);
             if(cashFlowData != null) {
             cashFlowData.setMoney(dto.getMoney());
             cashFlowData.setModifyTime(LocalDateTime.now());
-            cashFlowDataSer.update(cashFlowData);
+            cashFlowDatumSer.update(cashFlowData);
         }
     }
 
@@ -585,9 +597,11 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
 
         //利息支出~应收票据的贴现利息(记账凭证,本年累计)
         Double cash1 = 0d;
-        cash1 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("应收票据的贴现利息"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        Double cash2 = 0d;
+        cash1 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("利息支出"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        cash2 = voucherGenerateAPI.getCurrent(new SubjectCollectDTO("应收票据的贴现利息"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 
-        return cash1;
+        return cash1 - cash2;
     }
 
     //投资损失（减：收益）
@@ -782,7 +796,8 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
     private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+//        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, false);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();
