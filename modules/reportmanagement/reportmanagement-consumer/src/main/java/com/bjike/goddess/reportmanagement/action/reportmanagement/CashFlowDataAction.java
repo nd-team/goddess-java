@@ -87,7 +87,7 @@ public class CashFlowDataAction {
      * @return class ReturnCashDataVO
      * @version v1
      */
-    @GetMapping("v1/findMoney/{dataId}")
+    @GetMapping("v1/findMoney")
     public Result findMoney(CashFlowDataDTO dto) throws ActException {
         try {
             return ActResult.initialize(BeanTransform.copyProperties(cashFlowDataAPI.findMoney(dto), ReturnCashDataVO.class));

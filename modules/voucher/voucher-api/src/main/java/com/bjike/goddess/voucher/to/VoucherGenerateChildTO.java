@@ -1,5 +1,7 @@
 package com.bjike.goddess.voucher.to;
 
+import java.io.Serializable;
+
 /**
  * @Author: [caiwenxian]
  * @Date: [2018-01-15 10:47]
@@ -7,7 +9,7 @@ package com.bjike.goddess.voucher.to;
  * @Version: [1.0.0]
  * @Copy: [com.bjike]
  */
-public class VoucherGenerateChildTO {
+public class VoucherGenerateChildTO implements Serializable{
 
     /**
      * id

@@ -105,7 +105,7 @@ public class CashFlowProjectAction extends BaseFileAction{
      * @param dto dto
      * @version v1
      */
-    @PutMapping("v1/editMoney/{projectId}")
+    @PutMapping("v1/editMoney")
     public Result editMoney(@Validated(EDIT.class) CashFlowProjectDTO dto) throws ActException {
         try {
             cashFlowProjectAPI.editMoney(dto);
