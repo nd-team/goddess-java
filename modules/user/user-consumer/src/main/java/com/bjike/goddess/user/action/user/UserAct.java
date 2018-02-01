@@ -423,7 +423,7 @@ public class UserAct extends BaseFileAction {
     }
 
     /**
-     * 根据邀请码获取邀请人ID
+     * 根据邀请码获取邀请人信息
      *
      * @param code
      * @return class ShareCodeVO

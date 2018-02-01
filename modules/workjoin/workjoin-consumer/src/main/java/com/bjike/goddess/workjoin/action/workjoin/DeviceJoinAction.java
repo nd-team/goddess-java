@@ -273,7 +273,6 @@ public class DeviceJoinAction extends BaseFileAction{
 
     /**
      * 获取设备编号和设备名称
-     * @return class MaterialInStockVO
      * @throws ActException
      * @version v1
      */

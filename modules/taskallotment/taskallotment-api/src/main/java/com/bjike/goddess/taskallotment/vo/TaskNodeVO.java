@@ -259,6 +259,10 @@ public class TaskNodeVO {
      */
     private String moudle;
     /**
+     * 不通过理由
+     */
+    private String notPassReason;
+    /**
      * 功能优先级
      */
     private Integer gpriority;
@@ -778,5 +782,13 @@ public class TaskNodeVO {
 
     public void setGpriority(Integer gpriority) {
         this.gpriority = gpriority;
+    }
+
+    public String getNotPassReason() {
+        return notPassReason;
+    }
+
+    public void setNotPassReason(String notPassReason) {
+        this.notPassReason = notPassReason;
     }
 }

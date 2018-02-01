@@ -76,6 +76,10 @@ public interface UserRegisterAPI {
         return;
     }
 
+    default void checkIntegral(String code) throws SerException {
+        return;
+    }
+
     /**
      * 移动端用户注册
      * lijuntao

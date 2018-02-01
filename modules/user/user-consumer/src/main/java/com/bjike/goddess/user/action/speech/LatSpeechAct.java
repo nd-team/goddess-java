@@ -64,7 +64,13 @@ public class LatSpeechAct extends BaseFileAction {
         }
     }
 
-    @GetMapping("v1/ShareCodeUtil/code")
+    /**
+     * 生成邀请码
+     *
+     * @version v1
+     * @desc
+     */
+    @GetMapping("v1/shareCodeUtil/code")
     public Result code() throws ActException {
         String result = "";
         result = ShareCodeUtil.generateShortUuid();

@@ -11,12 +11,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.organize.api.*;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.ModuleTypeBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.bo.WorkRangeBO;
-import com.bjike.goddess.organize.entity.ModuleType;
-import com.bjike.goddess.organize.entity.PositionDetail;
-import com.bjike.goddess.organize.entity.WorkRange;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import com.bjike.goddess.organize.vo.ModuleTypeVO;
 import com.bjike.goddess.organize.vo.PositionDetailVO;
 import com.bjike.goddess.organize.vo.WorkRangeVO;
@@ -62,6 +61,9 @@ public class WorkJoinAction {
     private WorkRangeAPI workRangeAPI;
     @Autowired
     private PositionInstructionAPI positionInstructionAPI;
+    @Autowired
+    private DepartmentDetailAPI departmentDetailAPI;
+
     /**
      * 模块设置导航权限
      *
@@ -413,6 +415,23 @@ public class WorkJoinAction {
                 list = positionInstructionAPI.findWorkPermission();
             }
             return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有部门
+     *
+     * @return class DepartmentDetailVO
+     * @throws ActException
+     * @version v1
+     */
+    @GetMapping("v1/departs")
+    public Result departs(HttpServletRequest request) throws ActException {
+        try {
+            List<DepartmentDetailBO> list = departmentDetailAPI.findStatus();
+            return ActResult.initialize(BeanTransform.copyProperties(list, DepartmentDetailVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
