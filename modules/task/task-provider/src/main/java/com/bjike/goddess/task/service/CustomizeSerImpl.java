@@ -1655,7 +1655,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
                 }
                 StringBuffer sql = new StringBuffer();
                 if ("peopleNum".equals(title)){
-                    sql.append("SELECT initiate FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") AND initiate IS NOT NULL GROUP BY initiate " );
+                    sql.append("SELECT execute FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") AND initiate IS NOT NULL GROUP BY execute " );
                 }else {
                     sql.append("SELECT " + title +" FROM goddess_taskallotment.taskallotment_tasknode WHERE table_id in ("+tables+") AND "+title+" IS NOT NULL GROUP BY " + title );
                 }

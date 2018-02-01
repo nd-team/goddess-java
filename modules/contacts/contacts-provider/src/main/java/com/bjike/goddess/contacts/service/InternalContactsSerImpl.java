@@ -12,7 +12,10 @@ import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.common.utils.regex.Validator;
 import com.bjike.goddess.contacts.api.InternalContactsAPI;
 import com.bjike.goddess.contacts.bo.*;
-import com.bjike.goddess.contacts.dto.*;
+import com.bjike.goddess.contacts.dto.CommerceContactsDTO;
+import com.bjike.goddess.contacts.dto.ExternalContactsDTO;
+import com.bjike.goddess.contacts.dto.InternalContactsDTO;
+import com.bjike.goddess.contacts.dto.SearchDTO;
 import com.bjike.goddess.contacts.entity.CommerceContacts;
 import com.bjike.goddess.contacts.entity.ExternalContacts;
 import com.bjike.goddess.contacts.entity.InternalContacts;
@@ -35,6 +38,7 @@ import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.staffentry.api.EntryRegisterAPI;
 import com.bjike.goddess.staffentry.bo.EntryRegisterBO;
@@ -49,7 +53,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -355,7 +358,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
         return this.transformBO(entity);
     }
 
-//    @Cacheable
+    //    @Cacheable
     @Override
     public List<InternalContactsBO> maps(InternalContactsDTO dto) throws SerException {
         search(dto);
@@ -807,7 +810,7 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     public List<InternalContactsBO> getInfoByName(String name) throws SerException {
         InternalContactsDTO dto = new InternalContactsDTO();
         dto.getConditions().add(Restrict.eq("userName", name));
-        List<InternalContacts> internalContactsBOS = super.findByCis ( dto );
+        List<InternalContacts> internalContactsBOS = super.findByCis(dto);
         return BeanTransform.copyProperties(internalContactsBOS, InternalContactsBO.class, false);
     }
 
@@ -831,53 +834,74 @@ public class InternalContactsSerImpl extends ServiceImpl<InternalContacts, Inter
     }
 
     @Override
-    public List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
-        List<MobileInternalContactsBO> boList = new ArrayList<>();
-        InternalContactsDTO dto = new InternalContactsDTO();
-        dto.getConditions().add(Restrict.eq("department", dep));
-        List<InternalContacts> list = super.findByCis(dto);
+    public List<MobileContactsBO> mobileInfoByDepartment() throws SerException {
+        List<MobileContactsBO> boList = new ArrayList<>();
 
-        if (list != null && list.size() > 0) {
-            List<String> userNames = list.stream().map(InternalContacts::getName).collect(Collectors.toList());
-            UserDTO userDTO = new UserDTO();
-            userDTO.getConditions().add(Restrict.in("username", userNames));
-            List<UserBO> userBOs = userAPI.findByCis(userDTO);
+        List<DepartmentDetailBO> detailBOS = departmentDetailAPI.findStatus();
+        if (detailBOS != null && detailBOS.size() > 0) {
+            for (DepartmentDetailBO detailBO : detailBOS) {
+                List<MobileInternalContactsBO> contactsBOS = new ArrayList<>();
+                String department = detailBO.getDepartment();
+                InternalContactsDTO dto = new InternalContactsDTO();
+                dto.getConditions().add(Restrict.eq("department", department));
+                List<InternalContacts> list = super.findByCis(dto);
 
-            //查员工入职
-            EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
-            entryRegisterDTO.getConditions().add(Restrict.in("username", userNames));
-            List<UserNameSexBO> userNameSexBOs = entryRegisterAPI.findSexByUserName((String[]) userNames.toArray(new String[userNames.size()]));
+                if (list != null && list.size() > 0) {
+                    List<String> userNames = list.stream().map(InternalContacts::getName).collect(Collectors.toList());
+                    UserDTO userDTO = new UserDTO();
+                    userDTO.getConditions().add(Restrict.in("username", userNames));
+                    List<UserBO> userBOs = userAPI.findByCis(userDTO);
 
-            for (InternalContacts bo : list) {
-                MobileInternalContactsBO mobIn = new MobileInternalContactsBO();
-                if (null != userBOs && userBOs.size() > 0) {
-                    mobIn.setHeadSculpture(userBOs.get(0).getHeadSculpture());
-                }
-                mobIn.setUserId(bo.getId());
-                mobIn.setUsername(bo.getName());
-                mobIn.setDepartment(bo.getDepartment());
-                mobIn.setPhone(bo.getPhone());
-                mobIn.setPhoneNumberA(bo.getPhoneNumberA());
-                mobIn.setPhoneNumberB(bo.getPhoneNumberB());
-                mobIn.setPhoneNumberC(bo.getPhoneNumberC());
-                mobIn.setPhoneNumberD(bo.getPhoneNumberD());
-                mobIn.setPosition(bo.getPosition());
-                if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
-                    List<Integer> integerList = userNameSexBOs.stream().filter(str -> bo.getName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
-                    if (null != integerList && integerList.size() > 0) {
-                        if (0 == integerList.get(0)) {
-                            mobIn.setSex(SexType.MAN);
-                        } else {
-                            mobIn.setSex(SexType.WOMAN);
+                    //查员工入职
+                    EntryRegisterDTO entryRegisterDTO = new EntryRegisterDTO();
+                    entryRegisterDTO.getConditions().add(Restrict.in("username", userNames));
+                    List<UserNameSexBO> userNameSexBOs = entryRegisterAPI.findSexByUserName((String[]) userNames.toArray(new String[userNames.size()]));
+
+                    for (InternalContacts bo : list) {
+
+                        MobileInternalContactsBO mobIn = new MobileInternalContactsBO();
+                        if (null != userBOs && userBOs.size() > 0) {
+                            mobIn.setHeadSculpture(userBOs.get(0).getHeadSculpture());
                         }
-                    }
-                }
-                boList.add(mobIn);
+                        mobIn.setUserId(bo.getId());
+                        mobIn.setUsername(bo.getName());
+//                        mobIn.setDepartment(department);
+                        mobIn.setPhone(bo.getPhone());
+                        mobIn.setPhoneNumberA(bo.getPhoneNumberA());
+                        mobIn.setPhoneNumberB(bo.getPhoneNumberB());
+                        mobIn.setPhoneNumberC(bo.getPhoneNumberC());
+                        mobIn.setPhoneNumberD(bo.getPhoneNumberD());
+                        mobIn.setPosition(bo.getPosition());
+                        if (null != userNameSexBOs && userNameSexBOs.size() > 0) {
+                            List<Integer> integerList = userNameSexBOs.stream().filter(str -> bo.getName().equals(str.getUsername())).map(UserNameSexBO::getGender).collect(Collectors.toList());
+                            if (null != integerList && integerList.size() > 0) {
+                                if (0 == integerList.get(0)) {
+                                    mobIn.setSex(SexType.MAN);
+                                } else {
+                                    mobIn.setSex(SexType.WOMAN);
+                                }
+                            }
+                        }
 
+                        contactsBOS.add(mobIn);
+                    }
+
+                    Integer num = departmentDetailAPI.departmentTotalPeople(department);
+//                    if (peopleBOS != null && peopleBOS.size() > 0) {
+//                        for (DepartmentPeopleBO peopleBO : peopleBOS) {
+                    MobileContactsBO contactsBO = new MobileContactsBO();
+                    contactsBO.setDepartment(department);
+                    contactsBO.setPeopleCount(num);
+                    contactsBO.setMobileInternalContactsBOS(contactsBOS);
+                    boList.add(contactsBO);
+//                        }
+//                    }
+                }
             }
         }
         return boList;
     }
+
 
     @Override
     public Long getMobileTotal(InternalContactsDTO dto) throws SerException {

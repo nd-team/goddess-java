@@ -29,9 +29,6 @@
     <dubbo:reference validation="true" interface="com.bjike.goddess.salaryconfirm.api.SalaryconfirmAPI"
                      id="salaryConfirmAPI"/>
 
-    <!-- 项目中问题受理和处理-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI"
-                     id="projectEmailAPI"/>
     <!-- 客户信息-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.customer.api.CusEmailAPI" id="cusEmailApiImpl"/>
     <!-- 商务合同-->
@@ -52,9 +49,6 @@
                      id="beforeRemoveEmployeeApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.secure.api.SecureCartAPI" id="secureCartApiImpl"/>
     <dubbo:reference validation="true" interface="com.bjike.goddess.secure.api.AttachedEndAPI" id="attachedEndApiImpl"/>
-    <!-- 项目问题受理和处理-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.projectissuehandle.api.CollectEmailAPI"
-                     id="projectissueEmailApiImpl"/>
     <!-- 商务评估-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.businessevaluate.api.BusinessEvaluateCollectAPI"
                      id="businessEvaluateEmailApiImpl"/>
@@ -64,9 +58,6 @@
     <!-- 竞争对手-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.competitormanage.api.CompetitorCollectAPI"
                      id="competitormanageEmailApiImpl"/>
-    <!-- 商业能力互动-->
-    <dubbo:reference validation="true" interface="com.bjike.goddess.businessinteraction.api.CollectEmailAPI"
-                     id="businessinteractEmailApiImpl"/>
 
     <!-- 组织结构-->
     <dubbo:reference validation="true" interface="com.bjike.goddess.organize.api.EmailAPI"

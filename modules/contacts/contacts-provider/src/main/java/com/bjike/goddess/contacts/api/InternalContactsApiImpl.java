@@ -196,8 +196,8 @@ public class InternalContactsApiImpl implements InternalContactsAPI {
     }
 
     @Override
-    public List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
-        return internalContactsSer.mobileInfoByDepartment(dep);
+    public List<MobileContactsBO> mobileInfoByDepartment() throws SerException {
+        return internalContactsSer.mobileInfoByDepartment();
     }
 
     @Override

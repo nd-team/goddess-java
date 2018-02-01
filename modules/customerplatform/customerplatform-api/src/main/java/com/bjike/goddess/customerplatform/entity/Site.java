@@ -19,6 +19,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "customerplatform_site")
 public class Site extends BaseEntity {
+    /**
+     * 站点经度
+     */
+    @Column(name = "siteLatitude", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '站点经度'")
+    private String siteLatitude;
+    /**
+     * 站点纬度
+     */
+    @Column(name = "siteLongitude", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '站点纬度'")
+    private String siteLongitude;
+    /**
+     * 归属运营商
+     */
+    @Column(name = "ownershipOperator", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '归属运营商'")
+    private String ownershipOperator;
 
     /**
      * 站点名称
@@ -100,6 +115,30 @@ public class Site extends BaseEntity {
      */
     @Column(name = "remark", nullable = true, columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+
+    public String getSiteLatitude() {
+        return siteLatitude;
+    }
+
+    public void setSiteLatitude(String siteLatitude) {
+        this.siteLatitude = siteLatitude;
+    }
+
+    public String getSiteLongitude() {
+        return siteLongitude;
+    }
+
+    public void setSiteLongitude(String siteLongitude) {
+        this.siteLongitude = siteLongitude;
+    }
+
+    public String getOwnershipOperator() {
+        return ownershipOperator;
+    }
+
+    public void setOwnershipOperator(String ownershipOperator) {
+        this.ownershipOperator = ownershipOperator;
+    }
 
     public String getProvinces() {
         return provinces;

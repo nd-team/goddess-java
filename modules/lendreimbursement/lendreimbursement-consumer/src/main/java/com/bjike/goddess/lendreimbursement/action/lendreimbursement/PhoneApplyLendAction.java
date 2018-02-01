@@ -576,7 +576,6 @@ public class PhoneApplyLendAction extends BaseFileAction {
 //    public Result listThirdByCode(@PathVariable String code) throws ActException {
 //        try {
 //            List<String> list = accountanCourseAPI.findThirdNameByCode(code);
-//
 //            return ActResult.initialize(list);
 //        } catch (SerException e) {
 //            throw new ActException(e.getMessage());
@@ -595,7 +594,6 @@ public class PhoneApplyLendAction extends BaseFileAction {
 //    public Result listSecond(@PathVariable String code) throws ActException {
 //        try {
 //            List<String> list = accountanCourseAPI.findSendNameByCode(code);
-//
 //            return ActResult.initialize(list);
 //        } catch (SerException e) {
 //            throw new ActException(e.getMessage());

@@ -318,10 +318,10 @@ public interface InternalContactsSer extends Ser<InternalContacts, InternalConta
     /**
      * 查询部门下所有人的信息
      *
-     * @return class MobileInternalContactsBO
+     * @return class MobileContactsBO
      * @throws SerException
      */
-    default List<MobileInternalContactsBO> mobileInfoByDepartment(String dep) throws SerException {
+    default List<MobileContactsBO> mobileInfoByDepartment() throws SerException {
         return null;
     }
     /**

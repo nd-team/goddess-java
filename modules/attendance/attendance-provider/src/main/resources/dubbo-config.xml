@@ -24,7 +24,7 @@
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAPI" ref="vacateApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.OverWorkAPI" ref="overWorkApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.overtime.ExtralOverWorkAPI" ref="extralOverWorkApiImpl"/>
-	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.FinanceAttendanceAPI" ref="financeAttendanceApiImpl"/>
+	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.FinanceAttendanceAPI" ref="financeAttendanceApiImpl" timeout="1200000"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateAuditAPI" ref="vacateAuditApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.VacateSetAPI" ref="vacateSetApiImpl"/>
 	<dubbo:service  validation="true"  interface="com.bjike.goddess.attendance.api.HolidaySetAPI" ref="holidaySetApiImpl"/>

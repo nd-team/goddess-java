@@ -55,9 +55,14 @@ public class BiddingInfoBO extends BaseBO {
     private String businessDirectionSubject;
 
     /**
-     * 标书类型
+     * 标书模块
      */
     private String tenderModule;
+
+    /**
+     * 标书类型
+     */
+    private String tenderType;
 
     /**
      * 项目名称
@@ -184,6 +189,14 @@ public class BiddingInfoBO extends BaseBO {
      * 备注
      */
     private String remark;
+
+    public String getTenderType() {
+        return tenderType;
+    }
+
+    public void setTenderType(String tenderType) {
+        this.tenderType = tenderType;
+    }
 
     public String getUpdateTime() {
         return updateTime;

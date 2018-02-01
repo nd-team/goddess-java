@@ -65,12 +65,17 @@ public class BiddingInfoTO extends BaseTO {
      */
     @NotBlank(message = "业务方向科目不能为空",groups = {ADD.class, EDIT.class})
     private String businessDirectionSubject;
+    /**
+     * 标书模块
+     */
+    @NotBlank(message = "标书模块不能为空",groups = {ADD.class, EDIT.class})
+    private String tenderModule;
 
     /**
      * 标书类型
      */
     @NotNull(message = "标书类型不能为空",groups = {ADD.class, EDIT.class})
-    private String[] tenderModule;
+    private String[] tenderType;
 
     /**
      * 项目名称
@@ -269,12 +274,20 @@ public class BiddingInfoTO extends BaseTO {
         this.businessDirectionSubject = businessDirectionSubject;
     }
 
-    public String[] getTenderModule() {
+    public String getTenderModule() {
         return tenderModule;
     }
 
-    public void setTenderModule(String[] tenderModule) {
+    public void setTenderModule(String tenderModule) {
         this.tenderModule = tenderModule;
+    }
+
+    public String[] getTenderType() {
+        return tenderType;
+    }
+
+    public void setTenderType(String[] tenderType) {
+        this.tenderType = tenderType;
     }
 
     public String getBiddingNumber() {

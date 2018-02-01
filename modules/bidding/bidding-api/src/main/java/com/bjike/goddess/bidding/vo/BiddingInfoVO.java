@@ -55,9 +55,14 @@ public class BiddingInfoVO {
     private String businessDirectionSubject;
 
     /**
-     * 标书类型
+     * 标书模块
      */
     private String tenderModule;
+
+    /**
+     * 标书类型
+     */
+    private String tenderType;
 
 
     /**
@@ -185,6 +190,14 @@ public class BiddingInfoVO {
      * 备注
      */
     private String remark;
+
+    public String getTenderType() {
+        return tenderType;
+    }
+
+    public void setTenderType(String tenderType) {
+        this.tenderType = tenderType;
+    }
 
     public String getUpdateTime() {
         return updateTime;

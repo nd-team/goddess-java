@@ -85,25 +85,25 @@ public class ResumeInfo extends BaseEntity {
     /**
      * 兴趣爱好
      */
-    @Column(name = "hobby", nullable = false, columnDefinition = "TEXT   COMMENT '兴趣爱好'")
+    @Column(name = "hobby", columnDefinition = "TEXT   COMMENT '兴趣爱好'")
     private String hobby;
 
     /**
      * 工作经历描述
      */
-    @Column(name = "description", nullable = false, columnDefinition = "TEXT   COMMENT '工作经历描述'")
+    @Column(name = "description", columnDefinition = "TEXT   COMMENT '工作经历描述'")
     private String description;
 
     /**
      * 行业
      */
-    @Column(name = "industry", nullable = false, columnDefinition = "TEXT   COMMENT '行业'")
+    @Column(name = "industry", columnDefinition = "TEXT   COMMENT '行业'")
     private String industry;
 
     /**
      * 状态
      */
-    @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '状态'")
+    @Column(name = "status", columnDefinition = "VARCHAR(255)   COMMENT '状态'")
     private Status status;
 
 

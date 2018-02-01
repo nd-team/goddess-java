@@ -188,6 +188,7 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
                 Boolean tar = false;
                 if (!tar) {
                     bo.setPhone(transPhone(bo.getPhone()));
+                    bo.setOwnerPhone(transOwnerPhone(bo.getOwnerPhone()));
                 }
             }
         }
@@ -242,6 +243,7 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
         Boolean tar = false;
         if (!tar) {
             bo.setPhone(transPhone(bo.getPhone()));
+            bo.setOwnerPhone(transOwnerPhone(bo.getOwnerPhone()));
         }
         return bo;
     }
@@ -255,6 +257,10 @@ public class OwnerSerImpl extends ServiceImpl<Owner, OwnerDTO> implements OwnerS
     private String transPhone(String phone) throws SerException {
         phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
         return phone;
+    }
+    private String transOwnerPhone(String transOwnerPhone) throws SerException {
+        transOwnerPhone = transOwnerPhone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
+        return transOwnerPhone;
     }
     @Override
     public List<String> getProvinces() throws SerException {
