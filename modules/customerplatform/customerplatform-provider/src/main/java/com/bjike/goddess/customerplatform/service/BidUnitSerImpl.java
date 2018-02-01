@@ -237,6 +237,7 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
                 Boolean tar = false;
                 if (!tar) {
                     bo.setPhone(transPhone(bo.getPhone()));
+                    bo.setCompanyPhone(transCompanyPhone(bo.getCompanyPhone()));
                 }
             }
         }
@@ -289,6 +290,7 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
         Boolean tar = false;
         if (!tar) {
             bo.setPhone(transPhone(bo.getPhone()));
+            bo.setCompanyPhone(transCompanyPhone(bo.getCompanyPhone()));
         }
         return bo;
     }
@@ -303,7 +305,10 @@ public class BidUnitSerImpl extends ServiceImpl<BidUnit, BidUnitDTO> implements 
         phone = phone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
         return phone;
     }
-
+    private String transCompanyPhone(String companyPhone) throws SerException {
+        companyPhone = companyPhone.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
+        return companyPhone;
+    }
     @Override
     public List<String> getProvinces() throws SerException {
         Set<String> set = new HashSet<>();

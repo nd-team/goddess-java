@@ -426,18 +426,18 @@ public class SkillPromotionApplySerImpl extends ServiceImpl<SkillPromotionApply,
         SkillPromotionApply skillPromotionApply = BeanTransform.copyProperties(skillPromotionApplyTO, SkillPromotionApply.class, true);
         skillPromotionApply.setCreateTime(LocalDateTime.now());
         super.save(skillPromotionApply);
-        if (moduleAPI.isCheck("event")) {
-            for (String s : events(skillPromotionApply.getName())) {
-                EventTO eventTO = new EventTO();
-                eventTO.setProjectChineseName("管理等级晋升");
-                eventTO.setContent("管理等级晋升申请审核");
-                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
-                eventTO.setName(s);
-                eventTO.setPermissions(Permissions.ADUIT);
-                eventTO.setEventId(skillPromotionApply.getId());
-                eventAPI.save(eventTO);
-            }
-        }
+//        if (moduleAPI.isCheck("event")) {
+//            for (String s : events(skillPromotionApply.getName())) {
+//                EventTO eventTO = new EventTO();
+//                eventTO.setProjectChineseName("管理等级晋升");
+//                eventTO.setContent("管理等级晋升申请审核");
+//                eventTO.setRequestTime(DateUtil.dateToString(LocalDateTime.now()));    //todo:要求处理时间不确定
+//                eventTO.setName(s);
+//                eventTO.setPermissions(Permissions.ADUIT);
+//                eventTO.setEventId(skillPromotionApply.getId());
+//                eventAPI.save(eventTO);
+//            }
+//        }
         return BeanTransform.copyProperties(skillPromotionApply, SkillPromotionApplyBO.class);
     }
 

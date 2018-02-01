@@ -95,6 +95,7 @@ public class TempMatterDemandBO extends BaseBO {
      */
     private Integer adoptNum;
 
+
     public Boolean getIfStockSatisfy() {
         return ifStockSatisfy;
     }

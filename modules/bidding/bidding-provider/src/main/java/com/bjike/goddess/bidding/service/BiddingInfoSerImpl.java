@@ -356,8 +356,8 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
     public BiddingInfoBO insertBiddingInfo(BiddingInfoTO biddingInfoTO) throws SerException {
         checkAddIdentity();
 //        checkDate(biddingInfoTO);
-        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true, "tenderModule");
-        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(), ","));
+        BiddingInfo biddingInfo = BeanTransform.copyProperties(biddingInfoTO, BiddingInfo.class, true, "tenderType");
+        biddingInfo.setTenderType(StringUtils.join(biddingInfoTO.getTenderType(), ","));
         if (biddingInfo.getPassProjectEstimates().equals(false)) {
             biddingInfo.setOpportunity(false);
         } else {
@@ -375,10 +375,10 @@ public class BiddingInfoSerImpl extends ServiceImpl<BiddingInfo, BiddingInfoDTO>
             throw new SerException("id不能为空");
         }
         BiddingInfo biddingInfo = super.findById(biddingInfoTO.getId());
-        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true, "tenderModule");
+        BeanTransform.copyProperties(biddingInfoTO, biddingInfo, true, "tenderType");
 //        checkDate(biddingInfoTO);
         biddingInfo.setModifyTime(LocalDateTime.now());
-        biddingInfo.setTenderModule(StringUtils.join(biddingInfoTO.getTenderModule(), ","));
+        biddingInfo.setTenderType(StringUtils.join(biddingInfoTO.getTenderType(), ","));
         if (biddingInfo.getPassProjectEstimates().equals(false)) {
             biddingInfo.setOpportunity(false);
         } else {

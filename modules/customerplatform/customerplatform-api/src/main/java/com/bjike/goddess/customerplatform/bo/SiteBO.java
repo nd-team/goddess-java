@@ -12,6 +12,18 @@ import com.bjike.goddess.common.api.bo.BaseBO;
  * @Copy: [ com.bjike ]
  */
 public class SiteBO extends BaseBO {
+    /**
+     * 站点经度
+     */
+    private String siteLatitude;
+    /**
+     * 站点纬度
+     */
+    private String siteLongitude;
+    /**
+     * 归属运营商
+     */
+    private String ownershipOperator;
 
     /**
      * 站点名称
@@ -80,6 +92,29 @@ public class SiteBO extends BaseBO {
      */
     private String remark;
 
+    public String getOwnershipOperator() {
+        return ownershipOperator;
+    }
+
+    public void setOwnershipOperator(String ownershipOperator) {
+        this.ownershipOperator = ownershipOperator;
+    }
+
+    public String getSiteLatitude() {
+        return siteLatitude;
+    }
+
+    public void setSiteLatitude(String siteLatitude) {
+        this.siteLatitude = siteLatitude;
+    }
+
+    public String getSiteLongitude() {
+        return siteLongitude;
+    }
+
+    public void setSiteLongitude(String siteLongitude) {
+        this.siteLongitude = siteLongitude;
+    }
 
     public String getProvinces() {
         return provinces;

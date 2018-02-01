@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -207,14 +208,16 @@ public class ResumeInfoSerImpl extends ServiceImpl<ResumeInfo, ResumeInfoDTO> im
         return null;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void add(ResumeInfoTO to) throws SerException {
         ResumeInfo entity = new ResumeInfo();
-        BeanUtils.copyProperties(to, entity);
+        BeanTransform.copyProperties(to, entity, true);
         entity.setStatus(Status.THAW);
         super.save(entity);
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void edit(ResumeInfoTO to) throws SerException {
         ResumeInfo entity = super.findById(to.getId());
@@ -236,6 +239,7 @@ public class ResumeInfoSerImpl extends ServiceImpl<ResumeInfo, ResumeInfoDTO> im
         return bo;
     }
 
+    @Transactional(rollbackFor = SerException.class)
     @Override
     public void delete(String id) throws SerException {
         ResumeInfo entity = super.findById(id);

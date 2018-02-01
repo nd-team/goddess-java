@@ -24,9 +24,11 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -290,6 +292,14 @@ public class RentalApplyAct extends BaseFileAction{
         }
     }
 
+    @RequestMapping("v1/hello")
+    public String hello(){
+        return "hello";
+    }
+
+//    public ModelAndView hello(){
+//        return new ModelAndView("hello");
+//    }
 
 }
 

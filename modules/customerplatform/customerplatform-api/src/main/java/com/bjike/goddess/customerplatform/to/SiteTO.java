@@ -42,6 +42,21 @@ public class SiteTO extends BaseTO {
      */
     @NotBlank(message = "站点类型不能为空", groups = {ADD.class, EDIT.class})
     private String siteType;
+    /**
+     * 站点经度
+     */
+    @NotBlank(message = "站点经度不能为空", groups = {ADD.class, EDIT.class})
+    private String siteLatitude;
+    /**
+     * 站点纬度
+     */
+    @NotBlank(message = "站点纬度不能为空", groups = {ADD.class, EDIT.class})
+    private String siteLongitude;
+    /**
+     * 归属运营商
+     */
+    @NotBlank(message = "归属运营商不能为空", groups = {ADD.class, EDIT.class})
+    private String ownershipOperator;
 
     /**
      * 联系人姓名
@@ -92,6 +107,30 @@ public class SiteTO extends BaseTO {
      */
     private String remark;
 
+
+    public String getSiteLatitude() {
+        return siteLatitude;
+    }
+
+    public void setSiteLatitude(String siteLatitude) {
+        this.siteLatitude = siteLatitude;
+    }
+
+    public String getSiteLongitude() {
+        return siteLongitude;
+    }
+
+    public void setSiteLongitude(String siteLongitude) {
+        this.siteLongitude = siteLongitude;
+    }
+
+    public String getOwnershipOperator() {
+        return ownershipOperator;
+    }
+
+    public void setOwnershipOperator(String ownershipOperator) {
+        this.ownershipOperator = ownershipOperator;
+    }
 
     public String getProvinces() {
         return provinces;

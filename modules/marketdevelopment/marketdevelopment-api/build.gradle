@@ -6,5 +6,4 @@ dependencies {
     compile project(":common:common-utils")
     compile project(":modules:assemble:assemble-api")
     compile project(":modules:customer:customer-api")
-    compile project(":modules:projectissuehandle:projectissuehandle-api")
 }

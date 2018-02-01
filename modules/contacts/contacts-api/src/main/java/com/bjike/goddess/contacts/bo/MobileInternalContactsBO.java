@@ -117,6 +117,7 @@ public class MobileInternalContactsBO extends BaseBO {
      */
     private ContactsStatus status;
 
+
     public String getPhoneNumberA() {
         return phoneNumberA;
     }

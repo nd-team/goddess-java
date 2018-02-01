@@ -447,14 +447,13 @@ public class InternalContactsAct extends BaseFileAction {
     /**
      * 移动端从获取部门下的信息
      *
-     * @param dep 部门
      * @return class MobileInternalContactsBO
      * @version v1
      */
     @GetMapping("v1/mobile/info")
-    public Result mobileInfoByDepartment(String dep) throws ActException {
+    public Result mobileInfoByDepartment() throws ActException {
         try {
-            List<MobileInternalContactsBO> list = internalContactsAPI.mobileInfoByDepartment(dep);
+            List<MobileContactsBO> list = internalContactsAPI.mobileInfoByDepartment();
             return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());

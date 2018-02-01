@@ -226,8 +226,8 @@ public class BidUnitAction {
      *
      * @version v1
      */
-    @GetMapping("v1/city")
-    public Result getCity(String provinces) throws ActException {
+    @GetMapping("v1/city/{provinces}")
+    public Result getCity(@PathVariable String provinces) throws ActException {
         try {
             return ActResult.initialize(bidUnitAPI.getCity(provinces));
         } catch (SerException e) {
@@ -240,8 +240,8 @@ public class BidUnitAction {
      *
      * @version v1
      */
-    @GetMapping("v1/area")
-    public Result getArea(String provinces,String city) throws ActException {
+    @GetMapping("v1/area/{provinces}/{city}")
+    public Result getArea(@PathVariable String provinces,@PathVariable String city) throws ActException {
         try {
             return ActResult.initialize(bidUnitAPI.getArea(provinces,city));
         } catch (SerException e) {

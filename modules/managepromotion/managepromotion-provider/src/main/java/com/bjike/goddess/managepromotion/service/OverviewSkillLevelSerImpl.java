@@ -182,21 +182,21 @@ public class OverviewSkillLevelSerImpl extends ServiceImpl<OverviewSkillLevel, O
         overviewSkillLevel.setCreateTime(LocalDateTime.now());
 
 
-        String sql = "select is_subject from managepromotion_employeefunctionlevel where name='' and is_subject=0 ";
-        String[] fields = new String[]{"subject"};
-        List<EmployeeFunctionLevelBO> levelBOS = super.findBySql(sql, EmployeeFunctionLevelBO.class, fields);
-
-        if (null != levelBOS && levelBOS.size() > 0) {
-            throw new SerException("主项只能有一个");
-        }
-
-
-        sql = "SELECT is_subject from managepromotion_overviewskilllevel where is_subject=0 GROUP BY is_subject HAVING count(is_subject)>=5 ";
-        List<OverviewSkillLevelBO> skillLevelBOS = super.findBySql(sql, OverviewSkillLevelBO.class, fields);
-
-        if (null != skillLevelBOS && skillLevelBOS.size() > 5) {
-            throw new SerException("子项只能有5个");
-        }
+//        String sql = "select is_subject from managepromotion_employeefunctionlevel where name='' and is_subject=0 ";
+//        String[] fields = new String[]{"subject"};
+//        List<EmployeeFunctionLevelBO> levelBOS = super.findBySql(sql, EmployeeFunctionLevelBO.class, fields);
+//
+//        if (null != levelBOS && levelBOS.size() > 0) {
+//            throw new SerException("主项只能有一个");
+//        }
+//
+//
+//        sql = "SELECT is_subject from managepromotion_overviewskilllevel where is_subject=0 GROUP BY is_subject HAVING count(is_subject)>=5 ";
+//        List<OverviewSkillLevelBO> skillLevelBOS = super.findBySql(sql, OverviewSkillLevelBO.class, fields);
+//
+//        if (null != skillLevelBOS && skillLevelBOS.size() > 5) {
+//            throw new SerException("子项只能有5个");
+//        }
 
         super.save(overviewSkillLevel);
         return BeanTransform.copyProperties(overviewSkillLevel,OverviewSkillLevelBO.class);

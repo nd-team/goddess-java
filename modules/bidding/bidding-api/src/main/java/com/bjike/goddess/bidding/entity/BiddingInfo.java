@@ -70,12 +70,17 @@ public class BiddingInfo extends BaseEntity {
      */
     @Column(name = "businessDirectionSubject", columnDefinition = "VARCHAR(255)   COMMENT '业务方向科目'")
     private String businessDirectionSubject;
+    /**
+     * 标书模块
+     */
+    @Column(name = "tenderModule", columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
+    private String tenderModule;
 
     /**
      * 标书类型
      */
-    @Column(name = "tenderModule", columnDefinition = "VARCHAR(255)   COMMENT '标书模块'")
-    private String tenderModule;
+    @Column(name = "tenderType", columnDefinition = "VARCHAR(255)   COMMENT '标书类型'")
+    private String tenderType;
 
 
     /**
@@ -230,6 +235,14 @@ public class BiddingInfo extends BaseEntity {
      */
     @Column(name = "remark", columnDefinition = "VARCHAR(255)   COMMENT '备注'")
     private String remark;
+
+    public String getTenderType() {
+        return tenderType;
+    }
+
+    public void setTenderType(String tenderType) {
+        this.tenderType = tenderType;
+    }
 
     public Integer getMonth() {
         return month;

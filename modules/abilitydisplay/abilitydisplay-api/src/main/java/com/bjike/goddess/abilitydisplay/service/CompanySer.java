@@ -7,8 +7,6 @@ import com.bjike.goddess.abilitydisplay.entity.MyPage;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
-import java.util.List;
-
 /**
  * 公司业务接口
  *
