@@ -597,8 +597,9 @@ public class CollectSchemeSerImpl extends ServiceImpl<CollectScheme, CollectSche
         /** * 内容 */
         StringBuffer context = new StringBuffer();
         /** * 标题 */
-        StringBuffer title = new StringBuffer("汇总方案");
         CollectScheme entity = super.findById(id);
+
+        StringBuffer title = new StringBuffer(entity.getName()+DateUtil.dateToString(LocalDate.now()));
         if (null == entity) {
             throw new SerException("该对象不存在");
         }
