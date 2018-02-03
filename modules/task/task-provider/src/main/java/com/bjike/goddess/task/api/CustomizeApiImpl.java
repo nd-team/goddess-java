@@ -2,6 +2,7 @@ package com.bjike.goddess.task.api;
 
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.task.bo.CustomizeBO;
 import com.bjike.goddess.task.bo.DataBO;
 import com.bjike.goddess.task.dto.CollectDTO;
@@ -107,5 +108,10 @@ public class CustomizeApiImpl implements CustomizeAPI {
     @Override
     public void send(String id) throws SerException {
         customizeSer.send(id);
+    }
+
+    @Override
+    public List<CustomizeBO> findAll() throws SerException {
+        return BeanTransform.copyProperties(customizeSer.findAll(),CustomizeBO.class);
     }
 }

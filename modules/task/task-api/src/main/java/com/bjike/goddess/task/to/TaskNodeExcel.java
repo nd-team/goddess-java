@@ -157,8 +157,13 @@ public class TaskNodeExcel extends BaseTO {
     /**
      * 任务工作总结
      */
-    //@ExcelHeader(name = "任务工作总结")
-    //private String summary;
+    @ExcelHeader(name = "任务工作总结")
+    private String summary;
+    /**
+     * 功能模块
+     */
+    @ExcelHeader(name = "功能模块")
+    private String moudle;
     /**
      * 任务状态
      */

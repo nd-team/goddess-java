@@ -133,4 +133,7 @@ public interface CustomizeAPI {
      * @throws SerException
      */
     void send(String id) throws SerException;
+
+    List<CustomizeBO> findAll() throws SerException;
+
 }

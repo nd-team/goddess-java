@@ -255,6 +255,7 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         CustomizeBO bo = BeanTransform.copyProperties(entity, CustomizeBO.class);
         CustomizeSonDTO customizeSonDTO = new CustomizeSonDTO();
         customizeSonDTO.getConditions().add(Restrict.eq("customizeId",entity.getId()));
+        customizeSonDTO.getSorts().add("titleIndex=asc");
         List<CustomizeSon> customizeSons = customizeSonSer.findByCis(customizeSonDTO);
         bo.setSons(BeanTransform.copyProperties ( customizeSons, CustomizeSonBO.class ));
         return bo;
@@ -1402,23 +1403,47 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
 
         //goddess_taskallotment.
 
+
+
+
+//        str = "(SELECT any_value(ifnull(a.project,'无')) AS project,any_value(ifnull(b.name,'无')) AS name, " +
+//                "       any_value(ifnull(c.initiate,'无')) AS initiate,any_value(ifnull(c.taskName,'无')) AS taskName, " +
+//                "       any_value(ifnull(c.charge,'无')) AS charge,any_value(ifnull(c.execute,'无')) AS execute, " +
+//                "       any_value(ifnull(c.taskType,'无')) AS taskType,any_value(ifnull(c.type,'无')) AS type,any_value(ifnull(c.content,'无')) AS content, " +
+//                "       any_value(sum(c.planNum)) AS planNum,any_value(sum(c.actualNum)) AS actualNum, " +
+//                "       any_value(sum(c.actualTime)) AS actualTime,any_value(c.actualType) AS actualType, " +
+//                "       any_value(sum(c.needTime)) AS needTime,any_value(c.needType) AS needType, " +
+//                "       any_value(sum(c.executeTime)) AS executeTime,any_value(c.executeType) AS executeType, " +
+//                "       any_value(ifnull(c.remark,'无')) AS remark,any_value(ifnull(c.executeArea,'无')) AS executeArea, " +
+//                "       any_value(ifnull(c.executeDepart,'无')) AS executeDepart,any_value(ifnull(c.finishStatus,'无')) AS finishStatus, " +
+//                "       any_value(ifnull(c.priority,'无')) AS priority,any_value(ifnull(c.taskStatus,'无')) AS taskStatus, " +
+//                "       any_value(ifnull(c.moudle,'无')) AS moudle,any_value(ifnull(c.summary,'无')) AS summary,   " +
+//                "       any_value(count(*)) AS count FROM goddess_taskallotment.taskallotment_project a " +
+//                "      LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+//                "      LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id" +
+//                "   WHERE b.id IN ("+tablesId+") " +
+//                "   AND c.startTime BETWEEN '"+startTime+"' AND '"+endTime+"'" +
+//                "   GROUP BY "+GroupByTxt+" ) m";
         str = "(SELECT any_value(ifnull(a.project,'无')) AS project,any_value(ifnull(b.name,'无')) AS name, " +
-                "       any_value(ifnull(c.initiate,'无')) AS initiate,any_value(ifnull(c.taskName,'无')) AS taskName, " +
-                "       any_value(ifnull(c.charge,'无')) AS charge,any_value(ifnull(c.execute,'无')) AS execute, " +
-                "       any_value(ifnull(c.taskType,'无')) AS taskType,any_value(ifnull(c.type,'无')) AS type,any_value(ifnull(c.content,'无')) AS content, " +
-                "       any_value(sum(c.planNum)) AS planNum,any_value(sum(c.actualNum)) AS actualNum, " +
-                "       any_value(sum(c.actualTime)) AS actualTime,any_value(c.actualType) AS actualType, " +
-                "       any_value(sum(c.needTime)) AS needTime,any_value(c.needType) AS needType, " +
-                "       any_value(sum(c.executeTime)) AS executeTime,any_value(c.executeType) AS executeType, " +
-                "       any_value(ifnull(c.remark,'无')) AS remark,any_value(ifnull(c.executeArea,'无')) AS executeArea, " +
-                "       any_value(ifnull(c.executeDepart,'无')) AS executeDepart,any_value(ifnull(c.finishStatus,'无')) AS finishStatus, " +
-                "       any_value(ifnull(c.priority,'无')) AS priority,any_value(ifnull(c.taskStatus,'无')) AS taskStatus, " +
-                "       any_value(count(*)) AS count FROM goddess_taskallotment.taskallotment_project a " +
-                "      LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
-                "      LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id" +
+                "     any_value(ifnull(c.initiate,'无')) AS initiate,any_value(ifnull(c.taskName,'无')) AS taskName, " +
+                "     any_value(ifnull(c.charge,'无')) AS charge,any_value(ifnull(c.execute,'无')) AS execute, " +
+                "     any_value(ifnull(c.taskType,'无')) AS taskType,any_value(ifnull(c.type,'无')) AS type, " +
+                "     any_value(ifnull(c.content,'无')) AS content, " +
+                "     any_value( CONVERT(ifnull(sum(c.planNum),'0') ,CHAR(20)) ) AS planNum,any_value( CONVERT(ifnull(sum(c.actualNum),'0'),CHAR(20))) AS actualNum, " +
+                "     any_value( CONVERT(ifnull(sum(c.actualTime),'0'),CHAR(20))) AS actualTime,any_value(ifnull(c.actualType,'无')) AS actualType, " +
+                "     any_value( CONVERT(ifnull(sum(c.needTime),'0'),CHAR(20))) AS needTime,any_value(ifnull(c.needType,'无')) AS needType, " +
+                "     any_value( CONVERT(ifnull(sum(c.executeTime),'0'),CHAR(20))) AS executeTime,any_value(ifnull(c.executeType,'无')) AS executeType, " +
+                "     any_value(ifnull(c.remark,'无')) AS remark,any_value(ifnull(c.executeArea,'无')) AS executeArea, " +
+                "     any_value(ifnull(c.executeDepart,'无')) AS executeDepart,any_value(ifnull(c.finishStatus,'无')) AS finishStatus, " +
+                "     any_value(ifnull(c.priority,'无')) AS priority,any_value(ifnull(c.taskStatus,'无')) AS taskStatus, " +
+                "     any_value(ifnull(c.moudle,'无')) AS moudle,any_value(ifnull(c.summary,'无')) AS summary, " +
+                "     any_value(count(*)) AS count FROM goddess_taskallotment.taskallotment_project a " +
+                "    LEFT JOIN goddess_taskallotment.taskallotment_table b ON a.id = b.project_id " +
+                "    LEFT JOIN goddess_taskallotment.taskallotment_tasknode c ON  b.id = c.table_id" +
                 "   WHERE b.id IN ("+tablesId+") " +
                 "   AND c.startTime BETWEEN '"+startTime+"' AND '"+endTime+"'" +
                 "   GROUP BY "+GroupByTxt+" ) m";
+
         sql.append(" SELECT " + field +" FROM " + str + " WHERE " + txt );
 
         return sql.toString();
@@ -1753,19 +1778,20 @@ public class CustomizeSerImpl extends ServiceImpl<Customize, CustomizeDTO> imple
         }
         /** * 内容 */
         context = detail(id);
-        if ("1".equals(entity.getType())){
-            if ("1".equals(entity.getTypeExplain())){
-                title = "今日汇总明细";
-            }else {
-                title = "明日汇总明细";
-            }
-        }else{
-            if ("1".equals(entity.getTypeExplain())){
-                title = "日周月数量汇总";
-            }else {
-                title = "自定义数量汇总";
-            }
-        }
+        title = entity.getName()+"_"+ DateUtil.dateToString(LocalDate.now());
+//        if ("1".equals(entity.getType())){
+//            if ("1".equals(entity.getTypeExplain())){
+//                title = entity.getName()+"_"+ DateUtil.dateToString(LocalDate.now());
+//            }else {
+//                title = "明日汇总明细";
+//            }
+//        }else{
+//            if ("1".equals(entity.getTypeExplain())){
+//                title = "日周月数量汇总";
+//            }else {
+//                title = "自定义数量汇总";
+//            }
+//        }
 
         String departEmial = null;
         //是否抄送本部门

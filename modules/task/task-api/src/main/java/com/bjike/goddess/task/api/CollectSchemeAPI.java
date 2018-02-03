@@ -124,4 +124,7 @@ public interface CollectSchemeAPI {
      * @throws SerException
      */
     void send(String id) throws SerException;
+
+
+    List<CollectSchemeBO> findAll() throws SerException;
 }
