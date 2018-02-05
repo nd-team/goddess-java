@@ -45,7 +45,7 @@ public class RotationRecordSerImpl extends ServiceImpl<RotationRecord, RotationR
 
     @Override
     public List<RotationRecordBO> list(RotationRecordDTO dto) throws SerException {
-        List<RotationRecord> entities =  super.findByCis(dto);
+        List<RotationRecord> entities =  super.findByPage(dto);
 
         return convertRecord(entities);
     }

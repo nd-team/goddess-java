@@ -15,6 +15,7 @@ import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.bo.PayedCollectBO;
 import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.DispatchcarDeleteFileTO;
 import com.bjike.goddess.dispatchcar.to.ExportDispatchCarInfoTO;
@@ -205,8 +206,13 @@ public class PayedAct extends BaseFileAction{
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ExportDispatchCarInfoTO to, HttpServletResponse response) throws ActException {
         try {
+            DispatchcarExportDTO dto = new DispatchcarExportDTO();
+            dto.setArea(to.getArea());
+            dto.setStartTime(to.getStartTime());
+            dto.setEndTime(to.getEndTime());
+            dto.setFindType(FindType.PAYED);
             String fileName = "出车记录.xlsx";
-            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(to), fileName);
+            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(dto), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());

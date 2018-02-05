@@ -11,9 +11,11 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
 import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
+import com.bjike.goddess.dispatchcar.to.ExportDispatchCarInfoTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
 import com.bjike.goddess.dispatchcar.vo.AuditResultVO;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -162,15 +165,15 @@ public class FinanceAuditAct extends BaseFileAction{
     }
 
     /**
-     * 核对分析
+     * 核对
      * @param to 核对内容
      * @throws ActException
      * @version v1
      */
     @PostMapping("v1/financialSugg")
-    public Result financialSugg(@Validated(ADD.class) CheckChangeCarTO to, @Validated(ADD.class) DispatchCarInfoTO dispatchCarInfoTO,HttpServletRequest request) throws ActException{
+    public Result financialSugg(@Validated(ADD.class) CheckChangeCarTO to,HttpServletRequest request) throws ActException{
         try {
-            dispatchCarInfoAPI.financialSugg(dispatchCarInfoTO,to);
+            dispatchCarInfoAPI.financialSugg(to);
             return new ActResult("核对成功");
         }catch (SerException e){
             throw new ActException(e.getMessage());
@@ -224,6 +227,31 @@ public class FinanceAuditAct extends BaseFileAction{
         }
 
     }
+
+    /**
+     * 导出Excel
+     *
+     * @param to 导出条件
+     * @version v1
+     */
+    @GetMapping("v1/exportExcel")
+    public Result exportExcel(ExportDispatchCarInfoTO to, HttpServletResponse response) throws ActException {
+        try {
+            DispatchcarExportDTO dto = new DispatchcarExportDTO();
+            dto.setArea(to.getArea());
+            dto.setStartTime(to.getStartTime());
+            dto.setEndTime(to.getEndTime());
+            dto.setFindType(FindType.FINANCEAUDIT);
+            String fileName = "出车记录.xlsx";
+            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(dto), fileName);
+            return new ActResult("导出成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        } catch (IOException e1) {
+            throw new ActException(e1.getMessage());
+        }
+    }
+
 
 //
 //    /**

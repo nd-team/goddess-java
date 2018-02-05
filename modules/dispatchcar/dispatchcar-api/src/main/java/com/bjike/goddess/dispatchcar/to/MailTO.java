@@ -15,42 +15,41 @@ import javax.validation.constraints.NotNull;
  * @Copy: [com.bjike]
  */
 public class MailTO extends BaseTO{
+
     /**
-     * 寄件日期
+     * 是否有票据
      */
-    @NotBlank(message = "寄件日期不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否有票据不能为空", groups = {ADD.class, EDIT.class})
+    private Boolean hasBill;
+
+    /**
+     * 收件人
+     */
+    @NotNull(message = "收件人不能为空", groups = {ADD.class, EDIT.class})
+    private String sendReceiver;
+
+    /**
+     * 寄件时间
+     */
+    @NotNull(message = "寄件时间不能为空", groups = {ADD.class, EDIT.class})
     private String sendDate;
 
     /**
-     * 存档联是否寄件
+     * 地区
      */
-    @NotNull(message = "存档联是否寄件不能为空", groups = {ADD.class, EDIT.class})
-    private Boolean ifSendArchiveAl;
+    @NotNull(message = "地区不能为空", groups = {ADD.class, EDIT.class})
+    private String sendArea;
 
     /**
-     * 报销联是否寄件
+     * 详细地址
      */
-    @NotNull(message = "报销联是否寄件不能为空", groups = {ADD.class, EDIT.class})
-    private Boolean ifSendReimbursementAl;
+    @NotNull(message = "详细地址不能为空", groups = {ADD.class, EDIT.class})
+    private String sendAddress;
 
     /**
-     * 过路停车费总额
+     * 寄件备注
      */
-    @NotNull(message = "过路停车费总额不能为空", groups = {ADD.class, EDIT.class})
-    private Double totalParking;
-
-
-    /**
-     * 过路停车费小票总数
-     */
-    @NotNull(message = "过路停车费小票总数不能为空", groups = {ADD.class, EDIT.class})
-    private Integer tatalReceipts;
-
-    /**
-     * 加油小票是否寄件
-     */
-    @NotNull(message = "加油小票是否寄件不能为空", groups = {ADD.class, EDIT.class})
-    private Boolean ifSendAddOilReceipts;
+    private String sendRemark;
 
 
     public String getSendDate() {
@@ -61,43 +60,43 @@ public class MailTO extends BaseTO{
         this.sendDate = sendDate;
     }
 
-    public Boolean getIfSendArchiveAl() {
-        return ifSendArchiveAl;
+    public Boolean getHasBill() {
+        return hasBill;
     }
 
-    public void setIfSendArchiveAl(Boolean ifSendArchiveAl) {
-        this.ifSendArchiveAl = ifSendArchiveAl;
+    public void setHasBill(Boolean hasBill) {
+        this.hasBill = hasBill;
     }
 
-    public Boolean getIfSendReimbursementAl() {
-        return ifSendReimbursementAl;
+    public String getSendReceiver() {
+        return sendReceiver;
     }
 
-    public void setIfSendReimbursementAl(Boolean ifSendReimbursementAl) {
-        this.ifSendReimbursementAl = ifSendReimbursementAl;
+    public void setSendReceiver(String sendReceiver) {
+        this.sendReceiver = sendReceiver;
     }
 
-    public Double getTotalParking() {
-        return totalParking;
+    public String getSendArea() {
+        return sendArea;
     }
 
-    public void setTotalParking(Double totalParking) {
-        this.totalParking = totalParking;
+    public void setSendArea(String sendArea) {
+        this.sendArea = sendArea;
     }
 
-    public Integer getTatalReceipts() {
-        return tatalReceipts;
+    public String getSendAddress() {
+        return sendAddress;
     }
 
-    public void setTatalReceipts(Integer tatalReceipts) {
-        this.tatalReceipts = tatalReceipts;
+    public void setSendAddress(String sendAddress) {
+        this.sendAddress = sendAddress;
     }
 
-    public Boolean getIfSendAddOilReceipts() {
-        return ifSendAddOilReceipts;
+    public String getSendRemark() {
+        return sendRemark;
     }
 
-    public void setIfSendAddOilReceipts(Boolean ifSendAddOilReceipts) {
-        this.ifSendAddOilReceipts = ifSendAddOilReceipts;
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
     }
 }

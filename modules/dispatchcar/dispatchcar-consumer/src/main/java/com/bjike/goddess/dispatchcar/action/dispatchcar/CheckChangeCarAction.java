@@ -9,27 +9,29 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.dispatchcar.api.CheckChangeCarAPI;
 import com.bjike.goddess.dispatchcar.bo.CheckChangeCarBO;
 import com.bjike.goddess.dispatchcar.dto.CheckChangeCarDTO;
-import com.bjike.goddess.dispatchcar.to.CheckChangeCarTO;
 import com.bjike.goddess.dispatchcar.to.CorrectMistakeTO;
 import com.bjike.goddess.dispatchcar.to.GuidePermissionTO;
 import com.bjike.goddess.dispatchcar.vo.CheckChangeCarVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
-* 出车核对修改记录
-* @Author: [ Jason ]
-* @Date: [  2017-09-25 11:24 ]
-* @Description:	[ 出车核对修改记录 ]
-* @Version: [ v1.0.0 ]
-* @Copy: [ com.bjike ]
-*/
+ * 出车核对修改记录
+ *
+ * @Author: [ Jason ]
+ * @Date: [  2017-09-25 11:24 ]
+ * @Description: [ 出车核对修改记录 ]
+ * @Version: [ v1.0.0 ]
+ * @Copy: [ com.bjike ]
+ */
 @RestController
 @RequestMapping("checkchangecar")
 public class CheckChangeCarAction {
@@ -37,12 +39,10 @@ public class CheckChangeCarAction {
     private CheckChangeCarAPI checkChangeCarAPI;
 
 
-
     /**
      * 功能导航权限
      *
      * @param guidePermissionTO 导航类型数据
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/guidePermission")
@@ -64,18 +64,18 @@ public class CheckChangeCarAction {
 
     /**
      * 出车核对修改记录列表
+     *
      * @param dto 查询条件
      * @return class CheckChangeCarVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result findList(CheckChangeCarDTO dto) throws ActException{
+    public Result findList(CheckChangeCarDTO dto) throws ActException {
         try {
             List<CheckChangeCarBO> boList = checkChangeCarAPI.list(dto);
-            List<CheckChangeCarVO> voList = BeanTransform.copyProperties(boList,CheckChangeCarVO.class);
+            List<CheckChangeCarVO> voList = BeanTransform.copyProperties(boList, CheckChangeCarVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -83,16 +83,16 @@ public class CheckChangeCarAction {
 
     /**
      * 问题解决
+     *
      * @param to 出车
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/modify")
-    public Result modify(@Validated(ADD.class) CorrectMistakeTO to) throws ActException{
+    public Result modify(@Validated(ADD.class) CorrectMistakeTO to) throws ActException {
         try {
             checkChangeCarAPI.modify(to);
             return new ActResult("问题解决成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -100,20 +100,20 @@ public class CheckChangeCarAction {
 
     /**
      * 根据id查询单个核对修改记录
+     *
      * @param id
      * @return class CheckChangeCarVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/one")
-    public Result findOne(@RequestParam String id) throws ActException{
+    public Result findOne(@RequestParam String id) throws ActException {
         try {
             CheckChangeCarBO checkChangeCarBO = checkChangeCarAPI.findOne(id);
-            CheckChangeCarVO checkChangeCarVO = BeanTransform.copyProperties(checkChangeCarBO,CheckChangeCarVO.class);
+            CheckChangeCarVO checkChangeCarVO = BeanTransform.copyProperties(checkChangeCarBO, CheckChangeCarVO.class);
             return ActResult.initialize(checkChangeCarVO);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
- }
+}

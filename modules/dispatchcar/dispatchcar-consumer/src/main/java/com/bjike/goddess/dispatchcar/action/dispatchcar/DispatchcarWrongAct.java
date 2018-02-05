@@ -12,8 +12,9 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
-import com.bjike.goddess.dispatchcar.dto.CheckChangeCarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
+import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
@@ -44,7 +45,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("dipatchcarwrong")
-public class DispatchcarWrongAct extends BaseFileAction{
+public class DispatchcarWrongAct extends BaseFileAction {
     @Autowired
     private DispatchCarInfoAPI dispatchCarInfoAPI;
 
@@ -55,7 +56,6 @@ public class DispatchcarWrongAct extends BaseFileAction{
      * 功能导航权限
      *
      * @param guidePermissionTO 导航类型数据
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/guidePermission")
@@ -76,18 +76,18 @@ public class DispatchcarWrongAct extends BaseFileAction{
 
     /**
      * 出车有误记录列表
+     *
      * @param dto 查询条件
      * @return class DispatchCarInfoVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/list")
-    public Result list(DispatchCarInfoDTO dto) throws ActException{
+    public Result list(DispatchCarInfoDTO dto) throws ActException {
         try {
             List<DispatchCarInfoBO> boList = dispatchCarInfoAPI.findWrongRecord(dto);
-            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(boList,DispatchCarInfoVO.class);
+            List<DispatchCarInfoVO> voList = BeanTransform.copyProperties(boList, DispatchCarInfoVO.class);
             return ActResult.initialize(voList);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -146,7 +146,7 @@ public class DispatchcarWrongAct extends BaseFileAction{
      * 上传附件
      *
      * @param request 附件内容
-     * @param id      出车id
+     * @param id 出车id
      * @version v1
      */
     @PostMapping("v1/upload/{id}")
@@ -242,16 +242,16 @@ public class DispatchcarWrongAct extends BaseFileAction{
 
     /**
      * 寄件
+     *
      * @param to 寄件内容
-     * @throws ActException
      * @version v1
      */
     @PostMapping("v1/mail")
-    public Result mail(@Validated(EDIT.class) MailTO to) throws ActException{
+    public Result mail(@Validated(EDIT.class) MailTO to) throws ActException {
         try {
             dispatchCarInfoAPI.mail(to);
             return new ActResult("寄件编辑成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -260,7 +260,6 @@ public class DispatchcarWrongAct extends BaseFileAction{
     /**
      * 导入
      *
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -288,8 +287,13 @@ public class DispatchcarWrongAct extends BaseFileAction{
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ExportDispatchCarInfoTO to, HttpServletResponse response) throws ActException {
         try {
+            DispatchcarExportDTO dto = new DispatchcarExportDTO();
+            dto.setArea(to.getArea());
+            dto.setStartTime(to.getStartTime());
+            dto.setEndTime(to.getEndTime());
+            dto.setFindType(FindType.WRONG);
             String fileName = "出车记录.xlsx";
-            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(to), fileName);
+            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(dto), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -314,6 +318,39 @@ public class DispatchcarWrongAct extends BaseFileAction{
             throw new ActException(e.getMessage());
         } catch (IOException e1) {
             throw new ActException(e1.getMessage());
+        }
+    }
+
+    /**
+     * 重新审核
+     *
+     * @des 重新审核
+     * @version v1
+     */
+    @PutMapping("v1/reAudit")
+    public Result reAudit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        try {
+            dispatchCarInfoAPI.reAudit(to);
+            return new ActResult("操作成功");
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据id出车记录
+     *
+     * @param id 出车记录id
+     * @return class DispatchCarInfoVO
+     * @version v1
+     */
+    @GetMapping("v1/find/{id}")
+    public Result find(@PathVariable String id, HttpServletRequest request) throws ActException {
+        try {
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(dispatchCarInfoAPI.findById(id), DispatchCarInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
         }
     }
 }

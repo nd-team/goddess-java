@@ -365,6 +365,7 @@ public class BusinessNegotiationSerImpl extends ServiceImpl<BusinessNegotiation,
             businessNegotiation = BeanTransform.copyProperties(to, BusinessNegotiation.class, true);
             businessNegotiation.setCreateTime(createTime);
             businessNegotiation.setModifyTime(LocalDateTime.now());
+            super.update(businessNegotiation);
             BusinessNegotiationBO bo = BeanTransform.copyProperties(businessNegotiation, BusinessNegotiationBO.class);
             return bo;
         } else {

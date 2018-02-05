@@ -179,4 +179,9 @@ public class RotationRecordApiImpl implements RotationRecordAPI {
     public List<RotationRecordBO> list(RotationRecordDTO dto) throws SerException {
         return rotationRecordSer.list(dto);
     }
+
+    @Override
+    public Long count(RotationRecordDTO dto) throws SerException {
+        return rotationRecordSer.count(dto);
+    }
 }

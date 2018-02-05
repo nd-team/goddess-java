@@ -6,10 +6,12 @@ import com.bjike.goddess.dispatchcar.enums.Acctype;
 import com.bjike.goddess.dispatchcar.enums.CarSource;
 import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
+import com.bjike.goddess.dispatchcar.to.DispatchCarInfoTO;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -528,6 +530,8 @@ public class DispatchCarInfo extends BaseEntity {
 
 
 
+
+
 //    /**
 //     * 处罚汇总
 //     */
@@ -670,6 +674,47 @@ public class DispatchCarInfo extends BaseEntity {
 //     */
 //    @Column(name = "totalCost", columnDefinition = "DECIMAL(10,2)   COMMENT '金额，全部费用'")
 //    private Double totalCost;
+
+    /**
+     * 是否有票据
+     */
+    @Column(name = "hasBill", columnDefinition = "TINYINT(1)   COMMENT '是否有票据'")
+    private Boolean hasBill;
+
+    /**
+     * 收件人
+     */
+    @Column(name = "sendReceiver", columnDefinition = "VARCHAR(20)   COMMENT '收件人'")
+    private String sendReceiver;
+
+//    /**
+//     * 寄件时间
+//     */
+//    private String sendDate;
+
+    /**
+     * 地区
+     */
+    @Column(name = "sendArea", columnDefinition = "VARCHAR(10)   COMMENT '地区'")
+    private String sendArea;
+
+    /**
+     * 详细地址
+     */
+    @Column(name = "sendAddress", columnDefinition = "VARCHAR(50)   COMMENT '详细地址'")
+    private String sendAddress;
+
+    /**
+     * 寄件备注
+     */
+    @Column(name = "sendRemark", columnDefinition = "VARCHAR(200)   COMMENT '备注'")
+    private String sendRemark;
+
+    /**
+     * 财务核对是否通过
+     */
+    @Column(name = "ifFinancePass", columnDefinition = "TINYINT(1) COMMENT '财务核对是否通过'")
+    private Boolean ifFinancePass;
 
 
     public String getNumber() {
@@ -1372,5 +1417,53 @@ public class DispatchCarInfo extends BaseEntity {
 
     public void setCost(Double cost) {
         this.cost = cost;
+    }
+
+    public Boolean getHasBill() {
+        return hasBill;
+    }
+
+    public void setHasBill(Boolean hasBill) {
+        this.hasBill = hasBill;
+    }
+
+    public String getSendReceiver() {
+        return sendReceiver;
+    }
+
+    public void setSendReceiver(String sendReceiver) {
+        this.sendReceiver = sendReceiver;
+    }
+
+    public String getSendArea() {
+        return sendArea;
+    }
+
+    public void setSendArea(String sendArea) {
+        this.sendArea = sendArea;
+    }
+
+    public String getSendAddress() {
+        return sendAddress;
+    }
+
+    public void setSendAddress(String sendAddress) {
+        this.sendAddress = sendAddress;
+    }
+
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
+    }
+
+    public Boolean getIfFinancePass() {
+        return ifFinancePass;
+    }
+
+    public void setIfFinancePass(Boolean ifFinancePass) {
+        this.ifFinancePass = ifFinancePass;
     }
 }

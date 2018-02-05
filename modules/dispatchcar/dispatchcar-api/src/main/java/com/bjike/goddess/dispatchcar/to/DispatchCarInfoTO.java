@@ -24,6 +24,10 @@ import java.util.Map;
  */
 public class DispatchCarInfoTO extends BaseTO {
 
+    public interface COMPLETE{}
+
+    public interface SENT{}
+
     /**
      * 出车单号
      */
@@ -37,9 +41,6 @@ public class DispatchCarInfoTO extends BaseTO {
     @NotBlank(message = "司机名称不能为空", groups = {ADD.class, EDIT.class})
     private String driver;
 
-
-
-
     /**
      * 用车人
      */
@@ -49,7 +50,7 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 员工编号
      */
-    @NotBlank(message = "员工编号不能为空", groups = {ADD.class, EDIT.class})
+//    @NotBlank(message = "员工编号不能为空", groups = {ADD.class, EDIT.class})
     private String userNumber;
 
     /**
@@ -91,25 +92,25 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 出车开始时间
      */
-    @NotBlank(message = "出车开始时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "出车开始时间不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private String startTime;
 
     /**
      * 出车结束时间
      */
-    @NotBlank(message = "出车结束时间不能为空", groups = {ADD.class, EDIT.class})
+    @NotBlank(message = "出车结束时间不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private String endTime;
 
     /**
      * 是否午休
      */
-    @NotNull(message = "是否午休不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否午休不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Boolean siesta;
 
     /**
      * 加班时长
      */
-    @NotNull(message = "加班时长不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "加班时长不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double overWorkTime;
 
     /**
@@ -139,19 +140,19 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 是否开空调
      */
-    @NotNull(message = "是否开空调不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否开空调不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Boolean aircondition;
 
     /**
      * 是否市内
      */
-    @NotNull(message = "是否市内不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "是否市内不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Boolean downtown;
 
     /**
      * 当天是否加油
      */
-    @NotNull(message = "当天是否加油不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "当天是否加油不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Boolean addOil;
 
     /**
@@ -174,7 +175,7 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 油卡余额
      */
-    @NotNull(message = "油卡余额不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "油卡余额不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double oilCardBalance;
 
     /**
@@ -221,7 +222,7 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 当天油价
      */
-    @NotNull(message = "当天油价不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "当天油价不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double oilPrice;
 
     /**
@@ -239,43 +240,43 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 完成任务数量
      */
-    @NotNull(message = "完成任务数量不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "完成任务数量不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Integer finishTaskAmount;
 
     /**
      * 出车开始里程数
      */
-    @NotNull(message = "出车开始里程数不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "出车开始里程数不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double startMileage;
 
     /**
      * 出车结束里程数
      */
-    @NotNull(message = "出车结束里程数不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "出车结束里程数不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double endMileage;
 
     /**
      * GPS轨迹总里程数
      */
-    @NotNull(message = "GPS轨迹总里程数不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "GPS轨迹总里程数不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double mileageOfGPS;
 
     /**
      * 停车费
      */
-    @NotNull(message = "停车费不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "停车费不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double parkCost;
 
     /**
      * 过路费
      */
-    @NotNull(message = "过路费不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "过路费不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double roadCost;
 
     /**
      * 评价司机
      */
-    @NotNull(message = "评价司机不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "评价司机不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Evaluate evaluatedriver;
 
     /**
@@ -286,7 +287,7 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 实际加油量
      */
-    @NotNull(message = "实际加油量不能为空", groups = {ADD.class, EDIT.class})
+    @NotNull(message = "实际加油量不能为空", groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double addOilAmount;
 
     /**
@@ -328,11 +329,6 @@ public class DispatchCarInfoTO extends BaseTO {
      */
     private String sender;
 
-    /**
-     * 寄件日期
-     */
-    private String sendDate;
-
 
     /**
      * 存档联是否寄件
@@ -343,6 +339,43 @@ public class DispatchCarInfoTO extends BaseTO {
      * 报销联是否寄件
      */
     private Boolean ifSendReimbursementAl;
+
+    /**
+     * 是否有票据
+     */
+    @NotNull(message = "是否有票据不能为空", groups = {DispatchCarInfoTO.SENT.class})
+    private Boolean hasBill;
+
+    /**
+     * 收件人
+     */
+    @NotNull(message = "收件人不能为空", groups = {DispatchCarInfoTO.SENT.class})
+    private String sendReceiver;
+
+    /**
+     * 寄件时间
+     */
+    @NotNull(message = "寄件时间不能为空", groups = {DispatchCarInfoTO.SENT.class})
+    private String sendDate;
+
+    /**
+     * 地区
+     */
+    @NotNull(message = "地区不能为空", groups = {DispatchCarInfoTO.SENT.class})
+    private String sendArea;
+
+    /**
+     * 详细地址
+     */
+    @NotNull(message = "详细地址不能为空", groups = {DispatchCarInfoTO.SENT.class})
+    private String sendAddress;
+
+    /**
+     * 寄件备注
+     */
+    private String sendRemark;
+
+
 
 
 
@@ -396,7 +429,7 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 租车费用
      */
-    @NotNull(message = "租车费用不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "租车费用不能为空",groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double carRentalCost;
 
 //    /**
@@ -419,8 +452,11 @@ public class DispatchCarInfoTO extends BaseTO {
     /**
      * 当天油耗
      */
-    @NotNull(message = "当天油耗不能为空",groups = {ADD.class, EDIT.class})
+    @NotNull(message = "当天油耗不能为空",groups = {DispatchCarInfoTO.COMPLETE.class, EDIT.class})
     private Double oilWear;
+
+
+
 
     public String getDriver() {
         return driver;

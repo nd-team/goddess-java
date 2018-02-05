@@ -332,4 +332,20 @@ public class RotationCollectAction {
     }
 
 
+    /**
+     * 获取全部地区
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("/v1/areas")
+    public Result listArea() throws ActException{
+        try {
+            List<String> areas = rotationCollectAPI.listAreas();
+            return ActResult.initialize(areas);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

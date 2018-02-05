@@ -1,11 +1,14 @@
 package com.bjike.goddess.dispatchcar.vo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.dispatchcar.enums.Acctype;
 import com.bjike.goddess.dispatchcar.enums.Evaluate;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -562,9 +565,76 @@ public class DispatchCarInfoVO {
 //    private Double totalCost;
 
 
+    /**
+     * 是否有票据
+     */
+    private Boolean hasBill;
+
+    /**
+     * 收件人
+     */
+    private String sendReceiver;
+
+//    /**
+//     * 寄件时间
+//     */
+//    private String sendDate;
+
+    /**
+     * 地区
+     */
+    private String sendArea;
+
+    /**
+     * 详细地址
+     */
+    private String sendAddress;
+
+    /**
+     * 寄件备注
+     */
+    private String sendRemark;
 
 
+    public Boolean getHasBill() {
+        return hasBill;
+    }
 
+    public void setHasBill(Boolean hasBill) {
+        this.hasBill = hasBill;
+    }
+
+    public String getSendReceiver() {
+        return sendReceiver;
+    }
+
+    public void setSendReceiver(String sendReceiver) {
+        this.sendReceiver = sendReceiver;
+    }
+
+    public String getSendArea() {
+        return sendArea;
+    }
+
+    public void setSendArea(String sendArea) {
+        this.sendArea = sendArea;
+    }
+
+    public String getSendAddress() {
+        return sendAddress;
+    }
+
+    public void setSendAddress(String sendAddress) {
+        this.sendAddress = sendAddress;
+    }
+
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
+    }
 
     public String getNumber() {
         return number;

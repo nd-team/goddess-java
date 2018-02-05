@@ -1323,7 +1323,7 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
-        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, false);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();

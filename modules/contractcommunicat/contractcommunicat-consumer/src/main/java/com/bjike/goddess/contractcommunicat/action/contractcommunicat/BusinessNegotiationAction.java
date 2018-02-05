@@ -18,16 +18,15 @@ import com.bjike.goddess.contractcommunicat.excel.SonPermissionObject;
 import com.bjike.goddess.contractcommunicat.to.BusinessNegotiationTO;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.vo.BusinessNegotiationVO;
-import com.bjike.goddess.contractcommunicat.vo.InProjectsVO;
-import com.bjike.goddess.contractcommunicat.vo.ProjectOutsourcingVO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
 import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
-import com.bjike.goddess.problemhandle.api.ProblemAcceptAPI;
-import com.bjike.goddess.problemhandle.bo.ProblemAcceptBO;
-import com.bjike.goddess.problemhandle.dto.ProblemAcceptDTO;
+import com.bjike.goddess.problemhandle.api.ProjectProblemAccAPI;
+import com.bjike.goddess.problemhandle.bo.ProjectProblemAccBO;
+import com.bjike.goddess.problemhandle.dto.ProjectProblemAccDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -60,7 +59,7 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @Autowired
     UserSetPermissionAPI userSetPermissionAPI;
     @Autowired
-    ProblemAcceptAPI projectProblemAccAPI;
+    ProjectProblemAccAPI projectProblemAccAPI;
     @Autowired
     DepartmentDetailAPI departmentDetailAPI;
 
@@ -426,12 +425,17 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @GetMapping("v1/area")
     public Result listArea() throws ActException {
         try {
-            List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            /*List<ProjectProblemAccBO> bos = projectProblemAccAPI.findListProjectProblem(new ProjectProblemAccDTO());
             if (null == bos) {
                 return ActResult.initialize(null);
             }
             Set<String> set = new HashSet<>();
-            for (ProblemAcceptBO bo : bos) {
+            for (ProjectProblemAccBO bo : bos) {
+                set.add(bo.get());
+            }*/
+            Set<String> set = new HashSet<>();
+            List<AreaBO> list = departmentDetailAPI.findArea();
+            for (AreaBO bo : list) {
                 set.add(bo.getArea());
             }
             return ActResult.initialize(set);
@@ -448,16 +452,16 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @GetMapping("v1/department")
     public Result listDepartment() throws ActException {
         try {
-            List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            /*List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
             if (null == bos) {
                 return ActResult.initialize(null);
             }
             Set<String> set = new HashSet<>();
             for (ProblemAcceptBO bo : bos) {
 //                set.add(bo.getAffectedDepartment());
-            }
-
-            return ActResult.initialize(set);
+            }*/
+            List<String> list = departmentDetailAPI.findAllProject();
+            return ActResult.initialize(list);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -471,10 +475,13 @@ public class BusinessNegotiationAction extends BaseFileAction{
     @GetMapping("v1/problemNum")
     public Result problemNum() throws ActException {
         try {
-            List<ProblemAcceptBO> bos = projectProblemAccAPI.findListProblemAccept(new ProblemAcceptDTO());
+            List<ProjectProblemAccBO> bos = projectProblemAccAPI.findListProjectProblem(new ProjectProblemAccDTO());
+            if (null == bos) {
+                return ActResult.initialize(null);
+            }
             Set<String> set = new HashSet<>();
-            for (ProblemAcceptBO bo : bos) {
-                set.add(bo.getProjectNum());
+            for (ProjectProblemAccBO bo : bos) {
+                set.add(bo.getProblemAcceptanceNum());
             }
             return ActResult.initialize(set);
         } catch (SerException e) {

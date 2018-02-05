@@ -542,6 +542,16 @@ public class RotationCollectSerImpl extends ServiceImpl<RotationRecord, Rotation
         return bcCollectEchartBO;
     }
 
+    @Override
+    public List<String> listArea() throws SerException {
+        List<AreaBO> areas = departmentDetailAPI.findArea();
+        List<String> list = new ArrayList<>();
+        for (AreaBO bo : areas) {
+            list.add(bo.getArea());
+        }
+        return list;
+    }
+
     /**
      * 岗位轮换明细管理层汇总柱状图图表
      *

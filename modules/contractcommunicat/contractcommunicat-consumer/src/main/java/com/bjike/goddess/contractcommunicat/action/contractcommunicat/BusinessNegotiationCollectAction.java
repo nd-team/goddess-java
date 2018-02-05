@@ -13,9 +13,13 @@ import com.bjike.goddess.contractcommunicat.enums.CollectTimeType;
 import com.bjike.goddess.contractcommunicat.to.GuidePermissionTO;
 import com.bjike.goddess.contractcommunicat.vo.BNCollectEchartVO;
 import com.bjike.goddess.contractcommunicat.vo.BusinessNegotiationCollectVO;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.dto.DepartmentDetailDTO;
+import com.bjike.goddess.organize.vo.DepartmentDetailVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +46,9 @@ public class BusinessNegotiationCollectAction {
 
     @Autowired
     BusinessNegotiationCollectAPI businessNegotiationCollectAPI;
+
+    @Autowired
+    DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -89,6 +97,7 @@ public class BusinessNegotiationCollectAction {
      * @param department 项目组/部门
      * @param problemBelong 问题归属
      * @param time 时间　'2017-12-12'
+     * @return class BusinessNegotiationCollectVO
      * @version v1
      */
     @GetMapping("v1/dayCollect")
@@ -114,6 +123,7 @@ public class BusinessNegotiationCollectAction {
      * @param year 年　'2017'
      * @param month 月　'12'
      * @param week 周　'1'
+     * @return class BusinessNegotiationCollectVO
      * @version v1
      */
     @GetMapping("v1/weekCollect")
@@ -138,6 +148,7 @@ public class BusinessNegotiationCollectAction {
      * @param problemBelong 问题归属
      * @param year 年　'2017'
      * @param month 月　'12'
+     * @return class BusinessNegotiationCollectVO
      * @version v1
      */
     @GetMapping("v1/monthCollect")
@@ -162,6 +173,7 @@ public class BusinessNegotiationCollectAction {
      * @param problemBelong 问题归属
      * @param year 年　'2017'
      * @param quarter 季度　'1'
+     * @return class BusinessNegotiationCollectVO
      * @version v1
      */
     @GetMapping("v1/quarterCollect")
@@ -185,6 +197,7 @@ public class BusinessNegotiationCollectAction {
      * @param department 项目组/部门
      * @param problemBelong 问题归属
      * @param year 年　'2017'
+     * @return class BusinessNegotiationCollectVO
      * @version v1
      */
     @GetMapping("v1/yearCollect")
@@ -208,6 +221,7 @@ public class BusinessNegotiationCollectAction {
      * @param department 项目组/部门
      * @param problemBelong 问题归属
      * @param time 年　'2017-12-12'
+     * @return class BusinessNegotiationCollectVO
      * @version v1
      */
     @GetMapping("v1/totalCollect")
@@ -446,6 +460,56 @@ public class BusinessNegotiationCollectAction {
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
+    }
+
+    /**
+     * 获取全部部门
+     *
+     * @return class DepartmentDetailBO
+     * @version v1
+     */
+    @GetMapping("v1/allDepartments")
+    public Result allDepartment() throws ActException {
+        try {
+            List<DepartmentDetailBO> bos = departmentDetailAPI.view(new DepartmentDetailDTO());
+
+            return ActResult.initialize(BeanTransform.copyProperties(bos, DepartmentDetailVO.class));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+    /**
+     * 获取地区
+     *
+     * @version v1
+     */
+    @GetMapping("v1/area")
+    public Result listArea() throws ActException {
+        try {
+            List<AreaBO> bos = departmentDetailAPI.findArea();
+            if (null == bos) {
+                return ActResult.initialize(null);
+            }
+            Set<String> set = new HashSet<>();
+            for (AreaBO bo : bos) {
+                set.add(bo.getArea());
+            }
+            return ActResult.initialize(set);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取问题归属
+     *
+     * @version v1
+     */
+    @GetMapping("v1/problemBelong")
+    public Result listProblemBelong() throws ActException {
+
+
+        return ActResult.initialize(null);
     }
 
 

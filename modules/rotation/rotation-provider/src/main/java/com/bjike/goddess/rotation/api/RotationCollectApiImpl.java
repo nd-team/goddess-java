@@ -56,4 +56,9 @@ public class RotationCollectApiImpl implements RotationCollectAPI{
     public RotationCollectEchartBO collectEchart(RotationCollectEchartDTO dto) throws SerException {
         return rotationCollectSer.collectEchart(dto);
     }
+
+    @Override
+    public List<String> listAreas() throws SerException {
+        return rotationCollectSer.listArea();
+    }
 }

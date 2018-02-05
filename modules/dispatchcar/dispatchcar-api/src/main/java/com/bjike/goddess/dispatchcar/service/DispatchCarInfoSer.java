@@ -6,6 +6,7 @@ import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
@@ -136,6 +137,8 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      */
     void financialSugg(DispatchCarInfoTO dispatchCarInfoTO,CheckChangeCarTO to) throws SerException;
 
+    void financialSugg(CheckChangeCarTO to) throws SerException;
+
 
     /**
      * 项目负责人或任务下发人审核
@@ -176,6 +179,8 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @param id 出车记录id
      */
     void pay(String id) throws SerException;
+
+    void pay(String id, Boolean pay) throws SerException;
 
     /**
      * 出车情况汇总
@@ -232,7 +237,7 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
     /**
      * 支付司机金额汇总
      */
-    List<PayDriverMoneyCollectBO> driverCollect(String startTime,String endTime) throws SerException;
+    List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime, String project) throws SerException;
 
     /**
      * 付款计划
@@ -310,11 +315,11 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
     /**
      * 导出
      *
-     * @param to
+     * @param dto
      * @return
      * @throws SerException
      */
-    byte[] exportExcel(ExportDispatchCarInfoTO to) throws SerException;
+    byte[] exportExcel(DispatchcarExportDTO dto) throws SerException;
 
 
     /**
@@ -407,4 +412,31 @@ public interface DispatchCarInfoSer extends Ser<DispatchCarInfo, DispatchCarInfo
      * @throws SerException
      */
     Long dispatchCount(String project) throws SerException;
+
+    /**
+     * 获取出车编号
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    String getDispatchNumber() throws SerException;
+
+    /**
+     * 申请重新审核
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    void reAudit(DispatchCarInfoTO to) throws SerException;
+
+    /**
+     * 获取全部项目（本身项目）
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    List<String> listProject() throws SerException;
 }
