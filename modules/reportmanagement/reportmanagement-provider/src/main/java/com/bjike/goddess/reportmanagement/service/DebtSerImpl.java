@@ -291,15 +291,19 @@ public class DebtSerImpl extends ServiceImpl<Debt, DebtDTO> implements DebtSer {
                 bo.setBeginDebt(formulaBO.getBegin());
                 bo.setEndDebt(formulaBO.getEnd());
                 if (Type.ADD.equals(debt.getType())) {
-                    beginSum += bo.getBeginDebt();
-                    endSum += bo.getEndDebt();
-                    countBegin += bo.getBeginDebt();
-                    countEnd += bo.getEndDebt();
+                    if(!"实收资本".equals(bo.getDebt()) || !"已归还投资".equals(bo.getDebt())){
+                        beginSum += bo.getBeginDebt();
+                        endSum += bo.getEndDebt();
+                        countBegin += bo.getBeginDebt();
+                        countEnd += bo.getEndDebt();
+                    }
                 } else if (Type.REMOVE.equals(debt.getType())) {
-                    beginSum -= bo.getBeginDebt();
-                    endSum -= bo.getEndDebt();
-                    countBegin -= bo.getBeginDebt();
-                    countEnd -= bo.getEndDebt();
+                    if(!"实收资本".equals(bo.getDebt()) || !"已归还投资".equals(bo.getDebt())) {
+                        beginSum -= bo.getBeginDebt();
+                        endSum -= bo.getEndDebt();
+                        countBegin -= bo.getBeginDebt();
+                        countEnd -= bo.getEndDebt();
+                    }
                 }
             }
             bo.setDebtNum(num);

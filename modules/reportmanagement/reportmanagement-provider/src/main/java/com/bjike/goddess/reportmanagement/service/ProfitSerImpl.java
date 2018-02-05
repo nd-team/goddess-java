@@ -52,6 +52,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 利润表业务实现
@@ -609,6 +610,7 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 if (subjectCollectBO != null) {
                     ProfitBO bo = BeanTransform.copyProperties(profit, ProfitBO.class, "project");
                     bo.setProject(joingTogether(profit.getProject(), profit.getProjectType()));
+//                    bo.setProject1(profit.getProject());
                     bo.setCurrentMonthAmount(subjectCollectBO.getCurrentAmount());
                     bo.setCurrentYearAmount(subjectCollectBO.getYearAmount());
 
@@ -732,13 +734,14 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitLevelBO> levelAnalyze(ProfitDTO dto) throws SerException {
+        String startTime = dto.getStartTime();
+        String endDate = dto.getEndTime();
         List<ProfitLevelBO> profitLevelBOList = new ArrayList<>();
         DecimalFormat df = new DecimalFormat("######0.00");
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
             dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
             dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
         }
-        String endDate = dto.getEndTime();
         //开始值的数据
         String startValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), 1));
         String startValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue())));
@@ -766,6 +769,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
                 }
             }
         }
+        profitLevelBOList.stream().forEach(obj -> {
+            obj.setStartTime(startTime);
+            obj.setEndTime(endDate);
+        });
         return profitLevelBOList;
 
     }
@@ -937,83 +944,128 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
 
     @Override
     public List<ProfitVerticalBO> verticalAnalyze(ProfitDTO dto) throws SerException {
+        String endDate = dto.getEndTime();
+        Double businessStartValue = 0d;
+        Double businessEndValue = 0d;
+        List<ProfitVerticalBO> profitVerticalBOS = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("######0.00");
         if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
-            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
-            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+            dto.setStartTime(DateUtil.dateToString(LocalDate.now()));
+            dto.setEndTime(DateUtil.dateToString(LocalDate.now()));
         }
-        List<ProfitLevelBO> levelBOs = levelAnalyze(dto);
-        double incomeStart = 0;
-        double incomeEnd = 0;
-        List<ProfitVerticalBO> boList = new ArrayList<>();
-        if ((levelBOs != null) && (!levelBOs.isEmpty())) {
-            for (ProfitLevelBO level : levelBOs) {
-                ProfitVerticalBO verticalBO = new ProfitVerticalBO();
-                verticalBO.setProject(level.getProject());
-                if (ProfitType.AINCOME.equals(level.getProfitType())) {
-                    if (level.getProject().contains("、")) {
-                        incomeStart = level.getStart();
-                        incomeEnd = level.getEnd();
-                        verticalBO.setStartTime("100%");
-                        verticalBO.setEndTime("100%");
-                        boList.add(verticalBO);
-                    } else {
-                        String start = String.format("%.2f", (level.getStart() / incomeStart) * 100);
-                        String end = String.format("%.2f", (level.getEnd() / incomeEnd) * 100);
-                        double change = Double.parseDouble(start) - Double.parseDouble(end);
-                        verticalBO.setStartTime(start + "%");
-                        verticalBO.setEndTime(end + "%");
-                        verticalBO.setChange(change);
-                        boList.add(verticalBO);
-                    }
-                } else if (ProfitType.BPROFIT.equals(level.getProfitType())) {
-                    if (level.getProject().contains("、")) {
-                        incomeStart = level.getStart();
-                        incomeEnd = level.getEnd();
-                        verticalBO.setStartTime("100%");
-                        verticalBO.setEndTime("100%");
-                        boList.add(verticalBO);
-                    } else {
-                        String start = String.format("%.2f", (level.getStart() / incomeStart) * 100);
-                        String end = String.format("%.2f", (level.getEnd() / incomeEnd) * 100);
-                        double change = Double.parseDouble(start) - Double.parseDouble(end);
-                        verticalBO.setStartTime(start + "%");
-                        verticalBO.setEndTime(end + "%");
-                        verticalBO.setChange(change);
-                        boList.add(verticalBO);
-                    }
-                } else if (ProfitType.CSUM.equals(level.getProfitType())) {
-                    if (level.getProject().contains("、")) {
-                        incomeStart = level.getStart();
-                        incomeEnd = level.getEnd();
-                        verticalBO.setStartTime("100%");
-                        verticalBO.setEndTime("100%");
-                        boList.add(verticalBO);
-                    } else {
-                        String start = String.format("%.2f", (level.getStart() / incomeStart) * 100);
-                        String end = String.format("%.2f", (level.getEnd() / incomeEnd) * 100);
-                        double change = Double.parseDouble(start) - Double.parseDouble(end);
-                        verticalBO.setStartTime(start + "%");
-                        verticalBO.setEndTime(end + "%");
-                        verticalBO.setChange(change);
-                        boList.add(verticalBO);
-                    }
-                } else if (ProfitType.DNETPROFIT.equals(level.getProfitType())) {
-                    if (level.getProject().contains("、")) {
-                        incomeStart = level.getStart();
-                        incomeEnd = level.getEnd();
-                        verticalBO.setStartTime("100%");
-                        verticalBO.setEndTime("100%");
-                        boList.add(verticalBO);
+        //开始值的数据
+        String startValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), 1));
+        String startValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(dto.getStartTime()).getYear(), DateUtil.parseDate(dto.getStartTime()).getMonthValue())));
+        dto.setStartTime(startValueStartDate);
+        dto.setEndTime(startValueEndDate);
+        List<ProfitBO> profitBOS1 = list(dto);
+        //结束值的数据
+        String endValueStartDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue(), 1));
+        String endValueEndDate = DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue(), DateUtil.getDayByDate(DateUtil.parseDate(endDate).getYear(), DateUtil.parseDate(endDate).getMonthValue())));
+        List<ProfitBO> profitBOS2 = list(dto);
+        dto.setStartTime(endValueStartDate);
+        dto.setEndTime(endValueEndDate);
+        if (profitBOS1 != null && profitBOS1.size() > 0) {
+            List<ProfitBO> profitBOTis1 = profitBOS1.stream().filter(str->"一、营业收入".equals(str.getProject())).collect(Collectors.toList());
+            List<ProfitBO> profitBOTis2 = profitBOS2.stream().filter(str->"一、营业收入".equals(str.getProject())).collect(Collectors.toList());
+            if(null!=profitBOTis1 && profitBOTis1.size()>0){
+                businessStartValue = profitBOTis1.get(0).getCurrentMonthAmount();
+                businessEndValue = profitBOTis2.get(0).getCurrentMonthAmount();
+            }
+            for (ProfitBO profitBO : profitBOS1) {
+                for (ProfitBO profitBO1 : profitBOS2) {
+                    if(profitBO.getProject().equals(profitBO1.getProject())){
+                        ProfitVerticalBO profitVerticalBO = new ProfitVerticalBO();
+                        profitVerticalBO.setProject(profitBO.getProject());
+                        profitVerticalBO.setStartTime(null == businessStartValue || 0 == businessStartValue ? 0 : Double.parseDouble(df.format(profitBO.getCurrentMonthAmount() / businessStartValue)));
+                        profitVerticalBO.setEndTime(null == businessEndValue || 0 == businessEndValue ? 0 : Double.parseDouble(df.format(profitBO.getCurrentMonthAmount() / businessEndValue)));
+                        profitVerticalBO.setChange(profitVerticalBO.getStartTime()-profitVerticalBO.getEndTime());
+                        profitVerticalBOS.add(profitVerticalBO);
                     }
                 }
             }
         }
-        boList.stream().forEach(obj -> {
-            obj.setStartTime(dto.getStartTime());
-            obj.setEndTime(dto.getEndTime());
-        });
-        return boList;
+        return profitVerticalBOS;
     }
+//    @Override
+//    public List<ProfitVerticalBO> verticalAnalyze(ProfitDTO dto) throws SerException {
+//        if (StringUtils.isBlank(dto.getStartTime()) && StringUtils.isBlank(dto.getEndTime())) {
+//            dto.setStartTime(DateUtil.dateToString(DateUtil.getStartMonth()));
+//            dto.setEndTime(DateUtil.dateToString(DateUtil.getEndMonth()));
+//        }
+//        List<ProfitLevelBO> levelBOs = levelAnalyze(dto);
+//        double incomeStart = 0;
+//        double incomeEnd = 0;
+//        List<ProfitVerticalBO> boList = new ArrayList<>();
+//        if ((levelBOs != null) && (!levelBOs.isEmpty())) {
+//            for (ProfitLevelBO level : levelBOs) {
+//                ProfitVerticalBO verticalBO = new ProfitVerticalBO();
+//                verticalBO.setProject(level.getProject());
+//                if (ProfitType.AINCOME.equals(level.getProfitType())) {
+//                    if (level.getProject().contains("、")) {
+//                        incomeStart = level.getStart();
+//                        incomeEnd = level.getEnd();
+//                        verticalBO.setStartTime("100%");
+//                        verticalBO.setEndTime("100%");
+//                        boList.add(verticalBO);
+//                    } else {
+//                        String start = String.format("%.2f", (level.getStart() / incomeStart) * 100);
+//                        String end = String.format("%.2f", (level.getEnd() / incomeEnd) * 100);
+//                        double change = Double.parseDouble(start) - Double.parseDouble(end);
+//                        verticalBO.setStartTime(start + "%");
+//                        verticalBO.setEndTime(end + "%");
+//                        verticalBO.setChange(change);
+//                        boList.add(verticalBO);
+//                    }
+//                } else if (ProfitType.BPROFIT.equals(level.getProfitType())) {
+//                    if (level.getProject().contains("、")) {
+//                        incomeStart = level.getStart();
+//                        incomeEnd = level.getEnd();
+//                        verticalBO.setStartTime("100%");
+//                        verticalBO.setEndTime("100%");
+//                        boList.add(verticalBO);
+//                    } else {
+//                        String start = String.format("%.2f", (level.getStart() / incomeStart) * 100);
+//                        String end = String.format("%.2f", (level.getEnd() / incomeEnd) * 100);
+//                        double change = Double.parseDouble(start) - Double.parseDouble(end);
+//                        verticalBO.setStartTime(start + "%");
+//                        verticalBO.setEndTime(end + "%");
+//                        verticalBO.setChange(change);
+//                        boList.add(verticalBO);
+//                    }
+//                } else if (ProfitType.CSUM.equals(level.getProfitType())) {
+//                    if (level.getProject().contains("、")) {
+//                        incomeStart = level.getStart();
+//                        incomeEnd = level.getEnd();
+//                        verticalBO.setStartTime("100%");
+//                        verticalBO.setEndTime("100%");
+//                        boList.add(verticalBO);
+//                    } else {
+//                        String start = String.format("%.2f", (level.getStart() / incomeStart) * 100);
+//                        String end = String.format("%.2f", (level.getEnd() / incomeEnd) * 100);
+//                        double change = Double.parseDouble(start) - Double.parseDouble(end);
+//                        verticalBO.setStartTime(start + "%");
+//                        verticalBO.setEndTime(end + "%");
+//                        verticalBO.setChange(change);
+//                        boList.add(verticalBO);
+//                    }
+//                } else if (ProfitType.DNETPROFIT.equals(level.getProfitType())) {
+//                    if (level.getProject().contains("、")) {
+//                        incomeStart = level.getStart();
+//                        incomeEnd = level.getEnd();
+//                        verticalBO.setStartTime("100%");
+//                        verticalBO.setEndTime("100%");
+//                        boList.add(verticalBO);
+//                    }
+//                }
+//            }
+//        }
+//        boList.stream().forEach(obj -> {
+//            obj.setStartTime(dto.getStartTime());
+//            obj.setEndTime(dto.getEndTime());
+//        });
+//        return boList;
+//    }
 
     @Override
     public List<ProfitAnalyzeIndicatorBO> analyzeIndicator(ProfitDTO dto) throws SerException {
@@ -1467,10 +1519,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         byte[] bytes1 = ExcelUtil.clazzToExcel(list, excel);
         XSSFWorkbook wb = null;
         String comp = "";
-//        List<String> comps = companyBasicInfoAPI.findCompanyName();
-//        if(comps!=null && comps.size()>0){
-//            comp = comps.get(0);
-//        }
+        List<String> comps = companyBasicInfoAPI.findCompanyName();
+        if(comps!=null && comps.size()>0){
+            comp = comps.get(0);
+        }
         try {
             InputStream is = new ByteArrayInputStream(bytes1);
             wb = new XSSFWorkbook(is);// 创建一个工作execl文档
@@ -1508,5 +1560,10 @@ public class ProfitSerImpl extends ServiceImpl<Profit, ProfitDTO> implements Pro
         }
 
         return os.toByteArray();
+    }
+
+    public static void main(String[] args) {
+        String ss = "一、营业收入";
+        System.out.println("一、营业收入".equals(ss));
     }
 }

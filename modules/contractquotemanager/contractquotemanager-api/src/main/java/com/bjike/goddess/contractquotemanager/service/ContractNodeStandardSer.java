@@ -143,5 +143,25 @@ public interface ContractNodeStandardSer extends Ser<ContractNodeStandard, Contr
     default List<ContractNodeStandardBO> findByTo(FilterTO to) throws SerException {
         return null;
     }
+    /**
+     * 导出excel
+     *
+     * @return
+     * @throws SerException
+     */
+    byte[] exportExcel() throws SerException;
+
+
+    /**
+     *  导入
+     * @param contractProjectInfoTOS
+     */
+    void importExcel(List<ContractNodeStandardTO> contractProjectInfoTOS) throws SerException;
+
+    /**
+     * 导出Excel
+     * @throws SerException
+     */
+    byte[] templateExport() throws SerException;
 
 }

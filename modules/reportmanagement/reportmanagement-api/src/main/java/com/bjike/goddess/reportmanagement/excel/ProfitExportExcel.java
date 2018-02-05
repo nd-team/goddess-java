@@ -19,25 +19,25 @@ public class ProfitExportExcel extends BaseBO {
     /**
      * 项目
      */
-    @ExcelHeader(name = "项目不能为空",notNull = true)
+    @ExcelHeader(name = "项目",notNull = true)
     private String project;
 
     /**
      * 行次
      */
-    @ExcelHeader(name = "行次不能为空",notNull = true)
+    @ExcelHeader(name = "行次",notNull = true)
     private Integer num;
 
     /**
      * 本月数
      */
-    @ExcelHeader(name = "本月数不能为空",notNull = true)
+    @ExcelHeader(name = "本月数",notNull = true)
     private Double currentMonthAmount;
 
     /**
      * 本年累计数
      */
-    @ExcelHeader(name = "本年累计数不能为空",notNull = true)
+    @ExcelHeader(name = "本年累计数",notNull = true)
     private Double currentYearAmount;
 
     public String getProject() {

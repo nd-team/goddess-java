@@ -16,9 +16,13 @@ import com.bjike.goddess.reportmanagement.enums.Type;
 public class ProfitBO extends BaseBO {
 
     /**
-     * 项目
+     * 列表展示的项目(+项目类型)
      */
     private String project;
+//    /**
+//     * 原本的项目
+//     */
+//    private String project1;
 
     /**
      * 行次
@@ -55,6 +59,7 @@ public class ProfitBO extends BaseBO {
     public void setProfitType(ProfitType profitType) {
         this.profitType = profitType;
     }
+
 
     public Type getType() {
         return type;

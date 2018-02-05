@@ -486,20 +486,24 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 bo.setCurrent(formulaBO.getCurrent());
                 bo.setEndAsset(formulaBO.getEnd());
                 if (Type.ADD.equals(asset.getType())) {
-                    beginSum += bo.getBeginAsset();
+                    if(!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
+                        beginSum += bo.getBeginAsset();
 //                    currentSum += bo.getCurrent();
-                    endSum += bo.getEndAsset();
-                    countBegin += bo.getBeginAsset();
+                        endSum += bo.getEndAsset();
+                        countBegin += bo.getBeginAsset();
 //                    countCurrent += bo.getCurrent();
-                    countEnd += bo.getEndAsset();
+                        countEnd += bo.getEndAsset();
+                    }
                 } else if (Type.REMOVE.equals(asset.getType())) {
-                    bo.setAsset("减：" + asset.getAsset());
-                    beginSum = beginSum - bo.getBeginAsset();
+
+                    if(!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
+                        beginSum = beginSum - bo.getBeginAsset();
 //                    currentSum -= bo.getCurrent();
-                    endSum = endSum - bo.getEndAsset();
-                    countBegin = countBegin - bo.getBeginAsset();
+                        endSum = endSum - bo.getEndAsset();
+                        countBegin = countBegin - bo.getBeginAsset();
 //                    countCurrent -= bo.getCurrent();
-                    countEnd = countEnd - bo.getEndAsset();
+                        countEnd = countEnd - bo.getEndAsset();
+                    }
                 }
                 bo.setAssetNum(num);
                 num++;
