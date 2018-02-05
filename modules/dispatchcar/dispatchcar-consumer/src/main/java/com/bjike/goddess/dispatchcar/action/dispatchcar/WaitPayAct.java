@@ -13,6 +13,7 @@ import com.bjike.goddess.dispatchcar.api.DispatchCarInfoAPI;
 import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.bo.PayDriverMoneyCollectBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.enums.FindType;
 import com.bjike.goddess.dispatchcar.to.*;
 import com.bjike.goddess.dispatchcar.vo.AuditDetailVO;
@@ -136,10 +137,10 @@ public class WaitPayAct extends BaseFileAction{
      * @param id 出车记录id
      * @version v1
      */
-    @GetMapping("v1/pay/{id}")
-    public Result pay(@PathVariable String id) throws ActException {
+    @GetMapping("v1/pay")
+    public Result pay(@RequestParam String id, @RequestParam Boolean pay) throws ActException {
         try {
-            dispatchCarInfoAPI.pay(id);
+            dispatchCarInfoAPI.pay(id, pay);
             return new ActResult("付款成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -234,8 +235,13 @@ public class WaitPayAct extends BaseFileAction{
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ExportDispatchCarInfoTO to, HttpServletResponse response) throws ActException {
         try {
+            DispatchcarExportDTO dto = new DispatchcarExportDTO();
+            dto.setArea(to.getArea());
+            dto.setStartTime(to.getStartTime());
+            dto.setEndTime(to.getEndTime());
+            dto.setFindType(FindType.WAITPAY);
             String fileName = "出车记录.xlsx";
-            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(to), fileName);
+            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(dto), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -248,18 +254,35 @@ public class WaitPayAct extends BaseFileAction{
      * 支付司机金额汇总
      * @param startTime 预计支付开始时间
      * @param endTime 预计支付结束时间
+     * @param project 项目
      * @return class PayDriverMoneyCollectVO
      * @throws ActException
      * @version v1
      */
     @GetMapping("v1/payMoney")
-    public Result payMoney(@RequestParam String startTime,@RequestParam String endTime) throws ActException{
+    public Result payMoney(@RequestParam String startTime,@RequestParam String endTime, @RequestParam(required = false) String project) throws ActException{
         try {
-            List<PayDriverMoneyCollectBO> boList = dispatchCarInfoAPI.driverCollect(startTime,endTime);
+            List<PayDriverMoneyCollectBO> boList = dispatchCarInfoAPI.driverCollect(startTime, endTime, project);
             List<PayDriverMoneyCollectVO> voList = BeanTransform.copyProperties(boList,PayDriverMoneyCollectVO.class);
             return ActResult.initialize(voList);
         }catch (SerException e){
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 获取全部项目
+     *
+     * @version v1
+     */
+    @GetMapping("v1/project")
+    public Result listProject() throws ActException{
+        try {
+            List<String> list = dispatchCarInfoAPI.listProject();
+            return ActResult.initialize(list);
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

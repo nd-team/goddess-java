@@ -17,6 +17,7 @@ import com.bjike.goddess.dispatchcar.bean.AuditResult;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.dto.LeaseCarCostDTO;
 import com.bjike.goddess.dispatchcar.entity.CheckChangeCar;
 import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
@@ -298,17 +299,17 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 //            throw new SerException("公司不存在该员工");
 //        }
         //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
-        Double oilWear = to.getOilWear();
+      /*  Double oilWear = to.getOilWear();
         if (to.getAircondition()) {
             oilWear = oilWear + 0.01;
         }
         if (to.getDowntown()) {
             oilWear = oilWear + 0.01;
-        }
+        }*/
 
 
         DispatchCarInfo model = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
-        if (to.getAcctype() == Acctype.MARKET) {
+        /*if (to.getAcctype() == Acctype.MARKET) {
             if (moduleAPI.isCheck("organize")) {
                 List<PositionDetailBO> positionDetailUserBOS = positionDetailUserAPI.findPositionByUser(userBO.getUsername());
                 if (positionDetailUserBOS != null && positionDetailUserBOS.size() > 0) {
@@ -321,7 +322,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             } else {
                 throw new SerException("请去模块关联设置组织结构关联");
             }
-        }
+        }*/
 
         //判断是否为本公司人员出车
         if (to.getAcctype() == Acctype.MARKET) {
@@ -329,10 +330,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         } else {
             model.setCompanyDispatch(true);
         }
-        model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
+//        model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
         //计算餐补、加班费，满8小时，并有4小时为22点后，则给予餐费补贴30元,超过8个小时后的加班费 = 租车费 / 8 * 小时数
         //实际上班时长
-        Long workHours = ChronoUnit.HOURS.between(model.getStartTime(), model.getEndTime());
+        /*Long workHours = ChronoUnit.HOURS.between(model.getStartTime(), model.getEndTime());
         if (workHours > 8) {
             //当天22点
             LocalDateTime dateTime = LocalDateTime.of(model.getStartTime().toLocalDate(), LocalTime.of(22, 0));
@@ -350,20 +351,20 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         } else {
             model.setMealCost(0.0);
             model.setOverWorkTime(0.0);
-        }
+        }*/
         //查找租车费用
 //        model.setCarRentalCost(findCost(to));
 //        model.setOilWear(oilWear);
-        model.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
+//        model.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
 
         //设置应加油量
-        model.setShouldAmount(model.getMileageSubtract() * oilWear);
+//        model.setShouldAmount(model.getMileageSubtract() * oilWear);
         //设置应加油费
-        model.setShouldAmountMoney(model.getShouldAmount() * to.getOilPrice());
+//        model.setShouldAmountMoney(model.getShouldAmount() * to.getOilPrice());
         //设置实加油费
-        model.setAddOilAmountMoney(model.getAddOilAmount() * to.getOilPrice());
+//        model.setAddOilAmountMoney(model.getAddOilAmount() * to.getOilPrice());
         //设置补充加油量和欠加油量
-        if (model.getAddOilAmount() - model.getShouldAmount() > 0) {
+        /*if (model.getAddOilAmount() - model.getShouldAmount() > 0) {
             model.setLessOil(0.0);
             model.setLessOilFee(0.0);
             model.setSupplementOil(model.getAddOilAmount() - model.getShouldAmount());
@@ -378,7 +379,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             model.setLessOilFee(0.0);
             model.setSupplementOil(0.0);
             model.setSupplementFee(0.0);
-        }
+        }*/
 
 //        model.setAddOilAmount(model.getMileageSubtract() * oilWear);
 //        if (to.getOilPrice() != null) {
@@ -388,14 +389,14 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 //        }
 
         //查询油卡余额
-        model.setOilCardBalance(to.getOilCardBalance());
+        /*model.setOilCardBalance(to.getOilCardBalance());
         model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
-        model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
+        model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());*/
 //        model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
         model.setFindType(FindType.WAITAUDIT);
         //设置出车单号----IKE20170101-1...
 
-        setNumber(model);
+//        setNumber(model);
         model.setCarSource(CarSource.MANUALENTRY);
 
         super.save(model);
@@ -406,7 +407,12 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Transactional(rollbackFor = SerException.class)
     public DispatchCarInfoBO updateModel(DispatchCarInfoTO to) throws SerException {
         if (to.getId() != null) {
-            DispatchCarInfo model = super.findById(to.getId());
+            DispatchCarInfo old = super.findById(to.getId());
+            DispatchCarInfo model = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
+            model.setCreateTime(old.getCreateTime());
+            model.setModifyTime(LocalDateTime.now());
+            model.setDispatchDate(old.getDispatchDate());
+            model.setCompanyDispatch(old.getCompanyDispatch());
             if (model != null) {
                 UserBO userBO = userAPI.findByUsername(to.getCarUser());
 //                to.setUserNumber(userBO.getEmployeeNumber());
@@ -700,31 +706,29 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     @Transactional(rollbackFor = SerException.class)
     public void fundSugg(DispatchCarInfoTO dispatchCarInfoTO, PredictPayTO to) throws SerException {
         UserBO userBO = userAPI.currentUser();
+        //todo 暂时注释，线下测试
         List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser(userBO.getUsername());
-        if (positionDetailBOS != null) {
-            if (positionDetailBOS.get(0).getPosition().equals("资金模块负责人") || userBO.getUsername().equals("admin")) {
-                DispatchCarInfo model = super.findById(to.getId());
-                if (model != null) {
-                    model.setMoneyModuleIdea(to.getMoneyModuleIdea());
-                    model.setMoneyModule(userBO.getUsername());
-                    model.setMoneyDate(LocalDateTime.now());
-                    model.setExpectPayDate(DateUtil.parseDate(to.getExpectPayDate()));
-                    model.setPaymentSchedule(to.getPaymentSchedule());
-                    //如果核对时问题描述或者问题类型不为空则数据存入到出车核对修改记录
-                    if (to.getProblemType() != null || to.getProblemDes() != null) {
-                        filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
-                    }
-                    BeanTransform.copyProperties(to, model, true, "modifyTime", "createTime", "carSource", "companyDispatch", "addOilExplain", "supplementOil", "supplementFee", "oweOilExplain", "lessOil", "lessOilFee", "shouldAmount", "shouldAmountMoney", "addOilAmountMoney");
-                    super.update(model);
-                } else {
-                    throw new SerException("核对对象不能为空!");
-                }
-            } else {
-                throw new SerException("资金模块负责人方可核对记录!");
-            }
-        } else {
+        if (positionDetailBOS == null || positionDetailBOS.size() == 0) {
             throw new SerException("获取不到当前登录用户的职位信息!");
         }
+        if (!positionDetailBOS.get(0).getPosition().equals("资金模块负责人") || !userBO.getUsername().equals("admin")) {
+                throw new SerException("资金模块负责人方可核对记录!");
+        }
+        DispatchCarInfo model = super.findById(to.getId());
+        if (model == null) {
+            throw new SerException("核对对象不能为空!");
+        }
+        model.setMoneyModuleIdea(to.getMoneyModuleIdea());
+        model.setMoneyModule(userBO.getUsername());
+        model.setMoneyDate(LocalDateTime.now());
+        model.setExpectPayDate(DateUtil.parseDate(to.getExpectPayDate()));
+        model.setPaymentSchedule(to.getPaymentSchedule());
+        //如果核对时问题描述或者问题类型不为空则数据存入到出车核对修改记录
+        if (to.getProblemType() != null || to.getProblemDes() != null) {
+            filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
+        }
+        BeanTransform.copyProperties(to, model, true, "modifyTime", "createTime", "carSource", "companyDispatch", "addOilExplain", "supplementOil", "supplementFee", "oweOilExplain", "lessOil", "lessOilFee", "shouldAmount", "shouldAmountMoney", "addOilAmountMoney");
+        super.update(model);
     }
 
     @Override
@@ -878,10 +882,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                         model.setClientModule(userBO.getUsername());
                         model.setClientDate(LocalDateTime.now());
                         //如果核对问题时冻结了数据，则把数据的查询类型设置为有误
-                        if (to.getIfFreeze() == true) {
-                            model.setFindType(FindType.WRONG);
-                            model.setStatus(Status.CONGEAL);
-                        }
+//                        if (to.getIfFreeze() == true) {
+//                            model.setFindType(FindType.WRONG);
+//                            model.setStatus(Status.CONGEAL);
+//                        }
                         super.update(model);
                     } else {
                         throw new SerException("科目类型不为市场费，无法审核!");
@@ -910,10 +914,10 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                         model.setHeadModule(userBO.getUsername());
                         model.setHeadDate(LocalDateTime.now());
                         //如果核对问题时冻结了数据，则把数据的查询类型设置为有误
-                        if (to.getIfFreeze() == true) {
-                            model.setFindType(FindType.WRONG);
-                            model.setStatus(Status.CONGEAL);
-                        }
+//                        if (to.getIfFreeze() == true) {
+//                            model.setFindType(FindType.WRONG);
+//                            model.setStatus(Status.CONGEAL);
+//                        }
                         super.update(model);
                     } else {
 
@@ -953,11 +957,18 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         DispatchCarInfo model = super.findById(to.getId());
         model.setSender(userBO.getUsername());
         model.setSendDate(LocalDate.now());
-        model.setIfSendArchiveAL(to.getIfSendArchiveAl());
-        model.setIfSendReimbursementAl(to.getIfSendReimbursementAl());
-        model.setTotalParking(to.getTotalParking());
-        model.setTotalReceipts(to.getTatalReceipts());
-        model.setIfSendAddOilReceipts(to.getIfSendAddOilReceipts());
+//        model.setIfSendArchiveAL(to.getIfSendArchiveAl());
+//        model.setIfSendReimbursementAl(to.getIfSendReimbursementAl());
+//        model.setTotalParking(to.getTotalParking());
+//        model.setTotalReceipts(to.getTatalReceipts());
+//        model.setIfSendAddOilReceipts(to.getIfSendAddOilReceipts());
+        model.setHasBill(to.getHasBill());
+        model.setSendReceiver(to.getSendReceiver());
+        model.setSendDate(LocalDate.parse(to.getSendDate()));
+        model.setSendArea(to.getSendArea());
+        model.setSendAddress(to.getSendAddress());
+        model.setSendRemark(to.getSendRemark());
+
         super.update(model);
     }
 
@@ -970,7 +981,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                 DispatchCarInfo model = super.findById(to.getId());
                 if (model != null) {
                     if (model.getIfCorrect() != null) {
-                        if (model.getIfCorrect() == true) {
+                        if (model.getIfCorrect()) {
                             model.setAccountModuleIdea(to.getAuditSugg());
                             model.setAccountModule(userBO.getUsername());
                             model.setAccountDate(LocalDateTime.now());
@@ -999,6 +1010,41 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         } else {
             throw new SerException("无法获取当前登录用户的职位信息!");
         }
+    }
+
+    @Override
+    public void financialSugg(CheckChangeCarTO to) throws SerException {
+        UserBO userBO = userAPI.currentUser();
+        //todo 暂时注释，线下测试
+        List<PositionDetailBO> positionDetailBOS = positionDetailUserAPI.findPositionByUser(userBO.getUsername());
+        if(positionDetailBOS == null || positionDetailBOS.size() == 0){
+            throw new SerException("无法获取当前登录用户的职位信息!");
+        }
+        if (!positionDetailBOS.get(0).getPosition().equals("财务模块负责人") && !userBO.getUsername().equals("admin")) {
+            throw new SerException("财务模块负责人方可核对记录!");
+        }
+        DispatchCarInfo model = super.findById(to.getId());
+        if (model == null) {
+            throw new SerException("核对对象不能为空");
+        }
+        if (to.getIfFinancePass()) {//是否通过
+            model.setFindType(FindType.WAITPAY);
+        } else {
+            model.setFindType(FindType.WRONG);
+        }
+        model.setIfCorrect(to.getIfCorrect());
+        model.setIfFinancePass(to.getIfFinancePass());
+        model.setAccountModuleIdea(to.getAuditSugg());
+        model.setAccountModule(userBO.getUsername());
+        model.setAccountDate(LocalDateTime.now());
+        model.setReceiver(to.getReceiver());
+        model.setReceiveDate(DateUtil.parseDate(to.getReceiveDate()));
+        model.setReceiveReceipts(to.getReceiveReceipts());
+        super.update(model);
+        //如果核对时问题描述或者问题类型不为空则数据存入到出车核对修改记录
+//        if (to.getProblemType() != null || to.getProblemDes() != null) {
+//            filter(dispatchCarInfoTO, model, checkChangeCar(to, model, userBO));
+//        }
     }
 
     private CheckChangeCar checkChangeCar(CheckChangeCarTO to, DispatchCarInfo model, UserBO userBO) throws SerException {
@@ -1108,6 +1154,26 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
 ////                to.setReceivers(sendUsers);
 //                messageAPI.send(to);
 //            }
+            super.update(model);
+        } else {
+            throw new SerException("付款对象不能为空!");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = SerException.class)
+    public void pay(String id, Boolean pay) throws SerException {
+        DispatchCarInfo model = super.findById(id);
+        if (model != null) {
+            if (FindType.PAYED == model.getFindType()) {
+                throw new SerException("无需重复付款!");
+            }
+            if (pay) {
+                model.setFindType(FindType.PAYED);
+            } else {    //不通过，改为有误记录
+                model.setFindType(FindType.WRONG);
+            }
+            model.setIfPayed(pay);
             super.update(model);
         } else {
             throw new SerException("付款对象不能为空!");
@@ -1875,9 +1941,12 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public List<OilCardBasicCarBO> findAllOil() throws SerException {
+        public List<OilCardBasicCarBO> findAllOil() throws SerException {
         List<OilCardBasicBO> boList = oilCardBasicAPI.findOilCard();
         List<OilCardBasicCarBO> carBOS = BeanTransform.copyProperties(boList, OilCardBasicCarBO.class, "cardStatus", "id");
+        if (carBOS == null) {
+            return null;
+        }
         for (OilCardBasicBO cardBasicBO : boList) {
             for (OilCardBasicCarBO oilCardBasicCarBO : carBOS) {
                 com.bjike.goddess.oilcardmanage.enums.OilCardStatus oilCardStatus = cardBasicBO.getCardStatus();
@@ -2211,16 +2280,20 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public byte[] exportExcel(ExportDispatchCarInfoTO to) throws SerException {
-        DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
+    public byte[] exportExcel(DispatchcarExportDTO dto) throws SerException {
+        DispatchCarInfoDTO dto1  = new DispatchCarInfoDTO();
+
         //根据地区和开始时间和结束时间来导出excel
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(to.getArea()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getStartTime()) && org.apache.commons.lang3.StringUtils.isNotBlank(to.getEndTime())) {
-            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(to.getStartTime()), DateUtil.parseDate(to.getEndTime())};
-            dto.getConditions().add(Restrict.eq("area", to.getArea()));
-            dto.getConditions().add(Restrict.between("dispatchDate", localDates));
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(dto.getArea()) && org.apache.commons.lang3.StringUtils.isNotBlank(dto.getStartTime()) && org.apache.commons.lang3.StringUtils.isNotBlank(dto.getEndTime())) {
+            LocalDate[] localDates = new LocalDate[]{DateUtil.parseDate(dto.getStartTime()), DateUtil.parseDate(dto.getEndTime())};
+            dto1.getConditions().add(Restrict.eq("area", dto.getArea()));
+            dto1.getConditions().add(Restrict.between("dispatchDate", localDates));
+        }
+        if (!StringUtils.isEmpty(dto.getFindType())) {
+            dto1.getConditions().add(Restrict.eq("findType", dto.getFindType().getCode()));
         }
 
-        List<DispatchCarInfo> list = super.findByCis(dto);
+        List<DispatchCarInfo> list = super.findByCis(dto1);
         List<DispatchCarInfoSetExcel> toList = new ArrayList<DispatchCarInfoSetExcel>();
         for (DispatchCarInfo model : list) {
             DispatchCarInfoSetExcel excel = BeanTransform.copyProperties(model, DispatchCarInfoSetExcel.class, "companyDispatch"
@@ -2434,13 +2507,16 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
     }
 
     @Override
-    public List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime) throws SerException {
+    public List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime, String project) throws SerException {
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
         LocalDate startDate = DateUtil.parseDate(startTime);
         LocalDate endDate = DateUtil.parseDate(endTime);
         LocalDate[] localDates = new LocalDate[]{startDate, endDate};
         dto.getConditions().add(Restrict.between("expectPayDate", localDates));
         dto.getConditions().add(Restrict.eq("findType", FindType.WAITPAY));
+        if (!StringUtils.isEmpty(project)) {
+            dto.getConditions().add(Restrict.eq("project", project));
+        }
         List<DispatchCarInfo> dispatchCarInfos = super.findByCis(dto);
         List<PayDriverMoneyCollectBO> boList = new ArrayList<>();
         if (dispatchCarInfos != null && dispatchCarInfos.size() > 0) {
@@ -3143,5 +3219,182 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         DispatchCarInfoDTO dto = new DispatchCarInfoDTO();
         dto.getConditions().add(Restrict.eq("project", project));
         return super.count(dto);
+    }
+
+    @Override
+    public String getDispatchNumber() throws SerException {
+
+        String now = LocalDate.now().toString();
+        //todo 同时并发时可能会出错
+        String sql = "select dispatch_number as number from dispatchcar_basicinfo where DATE_FORMAT(createTime, '%Y-%m-%d') = '"+ now +"' order by createTime desc";
+        String[] fields = new String[]{"number"};
+        List<DispatchCarInfo> list = super.findBySql(sql, DispatchCarInfo.class, fields);
+
+        StringBuffer number = new StringBuffer();
+        LocalDate localDate = LocalDate.now();
+        String year = localDate.getYear() + "";
+        String month = localDate.getMonthValue() > 9 ? localDate.getMonthValue() + "" : "0" + localDate.getMonthValue();
+        String day = localDate.getDayOfMonth() > 9 ? localDate.getDayOfMonth() + "" : "0" + localDate.getDayOfMonth();
+        number.append("IKE");
+        number.append(year);
+        number.append(month);
+        number.append(day);
+        number.append("-");
+        if (list == null || list.size() == 0) {
+            number.append("1");
+
+            return number.toString();
+        }
+        String old = list.get(0).getNumber();
+        String[] arr = old.split("-");
+        if (arr.length == 0) {
+            number.append(1);
+            return number.toString();
+        }
+        int num = Integer.parseInt(arr[1]);
+        number.append(num + 1);
+        return number.toString();
+    }
+
+    @Override
+    public void reAudit(DispatchCarInfoTO to) throws SerException {
+//        UserBO userBO = userAPI.findByUsername(to.getCarUser());
+        UserBO userBO = userAPI.currentUser();
+        if (to.getId() != null) {
+            DispatchCarInfo old = super.findById(to.getId());
+            DispatchCarInfo model = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
+            model.setCreateTime(old.getCreateTime());
+            model.setModifyTime(LocalDateTime.now());
+            model.setDispatchDate(old.getDispatchDate());
+            model.setCompanyDispatch(old.getCompanyDispatch());
+            if (model != null) {
+
+//                to.setUserNumber(userBO.getEmployeeNumber());
+                //加油费 = 加油量 * 当天油价 ，加油量 = 总油耗 * 总里程数 ， 总油耗 = 本车耗油 + 是否开空调 + 是否市内
+                Double oilWear = to.getOilWear();
+                if (to.getAircondition()) {
+                    oilWear = oilWear + 0.01;
+                }
+                if (to.getDowntown()) {
+                    oilWear = oilWear + 0.01;
+                }
+//                model.setOilWear(oilWear);
+                model.setMileageSubtract(to.getEndMileage() - to.getStartMileage());
+                //设置应加油量
+                model.setShouldAmount(model.getMileageSubtract() * oilWear);
+                //设置应加油费
+                model.setShouldAmountMoney(model.getShouldAmount() * to.getOilPrice());
+                //设置实加油费
+                model.setAddOilAmountMoney(model.getAddOilAmount() * to.getOilPrice());
+                //设置补充加油量和欠加油量
+                if (model.getAddOilAmount() - model.getShouldAmount() > 0) {
+                    model.setLessOil(0.0);
+                    model.setLessOilFee(0.0);
+                    model.setSupplementOil(model.getAddOilAmount() - model.getShouldAmount());
+                    model.setSupplementFee(model.getSupplementOil() * to.getOilPrice());
+                } else if (model.getAddOilAmount() - model.getShouldAmount() < 0) {
+                    model.setLessOil(model.getShouldAmount() - model.getAddOilAmount());
+                    model.setLessOilFee(model.getLessOil() * to.getOilPrice());
+                    model.setSupplementOil(0.0);
+                    model.setSupplementFee(0.0);
+                } else {
+                    model.setLessOil(0.0);
+                    model.setLessOilFee(0.0);
+                    model.setSupplementOil(0.0);
+                    model.setSupplementFee(0.0);
+                }
+
+                BeanTransform.copyProperties(to, model, true);
+
+                model.setMileageSubtract(model.getEndMileage() - model.getStartMileage());
+                //计算餐补、加班费，满8小时，并有4小时为22点后，则给予餐费补贴30元,超过8个小时后的加班费 = 租车费 / 8 * 小时数
+                //实际上班时长
+                Long workHours = ChronoUnit.HOURS.between(model.getStartTime(), model.getEndTime());
+                if (workHours > 8) {
+                    //当天22点
+                    LocalDateTime dateTime = LocalDateTime.of(model.getStartTime().toLocalDate(), LocalTime.of(22, 0));
+                    //出车开始时间+4 > 22:00 则补贴30元
+                    if (model.getStartTime().plusHours(4).isAfter(dateTime)) {
+                        model.setMealCost(30.0);
+                    } else {
+                        model.setMealCost(0.0);
+                    }
+                    if (!model.getSiesta()) {
+                        model.setOverWorkTime((double) (workHours - 8));
+                    } else {
+                        model.setOverWorkTime((double) (workHours - 8 - 1));
+                    }
+                } else {
+                    model.setMealCost(0.0);
+                    model.setOverWorkTime(0.0);
+                }
+                //查找租车费用
+//                model.setCarRentalCost(findCost(to));
+                //查询油卡余额
+                model.setOilCardBalance(to.getOilCardBalance());
+                model.setOverWorkCost(model.getCarRentalCost() / 8 * model.getOverWorkTime());
+                model.setCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost());
+//                model.setTotalCost(model.getMealCost() + model.getCarRentalCost() + model.getOverWorkCost() + model.getParkCost() + model.getRoadCost() + model.getOilCost());
+
+                model.setModifyTime(LocalDateTime.now());
+                model.setFindType(FindType.WAITAUDIT);
+                model.setProjectApproval(to.getProjectApproval());
+
+                super.update(model);
+            } else {
+                throw new SerException("更新对象不能为空");
+            }
+        } else {
+            throw new SerException("id不能为空");
+        }
+
+
+        DispatchCarInfo old = super.findById(to.getId());
+        DispatchCarInfo entity = BeanTransform.copyProperties(to, DispatchCarInfo.class, true);
+        if (old.getIfPass() != null && !old.getIfPass()) {
+            entity.setFindType(FindType.WAITAUDIT);
+        }
+        if (old.getIfFinancePass() != null && !old.getIfFinancePass()) {
+            entity.setFindType(FindType.FINANCEAUDIT);
+        }
+        if (old.getIfPayed() != null && !old.getIfPayed()) {
+            entity.setFindType(FindType.WAITPAY);
+        }
+        if (null == entity.getFindType()) {
+            entity.setFindType(FindType.WAITAUDIT);
+        }
+        entity.setModifyTime(LocalDateTime.now());
+        entity.setCreateTime(old.getCreateTime());
+        super.update(entity);
+
+        savaChangeRecord(to, userBO);
+
+    }
+
+    private void savaChangeRecord(DispatchCarInfoTO to, UserBO userBO) throws SerException{
+        DispatchCarInfo dispatchCarInfo = super.findById(to.getId());
+        CheckChangeCar checkChangeCar = new CheckChangeCar();
+        checkChangeCar.setCarUser(dispatchCarInfo.getCarUser());
+        checkChangeCar.setDispatchDate(dispatchCarInfo.getDispatchDate());
+        checkChangeCar.setModifier(userBO.getUsername());
+        checkChangeCar.setModifyDate(LocalDate.now());
+        checkChangeCar.setNumber(dispatchCarInfo.getNumber());
+        checkChangeCar.setCreateTime(dispatchCarInfo.getCreateTime());
+
+        filter(to, dispatchCarInfo, checkChangeCar);
+//        checkChangeCarSer.save(checkChangeCar);
+
+    }
+
+    @Override
+    public List<String> listProject() throws SerException {
+        String sql = "select distinct(project) as project from dispatchcar_basicinfo";
+        String[] fields = new String[]{"project"};
+        List<Object> list = super.findBySql(sql);
+        List list1 = new ArrayList();
+        for (Object object : list) {
+            list1.add(object);
+        }
+        return list1;
     }
 }

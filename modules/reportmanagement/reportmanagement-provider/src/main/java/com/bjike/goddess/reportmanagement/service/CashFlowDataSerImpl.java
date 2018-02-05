@@ -753,7 +753,9 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         //保存公式
         saveFormula("现金的期末余额", DataType.CASH, "资产负债表“货币资金”期末余额");
 
-        return voucherGenerateAPI.getCurrent(new SubjectCollectDTO("货币资金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+//        return voucherGenerateAPI.getCurrent(new SubjectCollectDTO("货币资金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+//        return voucherGenerateAPI.getCurrent(new SubjectCollectDTO("现金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
+        return findAssetNum("现金", dto.getEndTime(), false);
     }
 
     //减：现金的期初余额
@@ -762,7 +764,8 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
         saveFormula("减：现金的期初余额", DataType.CASH, "资产负债表“货币资金”期初余额");
 
         //资产负债表“货币资金”期初余额
-        return findAssetNum("货币资金", dto.getEndTime(), true);
+//        return findAssetNum("货币资金", dto.getEndTime(), true);
+        return findAssetNum("现金", dto.getEndTime(), true);
     }
 
     //加：现金等价物的期末余额

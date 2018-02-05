@@ -7,17 +7,17 @@ import com.bjike.goddess.common.consumer.interceptor.login.LoginAuth;
 import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.rotation.api.RotationRecordAPI;
-import com.bjike.goddess.rotation.bo.RotationRecordBO;
 import com.bjike.goddess.rotation.dto.RotationRecordDTO;
 import com.bjike.goddess.rotation.to.GuidePermissionTO;
 import com.bjike.goddess.rotation.vo.RotationRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -64,12 +64,30 @@ public class RotationRecordAction {
      * 获取岗位轮换记录列表
      *
      * @param dto dto
-     * @return class
+     * @return class RotationRecordVO
      * @version v1
      */
     @LoginAuth
     @GetMapping("/v1/list")
-    public ActResult list(RotationRecordDTO dto) throws ActException {
+    public Result list(RotationRecordDTO dto) throws ActException {
+        try {
+            List<RotationRecordVO> vos = BeanTransform.copyProperties(rotationRecordAPI.list(dto), RotationRecordVO.class);
+
+            return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取岗位轮换记录总条数
+     *
+     * @param dto dto
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("/v1/count")
+    public Result count(RotationRecordDTO dto) throws ActException {
         try {
             List<RotationRecordVO> vos = BeanTransform.copyProperties(rotationRecordAPI.list(dto), RotationRecordVO.class);
 

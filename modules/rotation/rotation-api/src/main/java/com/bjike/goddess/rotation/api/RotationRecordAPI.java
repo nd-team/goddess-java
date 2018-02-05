@@ -41,4 +41,13 @@ public interface RotationRecordAPI {
      */
     List<RotationRecordBO> list(RotationRecordDTO dto) throws SerException;
 
+    /**
+     * 总条数
+     *
+     * @param
+     * @return class
+     * @version v1
+     */
+    Long count(RotationRecordDTO dto) throws SerException;
+
 }

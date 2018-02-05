@@ -496,7 +496,8 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                 to.setBrow(to.getBrow().substring(0, to.getBrow().indexOf("%")));
             }
         }
-        String month = to.getYear() + "-" + to.getMonth() + "-01";
+        String month = to.getYear() + "-" + (to.getMonth() > 9 ? to.getMonth() : "0" + to.getMonth()) + "-01";
+//        String month = to.getMonth() > 9 ? to.getMonth() + "" : "0" + to.getMonth();
         //得到偏差分析
         if ("偏差分析".equals(to.getAnalysis())) {
             return getVarianceAnalysisBOs(to, month);
@@ -1715,7 +1716,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isBlank(month)) {
             month = LocalDate.now().toString().substring(0, LocalDate.now().toString().lastIndexOf("-"));
         }
-        String startTime = month + "-01";
+        String startTime = month;
         String endTime = this.findEndDayOfMonth(startTime);
 
         String fields[] = null;
@@ -2393,18 +2394,21 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             String arr1[] = code1.split(":");
             String code2 = accountanCourseAPI.findByCourseName(entity.getSecondSubject());
             String arr2[] = code2.split(":");
-            String code3 = accountanCourseAPI.findByCourseName(entity.getThirdSubject());
-            String arr3[] = code3.split(":");
+//            String code3 = accountanCourseAPI.findByCourseName(entity.getThirdSubject());
+//            String arr3[] = code3.split(":");
+            if (StringUtils.isNotBlank(entity.getThirdSubject())) {
+                String code3 = accountanCourseAPI.findByCourseName(entity.getThirdSubject());
+                String arr3[] = code3.split(":");
+                if(arr3.length > 0) {
+                    entity.setThirdSubjectCode(arr3[0]);
+                }
+            }
             if(arr1.length > 0) {
                 entity.setFirstSubjectCode(arr1[0]);
             }
             if(arr2.length > 0) {
                 entity.setSecondSubjectCode(arr2[0]);
             }
-            if(arr3.length > 0) {
-                entity.setThirdSubjectCode(arr3[0]);
-            }
-
             entities.add(entity);
         }
         super.update(entities);
@@ -2823,18 +2827,32 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double borrowMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getBorrowMoney).sum();
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
 
         }
+
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             VoucherGenerateBO total = new VoucherGenerateBO();
@@ -2882,15 +2900,28 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
             throw new SerException("请正确填写数据");
         }
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
 
         }
@@ -2947,18 +2978,31 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
 
         }
+
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             VoucherGenerateBO total = new VoucherGenerateBO();
@@ -3012,16 +3056,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
 
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
@@ -3215,17 +3272,31 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
+
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
             VoucherGenerateBO total = new VoucherGenerateBO();
@@ -3281,16 +3352,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3348,16 +3432,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3414,16 +3511,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3545,16 +3655,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3609,16 +3732,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3674,16 +3810,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3739,16 +3888,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3864,16 +4026,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3929,16 +4104,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -3994,16 +4182,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -4059,16 +4260,29 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         Double loanMoneyTotal = list.stream().mapToDouble(VoucherGenerate::getLoanMoney).sum();
 
         //设置科目代码
+//        for (VoucherGenerate voucherGenerate : list) {
+//            if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
+//                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+//                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
+//            }
+//            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+//                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
+//            }
+//        }
+        //一级科目编码展示
         for (VoucherGenerate voucherGenerate : list) {
             if (StringUtils.isNotBlank(voucherGenerate.getFirstSubjectCode())) {
-                voucherGenerate.setFirstSubject( voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                } else {
+                    voucherGenerate.setFirstSubject(voucherGenerate.getFirstSubjectCode() + ":" + voucherGenerate.getFirstSubject());
+                }
             }
-            if (StringUtils.isNotBlank(voucherGenerate.getSecondSubjectCode())) {
-                voucherGenerate.setSecondSubject( voucherGenerate.getSecondSubjectCode() + ":" + voucherGenerate.getSecondSubject());
-            }
-            if (StringUtils.isNotBlank(voucherGenerate.getThirdSubjectCode())) {
-                voucherGenerate.setThirdSubject( voucherGenerate.getThirdSubjectCode() + ":" + voucherGenerate.getThirdSubject());
-            }
+
         }
         List<VoucherGenerateBO> voucherGenerateBOs = BeanTransform.copyProperties(list, VoucherGenerateBO.class);
         if (null != voucherGenerateBOs && voucherGenerateBOs.size() > 0) {
@@ -5241,7 +5455,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1); // 设置为上一个月
         date = calendar.getTime();
         String lastMonth = dateFormat.format(date);
-        lastMonth = lastMonth.substring(0, lastMonth.lastIndexOf("-"));
+//        lastMonth = lastMonth.substring(0, lastMonth.lastIndexOf("-"));
         return lastMonth;
     }
 

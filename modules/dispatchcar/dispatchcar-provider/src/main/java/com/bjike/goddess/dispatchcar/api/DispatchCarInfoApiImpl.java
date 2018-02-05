@@ -1,6 +1,5 @@
 package com.bjike.goddess.dispatchcar.api;
 
-
 import com.bjike.goddess.carinfo.bo.DriverInfoBO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -9,6 +8,7 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.dispatchcar.bo.*;
 import com.bjike.goddess.dispatchcar.dto.CollectDispatchcarDTO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.enums.CollectIntervalType;
 import com.bjike.goddess.dispatchcar.enums.CollectType;
 import com.bjike.goddess.dispatchcar.enums.FindType;
@@ -104,6 +104,11 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public void pay(String id) throws SerException {
         dispatchCarInfoSer.pay(id);
+    }
+
+    @Override
+    public void pay(String id, Boolean pay) throws SerException {
+        dispatchCarInfoSer.pay(id, pay);
     }
 
     @Override
@@ -266,6 +271,11 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
+    public void financialSugg(CheckChangeCarTO to) throws SerException {
+        dispatchCarInfoSer.financialSugg(to);
+    }
+
+    @Override
     public List<DispatchCarInfoBO> findWrongRecord(DispatchCarInfoDTO dto) throws SerException {
         return dispatchCarInfoSer.findWrongRecord(dto);
     }
@@ -291,8 +301,8 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public byte[] exportExcel(ExportDispatchCarInfoTO to) throws SerException {
-        return dispatchCarInfoSer.exportExcel(to);
+    public byte[] exportExcel(DispatchcarExportDTO dto) throws SerException {
+        return dispatchCarInfoSer.exportExcel(dto);
     }
 
     @Override
@@ -301,8 +311,8 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     }
 
     @Override
-    public List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime) throws SerException {
-        return dispatchCarInfoSer.driverCollect(startTime,endTime);
+    public List<PayDriverMoneyCollectBO> driverCollect(String startTime, String endTime, String project) throws SerException {
+        return dispatchCarInfoSer.driverCollect(startTime, endTime, project);
     }
 
     @Override
@@ -368,5 +378,20 @@ public class DispatchCarInfoApiImpl implements DispatchCarInfoAPI {
     @Override
     public Long dispatchCount(String project) throws SerException {
         return dispatchCarInfoSer.dispatchCount(project);
+    }
+
+    @Override
+    public String getDispathNumber() throws SerException {
+        return dispatchCarInfoSer.getDispatchNumber();
+    }
+
+    @Override
+    public void reAudit(DispatchCarInfoTO to) throws SerException {
+        dispatchCarInfoSer.reAudit(to);
+    }
+
+    @Override
+    public List<String> listProject() throws SerException {
+        return dispatchCarInfoSer.listProject();
     }
 }

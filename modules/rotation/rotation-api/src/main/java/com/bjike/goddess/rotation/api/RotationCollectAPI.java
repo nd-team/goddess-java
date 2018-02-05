@@ -73,4 +73,6 @@ public interface RotationCollectAPI {
      * @version v1
      */
     RotationCollectEchartBO collectEchart(RotationCollectEchartDTO dto) throws SerException;
+
+    List<String> listAreas() throws SerException;
 }

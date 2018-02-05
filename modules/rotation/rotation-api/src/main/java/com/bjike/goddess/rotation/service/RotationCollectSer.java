@@ -74,5 +74,5 @@ public interface RotationCollectSer {
      */
     RotationCollectEchartBO collectEchart(RotationCollectEchartDTO dto) throws SerException;
 
-
+    List<String> listArea() throws SerException;
 }

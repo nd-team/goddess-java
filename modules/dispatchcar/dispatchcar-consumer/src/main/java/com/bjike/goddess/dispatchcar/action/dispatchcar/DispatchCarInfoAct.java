@@ -18,7 +18,7 @@ import com.bjike.goddess.dispatchcar.bo.AuditDetailBO;
 import com.bjike.goddess.dispatchcar.bo.DispatchCarInfoBO;
 import com.bjike.goddess.dispatchcar.bo.OilCardBasicCarBO;
 import com.bjike.goddess.dispatchcar.dto.DispatchCarInfoDTO;
-import com.bjike.goddess.dispatchcar.entity.DispatchCarInfo;
+import com.bjike.goddess.dispatchcar.dto.DispatchcarExportDTO;
 import com.bjike.goddess.dispatchcar.excel.DispatchCarInfoSetExcel;
 import com.bjike.goddess.dispatchcar.excel.SonPermissionObject;
 import com.bjike.goddess.dispatchcar.to.*;
@@ -70,7 +70,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
     /**
      * 模块设置导航权限
      *
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -99,7 +98,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
     /**
      * 下拉导航权限
      *
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -119,7 +117,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * 功能导航权限
      *
      * @param guidePermissionTO 导航类型数据
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/guidePermission")
@@ -183,7 +180,29 @@ public class DispatchCarInfoAct extends BaseFileAction {
     public Result add(@Validated({ADD.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             DispatchCarInfoBO bo = dispatchCarInfoAPI.addModel(to);
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(bo,DispatchCarInfoVO.class, request);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(bo, DispatchCarInfoVO.class, request);
+            return ActResult.initialize(vo);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 完善出车记录
+     *
+     * @param to 出车记录
+     * @return class DispatchCarInfoVO
+     * @version v1
+     */
+    @LoginAuth
+    @PostMapping("v1/complete")
+    public Result complete(@Validated({DispatchCarInfoTO.COMPLETE.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+        if (StringUtils.isBlank(to.getId())) {
+            throw new ActException("出车记录不能为空");
+        }
+        try {
+            DispatchCarInfoBO model = dispatchCarInfoAPI.editModel(to);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(model, DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -201,7 +220,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     public Result edit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             DispatchCarInfoBO model = dispatchCarInfoAPI.editModel(to);
-            DispatchCarInfoVO vo = BeanTransform.copyProperties(model,DispatchCarInfoVO.class, request);
+            DispatchCarInfoVO vo = BeanTransform.copyProperties(model, DispatchCarInfoVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -332,7 +351,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     public Result findAudit(@PathVariable String id, HttpServletRequest request) throws ActException {
         try {
             AuditDetailBO bo = dispatchCarInfoAPI.findAudit(id);
-            AuditDetailVO vo = BeanTransform.copyProperties(bo,AuditDetailVO.class, request);
+            AuditDetailVO vo = BeanTransform.copyProperties(bo, AuditDetailVO.class, request);
             return ActResult.initialize(vo);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -361,7 +380,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * 查询所有司机信息和车牌号码
      *
      * @return class DriverInfoVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/driver")
@@ -379,7 +397,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * 查询所有用车陪同人员和用车人员和任务下达人员和所属项目组
      *
      * @return class UserVO
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -387,7 +404,7 @@ public class DispatchCarInfoAct extends BaseFileAction {
     public Result findAllEntry() throws ActException {
         try {
             List<UserBO> boList = dispatchCarInfoAPI.findAllEntry();
-            List<UserVO>  voList = BeanTransform.copyProperties(boList, UserVO.class);
+            List<UserVO> voList = BeanTransform.copyProperties(boList, UserVO.class);
             return ActResult.initialize(voList);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -396,31 +413,31 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 查询所有所属地区
+     *
      * @return class AreaBO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/area")
-    public Result findAllArea() throws ActException{
+    public Result findAllArea() throws ActException {
         try {
             List<AreaBO> areas = dispatchCarInfoAPI.findArea();
             return ActResult.initialize(areas);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 查询所有项目组
-     * @throws ActException
+     *
      * @version v1
      */
     @GetMapping("v1/find/department")
-    public Result findAllDepartment() throws ActException{
+    public Result findAllDepartment() throws ActException {
         try {
             List<String> departments = dispatchCarInfoAPI.getAllDepartment();
             return ActResult.initialize(departments);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -429,7 +446,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
      * 查询所有油卡信息
      *
      * @return class OilCardBasicCarVO
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/find/oil")
@@ -446,31 +462,31 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 查找所有项目名称
-     * @throws ActException
+     *
      * @version v1
      */
     @GetMapping("v1/find/allProject")
-    public Result findAllProject() throws ActException{
+    public Result findAllProject() throws ActException {
         try {
             List<String> allProject = dispatchCarInfoAPI.findAllProject();
             return ActResult.initialize(allProject);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 寄件
+     *
      * @param to 寄件内容
-     * @throws ActException
      * @version v1
      */
     @PostMapping("v1/mail")
-    public Result mail(@Validated(EDIT.class) MailTO to,BindingResult bindingResult, HttpServletRequest request) throws ActException{
+    public Result mail(@Validated(EDIT.class) MailTO to, BindingResult bindingResult) throws ActException {
         try {
             dispatchCarInfoAPI.mail(to);
             return new ActResult("寄件编辑成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -479,7 +495,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
     /**
      * 导入
      *
-     * @throws ActException
      * @version v1
      */
     @LoginAuth
@@ -506,8 +521,13 @@ public class DispatchCarInfoAct extends BaseFileAction {
     @GetMapping("v1/exportExcel")
     public Result exportExcel(ExportDispatchCarInfoTO to, HttpServletResponse response) throws ActException {
         try {
+            DispatchcarExportDTO dto = new DispatchcarExportDTO();
+            dto.setArea(to.getArea());
+            dto.setStartTime(to.getStartTime());
+            dto.setEndTime(to.getEndTime());
+            dto.setFindType(null);
             String fileName = "出车记录.xlsx";
-            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(to), fileName);
+            super.writeOutFile(response, dispatchCarInfoAPI.exportExcel(dto), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {
             throw new ActException(e.getMessage());
@@ -536,7 +556,6 @@ public class DispatchCarInfoAct extends BaseFileAction {
     }
 
 
-
 //    /**
 //     * 添加数据
 //     * @throws ActException
@@ -554,32 +573,32 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 出车记录删除
-     * @param id
-     * @throws ActException
+     *
+     * @param id id
      * @version v1
      */
     @DeleteMapping("v1/delete")
-    public Result delete(@RequestParam String id) throws ActException{
+    public Result delete(@RequestParam String id) throws ActException {
         try {
             dispatchCarInfoAPI.delete(id);
             return new ActResult("删除成功");
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
 
     /**
      * 根据司机姓名获取出车油耗
-     * @param driver
-     * @throws ActException
+     *
+     * @param driver driver
      * @version v1
      */
     @GetMapping("v1/find/oilwear")
-    public Result findOilWear(String driver) throws ActException{
+    public Result findOilWear(String driver) throws ActException {
         try {
             Double oilWear = dispatchCarInfoAPI.findOilWear(driver);
             return ActResult.initialize(oilWear);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -587,16 +606,16 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 根据油卡编号查询油卡余额
-     * @param oilCardNumber
-     * @throws ActException
+     *
+     * @param oilCardNumber oilCardNumber
      * @version v1
      */
     @GetMapping("v1/find/balance")
-    public Result findBalance(@RequestParam String oilCardNumber) throws ActException{
+    public Result findBalance(@RequestParam String oilCardNumber) throws ActException {
         try {
             Double balance = dispatchCarInfoAPI.findBalance(oilCardNumber);
             return ActResult.initialize(balance);
-        }catch (SerException e){
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
@@ -604,16 +623,31 @@ public class DispatchCarInfoAct extends BaseFileAction {
 
     /**
      * 根据项目名称获取立项信息
-     * @param project
-     * @throws ActException
+     *
+     * @param project project
      * @version v1
      */
     @GetMapping("v1/find/projectapproval")
-    public Result findProjectApproval(String project) throws ActException{
+    public Result findProjectApproval(String project) throws ActException {
         try {
             Boolean projectAproval = dispatchCarInfoAPI.findProjectAproval(project);
             return ActResult.initialize(projectAproval);
-        }catch (SerException e){
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取出车单号
+     *
+     * @version v1
+     */
+    @GetMapping("v1/dispatchNumber")
+    public Result getDispatchNumber() throws ActException {
+        try {
+            String number = dispatchCarInfoAPI.getDispathNumber();
+            return ActResult.initialize(number);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }
