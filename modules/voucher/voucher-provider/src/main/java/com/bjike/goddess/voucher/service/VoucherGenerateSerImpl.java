@@ -801,11 +801,27 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         List<VoucherGenerate> list = super.findByCis(dto);
         if (null != list && list.size() > 0) {
             if ("营业收入".equals(firstSubject)) {
-                subjectCollectBO = getCurrent(i, "主营业务收入", startTime, endTime, false);
-                current = subjectCollectBO.getCurrentAmount();
+                SubjectCollectBO subjectCollectBO1 = getCurrent(i, "主营业务收入", startTime, endTime, false);
+                SubjectCollectBO subjectCollectBO2 =getCurrent(i, "其他业务收入", startTime, endTime, false);
+                debitAmount = subjectCollectBO1.getIssueDebitAmount()+subjectCollectBO2.getIssueDebitAmount();
+                creditAmount = subjectCollectBO1.getIssueCreditAmount()+subjectCollectBO2.getIssueCreditAmount();
+                current = subjectCollectBO1.getCurrentAmount()+subjectCollectBO2.getCurrentAmount();
+
+                subjectCollectBO.setIssueDebitAmount(debitAmount);
+                subjectCollectBO.setIssueCreditAmount(creditAmount);
+                subjectCollectBO.setCurrentAmount(current);
+
             } else if ("营业成本".equals(firstSubject)) {
-                subjectCollectBO = getCurrent(i, "主营业务成本", startTime, endTime, true);
-                current = subjectCollectBO.getCurrentAmount();
+                SubjectCollectBO subjectCollectBO1 = getCurrent(i, "主营业务成本", startTime, endTime, true);
+                SubjectCollectBO subjectCollectBO2 =getCurrent(i, "其他业务成本", startTime, endTime, true);
+
+                debitAmount = subjectCollectBO1.getIssueDebitAmount()+subjectCollectBO2.getIssueDebitAmount();
+                creditAmount = subjectCollectBO1.getIssueCreditAmount()+subjectCollectBO2.getIssueCreditAmount();
+                current = subjectCollectBO1.getCurrentAmount()+subjectCollectBO2.getCurrentAmount();
+
+                subjectCollectBO.setIssueDebitAmount(debitAmount);
+                subjectCollectBO.setIssueCreditAmount(creditAmount);
+                subjectCollectBO.setCurrentAmount(current);
             } else if ("营业税金及附加".equals(firstSubject)) {
 
                 SubjectCollectBO subjectCollectBO1 = getCurrent(i, "城建税", startTime, endTime, true);

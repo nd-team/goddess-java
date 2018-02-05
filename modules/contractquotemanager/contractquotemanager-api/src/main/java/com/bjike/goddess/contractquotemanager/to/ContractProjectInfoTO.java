@@ -31,7 +31,7 @@ public class ContractProjectInfoTO extends BaseTO {
     private String projectGroup;
 
     /**
-     * 项目内部结构
+     * 项目内部名称
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "所属项目内部结构不能为空")
     private String projectInner;
@@ -73,7 +73,7 @@ public class ContractProjectInfoTO extends BaseTO {
     private Integer completeTime;
 
     /**
-     * 合同金额(单位:万元)
+     * 合同金额
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "合同金额(单位:万元)")
     private Double money;
@@ -85,13 +85,13 @@ public class ContractProjectInfoTO extends BaseTO {
     private String majorCompany;
 
     /**
-     * 合同规模数
+     * 合同预估规模
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "合同规模数不能为空")
-    private String contractScale;
+    private Double contractScale;
 
     /**
-     * 回款周期
+     * 回款周期(天)
      */
     @NotNull(groups = {ADD.class, EDIT.class}, message = "回款周期不能为空")
     private Double receivableNum;
@@ -107,6 +107,12 @@ public class ContractProjectInfoTO extends BaseTO {
      */
     @NotBlank(groups = {ADD.class, EDIT.class}, message = "难易程度不能为空")
     private String difficulty;
+
+    /**
+     * 合同单价
+     */
+    @NotBlank(groups = {ADD.class, EDIT.class}, message = "合同单价不能为空")
+    private Double contractPrice;
 
 
     public String getArea() {
@@ -197,11 +203,11 @@ public class ContractProjectInfoTO extends BaseTO {
         this.majorCompany = majorCompany;
     }
 
-    public String getContractScale() {
+    public Double getContractScale() {
         return contractScale;
     }
 
-    public void setContractScale(String contractScale) {
+    public void setContractScale(Double contractScale) {
         this.contractScale = contractScale;
     }
 
@@ -227,5 +233,13 @@ public class ContractProjectInfoTO extends BaseTO {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public Double getContractPrice() {
+        return contractPrice;
+    }
+
+    public void setContractPrice(Double contractPrice) {
+        this.contractPrice = contractPrice;
     }
 }
