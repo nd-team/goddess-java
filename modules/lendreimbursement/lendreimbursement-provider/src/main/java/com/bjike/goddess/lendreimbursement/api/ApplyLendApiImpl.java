@@ -508,4 +508,19 @@ public class ApplyLendApiImpl implements ApplyLendAPI {
         return applyLendSer.findProject();
     }
 
+    @Override
+    public void sendEmail() throws SerException {
+        applyLendSer.sendEmailTiming();
+    }
+
+    @Override
+    public void departmentEmail() throws SerException {
+        applyLendSer.departmentEmail();
+    }
+
+    @Override
+    public void finanEmail() throws SerException {
+        applyLendSer.finanEmail();
+    }
+
 }

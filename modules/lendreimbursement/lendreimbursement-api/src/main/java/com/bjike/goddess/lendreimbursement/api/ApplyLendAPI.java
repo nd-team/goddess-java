@@ -943,4 +943,31 @@ public interface ApplyLendAPI {
     default List<String> findProject() throws SerException {
         return null;
     }
+
+    /**
+     * 提醒功能
+     *
+     * @throws SerException
+     */
+    default void sendEmail() throws SerException {
+        return;
+    }
+
+    /**
+     * 部门提醒功能
+     *
+     * @throws SerException
+     */
+    default void departmentEmail() throws SerException {
+        return;
+    }
+
+    /**
+     * 财务部提醒功能
+     *
+     * @throws SerException
+     */
+    default void finanEmail() throws SerException {
+        return;
+    }
 }
