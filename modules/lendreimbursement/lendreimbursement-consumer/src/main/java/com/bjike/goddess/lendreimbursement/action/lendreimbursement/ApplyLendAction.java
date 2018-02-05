@@ -1482,4 +1482,51 @@ public class ApplyLendAction extends BaseFileAction {
         }
     }
 
+    /**
+     * 个人提醒功能
+     *
+     * @version v1
+     */
+    @GetMapping("v1/sendEmail")
+    public Result sendEmail() throws ActException{
+        try {
+            applyLendAPI.sendEmail();
+            return ActResult.initialize("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 部门提醒功能
+     *
+     * @version v1
+     */
+    @GetMapping("v1/departmentEmail")
+    public Result departmentEmail() throws ActException{
+        try {
+            applyLendAPI.departmentEmail();
+            return ActResult.initialize("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 财务部提醒功能
+     *
+     * @version v1
+     */
+    @GetMapping("v1/finanEmail")
+    public Result finanEmail() throws ActException{
+        try {
+            applyLendAPI.finanEmail();
+            return ActResult.initialize("发送邮件成功");
+        }catch (SerException e){
+            throw new ActException(e.getMessage());
+        }
+    }
+
+
+
 }

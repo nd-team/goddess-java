@@ -9,6 +9,9 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.contacts.api.CommonalityAPI;
+import com.bjike.goddess.contacts.api.InternalContactsAPI;
+import com.bjike.goddess.contacts.bo.CommonalityBO;
 import com.bjike.goddess.financeinit.api.AccountAPI;
 import com.bjike.goddess.financeinit.api.AccountanCourseAPI;
 import com.bjike.goddess.financeinit.bo.SecondSubjectDataBO;
@@ -23,14 +26,23 @@ import com.bjike.goddess.lendreimbursement.excel.ApplyLendExcel;
 import com.bjike.goddess.lendreimbursement.to.*;
 import com.bjike.goddess.lendreimbursement.vo.LendMixReimCollectDataVO;
 import com.bjike.goddess.lendreimbursement.vo.lendreimshape.*;
+import com.bjike.goddess.message.api.MessageAPI;
+import com.bjike.goddess.message.enums.MsgType;
+import com.bjike.goddess.message.enums.RangeType;
+import com.bjike.goddess.message.enums.SendType;
+import com.bjike.goddess.message.to.MessageTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.bo.AreaBO;
+import com.bjike.goddess.organize.bo.DepartmentPeopleBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.reimbursementprepare.enums.PayStatus;
 import com.bjike.goddess.reimbursementprepare.excel.ExportExcelTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
+import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
+import com.bjike.goddess.voucher.bo.VoucherGenerateBO;
+import com.bjike.goddess.voucher.to.VoucherGenerateTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +51,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -83,9 +93,17 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     private ModuleAPI moduleAPI;
     @Autowired
     private ReimburseAnalisisorSer reimburseAnalisisorSer;
+    @Autowired
+    private MessageAPI messageAPI;
+    @Autowired
+    private CommonalityAPI commonalityAPI;
+    @Autowired
+    private InternalContactsAPI internalContactsAPI;
 
     @Autowired
     private AccountanCourseAPI accountanCourseAPI;
+    @Autowired
+    private VoucherGenerateAPI voucherGenerateAPI;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -1237,6 +1255,9 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setPayCondition("是");
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
+
+        //付款时增加记账凭证数据
+        addVoucher(lend);
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
@@ -1316,7 +1337,6 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
             lend.setModifyTime(LocalDateTime.now());
             super.update(lend);
         }
-
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
@@ -1346,7 +1366,6 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
     @Transactional(rollbackFor = SerException.class)
     @Override
     public ApplyLendBO editReturnBorrowRecord(ApplyLendTO applyLendTO) throws SerException {
-
         if (StringUtils.isBlank(applyLendTO.getId())) {
             throw new SerException("还款失败，id不能为空");
         }
@@ -1373,6 +1392,8 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setLendRetunStatus(LendRetunStatus.WAITRETURNCHECK);
         lend.setModifyTime(LocalDateTime.now());
         super.update(lend);
+        sendEmail(lend.getLender());
+
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
@@ -1665,8 +1686,16 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         //这里把是否收到单据设置，而账务核对那里的收到单据只是填一下情况
         lend.setDocumentCondition("是".equals(applyLendTO.getCheckPassOr()) ? "是" : "否");
         super.update(lend);
-        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
 
+        //还款核对时添加记账凭证数据
+        if (lend.getReturnMoney() > 0d) {
+            addVoucher1(lend);
+        }
+
+        //发送邮件
+
+
+        return BeanTransform.copyProperties(lend, ApplyLendBO.class);
     }
 
     @Override
@@ -1793,9 +1822,12 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         lend.setTicketCondition(applyLendTO.getTicketCondition());
         lend.setReceiveTicket(applyLendTO.getReceiveTicket());
         lend.setModifyTime(LocalDateTime.now());
+        lend.setLendRetunStatus("是".equals(applyLendTO.getTicketCondition()) ? LendRetunStatus.PASS : LendRetunStatus.NOTPASS);
         super.update(lend);
+        if (LendRetunStatus.NOTPASS.equals(lend.getLendRetunStatus())) {
+            sendEmail1(lend);
+        }
         return BeanTransform.copyProperties(lend, ApplyLendBO.class);
-
     }
 
     @Override
@@ -3962,6 +3994,352 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return departmentDetailAPI.findAllProject();
     }
 
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void sendEmailTiming() throws SerException {
+        ApplyLendDTO applyLendDTO = new ApplyLendDTO();
+        applyLendDTO.getConditions().add(Restrict.eq("lendRetunStatus", 2));
+        applyLendDTO.getSorts().add("createTime=desc");
+
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+        List<ApplyLendBO> lendBOList = BeanTransform.copyProperties(list, ApplyLendBO.class);
+        if (null != lendBOList && lendBOList.size() > 0) {
+            List<String> nameList = lendBOList.stream().map(ApplyLendBO::getLender).distinct().collect(Collectors.toList());
+            for (String name : nameList) {
+                applyLendDTO.getConditions().add(Restrict.eq("lender", name));
+                List<ApplyLend> list1 = super.findByCis(applyLendDTO);
+                List<ApplyLendBO> lendBOList1 = BeanTransform.copyProperties(list1, ApplyLendBO.class);
+
+//                int i = 0;
+//                if (i == 0) {
+                if (null != lendBOList1 && lendBOList1.size() > 0) {
+                    MessageTO messageTO = new MessageTO();
+                    messageTO.setContent(html(lendBOList1));
+                    messageTO.setTitle("定时发送借款报销各种状态的情况");
+                    messageTO.setMsgType(MsgType.SYS);
+                    messageTO.setSendType(SendType.EMAIL);
+                    messageTO.setRangeType(RangeType.SPECIFIED);
+                    //定时发送必须写
+                    messageTO.setSenderId("SYSTEM");
+                    messageTO.setSenderName("SYSTEM");
+                    String email[] = new String[]{findEmailByName(name)};
+//                    String email[] = new String[]{"zhuangkaiqin_aj@163.com"};
+                    messageTO.setReceivers(email);
+                    messageAPI.send(messageTO);
+                }
+//                }
+//                i++;
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void departmentEmail() throws SerException {
+        ApplyLendDTO applyLendDTO = new ApplyLendDTO();
+        applyLendDTO.getConditions().add(Restrict.eq("lendRetunStatus", 2));
+        applyLendDTO.getSorts().add("createTime=desc");
+
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+        List<ApplyLendBO> lendBOList = BeanTransform.copyProperties(list, ApplyLendBO.class);
+        if (null != lendBOList && lendBOList.size() > 0) {
+            List<String> nameList = lendBOList.stream().map(ApplyLendBO::getLender).distinct().collect(Collectors.toList());
+
+            Set<String> emailSet = new HashSet<>(0);
+            for (String name : nameList) {
+                String departmentEmail = findDepartmentEmail(name);
+                emailSet.add(departmentEmail);
+            }
+
+            Set<String> nameSet = new HashSet<>(0);
+            if (null != emailSet && emailSet.size() > 0) {
+                for (String departmentEmail1 : emailSet) {
+                    for (String name : nameList) {
+                        String departmentEmail = findDepartmentEmail(name);
+                        if (null != departmentEmail && departmentEmail.equals(departmentEmail1)) {
+                            nameSet.add(name);
+                        }
+                    }
+
+                    if (null != nameSet && nameSet.size() > 0) {
+                        String departmentEmail = "";
+                        List<ApplyLendBO> lendBOList2 = new ArrayList<>(0);
+                        for (String name2 : nameSet) {
+                            departmentEmail = findDepartmentEmail(name2);
+                            applyLendDTO.getConditions().add(Restrict.eq("lender", name2));
+                            List<ApplyLend> list1 = super.findByCis(applyLendDTO);
+                            List<ApplyLendBO> lendBOList1 = BeanTransform.copyProperties(list1, ApplyLendBO.class);
+                            lendBOList2.addAll(lendBOList1);
+                        }
+                        if (null != lendBOList2 && lendBOList2.size() > 0) {
+                            MessageTO messageTO = new MessageTO();
+                            messageTO.setContent(html(lendBOList2));
+                            messageTO.setTitle("定时发送借款报销各种状态的情况");
+                            messageTO.setMsgType(MsgType.SYS);
+                            messageTO.setSendType(SendType.EMAIL);
+                            messageTO.setRangeType(RangeType.SPECIFIED);
+                            //定时发送必须写
+                            messageTO.setSenderId("SYSTEM");
+                            messageTO.setSenderName("SYSTEM");
+                            String email[] = new String[]{departmentEmail};
+//                    String email[] = new String[]{"zhuangkaiqin_aj@163.com"};
+                            messageTO.setReceivers(email);
+                            messageAPI.send(messageTO);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
+    public void finanEmail() throws SerException {
+        ApplyLendDTO applyLendDTO = new ApplyLendDTO();
+        applyLendDTO.getConditions().add(Restrict.ne("lendRetunStatus", new Integer[]{2, 3}));
+        applyLendDTO.getSorts().add("createTime=desc");
+
+        List<ApplyLend> list = super.findByCis(applyLendDTO);
+        List<ApplyLendBO> lendBOList = BeanTransform.copyProperties(list, ApplyLendBO.class);
+        if (null != lendBOList && lendBOList.size() > 0) {
+            MessageTO messageTO = new MessageTO();
+            messageTO.setContent(html(lendBOList));
+            messageTO.setTitle("定时发送借款报销各种状态的情况");
+            messageTO.setMsgType(MsgType.SYS);
+            messageTO.setSendType(SendType.EMAIL);
+            messageTO.setRangeType(RangeType.SPECIFIED);
+            //定时发送必须写
+            messageTO.setSenderId("SYSTEM");
+            messageTO.setSenderName("SYSTEM");
+//            String email[] = new String[]{findFinanEma()};
+            String email[] = new String[]{"zhuangkaiqin_aj@163.com"};
+            messageTO.setReceivers(email);
+            messageAPI.send(messageTO);
+        }
+    }
+
+    private String html(List<ApplyLendBO> list) throws SerException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h4>借款报销各种状态的情况:</h4>");
+        sb.append("<table border=\"1\" cellpadding=\"10\" cellspacing=\"0\"   > ");
+        sb.append("<tr>");
+        sb.append("<td>预计借款日期</td>");
+        sb.append("<td>借款人</td>");
+        sb.append("<td>负责人</td>");
+        sb.append("<td>地区</td>");
+        sb.append("<td>项目组</td>");
+        sb.append("<td>项目名称</td>");
+        sb.append("<td>参与人员</td>");
+        sb.append("<td>借款方式</td>");
+        sb.append("<td>一级科目</td>");
+        sb.append("<td>二级科目</td>");
+        sb.append("<td>三级科目</td>");
+        sb.append("<td>说明</td>");
+        sb.append("<td>是否补写</td>");
+        sb.append("<td>补写情况</td>");
+        sb.append("<td>借款事由</td>");
+        sb.append("<td>金额</td>");
+        sb.append("<td>是否有发票</td>");
+        sb.append("<td>无发票备注</td>");
+        sb.append("<td>商品链接</td>");
+        sb.append("<td>备注</td>");
+        sb.append("<td>填单人</td>");
+        sb.append("<td>借款日期</td>");
+        sb.append("<td>负责人审核意见</td>");
+        sb.append("<td>负责人是否通过</td>");
+        sb.append("<td>负责人审核时间</td>");
+        sb.append("<td>财务运营部</td>");
+        sb.append("<td>财务运营部审核意见</td>");
+        sb.append("<td>财务运营部是否通过</td>");
+        sb.append("<td>财务运营部审核时间</td>");
+        sb.append("<td>总经办</td>");
+        sb.append("<td>总经办审核意见</td>");
+        sb.append("<td>总经办是否通过</td>");
+        sb.append("<td>总经办审核时间</td>");
+        sb.append("<td>代理审核备注</td>");
+        sb.append("<td>是否付款（是/否）</td>");
+        sb.append("<td>付款人");
+        sb.append("<td>付款日期");
+        sb.append("<td>支付来源</td>");
+        sb.append("<td>单据数量</td>");
+        sb.append("<td>是否收到单据</td>");
+        sb.append("<td>报销金额</td>");
+        sb.append("<td>借款金额</td>");
+        sb.append("<td>退回金额</td>");
+        sb.append("<td>退回日期</td>");
+        sb.append("<td>归还方式</td>");
+        sb.append("<td>归还账户</td>");
+        sb.append("<td>还款说明</td>");
+        sb.append("<td>收件人</td>");
+        sb.append("<td>寄件人</td>");
+        sb.append("<td>寄件日期</td>");
+        sb.append("<td>寄件情况</td>");
+        sb.append("<td>收件地区(寄件的时候填的地区)</td>");
+        sb.append("<td>收件地址</td>");
+        sb.append("<td>收票人</td>");
+        sb.append("<td>收票日期</td>");
+        sb.append("<td>收票情况</td>");
+        sb.append("<td>是否已收票</td>");
+        sb.append("<td>核对人</td>");
+        sb.append("<td>核对日期</td>");
+        sb.append("<td>核对内容</td>");
+
+        sb.append("<td>还款核对状态</td>");
+        sb.append("<td>状态</td>");
+
+        sb.append("<td>是否已收款（是/否）</td>");
+        sb.append("<td>确认已收款时间</td>");
+        sb.append("<td>提交时间（填单人）</td>");
+        sb.append("<td>申请单有误状态标识</td>");
+        sb.append("<td>创建时间</td>");
+        sb.append("<td>修改时间</td>");
+        sb.append("<td>查询数量</td>");
+
+        sb.append("<td>分析人</td>");
+        sb.append("<td>是否分析(是/否)</td>");
+        sb.append("</tr>");
+
+        for (ApplyLendBO bo : list) {
+            sb.append("<tr>");
+            sb.append("<td>" + bo.getEstimateLendDate() + "</td>");
+            sb.append("<td>" + bo.getLender() + "</td>");
+            sb.append("<td>" + bo.getCharger() + "</td>");
+            sb.append("<td>" + bo.getArea() + "</td>");
+            sb.append("<td>" + bo.getProjectGroup() + "</td>");
+            sb.append("<td>" + bo.getProjectName() + "</td>");
+            sb.append("<td>" + bo.getAttender() + "</td>");
+            sb.append("<td>" + bo.getLendWay() + "</td>");
+            sb.append("<td>" + bo.getFirstSubject() + "</td>");
+            sb.append("<td>" + bo.getSecondSubject() + "</td>");
+            sb.append("<td>" + bo.getThirdSubject() + "</td>");
+            sb.append("<td>" + bo.getExplains() + "</td>");
+            sb.append("<td>" + bo.getWriteUp() + "</td>");
+            sb.append("<td>" + bo.getWriteUpCondition() + "</td>");
+            sb.append("<td>" + bo.getLendReson() + "</td>");
+            sb.append("<td>" + bo.getMoney() + "</td>");
+            sb.append("<td>" + bo.getInvoice() + "</td>");
+            sb.append("<td>" + bo.getNoInvoiceRemark() + "</td>");
+            sb.append("<td>" + bo.getGoodsLink() + "</td>");
+            sb.append("<td>" + bo.getRemark() + "</td>");
+            sb.append("<td>" + bo.getFillSingler() + "</td>");
+            sb.append("<td>" + bo.getLendDate() + "</td>");
+            sb.append("<td>" + bo.getChargerOpinion() + "</td>");
+            sb.append("<td>" + bo.getChargerPass() + "</td>");
+            sb.append("<td>" + bo.getChargerPassTime() + "</td>");
+            sb.append("<td>" + bo.getFinacer() + "</td>");
+            sb.append("<td>" + bo.getFincerOpinion() + "</td>");
+            sb.append("<td>" + bo.getFincerPass() + "</td>");
+            sb.append("<td>" + bo.getFincerPassTime() + "</td>");
+            sb.append("<td>" + bo.getManager() + "</td>");
+            sb.append("<td>" + bo.getManagerOpinion() + "</td>");
+            sb.append("<td>" + bo.getManagerPass() + "</td>");
+            sb.append("<td>" + bo.getManagerPassTime() + "</td>");
+            sb.append("<td>" + bo.getProxyAuditRemark() + "</td>");
+            sb.append("<td>" + bo.getPayCondition() + "</td>");
+            sb.append("<td>" + bo.getPayer() + "</td>");
+            sb.append("<td>" + bo.getPayDate() + "</td>");
+            sb.append("<td>" + bo.getPayOrigin() + "</td>");
+            sb.append("<td>" + bo.getDocumentQuantity() + "</td>");
+            sb.append("<td>" + bo.getDocumentCondition() + "</td>");
+            sb.append("<td>" + bo.getReimMoney() + "</td>");
+            sb.append("<td>" + bo.getLendMoney() + "</td>");
+            sb.append("<td>" + bo.getReturnMoney() + "</td>");
+            sb.append("<td>" + bo.getReturnDate() + "</td>");
+            sb.append("<td>" + bo.getReturnWays() + "</td>");
+            sb.append("<td>" + bo.getReturnAccount() + "</td>");
+            sb.append("<td>" + bo.getReturnRemark() + "</td>");
+            sb.append("<td>" + bo.getSendRecevier() + "</td>");
+            sb.append("<td>" + bo.getSender() + "</td>");
+            sb.append("<td>" + bo.getSendDate() + "</td>");
+            sb.append("<td>" + bo.getSendCondition() + "</td>");
+            sb.append("<td>" + bo.getReceiveArea() + "</td>");
+            sb.append("<td>" + bo.getReceiveAddr() + "</td>");
+            sb.append("<td>" + bo.getTicketer() + "</td>");
+            sb.append("<td>" + bo.getTicketDate() + "</td>");
+            sb.append("<td>" + bo.getTicketCondition() + "</td>");
+            sb.append("<td>" + bo.getReceiveTicket() + "</td>");
+            sb.append("<td>" + bo.getChecker() + "</td>");
+            sb.append("<td>" + bo.getCheckDate() + "</td>");
+            sb.append("<td>" + bo.getCheckcontent() + "</td>");
+
+            sb.append("<td>" + transLendRetunStatus(bo.getLendRetunStatus()) + "</td>");
+            sb.append("<td>" + transLendStatus(bo.getLendStatus()) + "</td>");
+
+            sb.append("<td>" + bo.getReceivePay() + "</td>");
+            sb.append("<td>" + bo.getReceivePayTime() + "</td>");
+            sb.append("<td>" + bo.getCommitTime() + "</td>");
+            sb.append("<td>" + bo.getLendError() + "</td>");
+            sb.append("<td>" + bo.getCreateTime() + "</td>");
+            sb.append("<td>" + bo.getModifyTime() + "</td>");
+            sb.append("<td>" + bo.getCounts() + "</td>");
+//            sb.append("<td>" + bo.getLendPhoneSelectStatus() + "</td>");
+            sb.append("<td>" + bo.getAnalysiser() + "</td>");
+            sb.append("<td>" + bo.getAnalyse() + "</td>");
+            sb.append("</tr>");
+        }
+
+        sb.append("</table>");
+        return sb.toString();
+    }
+
+    private String transLendRetunStatus(LendRetunStatus lendRetunStatus) throws SerException {
+        String str = "";
+        switch (lendRetunStatus) {
+            case NONE:
+                str = "未处理";
+                break;
+            case WAITRETURNCHECK:
+                str = "还款中的待核对";
+                break;
+            case PASS:
+                str = "审核通过";
+                break;
+            case NOTPASS:
+                str = "审核不通过";
+                break;
+        }
+        return str;
+    }
+
+    private String transLendStatus(LendStatus lendStatus) throws SerException {
+        String str = "";
+        switch (lendStatus) {
+            case NONE:
+                str = "未处理";
+                break;
+            case CHARGEPASS:
+                str = "负责人审核通过";
+                break;
+            case CHARGENOTPASS:
+                str = "负责人审核不通过";
+                break;
+            case FINACEPASS:
+                str = "财务运营审核通过";
+                break;
+            case FINACENOTPASS:
+                str = "财务运营审核不通过";
+                break;
+            case FINACECONGEL:
+                str = "财务运营冻结";
+                break;
+            case CHARGESURECONGEL:
+                str = "负责人确认冻结";
+                break;
+            case MANAGEPASS:
+                str = "总经办审核通过";
+                break;
+            case MANAGENOTPASS:
+                str = "总经办审核不通过";
+                break;
+            case LISTERROR:
+                str = "申请单有误";
+                break;
+
+        }
+        return str;
+    }
+
+
     //柱状图数据
     private OptionBO getOptionBO(String userName, List<Double> list1, List<Double> list2) throws SerException {
         List<String> monthList = new ArrayList<>(0);
@@ -4043,7 +4421,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return objects;
     }
 
-    //获取某一个月的借款总金额,
+    //获取某一个月的借款总金额
     private Double findTotalMoney(String userName, String startTime, String endTime, Boolean tar) throws SerException {
         StringBuilder sql = new StringBuilder("select ifnull(sum(money),0) from lendreimbursement_applylend ");
         if (tar) {
@@ -4057,7 +4435,7 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return objects;
     }
 
-    //
+//
 
     //统计所有地区的已报销记录
     private List<ReimShapeSeriesDataVO> getReimDataSeries(List<String> groupList, LocalDateTime startTime, LocalDateTime endTime, ReimShapeDetailTypeStatus typeStatus, String flag) throws SerException {
@@ -4139,5 +4517,168 @@ public class ApplyLendSerImpl extends ServiceImpl<ApplyLend, ApplyLendDTO> imple
         return dataVOList;
     }
 
+    /**
+     * 付款时增加记账凭证数据
+     */
+    private void addVoucher(ApplyLend lend) throws SerException {
+        VoucherGenerateTO to = new VoucherGenerateTO();
+        to.setVoucherWord("记");
+        to.setVoucherDate(DateUtil.dateToString(lend.getPayDate()));
+        to.setSumary(lend.getLendReson());
+
+        String payOrigin = lend.getPayOrigin();
+        List<String> list = accountAPI.findSubjects(payOrigin);
+        if (null != list && list.size() > 0) {
+            String[] firstSubjects = new String[]{lend.getFirstSubject(), list.get(0)};
+            String[] secondSubjects = new String[]{lend.getSecondSubject(), list.get(1)};
+            String[] thirdSubjects = new String[]{lend.getThirdSubject(), list.get(2)};
+
+            to.setFirstSubjects(Arrays.stream(firstSubjects).collect(Collectors.toList()));
+            to.setSecondSubjects(Arrays.stream(secondSubjects).collect(Collectors.toList()));
+            to.setThirdSubjects(Arrays.stream(thirdSubjects).collect(Collectors.toList()));
+
+            Double[] borrowMoneys = new Double[]{lend.getMoney(), 0d};
+            Double[] loanMoneys = new Double[]{0d, lend.getMoney()};
+
+            to.setBorrowMoneys(Arrays.stream(borrowMoneys).collect(Collectors.toList()));
+            to.setLoanMoneys(Arrays.stream(loanMoneys).collect(Collectors.toList()));
+
+            to.setSource("借款");
+            to.setArea(lend.getArea());
+            to.setProjectName(lend.getProjectName());
+            to.setProjectGroup(lend.getProjectGroup());
+            to.setTicketer(lend.getPayer());
+            to.setAuditor(lend.getPayer());
+            to.setTicketNum(1d);
+
+            List<VoucherGenerateBO> list1 = voucherGenerateAPI.addVoucherGenerate(to);
+        }
+    }
+
+    /**
+     * 还款核对时添加记账凭证数据
+     */
+    private void addVoucher1(ApplyLend lend) throws SerException {
+        VoucherGenerateTO to = new VoucherGenerateTO();
+        to.setVoucherWord("记");
+        to.setVoucherDate(DateUtil.dateToString(lend.getCheckDate()));
+        to.setSumary(lend.getLendReson());
+
+        String payOrigin = lend.getPayOrigin();
+        List<String> list = accountAPI.findSubjects(payOrigin);
+        if (null != list && list.size() > 0) {
+            String[] firstSubjects = new String[]{list.get(0), lend.getFirstSubject()};
+            String[] secondSubjects = new String[]{list.get(1), lend.getSecondSubject()};
+            String[] thirdSubjects = new String[]{list.get(2), lend.getThirdSubject()};
+
+            to.setFirstSubjects(Arrays.stream(firstSubjects).collect(Collectors.toList()));
+            to.setSecondSubjects(Arrays.stream(secondSubjects).collect(Collectors.toList()));
+            to.setThirdSubjects(Arrays.stream(thirdSubjects).collect(Collectors.toList()));
+
+            Double[] borrowMoneys = new Double[]{lend.getMoney(), 0d};
+            Double[] loanMoneys = new Double[]{0d, lend.getMoney()};
+
+            to.setBorrowMoneys(Arrays.stream(borrowMoneys).collect(Collectors.toList()));
+            to.setLoanMoneys(Arrays.stream(loanMoneys).collect(Collectors.toList()));
+
+            to.setSource("借款");
+            to.setArea(lend.getArea());
+            to.setProjectName(lend.getProjectName());
+            to.setProjectGroup(lend.getProjectGroup());
+            to.setTicketer(lend.getCharger());
+            to.setAuditor(lend.getCharger());
+            to.setTicketNum(1d);
+
+            List<VoucherGenerateBO> list1 = voucherGenerateAPI.addVoucherGenerate(to);
+        }
+    }
+
+    /**
+     * 还款编辑发送邮件
+     */
+    private void sendEmail(String name) throws SerException {
+        String email1 = findFinanEma();
+        String email2 = findMoneyEma();
+
+        String[] emails = new String[]{email1, email2};
+//        String[] emails = new String[]{"zhuangkaiqin_aj@163.com"};
+
+        //发送邮件测试邮箱是否有误
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle("借款与报销还款核对");
+        messageTO.setMsgType(MsgType.SYS);
+        messageTO.setContent("借款人" + name + "已进行还款操作,请上系统核对");
+        messageTO.setSendType(SendType.EMAIL);
+        messageTO.setRangeType(RangeType.SPECIFIED);
+        messageTO.setReceivers(emails);
+        messageAPI.send(messageTO);
+    }
+
+    /**
+     * 账户核对收到单据发送邮件
+     */
+    private void sendEmail1(ApplyLend lend) throws SerException {
+        String email = findEmailByName(lend.getLender());
+
+        String[] emails = new String[]{email};
+//        String[] emails = new String[]{"zhuangkaiqin_aj@163.com"};
+        String time = DateUtil.dateToString(LocalDate.now());
+
+        //发送邮件测试邮箱是否有误
+        MessageTO messageTO = new MessageTO();
+        messageTO.setTitle("账户核对不通过");
+        messageTO.setMsgType(MsgType.SYS);
+        messageTO.setContent(time + ",借款人" + lend.getLender() + "因" + lend.getLendReson() + "的借款还款发票与记录不符,请在" + getTime() + "内寄送相对应的发票,超时会有相应的惩罚");
+        messageTO.setSendType(SendType.EMAIL);
+        messageTO.setRangeType(RangeType.SPECIFIED);
+        messageTO.setReceivers(emails);
+        messageAPI.send(messageTO);
+    }
+
+    //获取财务运营部公邮
+    private String findFinanEma() throws SerException {
+        CommonalityBO bo = commonalityAPI.findByDepartment("运营财务部");
+        return bo.getEmail();
+    }
+
+    //获取资金模块负责人的邮件
+    private String findMoneyEma() throws SerException {
+        String name = positionDetailUserAPI.moneyModulePerson();
+        String email = internalContactsAPI.getEmail(name);
+        return email;
+    }
+
+    //根据名字获取邮件
+    private String findEmailByName(String name) throws SerException {
+        String email = internalContactsAPI.getEmail(name);
+        return email;
+    }
+
+    //
+    public String getTime() throws SerException {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(DateUtil.dateToString(LocalDate.now()));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+            Date aa = calendar.getTime();
+            return sdf.format(aa);
+        } catch (Exception e) {
+            throw new SerException(e.getMessage());
+        }
+    }
+
+    private String findDepartmentEmail(String name) throws SerException {
+        List<DepartmentPeopleBO> list = departmentDetailAPI.departmentByName(name);
+        if (null != list && list.size() > 0) {
+            String department = list.get(0).getDepartment();
+            CommonalityBO bo = commonalityAPI.findByDepartment(department);
+            if (null != bo) {
+                return bo.getEmail();
+            }
+        }
+        return null;
+    }
 
 }
