@@ -878,6 +878,11 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
             if (null == departs) {
                 throw new SerException("部门汇总必须选择部门");
             }
+        }else{
+            String[] personals = dto.getPersonals();
+            if (null == personals) {
+                throw new SerException("个人汇总必须选择姓名");
+            }
         }
         return getCount(dto);
     }
@@ -966,6 +971,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
                 sb.append("SELECT id FROM attendance_vacate WHERE ");
                 if (CountType.DEPART.equals(dto.getCountType())) {
                     sb.append("depart in ('" + StringUtils.join(dto.getDeparts(), "','") + "') AND");
+                }else if(CountType.PERSONAL.equals(dto.getCountType())){
+                    sb.append("name in ('" + StringUtils.join(dto.getPersonals(), "','") + "') AND");
                 }
                 sb.append("  '" + date + "' BETWEEN DATE_FORMAT(startTime,'%Y-%m-%d') AND DATE_FORMAT(endTime,'%Y-%m-%d')");
                 List<Vacate> vacates = super.findBySql(sb.toString(), Vacate.class, new String[]{"id"});
@@ -986,6 +993,8 @@ public class VacateSerImpl extends ServiceImpl<Vacate, VacateDTO> implements Vac
         sb.append("SELECT id FROM attendance_vacate WHERE ");
         if (CountType.DEPART.equals(dto.getCountType())) {
             sb.append("depart in ('" + StringUtils.join(dto.getDeparts(), "','") + "') AND");
+        }else if(CountType.PERSONAL.equals(dto.getCountType())){
+            sb.append("name in ('" + StringUtils.join(dto.getPersonals(), "','") + "') AND");
         }
         sb.append(" (DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '" + dto.getStartTime() + "' AND '" + dto.getEndTime() + "') AND" +
                 "      (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '" + dto.getStartTime() + "' AND '" + dto.getEndTime() + "')");

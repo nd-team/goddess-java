@@ -43,7 +43,7 @@ public class ArrestPointSerImpl extends ServiceImpl<ArrestPoint, ArrestPointDTO>
         String name = userAPI.currentUser().getUsername();
         ArrestPoint entity = BeanTransform.copyProperties(to, ArrestPoint.class, true);
         Week[] workDays = to.getWorkDays();
-        if (null != to.getWeek()) {
+        if (null != to.getWeek() && to.getWeek()) {
             entity.setWorkDay("大小周（8:30-18:00）");
         } else {
             boolean flag = false;

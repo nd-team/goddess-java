@@ -29,10 +29,10 @@ public class VacateVO {
      * uuid
      */
     private String uuid;
-    /**
-     * 员工编号
-     */
-    private String employeeNumber;
+//    /**
+//     * 员工编号
+//     */
+//    private String employeeNumber;
 
     /**
      * 请假人
@@ -192,12 +192,12 @@ public class VacateVO {
         this.id = id;
     }
 
-    public String getEmployeeNumber() {
-        return employeeNumber;
+    public String getPosition() {
+        return position;
     }
 
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getName() {
@@ -216,13 +216,6 @@ public class VacateVO {
         this.depart = depart;
     }
 
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
 
     public String getStartTime() {
         return startTime;

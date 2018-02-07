@@ -29,10 +29,10 @@ public class VacateBO implements Serializable {
      * uuid
      */
     private String uuid;
-    /**
-     * 员工编号
-     */
-    private String employeeNumber;
+//    /**
+//     * 员工编号
+//     */
+//    private String employeeNumber;
 
     /**
      * 请假人
@@ -191,14 +191,6 @@ public class VacateBO implements Serializable {
 
     public void setAduitStatus(AduitStatus aduitStatus) {
         this.aduitStatus = aduitStatus;
-    }
-
-    public String getEmployeeNumber() {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
     }
 
     public String getName() {

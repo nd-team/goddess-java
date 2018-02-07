@@ -228,8 +228,8 @@ public class TaskNodeApiImpl implements TaskNodeAPI {
     }
 
     @Override
-    public DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException {
-        return taskNodeSer.dayCount(startTime, endTime, departIds);
+    public DayReportCountBO dayCount(String startTime, String endTime, String[] departIds,String[] names) throws SerException {
+        return taskNodeSer.dayCount(startTime, endTime, departIds,names);
     }
 
     @Override

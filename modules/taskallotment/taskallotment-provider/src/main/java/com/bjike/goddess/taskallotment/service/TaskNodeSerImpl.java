@@ -184,7 +184,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     @Override
     @Transactional(rollbackFor = {SerException.class})
-    public void saves(TaskNodeBaseTO to ) throws SerException {
+    public void saves(TaskNodeBaseTO to) throws SerException {
         TaskNodeBase entity = BeanTransform.copyProperties(to, TaskNodeBase.class, true);
         taskNodeBaseSer.save(entity);
         List<TaskNodeTO> taskNodeTOS = to.getTaskNodeList();
@@ -202,31 +202,31 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 super.save(list);
             }
 //
-                for (int k = 0; k < taskNodeTOS.size(); k++) {
-                    List<CustomTitleTO> titleTOS = taskNodeTOS.get(k).getCustomTitles();
+            for (int k = 0; k < taskNodeTOS.size(); k++) {
+                List<CustomTitleTO> titleTOS = taskNodeTOS.get(k).getCustomTitles();
 //            List<CustomTitleTO> titleTOS = taskNodeTOS.get(i).getCustomTitles();
-                    List<CustomTitle> titles = new ArrayList<>();
-                    if (null != titleTOS) {
-                        int j = 0;
-                        for (CustomTitleTO titleTO : titleTOS) {
-                            j++;
-                            if (titleTO.getMandatory()) {
-                                if (null == titleTO.getContent()) {
-                                    throw new SerException(titleTO.getTitle() + "为必填字段");
-                                }
+                List<CustomTitle> titles = new ArrayList<>();
+                if (null != titleTOS) {
+                    int j = 0;
+                    for (CustomTitleTO titleTO : titleTOS) {
+                        j++;
+                        if (titleTO.getMandatory()) {
+                            if (null == titleTO.getContent()) {
+                                throw new SerException(titleTO.getTitle() + "为必填字段");
                             }
-                            titleTO.setId(null);
-                            CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
-                            customTitle.setTitleIndex(j);
-                            customTitle.setTaskNodeId(list.get(k).getId());
-                            titles.add(customTitle);
+                        }
+                        titleTO.setId(null);
+                        CustomTitle customTitle = BeanTransform.copyProperties(titleTO, CustomTitle.class, true);
+                        customTitle.setTitleIndex(j);
+                        customTitle.setTaskNodeId(list.get(k).getId());
+                        titles.add(customTitle);
                     }
                 }
                 customTitleSer.save(titles);
             }
-                }
-
         }
+
+    }
 
 
     @Override
@@ -238,7 +238,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        entity.setType(type(taskType));
 //        super.save(entity);
 //        int i = 0;
-        List<TaskNode> list = BeanTransform.copyProperties(to, TaskNode.class, true,"tableId");
+        List<TaskNode> list = BeanTransform.copyProperties(to, TaskNode.class, true, "tableId");
         for (TaskNode taskNode : list) {
             String tableId = to.getTableId();
             TaskNode entity = BeanTransform.copyProperties(to, TaskNode.class, true);
@@ -400,7 +400,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             TableBO tableBO = BeanTransform.copyProperties(t, TableBO.class);
             tableBO.setNodeS(nodeBOS);
             tableBOS.add(tableBO);
-    }
+        }
         return tableBOS;
     }
 
@@ -508,9 +508,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             customTitleSer.remove(titles);
 
         }
-        if(entity.getFatherId() == null){
+        if (entity.getFatherId() == null) {
             TaskNodeDTO taskNodeDTO = new TaskNodeDTO();
-            taskNodeDTO.getConditions().add(Restrict.eq("fatherId",id));
+            taskNodeDTO.getConditions().add(Restrict.eq("fatherId", id));
             List<TaskNode> taskNodes = super.findByCis(taskNodeDTO);
             super.remove(taskNodes);
         }
@@ -578,18 +578,18 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 //        if(entity1.getConfirm() == false  && entity1.getTaskStatus().equals(TaskStatus.RECEIVE) || entity1.getTaskStatus().equals(TaskStatus.NOTRECEIVE)){
 //            throw new SerException("您确定要重新发送任务，确定就发送成功，取消就停留在当前界面");
 //        }else {
-            RpcTransmit.transmitUserToken(token);
-            TaskNode entity = update(to);
-            entity.setInitiate(name);
-            entity.setTime(LocalDateTime.now());
-            super.update(entity);
-            if ((null != entity.getSplit()) && (entity.getSplit())) {
-                split(entity);
-            }
-            if (null != to.getExecute()) {
-                priority(entity);  //处理优先级
-            }
-            send(name, entity);
+        RpcTransmit.transmitUserToken(token);
+        TaskNode entity = update(to);
+        entity.setInitiate(name);
+        entity.setTime(LocalDateTime.now());
+        super.update(entity);
+        if ((null != entity.getSplit()) && (entity.getSplit())) {
+            split(entity);
+        }
+        if (null != to.getExecute()) {
+            priority(entity);  //处理优先级
+        }
+        send(name, entity);
 //        }
         //TODO 发起任务保存代办事件
 //        if (null != entity.getExecute()) {
@@ -3299,8 +3299,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     }
 
     @Override
-    public DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException {
-        List<DayCountBO> dayCountBOS = get(startTime, endTime, departIds);
+    public DayReportCountBO dayCount(String startTime, String endTime, String[] departIds, String[] userNames) throws SerException {
+        List<DayCountBO> dayCountBOS = getList(startTime, endTime, departIds, userNames);
         Set<String> areas = dayCountBOS.stream().filter(dayCountBO -> null != dayCountBO.getArea()).map(DayCountBO::getArea).collect(Collectors.toSet());
         DayReportCountBO dayReportCountBO = new DayReportCountBO();
         dayReportCountBO.setTime(startTime + "-" + endTime);
@@ -3370,6 +3370,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         count.setSons(bbos);
         abos.add(count);
         dayReportCountBO.setSons(abos);
+        System.out.println(dayReportCountBO);
         return dayReportCountBO;
     }
 
@@ -3465,7 +3466,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     private List<DayCountBO> get(String startTime, String endTime, String[] departIds) throws SerException {
         List<DayCountBO> dayCountBOS = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT DISTINCT id" +
+        sb.append("SELECT DISTINCT id " +
                 "        FROM taskallotment_tasknode" +
                 "        WHERE ");
         if (null != departIds) {
@@ -3487,7 +3488,8 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
                 sb.append("execute in (" + executeStr + ") AND ");
             }
         }
-        sb.append("(DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "')  and (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "') and haveSon is null");
+        sb.append("(DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "')  and (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "') and haveSon is null and execute is not null");
+//        System.out.println("---->"+sb.toString());
         List<TaskNode> ids = super.findBySql(sb.toString(), TaskNode.class, new String[]{"id"});
         List<TaskNode> list = new ArrayList<>();
         if (null != ids) {
@@ -3496,6 +3498,93 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             }
         }
         Set<String> names = list.stream().map(TaskNode::getExecute).collect(Collectors.toSet());
+
+        for (String name : names) {
+            Stream<TaskNode> stream = list.stream().filter(taskNode -> name.equals(taskNode.getExecute()));
+            //计划任务量
+            double planNum = stream.mapToDouble(TaskNode::getPlanNum).sum();
+            //完成任务量
+            double actualNum = list.stream().filter(taskNode -> name.equals(taskNode.getExecute()) && (null != taskNode.getActualNum())).mapToDouble(TaskNode::getActualNum).sum();
+            double needMin = list.stream().filter(taskNode -> TimeType.MINUTE.equals(taskNode.getNeedType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+            double needHour = list.stream().filter(taskNode -> TimeType.HOUR.equals(taskNode.getNeedType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+            double needDay = list.stream().filter(taskNode -> TimeType.DAY.equals(taskNode.getNeedType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getNeedTime).sum();
+            //任务时长(小时)
+            double taskTime = new BigDecimal(needMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + needDay * 8 + needHour;
+            double actualMin = list.stream().filter(taskNode -> (null != taskNode.getActualType()) && TimeType.MINUTE.equals(taskNode.getActualType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+            double actualHour = list.stream().filter(taskNode -> (null != taskNode.getActualType()) && TimeType.HOUR.equals(taskNode.getActualType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+            double actualDay = list.stream().filter(taskNode -> (null != taskNode.getActualType()) && TimeType.DAY.equals(taskNode.getActualType()) && name.equals(taskNode.getExecute())).mapToDouble(TaskNode::getActualTime).sum();
+            //实际时长(小时)
+            double actualTime = new BigDecimal(actualMin / 60).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() + actualDay * 8 + actualHour;
+            //加班时长(小时)
+            double outTime = outTime(name, startTime, endTime);
+            PositionDetailBO positionDetailBO = positionUserDetailAPI.getPosition(name);
+            DayCountBO dayCountBO = new DayCountBO();
+            if (null != positionDetailBO) {
+                dayCountBO.setArea(positionDetailBO.getArea());
+                dayCountBO.setDepart(positionDetailBO.getDepartmentName());
+                dayCountBO.setPosition(positionDetailBO.getPosition());
+            }
+            dayCountBO.setOutTime(outTime);
+            dayCountBO.setName(name);
+            dayCountBO.setPlanNum(planNum);
+            dayCountBO.setActualNum(actualNum);
+            dayCountBO.setTaskTime(taskTime);
+            dayCountBO.setActualTime(actualTime);
+            dayCountBOS.add(dayCountBO);
+        }
+        return dayCountBOS;
+    }
+
+    /**
+     * 考勤日报汇总获取数据集合
+     *
+     * @param startTime
+     * @param endTime
+     * @param departIds
+     * @return
+     * @throws SerException
+     */
+    private List<DayCountBO> getList(String startTime, String endTime, String[] departIds, String[] userNames) throws SerException {
+        List<DayCountBO> dayCountBOS = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT DISTINCT id " +
+                "        FROM taskallotment_tasknode" +
+                "        WHERE ");
+        if (null != departIds) {
+            Set<String> set = new HashSet<>();
+            for (String s : departIds) {
+                Set<String> names = departmentDetailAPI.departPersons(s);   //查找某个部门的所有人
+                if (null != names) {
+                    set.addAll(names);
+                }
+            }
+            String[] executes = new String[set.size()];
+            int i = 0;
+            for (String s : set) {
+                executes[i] = "'" + s + "'";
+                i++;
+            }
+            String executeStr = StringUtils.join(executes, ",");
+            if (executes.length > 0) {
+                sb.append("execute in (" + executeStr + ") AND ");
+            }
+        } else if (null != userNames) {
+            String executeStr = StringUtils.join(userNames, ",");
+            if (userNames.length > 0) {
+                sb.append("execute in (" + executeStr + ") AND ");
+            }
+        }
+        sb.append("(DATE_FORMAT(startTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "')  and (DATE_FORMAT(endTime, '%Y-%m-%d') BETWEEN '" + startTime + "' AND '" + endTime + "') and haveSon is null and execute is not null");
+//        System.out.println("---->"+sb.toString());
+        List<TaskNode> ids = super.findBySql(sb.toString(), TaskNode.class, new String[]{"id"});
+        List<TaskNode> list = new ArrayList<>();
+        if (null != ids) {
+            for (TaskNode t : ids) {
+                list.add(super.findById(t.getId()));
+            }
+        }
+        Set<String> names = list.stream().map(TaskNode::getExecute).collect(Collectors.toSet());
+
         for (String name : names) {
             Stream<TaskNode> stream = list.stream().filter(taskNode -> name.equals(taskNode.getExecute()));
             //计划任务量
@@ -3534,6 +3623,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
 
     //查询某人某段时间的加班时长，注意，考勤数据库与任务分配数据库必须为同一个，不考虑分库
     private Double outTime(String name, String startTime, String endTime) throws SerException {
+        //goddess_attendance.
         String sql = "SELECT sum(overLong) time " +
                 "FROM attendance_overwork " +
                 "WHERE overWorker = '" + name + "' AND " +

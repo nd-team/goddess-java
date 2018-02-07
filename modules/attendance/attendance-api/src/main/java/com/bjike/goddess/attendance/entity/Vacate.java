@@ -28,11 +28,11 @@ public class Vacate extends BaseEntity {
     @Column(name = "date", nullable = false, columnDefinition = "DATE   COMMENT '开始时间'")
     private LocalDate date;
 
-    /**
-     * 员工编号
-     */
-    @Column(name = "employeeNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
-    private String employeeNumber;
+//    /**
+//     * 员工编号
+//     */
+//    @Column(name = "employeeNumber", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '员工编号'")
+//    private String employeeNumber;
 
     /**
      * 请假人
@@ -178,13 +178,6 @@ public class Vacate extends BaseEntity {
         this.vacateType = vacateType;
     }
 
-    public String getEmployeeNumber() {
-        return employeeNumber;
-    }
-
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
-    }
 
     public String getName() {
         return name;

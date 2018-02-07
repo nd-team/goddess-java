@@ -23,11 +23,11 @@ import javax.validation.constraints.NotNull;
 public class VacateTO extends BaseTO {
     public interface GETTIME{}
     public interface PHONEADD{}
-    /**
-     * 员工编号
-     */
-    @NotBlank(groups = {ADD.class,VacateTO.PHONEADD.class},message = "员工编号不能为空")
-    private String employeeNumber;
+//    /**
+//     * 员工编号
+//     */
+//    @NotBlank(groups = {ADD.class,VacateTO.PHONEADD.class},message = "员工编号不能为空")
+//    private String employeeNumber;
 
     /**
      * 请假人
@@ -156,12 +156,12 @@ public class VacateTO extends BaseTO {
         this.handoff = handoff;
     }
 
-    public String getEmployeeNumber() {
-        return employeeNumber;
+    public String getPosition() {
+        return position;
     }
 
-    public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getName() {
@@ -204,13 +204,6 @@ public class VacateTO extends BaseTO {
         this.depart = depart;
     }
 
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
 
     public StartTime getStartTime() {
         return startTime;

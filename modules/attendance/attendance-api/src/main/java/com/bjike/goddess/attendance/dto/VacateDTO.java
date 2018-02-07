@@ -27,6 +27,10 @@ public class VacateDTO extends BaseDTO {
      */
     private String[] departs;
     /**
+     * 个人数组
+     */
+    private String[] personals;
+    /**
      * 开始时间
      */
     @NotBlank(groups = VacateDTO.COUNT.class,message = "开始时间不能为空")
@@ -67,5 +71,13 @@ public class VacateDTO extends BaseDTO {
 
     public void setDeparts(String[] departs) {
         this.departs = departs;
+    }
+
+    public String[] getPersonals() {
+        return personals;
+    }
+
+    public void setPersonals(String[] personals) {
+        this.personals = personals;
     }
 }
