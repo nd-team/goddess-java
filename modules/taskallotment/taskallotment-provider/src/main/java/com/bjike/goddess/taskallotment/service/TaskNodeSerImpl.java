@@ -186,6 +186,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
     @Transactional(rollbackFor = {SerException.class})
     public void saves(TaskNodeBaseTO to) throws SerException {
         TaskNodeBase entity = BeanTransform.copyProperties(to, TaskNodeBase.class, true);
+
         taskNodeBaseSer.save(entity);
         List<TaskNodeTO> taskNodeTOS = to.getTaskNodeList();
         List<TaskNode> list = new ArrayList<>();
@@ -572,9 +573,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         if (null == entity1) {
             throw new SerException("该对象不存在");
         }
-        if (null != entity1.getInitiate() && entity1.getConfirm() == true) {
-            throw new SerException("该任务已被分发，不能再次发起");
+        if (entity1.getConfirm()!=null){
+            if (null != entity1.getInitiate() && entity1.getConfirm() ) {
+                throw new SerException("该任务已被分发，不能再次发起");
+            }
         }
+
 //        if(entity1.getConfirm() == false  && entity1.getTaskStatus().equals(TaskStatus.RECEIVE) || entity1.getTaskStatus().equals(TaskStatus.NOTRECEIVE)){
 //            throw new SerException("您确定要重新发送任务，确定就发送成功，取消就停留在当前界面");
 //        }else {
@@ -885,6 +889,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.eq("initiate", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
+        if (dto.getUser() !=null){
+            dto.getConditions().add(Restrict.like("execute", dto.getUser()));
+        }
         dto.getSorts().add("time=desc");
         List<TaskNode> list = super.findByCis(dto, true);
         List<TaskNodeBO> bos = new ArrayList<>();
@@ -899,6 +906,9 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.eq("initiate", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
+        if (dto.getUser() !=null){
+            dto.getConditions().add(Restrict.like("execute", dto.getUser()));
+        }
         return super.count(dto);
     }
 
@@ -1135,10 +1145,19 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             Set<String> tableIds = tables.stream().map(table -> table.getId()).collect(Collectors.toSet());
             dto.getConditions().add(Restrict.in("tableId", tableIds));
         }
+
         String name = userAPI.currentUser().getUsername();
         dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("execute", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
+
+        if (dto.getStartTime()!=null){
+            dto.getConditions().add(Restrict.gt_eq("startTime", dto.getStartTime()));
+        }
+        if (dto.getEndTime()!=null){
+            dto.getConditions().add(Restrict.lt_eq("endTime", dto.getEndTime()));
+        }
+
         dto.getSorts().add("time=desc");
         List<TaskNode> list = super.findByCis(dto, true);
         List<TaskNodeBO> bos = new ArrayList<>();
@@ -1166,6 +1185,12 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("execute", name));
         dto.getConditions().add(Restrict.isNull("haveSon"));
+        if (dto.getStartTime()!=null){
+            dto.getConditions().add(Restrict.gt_eq("startTime", dto.getStartTime()));
+        }
+        if (dto.getEndTime()!=null){
+            dto.getConditions().add(Restrict.lt_eq("endTime", dto.getEndTime()));
+        }
         return super.count(dto);
     }
 
