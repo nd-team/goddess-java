@@ -836,6 +836,19 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             }
             String departStr = StringUtils.join(departTemps, ",");
             sb.append("depart in (" + departStr + ") AND ");
+        }else if (CountType.PERSONAL.equals(countType)) {
+            String[] personals = dto.getDeparts();
+            if (null == personals) {
+                throw new SerException("个人汇总必须选择姓名");
+            }
+            String[] personalTemps = new String[personals.length];
+            int i = 0;
+            for (String s : personals) {
+                personalTemps[i] = "'" + s + "'";
+                i++;
+            }
+            String personalStr = StringUtils.join(personalTemps, ",");
+            sb.append("overWorker in (" + personalStr + ") AND ");
         }
         sb.append("('" + dto.getStartTime() + "' BETWEEN DATE_FORMAT(overStartTime, '%Y-%m-%d') AND DATE_FORMAT(overEndTime, '%Y-%m-%d'))" +
                 "   AND ('" + dto.getEndTime() + "' BETWEEN DATE_FORMAT(overStartTime, '%Y-%m-%d') AND DATE_FORMAT(overEndTime, '%Y-%m-%d'))");

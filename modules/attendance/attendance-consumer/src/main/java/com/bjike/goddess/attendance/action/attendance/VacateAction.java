@@ -8,6 +8,7 @@ import com.bjike.goddess.attendance.excel.VacateImportExcel;
 import com.bjike.goddess.attendance.to.DeleteFileTO;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.VacateTO;
+import com.bjike.goddess.attendance.vo.InternalContactsConditionVO;
 import com.bjike.goddess.attendance.vo.SonPermissionObject;
 import com.bjike.goddess.attendance.vo.VacateCountVO;
 import com.bjike.goddess.attendance.vo.VacateVO;
@@ -22,12 +23,10 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
-import com.bjike.goddess.organize.api.DepartmentDetailAPI;
-import com.bjike.goddess.organize.api.PositionDetailAPI;
-import com.bjike.goddess.organize.api.PositionUserDetailAPI;
-import com.bjike.goddess.organize.api.UserSetPermissionAPI;
+import com.bjike.goddess.organize.api.*;
 import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.organize.bo.DepartmentDetailBO;
+import com.bjike.goddess.organize.bo.InternalContactsConditionBO;
 import com.bjike.goddess.organize.bo.PositionDetailBO;
 import com.bjike.goddess.organize.vo.AreaVO;
 import com.bjike.goddess.organize.vo.DepartmentDetailVO;
@@ -79,7 +78,8 @@ public class VacateAction extends BaseFileAction {
     private PositionDetailAPI positionDetailAPI;
     @Autowired
     private UserSetPermissionAPI userSetPermissionAPI;
-
+    @Autowired
+    private PositionDetailUserAPI positionDetailUserAPI;
 
     /**
      * 模块设置导航权限
@@ -502,7 +502,7 @@ public class VacateAction extends BaseFileAction {
     }
 
     /**
-     * 获取当前用户
+     * 获取当前用户信息
      *
      * @return class UserVO
      * @throws ActException
@@ -511,8 +511,17 @@ public class VacateAction extends BaseFileAction {
     @GetMapping("v1/user")
     public Result user(HttpServletRequest request) throws ActException {
         try {
-            UserBO bo = userAPI.currentUser();
-            return ActResult.initialize(BeanTransform.copyProperties(bo, UserVO.class, request));
+            InternalContactsConditionVO vo = new InternalContactsConditionVO();
+            UserBO userBO = userAPI.currentUser();
+            String userName = userBO.getUsername();
+            InternalContactsConditionBO bo = positionDetailUserAPI.getByName(userName);
+            if(bo!=null){
+                vo = BeanTransform.copyProperties(bo, InternalContactsConditionVO.class, request);
+                vo.setUserName(userName);
+            }else{
+                vo.setUserName(userName);
+            }
+            return ActResult.initialize(vo);
         } catch (Exception e) {
             throw new ActException(e.getMessage());
         }

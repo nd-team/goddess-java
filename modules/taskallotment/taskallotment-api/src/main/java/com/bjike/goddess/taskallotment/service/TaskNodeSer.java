@@ -405,7 +405,7 @@ public interface TaskNodeSer extends Ser<TaskNode, TaskNodeDTO> {
      * @return
      * @throws SerException
      */
-    DayReportCountBO dayCount(String startTime, String endTime, String[] departIds) throws SerException;
+    DayReportCountBO dayCount(String startTime, String endTime, String[] departIds,String[] userNames) throws SerException;
 
     /**
      * 日报汇总邮件

@@ -129,8 +129,13 @@ public class DayReportSerImpl extends ServiceImpl<DayReport, DayReportDTO> imple
             if (null == departs) {
                 throw new SerException("部门汇总必须选择部门");
             }
+        }else if(CountType.PERSONAL.equals(dto.getCountType())){
+            String[] personals = dto.getNames();
+            if (null == personals) {
+                throw new SerException("个人汇总必须选择姓名");
+            }
         }
-        return BeanTransform.copyProperties(taskNodeAPI.dayCount(dto.getStartTime(), dto.getEndTime(), dto.getDepartIds()), DayReportCountBO.class);
+        return BeanTransform.copyProperties(taskNodeAPI.dayCount(dto.getStartTime(), dto.getEndTime(), dto.getDepartIds(),dto.getNames()), DayReportCountBO.class);
     }
 
     @Override
