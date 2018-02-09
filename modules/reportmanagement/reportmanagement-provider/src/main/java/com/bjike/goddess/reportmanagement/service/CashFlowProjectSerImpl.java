@@ -1202,14 +1202,14 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         //存入公式
         saveFormula("投资活动产生的现金流量净额", ProjectType.INVESTMENT, "现金流入小计 - 现金流出小计");
 
-        return findCash18(dto) - findCash14(dto);
+        return findCash14(dto) - findCash18(dto);
     }
 
     //吸收投资所收到的现金
     private Double findCash20(CashFlowProjectDTO dto) throws SerException {
         //（实收资本期末数－实收资本期初数）
         Double cash1 = 0d;
-        cash1 = findAssetNum("实收资本", dto.getEndTime(), false) - findAssetNum("实收资本", dto.getEndTime(), true);
+        cash1 = findAssetNum1("实收资本", dto.getEndTime(), false) - findAssetNum1("实收资本", dto.getEndTime(), true);
 
         //（应付债券期末数－应付债券期初数）
         Double cash2 = 0d;
@@ -1318,12 +1318,29 @@ public class CashFlowProjectSerImpl extends ServiceImpl<CashFlowProject, CashFlo
         return findCash9(dto) + findCash19(dto) + findCash28(dto) + findCash29(dto);
     }
 
-    //获取资产负债表中的期初数和期末数,tar为true,获取期初数
+    //获取资产负债表中的期初数和期末数,tar为true,获取期初数(借方-贷方)
     private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
         SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        if (null != subjectCollectBO) {
+            if (tar) {
+                return subjectCollectBO.getBeginAmount();
+            } else {
+                return subjectCollectBO.getEndAmount();
+            }
+        }
+        return 0d;
+    }
+
+
+    //获取资产负债表中的期初数和期末数,tar为true,获取期初数(贷方-借方)
+    private Double findAssetNum1(String firstSubject, String endTime, Boolean tar) throws SerException {
+        SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
+        subjectCollectDTO.setFirstSubject(firstSubject);
+//        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, false);
         if (null != subjectCollectBO) {
             if (tar) {
                 return subjectCollectBO.getBeginAmount();

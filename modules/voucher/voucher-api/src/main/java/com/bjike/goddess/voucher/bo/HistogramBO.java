@@ -2,6 +2,8 @@ package com.bjike.goddess.voucher.bo;
 
 import com.bjike.goddess.common.api.bo.BaseBO;
 
+import java.time.LocalDate;
+
 /**
  * 柱状图数据
  *
@@ -28,6 +30,11 @@ public class HistogramBO extends BaseBO {
      */
     private Double loanMoney;
 
+    /**
+     * 记账凭证日期
+     */
+    private LocalDate voucherDate;
+
     public String getMonth() {
         return month;
     }
@@ -50,5 +57,13 @@ public class HistogramBO extends BaseBO {
 
     public void setLoanMoney(Double loanMoney) {
         this.loanMoney = loanMoney;
+    }
+
+    public LocalDate getVoucherDate() {
+        return voucherDate;
+    }
+
+    public void setVoucherDate(LocalDate voucherDate) {
+        this.voucherDate = voucherDate;
     }
 }

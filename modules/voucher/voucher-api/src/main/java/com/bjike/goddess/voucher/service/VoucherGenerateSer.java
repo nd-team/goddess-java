@@ -3,10 +3,7 @@ package com.bjike.goddess.voucher.service;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 import com.bjike.goddess.voucher.bo.*;
-import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
-import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.excel.SonPermissionObject;
 import com.bjike.goddess.voucher.to.AnalysisTO;
@@ -694,7 +691,7 @@ public interface VoucherGenerateSer extends Ser<VoucherGenerate, VoucherGenerate
     /**
      * 根据月份查询借方金额和贷方金额
      */
-    default OptionBO ctReSubHistogram() throws SerException {
+    default OptionBO ctReSubHistogram(VoucherChartDTO dto) throws SerException {
         return null;
     }
 

@@ -328,7 +328,7 @@ public class DispatchcarWrongAct extends BaseFileAction {
      * @version v1
      */
     @PutMapping("v1/reAudit")
-    public Result reAudit(@Validated({EDIT.class}) DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
+    public Result reAudit(DispatchCarInfoTO to, BindingResult bindingResult, HttpServletRequest request) throws ActException {
         try {
             dispatchCarInfoAPI.reAudit(to);
             return new ActResult("操作成功");
