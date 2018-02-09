@@ -4,10 +4,12 @@ import com.bjike.goddess.attendance.bo.FinanceAttendanceBO;
 import com.bjike.goddess.attendance.bo.FinanceCountBO;
 import com.bjike.goddess.attendance.bo.FinanceCountFieldBO;
 import com.bjike.goddess.attendance.dto.FinanceAttendanceDTO;
+import com.bjike.goddess.attendance.entity.PageUtils;
 import com.bjike.goddess.attendance.service.FinanceAttendanceSer;
 import com.bjike.goddess.attendance.to.FinanceAttendanceTO;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
+import com.bjike.goddess.common.utils.bean.BeanTransform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +87,31 @@ public class FinanceAttendanceApiImpl implements FinanceAttendanceAPI {
     @Override
     public byte[] excelExport(FinanceAttendanceDTO dto) throws SerException {
         return financeAttendanceSer.excelExport(dto).toByteArray();
+    }
+
+    @Override
+    public PageUtils findAll(String pageNum, String pageSize, String name) throws SerException {
+        return financeAttendanceSer.findAll(pageNum,pageSize,name);
+    }
+
+    @Override
+    public void save(FinanceAttendanceDTO dto) throws SerException {
+        financeAttendanceSer.save(dto);
+    }
+
+    @Override
+    public void delete(String[] ids) throws SerException {
+        financeAttendanceSer.delete(ids);
+    }
+
+    @Override
+    public FinanceAttendanceBO findById(String id) throws SerException {
+        return BeanTransform.copyProperties(financeAttendanceSer.findById(id),FinanceAttendanceBO.class);
+    }
+
+    @Override
+    public void Update(FinanceAttendanceDTO dto) throws SerException {
+        financeAttendanceSer.Update(dto);
     }
 
 }

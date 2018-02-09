@@ -4,6 +4,7 @@ import com.bjike.goddess.attendance.bo.FinanceAttendanceBO;
 import com.bjike.goddess.attendance.bo.FinanceCountBO;
 import com.bjike.goddess.attendance.bo.FinanceCountFieldBO;
 import com.bjike.goddess.attendance.dto.FinanceAttendanceDTO;
+import com.bjike.goddess.attendance.entity.PageUtils;
 import com.bjike.goddess.attendance.to.FinanceAttendanceTO;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.common.api.exception.SerException;
@@ -112,4 +113,26 @@ public interface FinanceAttendanceAPI {
     default byte[] excelExport(FinanceAttendanceDTO dto) throws SerException {
         return  null;
     }
+
+
+
+    /**
+     * 新方式
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @throws SerException
+     */
+    default PageUtils findAll(String pageNum, String pageSize, String name)throws SerException {
+        return  null;
+    }
+
+
+    void save(FinanceAttendanceDTO dto) throws SerException;
+
+    void delete(String[] ids) throws SerException;
+
+    FinanceAttendanceBO findById(String id) throws SerException;
+
+    void Update(FinanceAttendanceDTO dto) throws SerException;
 }

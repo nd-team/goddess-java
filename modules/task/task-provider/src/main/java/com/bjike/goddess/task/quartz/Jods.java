@@ -32,7 +32,7 @@ public class Jods {
     @Autowired
     private CollectSchemeAPI collectSchemeAPI;
 
-    public final static long ONE_Minute = 60 * 10 * 1000;
+    public final static long ONE_Minute = 60  * 1000;
 
     @Scheduled(fixedDelay=ONE_Minute)
     public void fixedDelayJob() throws MalformedURLException, URISyntaxException, SerException {
