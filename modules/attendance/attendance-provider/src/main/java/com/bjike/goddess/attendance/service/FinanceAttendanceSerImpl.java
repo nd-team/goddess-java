@@ -4,9 +4,11 @@ import com.bjike.goddess.attendance.bo.FinanceAttendanceBO;
 import com.bjike.goddess.attendance.bo.FinanceCountBO;
 import com.bjike.goddess.attendance.bo.FinanceCountFieldBO;
 import com.bjike.goddess.attendance.bo.VacateBO;
+import com.bjike.goddess.attendance.dao.FinanceAttendanceRep;
 import com.bjike.goddess.attendance.dto.FinanceAttendanceDTO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.entity.FinanceAttendance;
+import com.bjike.goddess.attendance.entity.PageUtils;
 import com.bjike.goddess.attendance.entity.Punch;
 import com.bjike.goddess.attendance.enums.AduitStatus;
 import com.bjike.goddess.attendance.enums.GuideAddrStatus;
@@ -40,6 +42,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,6 +94,9 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
+
+    @Autowired
+    private FinanceAttendanceRep financeAttendanceRep;
 
     /**
      * 核对查看权限（部门级别）
@@ -1627,4 +1635,30 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         return titleStyle;
     }
 
+    @Override
+    public PageUtils findAll(String pageNum, String pageSize, String name) throws SerException {
+
+        Pageable pageable = new PageRequest( Integer.parseInt(pageNum) , Integer.parseInt( pageSize));
+        PageUtils pageUtils = new PageUtils(financeAttendanceRep.findAll(pageable).getContent(),
+                (int)financeAttendanceRep.findAll(pageable).getTotalElements(),
+                Integer.parseInt( pageSize),Integer.parseInt(pageNum)-1);
+        return pageUtils;
+    }
+
+    @Override
+    public void save(FinanceAttendanceDTO dto) throws SerException {
+        financeAttendanceRep.saveAndFlush( BeanTransform.copyProperties(dto,FinanceAttendance.class) );
+    }
+
+    @Override
+    public void delete(String[] ids) throws SerException {
+        for (String id : ids){
+            financeAttendanceRep.delete(id);
+        }
+    }
+
+    @Override
+    public void Update(FinanceAttendanceDTO dto) throws SerException {
+        financeAttendanceRep.saveAndFlush( BeanTransform.copyProperties(dto,FinanceAttendance.class) );
+    }
 }

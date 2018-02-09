@@ -10,10 +10,10 @@ package com.bjike.goddess.attendance.enums;
  * @Copy: [com.bjike]
  */
 public enum CountType {
-//    /**
-//     * 整体汇总
-//     */
-//    WHOLE(0),
+    /**
+     * 整体汇总
+     */
+    WHOLE(0),
     /**
      * 个人汇总
      */
