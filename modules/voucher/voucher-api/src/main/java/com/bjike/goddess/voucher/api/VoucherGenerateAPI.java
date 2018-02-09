@@ -680,7 +680,7 @@ public interface VoucherGenerateAPI {
     /**
      * 记账凭证记录科目汇总柱状图
      */
-    default OptionBO ctReSubHistogram() throws SerException {
+    default OptionBO ctReSubHistogram(VoucherChartDTO dto) throws SerException {
         return null;
     }
 

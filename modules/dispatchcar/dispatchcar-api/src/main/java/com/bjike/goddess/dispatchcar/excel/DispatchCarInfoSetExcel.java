@@ -1,9 +1,12 @@
 package com.bjike.goddess.dispatchcar.excel;
 
+import com.bjike.goddess.common.api.entity.ADD;
+import com.bjike.goddess.common.api.entity.EDIT;
 import com.bjike.goddess.common.api.type.Status;
 import com.bjike.goddess.common.utils.excel.ExcelHeader;
 import com.bjike.goddess.dispatchcar.enums.*;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -425,37 +428,37 @@ public class DispatchCarInfoSetExcel implements Serializable{
     private String sendDate;
 
 
-    /**
-     * 存档联是否寄件
-     */
-    @ExcelHeader(name="存档联是否寄件")
-    private String ifSendArchiveAL;
+//    /**
+//     * 存档联是否寄件
+//     */
+//    @ExcelHeader(name="存档联是否寄件")
+//    private String ifSendArchiveAL;
 
-    /**
-     * 报销联是否寄件
-     */
-    @ExcelHeader(name="报销联是否寄件")
-    private String ifSendReimbursementAl;
+//    /**
+//     * 报销联是否寄件
+//     */
+//    @ExcelHeader(name="报销联是否寄件")
+//    private String ifSendReimbursementAl;
 
-    /**
-     * 过路停车费总额
-     */
-    @ExcelHeader(name="过路停车费总额")
-    private Double totalParking;
-
-
-    /**
-     * 过路停车费小票总数
-     */
-    @ExcelHeader(name="过路停车费小票总数")
-    private Integer totalReceipts;
+//    /**
+//     * 过路停车费总额
+//     */
+//    @ExcelHeader(name="过路停车费总额")
+//    private Double totalParking;
 
 
-    /**
-     * 加油小票是否寄件
-     */
-    @ExcelHeader(name="加油小票是否寄件")
-    private String ifSendAddOilReceipts;
+//    /**
+//     * 过路停车费小票总数
+//     */
+//    @ExcelHeader(name="过路停车费小票总数")
+//    private Integer totalReceipts;
+
+
+//    /**
+//     * 加油小票是否寄件
+//     */
+//    @ExcelHeader(name="加油小票是否寄件")
+//    private String ifSendAddOilReceipts;
 
 
     /**
@@ -537,6 +540,36 @@ public class DispatchCarInfoSetExcel implements Serializable{
      */
     @ExcelHeader(name="查询类型",notNull = true)
     private FindType findType;
+
+    /**
+     * 是否有票据
+     */
+    @ExcelHeader(name="是否有票据",notNull = true)
+    private String hasBill;
+
+    /**
+     * 收件人
+     */
+    @ExcelHeader(name="收件人",notNull = true)
+    private String sendReceiver;
+
+    /**
+     * 地区
+     */
+    @ExcelHeader(name="地区",notNull = true)
+    private String sendArea;
+
+    /**
+     * 详细地址
+     */
+    @ExcelHeader(name="详细地址",notNull = true)
+    private String sendAddress;
+
+    /**
+     * 寄件备注
+     */
+    @ExcelHeader(name="寄件备注",notNull = true)
+    private String sendRemark;
 
 
     public CarSource getCarSource() {
@@ -1075,46 +1108,6 @@ public class DispatchCarInfoSetExcel implements Serializable{
         this.sendDate = sendDate;
     }
 
-    public String getIfSendArchiveAL() {
-        return ifSendArchiveAL;
-    }
-
-    public void setIfSendArchiveAL(String ifSendArchiveAL) {
-        this.ifSendArchiveAL = ifSendArchiveAL;
-    }
-
-    public String getIfSendReimbursementAl() {
-        return ifSendReimbursementAl;
-    }
-
-    public void setIfSendReimbursementAl(String ifSendReimbursementAl) {
-        this.ifSendReimbursementAl = ifSendReimbursementAl;
-    }
-
-    public Double getTotalParking() {
-        return totalParking;
-    }
-
-    public void setTotalParking(Double totalParking) {
-        this.totalParking = totalParking;
-    }
-
-    public Integer getTotalReceipts() {
-        return totalReceipts;
-    }
-
-    public void setTotalReceipts(Integer totalReceipts) {
-        this.totalReceipts = totalReceipts;
-    }
-
-    public String getIfSendAddOilReceipts() {
-        return ifSendAddOilReceipts;
-    }
-
-    public void setIfSendAddOilReceipts(String ifSendAddOilReceipts) {
-        this.ifSendAddOilReceipts = ifSendAddOilReceipts;
-    }
-
     public String getReceiver() {
         return receiver;
     }
@@ -1217,5 +1210,45 @@ public class DispatchCarInfoSetExcel implements Serializable{
 
     public void setFindType(FindType findType) {
         this.findType = findType;
+    }
+
+    public String getHasBill() {
+        return hasBill;
+    }
+
+    public void setHasBill(String hasBill) {
+        this.hasBill = hasBill;
+    }
+
+    public String getSendReceiver() {
+        return sendReceiver;
+    }
+
+    public void setSendReceiver(String sendReceiver) {
+        this.sendReceiver = sendReceiver;
+    }
+
+    public String getSendArea() {
+        return sendArea;
+    }
+
+    public void setSendArea(String sendArea) {
+        this.sendArea = sendArea;
+    }
+
+    public String getSendAddress() {
+        return sendAddress;
+    }
+
+    public void setSendAddress(String sendAddress) {
+        this.sendAddress = sendAddress;
+    }
+
+    public String getSendRemark() {
+        return sendRemark;
+    }
+
+    public void setSendRemark(String sendRemark) {
+        this.sendRemark = sendRemark;
     }
 }

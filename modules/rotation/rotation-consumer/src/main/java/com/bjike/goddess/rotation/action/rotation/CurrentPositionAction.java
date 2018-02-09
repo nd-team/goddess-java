@@ -79,12 +79,30 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @RequestMapping("/v1/list")
+    @GetMapping("v1/list")
     public Result list(CurrentPositionDTO dto) throws ActException{
         try {
             List<CurrentPositionBO> bos = currentPositionAPI.list(dto);
             List<CurrentPositionVO> vos = BeanTransform.copyProperties(bos, CurrentPositionVO.class);
             return ActResult.initialize(vos);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取总条数
+     *
+     * @param dto dto
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/count")
+    public Result count(CurrentPositionDTO dto) throws ActException{
+        try {
+
+            Long count = currentPositionAPI.count(dto);
+            return ActResult.initialize(count);
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
@@ -97,7 +115,7 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PostMapping("/v1/add")
+    @PostMapping("v1/add")
     public Result add(CurrentPositionTO to) throws ActException{
         try {
             currentPositionAPI.add(to);
@@ -114,7 +132,7 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @PutMapping("/v1/edit")
+    @PutMapping("v1/edit")
     public Result modify(@Validated(EDIT.class) CurrentPositionTO to, BindingResult bindingResult) throws ActException{
         try {
             currentPositionAPI.update(to);
@@ -131,7 +149,7 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @DeleteMapping("/v1/delete/{id}")
+    @DeleteMapping("v1/delete/{id}")
     public Result list(@PathVariable String id) throws ActException{
         try {
             currentPositionAPI.delete(id);
@@ -149,7 +167,7 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @RequestMapping("/v1/getOne/{id}")
+    @GetMapping("v1/getOne/{id}")
     public Result getOne(@PathVariable String id) throws ActException{
         try {
             CurrentPositionBO bo = currentPositionAPI.getOne(id);
@@ -209,7 +227,7 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @RequestMapping("/v1/export")
+    @GetMapping("v1/export")
     public Result export(CurrentPositionDTO dto, HttpServletResponse response) throws ActException{
         try {
             String fileName = "岗位轮换.xlsx";
@@ -226,7 +244,7 @@ public class CurrentPositionAction extends BaseFileAction{
      * @version v1
      */
     @LoginAuth
-    @RequestMapping("/v1/exportTemplate")
+    @GetMapping("v1/exportTemplate")
     public Result exportTemplate(HttpServletResponse response) throws ActException{
         try {
             String fileName = "岗位轮换模板.xlsx";
@@ -236,12 +254,5 @@ public class CurrentPositionAction extends BaseFileAction{
             throw new ActException(e.getMessage());
         }
     }
-
-
-
-
-
-
-
 
 }

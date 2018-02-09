@@ -1,5 +1,6 @@
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,5 +13,6 @@ import java.util.List;
  */
 public class MyTest {
     static public void main(String[] a) {
+        System.out.println(LocalDate.now().getMonthValue());
     }
 }

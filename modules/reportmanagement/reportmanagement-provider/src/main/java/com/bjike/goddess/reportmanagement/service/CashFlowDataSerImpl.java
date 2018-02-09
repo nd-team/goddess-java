@@ -268,13 +268,13 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
                 if ("3、现金及现金等价物净增加情况".equals(cashFlowProjectBO.getData())) {
                     bo29 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
                 }
-                if ("现金的期未余额".equals(cashFlowProjectBO.getData())) {
+                if ("现金的期末余额".equals(cashFlowProjectBO.getData())) {
                     bo30 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
                 }
                 if ("减：现金的期初余额".equals(cashFlowProjectBO.getData())) {
                     bo31 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
                 }
-                if ("加：现金等价物的期未余额".equals(cashFlowProjectBO.getData())) {
+                if ("加：现金等价物的期末余额".equals(cashFlowProjectBO.getData())) {
                     bo32 = new CashFlowDataBO(cashFlowProjectBO.getData(), cashFlowProjectBO.getNum(), cashFlowProjectBO.getMoney(), cashFlowProjectBO.getId());
                 }
                 if ("减：现金等价物的期初余额".equals(cashFlowProjectBO.getData())) {
@@ -755,7 +755,8 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
 
 //        return voucherGenerateAPI.getCurrent(new SubjectCollectDTO("货币资金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
 //        return voucherGenerateAPI.getCurrent(new SubjectCollectDTO("现金"), dto.getStartTime().substring(0, 4) + "-01-01", dto.getEndTime(), true);
-        return findAssetNum("现金", dto.getEndTime(), false);
+        Double value = findAssetNum("现金", dto.getEndTime(), false);
+        return value;
     }
 
     //减：现金的期初余额
@@ -797,6 +798,22 @@ public class CashFlowDataSerImpl extends ServiceImpl<CashFlowData, CashFlowDataD
 
     //获取资产负债表中的期初数和期末数,tar为true,获取期初数
     private Double findAssetNum(String firstSubject, String endTime, Boolean tar) throws SerException {
+        SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
+        subjectCollectDTO.setFirstSubject(firstSubject);
+//        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);
+        if (null != subjectCollectBO) {
+            if (tar) {
+                return subjectCollectBO.getBeginAmount();
+            } else {
+                return subjectCollectBO.getEndAmount();
+            }
+        }
+        return 0d;
+    }
+
+    //获取资产负债表中的期初数和期末数,tar为true,获取期初数(贷方-借方)
+    private Double findAssetNum1(String firstSubject, String endTime, Boolean tar) throws SerException {
         SubjectCollectDTO subjectCollectDTO = new SubjectCollectDTO();
         subjectCollectDTO.setFirstSubject(firstSubject);
 //        SubjectCollectBO subjectCollectBO = voucherGenerateAPI.getSum(subjectCollectDTO, endTime,endTime, true);

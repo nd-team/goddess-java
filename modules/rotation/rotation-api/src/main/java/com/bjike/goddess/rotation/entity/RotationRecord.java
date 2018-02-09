@@ -30,7 +30,7 @@ public class RotationRecord extends BaseEntity {
      * 自荐表id
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional=true)
-    @JoinColumn(name = "coverRotationId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '申请轮换等级'")
+    @JoinColumn(name = "coverRotationId", columnDefinition = "VARCHAR(36)   COMMENT '申请轮换等级'")
     @NotFound(action= NotFoundAction.IGNORE)
     private CoverRotation coverRotation;
 
@@ -38,7 +38,7 @@ public class RotationRecord extends BaseEntity {
      * 推荐表id
      */
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional=true)
-    @JoinColumn(name = "recommendRotationId", nullable = false, columnDefinition = "VARCHAR(36)   COMMENT '申请轮换等级'")
+    @JoinColumn(name = "recommendRotationId", columnDefinition = "VARCHAR(36)   COMMENT '申请轮换等级'")
     @NotFound(action=NotFoundAction.IGNORE)
     private RecommendRotation recommendRotation;
 

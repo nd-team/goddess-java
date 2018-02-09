@@ -33,6 +33,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -168,7 +169,7 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         entity.setAudit(AuditType.NONE);
         entity.setApplyLevel(subsidyStandardSer.findById(to.getApplyLevelId()));
         StaffRecordsBO bo = staffRecordsAPI.findByName(entity.getUsername());
-        entity.setEntryTime(bo.getEntryTime());
+        entity.setEntryTime(bo == null ? null : bo.getEntryTime());
         entity.setRegularTime(regularizationAPI.getTime(entity.getUsername()));
         if (null == entity.getApplyLevel())
             throw new SerException("推荐的层级不存在");
@@ -275,12 +276,15 @@ public class RecommendRotationSerImpl extends ServiceImpl<RecommendRotation, Rec
         //通过则保存到记录表
         if (to.getPass()) {
             //发送邮件
-            RecommendRotationSerImpl.Email email = new RecommendRotationSerImpl.Email("岗位轮换申请结果通知", getCRTable(coverRotationBOS), new String[] {user.getEmail()}, entity.getId(), null);
-            new Thread(email).start();
+            if (!StringUtils.isEmpty(user.getEmail())) {
+                Email email = new Email("岗位轮换申请结果通知", getCRTable(coverRotationBOS), new String[] {user.getEmail()}, entity.getId(), null);
+                new Thread(email).start();
+            }
+
             RotationRecordTO rotationRecord = new RotationRecordTO();
             rotationRecord.setRotationType("推荐");
             rotationRecord.setRecommendRotation(entity);
-            rotationRecord.setRecommendRotation(null);
+            rotationRecord.setCoverRotation(null);
             rotationRecordSer.add(rotationRecord);
         }
 

@@ -24,10 +24,7 @@ import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
-import com.bjike.goddess.voucher.dto.SubjectCollectDTO;
-import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
-import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
+import com.bjike.goddess.voucher.dto.*;
 import com.bjike.goddess.voucher.entity.SubjectCollect;
 import com.bjike.goddess.voucher.entity.VoucherGenerate;
 import com.bjike.goddess.voucher.entity.VoucherTotal;
@@ -514,50 +511,61 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
     }
 
     @Override
-    public OptionBO ctReSubHistogram() throws SerException {
-        String[] fields = new String[]{"borrowMoney", "loanMoney"};
-        String year = String.valueOf(LocalDate.now().getYear());
+    public OptionBO ctReSubHistogram(VoucherChartDTO dto) throws SerException {
+        String[] fields = new String[]{"borrowMoney", "loanMoney", "voucherDate"};
 
-        List<HistogramBO> histogramBOList = new ArrayList<>(0);
-        for (int i = 1; i < 13; i++) {
-            String startTime = year + "-" + i + "-01";
-            String endTime = "";
-            if (i <= 11) {
-                int j = i + 1;
-                endTime = year + "-" + j + "-01";
-            } else {
-                year = String.valueOf(LocalDate.now().getYear() + 1);
-                endTime = year + "-01-01";
-            }
-            StringBuilder sql = new StringBuilder("select sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney from voucher_vouchergenerate ");
-            sql.append(" WHERE voucherDate BETWEEN '" + startTime + "' and '" + endTime + "' ;");
-            List<HistogramBO> histogramBOs = super.findBySql(sql.toString(), HistogramBO.class, fields);
-            if (null != histogramBOs && histogramBOs.size() > 0) {
-                HistogramBO histogramBO = histogramBOs.get(0);
-                if (i < 10) {
-                    histogramBO.setMonth(year + "-0" + i);
-                } else if (i >= 10 && i < 12) {
-                    histogramBO.setMonth(year + "-" + i);
-                } else {
-                    histogramBO.setMonth("2017-12");
+        StringBuilder sql = new StringBuilder("select borrowMoney as borrowMoney, loanMoney as loanMoney, voucherDate from voucher_vouchergenerate ");
+        sql.append(" WHERE 1 = 1 ");
+        if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
+            sql.append(" and voucherDate BETWEEN '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "' ");
+        }
+        if (StringUtils.isNotBlank(dto.getFirstSubject())) {
+            sql.append(" and firstSubject = '"+ dto.getFirstSubject() +"'");
+        }
+        if (StringUtils.isNotBlank(dto.getSecondSubject())) {
+            sql.append(" and secondSubject = '"+ dto.getSecondSubject() +"'");
+        }
+        if (StringUtils.isNotBlank(dto.getThirdSubject())) {
+            sql.append(" and thirdSubject = '"+ dto.getThirdSubject() +"'");
+        }
+        if (StringUtils.isNotBlank(dto.getArea())) {
+            sql.append(" and area = '"+ dto.getArea() +"'");
+        }
+        if (StringUtils.isNotBlank(dto.getProjectName())) {
+            sql.append(" and projectName = '"+ dto.getProjectName() +"'");
+        }
+        if (StringUtils.isNotBlank(dto.getProjectGroup())) {
+            sql.append(" and projectGroup = '"+ dto.getProjectGroup() +"'");
+        }
+        sql.append(" order by voucherDate desc");
+        List<HistogramBO> bos = super.findBySql(sql.toString(), HistogramBO.class, fields);
+
+        int len = bos.size();
+        for (int i = 0; i < len; i++) {
+            int year = bos.get(i).getVoucherDate().getYear();
+            int month = bos.get(i).getVoucherDate().getMonthValue();
+            for (int j = 1; j < len; j++) {
+                int year1 = bos.get(j).getVoucherDate().getYear();
+                int month1 = bos.get(j).getVoucherDate().getMonthValue();
+                if (year == year1 && month == month1) {
+                    bos.get(i).setBorrowMoney(bos.get(i).getBorrowMoney() + bos.get(j).getBorrowMoney());
+                    bos.get(i).setLoanMoney(bos.get(i).getLoanMoney() + bos.get(j).getLoanMoney());
+                    if (i != j) {
+                        bos.remove(j);
+                        len = len - 1;
+                        j --;
+                    }
                 }
-                histogramBOList.add(histogramBO);
-            } else {
-                HistogramBO histogramBO = new HistogramBO();
-                if (i < 10) {
-                    histogramBO.setMonth(year + "-0" + i);
-                } else if (i >= 10 && i < 12) {
-                    histogramBO.setMonth(year + "-" + i);
-                } else {
-                    histogramBO.setMonth("2017-12");
-                }
-                histogramBO.setBorrowMoney(0d);
-                histogramBO.setLoanMoney(0d);
-                histogramBOList.add(histogramBO);
             }
         }
+
+        for (HistogramBO bo : bos) {
+            bo.setMonth(bo.getVoucherDate().getYear() +
+                    (bo.getVoucherDate().getMonthValue() > 9 ?  "-" + bo.getVoucherDate().getMonthValue() : "-0" + bo.getVoucherDate().getMonthValue()));
+        }
+
         String text_1 = "借方金额和贷方金额汇总";
-        return getOptionBO(text_1, histogramBOList);
+        return getOptionBO(text_1, bos);
 
     }
 
@@ -2122,12 +2130,13 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         if (StringUtils.isNotBlank(dto.getStartTime()) && StringUtils.isNotBlank(dto.getEndTime())) {
             sql.append("and voucherDate between '" + dto.getStartTime() + "' and '" + dto.getEndTime() + "' ");
         }
-        sql.append("group by uId limit " + startRow + ", " + endRow + ")m) ");
+        sql.append(" group by uId limit " + startRow + ", " + endRow + ")m");
         if ("降序".equals(dto.getAscOrDesc())) {
             sql.append(" order by voucherDate, voucherNum, borrowMoney desc");
         } else {
             sql.append(" order by voucherDate, voucherNum asc, borrowMoney desc");
         }
+        sql.append(") ");
 
         String[] fields = {"id", "voucherWord", "voucherNum", "voucherDate", "firstSubject", "secondSubject", "thirdSubject"
                 , "borrowMoney", "loanMoney", "sumary", "source", "area", "projectName", "projectGroup", "ticketer", "ticketNum", "extraFile", "auditor",
@@ -2179,7 +2188,7 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     bo.setLoanMoney(bos.get(j).getLoanMoney());
                     bo.setId(bos.get(j).getId());
                     details.add(bo);
-                    bos.get(i).setDetails(details);
+//                    bos.get(i).setDetails(details);
                     bos.get(i).setFirstSubject(null);
                     bos.get(i).setSecondSubject(null);
                     bos.get(i).setThirdSubject(null);
@@ -2189,19 +2198,46 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
                     if (i != j) {
                         bos.remove(j);
                         len = len - 1;
+                        j --;
 //                        continue;
                     }
                 }
             }
+            bos.get(i).setDetails(details);
         }
 
-//        for(int i = 0; i < bos.size(); i ++) {
-//            for(int j = 0; j < bos.get(i).getDetails().size(); j ++) {
-//                if(bos.get(i).getDetails().get(j).getBorrowMoney() == 0) {
-//
-//                }
-//            }
-//        }
+        for (int i = 0; i < len - 1; i ++) {
+            for (int j = 0; j < len - 1 - i; j ++) {
+                LocalDate voucherDate = LocalDate.parse(bos.get(j).getVoucherDate());
+                LocalDate voucherDate1 = LocalDate.parse(bos.get(j + 1).getVoucherDate());
+                Double voucherNum = bos.get(j).getVoucherNum();
+                Double voucherNum1 = bos.get(j + 1).getVoucherNum();
+                if (voucherDate1.getYear() > voucherDate.getYear()) {
+                    VoucherGenerateBO temp = bos.get(j);
+                    bos.set(j, bos.get(j + 1));
+                    bos.set(j + 1, temp);
+                }
+                if (voucherDate1.getYear() == voucherDate.getYear() && voucherDate1.getMonthValue() > voucherDate.getMonthValue()) {
+                    VoucherGenerateBO temp = bos.get(j);
+                    bos.set(j, bos.get(j + 1));
+                    bos.set(j + 1, temp);
+                }
+                if (voucherDate1.getYear() == voucherDate.getYear() && voucherDate1.getMonthValue() == voucherDate.getMonthValue()
+                        && voucherDate1.getDayOfMonth() < voucherDate.getDayOfMonth()) {
+                    VoucherGenerateBO temp = bos.get(j);
+                    bos.set(j, bos.get(j + 1));
+                    bos.set(j + 1, temp);
+                }
+                if (voucherDate1.getYear() == voucherDate.getYear() && voucherDate1.getMonthValue() == voucherDate.getMonthValue()
+                        && voucherDate1.getDayOfMonth() == voucherDate.getDayOfMonth()
+                        && voucherNum > voucherNum1) {
+                    VoucherGenerateBO temp = bos.get(j);
+                    bos.set(j, bos.get(j + 1));
+                    bos.set(j + 1, temp);
+                }
+            }
+        }
+
         return bos;
     }
 
@@ -3964,12 +4000,11 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         //若没有选一级、二级、三级科目，表头是：(一级科目/借方金额/贷方金额)
         if (StringUtils.isBlank(first) && StringUtils.isBlank(second) && StringUtils.isBlank(third)) {
 
-            sql.append(" select firstSubject , sum(borrowMoney) as borrowMoney , sum(loanMoney) as loanMoney, firstSubjectCode, ")
-                    .append(" from voucher_vouchergenerate where 1=1   ");
+            sql.append(" select firstSubject, sum(borrowMoney) as borrowMoney, sum(loanMoney) as loanMoney, firstSubjectCode ")
+                    .append(" from voucher_vouchergenerate where 1=1 ");
             if (StringUtils.isNotBlank(voucherGenerateDTO.getStartTime())
                     && StringUtils.isNotBlank(voucherGenerateDTO.getEndTime())) {
                 sql.append(" and voucherDate between '" + voucherGenerateDTO.getStartTime() + "' and '" + voucherGenerateDTO.getEndTime() + "' ");
-
             }
             sql.append(" group by firstSubject ");
             list = super.findBySql(sql.toString(), VoucherGenerate.class, field);

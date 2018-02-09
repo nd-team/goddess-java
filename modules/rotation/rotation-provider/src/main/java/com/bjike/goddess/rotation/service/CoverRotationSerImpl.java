@@ -38,6 +38,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -301,6 +302,7 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
             entity.setDepartment("");
         }
         entity.setUsername(user.getUsername());
+        entity.setCreateTime(LocalDateTime.now());
         coverRotationOpinionSer.save(entity);
         entity.setModifyTime(LocalDateTime.now());
         return coverRotationOpinionSer.transformBO(entity);
@@ -342,8 +344,10 @@ public class CoverRotationSerImpl extends ServiceImpl<CoverRotation, CoverRotati
         //通过则保存到记录表
         if (to.getPass()) {
             //发送邮件
-            Email email = new Email("岗位轮换申请结果通知", getCRTable(coverRotationBOS), new String[] {user.getEmail()}, entity.getId(), null);
-            new Thread(email).start();
+            if (!StringUtils.isEmpty(user.getEmail())) {
+                Email email = new Email("岗位轮换申请结果通知", getCRTable(coverRotationBOS), new String[] {user.getEmail()}, entity.getId(), null);
+                new Thread(email).start();
+            }
             RotationRecordTO rotationRecord = new RotationRecordTO();
             rotationRecord.setRotationType("自荐");
             rotationRecord.setCoverRotation(entity);

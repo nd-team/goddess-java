@@ -24,6 +24,7 @@ import com.bjike.goddess.user.entity.rbac.Group;
 import com.bjike.goddess.voucher.api.VoucherGenerateAPI;
 import com.bjike.goddess.voucher.bo.*;
 import com.bjike.goddess.voucher.dto.SubjectCollectsDTO;
+import com.bjike.goddess.voucher.dto.VoucherChartDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateDTO;
 import com.bjike.goddess.voucher.dto.VoucherGenerateExportDTO;
 import com.bjike.goddess.voucher.enums.ExportStatus;
@@ -848,14 +849,15 @@ public class VoucherGenerateAction extends BaseFileAction {
     /**
      * 记账凭证记录柱状图
      *
+     * @param dto VoucherChartDTO
      * @return class OptionVO
      * @des 根据月份汇总借方金额和贷方金额
      * @version v1
      */
     @GetMapping("v1/ctReSubHistogram")
-    public Result ctReSubHistogram() throws ActException {
+    public Result ctReSubHistogram(VoucherChartDTO dto) throws ActException {
         try {
-            OptionBO optionBO = voucherGenerateAPI.ctReSubHistogram();
+            OptionBO optionBO = voucherGenerateAPI.ctReSubHistogram(dto);
             OptionVO optionVO = BeanTransform.copyProperties(optionBO, OptionVO.class);
             return ActResult.initialize(optionVO);
         } catch (SerException e) {
