@@ -36,7 +36,7 @@ public class IndexAct {
      * 跳转到本项目
      * @return
      */
-    @RequestMapping("index")
+    @GetMapping("/")
     public ModelAndView index(){
         return new ModelAndView("index");
     }
@@ -45,7 +45,7 @@ public class IndexAct {
      * 跳转到指定路径
      * @return
      */
-    @RequestMapping("list")
+    @GetMapping("list")
     public ModelAndView list(){
         return new ModelAndView("modules/user");
     }

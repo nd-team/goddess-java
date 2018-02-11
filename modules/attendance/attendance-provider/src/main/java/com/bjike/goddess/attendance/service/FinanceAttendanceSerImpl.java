@@ -45,9 +45,12 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -1593,17 +1596,16 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
         contentStyle.setWrapText(true);
         XSSFFont contentFont = workBook.createFont();
         contentFont.setFontName("宋体");
-        contentStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-        contentFont.setFontHeightInPoints((short) 10);
-        contentStyle.setFont(contentFont);
-        contentStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 居中
-
-
-        //---设置边框:
-        contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-        contentStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-        contentStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-        contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+//        contentStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+//        contentFont.setFontHeightInPoints((short) 10);
+//        contentStyle.setFont(contentFont);
+//        contentStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 居中
+//
+//        //---设置边框:
+//        contentStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+//        contentStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+//        contentStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+//        contentStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
 
         return contentStyle;
     }
@@ -1617,37 +1619,51 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
     private XSSFCellStyle createTitleSytle(XSSFWorkbook workBook) {
         XSSFCellStyle titleStyle = workBook.createCellStyle();
         XSSFFont titlefont = workBook.createFont();
-        titlefont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
-        titlefont.setFontName("宋体");
-        titleStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
-        titleStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-        titleStyle.setWrapText(true);
-        titlefont.setFontHeightInPoints((short) 11);
-        titleStyle.setFont(titlefont);
-        titleStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
-        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-        //---设置边框:
-        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+//        titlefont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+//        titlefont.setFontName("宋体");
+//        titleStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
+//        titleStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
+//        titleStyle.setWrapText(true);
+//        titlefont.setFontHeightInPoints((short) 11);
+//        titleStyle.setFont(titlefont);
+//        titleStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
+//        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+//        //---设置边框:
+//        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+//        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+//        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+//        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
 
         return titleStyle;
     }
 
     @Override
     public PageUtils findAll(String pageNum, String pageSize, String name) throws SerException {
+        /**
+         * 查询条件
+         */
+        Specification<FinanceAttendance> specification = new Specification<FinanceAttendance>() {
+            @Override
+            public Predicate toPredicate(Root<FinanceAttendance> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> _name = root.get("name");
+                Predicate _key = cb.like(_name, "%" + name + "%");
+                return cb.and(_key);
+            }
+        };
+        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
 
-        Pageable pageable = new PageRequest( Integer.parseInt(pageNum) , Integer.parseInt( pageSize));
-        PageUtils pageUtils = new PageUtils(financeAttendanceRep.findAll(pageable).getContent(),
-                (int)financeAttendanceRep.findAll(pageable).getTotalElements(),
-                Integer.parseInt( pageSize),Integer.parseInt(pageNum)-1);
+        Pageable pageable = new PageRequest( Integer.parseInt(pageNum)-1 , Integer.parseInt( pageSize),sort);
+        PageUtils pageUtils = new PageUtils(
+                BeanTransform.copyProperties(financeAttendanceRep.findAll(specification,pageable).getContent(),
+                        FinanceAttendanceBO.class) ,
+                (int)financeAttendanceRep.findAll(specification,pageable).getTotalElements(),
+                Integer.parseInt(pageSize),Integer.parseInt(pageNum));
         return pageUtils;
     }
 
     @Override
     public void save(FinanceAttendanceDTO dto) throws SerException {
-        financeAttendanceRep.saveAndFlush( BeanTransform.copyProperties(dto,FinanceAttendance.class) );
+        financeAttendanceRep.saveAndFlush( BeanTransform.copyProperties(dto,FinanceAttendance.class,true) );
     }
 
     @Override
@@ -1659,6 +1675,6 @@ public class FinanceAttendanceSerImpl extends ServiceImpl<FinanceAttendance, Fin
 
     @Override
     public void Update(FinanceAttendanceDTO dto) throws SerException {
-        financeAttendanceRep.saveAndFlush( BeanTransform.copyProperties(dto,FinanceAttendance.class) );
+        financeAttendanceRep.saveAndFlush( BeanTransform.copyProperties(dto,FinanceAttendance.class,true) );
     }
 }
