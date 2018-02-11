@@ -25,6 +25,89 @@ public class FinanceAttendanceDTO extends BaseDTO {
      */
     private String[] names;
 
+    private String id;
+    private String name;
+    private String time;
+    private String week;
+
+    private Double absenteeismDay;
+    private Double actualDay;
+    private Double finishDay;
+    private Double vacateDay;
+    private Double attendanceDay;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week;
+    }
+
+    public Double getAbsenteeismDay() {
+        return absenteeismDay;
+    }
+
+    public void setAbsenteeismDay(Double absenteeismDay) {
+        this.absenteeismDay = absenteeismDay;
+    }
+
+    public Double getActualDay() {
+        return actualDay;
+    }
+
+    public void setActualDay(Double actualDay) {
+        this.actualDay = actualDay;
+    }
+
+    public Double getFinishDay() {
+        return finishDay;
+    }
+
+    public void setFinishDay(Double finishDay) {
+        this.finishDay = finishDay;
+    }
+
+    public Double getVacateDay() {
+        return vacateDay;
+    }
+
+    public void setVacateDay(Double vacateDay) {
+        this.vacateDay = vacateDay;
+    }
+
+    public Double getAttendanceDay() {
+        return attendanceDay;
+    }
+
+    public void setAttendanceDay(Double attendanceDay) {
+        this.attendanceDay = attendanceDay;
+    }
+
     public String getStartTime() {
         return startTime;
     }
