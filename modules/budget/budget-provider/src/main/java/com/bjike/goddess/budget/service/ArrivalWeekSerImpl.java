@@ -841,7 +841,7 @@ public class ArrivalWeekSerImpl extends ServiceImpl<ArrivalWeek, ArrivalWeekDTO>
         }
         if (StringUtils.isNotBlank(dto.getTime())) {
             dto1.getConditions().add(Restrict.eq("year", dto.getTime().substring(0, dto.getTime().indexOf("-"))));
-            dto1.getConditions().add(Restrict.eq("month", dto.getTime().substring(dto.getTime().indexOf("-") + 1, dto.getTime().length())));
+            dto1.getConditions().add(Restrict.eq("month", Integer.parseInt(dto.getTime().substring(dto.getTime().indexOf("-") + 1, dto.getTime().length()))));
         }
         return dto1;
     }

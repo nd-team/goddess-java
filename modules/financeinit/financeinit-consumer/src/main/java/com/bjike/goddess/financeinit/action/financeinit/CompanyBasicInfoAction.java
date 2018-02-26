@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -184,7 +185,7 @@ public class CompanyBasicInfoAction extends BaseFileAction{
     @GetMapping("v1/export")
     public Result exportReport( HttpServletResponse response) throws ActException {
         try {
-            String fileName = "公司基本信息.xlsx";
+            String fileName = LocalDate.now()+"公司基本信息.xlsx";
             super.writeOutFile(response, companyBasicInfoAPI.exportExcel(), fileName);
             return new ActResult("导出成功");
         } catch (SerException e) {

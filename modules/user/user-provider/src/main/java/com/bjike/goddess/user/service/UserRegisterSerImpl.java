@@ -128,7 +128,7 @@ public class UserRegisterSerImpl implements UserRegisterSer{
                 code = smsReceiveCodeVO.getCode();
                 if (StringUtils.isNotBlank(code) && "ok".equals(code.toLowerCase())) {
                     //说明发送成功
-                    Pattern expression = Pattern.compile("[0-9]{" + Integer.parseInt(smsCodeParameterTO.getRandomNum()) + "}");//创建匹配模式
+                     Pattern expression = Pattern.compile("[0-9]{" + Integer.parseInt(smsCodeParameterTO.getRandomNum()) + "}");//创建匹配模式
                     Matcher matcher2 = expression.matcher(smsReceiveCodeVO.getContent());//通过匹配模式得到匹配器
                     if (matcher2.find()) {
                         String smsCode = matcher2.group();

@@ -70,7 +70,7 @@ public class ArrestPointAction {
     public Result save(@Validated(ADD.class) ArrestPointTO to, BindingResult result, HttpServletRequest request) throws ActException {
         try {
             ArrestPointBO bo = arrestPointAPI.save(to);
-            return ActResult.initialize(BeanTransform.copyProperties(bo, ArrestPointVO.class, request));
+            return ActResult .initialize(BeanTransform.copyProperties(bo, ArrestPointVO.class, request));
         } catch (SerException e) {
             throw new ActException(e.getMessage());
         }

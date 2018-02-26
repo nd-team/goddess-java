@@ -17,11 +17,11 @@ public enum CountType {
     /**
      * 个人汇总
      */
-    PERSONAL(0),
+    PERSONAL(1),
     /**
      * 部门汇总
      */
-    DEPART(1);
+    DEPART(2);
     private int code;
 
     CountType(int code) {

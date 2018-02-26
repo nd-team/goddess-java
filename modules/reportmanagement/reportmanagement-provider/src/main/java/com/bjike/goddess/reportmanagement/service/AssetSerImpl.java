@@ -486,7 +486,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                 bo.setCurrent(formulaBO.getCurrent());
                 bo.setEndAsset(formulaBO.getEnd());
                 if (Type.ADD.equals(asset.getType())) {
-                    if(!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
+                    if (!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
                         beginSum += bo.getBeginAsset();
 //                    currentSum += bo.getCurrent();
                         endSum += bo.getEndAsset();
@@ -496,7 +496,7 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
                     }
                 } else if (Type.REMOVE.equals(asset.getType())) {
 
-                    if(!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
+                    if (!"固定资产原值".equals(bo.getAsset()) || !"累计折旧".equals(bo.getAsset()) || !"固定资产净值".equals(bo.getAsset()) || !"固定资产减值准备".equals(bo.getAsset())) {
                         beginSum = beginSum - bo.getBeginAsset();
 //                    currentSum -= bo.getCurrent();
                         endSum = endSum - bo.getEndAsset();

@@ -8,7 +8,7 @@ import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.bo.CompanyBasicInfoBO;
-import com.bjike.goddess.financeinit.dto.CompanyBasicInfoDTO;
+import com.bjike.goddess.financeinit.dto.*;
 import com.bjike.goddess.financeinit.entity.CompanyBasicInfo;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.excel.CompanyBasicInfoExport;
@@ -42,6 +42,24 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private AccountSer accountSer;
+    @Autowired
+    private AccountanCourseSer accountanCourseSer;
+    @Autowired
+    private AccountDepartmentSer accountDepartmentSer;
+    @Autowired
+    private BaseParameterSer baseParameterSer;
+    @Autowired
+    private InitDateEntrySer initDateEntrySer;
+    @Autowired
+    private ProofWordsSer proofWordsSer;
+    @Autowired
+    private UseCommonlySer useCommonlySer;
+    @Autowired
+    private WithUnitSer withUnitSer;
+    @Autowired
+    private CurrencySer currencySer;
 
     /**
      * 核对查看权限（部门级别）
@@ -56,6 +74,28 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
             flag = cusPermissionSer.getCusPermission("1");
             if (!flag) {
                 throw new SerException("您不是相应财务部门的人员，不可以查看");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+    /**
+     * 核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private void checkFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+            if (!flag) {
+                throw new SerException("您不是财务部门的主管，不可以操作");
             }
         }
         RpcTransmit.transmitUserToken(userToken);
@@ -81,6 +121,26 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
 
     }
 
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+    /**
+     * 导航栏核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private Boolean guideFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
     /**
      * 导航栏核对查看权限（部门级别）
      */
@@ -121,7 +181,10 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if (flagSee || flagAdd) {
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagFinanSup = guideFinanDepartSup();
+        RpcTransmit.transmitUserToken(userToken);
+        if (flagSee || flagAdd || flagFinanSup) {
             return true;
         } else {
             return false;
@@ -139,13 +202,13 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
                 flag = guideSeeIdentity();
                 break;
             case ADD:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case DELETE:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case COLLECT:
                 flag = guideAddIdentity();
@@ -183,14 +246,42 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     @Override
     public List<CompanyBasicInfoBO> listBaseInfo(CompanyBasicInfoDTO companyBasicInfoDTO) throws SerException {
         checkSeeIdentity();
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        //TODO: 由于还不知道怎么获取当前用户属于那个公司,所以这里先固定当前用户为"北京艾佳天城信息技术有限公司"
+        String companyName = "北京艾佳天城信息技术有限公司";
+        Boolean bool = checkExist(companyName);
+        if(!bool){
+            if("IKE009999".equalsIgnoreCase(userBO.getEmployeeNumber()) || "admin".equals(userBO.getUsername())){
+                throw new SerException("公司的基本信息未完善，请财务主管进行完善");
+            }else{
+                throw new SerException("财务主管请进行完善信息");
+            }
+        }
+
         List<CompanyBasicInfo> list = super.findByCis(companyBasicInfoDTO, true);
         return BeanTransform.copyProperties(list, CompanyBasicInfoBO.class);
     }
 
+    private Boolean checkExist(String companyName)throws SerException{
+        Boolean bool = false;
+        if(StringUtils.isNotBlank(companyName)){
+            CompanyBasicInfoDTO companyBasicInfoDTO = new CompanyBasicInfoDTO();
+            companyBasicInfoDTO.getConditions().add(Restrict.eq("companyName",companyName));
+            CompanyBasicInfo companyBasicInfo = super.findOne(companyBasicInfoDTO);
+            if(null != companyBasicInfo){
+               bool = true;
+            }
+        }
+        return bool;
+    }
+
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public CompanyBasicInfoBO addBaseInfo(CompanyBasicInfoTO companyBasicInfoTO) throws SerException {
-        checkAddIdentity();
+        checkFinanDepartSup();
         CompanyBasicInfo companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO, CompanyBasicInfo.class, true);
         companyBasicInfo.setCreateTime(LocalDateTime.now());
         super.save(companyBasicInfo);
@@ -200,7 +291,7 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public CompanyBasicInfoBO editBaseInfo(CompanyBasicInfoTO companyBasicInfoTO) throws SerException {
-        checkAddIdentity();
+        checkFinanDepartSup();
         CompanyBasicInfo companyBasicInfo = super.findById(companyBasicInfoTO.getId());
         LocalDateTime date = companyBasicInfo.getCreateTime();
         companyBasicInfo = BeanTransform.copyProperties(companyBasicInfoTO, CompanyBasicInfo.class);
@@ -213,7 +304,32 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void deleteBaseInfo(String id) throws SerException {
-        checkAddIdentity();
+        checkFinanDepartSup();
+        //只有当【公司初始化】【财务初始化】里面的数据都清空的时候，财务主管才能进行【删除】操作 这个需求为实现,需要问清楚需求
+        if(accountSer.countAccount(new AccountDTO())!=0){
+            throw new SerException("请先清空账户来源的数据");
+        }
+        if(accountanCourseSer.count(new AccountanCourseDTO())!=0){
+            throw new SerException("请先清空会计科目的数据");
+        }
+        if(baseParameterSer.countBasicPara(new BaseParameterDTO())!=0){
+            throw new SerException("请先清空公司初始化的数据");
+        }
+        if(currencySer.countCurren(new CurrencyDTO())!=0){
+            throw new SerException("请先清空币别的数据");
+        }
+        if(initDateEntrySer.countInit(new InitDateEntryDTO())!=0){
+            throw new SerException("请先清空财务初始化的数据");
+        }
+        if(proofWordsSer.countProof(new ProofWordsDTO())>1){
+            throw new SerException("请先清空凭证字的数据");
+        }
+        if(useCommonlySer.countUse(new UseCommonlyDTO())>1){
+            throw new SerException("请先清空常用摘要的数据");
+        }
+        if(withUnitSer.countWith(new WithUnitDTO())!=0){
+            throw new SerException("请先清空往来单位的数据");
+        }
         super.remove(id);
     }
 
@@ -251,4 +367,5 @@ public class CompanyBasicInfoSerImpl extends ServiceImpl<CompanyBasicInfo, Compa
         CompanyBasicInfo companyBasicInfo = super.findOne(companyBasicInfoDTO);
         return BeanTransform.copyProperties(companyBasicInfo, CompanyBasicInfoBO.class);
     }
+
 }
