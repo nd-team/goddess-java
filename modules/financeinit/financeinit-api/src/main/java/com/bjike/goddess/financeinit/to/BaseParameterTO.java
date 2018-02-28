@@ -63,47 +63,6 @@ public class BaseParameterTO extends BaseTO {
     @NotNull(message = "账套会计启用日期不能为空",groups = {ADD.class, EDIT.class})
     private String accountOpening;
 
-    /**
-     * 税号
-     */
-    @NotBlank(message = "税号不能为空",groups = {EDIT.class})
-    private String ein;
-
-    /**
-     * 电话
-     */
-    @NotBlank(message = "电话不能为空",groups = {EDIT.class})
-    private String phone;
-
-    /**
-     * 地址
-     */
-    @NotBlank(message = "地址不能为空",groups = {EDIT.class})
-    private String address;
-
-    /**
-     * 开户银行
-     */
-    @NotBlank(message = "开户银行不能为空",groups = {EDIT.class})
-    private String bank;
-
-    /**
-     * 银行账号
-     */
-    @NotBlank(message = "银行账号不能为空",groups = {EDIT.class})
-    private String account;
-
-    /**
-     * 公司规模形式
-     */
-    @NotNull(message = "公司规模形式不能为空",groups = {EDIT.class})
-    private ScaleShape scaleShape;
-
-    /**
-     * 备注
-     */
-    private String remark;
-
 
     public String getCompanyName() {
         return companyName;
@@ -161,59 +120,4 @@ public class BaseParameterTO extends BaseTO {
         this.accountOpening = accountOpening;
     }
 
-    public String getEin() {
-        return ein;
-    }
-
-    public void setEin(String ein) {
-        this.ein = ein;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getBank() {
-        return bank;
-    }
-
-    public void setBank(String bank) {
-        this.bank = bank;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public ScaleShape getScaleShape() {
-        return scaleShape;
-    }
-
-    public void setScaleShape(ScaleShape scaleShape) {
-        this.scaleShape = scaleShape;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

@@ -18,11 +18,11 @@ import javax.validation.constraints.NotNull;
  */
 public class CurrencyTO extends BaseTO {
 
-    /**
-     * 代码
-     */
-    @NotBlank(message = "代码不能为空",groups = {ADD.class,EDIT.class})
-    private String code;
+//    /**
+//     * 代码
+//     */
+//    @NotBlank(message = "代码不能为空",groups = {ADD.class,EDIT.class})
+//    private String code;
 
     /**
      * 名称
@@ -42,13 +42,6 @@ public class CurrencyTO extends BaseTO {
     private Boolean standardMoney;
 
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;

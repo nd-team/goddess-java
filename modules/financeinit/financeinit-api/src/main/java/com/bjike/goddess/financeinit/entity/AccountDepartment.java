@@ -23,7 +23,7 @@ public class AccountDepartment extends BaseEntity {
     /**
      * 核算部门
      */
-    @Column(name = "accountDepartment", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '核算部门'")
+    @Column(name = "accountDepartment", nullable = false,unique = true, columnDefinition = "VARCHAR(255)   COMMENT '核算部门'")
     private String accountDepartment;
 
     /**

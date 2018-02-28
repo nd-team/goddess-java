@@ -8,7 +8,7 @@ import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.financeinit.bo.WithUnitBO;
 import com.bjike.goddess.financeinit.dto.WithUnitDTO;
-import com.bjike.goddess.financeinit.entity.*;
+import com.bjike.goddess.financeinit.entity.WithUnit;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.excel.SonPermissionObject;
 import com.bjike.goddess.financeinit.excel.WithUnitExport;
@@ -102,6 +102,53 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
 
     }
 
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+
+    /**
+     * 核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private void checkFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+            if (!flag) {
+                throw new SerException("您不是财务部门的主管，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+
+    /**
+     * 导航栏核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private Boolean guideFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+        } else {
+            flag = true;
+        }
+        return flag;
+    }
+
     /**
      * 导航栏核对查看权限（部门级别）
      */
@@ -143,13 +190,15 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
         Boolean flagSeeSign = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAddSign = guideAddIdentity();
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagFinanSup = guideFinanDepartSup();
 
         SonPermissionObject obj = new SonPermissionObject();
 
         obj = new SonPermissionObject();
         obj.setName("withunit");
         obj.setDescribesion("往来单位");
-        if (flagSeeSign || flagAddSign) {
+        if (flagSeeSign || flagAddSign || flagFinanSup) {
             obj.setFlag(true);
         } else {
             obj.setFlag(false);
@@ -201,7 +250,7 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
         RpcTransmit.transmitUserToken(userToken);
         obj = new SonPermissionObject();
         obj.setName("baseparameter");
-        obj.setDescribesion("基本参数");
+        obj.setDescribesion("财务基本参数");
         if (flagSeeParam) {
             obj.setFlag(true);
         } else {
@@ -289,13 +338,13 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
                 flag = guideSeeIdentity();
                 break;
             case ADD:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case DELETE:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case COLLECT:
                 flag = guideAddIdentity();
@@ -312,6 +361,7 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
         }
         return flag;
     }
+
     @Override
     public Long countWith(WithUnitDTO withUnitDTO) throws SerException {
         Long count = super.count(withUnitDTO);
@@ -333,19 +383,21 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
         List<WithUnit> list = super.findByCis(withUnitDTO, true);
         return BeanTransform.copyProperties(list, WithUnitBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public WithUnitBO addWith(WithUnitTO withUnitTO) throws SerException {
-        checkAddIdentity();
+        checkFinanDepartSup();
         WithUnit withUnit = BeanTransform.copyProperties(withUnitTO, WithUnit.class, true);
         withUnit.setCreateTime(LocalDateTime.now());
         super.save(withUnit);
         return BeanTransform.copyProperties(withUnit, WithUnitBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public WithUnitBO editWith(WithUnitTO withUnitTO) throws SerException {
-       checkAddIdentity();
+        checkFinanDepartSup();
         WithUnit withUnit = super.findById(withUnitTO.getId());
         LocalDateTime date = withUnit.getCreateTime();
         withUnit = BeanTransform.copyProperties(withUnitTO, WithUnit.class);
@@ -354,6 +406,7 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
         super.update(withUnit);
         return BeanTransform.copyProperties(withUnit, WithUnitBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void deleteWith(String id) throws SerException {
@@ -363,11 +416,11 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
 
     @Override
     public byte[] exportExcel() throws SerException {
-       checkAddIdentity();
+        checkAddIdentity();
         List<WithUnit> list = super.findAll();
         List<WithUnitExport> withUnitExports = new ArrayList<>();
 
-        for (WithUnit withUnit : list){
+        for (WithUnit withUnit : list) {
             WithUnitExport excel = BeanTransform.copyProperties(withUnit, WithUnitExport.class);
             withUnitExports.add(excel);
         }

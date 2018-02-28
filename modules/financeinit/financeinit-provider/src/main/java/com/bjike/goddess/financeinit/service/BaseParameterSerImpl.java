@@ -10,6 +10,8 @@ import com.bjike.goddess.financeinit.bo.BaseParameterBO;
 import com.bjike.goddess.financeinit.bo.CompanyBasicInfoBO;
 import com.bjike.goddess.financeinit.dto.BaseParameterDTO;
 import com.bjike.goddess.financeinit.entity.BaseParameter;
+import com.bjike.goddess.financeinit.entity.CompanyBasicInfo;
+import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
@@ -44,6 +46,8 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
     private UserAPI userAPI;
     @Autowired
     private CusPermissionSer cusPermissionSer;
+    @Autowired
+    private CurrencySer currencySer;
 
 
     /**
@@ -63,6 +67,51 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         }
         RpcTransmit.transmitUserToken(userToken);
 
+    }
+
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+    /**
+     * 核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private void checkFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+            if (!flag) {
+                throw new SerException("您不是财务部门的主管，不可以操作");
+            }
+        }
+        RpcTransmit.transmitUserToken(userToken);
+
+    }
+
+
+    //TODO: 这里还不知道财务部门主管的账号所以先写死为IKE009999
+    /**
+     * 导航栏核对财务部门主管权限,假设是:(IKE009999)
+     */
+    private Boolean guideFinanDepartSup() throws SerException {
+        Boolean flag = false;
+        String userToken = RpcTransmit.getUserToken();
+        UserBO userBO = userAPI.currentUser();
+        RpcTransmit.transmitUserToken(userToken);
+        String userName = userBO.getUsername();
+        RpcTransmit.transmitUserToken(userToken);
+        String employeeNumber = userBO.getEmployeeNumber();
+        RpcTransmit.transmitUserToken(userToken);
+        if (!"admin".equals(userName.toLowerCase())) {
+            flag = "IKE009999".equalsIgnoreCase(employeeNumber);
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 
     /**
@@ -124,7 +173,9 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         Boolean flagSee = guideSeeIdentity();
         RpcTransmit.transmitUserToken(userToken);
         Boolean flagAdd = guideAddIdentity();
-        if (flagSee || flagAdd) {
+        RpcTransmit.transmitUserToken(userToken);
+        Boolean flagFinanSup = guideFinanDepartSup();
+        if (flagSee || flagAdd || flagFinanSup) {
             return true;
         } else {
             return false;
@@ -142,13 +193,13 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
                 flag = guideSeeIdentity();
                 break;
             case ADD:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case EDIT:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case DELETE:
-                flag = guideAddIdentity();
+                flag = guideFinanDepartSup();
                 break;
             case COLLECT:
                 flag = guideAddIdentity();
@@ -198,25 +249,36 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public BaseParameterBO addBasicPara(BaseParameterTO baseParameterTO) throws SerException {
-        checkAddIdentity();
+        checkFinanDepartSup();
         BaseParameter baseParameter = BeanTransform.copyProperties(baseParameterTO, BaseParameter.class, true);
         baseParameter.setCreateTime(LocalDateTime.now());
-        CompanyBasicInfoBO companyBasicInfoBO = companyBasicInfoSer.findByCompanyName(baseParameterTO.getCompanyName());
-        baseParameter.setEin(companyBasicInfoBO.getEin());
-        baseParameter.setPhone(companyBasicInfoBO.getPhone());
-        baseParameter.setAddress(companyBasicInfoBO.getAddress());
-        baseParameter.setBank(companyBasicInfoBO.getBank());
-        baseParameter.setAccount(companyBasicInfoBO.getAccount());
-        baseParameter.setScaleShape(companyBasicInfoBO.getScaleShape());
-        baseParameter.setRemark(companyBasicInfoBO.getRemark());
         super.save(baseParameter);
+        //初始化公司基本信息
+        CompanyBasicInfo companyBasicInfo = new CompanyBasicInfo();
+        companyBasicInfo.setCompanyName(baseParameter.getCompanyName());
+        companyBasicInfoSer.save(companyBasicInfo);
+        //初始化币别
+        Currency currency = new Currency();
+        currency.setName(baseParameter.getFunctionalCurrency());
+        currency.setCode("01");
+        currency.setStandardMoney(true);
+        currencySer.save(currency);
+//        CompanyBasicInfoBO companyBasicInfoBO = companyBasicInfoSer.findByCompanyName(baseParameterTO.getCompanyName());
+//        baseParameter.setEin(companyBasicInfoBO.getEin());
+//        baseParameter.setPhone(companyBasicInfoBO.getPhone());
+//        baseParameter.setAddress(companyBasicInfoBO.getAddress());
+//        baseParameter.setBank(companyBasicInfoBO.getBank());
+//        baseParameter.setAccount(companyBasicInfoBO.getAccount());
+//        baseParameter.setScaleShape(companyBasicInfoBO.getScaleShape());
+//        baseParameter.setRemark(companyBasicInfoBO.getRemark());
         return BeanTransform.copyProperties(baseParameter, BaseParameterBO.class);
     }
 
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public BaseParameterBO editBasicPara(BaseParameterTO baseParameterTO) throws SerException {
-        checkAddIdentity();
+        checkFinanDepartSup();
+        //TODO:这里需要问一下需求当编辑的时候,添加那边初始化的公司基本信息和币别是否也需要随之改变,还是让财务主管自行到对应的地方修改信息
         BaseParameter baseParameter = super.findById(baseParameterTO.getId());
         LocalDateTime date = baseParameter.getCreateTime();
         baseParameter = BeanTransform.copyProperties(baseParameterTO, BaseParameter.class, true);

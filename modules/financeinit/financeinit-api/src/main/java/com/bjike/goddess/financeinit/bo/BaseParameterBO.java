@@ -51,40 +51,40 @@ public class BaseParameterBO extends BaseBO {
      */
     private String accountOpening;
 
-    /**
-     * 税号
-     */
-    private String ein;
-
-    /**
-     * 电话
-     */
-    private String phone;
-
-    /**
-     * 地址
-     */
-    private String address;
-
-    /**
-     * 开户银行
-     */
-    private String bank;
-
-    /**
-     * 银行账号
-     */
-    private String account;
-
-    /**
-     * 公司规模形式
-     */
-    private ScaleShape scaleShape;
-
-    /**
-     * 备注
-     */
-    private String remark;
+//    /**
+//     * 税号
+//     */
+//    private String ein;
+//
+//    /**
+//     * 电话
+//     */
+//    private String phone;
+//
+//    /**
+//     * 地址
+//     */
+//    private String address;
+//
+//    /**
+//     * 开户银行
+//     */
+//    private String bank;
+//
+//    /**
+//     * 银行账号
+//     */
+//    private String account;
+//
+//    /**
+//     * 公司规模形式
+//     */
+//    private ScaleShape scaleShape;
+//
+//    /**
+//     * 备注
+//     */
+//    private String remark;
 
 
     public String getCompanyName() {
@@ -143,59 +143,4 @@ public class BaseParameterBO extends BaseBO {
         this.accountOpening = accountOpening;
     }
 
-    public String getEin() {
-        return ein;
-    }
-
-    public void setEin(String ein) {
-        this.ein = ein;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getBank() {
-        return bank;
-    }
-
-    public void setBank(String bank) {
-        this.bank = bank;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public ScaleShape getScaleShape() {
-        return scaleShape;
-    }
-
-    public void setScaleShape(ScaleShape scaleShape) {
-        this.scaleShape = scaleShape;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

@@ -209,6 +209,10 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     @Override
     public void deleteDepart(String id) throws SerException {
         checkAddIdentity();
+        List<AccountDepartment> accountDepartmentList = super.findAll();
+        if(accountDepartmentList.size()<=1){
+            throw new SerException("这是最后一条数据了,是不能被删除的");
+        }
         super.remove(id);
     }
 }

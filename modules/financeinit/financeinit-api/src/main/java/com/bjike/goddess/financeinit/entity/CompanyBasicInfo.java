@@ -24,43 +24,43 @@ public class CompanyBasicInfo extends BaseEntity {
     /**
      * 公司名称
      */
-    @Column(name = "companyName", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '公司名称'")
+    @Column(name = "companyName", nullable = false,unique = true, columnDefinition = "VARCHAR(255)   COMMENT '公司名称'")
     private String companyName;
 
     /**
      * 税号
      */
-    @Column(name = "ein", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '税号'")
+    @Column(name = "ein",  columnDefinition = "VARCHAR(255)   COMMENT '税号'")
     private String ein;
 
     /**
      * 电话
      */
-    @Column(name = "phone", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '电话'")
+    @Column(name = "phone", columnDefinition = "VARCHAR(255)   COMMENT '电话'")
     private String phone;
 
     /**
      * 地址
      */
-    @Column(name = "address", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '地址'")
+    @Column(name = "address",  columnDefinition = "VARCHAR(255)   COMMENT '地址'")
     private String address;
 
     /**
      * 开户银行(基本户)
      */
-    @Column(name = "bank", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '开户银行(基本户)'")
+    @Column(name = "bank",  columnDefinition = "VARCHAR(255)   COMMENT '开户银行(基本户)'")
     private String bank;
 
     /**
      * 银行账号
      */
-    @Column(name = "account", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '银行账号'")
+    @Column(name = "account",  columnDefinition = "VARCHAR(255)   COMMENT '银行账号'")
     private String account;
 
     /**
      * 公司规模形式
      */
-    @Column(name = "scaleShape", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '公司规模形式'")
+    @Column(name = "scaleShape",  columnDefinition = "TINYINT(2)   COMMENT '公司规模形式'")
     private ScaleShape scaleShape;
 
     /**

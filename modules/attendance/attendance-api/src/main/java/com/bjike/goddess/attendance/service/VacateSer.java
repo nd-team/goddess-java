@@ -185,7 +185,7 @@ public interface VacateSer extends Ser<Vacate, VacateDTO> {
     Double currentVacateTime(String start, String end, String date) throws SerException;
 
     /**
-     * 某人当前周从周一至周日请假次数或某个季度分别请假次数1111
+     * 某人当前周从周一至周日请假次数或某个季度分别请假次数
      *
      * @param overTimesDTO
      * @return

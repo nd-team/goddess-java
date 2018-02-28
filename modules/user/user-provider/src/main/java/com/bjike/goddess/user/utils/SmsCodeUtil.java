@@ -35,7 +35,9 @@ public class SmsCodeUtil {
 
     // TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
 //    static final String accessKeyId = "LTAIIiJILKkH0JGY";
+//    LTAIIiJILKkH0JGY
 //    static final String accessKeySecret = "KmmxKgS8f3MVIdAEQ3NTv2Qzouetu1";
+//    KmmxKgS8f3MVIdAEQ3NTv2Qzouetu1
 
     public static SendSmsResponse sendSms(SmsCodeParameterTO smsCodeParameterTO ) throws ClientException {
 
@@ -81,9 +83,15 @@ public class SmsCodeUtil {
         String randomNumStr = "";
         for(int i = 0; i < num;i ++){
             int randomNum = (int)(Math.random() * 10);
-            randomNumStr += randomNum;
+            System.out.println(randomNum);
+            randomNumStr += randomNum+"";
         }
         return randomNumStr;
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(createRandomNum(6));
     }
 
     public static QuerySendDetailsResponse querySendDetails(SmsCodeParameterTO smsCodeParameterTO, String bizId) throws ClientException {
