@@ -68,7 +68,7 @@ public class UserLoginSerImpl implements UserLoginSer {
                 if (StringUtils.isNotBlank(token)) { //登录成功处理业务
                     PwdErrSession.remove(account);//删除密码验证错误次数统计
 //                    AuthCodeSession.remove(account);//清除验证码
-//                    saveLoginLog(loginTO, user);  //记录登录日志
+                    saveLoginLog(loginTO, user);  //记录登录日志
                     LoginUser loginUser = saveToSessionAndRedis(user, token); //保存登录用户到session和redis
 //                    setPermission(loginUser, token);
                 } else {

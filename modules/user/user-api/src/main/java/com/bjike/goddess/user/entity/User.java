@@ -90,6 +90,23 @@ public class User extends BaseEntity {
     @Column(name = "integral", columnDefinition = "VARCHAR(255)   COMMENT '用户积分；'")
     private String integral;
 
+    /**
+     * 父级ID.
+     *      对应 systemNO
+     *      如果为母公司，该字段为null
+     *      如果为子公司，该字段为母公司的systemNO
+     */
+    @Column(columnDefinition = "VARCHAR(12) COMMENT '父级ID' ")
+    private String fatherId;
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
+    }
+
     public String getSystemNO() {
         return systemNO;
     }

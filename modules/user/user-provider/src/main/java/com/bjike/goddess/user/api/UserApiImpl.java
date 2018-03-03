@@ -62,6 +62,11 @@ public class UserApiImpl implements UserAPI{
     }
 
     @Override
+    public List<String> currentSysNOs() throws SerException {
+        return userSer.currentSysNOs();
+    }
+
+    @Override
     public UserBO add(TransactionContext context,UserTO userTO) throws SerException {
         return userSer.add(context,userTO);
     }
