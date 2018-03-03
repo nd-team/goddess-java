@@ -158,6 +158,36 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         }
     }
 
+
+    @Override
+    public List<String> currentSysNOs() throws SerException {
+        List<String> sysNos = new ArrayList<>();
+        //获取当前的父级id
+        String fatherId =  currentUser().getFatherId();
+        //判断当前父级id 是否为空
+        if (StringUtils.isNotBlank(fatherId)){
+            //不为空的时候
+            UserDTO userDTO = new UserDTO();
+            userDTO.getConditions().add(Restrict.eq("fatherId",fatherId));
+            List<User> users = super.findByCis(userDTO);
+
+            for (User u : users){
+                sysNos.add(u.getSystemNO());
+            }
+            sysNos.add(currentUser().getSystemNO());
+        }else{
+            //为空的时候，直接取当前sysNo
+            String sysNO = currentUser().getSystemNO();
+            if (StringUtils.isNotBlank(sysNO)) {
+                sysNos.add(sysNO);
+            } else {
+                throw new SerException("当前用户系统号为空!");
+            }
+        }
+
+        return sysNos;
+    }
+
     @Cacheable
     @Override
     public List<UserBO> findAllUser() throws SerException {

@@ -65,6 +65,19 @@ public class UserBO extends BaseBO {
 
     private String createTime;
 
+    /**
+     * 父级ID
+     */
+    private String fatherId;
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
+    }
+
     public String getSystemNO() {
         return systemNO;
     }

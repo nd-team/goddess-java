@@ -98,6 +98,18 @@ public interface UserSer extends Ser<User, UserDTO> {
     }
 
     /**
+     * 获取当前用户全部系统号
+     *      包括子公司的系统号
+     *
+     * @return
+     * @throws SerException
+     */
+    default List<String> currentSysNOs() throws SerException {
+        return null;
+    }
+
+
+    /**
      * 添加用户
      *
      * @param userTO
