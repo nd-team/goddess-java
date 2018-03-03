@@ -167,21 +167,21 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
         //判断当前父级id 是否为空
         if (StringUtils.isNotBlank(fatherId)){
             //不为空的时候
+            sysNos.add(currentUser().getSystemNO());
+            String sysNO = currentUser().getSystemNO();
+            if (StringUtils.isNotBlank(sysNO)) {
+                sysNos.add(sysNO);
+            } else {
+                throw new SerException("当前用户系统号为空!");
+            }
+        }else{
+            //为空的时候，直接取当前sysNo
             UserDTO userDTO = new UserDTO();
             userDTO.getConditions().add(Restrict.eq("fatherId",fatherId));
             List<User> users = super.findByCis(userDTO);
 
             for (User u : users){
                 sysNos.add(u.getSystemNO());
-            }
-            sysNos.add(currentUser().getSystemNO());
-        }else{
-            //为空的时候，直接取当前sysNo
-            String sysNO = currentUser().getSystemNO();
-            if (StringUtils.isNotBlank(sysNO)) {
-                sysNos.add(sysNO);
-            } else {
-                throw new SerException("当前用户系统号为空!");
             }
         }
 
