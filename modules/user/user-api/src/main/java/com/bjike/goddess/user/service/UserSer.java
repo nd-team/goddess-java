@@ -104,7 +104,7 @@ public interface UserSer extends Ser<User, UserDTO> {
      * @return
      * @throws SerException
      */
-    default List<String> currentSysNOs() throws SerException {
+    default List<String> currentSysNOs(Boolean bool) throws SerException {
         return null;
     }
 

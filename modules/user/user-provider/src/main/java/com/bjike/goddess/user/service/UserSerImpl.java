@@ -160,20 +160,34 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
 
 
     @Override
-    public List<String> currentSysNOs() throws SerException {
+    public List<String> currentSysNOs(Boolean bool) throws SerException {
         List<String> sysNos = new ArrayList<>();
         //获取当前的父级id
         String fatherId =  currentUser().getFatherId();
+
         //判断当前父级id 是否为空
         if (StringUtils.isNotBlank(fatherId)){
             //不为空的时候
-            sysNos.add(currentUser().getSystemNO());
-            String sysNO = currentUser().getSystemNO();
-            if (StringUtils.isNotBlank(sysNO)) {
-                sysNos.add(sysNO);
-            } else {
-                throw new SerException("当前用户系统号为空!");
+            if (bool){
+                //bool==true,表示子公司要获取父级公司的sysNo
+                sysNos.add(currentUser().getSystemNO());
+                String sysNO = currentUser().getSystemNO();
+                if (StringUtils.isNotBlank(sysNO)) {
+                    sysNos.add(sysNO);
+                    sysNos.add(fatherId);
+                } else {
+                    throw new SerException("当前用户系统号为空!");
+                }
+            }else {
+                sysNos.add(currentUser().getSystemNO());
+                String sysNO = currentUser().getSystemNO();
+                if (StringUtils.isNotBlank(sysNO)) {
+                    sysNos.add(sysNO);
+                } else {
+                    throw new SerException("当前用户系统号为空!");
+                }
             }
+
         }else{
             //为空的时候，直接取当前sysNo
             UserDTO userDTO = new UserDTO();
@@ -183,6 +197,8 @@ public class UserSerImpl extends ServiceImpl<User, UserDTO> implements UserSer {
             for (User u : users){
                 sysNos.add(u.getSystemNO());
             }
+            sysNos.add(currentUser().getSystemNO());
+
         }
 
         return sysNos;

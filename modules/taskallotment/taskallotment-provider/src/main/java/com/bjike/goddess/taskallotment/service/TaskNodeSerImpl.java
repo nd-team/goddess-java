@@ -634,6 +634,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             son.setFatherId(entity.getId());
             son.setNeedTime(new BigDecimal(entity.getNeedTime() / day).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
             son.setPlanNum(new BigDecimal(entity.getPlanNum() / day).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            son.setTime(LocalDateTime.now());
             super.save(son);
             for (CustomTitle customTitle : customTitles) {
                 CustomTitle title = BeanTransform.copyProperties(customTitle, CustomTitle.class, true, "id", "taskNodeId");
@@ -893,6 +894,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             dto.getConditions().add(Restrict.like("execute", dto.getUser()));
         }
         dto.getSorts().add("time=desc");
+        dto.getSorts().add("startTime=desc");
         List<TaskNode> list = super.findByCis(dto, true);
         List<TaskNodeBO> bos = new ArrayList<>();
         for (TaskNode taskNode : list) {
@@ -1081,7 +1083,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
         dto.getConditions().add(Restrict.isNotNull("initiate"));
         dto.getConditions().add(Restrict.eq("charge", name));
         dto.getConditions().add(Restrict.isNotNull("haveSon"));
-        dto.getSorts().add("time=desc");
+        dto.getSorts().add("startTime=desc");
         List<TaskNode> list = super.findByCis(dto, true);
         List<TaskNodeBO> bos = new ArrayList<>();
         for (TaskNode taskNode : list) {
@@ -1158,7 +1160,7 @@ public class TaskNodeSerImpl extends ServiceImpl<TaskNode, TaskNodeDTO> implemen
             dto.getConditions().add(Restrict.lt_eq("endTime", dto.getEndTime()));
         }
 
-        dto.getSorts().add("time=desc");
+        dto.getSorts().add("startTime=desc");
         List<TaskNode> list = super.findByCis(dto, true);
         List<TaskNodeBO> bos = new ArrayList<>();
         for (TaskNode taskNode : list) {
