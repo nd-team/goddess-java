@@ -90,7 +90,7 @@ public interface UserAPI {
      * @return
      * @throws SerException
      */
-    default List<String> currentSysNOs() throws SerException {
+    default List<String> currentSysNOs(Boolean bool) throws SerException {
         return null;
     }
 
