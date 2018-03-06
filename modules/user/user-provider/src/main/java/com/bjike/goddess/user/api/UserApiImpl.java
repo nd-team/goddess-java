@@ -63,7 +63,7 @@ public class UserApiImpl implements UserAPI{
 
     @Override
     public List<String> currentSysNOs(Boolean bool) throws SerException {
-        return userSer.currentSysNOs();
+        return userSer.currentSysNOs(bool);
     }
 
     @Override
