@@ -10,6 +10,8 @@ import com.bjike.goddess.common.consumer.restful.ActResult;
 import com.bjike.goddess.common.utils.bean.BeanTransform;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
+import com.bjike.goddess.organize.api.DepartmentDetailAPI;
+import com.bjike.goddess.organize.bo.AreaBO;
 import com.bjike.goddess.rotation.api.CurrentPositionAPI;
 import com.bjike.goddess.rotation.bo.CurrentPositionBO;
 import com.bjike.goddess.rotation.dto.CurrentPositionDTO;
@@ -25,11 +27,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 目前岗位情况
@@ -46,6 +49,8 @@ public class CurrentPositionAction extends BaseFileAction{
 
     @Autowired
     CurrentPositionAPI currentPositionAPI;
+    @Autowired
+    DepartmentDetailAPI departmentDetailAPI;
 
     /**
      * 功能导航权限
@@ -251,6 +256,42 @@ public class CurrentPositionAction extends BaseFileAction{
             super.writeOutFile(response, currentPositionAPI.exportTemplate(), fileName);
             return new ActResult("导出成功");
         } catch (SerException | IOException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取部门、项目组
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/project")
+    public Result project() throws ActException{
+        try {
+            List<String> list = departmentDetailAPI.findAllDepartment();
+            return ActResult.initialize(list);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 地区
+     *
+     * @version v1
+     */
+    @LoginAuth
+    @GetMapping("v1/area")
+    public Result area() throws ActException{
+        try {
+            List<AreaBO> bos = departmentDetailAPI.findArea();
+            Set<String> list = new HashSet<>();
+            for (AreaBO areaBO : bos) {
+                list.add(areaBO.getArea());
+            }
+            return ActResult.initialize(list);
+        } catch (SerException e) {
             throw new ActException(e.getMessage());
         }
     }

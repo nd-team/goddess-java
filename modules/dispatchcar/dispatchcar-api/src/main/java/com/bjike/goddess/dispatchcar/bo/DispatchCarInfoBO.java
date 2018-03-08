@@ -534,10 +534,10 @@ public class DispatchCarInfoBO extends BaseBO {
      */
     private FindType findType;
 
-//    /**
-//     * 油耗
-//     */
-//    private Double oilWear;
+    /**
+     * 油耗
+     */
+    private Double oilWear;
 //
 //    /**
 //     * 油费
@@ -1317,5 +1317,13 @@ public class DispatchCarInfoBO extends BaseBO {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Double getOilWear() {
+        return oilWear;
+    }
+
+    public void setOilWear(Double oilWear) {
+        this.oilWear = oilWear;
     }
 }

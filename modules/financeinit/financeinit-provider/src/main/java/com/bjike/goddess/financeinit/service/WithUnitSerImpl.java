@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -364,6 +365,7 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
 
     @Override
     public Long countWith(WithUnitDTO withUnitDTO) throws SerException {
+        withUnitDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         Long count = super.count(withUnitDTO);
         return count;
     }
@@ -380,6 +382,7 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
     @Override
     public List<WithUnitBO> listWith(WithUnitDTO withUnitDTO) throws SerException {
         checkSeeIdentity();
+        withUnitDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<WithUnit> list = super.findByCis(withUnitDTO, true);
         return BeanTransform.copyProperties(list, WithUnitBO.class);
     }
@@ -387,9 +390,18 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public WithUnitBO addWith(WithUnitTO withUnitTO) throws SerException {
-        checkFinanDepartSup();
+        checkAddIdentity();
+        String systemId = getSystemId();
+        WithUnitDTO withUnitDTO = new WithUnitDTO();
+        withUnitDTO.getConditions().add(Restrict.eq("systemId", systemId));
+        withUnitDTO.getConditions().add(Restrict.eq("companyName", withUnitTO.getCompanyName()));
+        List<WithUnit> olds = super.findByCis(withUnitDTO);
+        if (olds != null && olds.size() > 0) {
+            throw new SerException("'" + withUnitTO.getCompanyName() + "'" + "已存在，不可重复添加");
+        }
         WithUnit withUnit = BeanTransform.copyProperties(withUnitTO, WithUnit.class, true);
         withUnit.setCreateTime(LocalDateTime.now());
+        withUnit.setSystemId(systemId);
         super.save(withUnit);
         return BeanTransform.copyProperties(withUnit, WithUnitBO.class);
     }
@@ -397,10 +409,12 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public WithUnitBO editWith(WithUnitTO withUnitTO) throws SerException {
-        checkFinanDepartSup();
+        checkAddIdentity();
         WithUnit withUnit = super.findById(withUnitTO.getId());
         LocalDateTime date = withUnit.getCreateTime();
+        String systemId = withUnit.getSystemId();
         withUnit = BeanTransform.copyProperties(withUnitTO, WithUnit.class);
+        withUnit.setSystemId(systemId);
         withUnit.setCreateTime(date);
         withUnit.setModifyTime(LocalDateTime.now());
         super.update(withUnit);
@@ -416,8 +430,11 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
 
     @Override
     public byte[] exportExcel() throws SerException {
-        checkAddIdentity();
-        List<WithUnit> list = super.findAll();
+        checkSeeIdentity();
+//        List<WithUnit> list = super.findAll();
+        WithUnitDTO withUnitDTO = new WithUnitDTO();
+        withUnitDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        List<WithUnit> list = super.findByCis(withUnitDTO);
         List<WithUnitExport> withUnitExports = new ArrayList<>();
 
         for (WithUnit withUnit : list) {
@@ -427,5 +444,18 @@ public class WithUnitSerImpl extends ServiceImpl<WithUnit, WithUnitDTO> implemen
         Excel excel = new Excel(0, 2);
         byte[] bytes = ExcelUtil.clazzToExcel(withUnitExports, excel);
         return bytes;
+    }
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
     }
 }

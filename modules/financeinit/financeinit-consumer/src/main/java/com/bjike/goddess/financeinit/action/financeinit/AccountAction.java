@@ -133,7 +133,7 @@ public class AccountAction extends BaseFileAction {
      */
     @LoginAuth
     @PostMapping("v1/add")
-    public Result addAccount(@Validated AccountTO accountTO, BindingResult bindingResult) throws ActException {
+    public Result addAccount(AccountTO accountTO, BindingResult bindingResult) throws ActException {
         try {
             AccountBO accountBO1 = accountAPI.addAccount(accountTO);
             return ActResult.initialize(BeanTransform.copyProperties(accountBO1, AccountVO.class));
@@ -153,7 +153,7 @@ public class AccountAction extends BaseFileAction {
      */
     @LoginAuth
     @PutMapping("v1/edit")
-    public Result editAccount(@Validated AccountTO accountTO, BindingResult bindingResult) throws ActException {
+    public Result editAccount(AccountTO accountTO, BindingResult bindingResult) throws ActException {
         try {
             AccountBO accountBO1 = accountAPI.editAccount(accountTO);
             return ActResult.initialize(BeanTransform.copyProperties(accountBO1, AccountVO.class));
@@ -203,7 +203,6 @@ public class AccountAction extends BaseFileAction {
     /**
      * 获取所有的会计科目名称和对应的代码
      *
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/accountanNameCode")
@@ -220,7 +219,6 @@ public class AccountAction extends BaseFileAction {
     /**
      * 获取所有的一级科目名称和对应的代码
      *
-     * @throws ActException
      * @version v1
      */
     @GetMapping("v1/firstNameCode")
@@ -236,7 +234,7 @@ public class AccountAction extends BaseFileAction {
 
     /**
      * 根据一级科目代码获取二级科目名称
-     *
+     * @param id id
      * @return class AccountAddDateVO
      * @throws ActException
      * @version v1
@@ -254,8 +252,8 @@ public class AccountAction extends BaseFileAction {
 
     /**
      * 根据二级科目id获取三级科目名称
-     *
-     * @return class  AccountAddDateVO
+     * @param id id
+     * @return class AccountAddDateVO
      * @throws ActException
      * @version v1
      */

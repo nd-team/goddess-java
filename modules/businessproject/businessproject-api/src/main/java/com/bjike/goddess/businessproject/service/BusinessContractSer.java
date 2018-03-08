@@ -2,11 +2,9 @@ package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
+import com.bjike.goddess.businessproject.dto.BusinessContractDTOV2;
 import com.bjike.goddess.businessproject.entity.BusinessContract;
-import com.bjike.goddess.businessproject.to.BusinessContractTO;
-import com.bjike.goddess.businessproject.to.CollectUpdateTO;
-import com.bjike.goddess.businessproject.to.GuidePermissionTO;
-import com.bjike.goddess.businessproject.to.PersonTO;
+import com.bjike.goddess.businessproject.to.*;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -44,6 +42,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
         return null;
     }
 
+    default Long countV2(BusinessContractDTOV2 dto) throws SerException {
+        return null;
+    }
+
     /**
      * 根据id获取商务项目合同
      *
@@ -63,6 +65,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
         return null;
     }
 
+    default List<BusinessContractsBO> listV2(BusinessContractDTOV2 dto) throws SerException {
+        return null;
+    }
+
     /**
      * 添加商务项目合同
      *
@@ -70,6 +76,10 @@ public interface BusinessContractSer extends Ser<BusinessContract, BusinessContr
      * @return class BusinessContractsBO
      */
     default BusinessContractsBO add(BusinessContractTO to) throws SerException {
+        return null;
+    }
+
+    default BusinessContractsBO addV2(BusinessContractTOV2 to) throws SerException {
         return null;
     }
 

@@ -645,11 +645,11 @@ public class DispatchCarInfo extends BaseEntity {
     @Column(name = "findType",  columnDefinition = "TINYINT(2)   COMMENT '查询类型'")
     private FindType findType;
 //
-//    /**
-//     * 油耗
-//     */
-//    @Column(name = "oilWear", columnDefinition = "DECIMAL(10,2)   COMMENT '总油耗'")
-//    private Double oilWear;
+    /**
+     * 油耗
+     */
+    @Column(name = "oilWear", columnDefinition = "DECIMAL(10,2)   COMMENT '总油耗'")
+    private Double oilWear;
 //
 //    /**
 //     * 油费
@@ -1465,5 +1465,13 @@ public class DispatchCarInfo extends BaseEntity {
 
     public void setIfFinancePass(Boolean ifFinancePass) {
         this.ifFinancePass = ifFinancePass;
+    }
+
+    public Double getOilWear() {
+        return oilWear;
+    }
+
+    public void setOilWear(Double oilWear) {
+        this.oilWear = oilWear;
     }
 }

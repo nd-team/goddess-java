@@ -413,6 +413,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
             model.setModifyTime(LocalDateTime.now());
             model.setDispatchDate(old.getDispatchDate());
             model.setCompanyDispatch(old.getCompanyDispatch());
+            model.setOilWear(to.getOilWear());  //当天油耗
             if (model != null) {
                 UserBO userBO = userAPI.findByUsername(to.getCarUser());
 //                to.setUserNumber(userBO.getEmployeeNumber());
@@ -712,7 +713,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         if (positionDetailBOS == null || positionDetailBOS.size() == 0) {
             throw new SerException("获取不到当前登录用户的职位信息!");
         }
-        if (!positionDetailBOS.get(0).getPosition().equals("资金模块负责人") || !userBO.getUsername().equals("admin")) {
+        if (!positionDetailBOS.get(0).getPosition().equals("资金模块负责人") && !userBO.getUsername().equals("admin")) {
                 throw new SerException("资金模块负责人方可核对记录!");
         }
         DispatchCarInfo model = super.findById(to.getId());
@@ -2170,7 +2171,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         for (DispatchCarInfoSetExcel model : toList) {
             DispatchCarInfo excel = BeanTransform.copyProperties(model, DispatchCarInfo.class, true, "companyDispatch"
                     , "projectApproval", "siesta", "aircondition", "downtown", "addOil", "receipt", "ifPass", "ifFreeze", "ifCorrect"
-                    , "ifSendArchiveAL", "ifSendReimbursementAl", "ifSendAddOilReceipts", "ifPayed");
+                    , "ifSendArchiveAL", "ifSendReimbursementAl", "ifSendAddOilReceipts", "ifPayed", "hasBill");
             if (model.getCompanyDispatch() != null) {
                 if (model.getCompanyDispatch().equals("是")) {
                     excel.setCompanyDispatch(true);
@@ -2591,7 +2592,7 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
         LocalDate endDate = DateUtil.parseDate(endTime);
         LocalDate[] localDates = new LocalDate[]{startDate, endDate};
         dto.getConditions().add(Restrict.eq("findType", FindType.PAYED));
-        dto.getConditions().add(Restrict.between("expectPayDate", localDates));
+        dto.getConditions().add(Restrict.between("dispatchDate", localDates));
         List<DispatchCarInfo> list = super.findByCis(dto);
         Set<String> areaSet = list.stream().map(p -> p.getArea()).collect(Collectors.toSet());
         List<PayedCollectBO> payedCollectBOS = new ArrayList<>();
@@ -2602,14 +2603,14 @@ public class DispatchCarInfoSerImpl extends ServiceImpl<DispatchCarInfo, Dispatc
                     PayedCollectBO payedCollectBO2 = new PayedCollectBO("", "合计", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
                     DispatchCarInfoDTO dispatchCarInfoDTO = new DispatchCarInfoDTO();
                     dispatchCarInfoDTO.getConditions().add(Restrict.eq("findType", FindType.PAYED));
-                    dispatchCarInfoDTO.getConditions().add(Restrict.between("expectPayDate", localDates));
+                    dispatchCarInfoDTO.getConditions().add(Restrict.between("dispatchDate", localDates));
                     dispatchCarInfoDTO.getConditions().add(Restrict.eq("area", area));
                     List<DispatchCarInfo> dispatchCarInfos = super.findByCis(dispatchCarInfoDTO);
                     Set<String> projectSet = dispatchCarInfos.stream().map(p -> p.getProject()).collect(Collectors.toSet());
                     for (String project : projectSet) {
                         DispatchCarInfoDTO dispatchCarInfoDTO2 = new DispatchCarInfoDTO();
                         dispatchCarInfoDTO2.getConditions().add(Restrict.eq("findType", FindType.PAYED));
-                        dispatchCarInfoDTO2.getConditions().add(Restrict.between("expectPayDate", localDates));
+                        dispatchCarInfoDTO2.getConditions().add(Restrict.between("dispatchDate", localDates));
                         dispatchCarInfoDTO2.getConditions().add(Restrict.eq("area", area));
                         dispatchCarInfoDTO2.getConditions().add(Restrict.eq("project", project));
                         List<DispatchCarInfo> dispatchCarInfoList = super.findByCis(dispatchCarInfoDTO2);

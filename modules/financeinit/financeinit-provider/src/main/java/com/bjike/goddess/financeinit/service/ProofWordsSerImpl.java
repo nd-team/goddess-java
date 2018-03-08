@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -159,8 +160,10 @@ public class ProofWordsSerImpl extends ServiceImpl<ProofWords, ProofWordsDTO> im
         RpcTransmit.transmitUserToken(userToken);
         return flag;
     }
+
     @Override
     public Long countProof(ProofWordsDTO proofWordsDTO) throws SerException {
+        proofWordsDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         Long count = super.count(proofWordsDTO);
         return count;
     }
@@ -168,28 +171,58 @@ public class ProofWordsSerImpl extends ServiceImpl<ProofWords, ProofWordsDTO> im
     @Override
     public ProofWordsBO getOneById(String id) throws SerException {
         ProofWords proofWords = super.findById(id);
-        return BeanTransform.copyProperties(proofWords,ProofWordsBO.class);
+        return BeanTransform.copyProperties(proofWords, ProofWordsBO.class);
     }
 
     @Override
     public List<ProofWordsBO> listProof(ProofWordsDTO proofWordsDTO) throws SerException {
-       checkSeeIdentity();
+        checkSeeIdentity();
+        proofWordsDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<ProofWords> proofWords = super.findByCis(proofWordsDTO);
-        return BeanTransform.copyProperties(proofWords,ProofWordsBO.class);
+        return BeanTransform.copyProperties(proofWords, ProofWordsBO.class);
     }
+
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public ProofWordsBO addProof(ProofWordsTO proofWordsTO) throws SerException {
         checkAddIdentity();
-        ProofWords proofWords = BeanTransform.copyProperties(proofWordsTO,ProofWords.class,true);
+        String systemId = getSystemId();
+        ProofWordsDTO proofWordsDTO = new ProofWordsDTO();
+        proofWordsDTO.getConditions().add(Restrict.eq("systemId", systemId));
+        proofWordsDTO.getConditions().add(Restrict.eq("proofCharacter", proofWordsTO.getProofCharacter()));
+        List<ProofWords> olds = super.findByCis(proofWordsDTO);
+        if (olds != null && olds.size() > 0) {
+            throw new SerException("'" + proofWordsTO.getProofCharacter() + "'已存在，不可重复添加");
+        }
+        ProofWords proofWords = BeanTransform.copyProperties(proofWordsTO, ProofWords.class, true);
         proofWords.setCreateTime(LocalDateTime.now());
+        proofWords.setSystemId(systemId);
         super.save(proofWords);
-        return BeanTransform.copyProperties(proofWords,ProofWordsBO.class);
+        return BeanTransform.copyProperties(proofWords, ProofWordsBO.class);
     }
 
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public void delete(String id) throws SerException {
+        ProofWordsDTO proofWordsDTO = new ProofWordsDTO();
+        proofWordsDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
+        List<ProofWords> proofWords = super.findByCis(proofWordsDTO);
+        if (proofWords == null || proofWords.size() <= 1) {
+            throw new SerException("至少存在一条数据，不可删除");
+        }
         super.remove(id);
+    }
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
     }
 }

@@ -66,7 +66,19 @@ public class Account extends BaseEntity {
     @Column(name = "amount", nullable = false, columnDefinition = "DECIMAL(10,2)   COMMENT '金额'")
     private Double amount;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
 
     public String getName() {

@@ -2,6 +2,7 @@ package com.bjike.goddess.businessproject.service;
 
 import com.bjike.goddess.businessproject.bo.*;
 import com.bjike.goddess.businessproject.dto.BusinessContractDTO;
+import com.bjike.goddess.businessproject.dto.BusinessContractDTOV2;
 import com.bjike.goddess.businessproject.dto.CollectUpdateDTO;
 import com.bjike.goddess.businessproject.entity.BusinessContract;
 import com.bjike.goddess.businessproject.entity.CollectUpdate;
@@ -10,10 +11,7 @@ import com.bjike.goddess.businessproject.enums.MakeContract;
 import com.bjike.goddess.businessproject.enums.TaskContract;
 import com.bjike.goddess.businessproject.excel.BusinessContractExport;
 import com.bjike.goddess.businessproject.excel.BusinessContractTemplateExcel;
-import com.bjike.goddess.businessproject.to.BusinessContractTO;
-import com.bjike.goddess.businessproject.to.CollectUpdateTO;
-import com.bjike.goddess.businessproject.to.GuidePermissionTO;
-import com.bjike.goddess.businessproject.to.PersonTO;
+import com.bjike.goddess.businessproject.to.*;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -345,6 +343,22 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     public Long count(BusinessContractDTO dto) throws SerException {
         search(dto);
         Long count = super.count(dto);
+
+        return count;
+    }
+
+    @Override
+    public Long countV2(BusinessContractDTOV2 dto) throws SerException {
+        BusinessContractDTO newDto = new BusinessContractDTO();
+        newDto.setSignedTime(dto.getSignedTime());
+        newDto.setArea(dto.getArea());
+        newDto.setBusinessType(dto.getBusinessType());
+        newDto.setBusinessSubject(dto.getBusinessSubject());
+        newDto.setMeasureClassify(dto.getMeasureClassify());
+        newDto.setContractStatus(dto.getContractStatus());
+        newDto.setTaskStatus(dto.getTaskStatus());
+        search(newDto);
+        Long count = super.count(newDto);
         return count;
     }
 
@@ -360,7 +374,28 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         dto.getSorts().add("createTime=desc");
         checkSeeIdentity();
         search(dto);
-        List<BusinessContract> contracts = super.findByCis (dto,true);
+        List<BusinessContract> contracts = super.findByCis(dto, true);
+        List<BusinessContractsBO> contractBOS = BeanTransform.copyProperties(contracts, BusinessContractsBO.class);
+        return contractBOS;
+    }
+
+    @Override
+    public List<BusinessContractsBO> listV2(BusinessContractDTOV2 dto) throws SerException {
+        checkSeeIdentity();
+        BusinessContractDTO newDto = new BusinessContractDTO();
+        newDto.getSorts().add("createTime=desc");
+        newDto.setSignedTime(dto.getSignedTime());
+        newDto.setArea(dto.getArea());
+        newDto.setBusinessType(dto.getBusinessType());
+        newDto.setBusinessSubject(dto.getBusinessSubject());
+        newDto.setMeasureClassify(dto.getMeasureClassify());
+        newDto.setContractStatus(dto.getContractStatus());
+        newDto.setTaskStatus(dto.getTaskStatus());
+        newDto.setPage(dto.getPage() + 1);
+        newDto.setLimit(dto.getLimit());
+        search(newDto);
+
+        List<BusinessContract> contracts = super.findByCis(newDto, true);
         List<BusinessContractsBO> contractBOS = BeanTransform.copyProperties(contracts, BusinessContractsBO.class);
         return contractBOS;
     }
@@ -405,12 +440,250 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
     @Transactional(rollbackFor = SerException.class)
     @Override
+    public BusinessContractsBO addV2(BusinessContractTOV2 to) throws SerException {
+        checkAddIdentity();
+        BusinessContract contract = BeanTransform.copyProperties(to, BusinessContract.class, true);
+        contract.setCreateTime(LocalDateTime.now());
+        super.save(contract);
+
+        BusinessContractsBO bo = BeanTransform.copyProperties(contract, BusinessContractsBO.class);
+        return bo;
+    }
+
+    @Transactional(rollbackFor = SerException.class)
+    @Override
     public BusinessContractsBO edit(BusinessContractTO to) throws SerException {
         checkAddIdentity();
         if (StringUtils.isNotBlank(to.getId())) {
             BusinessContract contract = super.findById(to.getId());
             LocalDateTime createTime = contract.getCreateTime();
-            contract = BeanTransform.copyProperties(to, BusinessContract.class, true);
+//            contract = BeanTransform.copyProperties(to, BusinessContract.class, true);
+            if (null != to.getMeasureClassify()) {
+                contract.setMeasureClassify(to.getMeasureClassify());
+            }
+            if (null != to.getMeasurePass()) {
+                contract.setMeasurePass(to.getMeasurePass());
+            }
+            if (null != to.getSignedTime()) {
+                contract.setSignedTime(LocalDate.parse(to.getSignedTime()));
+            }
+            if (null != to.getNotificationTime()) {
+                contract.setNotificationTime(LocalDate.parse(to.getNotificationTime()));
+            }
+            if (null != to.getNotification()) {
+                contract.setNotification(to.getNotification());
+            }
+            if (null != to.getArea()) {
+                contract.setArea(to.getArea());
+            }
+            if (null != to.getBusinessType()) {
+                contract.setBusinessType(to.getBusinessType());
+            }
+            if (null != to.getBusinessSubject()) {
+                contract.setBusinessSubject(to.getBusinessSubject());
+            }
+            if (null != to.getMajorCompany()) {
+                contract.setMajorCompany(to.getMajorCompany());
+            }
+            if (null != to.getSubCompany()) {
+                contract.setSubCompany(to.getSubCompany());
+            }
+            if (null != to.getCommonSubcontractor()) {
+                contract.setCommonSubcontractor(to.getCommonSubcontractor());
+            }
+            if (null != to.getCommonSubcontractorName()) {
+                contract.setCommonSubcontractorName(to.getCommonSubcontractorName());
+            }
+            if (null != to.getTaskFinish()) {
+                contract.setTaskFinish(to.getTaskFinish());
+            }
+            if (null != to.getCustomerName()) {
+                contract.setCustomerName(to.getCustomerName());
+            }
+            if (null != to.getProjectGroup()) {
+                contract.setProjectGroup(to.getProjectGroup());
+            }
+            if (null != to.getOperator()) {
+                contract.setOperator(to.getOperator());
+            }
+            if (null != to.getType()) {
+                contract.setType(to.getType());
+            }
+            if (null != to.getMajor()) {
+                contract.setMajor(to.getMajor());
+            }
+            if (null != to.getTaskContract()) {
+                contract.setTaskContract(to.getTaskContract());
+            }
+            if (null != to.getMarketNum()) {
+                contract.setMarketNum(to.getMarketNum());
+            }
+            if (null != to.getInternalContractNum()) {
+                contract.setInternalContractNum(to.getInternalContractNum());
+            }
+            if (null != to.getInternalProjectNum()) {
+                contract.setInternalProjectNum(to.getInternalProjectNum());
+            }
+            if (null != to.getMakeContract()) {
+                contract.setMakeContract(to.getMakeContract());
+            }
+            if (null != to.getSalesContractNum()) {
+                contract.setSalesContractNum(to.getSalesContractNum());
+            }
+            if (null != to.getSingleContractName()) {
+                contract.setSingleContractName(to.getSingleContractName());
+            }
+            if (null != to.getSingleContractNum()) {
+                contract.setSingleContractNum(to.getSingleContractNum());
+            }
+            if (null != to.getDispatchInterfaceA()) {
+                contract.setDispatchInterfaceA(to.getDispatchInterfaceA());
+            }
+            if (null != to.getDispatchInterfaceB()) {
+                contract.setDispatchInterfaceB(to.getDispatchInterfaceB());
+            }
+            if (null != to.getScale()) {
+                contract.setScale(to.getScale());
+            }
+            if (null != to.getScaleContract()) {
+                contract.setScaleContract(to.getScaleContract());
+            }
+            if (null != to.getScaleBalance()) {
+                contract.setScaleBalance(to.getScaleBalance());
+            }
+            if (null != to.getSolutionBalance()) {
+                contract.setSolutionBalance(to.getSolutionBalance());
+            }
+            if (null != to.getTaskMoney()) {
+                contract.setTaskMoney(to.getTaskMoney());
+            }
+            if (null != to.getMakeMoney()) {
+                contract.setMakeMoney(to.getMakeMoney());
+            }
+            if (null != to.getForecastFinishMoney()) {
+                contract.setForecastFinishMoney(to.getForecastFinishMoney());
+            }
+            if (null != to.getForecastMoney()) {
+                contract.setForecastMoney(to.getForecastMoney());
+            }
+            if (null != to.getForecastMarchMoney()) {
+                contract.setForecastMarchMoney(to.getForecastMarchMoney());
+            }
+            if (null != to.getEstimatedMarketLosses()) {
+                contract.setEstimatedMarketLosses(to.getEstimatedMarketLosses());
+            }
+            if (null != to.getGuarantor()) {
+                contract.setGuarantor(to.getGuarantor());
+            }
+            if (null != to.getGuarantorIdea()) {
+                contract.setGuarantorIdea(to.getGuarantorIdea());
+            }
+            if (null != to.getImplement()) {
+                contract.setImplement(to.getImplement());
+            }
+            if (null != to.getManagerIdea()) {
+                contract.setManagerIdea(to.getManagerIdea());
+            }
+            if (null != to.getPlanIdea()) {
+                contract.setPlanIdea(to.getPlanIdea());
+            }
+            if (null != to.getBudgetIdea()) {
+                contract.setBudgetIdea(to.getBudgetIdea());
+            }
+            if (null != to.getPartial()) {
+                contract.setPartial(to.getPartial());
+            }
+            if (null != to.getPartialMoney()) {
+                contract.setPartialMoney(to.getPartialMoney());
+            }
+            if (null != to.getContractPersist()) {
+                contract.setContractPersist(to.getContractPersist());
+            }
+            if (null != to.getPersist()) {
+                contract.setPersist(to.getPersist());
+            }
+            if (null != to.getExpectStartDate()) {
+                contract.setExpectStartDate(LocalDate.parse(to.getExpectStartDate()));
+            }
+            if (null != to.getRealityStartDate()) {
+                contract.setRealityStartDate(LocalDate.parse(to.getRealityStartDate()));
+            }
+            if (null != to.getRealityCompleteTime()) {
+                contract.setRealityCompleteTime(LocalDate.parse(to.getRealityCompleteTime()));
+            }
+            if (null != to.getNotApproach()) {
+                contract.setNotApproach(to.getNotApproach());
+            }
+            if (null != to.getApproach()) {
+                contract.setApproach(to.getApproach());
+            }
+            if (null != to.getShutdown()) {
+                contract.setShutdown(to.getShutdown());
+            }
+            if (null != to.getMarch()) {
+                contract.setMarch(to.getMarch());
+            }
+            if (null != to.getComplete()) {
+                contract.setComplete(to.getComplete());
+            }
+            if (null != to.getGoods()) {
+                contract.setGoods(to.getGoods());
+            }
+            if (null != to.getInitialTest()) {
+                contract.setInitialTest(to.getInitialTest());
+            }
+            if (null != to.getFinalTest()) {
+                contract.setFinalTest(to.getFinalTest());
+            }
+            if (null != to.getSettlementProcess()) {
+                contract.setSettlementProcess(to.getSettlementProcess());
+            }
+            if (null != to.getAccount()) {
+                contract.setAccount(to.getAccount());
+            }
+            if (null != to.getCloseSingle()) {
+                contract.setCloseSingle(to.getCloseSingle());
+            }
+            if (null != to.getBusinessCooperate()) {
+                contract.setBusinessCooperate(to.getBusinessCooperate());
+            }
+            if (null != to.getOuterProject()) {
+                contract.setOuterProject(to.getOuterProject());
+            }
+            if (null != to.getInnerProject()) {
+                contract.setInnerProject(to.getInnerProject());
+            }
+            if (null != to.getBusinessAssessProject()) {
+                contract.setBusinessAssessProject(to.getBusinessAssessProject());
+            }
+            if (null != to.getBusinessAssessCase()) {
+                contract.setBusinessAssessCase(to.getBusinessAssessCase());
+            }
+            if (null != to.getBusinessReplyFeedback()) {
+                contract.setBusinessReplyFeedback(to.getBusinessReplyFeedback());
+            }
+            if (null != to.getProjectCharge()) {
+                contract.setProjectCharge(to.getProjectCharge());
+            }
+            if (null != to.getHandlers()) {
+                contract.setHandlers(to.getHandlers());
+            }
+            if (null != to.getArchive()) {
+                contract.setArchive(to.getArchive());
+            }
+            if (null != to.getArchiveNum()) {
+                contract.setArchiveNum(to.getArchiveNum());
+            }
+            if (null != to.getStorageLocation()) {
+                contract.setStorageLocation(to.getStorageLocation());
+            }
+            if (null != to.getApproachStatus()) {
+                contract.setApproachStatus(to.getApproachStatus());
+            }
+            if (null != to.getWorkStatus()) {
+                contract.setWorkStatus(to.getWorkStatus());
+            }
+
             contract.setCreateTime(createTime);
             contract.setModifyTime(LocalDateTime.now());
             super.update(contract);
@@ -433,6 +706,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
     }
 
     private void search(BusinessContractDTO dto) throws SerException {
+
         //签订时间
         if (StringUtils.isNotBlank(dto.getSignedTime())) {
             dto.getConditions().add(Restrict.eq("signedTime", dto.getSignedTime()));
@@ -465,6 +739,24 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         if (null != dto.getCloseSingle()) {
             dto.getConditions().add(Restrict.eq("closeSingle", dto.getCloseSingle()));
         }
+
+        //测算分类
+        if (StringUtils.isNotBlank(dto.getMeasureClassify())) {
+            dto.getConditions().add(Restrict.eq("measureClassify", dto.getMeasureClassify()));
+        }
+        //业务方向科目
+        if (StringUtils.isNotBlank(dto.getBusinessSubject())) {
+            dto.getConditions().add(Restrict.eq("businessSubject", dto.getBusinessSubject()));
+        }
+        //合同状态
+        if (null != (dto.getContractStatus())) {
+            dto.getConditions().add(Restrict.eq("makeContract", dto.getContractStatus()));
+        }
+        //派工状态
+        if (null != dto.getTaskStatus()) {
+            dto.getConditions().add(Restrict.eq("taskContract", dto.getTaskStatus()));
+        }
+
     }
 
 
@@ -2289,7 +2581,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 }
             }
             //合同派工合同
-            export.setTaskContract( TaskContract.exportStrConvert(str.getTaskContract()));
+            export.setTaskContract(TaskContract.exportStrConvert(str.getTaskContract()));
             exports.add(export);
             //是否有合同派工合同
 //            if (null != str.getTaskContract()) {
@@ -3803,7 +4095,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
                 scaleContract.add(figureBO.getScaleContract());
 //                finishScale.add(figureBO.getFinishScale());
             }
-            List<List<Integer>> nums = new ArrayList<> ();
+            List<List<Integer>> nums = new ArrayList<>();
             nums.add(scaleContract);
 //            nums.add(finishScale);
             String[] ziduan = new String[]{"规模数量(总规模数量)", "实际规模数量"};
@@ -4064,12 +4356,12 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
 
     @Override
     public List<String> findProjectGroup() throws SerException {
-        Set<String> set = new HashSet<> ();
-        List<BusinessContract> businessContracts = super.findAll ();
+        Set<String> set = new HashSet<>();
+        List<BusinessContract> businessContracts = super.findAll();
         for (BusinessContract businessContract : businessContracts) {
-            set.add ( businessContract.getProjectGroup () );
+            set.add(businessContract.getProjectGroup());
         }
-        return new ArrayList<> ( set );
+        return new ArrayList<>(set);
     }
 
     @Override
@@ -4110,9 +4402,9 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         BusinessContractDTO businessContractDTO = new BusinessContractDTO();
         businessContractDTO.getConditions().add(Restrict.eq("internalContractNum", internalContractNum));
         Set<String> makeProjects = new HashSet<>();
-        List<BusinessContract> list = super.findByCis ( businessContractDTO );
+        List<BusinessContract> list = super.findByCis(businessContractDTO);
         for (BusinessContract businessContract : list) {
-            makeProjects.add(String.valueOf(businessContract.getMakeContract ()));
+            makeProjects.add(String.valueOf(businessContract.getMakeContract()));
         }
         return makeProjects;
     }
@@ -4207,7 +4499,7 @@ public class BusinessContractSerImpl extends ServiceImpl<BusinessContract, Busin
         BusinessContractDTO dto = new BusinessContractDTO();
         dto.getConditions().add(Restrict.eq("marketNum", markNum));
         List<BusinessContract> businessContracts = super.findByCis(dto);
-        if(null != businessContracts && businessContracts.size() > 0){
+        if (null != businessContracts && businessContracts.size() > 0) {
             return businessContracts.get(0).getInnerProject();
         }
         return null;

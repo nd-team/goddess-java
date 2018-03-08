@@ -63,6 +63,19 @@ public class WithUnit extends BaseEntity {
     @Column(name = "scaleShape", nullable = false, columnDefinition = "TINYINT(2)   COMMENT '公司规模形式'")
     private ScaleShape scaleShape;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
     public String getCompanyName() {
         return companyName;

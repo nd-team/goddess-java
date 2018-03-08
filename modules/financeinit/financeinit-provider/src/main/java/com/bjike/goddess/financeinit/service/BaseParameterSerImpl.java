@@ -14,6 +14,8 @@ import com.bjike.goddess.financeinit.entity.CompanyBasicInfo;
 import com.bjike.goddess.financeinit.entity.Currency;
 import com.bjike.goddess.financeinit.enums.GuideAddrStatus;
 import com.bjike.goddess.financeinit.to.BaseParameterTO;
+import com.bjike.goddess.financeinit.to.CompanyBasicInfoTO;
+import com.bjike.goddess.financeinit.to.CurrencyTO;
 import com.bjike.goddess.financeinit.to.GuidePermissionTO;
 import com.bjike.goddess.user.api.UserAPI;
 import com.bjike.goddess.user.bo.UserBO;
@@ -232,6 +234,8 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         return BeanTransform.copyProperties(baseParameter, BaseParameterBO.class);
     }
 
+    @Autowired
+    UserSer userSer;
     @Override
     public List<BaseParameterBO> listBasicPara(BaseParameterDTO baseParameterDTO) throws SerException {
         checkSeeIdentity();
@@ -244,25 +248,34 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         if (StringUtils.isNotBlank(baseParameterDTO.getCompanyName())) {
             baseParameterDTO.getConditions().add(Restrict.eq("companyName", baseParameterDTO.getCompanyName()));
         }
+        baseParameterDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
     }
 
     @Transactional(rollbackFor = {SerException.class})
     @Override
     public BaseParameterBO addBasicPara(BaseParameterTO baseParameterTO) throws SerException {
         checkFinanDepartSup();
+        String systemId = getSystemId();
+        BaseParameterDTO dto = new BaseParameterDTO();
+        dto.setSystemId(systemId);
+        List olds = super.findByCis(dto);
+        if (olds != null && olds.size() > 0) {
+            throw new SerException("基本参数数据最多存在一条");
+        }
         BaseParameter baseParameter = BeanTransform.copyProperties(baseParameterTO, BaseParameter.class, true);
         baseParameter.setCreateTime(LocalDateTime.now());
+        baseParameter.setSystemId(systemId);
         super.save(baseParameter);
         //初始化公司基本信息
-        CompanyBasicInfo companyBasicInfo = new CompanyBasicInfo();
+        CompanyBasicInfoTO companyBasicInfo = new CompanyBasicInfoTO();
         companyBasicInfo.setCompanyName(baseParameter.getCompanyName());
-        companyBasicInfoSer.save(companyBasicInfo);
+        companyBasicInfo.setSystemId(systemId);
+        companyBasicInfoSer.addBaseInfo(companyBasicInfo);
         //初始化币别
-        Currency currency = new Currency();
+        CurrencyTO currency = new CurrencyTO();
         currency.setName(baseParameter.getFunctionalCurrency());
-        currency.setCode("01");
         currency.setStandardMoney(true);
-        currencySer.save(currency);
+        currencySer.addCurren(currency);
 //        CompanyBasicInfoBO companyBasicInfoBO = companyBasicInfoSer.findByCompanyName(baseParameterTO.getCompanyName());
 //        baseParameter.setEin(companyBasicInfoBO.getEin());
 //        baseParameter.setPhone(companyBasicInfoBO.getPhone());
@@ -281,9 +294,11 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
         //TODO:这里需要问一下需求当编辑的时候,添加那边初始化的公司基本信息和币别是否也需要随之改变,还是让财务主管自行到对应的地方修改信息
         BaseParameter baseParameter = super.findById(baseParameterTO.getId());
         LocalDateTime date = baseParameter.getCreateTime();
+        String systemId = baseParameter.getSystemId();
         baseParameter = BeanTransform.copyProperties(baseParameterTO, BaseParameter.class, true);
         baseParameter.setCreateTime(date);
         baseParameter.setModifyTime(LocalDateTime.now());
+        baseParameter.setSystemId(systemId);
         super.update(baseParameter);
         return BeanTransform.copyProperties(baseParameter, BaseParameterBO.class);
     }
@@ -297,7 +312,10 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
 
     @Override
     public String findDoudap() throws SerException {
-        List<BaseParameter> baseParameters = super.findAll();
+        BaseParameterDTO dto = new BaseParameterDTO();
+        dto.getConditions().add(Restrict.eq("systemId", getSystemId()));
+//        List<BaseParameter> baseParameters = super.findAll();
+        List<BaseParameter> baseParameters = super.findByCis(dto);
         if (null != baseParameters && baseParameters.size() > 0) {
             List<LocalDate> time = baseParameters.stream().map(BaseParameter::getDateDuringPeriod).collect(Collectors.toList());
             if (null != time && time.size() > 0) {
@@ -305,5 +323,18 @@ public class BaseParameterSerImpl extends ServiceImpl<BaseParameter, BaseParamet
             }
         }
         return null;
+    }
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
     }
 }

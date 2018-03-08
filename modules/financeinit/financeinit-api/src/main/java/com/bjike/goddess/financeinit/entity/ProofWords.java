@@ -27,6 +27,20 @@ public class ProofWords extends BaseEntity {
     @Column(name = "proofCharacter", nullable = false,unique = true,columnDefinition = "TINYINT(2)   COMMENT '凭证字'")
     private ProofCharacter proofCharacter;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
 
     public ProofCharacter getProofCharacter() {
         return proofCharacter;

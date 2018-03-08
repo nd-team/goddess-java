@@ -1,5 +1,6 @@
 package com.bjike.goddess.financeinit.service;
 
+import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
 import com.bjike.goddess.common.provider.utils.RpcTransmit;
@@ -162,6 +163,7 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     }
     @Override
     public Long countDepart(AccountDepartmentDTO accountDepartmentDTO) throws SerException {
+        accountDepartmentDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         Long count = super.count(accountDepartmentDTO);
         return count;
     }
@@ -178,6 +180,7 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     @Override
     public List<AccountDepartmentBO> listDepart(AccountDepartmentDTO accountDepartmentDTO) throws SerException {
         checkSeeIdentity();
+        accountDepartmentDTO.getConditions().add(Restrict.eq("systemId", getSystemId()));
         List<AccountDepartment> list = super.findByCis(accountDepartmentDTO, true);
         return BeanTransform.copyProperties(list, AccountDepartmentBO.class);
     }
@@ -186,8 +189,18 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     @Override
     public AccountDepartmentBO addDepart(AccountDepartmentTO accountDepartmentTO) throws SerException {
        checkAddIdentity();
+       String systemId = getSystemId();
+        AccountDepartmentDTO accountDepartmentDTO = new AccountDepartmentDTO();
+        accountDepartmentDTO.getConditions().add(Restrict.eq("systemId", systemId));
+        accountDepartmentDTO.getConditions().add(Restrict.eq("accountDepartment", accountDepartmentTO.getAccountDepartment()));
+        accountDepartmentDTO.getConditions().add(Restrict.eq("projectName", accountDepartmentTO.getProjectName()));
+        List<AccountDepartment> list = super.findByCis(accountDepartmentDTO);
+        if (list != null && list.size() > 0) {
+            throw new SerException("不可添加重复数据");
+        }
         AccountDepartment accountDepartment = BeanTransform.copyProperties(accountDepartmentTO, AccountDepartment.class, true);
         accountDepartment.setCreateTime(LocalDateTime.now());
+        accountDepartment.setSystemId(systemId);
         super.save(accountDepartment);
         return BeanTransform.copyProperties(accountDepartment, AccountDepartmentBO.class);
     }
@@ -197,9 +210,18 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     public AccountDepartmentBO editDepart(AccountDepartmentTO accountDepartmentTO) throws SerException {
         checkAddIdentity();
         AccountDepartment accountDepartment = super.findById(accountDepartmentTO.getId());
-        LocalDateTime date = accountDepartment.getCreateTime();
-        accountDepartment = BeanTransform.copyProperties(accountDepartmentTO, AccountDepartment.class);
-        accountDepartment.setCreateTime(date);
+        if (accountDepartment == null) {
+            throw new SerException("编辑指定实体不存在");
+        }
+        if (StringUtils.isNotBlank(accountDepartmentTO.getAccountDepartment())) {
+            accountDepartment.setAccountDepartment(accountDepartmentTO.getAccountDepartment());
+        }
+        if (StringUtils.isNotBlank(accountDepartmentTO.getProjectName())) {
+            accountDepartment.setProjectName(accountDepartmentTO.getProjectName());
+        }
+        if (StringUtils.isNotBlank(accountDepartmentTO.getStaff())) {
+            accountDepartment.setStaff(accountDepartmentTO.getStaff());
+        }
         accountDepartment.setModifyTime(LocalDateTime.now());
         super.update(accountDepartment);
         return BeanTransform.copyProperties(accountDepartment, AccountDepartmentBO.class);
@@ -209,10 +231,23 @@ public class AccountDepartmentSerImpl extends ServiceImpl<AccountDepartment, Acc
     @Override
     public void deleteDepart(String id) throws SerException {
         checkAddIdentity();
-        List<AccountDepartment> accountDepartmentList = super.findAll();
-        if(accountDepartmentList.size()<=1){
-            throw new SerException("这是最后一条数据了,是不能被删除的");
-        }
+//        List<AccountDepartment> accountDepartmentList = super.findAll();
+//        if(accountDepartmentList.size()<=1){
+//            throw new SerException("这是最后一条数据了,是不能被删除的");
+//        }
         super.remove(id);
+    }
+
+    /**
+     * 获取公司编号
+     *
+     * @return
+     * @throws SerException
+     */
+    private String getSystemId() throws SerException {
+        String token = RpcTransmit.getUserToken();
+        String systemId = userAPI.currentSysNO();
+        RpcTransmit.transmitUserToken(token);
+        return systemId;
     }
 }

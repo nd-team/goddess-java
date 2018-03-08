@@ -42,6 +42,20 @@ public class FirstSubject extends BaseEntity {
     @Column(name = "remark",  columnDefinition = "VARCHAR(255)  COMMENT '会计科目适用范围'")
     private String remark;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     public String getCode() {
         return code;
     }

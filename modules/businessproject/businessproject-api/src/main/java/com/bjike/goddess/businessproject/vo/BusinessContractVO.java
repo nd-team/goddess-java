@@ -109,7 +109,7 @@ public class BusinessContractVO {
     private String major;
 
     /**
-     * 是否有合同派工合同
+     * 派工状态
      */
     private TaskContract taskContract;
 
@@ -129,7 +129,7 @@ public class BusinessContractVO {
     private String internalContractNum;
 
     /**
-     * 是否有合同立项
+     * 合同状态
      */
     private MakeContract makeContract;
 
@@ -393,6 +393,31 @@ public class BusinessContractVO {
      */
     private String storageLocation;
 
+    /**
+     * 进场状态
+     */
+    private String approachStatus;
+
+    /**
+     * 工作状态
+     */
+    private String workStatus;
+
+    public String getApproachStatus() {
+        return approachStatus;
+    }
+
+    public void setApproachStatus(String approachStatus) {
+        this.approachStatus = approachStatus;
+    }
+
+    public String getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(String workStatus) {
+        this.workStatus = workStatus;
+    }
 
     public String getId() {
         return id;

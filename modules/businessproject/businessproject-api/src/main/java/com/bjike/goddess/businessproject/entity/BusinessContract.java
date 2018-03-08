@@ -147,7 +147,7 @@ public class BusinessContract extends BaseEntity {
     /**
      * 是否有合同派工合同
      */
-    @Column(name = "is_taskContract", columnDefinition = "TINYINT(1)    COMMENT '是否有合同派工合同'")
+    @Column(name = "taskContract", columnDefinition = "TINYINT(1)    COMMENT '是否有合同派工合同'")
     private TaskContract taskContract;
 
     /**
@@ -490,6 +490,34 @@ public class BusinessContract extends BaseEntity {
      */
     @Column(columnDefinition = "TINYINT(1) COMMENT '状态'")
     private Boolean status;
+
+    /**
+     * 进场状态（替换之前的“进场”、“未进场”）
+     */
+    @Column(columnDefinition = "VARCHAR(10) COMMENT '进场状态'")
+    private String approachStatus;
+
+    /**
+     * 工作状态（替换之前的“停工”、“进行”、“完工”）
+     */
+    @Column(columnDefinition = "VARCHAR(10) COMMENT '工作状态'")
+    private String workStatus;
+
+    public String getApproachStatus() {
+        return approachStatus;
+    }
+
+    public void setApproachStatus(String approachStatus) {
+        this.approachStatus = approachStatus;
+    }
+
+    public String getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(String workStatus) {
+        this.workStatus = workStatus;
+    }
 
     public Boolean getStatus() {
         return status;

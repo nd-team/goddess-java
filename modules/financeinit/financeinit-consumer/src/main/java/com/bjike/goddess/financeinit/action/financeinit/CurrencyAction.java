@@ -77,11 +77,11 @@ public class CurrencyAction {
     }
 
     /**
-     * 一个公司基本信息
+     * 获取单个币别
      *
-     * @param id 公司基本信息id
+     * @param id 币别id
      * @return class CurrencyVO
-     * @des 根据id获取公司基本信息
+     * @des 获取单个币别
      * @version v1
      */
     @GetMapping("v1/getOneById/{id}")
@@ -96,11 +96,11 @@ public class CurrencyAction {
     }
 
     /**
-     * 公司基本信息列表
+     * 币别列表
      *
-     * @param currencyDTO 公司基本信息dto
+     * @param currencyDTO 币别dto
      * @return class CurrencyVO
-     * @des 获取所有公司基本信息
+     * @des 币别列表
      * @version v1
      */
     @GetMapping("v1/listAccount")
@@ -115,11 +115,11 @@ public class CurrencyAction {
     }
 
     /**
-     * 添加公司基本信息
+     * 添加币别信息
      *
-     * @param currencyTO 公司基本信息数据to
+     * @param currencyTO 币别to
      * @return class CurrencyVO
-     * @des 添加公司基本信息
+     * @des 添加币别
      * @version v1
      */
     @LoginAuth
@@ -135,11 +135,11 @@ public class CurrencyAction {
 
 
     /**
-     * 编辑公司基本信息
+     * 编辑币别
      *
-     * @param currencyTO 公司基本信息数据bo
+     * @param currencyTO 币别bo
      * @return class CurrencyVO
-     * @des 编辑公司基本信息
+     * @des 编辑币别
      * @version v1
      */
     @LoginAuth
@@ -157,7 +157,7 @@ public class CurrencyAction {
      * 删除
      *
      * @param id id
-     * @des 根据id删除公司基本信息记录
+     * @des 根据id删除币别
      * @version v1
      */
     @LoginAuth

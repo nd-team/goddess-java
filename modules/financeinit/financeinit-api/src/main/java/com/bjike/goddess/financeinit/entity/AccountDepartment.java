@@ -38,6 +38,20 @@ public class AccountDepartment extends BaseEntity {
     @Column(name = "staff", nullable = false, columnDefinition = "VARCHAR(255)   COMMENT '职员'")
     private String staff;
 
+    /**
+     * 公司编号
+     */
+    @Column(name = "systemId", updatable = false, columnDefinition = "VARCHAR(20)   COMMENT '公司编号'")
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
 
     public String getAccountDepartment() {
         return accountDepartment;

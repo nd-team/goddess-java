@@ -3,6 +3,8 @@ package com.bjike.goddess.financeinit.dto;
 import com.bjike.goddess.common.api.dto.BaseDTO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Column;
+
 /**
  * 账户来源数据传输对象
  *
@@ -31,6 +33,19 @@ public class AccountDTO extends BaseDTO {
      */
     @NotBlank(groups = {AccountDTO.TESTSearchSecond.class}, message = "二级科目不能为空")
     private String secondSubject;
+
+    /**
+     * 公司编号
+     */
+    private String systemId;
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 
     public String getFirstSubject() {
         return firstSubject;
