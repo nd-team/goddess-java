@@ -1,4 +1,7 @@
+import com.bjike.goddess.common.utils.date.DateUtil;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * @Author: [caiwenxian]
@@ -27,8 +30,10 @@ public class MyTest {
         System.out.println(c);*/
         pritNoBug();
 
-        Double a = null;
-        System.out.println(a.doubleValue());
+
+        LocalDate localDate = LocalDate.now();
+        System.out.println(DateUtil.dateToString(localDate));
+        System.out.println(DateUtil.parseDate("2018-03-30").getMonthValue() - 1);
     }
 
     public static void pritNoBug(){
@@ -54,4 +59,6 @@ public class MyTest {
         System.out.println("                                                    ");
         System.out.println("....................佛祖开光 ,永无BUG...................");
     }
+
+
 }

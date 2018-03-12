@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -750,118 +751,125 @@ public class AssetSerImpl extends ServiceImpl<Asset, AssetDTO> implements AssetS
         AssetBO bo37 = new AssetBO();
         AssetBO bo38 = new AssetBO();
         for (AssetBO bo : list) {
+            if (null != bo.getBeginAsset()) {
+                bo.setBeginAsset(new BigDecimal(bo.getBeginAsset()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+            }
+            if (null != bo.getEndAsset()) {
+                bo.setEndAsset(new BigDecimal(bo.getEndAsset()).setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+            }
             if ("流动资产：".equals(bo.getAsset()) || "流动资产:".equals(bo.getAsset())) {
-                bo1 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo1 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+
             }
             if ("货币资金".equals(bo.getAsset())) {
-                bo2 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo2 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("短期投资".equals(bo.getAsset())) {
-                bo3 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo3 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("应收票据".equals(bo.getAsset())) {
-                bo4 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo4 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("应收股利".equals(bo.getAsset())) {
-                bo5 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo5 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("应收利息".equals(bo.getAsset())) {
-                bo6 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo6 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("应收账款".equals(bo.getAsset())) {
-                bo7 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo7 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("其他应收款".equals(bo.getAsset())) {
-                bo8 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo8 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("预付账款".equals(bo.getAsset())) {
-                bo9 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo9 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("应收补贴款".equals(bo.getAsset())) {
-                bo10 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo10 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("存货".equals(bo.getAsset())) {
-                bo11 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo11 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("待摊费用".equals(bo.getAsset())) {
-                bo12 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo12 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("一年内到期的长期债券投资".equals(bo.getAsset())) {
-                bo13 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo13 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("其他流动资产".equals(bo.getAsset())) {
-                bo14 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo14 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("流动资产合计".equals(bo.getAsset())) {
-                bo15 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo15 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("长期资产：".equals(bo.getAsset()) || "长期资产:".equals(bo.getAsset())) {
-                bo16 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo16 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("长期股权投资".equals(bo.getAsset())) {
-                bo17 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo17 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("长期债券投资".equals(bo.getAsset())) {
-                bo18 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo18 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("长期投资合计".equals(bo.getAsset())) {
-                bo19 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo19 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("固定资产：".equals(bo.getAsset()) || "固定资产:".equals(bo.getAsset())) {
-                bo20 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo20 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("固定资产原价".equals(bo.getAsset())) {
-                bo21 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo21 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("减：累计折旧".equals(bo.getAsset()) || "减:累计折旧".equals(bo.getAsset())) {
-                bo22 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo22 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("固定资产净值".equals(bo.getAsset())) {
-                bo23 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo23 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("减：固定资产减值准备".equals(bo.getAsset()) || "减:固定资产减值准备".equals(bo.getAsset())) {
-                bo24 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo24 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("固定资产净额".equals(bo.getAsset()) || "固定资产净额:".equals(bo.getAsset())) {
-                bo25 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo25 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("工程物资".equals(bo.getAsset())) {
-                bo26 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo26 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("在建工程".equals(bo.getAsset())) {
-                bo27 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo27 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("固定资产清理".equals(bo.getAsset())) {
-                bo28 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo28 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("固定资产合计".equals(bo.getAsset())) {
-                bo29 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo29 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("无形资产及其他资产：".equals(bo.getAsset()) || "无形资产及其他资产:".equals(bo.getAsset())) {
-                bo30 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo30 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("无形资产".equals(bo.getAsset())) {
-                bo31 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo31 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("长期待摊费用".equals(bo.getAsset())) {
-                bo32 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo32 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("其他长期资产".equals(bo.getAsset())) {
-                bo33 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo33 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("无形资产及其他资产合计".equals(bo.getAsset())) {
-                bo34 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo34 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
                 bo35 = new AssetBO();
 
             }
             if ("递延税款：".equals(bo.getAsset()) || "递延税款:".equals(bo.getAsset())) {
-                bo36 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo36 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("递延税款借项".equals(bo.getAsset())) {
-                bo37 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo37 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
             if ("资产总计".equals(bo.getAsset())) {
-                bo38 = new AssetBO(bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
+                bo38 = new AssetBO(bo.getId(), bo.getStartTime(), bo.getEndTime(), bo.getAsset(), bo.getAssetType(), bo.getType(), bo.getAssetNum(), bo.getBeginAsset(), bo.getCurrent(), bo.getEndAsset());
             }
         }
         bos.add(bo1);

@@ -52,6 +52,20 @@ public class ProfitBO extends BaseBO {
      */
     private Type type;
 
+    public ProfitBO() {
+    }
+
+    public ProfitBO(String id, String project, Integer num, Double currentMonthAmount, Double currentYearAmount, String projectType, ProfitType profitType, Type type) {
+        this.id = id;
+        this.project = project;
+        this.num = num;
+        this.currentMonthAmount = currentMonthAmount;
+        this.currentYearAmount = currentYearAmount;
+        this.projectType = projectType;
+        this.profitType = profitType;
+        this.type = type;
+    }
+
     public ProfitType getProfitType() {
         return profitType;
     }

@@ -666,9 +666,9 @@ public class VoucherGenerateSerImpl extends ServiceImpl<VoucherGenerate, Voucher
         VoucherGenerateDTO dto12 = new VoucherGenerateDTO();
         if (DateUtil.parseDate(sTime).getMonthValue() != 1) {
             String beginStartTime = DateUtil.parseDate(sTime).getYear() + "-01-01";
-            String beginEndTime =
-                    DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue(),
-                    DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue())));
+            String beginEndTime = DateUtil.parseDate(sTime).with(TemporalAdjusters.lastDayOfMonth()).toString();
+//            DateUtil.dateToString(LocalDate.of(DateUtil.parseDate(sTime).getYear(), DateUtil.parseDate(sTime).getMonthValue(),
+//                    DateUtil.getDayByDate(year, DateUtil.parseDate(sTime).getMonthValue())));
             String[] times4 = new String[]{beginStartTime, beginEndTime};
             dto12.getConditions().add(Restrict.eq("firstSubject", firstSubject));
             dto12.getConditions().add(Restrict.between("voucherDate", times4));
