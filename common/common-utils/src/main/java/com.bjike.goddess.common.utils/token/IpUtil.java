@@ -28,15 +28,32 @@ public class IpUtil {
      */
     public static String getIp(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
+
+        System.out.print("X-Real-IP:"+request.getHeader("X-Real-IP"));
+        System.out.print("x-real-ip:"+request.getHeader("x-real-ip"));
+        System.out.print("X-Forwarded-For:"+request.getHeader("X-Forwarded-For"));
+        System.out.print("x-forwarded-for:"+request.getHeader("x-forwarded-for"));
+
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("Proxy-Client-IP");
+            System.out.print("Proxy-Client-IP:"+ipAddress);
         }
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("WL-Proxy-Client-IP");
+            System.out.print("WL-Proxy-Client-IP:"+ipAddress);
         }
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("X-Real-IP");
+            System.out.print("X-Real-IP:"+ipAddress);
         }
+        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("X-Forward-For");
+            System.out.print("X-Forward-IP:"+ipAddress);
+        }
+
+        ipAddress = request.getRemoteAddr();
+        System.out.print("getRemoteAddr:"+ipAddress);
+
         if (StringUtils.isBlank(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getRemoteAddr();
             if (ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")) {

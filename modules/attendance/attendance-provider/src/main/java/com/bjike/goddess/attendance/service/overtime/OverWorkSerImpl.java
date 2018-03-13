@@ -29,8 +29,6 @@ import com.bjike.goddess.common.utils.date.DateUtil;
 import com.bjike.goddess.common.utils.excel.Excel;
 import com.bjike.goddess.common.utils.excel.ExcelUtil;
 import com.bjike.goddess.event.api.EventAPI;
-import com.bjike.goddess.event.enums.Permissions;
-import com.bjike.goddess.event.to.EventTO;
 import com.bjike.goddess.organize.api.DepartmentDetailAPI;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.organize.api.PositionUserDetailAPI;
@@ -79,8 +77,8 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
     private CusPermissionSer cusPermissionSer;
     @Autowired
     private UserAPI userAPI;
-    @Autowired
-    private EventAPI eventAPI;
+//    @Autowired
+//    private EventAPI eventAPI;
 
     /**
      * 核对查看权限（部门级别）
@@ -241,17 +239,17 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
         overWork.setAuditStatus(AuditStatus.NONE);
         overWork.setEntryer(userBO.getUsername());
         super.save(overWork);
-        EventTO eventTO = new EventTO();
-        eventTO.setName(overWork.getCharger());
-        eventTO.setProjectChineseName("考勤");
-        eventTO.setProjectEnglishName("attendance");
-        eventTO.setFunctionChineseName("加班");
-        eventTO.setFunctionEnglishName("overwork");
-        eventTO.setContent("加班审核");
-        eventTO.setPermissions(Permissions.ADUIT);
-        eventTO.setEventId(overWork.getId());
-        eventTO.setStatus("待审核");
-        eventAPI.save(eventTO);
+//        EventTO eventTO = new EventTO();
+//        eventTO.setName(overWork.getCharger());
+//        eventTO.setProjectChineseName("考勤");
+//        eventTO.setProjectEnglishName("attendance");
+//        eventTO.setFunctionChineseName("加班");
+//        eventTO.setFunctionEnglishName("overwork");
+//        eventTO.setContent("加班审核");
+//        eventTO.setPermissions(Permissions.ADUIT);
+//        eventTO.setEventId(overWork.getId());
+//        eventTO.setStatus("待审核");
+//        eventAPI.save(eventTO);
 
         //如果是项目经理下发的任务，则不用审核，将审核状态改为已通过
         RpcTransmit.transmitUserToken(userToken);
@@ -412,10 +410,10 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             overWork.setModifyTime(LocalDateTime.now());
             super.update(overWork);
         }
-        String eventId = eventAPI.findId(auditTO.getId(), userBO.getUsername());
-        if (null != eventId) {
-            eventAPI.delete(eventId);
-        }
+//        String eventId = eventAPI.findId(auditTO.getId(), userBO.getUsername());
+//        if (null != eventId) {
+//            eventAPI.delete(eventId);
+//        }
         return BeanTransform.copyProperties(overWork, OverWorkBO.class);
     }
 
@@ -836,7 +834,7 @@ public class OverWorkSerImpl extends ServiceImpl<OverWork, OverWorkDTO> implemen
             }
             String departStr = StringUtils.join(departTemps, ",");
             sb.append("depart in (" + departStr + ") AND ");
-        }else if (CountType.PERSONAL.equals(countType)) {
+        } else if (CountType.PERSONAL.equals(countType)) {
             String[] personals = dto.getDeparts();
             if (null == personals) {
                 throw new SerException("个人汇总必须选择姓名");

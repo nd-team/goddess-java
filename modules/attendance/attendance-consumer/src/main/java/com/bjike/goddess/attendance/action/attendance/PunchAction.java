@@ -27,7 +27,6 @@ import com.bjike.goddess.common.utils.token.IpUtil;
 import com.bjike.goddess.organize.api.PositionDetailUserAPI;
 import com.bjike.goddess.user.bo.UserBO;
 import com.bjike.goddess.user.vo.UserVO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import util.AddressUtils;
 import util.CheckMobile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 打卡
@@ -290,4 +287,37 @@ public class PunchAction extends BaseFileAction {
             throw new ActException(e.getMessage());
         }
     }
+
+    /**
+     * 当前用户当天是否有打卡
+     *
+     * @version v1
+     */
+    @GetMapping("v1/isPunch")
+    public Result isPunch(@Validated(PunchSonTO.ISPUNCH.class) PunchSonTO to, BindingResult result) throws ActException {
+        try {
+            return ActResult.initialize(punchSonAPI.isPunch(to));
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
+    /**
+     * 根据时间获取当天全部数据
+     *
+     * @param date date
+     * @return class PunchSonVO
+     * @version v1
+     */
+    @GetMapping("v1/getPunchSon")
+    public Result getPunchSon(String date) throws ActException {
+        try {
+            List<PunchSonBO> punchSonBOS = punchSonAPI.getPunchSon(date);
+            List<PunchSonVO> punchSonVOS = BeanTransform.copyProperties(punchSonBOS, PunchSonVO.class);
+            return ActResult.initialize(punchSonVOS);
+        } catch (SerException e) {
+            throw new ActException(e.getMessage());
+        }
+    }
+
 }

@@ -6,10 +6,12 @@ import com.bjike.goddess.attendance.bo.PunchPhoneBO;
 import com.bjike.goddess.attendance.bo.PunchSonBO;
 import com.bjike.goddess.attendance.dto.PunchDTO;
 import com.bjike.goddess.attendance.dto.overtime.OverTimesDTO;
+import com.bjike.goddess.attendance.entity.PunchSon;
 import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
+import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.exception.SerException;
 
 import java.util.List;
@@ -125,6 +127,7 @@ public interface PunchSonAPI {
     default void upload(List<PunchImportExcel> tos) throws SerException {
         return;
     }
+
     /**
      * 当前用户迟到总条数
      *
@@ -132,4 +135,22 @@ public interface PunchSonAPI {
      * @throws SerException
      */
     Long currentUserLateCount() throws SerException;
+
+    /**
+     * 当前用户当天是否有打卡
+     *
+     * @return
+     * @throws SerException
+     */
+    Boolean isPunch(PunchSonTO to) throws SerException;
+
+    /**
+     * 根据时间获取当天全部数据
+     *
+     * @param date date
+     * @return class PunchSonBO
+     * @throws SerException
+     */
+    List<PunchSonBO> getPunchSon(String date) throws SerException;
+
 }

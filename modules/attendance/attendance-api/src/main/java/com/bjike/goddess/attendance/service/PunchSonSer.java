@@ -9,6 +9,7 @@ import com.bjike.goddess.attendance.excel.PunchImportExcel;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
+import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.api.service.Ser;
 
@@ -169,4 +170,21 @@ public interface PunchSonSer extends Ser<PunchSon, PunchSonDTO> {
      * @throws SerException
      */
     Long currentUserLateCount() throws SerException;
+
+    /**
+     * 当前用户当天是否有打卡
+     *
+     * @return
+     * @throws SerException
+     */
+    Boolean isPunch(PunchSonTO to) throws SerException;
+    /**
+     * 根据时间获取当天全部数据
+     *
+     * @param date date
+     * @return class PunchSonBO
+     * @throws SerException
+     */
+    List<PunchSonBO> getPunchSon(String date) throws SerException;
+
 }

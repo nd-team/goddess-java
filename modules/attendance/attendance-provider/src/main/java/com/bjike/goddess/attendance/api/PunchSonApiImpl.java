@@ -11,6 +11,7 @@ import com.bjike.goddess.attendance.service.PunchSonSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
+import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.exception.SerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class PunchSonApiImpl implements PunchSonAPI {
 
     @Override
     public OverWorkTimesVO userOverTimeCollect(OverTimesDTO overTimesDTO) throws SerException {
-        return punchSonSer.userOverTimeCollect(overTimesDTO) ;
+        return punchSonSer.userOverTimeCollect(overTimesDTO);
     }
 
     @Override
@@ -94,5 +95,15 @@ public class PunchSonApiImpl implements PunchSonAPI {
     @Override
     public Long currentUserLateCount() throws SerException {
         return punchSonSer.currentUserLateCount();
+    }
+
+    @Override
+    public Boolean isPunch(PunchSonTO to) throws SerException {
+        return punchSonSer.isPunch(to);
+    }
+
+    @Override
+    public List<PunchSonBO> getPunchSon(String date) throws SerException {
+        return punchSonSer.getPunchSon(date);
     }
 }
