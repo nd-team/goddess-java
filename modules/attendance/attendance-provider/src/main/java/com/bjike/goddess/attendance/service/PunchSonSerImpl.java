@@ -15,6 +15,7 @@ import com.bjike.goddess.attendance.service.overtime.OverWorkSer;
 import com.bjike.goddess.attendance.to.GuidePermissionTO;
 import com.bjike.goddess.attendance.to.PunchSonTO;
 import com.bjike.goddess.attendance.vo.OverWorkTimesVO;
+import com.bjike.goddess.attendance.vo.PunchSonVO;
 import com.bjike.goddess.common.api.dto.Restrict;
 import com.bjike.goddess.common.api.exception.SerException;
 import com.bjike.goddess.common.jpa.service.ServiceImpl;
@@ -201,7 +202,7 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
                 punchStatus = PunchStatus.NORMAL;
             } else if ((null != to.getArea()) && (!(to.getArea().contains(departmentDetailBO.getArea())))) {
                 punchStatus = PunchStatus.OUTSIDE;    //外勤
-            }else if((null != to.getArea())  && (!(to.getArea().contains("内网IP//内网IP/内网IP")))){
+            } else if ((null != to.getArea()) && (!(to.getArea().contains("内网IP//内网IP/内网IP")))) {
                 punchStatus = PunchStatus.NORMAL;
             }
         }
@@ -1386,25 +1387,25 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
 
     @Override
     public Long currentUserLateCount() throws SerException {
-        Long count =0l;
+        Long count = 0l;
         String userToken = RpcTransmit.getUserToken();
         UserBO userBO = userAPI.currentUser();
         RpcTransmit.transmitUserToken(userToken);
         PunchDTO punchDTO = new PunchDTO();
-        punchDTO.getConditions().add(Restrict.eq("name",userBO.getUsername()));
+        punchDTO.getConditions().add(Restrict.eq("name", userBO.getUsername()));
         List<Punch> punchs = punchSer.findByCis(punchDTO);
-        if(punchs!=null && punchs.size()>0){
-            for (Punch punch:punchs){
+        if (punchs != null && punchs.size() > 0) {
+            for (Punch punch : punchs) {
                 PunchSonDTO punchSonDTO = new PunchSonDTO();
-                punchSonDTO.getConditions().add(Restrict.eq("punchId",punch.getId()));
+                punchSonDTO.getConditions().add(Restrict.eq("punchId", punch.getId()));
                 List<PunchSon> punchSonList = super.findByCis(punchSonDTO);
-                if(punchSonList!=null && punchSonList.size()>0){
-                    for (PunchSon punchSon:punchSonList ){
+                if (punchSonList != null && punchSonList.size() > 0) {
+                    for (PunchSon punchSon : punchSonList) {
                         PunchGrandSonDTO punchGrandSonDTO = new PunchGrandSonDTO();
-                        punchGrandSonDTO.getConditions().add(Restrict.eq("punchSonId",punchSon.getId()));
-                        punchGrandSonDTO.getConditions().add(Restrict.eq("punchStatus",PunchStatus.LATE));
+                        punchGrandSonDTO.getConditions().add(Restrict.eq("punchSonId", punchSon.getId()));
+                        punchGrandSonDTO.getConditions().add(Restrict.eq("punchStatus", PunchStatus.LATE));
                         List<PunchGrandSon> punchGrandSonList = punchGrandSonSer.findByPage(punchGrandSonDTO);
-                        if(punchGrandSonList!=null && punchGrandSonList.size()>0){
+                        if (punchGrandSonList != null && punchGrandSonList.size() > 0) {
                             count += punchGrandSonList.size();
                         }
                     }
@@ -1412,5 +1413,51 @@ public class PunchSonSerImpl extends ServiceImpl<PunchSon, PunchSonDTO> implemen
             }
         }
         return count;
+    }
+
+    @Override
+    public Boolean isPunch(PunchSonTO to) throws SerException {
+
+        String sql = " SELECT count(*) AS count " +
+                "FROM goddess_taskallotment.attendance_punch ap LEFT JOIN goddess_taskallotment.attendance_punchson aps ON ap.id = aps.punch_id " +
+                "WHERE  ap.date = '" + LocalDate.now() + "' AND aps.punchType = " + to.getPunchType().getCode() + " " +
+                " and ap.name='" + userAPI.currentUser().getUsername() + "' ";
+
+        List<Object> objects = punchSonSer.findBySql(sql);
+        if (objects != null && objects.size() > 0) {
+            String length = objects.get(0).toString();
+
+            if (Integer.parseInt(length) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<PunchSonBO> getPunchSon(String date) throws SerException {
+        //判断是否为空
+        PunchDTO punchDTO = new PunchDTO();
+        if (date!=null){
+            punchDTO.getConditions().add(Restrict.eq("date",date));
+        }else {
+            punchDTO.getConditions().add(Restrict.eq("date",LocalDate.now()));
+        }
+
+        punchDTO.getConditions().add(Restrict.eq("name",userAPI.currentUser().getUsername()));
+        List<Punch> punchList = punchSer.findByCis(punchDTO);
+
+        if (!punchList.isEmpty() && punchList.size() > 0 ){
+            Punch punch = punchList.get(0);
+            PunchSonDTO sonDTO = new PunchSonDTO();
+            sonDTO.getConditions().add(Restrict.eq("punchId",punch.getId()));
+            List<PunchSon> punchSonList =  super.findByCis(sonDTO);
+            List<PunchSonBO> punchSonBOS = BeanTransform.copyProperties(punchSonList,PunchSonBO.class);
+            return punchSonBOS;
+        }
+
+        return null;
     }
 }

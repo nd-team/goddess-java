@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 public class PunchSonTO extends BaseTO {
     public interface PHONE{}
     public interface PC{}
+    public interface ISPUNCH{}
     /**
      * 经度
      */
@@ -38,7 +39,7 @@ public class PunchSonTO extends BaseTO {
     /**
      * 打卡类型
      */
-    @NotNull(groups = {PunchSonTO.PHONE.class,PunchSonTO.PC.class},message = "打卡类型不能为空")
+    @NotNull(groups = {PunchSonTO.PHONE.class,PunchSonTO.PC.class,PunchSonTO.ISPUNCH.class},message = "打卡类型不能为空")
     private PunchType punchType;
     /**
      * 打卡来源
